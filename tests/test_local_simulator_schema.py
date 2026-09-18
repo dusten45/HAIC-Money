@@ -52,6 +52,31 @@ class TestMapSchema(unittest.TestCase):
                 }
             )
 
+    def test_custom_map_round_trip_preserves_geometry(self):
+        from local_simulator.schema import map_from_dict, map_to_dict
+        from local_simulator.track_model import CustomMapSpec, CustomTrackGeometry
+
+        original = CustomMapSpec(
+            map_id="custom-track-0001",
+            geometry=CustomTrackGeometry(
+                centerline=((0.0, 0.0), (12.0, 0.0), (12.0, 12.0), (0.0, 12.0)),
+                width=8.0,
+            ),
+            obstacles=(),
+            max_steps=2000,
+            frame_skip=4,
+            generator=(("template", "oval"), ("design_seed", 7)),
+        )
+
+        self.assertEqual(map_from_dict(map_to_dict(original)), original)
+
+    def test_schema_one_payload_is_read_as_official_map(self):
+        result = self._schema_api()[2]({"track_id": 1, "seed": 42})
+
+        self.assertEqual(result.track_id, 1)
+        self.assertEqual(result.seed, 42)
+        self.assertEqual(result.map_kind, "official")
+
 
 if __name__ == "__main__":
     unittest.main()
