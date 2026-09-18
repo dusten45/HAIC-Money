@@ -123,7 +123,7 @@
     if (empty) empty.classList.add("hidden");
     const points = preview.track.points;
     const bounds = worldBounds(points);
-    const mapped = points.map((point) => project(point, bounds, width, height));
+    const mapped = points.map((point) => project([point[2], point[3]], bounds, width, height));
     context.lineJoin = "round";
     context.lineCap = "round";
     context.beginPath();

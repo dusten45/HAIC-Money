@@ -21,6 +21,10 @@ class TestWebAssets(unittest.TestCase):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")
         self.assertIn('emptyId = "canvas-empty"', script)
 
+    def test_map_renderer_projects_track_world_coordinates(self):
+        script = Path("web_simulator/app.js").read_text(encoding="utf-8")
+        self.assertIn("project([point[2], point[3]], bounds", script)
+
 
 if __name__ == "__main__":
     unittest.main()
