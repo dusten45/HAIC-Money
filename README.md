@@ -392,6 +392,19 @@ D:\HAIC\haic-env\Scripts\python.exe -m http.server 8000 `
 앞·뒤 한 스텝, 처음으로, 재생 속도와 타임라인 이동을 지원합니다. 여러 `run.json`을
 차례로 추가하면 완주 여부, 랩타임, 진행률, 손상, 충돌 횟수를 비교합니다.
 
+실제 로컬 시뮬레이터를 브라우저 버튼으로 실행하려면 정적 서버 대신 통합 런처를
+사용합니다.
+
+```powershell
+D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.web `
+  --host 127.0.0.1 --port 8765 `
+  --project-root C:\Users\koi\Coding\HAIC\.worktrees\obstacle-sim-site
+```
+
+통합 런처에서는 자체 맵 생성, `agent.py` 주행, 수동 키보드 주행, `run.json` 저장을
+웹에서 바로 실행할 수 있습니다. 정적 `http.server`는 파일을 불러와 로그를 보는
+전용 모드로 계속 사용할 수 있습니다.
+
 ### 사용자 장애물
 
 맵 파일은 `track_id`, `seed`, `obstacle_mode`, `max_steps`, `frame_skip`과 함께
