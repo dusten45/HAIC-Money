@@ -36,7 +36,7 @@ class TestSimulatorCli(unittest.TestCase):
 
             self.assertTrue(map_path.exists())
             self.assertTrue(run_path.exists())
-            self.assertEqual(load_run_log(run_path).schema_version, 1)
+            self.assertEqual(load_run_log(run_path).schema_version, 2)
 
             map_payload = json.loads(map_path.read_text(encoding="utf-8"))
             self.assertGreater(len(map_payload["preview"]["track"]["points"]), 0)

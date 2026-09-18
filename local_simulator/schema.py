@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from hashlib import sha256
+import json
 import math
 from typing import Any, Mapping
 
@@ -21,6 +23,7 @@ from .track_model import (
 
 LEGACY_SCHEMA_VERSION = 1
 MAP_SCHEMA_VERSION = 2
+RUN_SCHEMA_VERSION = 2
 # Kept as a compatibility alias for the run-log module until its schema is migrated.
 SCHEMA_VERSION = LEGACY_SCHEMA_VERSION
 OBSTACLE_MODES = frozenset(
@@ -260,6 +263,16 @@ def map_from_dict(payload: object) -> MapDocument:
     return validate_map_payload(payload)
 
 
+def map_fingerprint(document: MapDocument) -> str:
+    encoded = json.dumps(
+        map_to_dict(document),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return sha256(encoded.encode("utf-8")).hexdigest()[:16]
+
+
 __all__ = [
     "CustomMapSpec",
     "CustomObstacle",
@@ -269,8 +282,10 @@ __all__ = [
     "MapDocument",
     "MapSpec",
     "OBSTACLE_MODES",
+    "RUN_SCHEMA_VERSION",
     "SCHEMA_VERSION",
     "map_from_dict",
+    "map_fingerprint",
     "map_to_dict",
     "validate_map_payload",
 ]

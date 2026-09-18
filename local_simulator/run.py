@@ -8,7 +8,7 @@ from typing import Sequence
 
 from .logging import save_run_log
 from .map import default_artifact_root
-from .policies import BaselinePolicy
+from .policies import AgentPolicy, BaselinePolicy
 from .schema import map_from_dict
 from .simulation import run_episode
 
@@ -25,6 +25,22 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--max-steps", type=int)
     parser.add_argument("--frame-skip", type=int)
+    parser.add_argument(
+        "--policy",
+        choices=("baseline", "agent"),
+        default="baseline",
+    )
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path.cwd(),
+        help="workspace containing agent.py for --policy agent",
+    )
+    parser.add_argument(
+        "--agent-path",
+        type=Path,
+        help="optional agent.py path for --policy agent",
+    )
     parser.add_argument(
         "--record-frames",
         action="store_true",
@@ -46,7 +62,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             overrides["frame_skip"] = args.frame_skip
         if overrides:
             spec = replace(spec, **overrides)
-        result = run_episode(spec, BaselinePolicy(), record_frames=args.record_frames)
+        if args.policy == "agent":
+            agent_path = args.agent_path or (args.project_root / "agent.py")
+            policy = AgentPolicy(agent_path, args.project_root)
+        else:
+            policy = BaselinePolicy()
+        result = run_episode(spec, policy, record_frames=args.record_frames)
         save_run_log(result, args.output)
     except (OSError, json.JSONDecodeError, TypeError, ValueError, RuntimeError) as error:
         parser.error(str(error))

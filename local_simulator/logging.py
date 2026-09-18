@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from .environment import TrackSnapshot
-from .schema import SCHEMA_VERSION, map_from_dict, map_to_dict
+from .schema import LEGACY_SCHEMA_VERSION, RUN_SCHEMA_VERSION
 from .simulation_types import RunLog, RunStep
 
 
@@ -86,7 +86,7 @@ def _step_from_dict(payload: object) -> RunStep:
 
 def run_log_to_dict(run_log: RunLog) -> dict[str, Any]:
     result: dict[str, Any] = {
-        "schema_version": run_log.schema_version,
+        "schema_version": RUN_SCHEMA_VERSION,
         "run": run_log.run,
         "track": _track_to_dict(run_log.track),
         "steps": [_step_to_dict(step) for step in run_log.steps],
@@ -100,7 +100,10 @@ def run_log_to_dict(run_log: RunLog) -> dict[str, Any]:
 def run_log_from_dict(payload: object) -> RunLog:
     if not isinstance(payload, Mapping):
         raise ValueError("run log must be an object")
-    if payload.get("schema_version") != SCHEMA_VERSION:
+    if payload.get("schema_version") not in (
+        LEGACY_SCHEMA_VERSION,
+        RUN_SCHEMA_VERSION,
+    ):
         raise ValueError(
             f"unsupported schema_version: {payload.get('schema_version')}"
         )
@@ -117,7 +120,7 @@ def run_log_from_dict(payload: object) -> RunLog:
     if raw_frames is not None and not isinstance(raw_frames, (list, tuple)):
         raise ValueError("frames must be an array when present")
     return RunLog(
-        schema_version=SCHEMA_VERSION,
+        schema_version=RUN_SCHEMA_VERSION,
         run=dict(raw_run),
         track=_track_from_dict(payload.get("track")),
         steps=tuple(_step_from_dict(step) for step in raw_steps),

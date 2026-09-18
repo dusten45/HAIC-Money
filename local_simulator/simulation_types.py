@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .environment import TrackSnapshot
-from .schema import SCHEMA_VERSION
+from .schema import RUN_SCHEMA_VERSION
 
 
 @dataclass(frozen=True)
@@ -32,5 +32,5 @@ class RunLog:
     frames: tuple[str, ...] | None = None
 
     def __post_init__(self) -> None:
-        if self.schema_version != SCHEMA_VERSION:
+        if self.schema_version != RUN_SCHEMA_VERSION:
             raise ValueError(f"unsupported schema_version: {self.schema_version}")
