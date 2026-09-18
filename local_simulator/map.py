@@ -1,13 +1,21 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 import json
 from pathlib import Path
 import random
-from typing import Any, Sequence
+from typing import Sequence
 
-from .environment import build_map_bundle
-from .schema import CustomObstacle, MapSpec, map_to_dict
+from .preview import build_map_preview
+from .schema import (
+    CustomMapSpec,
+    CustomObstacle,
+    CustomTrackGeometry,
+    MapSpec,
+    map_to_dict,
+)
+from .track_generator import TEMPLATES, generate_custom_map, validate_custom_geometry
 
 
 DEFAULT_ARTIFACT_ROOT = Path("D:/HAIC")
@@ -33,6 +41,16 @@ def _obstacle_value(value: str) -> CustomObstacle:
         raise argparse.ArgumentTypeError(str(error)) from error
 
 
+def _control_point_value(value: str) -> tuple[float, float]:
+    try:
+        x, y = (float(part.strip()) for part in value.split(","))
+    except (TypeError, ValueError) as error:
+        raise argparse.ArgumentTypeError(
+            "control-point must use x,y"
+        ) from error
+    return x, y
+
+
 def _auto_obstacles(seed: int, count: int) -> tuple[CustomObstacle, ...]:
     if count < 0:
         raise ValueError("auto obstacle count must be non-negative")
@@ -53,12 +71,25 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Create a reproducible HAIC track and obstacle map."
     )
+    parser.add_argument("--kind", choices=("official", "custom"), default="official")
     parser.add_argument("--track-id", type=int, default=1)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--map-id")
+    parser.add_argument("--design-seed", type=int, default=42)
+    parser.add_argument("--template", choices=tuple(sorted(TEMPLATES)), default="oval")
+    parser.add_argument("--width", type=float, default=8.0)
+    parser.add_argument(
+        "--control-point",
+        action="append",
+        type=_control_point_value,
+        default=[],
+        metavar="X,Y",
+        help="custom track centerline point; may be repeated",
+    )
     parser.add_argument(
         "--obstacle-mode",
         choices=("official", "custom_only", "official_plus_custom"),
-        default="official",
+        default=None,
     )
     parser.add_argument(
         "--obstacle",
@@ -85,45 +116,67 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _preview(bundle: Any) -> dict[str, Any]:
-    return {
-        "track": {
-            "points": [list(point) for point in bundle.track.points],
-            "width": bundle.track.width,
-        },
-        "official_obstacles": [list(position) for position in bundle.official_obstacles],
-        "custom_obstacles": [
-            {
-                "position": list(obstacle.position),
-                "radius": obstacle.radius,
-            }
-            for obstacle in bundle.custom_obstacles
-        ],
-    }
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
-    if args.obstacle_mode == "official" and (args.obstacle or args.auto_obstacles):
+    obstacle_mode = args.obstacle_mode
+    if args.kind == "official" and obstacle_mode is None:
+        obstacle_mode = "official"
+    if args.kind == "custom" and obstacle_mode is None:
+        obstacle_mode = "custom_only"
+    if obstacle_mode == "official" and (args.obstacle or args.auto_obstacles):
         parser.error("custom obstacles require custom_only or official_plus_custom")
     try:
-        obstacles = tuple(args.obstacle) + _auto_obstacles(args.seed, args.auto_obstacles)
-        spec = MapSpec(
-            track_id=args.track_id,
-            seed=args.seed,
-            obstacle_mode=args.obstacle_mode,
-            obstacles=obstacles,
-            max_steps=args.max_steps,
-            frame_skip=args.frame_skip,
-            metadata=(("generator", "local_simulator.map"),),
+        obstacle_seed = args.design_seed if args.kind == "custom" else args.seed
+        obstacles = tuple(args.obstacle) + _auto_obstacles(
+            obstacle_seed,
+            args.auto_obstacles,
         )
-        bundle = build_map_bundle(spec)
+        if args.kind == "custom":
+            if obstacle_mode == "official":
+                parser.error("custom maps cannot use official obstacles")
+            map_id = args.map_id or f"custom-track-{args.design_seed:04d}"
+            if args.control_point:
+                geometry = CustomTrackGeometry(
+                    centerline=tuple(args.control_point),
+                    width=args.width,
+                )
+                validate_custom_geometry(geometry)
+                spec = CustomMapSpec(
+                    map_id=map_id,
+                    geometry=geometry,
+                    obstacles=obstacles,
+                    max_steps=args.max_steps,
+                    frame_skip=args.frame_skip,
+                    generator=(("design_seed", args.design_seed), ("source", "manual")),
+                    metadata=(("generator", "local_simulator.map"),),
+                )
+            else:
+                generated = generate_custom_map(
+                    map_id=map_id,
+                    design_seed=args.design_seed,
+                    template=args.template,
+                    width=args.width,
+                    max_steps=args.max_steps,
+                    frame_skip=args.frame_skip,
+                )
+                spec = replace(generated, obstacles=obstacles)
+        else:
+            spec = MapSpec(
+                track_id=args.track_id,
+                seed=args.seed,
+                obstacle_mode=obstacle_mode,
+                obstacles=obstacles,
+                max_steps=args.max_steps,
+                frame_skip=args.frame_skip,
+                metadata=(("generator", "local_simulator.map"),),
+            )
+        preview = build_map_preview(spec)
     except (TypeError, ValueError, RuntimeError) as error:
         parser.error(str(error))
 
     payload = map_to_dict(spec)
-    payload["preview"] = _preview(bundle)
+    payload["preview"] = preview
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
@@ -131,9 +184,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         encoding="utf-8",
     )
     print(f"map: {output_path}")
-    print(f"track points: {len(bundle.track.points)}")
-    print(f"official obstacles: {len(bundle.official_obstacles)}")
-    print(f"custom obstacles: {len(bundle.custom_obstacles)}")
+    print(f"track points: {len(preview['track']['points'])}")
+    print(f"official obstacles: {len(preview['official_obstacles'])}")
+    print(f"custom obstacles: {len(preview['custom_obstacles'])}")
     return 0
 
 
