@@ -9,7 +9,8 @@ import gymnasium as gym
 from core.track_variables import ObstacleSpec
 from core.vendor.car_racing import CarRacing, TRACK_WIDTH
 from env_wrapper import CarEnvironment
-from .schema import MapSpec
+from .custom_environment import CustomCarRacing
+from .schema import CustomMapSpec, MapDocument, MapSpec
 
 
 @dataclass(frozen=True)
@@ -20,20 +21,26 @@ class TrackSnapshot:
 
 @dataclass(frozen=True)
 class MapBundle:
-    spec: MapSpec
+    spec: MapDocument
     track: TrackSnapshot
     official_obstacles: tuple[tuple[float, float], ...]
     custom_obstacles: tuple[ObstacleSpec, ...]
 
 
 def create_environment(
-    spec: MapSpec,
+    spec: MapDocument,
     render_mode: str | None = "rgb_array",
 ) -> tuple[CarEnvironment, CarRacing]:
-    raw_environment = CarRacing(
-        continuous=True,
-        render_mode=render_mode,
-    )
+    if isinstance(spec, CustomMapSpec):
+        raw_environment: CarRacing = CustomCarRacing(
+            spec.geometry,
+            render_mode=render_mode,
+        )
+    else:
+        raw_environment = CarRacing(
+            continuous=True,
+            render_mode=render_mode,
+        )
     limited_environment = gym.wrappers.TimeLimit(
         raw_environment,
         max_episode_steps=spec.max_steps * spec.frame_skip + 200,
@@ -49,12 +56,20 @@ def create_environment(
 
 def reset_environment(
     environment: CarEnvironment,
-    spec: MapSpec,
+    spec: MapDocument,
 ) -> tuple[Any, dict[str, Any]]:
     options: dict[str, Any] = {}
-    if spec.obstacle_mode != "custom_only":
+    seed = 0
+    if isinstance(spec, CustomMapSpec):
+        generator = dict(spec.generator)
+        raw_seed = generator.get("design_seed", 0)
+        if isinstance(raw_seed, int) and not isinstance(raw_seed, bool):
+            seed = raw_seed
+    else:
+        seed = spec.seed
+    if isinstance(spec, MapSpec) and spec.obstacle_mode != "custom_only":
         options["track_id"] = spec.track_id
-    observation, info = environment.reset(seed=spec.seed, options=options)
+    observation, info = environment.reset(seed=seed, options=options)
     custom_obstacles = map_custom_obstacles(environment, spec)
     attach_custom_obstacles(environment, custom_obstacles)
     return observation, info
@@ -78,6 +93,7 @@ def snapshot_track(environment: CarEnvironment) -> TrackSnapshot:
 
 def _custom_obstacle_position(
     environment: CarEnvironment,
+    spec: MapDocument,
     progress: float,
     lateral: float,
     radius: float,
@@ -85,7 +101,8 @@ def _custom_obstacle_position(
     track = environment.unwrapped.track
     index = min(len(track) - 1, max(0, round(progress * (len(track) - 1))))
     _alpha, beta, x, y = track[index]
-    max_offset = min(TRACK_WIDTH * 0.6, TRACK_WIDTH - radius)
+    track_width = spec.geometry.width if isinstance(spec, CustomMapSpec) else TRACK_WIDTH
+    max_offset = min(track_width * 0.6, track_width - radius)
     offset = lateral * max_offset
     return (
         float(x + offset * math.cos(beta)),
@@ -95,7 +112,7 @@ def _custom_obstacle_position(
 
 def map_custom_obstacles(
     environment: CarEnvironment,
-    spec: MapSpec,
+    spec: MapDocument,
 ) -> tuple[ObstacleSpec, ...]:
     if spec.obstacle_mode == "official":
         return ()
@@ -107,6 +124,7 @@ def map_custom_obstacles(
         ObstacleSpec(
             position=_custom_obstacle_position(
                 environment,
+                spec,
                 obstacle.progress,
                 obstacle.lateral,
                 obstacle.radius,
@@ -139,12 +157,16 @@ def official_obstacle_positions(
     ]
 
 
-def build_map_bundle(spec: MapSpec) -> MapBundle:
+def build_map_bundle(spec: MapDocument) -> MapBundle:
     environment, _raw_environment = create_environment(spec, render_mode=None)
     try:
         reset_environment(environment, spec)
         custom_obstacles = map_custom_obstacles(environment, spec)
-        official_count = 6 if spec.obstacle_mode != "custom_only" else 0
+        official_count = (
+            6
+            if isinstance(spec, MapSpec) and spec.obstacle_mode != "custom_only"
+            else 0
+        )
         all_obstacles = official_obstacle_positions(environment)
         official_obstacles = tuple(all_obstacles[:official_count])
         return MapBundle(
