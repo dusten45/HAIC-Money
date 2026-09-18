@@ -17,6 +17,10 @@ class TestWebAssets(unittest.TestCase):
         for element_id in ("pause-button", "step-forward", "step-back", "speed", "run-table"):
             self.assertIn(f'id="{element_id}"', html)
 
+    def test_map_renderer_has_default_empty_state_target(self):
+        script = Path("web_simulator/app.js").read_text(encoding="utf-8")
+        self.assertIn('emptyId = "canvas-empty"', script)
+
 
 if __name__ == "__main__":
     unittest.main()

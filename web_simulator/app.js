@@ -108,7 +108,7 @@
     };
   }
 
-  function drawTrack(canvas, preview, obstacles, emptyId) {
+  function drawTrack(canvas, preview, obstacles, emptyId = "canvas-empty") {
     const context = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
