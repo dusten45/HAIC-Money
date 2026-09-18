@@ -358,3 +358,66 @@ python -m pip list
 
 특히 Python 버전이 3.10 또는 3.11인지, 현재 가상 환경의 Python과 `pip`가 같은
 경로를 사용하는지 먼저 확인하십시오.
+
+## 12. 맵 생성·실행 로그 시뮬레이터
+
+`local_simulator`는 공식 `CarRacing`/`CarEnvironment`를 그대로 사용해 재현 가능한
+맵을 만들고, 로컬에서 주행한 결과를 `run.json`으로 저장합니다. 브라우저 사이트는
+이 로그를 읽어 궤적을 재생할 뿐이며, 브라우저 안에서 Box2D 물리를 실행하거나
+매 스텝마다 서버를 호출하지 않습니다.
+
+큰 맵·로그·프레임 파일은 기본적으로 `D:\HAIC`에 보관합니다. 이 저장소의 정적
+사이트는 별도 설치 없이 열 수 있습니다.
+
+### Windows 권장 실행
+
+```powershell
+# 공식 환경과 호환되는 Python 3.11 가상 환경
+D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.map `
+  --track-id 1 --seed 42 `
+  --obstacle-mode official_plus_custom `
+  --auto-obstacles 4 `
+  --output D:\HAIC\maps\map.json
+
+D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.run `
+  --map D:\HAIC\maps\map.json `
+  --output D:\HAIC\runs\run.json
+
+D:\HAIC\haic-env\Scripts\python.exe -m http.server 8000 `
+  --directory web_simulator
+```
+
+그 다음 브라우저에서 `http://127.0.0.1:8000/`을 열고 `map.json`과 `run.json`을
+각각 불러옵니다. 사이트의 재생 버튼은 로그를 자동으로 끝까지 재생하며, 일시정지,
+앞·뒤 한 스텝, 처음으로, 재생 속도와 타임라인 이동을 지원합니다. 여러 `run.json`을
+차례로 추가하면 완주 여부, 랩타임, 진행률, 손상, 충돌 횟수를 비교합니다.
+
+### 사용자 장애물
+
+맵 파일은 `track_id`, `seed`, `obstacle_mode`, `max_steps`, `frame_skip`과 함께
+정규화된 장애물을 저장합니다. 장애물은 `progress,lateral,radius` 형식으로 반복해
+지정할 수 있습니다.
+
+```powershell
+D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.map `
+  --track-id 1 --seed 99 `
+  --obstacle-mode official_plus_custom `
+  --obstacle 0.42,-0.25,1.2 `
+  --obstacle 0.70,0.30,1.0 `
+  --output D:\HAIC\maps\custom-map.json
+```
+
+`--auto-obstacles N`은 같은 seed에서 같은 위치를 다시 만드는 검증·과적합 점검용
+장애물 N개를 생성합니다. `official` 모드는 공식 장애물만 사용하므로 사용자
+장애물을 함께 지정할 때는 `custom_only` 또는 `official_plus_custom`을 선택합니다.
+
+프레임까지 로그에 넣어 카메라 화면을 재생하려면 실행 명령에
+`--record-frames`를 추가합니다. 프레임 로그는 크기가 빠르게 커지므로 기본값은
+궤적·상태만 저장하는 방식입니다.
+
+### 이후 에이전트 연결
+
+현재 CLI의 기본 정책은 파이프라인 확인용 `BaselinePolicy`입니다. 다음 단계에서는
+`agent.py`의 `Agent.reset()`/`Agent.act()`를 같은 policy adapter에 연결해, 동일한
+맵·로그·웹사이트 형식으로 여러 에이전트 정책을 비교할 수 있습니다. 공식 파일인
+`core/`, `env_wrapper.py`, `damage.py`는 계속 수정하지 않아야 합니다.
