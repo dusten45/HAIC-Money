@@ -12,6 +12,11 @@ class TestWebAssets(unittest.TestCase):
         self.assertNotIn("http://", html)
         self.assertNotIn("https://", html)
 
+    def test_site_has_playback_and_metrics_controls(self):
+        html = Path("web_simulator/index.html").read_text(encoding="utf-8")
+        for element_id in ("pause-button", "step-forward", "step-back", "speed", "run-table"):
+            self.assertIn(f'id="{element_id}"', html)
+
 
 if __name__ == "__main__":
     unittest.main()
