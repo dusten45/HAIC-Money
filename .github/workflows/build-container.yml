@@ -5,12 +5,13 @@ on:
     branches:
       - main
     paths:
-      - Dockerfile
-      - .dockerignore
-      - pyproject.toml
-      - uv.lock
-      - .python-version
-      - .github/workflows/build-container.yml
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'docker/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.python-version'
+      - '.github/workflows/build-container.yml'
   workflow_dispatch:
 
 permissions:
@@ -23,13 +24,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Prepare image name
         shell: bash
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER}/haic-money"
-          echo "IMAGE_NAME=${IMAGE,,}" >> "$GITHUB_ENV"
+          echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/haic-money" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -49,5 +49,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

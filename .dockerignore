@@ -1,10 +1,7 @@
-.git
-.venv
-__pycache__
-*.pyc
-*.pyo
-*.log
-runs
-.pytest_cache
-.mypy_cache
-.ruff_cache
+**
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!.python-version
+!docker/
+!docker/**

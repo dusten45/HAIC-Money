@@ -4,8 +4,6 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-COPY --from=ghcr.io/astral-sh/uv:0.12.17 /uv /uvx /usr/local/bin/
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     swig \
     libgl1 \
@@ -14,7 +12,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zsh \
     xclip \
     xauth \
-    htop \
     ripgrep \
     tree \
     lsof \
@@ -37,14 +34,32 @@ RUN export NVM_DIR=/root/.nvm \
     && npm install -g @kilocode/cli \
     && kilo --version
 
+RUN mkdir -p /etc/haic /root/.config/kilo
+
+COPY docker/haic-tmux.conf /etc/haic/tmux.conf
+COPY docker/haic-zsh.zsh /etc/haic/zsh.zsh
+COPY docker/kilo.jsonc /root/.config/kilo/kilo.jsonc
+
+RUN touch /etc/tmux.conf \
+    && printf '\nsource-file /etc/haic/tmux.conf\n' >> /etc/tmux.conf \
+    && printf '\nsource /etc/haic/zsh.zsh\n' >> /etc/zsh/zshrc \
+    && chsh -s /usr/bin/zsh root
+
+ENV UV_PROJECT_ENVIRONMENT=/venv/main
+
 WORKDIR /opt/haic-env
 
 COPY pyproject.toml uv.lock .python-version ./
 
-RUN VIRTUAL_ENV=/venv/main uv sync --locked --inexact --active --no-install-project
+RUN uv sync --locked --inexact --no-install-project
 
-RUN /venv/main/bin/python -c 'import sys, torch, gymnasium, stable_baselines3, cv2, Box2D; print("python:", sys.version); print("torch:", torch.__version__); print("torch cuda:", torch.version.cuda); print("gymnasium:", gymnasium.__version__); print("sb3:", stable_baselines3.__version__); print("opencv:", cv2.__version__); print("Box2D: OK")'
-
-RUN env-hash > /.env_hash
+RUN /venv/main/bin/python -c 'import sys, torch, gymnasium, stable_baselines3, cv2, Box2D; print("python:", sys.version); print("torch:", torch.__version__); print("torch cuda:", torch.version.cuda); print("gymnasium:", gymnasium.__version__); print("sb3:", stable_baselines3.__version__); print("opencv:", cv2.__version__); print("Box2D: OK")' \
+    && /venv/main/bin/python -m pip --version \
+    && gh --version | head -n 1 \
+    && micro --version \
+    && zsh --version \
+    && export NVM_DIR=/root/.nvm \
+    && source "$NVM_DIR/nvm.sh" \
+    && kilo --version
 
 WORKDIR /workspace
