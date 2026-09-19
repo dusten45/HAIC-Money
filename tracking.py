@@ -56,7 +56,6 @@ def new_run(name: str, config: dict, command_line: str = "") -> Path:
     )
 
     (run_dir / "metrics.jsonl").write_text("")
-    (run_dir / ".gitignore").write_text("*.zip\ncheckpoints/\n")
 
     latest = RUNS_DIR / "_latest"
     try:

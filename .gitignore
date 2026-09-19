@@ -51,6 +51,10 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Versioned experiment artifacts
+!runs/**/train.log
+runs/_latest
+
 instance/
 .webassets-cache
 
