@@ -3,6 +3,9 @@ import ast
 import hashlib
 import json
 import os
+import platform
+import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -48,6 +51,14 @@ def sha256_file(path: Path):
     return digest.hexdigest()
 
 
+def file_metadata(path: Path):
+    return {
+        "path": relative_path(path),
+        "sha256": sha256_file(path),
+        "bytes": path.stat().st_size,
+    }
+
+
 def git_provenance():
     try:
         commit = subprocess.check_output(
@@ -77,6 +88,35 @@ def safe_label(label: str):
     if not normalized:
         raise ValueError("--label must contain at least one alphanumeric character")
     return normalized
+
+
+def source_model_metadata(source_model_path: Path | None):
+    if source_model_path is None:
+        return None
+    if not source_model_path.is_file():
+        raise FileNotFoundError(source_model_path)
+
+    metadata = file_metadata(source_model_path)
+    if source_model_path.stem == "best_model":
+        vecnormalize_path = source_model_path.with_name("best_model_vecnormalize.pkl")
+    else:
+        vecnormalize_path = source_model_path.with_name("model_vecnormalize.pkl")
+    metadata["vecnormalize"] = (
+        file_metadata(vecnormalize_path) if vecnormalize_path.is_file() else None
+    )
+
+    run_dir = source_model_path.parent
+    metadata["run_config"] = (
+        file_metadata(run_dir / "config.json")
+        if (run_dir / "config.json").is_file()
+        else None
+    )
+    metadata["evaluation_metrics"] = (
+        file_metadata(run_dir / "best_model_metrics.json")
+        if (run_dir / "best_model_metrics.json").is_file()
+        else None
+    )
+    return metadata
 
 
 def model_filename(agent_path: Path):
@@ -232,47 +272,59 @@ def create_submission_record(
     label: str,
     smoke_test: bool,
     python_executable: str,
+    command_line: str | None = None,
 ):
     created_at = datetime.now(timezone.utc)
-    submission_id = f"{created_at.strftime('%Y%m%dT%H%M%SZ')}_{safe_label(label)}"
+    submission_id = f"{created_at.strftime('%Y%m%dT%H%M%S%fZ')}_{safe_label(label)}"
     record_dir = submissions_dir / submission_id
-    record_dir.mkdir(parents=True)
-    archive_path = build_submission(agent_path, model_path, record_dir / "submission.zip")
-    smoke_result = smoke_submission(archive_path, python_executable) if smoke_test else None
+    if record_dir.exists():
+        raise FileExistsError(record_dir)
 
-    source_model = None
-    if source_model_path is not None:
-        if not source_model_path.is_file():
-            raise FileNotFoundError(source_model_path)
-        source_model = {
-            "path": relative_path(source_model_path),
-            "sha256": sha256_file(source_model_path),
-            "bytes": source_model_path.stat().st_size,
+    expected_model_filename = validate_agent_source(agent_path)
+    if model_path.name != expected_model_filename:
+        raise ValueError(
+            f"agent expects {expected_model_filename}, but model path is {model_path.name}"
+        )
+    if not model_path.is_file():
+        raise FileNotFoundError(model_path)
+
+    source_model = source_model_metadata(source_model_path)
+    provenance = git_provenance()
+    submissions_dir.mkdir(parents=True, exist_ok=True)
+    temporary_dir = Path(tempfile.mkdtemp(prefix=".pending-", dir=submissions_dir))
+    try:
+        archive_path = build_submission(agent_path, model_path, temporary_dir / "submission.zip")
+        smoke_result = (
+            smoke_submission(archive_path, python_executable) if smoke_test else None
+        )
+        manifest = {
+            "schema_version": 2,
+            "submission_id": submission_id,
+            "created_at_utc": created_at.isoformat().replace("+00:00", "Z"),
+            "git": provenance,
+            "package_command": command_line,
+            "runtime": {
+                "platform": platform.platform(),
+                "python_version": sys.version,
+                "python_executable": python_executable,
+            },
+            "agent": file_metadata(agent_path),
+            "model": file_metadata(model_path),
+            "source_model": source_model,
+            "submission_zip": {
+                "path": "submission.zip",
+                "sha256": sha256_file(archive_path),
+                "bytes": archive_path.stat().st_size,
+            },
+            "smoke_test": smoke_result,
         }
-
-    manifest = {
-        "schema_version": 1,
-        "submission_id": submission_id,
-        "created_at_utc": created_at.isoformat().replace("+00:00", "Z"),
-        "git": git_provenance(),
-        "agent": {
-            "path": relative_path(agent_path),
-            "sha256": sha256_file(agent_path),
-        },
-        "model": {
-            "path": relative_path(model_path),
-            "sha256": sha256_file(model_path),
-            "bytes": model_path.stat().st_size,
-        },
-        "source_model": source_model,
-        "submission_zip": {
-            "path": "submission.zip",
-            "sha256": sha256_file(archive_path),
-            "bytes": archive_path.stat().st_size,
-        },
-        "smoke_test": smoke_result,
-    }
-    (record_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+        (temporary_dir / "manifest.json").write_text(
+            json.dumps(manifest, indent=2) + "\n"
+        )
+        temporary_dir.replace(record_dir)
+    except Exception:
+        shutil.rmtree(temporary_dir, ignore_errors=True)
+        raise
     return record_dir, manifest
 
 
@@ -298,6 +350,7 @@ def main():
         args.label,
         args.smoke_test,
         args.python,
+        shlex.join(sys.argv),
     )
     print(
         f"built submission record: {record_dir} "

@@ -69,6 +69,28 @@ class TestSubmissionPackage(unittest.TestCase):
                 json.loads((record_dir / "manifest.json").read_text())["submission_id"],
                 manifest["submission_id"],
             )
+            self.assertEqual(manifest["schema_version"], 2)
+            self.assertEqual(manifest["source_model"]["vecnormalize"], None)
+
+    def test_cleans_partial_record_when_source_is_invalid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            model_path = directory_path / "model.pt"
+            torch.save(Baseline1Actor().state_dict(), model_path)
+            submissions_dir = directory_path / "submissions"
+
+            with self.assertRaises(FileNotFoundError):
+                create_submission_record(
+                    ROOT / "agent.py",
+                    model_path,
+                    directory_path / "missing.zip",
+                    submissions_dir,
+                    "broken",
+                    False,
+                    "python",
+                )
+
+            self.assertFalse(submissions_dir.exists())
 
 
 if __name__ == "__main__":
