@@ -11,7 +11,7 @@
 ## 1. 권장 환경
 
 - Python 3.10 또는 3.11
-- 공식 평가 서버: Python 3.11, CPU 환경
+- 공식 평가 서버: Python 3.11, Linux Docker, CPU 환경
 - Windows, macOS 또는 Linux
 
 먼저 참가자 저장소를 clone하고 저장소 루트로 이동합니다.
@@ -358,3 +358,67 @@ python -m pip list
 
 특히 Python 버전이 3.10 또는 3.11인지, 현재 가상 환경의 Python과 `pip`가 같은
 경로를 사용하는지 먼저 확인하십시오.
+
+## 12. PPO Baseline 1.1
+
+`train.py`의 기본값은 Baseline 1.1 안정화 설정입니다.
+
+```bash
+python train.py --name ppo-cnn-baseline1-1
+```
+
+- learning rate `1e-4`, `n_epochs=5`, `clip_range=0.2`, `target_kl=0.03`
+- 65,536 step마다 PPO update 이후의 model checkpoint와 VecNormalize 통계를 함께 저장
+- 학습 seed `42,1337,2024,777`로 seen 평가, holdout seed `10001`~`10008`로 best model 선택
+- holdout의 완주율, 평균 진행률, 평균 랩타임 순서로 `best_model.zip`을 선택
+- 마지막 rollout도 학습 종료 직후 평가하므로 최종 모델이 미평가 상태로 남지 않음
+
+resume 시에는 같은 checkpoint의 VecNormalize 통계가 자동으로 탐색됩니다.
+
+```bash
+python train.py \
+  --resume runs/<run>/best_model.zip \
+  --name ppo-cnn-baseline1-1-resume
+```
+
+### Throughput 비교
+
+rollout 크기를 16,384 sample로 고정한 짧은 비교 실행입니다. 두 명령 모두 3 rollout만
+실행하며, 평가와 checkpoint I/O를 제외해 로그의 FPS를 비교할 수 있습니다.
+
+```bash
+python train.py --name throughput-8x2048 --n-envs 8 --n-steps 2048 \
+  --total-timesteps 49152 --save-freq 0 --eval-freq 0 --skip-final-eval
+
+python train.py --name throughput-16x1024 --n-envs 16 --n-steps 1024 \
+  --total-timesteps 49152 --save-freq 0 --eval-freq 0 --skip-final-eval
+```
+
+### 제출용 Torch 모델 export
+
+학습 모델은 SB3 zip 대신 순수 Torch state dict로 export합니다. export 과정은 무작위
+관측값에서 SB3 deterministic action과 export 모델의 action이 일치하는지 검증하고,
+warm-up 후 CPU action latency를 측정합니다.
+
+```bash
+python export_policy.py \
+  --input runs/<run>/best_model.zip \
+  --output model.pt \
+  --verify-samples 256 \
+  --benchmark-calls 500
+```
+
+제출 ZIP에는 export된 `model.pt`와 `agent.py`만 포함하면 됩니다. `agent.py`는
+Stable-Baselines3를 import하지 않습니다.
+
+### 제출 ZIP 검증
+
+공식 평가와 같은 CPU 경로로 agent import, 모델 로드, 단일 action을 확인하고 ZIP 구조와
+정적 금지 import를 검사합니다.
+
+```bash
+python package_submission.py --output submission.zip --smoke-test
+```
+
+현재 작업 공간에는 Python 3.11 Docker가 없으므로, 업로드 전 Python 3.11 Linux 환경에서는
+같은 명령에 `--python python3.11`을 지정해 다시 확인해야 합니다.
