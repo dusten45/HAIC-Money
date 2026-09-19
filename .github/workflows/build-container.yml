@@ -1,4 +1,4 @@
-name: Build HAIC container
+name: Build HAIC Vast image
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - Dockerfile
+      - .dockerignore
       - pyproject.toml
       - uv.lock
       - .python-version
@@ -48,8 +49,5 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          labels: |
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
-            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
