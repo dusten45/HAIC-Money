@@ -8,7 +8,6 @@ import numpy as np
 from gymnasium.wrappers import TimeLimit
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
 
 import tracking
@@ -21,6 +20,8 @@ DEFAULT_TRACK_IDS = (1,)
 GAME_VARIABLES_VERSION = "variables-6"
 CHECKPOINT_PREFIX = "ppo_baseline"
 VECNORM_FILENAME = "model_vecnormalize.pkl"
+BEST_MODEL_FILENAME = "best_model"
+BEST_VECNORM_FILENAME = "best_model_vecnormalize.pkl"
 
 
 class HaicTrack(gym.Wrapper):
@@ -136,6 +137,8 @@ def find_vecnormalize_path(resume_path, explicit_path):
     checkpoint = Path(resume_path)
     candidates = [checkpoint.with_name(VECNORM_FILENAME)]
     stem = checkpoint.stem
+    if stem == BEST_MODEL_FILENAME:
+        candidates.insert(0, checkpoint.with_name(BEST_VECNORM_FILENAME))
     if stem.startswith(CHECKPOINT_PREFIX) and stem.endswith("_steps"):
         candidates.insert(
             0,
@@ -150,63 +153,162 @@ def find_vecnormalize_path(resume_path, explicit_path):
     return None
 
 
-class EvalLogger(BaseCallback):
+class HoldoutEvaluator:
     def __init__(
         self,
         eval_track_ids,
-        eval_seeds,
+        seen_eval_seeds,
+        holdout_eval_seeds,
         max_steps,
         frame_skip,
-        eval_freq,
         eval_episodes,
         run_dir,
-        verbose=0,
     ):
-        super().__init__(verbose)
         self.eval_track_ids = eval_track_ids
-        self.eval_seeds = eval_seeds
+        self.seen_eval_seeds = seen_eval_seeds
+        self.holdout_eval_seeds = holdout_eval_seeds
         self.max_steps = max_steps
         self.frame_skip = frame_skip
-        self.eval_freq = eval_freq
         self.eval_episodes = eval_episodes
         self.run_dir = run_dir
-        self.last_eval = 0
+        self.best_score = None
+        self.best_step = None
 
-    def _init_callback(self):
-        super()._init_callback()
-        self.last_eval = self.model.num_timesteps
-
-    def _on_step(self):
-        if self.eval_freq <= 0:
-            return True
-        if self.num_timesteps - self.last_eval < self.eval_freq:
-            return True
-        self.last_eval = self.num_timesteps
+    def _evaluate_seeds(self, model, seeds):
         results = []
         for tid in self.eval_track_ids:
-            for seed in self.eval_seeds:
+            for seed in seeds:
                 results.extend(
                     evaluate(
-                        self.model, tid, seed, self.max_steps, self.frame_skip,
+                        model, tid, seed, self.max_steps, self.frame_skip,
                         episodes=self.eval_episodes,
                     )
                 )
-        metrics = summarize(results)
-        metrics["step"] = int(self.num_timesteps)
+        return results
+
+    @staticmethod
+    def _selection_score(metrics):
+        lap_time_ms = metrics["avg_lap_time_ms"]
+        return (
+            metrics["finish_rate"],
+            metrics["avg_progress"],
+            -lap_time_ms if lap_time_ms is not None else float("-inf"),
+        )
+
+    def _save_best_model(self, model, metrics):
+        best_path = self.run_dir / BEST_MODEL_FILENAME
+        model.save(str(best_path))
+        vecnormalize = model.get_vec_normalize_env()
+        if vecnormalize is not None:
+            vecnormalize.save(str(self.run_dir / BEST_VECNORM_FILENAME))
+        tracking.write_json(self.run_dir / "best_model_metrics.json", metrics)
+
+    def evaluate(self, model, is_final=False):
+        step = int(model.num_timesteps)
+        seen_metrics = summarize(self._evaluate_seeds(model, self.seen_eval_seeds))
+        holdout_metrics = summarize(
+            self._evaluate_seeds(model, self.holdout_eval_seeds)
+        )
+        score = self._selection_score(holdout_metrics)
+        is_best = self.best_score is None or score > self.best_score
+        if is_best:
+            self.best_score = score
+            self.best_step = step
+
+        metrics = {
+            "step": step,
+            "is_final": is_final,
+            "seen": seen_metrics,
+            "holdout": holdout_metrics,
+            "best_model_updated": is_best,
+            "best_model_step": self.best_step,
+        }
+        if is_best:
+            self._save_best_model(model, metrics)
         tracking.log_metrics(self.run_dir, metrics)
         print(
-            f"[eval @ {metrics['step']}] finish_rate={metrics['finish_rate']:.2f} "
-            f"avg_progress={metrics['avg_progress']:.3f} "
-            f"avg_reward={metrics['avg_reward']:.1f} "
-            f"best_lap_ms={metrics['best_lap_time_ms']}"
+            f"[eval @ {metrics['step']}] "
+            f"seen finish_rate={seen_metrics['finish_rate']:.2f} "
+            f"progress={seen_metrics['avg_progress']:.3f} | "
+            f"holdout finish_rate={holdout_metrics['finish_rate']:.2f} "
+            f"progress={holdout_metrics['avg_progress']:.3f} "
+            f"best={is_best}"
         )
-        return True
+        return metrics
+
+
+def checkpoint_paths(checkpoint_dir: Path, step: int):
+    stem = f"{CHECKPOINT_PREFIX}_{step}_steps"
+    return (
+        checkpoint_dir / stem,
+        checkpoint_dir / f"{CHECKPOINT_PREFIX}_vecnormalize_{step}_steps.pkl",
+    )
+
+
+def save_checkpoint(model, checkpoint_dir: Path, step: int):
+    model_path, vecnormalize_path = checkpoint_paths(checkpoint_dir, step)
+    model.save(str(model_path))
+    vecnormalize = model.get_vec_normalize_env()
+    if vecnormalize is not None:
+        vecnormalize.save(str(vecnormalize_path))
+    print(f"saved checkpoint: {model_path}.zip")
+
+
+def next_interval_boundary(step: int, interval: int):
+    remainder = step % interval
+    return step + interval if remainder == 0 else step + interval - remainder
+
+
+def train_in_segments(
+    model,
+    total_timesteps,
+    save_freq,
+    eval_freq,
+    on_checkpoint,
+    on_evaluate,
+    evaluate_final,
+):
+    current_step = int(model.num_timesteps)
+    target_step = current_step + total_timesteps
+    next_checkpoint = (
+        next_interval_boundary(current_step, save_freq) if save_freq > 0 else None
+    )
+    next_evaluation = (
+        next_interval_boundary(current_step, eval_freq) if eval_freq > 0 else None
+    )
+    last_evaluation_step = None
+
+    while current_step < target_step:
+        segment_targets = [target_step]
+        segment_targets.extend(
+            step for step in (next_checkpoint, next_evaluation) if step is not None
+        )
+        segment_target = min(segment_targets)
+        model.learn(
+            total_timesteps=segment_target - current_step,
+            reset_num_timesteps=False,
+        )
+        updated_step = int(model.num_timesteps)
+        if updated_step <= current_step:
+            raise RuntimeError("PPO training segment did not advance num_timesteps")
+        current_step = updated_step
+
+        if next_checkpoint is not None and current_step >= next_checkpoint:
+            on_checkpoint(current_step)
+            next_checkpoint = next_interval_boundary(current_step, save_freq)
+        if next_evaluation is not None and current_step >= next_evaluation:
+            on_evaluate(is_final=current_step >= target_step)
+            last_evaluation_step = current_step
+            next_evaluation = next_interval_boundary(current_step, eval_freq)
+
+    if evaluate_final and last_evaluation_step != current_step:
+        on_evaluate(is_final=True)
 
 
 class Tee:
     def __init__(self, primary, mirror_path):
         self.primary = primary
-        self.mirror = open(mirror_path, "w", buffering=1)
+        self.mirror = open(mirror_path, "a", buffering=1)
 
     def write(self, data):
         try:
@@ -230,7 +332,7 @@ class Tee:
 def parse_args():
     parser = argparse.ArgumentParser(description="PPO + CNN 학습 (HAIC CarRacing)")
     parser.add_argument("--track-ids", type=str, default="1")
-    parser.add_argument("--seeds", type=str, default="42,1337,2024,777,123")
+    parser.add_argument("--seeds", type=str, default="42,1337,2024,777")
     parser.add_argument("--n-envs", type=int, default=8)
     parser.add_argument("--vec-type", type=str, choices=["dummy", "subproc"], default="subproc")
     parser.add_argument("--total-timesteps", type=int, default=1_000_000)
@@ -238,25 +340,81 @@ def parse_args():
     parser.add_argument("--frame-skip", type=int, default=FRAME_SKIP)
     parser.add_argument("--no-shaping", action="store_true", help="완주 보너스 비활성화")
     parser.add_argument("--no-norm-reward", action="store_true", help="보상 정규화 비활성화")
-    parser.add_argument("--learning-rate", type=float, default=3e-4)
+    parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument("--n-steps", type=int, default=2048)
     parser.add_argument("--batch-size", type=int, default=256)
-    parser.add_argument("--n-epochs", type=int, default=10)
+    parser.add_argument("--n-epochs", type=int, default=5)
     parser.add_argument("--gamma", type=float, default=0.99)
+    parser.add_argument("--clip-range", type=float, default=0.2)
     parser.add_argument("--ent-coef", type=float, default=0.0)
+    parser.add_argument("--target-kl", type=float, default=0.03)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--name", type=str, default="ppo-cnn", help="실험 이름 (runs/<timestamp>_<name>/ 에 기록)")
+    parser.add_argument("--name", type=str, default="ppo-cnn-baseline1-1", help="실험 이름 (runs/<timestamp>_<name>/ 에 기록)")
     parser.add_argument("--save-path", type=str, default="model")
     parser.add_argument("--checkpoint-dir", type=str, default="checkpoints")
-    parser.add_argument("--save-freq", type=int, default=0, help="N 스텝마다 체크포인트 저장 (0=비활성)")
+    parser.add_argument("--save-freq", type=int, default=65536, help="N 스텝마다 체크포인트 저장 (0=비활성)")
     parser.add_argument("--resume", type=str, default="", help="이어서 학습할 체크포인트 zip 경로 (비워두면 새로 시작)")
     parser.add_argument("--resume-vecnormalize", type=str, default="", help="보상 정규화 통계 pkl (기본: resume 경로에서 자동 탐색)")
-    parser.add_argument("--eval", action="store_true", help="학습 종료 후 완주 평가")
     parser.add_argument("--eval-freq", type=int, default=65536, help="N 스텝마다 평가 로그 (0=비활성)")
     parser.add_argument("--eval-episodes", type=int, default=1)
+    parser.add_argument(
+        "--eval",
+        action="store_true",
+        help="호환용 옵션: 종료 평가는 기본적으로 실행됨",
+    )
+    parser.add_argument(
+        "--skip-final-eval",
+        action="store_true",
+        help="throughput 측정 등에서 학습 종료 평가를 생략",
+    )
     parser.add_argument("--eval-track-ids", type=str, default="")
-    parser.add_argument("--eval-seeds", type=str, default="")
+    parser.add_argument(
+        "--seen-eval-seeds",
+        "--eval-seeds",
+        dest="seen_eval_seeds",
+        type=str,
+        default="",
+        help="학습 seed 평가 목록 (기본: --seeds)",
+    )
+    parser.add_argument(
+        "--holdout-eval-seeds",
+        type=str,
+        default="10001,10002,10003,10004,10005,10006,10007,10008",
+        help="best model 선택용 미사용 seed 목록",
+    )
     return parser.parse_args()
+
+
+def ppo_training_kwargs(args):
+    return {
+        "learning_rate": args.learning_rate,
+        "n_steps": args.n_steps,
+        "batch_size": args.batch_size,
+        "n_epochs": args.n_epochs,
+        "gamma": args.gamma,
+        "clip_range": args.clip_range,
+        "ent_coef": args.ent_coef,
+        "target_kl": args.target_kl,
+    }
+
+
+def validate_training_options(args, seeds, holdout_eval_seeds):
+    if not holdout_eval_seeds:
+        raise ValueError("--holdout-eval-seeds must contain at least one seed")
+    overlapping_holdout_seeds = sorted(set(seeds) & set(holdout_eval_seeds))
+    if overlapping_holdout_seeds:
+        raise ValueError(
+            "--holdout-eval-seeds must not overlap --seeds: "
+            f"{overlapping_holdout_seeds}"
+        )
+    if args.eval and args.skip_final_eval:
+        raise ValueError("--eval and --skip-final-eval cannot be used together")
+    if Path(args.save_path).stem == BEST_MODEL_FILENAME:
+        raise ValueError(f"--save-path '{BEST_MODEL_FILENAME}' is reserved")
+    if args.save_freq < 0 or args.eval_freq < 0:
+        raise ValueError("--save-freq and --eval-freq must be non-negative")
+    if args.eval_episodes <= 0:
+        raise ValueError("--eval-episodes must be positive")
 
 
 def main():
@@ -269,9 +427,13 @@ def main():
     eval_track_ids = (
         [int(t) for t in args.eval_track_ids.split(",") if t.strip()] or track_ids
     )
-    eval_seeds = (
-        [int(s) for s in args.eval_seeds.split(",") if s.strip()] or seeds[:2]
+    seen_eval_seeds = (
+        [int(s) for s in args.seen_eval_seeds.split(",") if s.strip()] or seeds
     )
+    holdout_eval_seeds = [
+        int(s) for s in args.holdout_eval_seeds.split(",") if s.strip()
+    ]
+    validate_training_options(args, seeds, holdout_eval_seeds)
 
     config = {
         "variables_version": GAME_VARIABLES_VERSION,
@@ -291,19 +453,26 @@ def main():
         "batch_size": args.batch_size,
         "n_epochs": args.n_epochs,
         "gamma": args.gamma,
+        "clip_range": args.clip_range,
         "ent_coef": args.ent_coef,
+        "target_kl": args.target_kl,
         "seed": args.seed,
         "resume_from": args.resume or None,
         "resume_vecnormalize": args.resume_vecnormalize or None,
         "eval_track_ids": eval_track_ids,
-        "eval_seeds": eval_seeds,
+        "seen_eval_seeds": seen_eval_seeds,
+        "holdout_eval_seeds": holdout_eval_seeds,
         "eval_freq": args.eval_freq,
         "eval_episodes": args.eval_episodes,
+        "eval_requested": args.eval,
+        "skip_final_eval": args.skip_final_eval,
     }
 
     run_dir = tracking.new_run(args.name, config, command_line=" ".join(sys.argv))
-    sys.stdout = Tee(sys.stdout, run_dir / "train.log")
-    sys.stderr = Tee(sys.stderr, run_dir / "train.log")
+    train_log = run_dir / "train.log"
+    train_log.write_text("")
+    sys.stdout = Tee(sys.stdout, train_log)
+    sys.stderr = Tee(sys.stderr, train_log)
     print(f"run_dir: {run_dir}")
 
     checkpoint_dir = run_dir / args.checkpoint_dir
@@ -327,6 +496,9 @@ def main():
     print(f"seeds: {seeds}")
     print(f"n_envs: {args.n_envs}  total_timesteps: {args.total_timesteps}")
     print(f"reward_shaping: {reward_shaping}  norm_reward: {norm_reward}")
+    print(f"target_kl: {args.target_kl}")
+    print(f"seen eval seeds: {seen_eval_seeds}")
+    print(f"holdout eval seeds: {holdout_eval_seeds}")
     if args.resume:
         print(f"resume from: {args.resume}")
         print(f"resume vecnormalize: {vecnormalize_stats_path}")
@@ -351,52 +523,40 @@ def main():
         vec_env = raw_env
 
     if args.resume:
-        model = PPO.load(args.resume, env=vec_env)
+        model = PPO.load(
+            args.resume,
+            env=vec_env,
+            **ppo_training_kwargs(args),
+            seed=args.seed,
+        )
     else:
         model = PPO(
             "CnnPolicy",
             vec_env,
-            learning_rate=args.learning_rate,
-            n_steps=args.n_steps,
-            batch_size=args.batch_size,
-            n_epochs=args.n_epochs,
-            gamma=args.gamma,
-            ent_coef=args.ent_coef,
+            **ppo_training_kwargs(args),
             seed=args.seed,
             verbose=1,
             device="auto",
             policy_kwargs={"normalize_images": False},
         )
 
-    callbacks = []
-    if args.save_freq and args.save_freq > 0:
-        checkpoint_save_freq = max(args.save_freq // args.n_envs, 1)
-        callbacks.append(
-            CheckpointCallback(
-                save_freq=checkpoint_save_freq,
-                save_path=str(checkpoint_dir),
-                name_prefix=CHECKPOINT_PREFIX,
-                save_vecnormalize=True,
-                verbose=2,
-            )
-        )
-    callbacks.append(
-        EvalLogger(
-            eval_track_ids,
-            eval_seeds,
-            args.max_steps,
-            args.frame_skip,
-            args.eval_freq,
-            args.eval_episodes,
-            run_dir,
-        )
+    evaluator = HoldoutEvaluator(
+        eval_track_ids,
+        seen_eval_seeds,
+        holdout_eval_seeds,
+        args.max_steps,
+        args.frame_skip,
+        args.eval_episodes,
+        run_dir,
     )
-
-    reset_num_timesteps = not bool(args.resume)
-    model.learn(
-        total_timesteps=args.total_timesteps,
-        callback=callbacks,
-        reset_num_timesteps=reset_num_timesteps,
+    train_in_segments(
+        model,
+        args.total_timesteps,
+        args.save_freq,
+        args.eval_freq,
+        on_checkpoint=lambda step: save_checkpoint(model, checkpoint_dir, step),
+        on_evaluate=lambda is_final: evaluator.evaluate(model, is_final),
+        evaluate_final=not args.skip_final_eval,
     )
 
     model.save(str(save_path))
@@ -405,19 +565,6 @@ def main():
         vecnorm_path = run_dir / VECNORM_FILENAME
         model.get_vec_normalize_env().save(str(vecnorm_path))
         print(f"saved vecnormalize: {vecnorm_path}")
-
-    if args.eval:
-        print("=== 평가 시작 ===")
-        for tid in eval_track_ids:
-            for s in eval_seeds:
-                results = evaluate(model, tid, s, args.max_steps, args.frame_skip)
-                for r in results:
-                    status = "FINISHED" if r["finished"] else "DNF"
-                    print(
-                        f"track:{tid} seed:{s} steps:{r['steps']} "
-                        f"reward:{r['reward']:.2f} progress:{r['progress']:.4f} "
-                        f"lap_time_ms:{r['lap_time_ms']} {status}"
-                    )
 
     print("=== 학습 완료 ===")
 

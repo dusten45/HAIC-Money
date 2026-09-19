@@ -73,3 +73,7 @@ def log_metrics(run_dir: Path, metrics: dict) -> None:
     line = json.dumps(metrics, default=str)
     with open(run_dir / "metrics.jsonl", "a") as handle:
         handle.write(line + "\n")
+
+
+def write_json(path: Path, value: dict) -> None:
+    path.write_text(json.dumps(value, indent=2, default=str) + "\n")
