@@ -1,0 +1,59 @@
+run_dir: /workspace/HAIC-Money/runs/20260919-130758_throughput-8x2048
+=== HAIC PPO 학습 시작 ===
+variables version: variables-6
+track_ids: [1]
+seeds: [42, 1337, 2024, 777]
+n_envs: 8  total_timesteps: 49152
+reward_shaping: True  norm_reward: True
+target_kl: 0.03
+seen eval seeds: [42, 1337, 2024, 777]
+holdout eval seeds: [10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008]
+Using cuda device
+------------------------------
+| time/              |       |
+|    fps             | 162   |
+|    iterations      | 1     |
+|    time_elapsed    | 100   |
+|    total_timesteps | 16384 |
+------------------------------
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 158         |
+|    iterations           | 2           |
+|    time_elapsed         | 207         |
+|    total_timesteps      | 32768       |
+| train/                  |             |
+|    approx_kl            | 0.007806572 |
+|    clip_fraction        | 0.0889      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -4.24       |
+|    explained_variance   | 0.06        |
+|    learning_rate        | 0.0001      |
+|    loss                 | 0.0419      |
+|    n_updates            | 5           |
+|    policy_gradient_loss | -0.00858    |
+|    std                  | 0.991       |
+|    value_loss           | 0.194       |
+-----------------------------------------
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 157         |
+|    iterations           | 3           |
+|    time_elapsed         | 312         |
+|    total_timesteps      | 49152       |
+| train/                  |             |
+|    approx_kl            | 0.006854227 |
+|    clip_fraction        | 0.0764      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -4.22       |
+|    explained_variance   | 0.508       |
+|    learning_rate        | 0.0001      |
+|    loss                 | 0.0183      |
+|    n_updates            | 10          |
+|    policy_gradient_loss | -0.00853    |
+|    std                  | 0.984       |
+|    value_loss           | 0.0779      |
+-----------------------------------------
+saved model: /workspace/HAIC-Money/runs/20260919-130758_throughput-8x2048/model.zip
+saved vecnormalize: /workspace/HAIC-Money/runs/20260919-130758_throughput-8x2048/model_vecnormalize.pkl
+=== 학습 완료 ===
