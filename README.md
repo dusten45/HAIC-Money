@@ -417,8 +417,15 @@ Stable-Baselines3를 import하지 않습니다.
 정적 금지 import를 검사합니다.
 
 ```bash
-python package_submission.py --output submission.zip --smoke-test
+python package_submission.py \
+  --label baseline1-final \
+  --source-model runs/<run>/best_model.zip \
+  --smoke-test
 ```
+
+각 실행은 `submissions/<UTC timestamp>_<label>/submission.zip`과 `manifest.json`을
+생성합니다. manifest에는 생성 시각, source model, code commit, agent/model/ZIP SHA-256,
+그리고 smoke 결과가 기록됩니다. 기록된 submission archive는 수정하거나 덮어쓰지 않습니다.
 
 현재 작업 공간에는 Python 3.11 Docker가 없으므로, 업로드 전 Python 3.11 Linux 환경에서는
 같은 명령에 `--python python3.11`을 지정해 다시 확인해야 합니다.

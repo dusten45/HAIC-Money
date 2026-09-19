@@ -1,11 +1,13 @@
 import argparse
 import ast
+import hashlib
 import json
 import os
 import subprocess
 import sys
 import tempfile
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -36,6 +38,45 @@ BANNED_SUFFIXES = {
     ".scr",
     ".so",
 }
+
+
+def sha256_file(path: Path):
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def git_provenance():
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True
+        ).strip()
+        dirty = bool(
+            subprocess.check_output(
+                ["git", "status", "--porcelain"], text=True
+            ).strip()
+        )
+        return {"commit": commit, "dirty": dirty}
+    except (OSError, subprocess.CalledProcessError):
+        return {"commit": None, "dirty": None}
+
+
+def relative_path(path: Path):
+    try:
+        return str(path.resolve().relative_to(Path.cwd().resolve()))
+    except ValueError:
+        return str(path)
+
+
+def safe_label(label: str):
+    normalized = "".join(
+        character.lower() if character.isalnum() else "-" for character in label
+    ).strip("-")
+    if not normalized:
+        raise ValueError("--label must contain at least one alphanumeric character")
+    return normalized
 
 
 def model_filename(agent_path: Path):
@@ -183,11 +224,65 @@ print(json.dumps({
     return result
 
 
+def create_submission_record(
+    agent_path: Path,
+    model_path: Path,
+    source_model_path: Path | None,
+    submissions_dir: Path,
+    label: str,
+    smoke_test: bool,
+    python_executable: str,
+):
+    created_at = datetime.now(timezone.utc)
+    submission_id = f"{created_at.strftime('%Y%m%dT%H%M%SZ')}_{safe_label(label)}"
+    record_dir = submissions_dir / submission_id
+    record_dir.mkdir(parents=True)
+    archive_path = build_submission(agent_path, model_path, record_dir / "submission.zip")
+    smoke_result = smoke_submission(archive_path, python_executable) if smoke_test else None
+
+    source_model = None
+    if source_model_path is not None:
+        if not source_model_path.is_file():
+            raise FileNotFoundError(source_model_path)
+        source_model = {
+            "path": relative_path(source_model_path),
+            "sha256": sha256_file(source_model_path),
+            "bytes": source_model_path.stat().st_size,
+        }
+
+    manifest = {
+        "schema_version": 1,
+        "submission_id": submission_id,
+        "created_at_utc": created_at.isoformat().replace("+00:00", "Z"),
+        "git": git_provenance(),
+        "agent": {
+            "path": relative_path(agent_path),
+            "sha256": sha256_file(agent_path),
+        },
+        "model": {
+            "path": relative_path(model_path),
+            "sha256": sha256_file(model_path),
+            "bytes": model_path.stat().st_size,
+        },
+        "source_model": source_model,
+        "submission_zip": {
+            "path": "submission.zip",
+            "sha256": sha256_file(archive_path),
+            "bytes": archive_path.stat().st_size,
+        },
+        "smoke_test": smoke_result,
+    }
+    (record_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    return record_dir, manifest
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Build and validate a HAIC submission ZIP")
     parser.add_argument("--agent", type=Path, default=Path("agent.py"))
     parser.add_argument("--model", type=Path, default=Path("model.pt"))
-    parser.add_argument("--output", type=Path, default=Path("submission.zip"))
+    parser.add_argument("--source-model", type=Path)
+    parser.add_argument("--submissions-dir", type=Path, default=Path("submissions"))
+    parser.add_argument("--label", required=True, help="immutable submission record label")
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--python", default=sys.executable, help="CPU Python interpreter")
     return parser.parse_args()
@@ -195,10 +290,21 @@ def parse_args():
 
 def main():
     args = parse_args()
-    archive = build_submission(args.agent, args.model, args.output)
-    print(f"built submission: {archive} ({archive.stat().st_size} bytes)")
-    if args.smoke_test:
-        result = smoke_submission(archive, args.python)
+    record_dir, manifest = create_submission_record(
+        args.agent,
+        args.model,
+        args.source_model,
+        args.submissions_dir,
+        args.label,
+        args.smoke_test,
+        args.python,
+    )
+    print(
+        f"built submission record: {record_dir} "
+        f"({manifest['submission_zip']['bytes']} bytes)"
+    )
+    if manifest["smoke_test"] is not None:
+        result = manifest["smoke_test"]
         print(
             f"cpu smoke passed: init_ms={result['init_seconds'] * 1000:.1f} "
             f"act_ms={result['act_seconds'] * 1000:.1f}"
