@@ -37,7 +37,7 @@ class _RawEnvironment(gym.Env):
         )
         self.observation_space = gym.spaces.Box(0, 255, (96, 96, 3), np.uint8)
         self.car = _Car()
-        self.track = [None] * 20
+        self.track = [None] * 100
         self.tile_visited_count = 0
         self.raw_steps = 0
         self.actions = []
@@ -56,6 +56,11 @@ class _RawEnvironment(gym.Env):
         self.raw_steps += 1
         self.actions.append(np.asarray(action, dtype=np.float32).copy())
         self.tile_visited_count = self.raw_steps
+        self.car.hull.linearVelocity = (float(self.raw_steps), 0.0)
+        self.car.hull.angularVelocity = float(self.raw_steps) / 10.0
+        for index, wheel in enumerate(self.car.wheels):
+            wheel.omega = float(self.raw_steps + index)
+            wheel.joint.angle = float(self.raw_steps + index) / 100.0
         return self._image(), float(self.raw_steps), False, False, {"collision": False}
 
 
@@ -81,10 +86,28 @@ class TestTrainingCollector(unittest.TestCase):
         for action in raw_environment.actions[-4:]:
             np.testing.assert_array_equal(action, [0.25, 0.5, 0.0])
         self.assertEqual(transition.reward, 210.0)
-        self.assertEqual(transition.labels.speed, 5.0)
-        self.assertEqual(transition.labels.tile_progress, 1.0)
+        self.assertEqual(transition.labels.speed, 54.0)
+        self.assertEqual(transition.labels.tile_progress, 0.54)
         self.assertEqual(transition.label_timing, "next_decision")
         self.assertTrue(np.all(transition.hud_features.full_frame == 54.0 / 255.0))
+
+    def test_transition_labels_are_read_after_the_fourth_action_tick(self):
+        # Break caught: reading labels before the action or after an
+        # intermediate raw tick misaligns auxiliary targets with next_observation.
+        from training.env_factory import make_collecting_environment
+
+        raw_environment = _RawEnvironment()
+        environment = make_collecting_environment(raw_environment)
+        environment.reset(seed=17, options={"track_id": 3})
+
+        transition = environment.step_transition(np.array([0.25, 0.5, 0.0]))
+
+        self.assertEqual(raw_environment.raw_steps, 54)
+        self.assertEqual(transition.labels.speed, 54.0)
+        self.assertEqual(transition.labels.wheel_omega, (54.0, 55.0, 56.0, 57.0))
+        self.assertAlmostEqual(transition.labels.steering_angle, 0.545)
+        self.assertEqual(transition.labels.yaw_rate, 5.4)
+        self.assertEqual(transition.labels.tile_progress, 0.54)
 
     def test_split_rejects_an_episode_present_in_training_and_holdout(self):
         # Break caught: a future edit permits a held-out track/seed pair to
