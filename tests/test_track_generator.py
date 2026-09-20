@@ -163,6 +163,71 @@ class TestTrackGenerator(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "template"):
             generate_custom_map("custom-track-invalid", 1, "unknown")
 
+    def test_rejects_turn_radius_smaller_than_track_half_width(self):
+        from local_simulator.track_generator import validate_custom_geometry
+        from local_simulator.track_model import CustomTrackGeometry
+
+        points = (
+            (-30.0, -30.0), (-15.0, -30.0), (0.0, -30.0), (0.0, 0.0),
+            (3.0, 0.0), (3.0, 3.0), (30.0, 3.0), (30.0, 15.0),
+            (30.0, 30.0), (0.0, 30.0), (-30.0, 30.0), (-30.0, 0.0),
+        )
+        with self.assertRaisesRegex(ValueError, "turn radius"):
+            validate_custom_geometry(CustomTrackGeometry(centerline=points, width=8.0))
+
+    def test_generator_handles_width_limits_and_rejects_out_of_range_width(self):
+        from local_simulator.track_generator import generate_custom_map
+
+        for width in (0.5, 100.0):
+            document = generate_custom_map("custom-track-width", 73, "technical", width=width)
+            self.assertTrue(
+                all(
+                    abs(value) <= 100000
+                    for point in document.geometry.centerline
+                    for value in point
+                )
+            )
+        with self.assertRaisesRegex(ValueError, "width"):
+            generate_custom_map("custom-track-invalid-width", 73, "technical", width=100.1)
+
+    def test_generated_road_boundaries_do_not_intersect(self):
+        from local_simulator.track_generator import (
+            TEMPLATES,
+            _road_edges_intersect,
+            generate_custom_map,
+        )
+
+        for template in sorted(TEMPLATES):
+            document = generate_custom_map(f"custom-track-clearance-{template}", 73, template)
+            self.assertFalse(_road_edges_intersect(document.geometry))
+
+    def test_detects_overlapping_road_boundaries(self):
+        from local_simulator.track_generator import _road_edges_intersect
+        from local_simulator.track_model import CustomTrackGeometry
+
+        narrow_loop = CustomTrackGeometry(
+            centerline=(
+                (-20.0, -3.0), (-10.0, -3.0), (0.0, -3.0), (10.0, -3.0),
+                (20.0, -3.0), (23.0, 0.0), (20.0, 3.0), (10.0, 3.0),
+                (0.0, 3.0), (-10.0, 3.0), (-20.0, 3.0), (-23.0, 0.0),
+            ),
+            width=8.0,
+        )
+        self.assertTrue(_road_edges_intersect(narrow_loop))
+
+    def test_generated_profiles_validate_for_a_fixed_seed_range(self):
+        from local_simulator.track_generator import (
+            TEMPLATES,
+            generate_custom_map,
+            validate_custom_geometry,
+        )
+
+        for template in sorted(TEMPLATES):
+            for seed in range(100):
+                with self.subTest(template=template, seed=seed):
+                    document = generate_custom_map(f"custom-track-{template}-{seed}", seed, template)
+                    validate_custom_geometry(document.geometry)
+
 
 if __name__ == "__main__":
     unittest.main()

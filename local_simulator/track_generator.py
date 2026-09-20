@@ -96,6 +96,40 @@ def _segments_intersect(
     return False
 
 
+def _point_segment_distance(
+    point: tuple[float, float],
+    start: tuple[float, float],
+    end: tuple[float, float],
+) -> float:
+    dx = end[0] - start[0]
+    dy = end[1] - start[1]
+    length_squared = dx * dx + dy * dy
+    if length_squared <= 1e-18:
+        return _distance(point, start)
+    ratio = max(
+        0.0,
+        min(1.0, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / length_squared),
+    )
+    projection = (start[0] + ratio * dx, start[1] + ratio * dy)
+    return _distance(point, projection)
+
+
+def _segments_distance(
+    first_start: tuple[float, float],
+    first_end: tuple[float, float],
+    second_start: tuple[float, float],
+    second_end: tuple[float, float],
+) -> float:
+    if _segments_intersect(first_start, first_end, second_start, second_end):
+        return 0.0
+    return min(
+        _point_segment_distance(first_start, second_start, second_end),
+        _point_segment_distance(first_end, second_start, second_end),
+        _point_segment_distance(second_start, first_start, first_end),
+        _point_segment_distance(second_end, first_start, first_end),
+    )
+
+
 def _are_adjacent(first_index: int, second_index: int, count: int) -> bool:
     if first_index == second_index:
         return True
@@ -103,6 +137,101 @@ def _are_adjacent(first_index: int, second_index: int, count: int) -> bool:
         return True
     if (second_index + 1) % count == first_index:
         return True
+    return False
+
+
+def _road_boundaries(
+    geometry: CustomTrackGeometry,
+) -> tuple[tuple[tuple[float, float], ...], tuple[tuple[float, float], ...]]:
+    points = geometry.centerline
+    left: list[tuple[float, float]] = []
+    right: list[tuple[float, float]] = []
+    for index, point in enumerate(points):
+        previous = points[(index - 1) % len(points)]
+        following = points[(index + 1) % len(points)]
+        incoming_length = _distance(previous, point)
+        outgoing_length = _distance(point, following)
+        incoming = (
+            (point[0] - previous[0]) / incoming_length,
+            (point[1] - previous[1]) / incoming_length,
+        )
+        outgoing = (
+            (following[0] - point[0]) / outgoing_length,
+            (following[1] - point[1]) / outgoing_length,
+        )
+        incoming_normal = (-incoming[1], incoming[0])
+        outgoing_normal = (-outgoing[1], outgoing[0])
+        normal_x = incoming_normal[0] + outgoing_normal[0]
+        normal_y = incoming_normal[1] + outgoing_normal[1]
+        normal_length = math.hypot(normal_x, normal_y)
+        if normal_length <= 1e-9:
+            normal_x, normal_y = outgoing_normal
+            normal_length = 1.0
+        normal = (normal_x / normal_length, normal_y / normal_length)
+        denominator = abs(normal[0] * incoming_normal[0] + normal[1] * incoming_normal[1])
+        miter_length = min(geometry.width / max(denominator, 1e-6), geometry.width * 4.0)
+        offset = (normal[0] * miter_length, normal[1] * miter_length)
+        left.append((point[0] + offset[0], point[1] + offset[1]))
+        right.append((point[0] - offset[0], point[1] - offset[1]))
+    return tuple(left), tuple(right)
+
+
+def _road_edges_intersect(geometry: CustomTrackGeometry) -> bool:
+    points = geometry.centerline
+    count = len(points)
+    boundaries = _road_boundaries(geometry)
+    for boundary in boundaries:
+        for first_index in range(count):
+            first_start = boundary[first_index]
+            first_end = boundary[(first_index + 1) % count]
+            for second_index in range(first_index + 1, count):
+                if _are_adjacent(first_index, second_index, count):
+                    continue
+                second_start = boundary[second_index]
+                second_end = boundary[(second_index + 1) % count]
+                if (
+                    max(first_start[0], first_end[0]) + 1e-9
+                    < min(second_start[0], second_end[0])
+                    or max(second_start[0], second_end[0]) + 1e-9
+                    < min(first_start[0], first_end[0])
+                    or max(first_start[1], first_end[1]) + 1e-9
+                    < min(second_start[1], second_end[1])
+                    or max(second_start[1], second_end[1]) + 1e-9
+                    < min(first_start[1], first_end[1])
+                ):
+                    continue
+                if _segments_intersect(first_start, first_end, second_start, second_end):
+                    return True
+
+    segment_lengths = [
+        _distance(points[index], points[(index + 1) % count])
+        for index in range(count)
+    ]
+    total_length = sum(segment_lengths)
+    midpoint_distances: list[float] = []
+    cumulative = 0.0
+    for length in segment_lengths:
+        midpoint_distances.append(cumulative + length * 0.5)
+        cumulative += length
+    # Ignore nearby samples along the same smooth bend; the 8-unit floor is
+    # twice the generator's maximum segment spacing.
+    required_arc_separation = max(geometry.width * 4.0, 8.0)
+    minimum_centerline_distance = geometry.width * 2.0
+    for first_index in range(count):
+        first_midpoint = midpoint_distances[first_index]
+        first_start = points[first_index]
+        first_end = points[(first_index + 1) % count]
+        for second_index in range(first_index + 1, count):
+            if _are_adjacent(first_index, second_index, count):
+                continue
+            separation = abs(midpoint_distances[second_index] - first_midpoint)
+            separation = min(separation, total_length - separation)
+            if separation <= required_arc_separation:
+                continue
+            second_start = points[second_index]
+            second_end = points[(second_index + 1) % count]
+            if _segments_distance(first_start, first_end, second_start, second_end) < minimum_centerline_distance:
+                return True
     return False
 
 
@@ -150,6 +279,23 @@ def validate_custom_geometry(geometry: CustomTrackGeometry) -> None:
         )
         if cosine < -0.995:
             raise ValueError(f"centerline turn is too sharp at point {index}")
+
+        side_a = incoming_length
+        side_b = outgoing_length
+        side_c = _distance(previous, following)
+        doubled_area = abs(_cross(previous, point, following))
+        if doubled_area > 1e-9:
+            radius = side_a * side_b * side_c / (2.0 * doubled_area)
+            # CustomCarRacing offsets each edge by geometry.width, so this
+            # field is the road half-width in world units.
+            minimum_radius = geometry.width * 1.05
+            if radius < minimum_radius:
+                raise ValueError(
+                    f"turn radius {radius:.6g} is below minimum {minimum_radius:.6g} at point {index}"
+                )
+
+    if _road_edges_intersect(geometry):
+        raise ValueError("road boundaries intersect or overlap")
 
 
 def custom_geometry_fingerprint(geometry: CustomTrackGeometry) -> str:
@@ -261,15 +407,11 @@ def _angle_gaps(rng: _TrackRng, count: int) -> tuple[float, ...]:
     return tuple(base + factor * (gap - base) for gap in raw_gaps)
 
 
-def _generate_geometry(
+def _build_geometry_candidate(
     template: str,
     design_seed: int,
     width: float,
 ) -> tuple[CustomTrackGeometry, tuple[str, ...]]:
-    if template not in TEMPLATES:
-        raise ValueError(f"template must be one of {sorted(TEMPLATES)}")
-    design_seed = _require_int("design_seed", design_seed, 0, MAX_SEED)
-    width = _require_float("width", width, 0.5, 100.0)
     rng = _TrackRng(design_seed)
     sequence = _corner_sequence(template, rng)
     count = len(sequence)
@@ -305,7 +447,6 @@ def _generate_geometry(
         )
         angle += gaps[index]
 
-    trim_ratios = {"wide": 0.30, "medium": 0.25, "tight": 0.21, "hairpin": 0.19}
     incoming_points: list[tuple[float, float]] = []
     outgoing_points: list[tuple[float, float]] = []
     for index, anchor in enumerate(anchors):
@@ -314,9 +455,33 @@ def _generate_geometry(
         incoming_length = _distance(anchor, previous)
         outgoing_length = _distance(anchor, following)
         corner_class = sequence[index].split(":", 1)[1]
+        previous_ray = (
+            (previous[0] - anchor[0]) / incoming_length,
+            (previous[1] - anchor[1]) / incoming_length,
+        )
+        following_ray = (
+            (following[0] - anchor[0]) / outgoing_length,
+            (following[1] - anchor[1]) / outgoing_length,
+        )
+        interior_cosine = max(
+            -1.0,
+            min(1.0, previous_ray[0] * following_ray[0] + previous_ray[1] * following_ray[1]),
+        )
+        deflection = math.pi - math.acos(interior_cosine)
+        half_deflection = deflection * 0.5
+        radius_target = {
+            "wide": 2.2,
+            "medium": 1.8,
+            "tight": 1.35,
+            "hairpin": 1.25,
+        }[corner_class] * width
+        quadratic_radius_factor = math.sin(half_deflection) / max(
+            math.cos(half_deflection) ** 2,
+            1e-9,
+        )
         trim = min(
-            trim_ratios[corner_class] * min(incoming_length, outgoing_length),
-            0.35 * min(incoming_length, outgoing_length),
+            radius_target * quadratic_radius_factor,
+            0.45 * min(incoming_length, outgoing_length),
         )
         incoming_points.append(_interpolate(anchor, previous, trim / incoming_length))
         outgoing_points.append(_interpolate(anchor, following, trim / outgoing_length))
@@ -351,8 +516,29 @@ def _generate_geometry(
     if len(quantized) > MAX_CENTERLINE_POINTS:
         raise ValueError(f"generated centerline exceeds {MAX_CENTERLINE_POINTS} points")
     geometry = CustomTrackGeometry(centerline=quantized, width=width)
-    validate_custom_geometry(geometry)
     return geometry, sequence
+
+
+def _generate_geometry(
+    template: str,
+    design_seed: int,
+    width: float,
+) -> tuple[CustomTrackGeometry, tuple[str, ...]]:
+    if template not in TEMPLATES:
+        raise ValueError(f"template must be one of {sorted(TEMPLATES)}")
+    design_seed = _require_int("design_seed", design_seed, 0, MAX_SEED)
+    width = _require_float("width", width, 0.5, 100.0)
+    last_error: ValueError | None = None
+    for attempt in range(32):
+        attempt_seed = (design_seed + attempt * 0x9E3779B9) & 0xFFFFFFFF
+        geometry, sequence = _build_geometry_candidate(template, attempt_seed, width)
+        try:
+            validate_custom_geometry(geometry)
+        except ValueError as error:
+            last_error = error
+            continue
+        return geometry, sequence
+    raise ValueError(f"could not generate a valid {template} track: {last_error}")
 
 
 def generate_custom_map(

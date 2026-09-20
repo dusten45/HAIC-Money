@@ -59,6 +59,23 @@ class TestCustomEnvironment(unittest.TestCase):
         finally:
             environment.close()
 
+    def test_every_generated_template_runs_in_custom_environment(self):
+        from local_simulator.environment import create_environment, reset_environment
+        from local_simulator.track_generator import TEMPLATES, generate_custom_map
+
+        for template in sorted(TEMPLATES):
+            document = generate_custom_map(f"custom-track-env-{template}", 73, template)
+            environment, _raw = create_environment(document, render_mode=None)
+            try:
+                observation, _info = reset_environment(environment, document)
+                self.assertEqual(observation.shape, (4, 84, 84))
+                next_observation, *_ = environment.step(
+                    np.array([0.0, 1.0, 0.0], dtype=np.float32)
+                )
+                self.assertEqual(next_observation.shape, (4, 84, 84))
+            finally:
+                environment.close()
+
 
 if __name__ == "__main__":
     unittest.main()
