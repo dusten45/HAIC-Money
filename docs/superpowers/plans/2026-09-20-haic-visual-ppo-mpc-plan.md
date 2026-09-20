@@ -42,14 +42,14 @@
 - 생성: tests/test_hud_features.py
 - 수정: .gitignore
 
-- [ ] 개발 가상환경에서 gymnasium, Box2D, torch, numpy, cv2, pygame import와 CarEnvironment reset/step을 확인한다. 이 설치 확인에만 Windows용 Box2D wheel을 쓰며 공식 requirements.txt는 수정하지 않는다.
-- [ ] env_factory에 학습용 CarEnvironment 생성을 구현한다. warmup 50 raw tick, frame skip 4, stack 4와 전처리를 공식 로컬 경로와 맞춘다.
-- [ ] labels에 수집기 전용 레이블을 정의한다: 속도, 네 바퀴 회전 신호, 조향각, yaw 속도, 타일 진행률, 충돌, 손상, off-track, finish. 현재 decision observation/action과 다음 observation 및 합산 reward를 한 transition으로 반환한다.
-- [ ] HUD ROI 추출은 84×84 이미지에서만 동작하게 하고, 각 ROI 출력과 전체 프레임을 함께 보존한다. 원본 시뮬레이터 상태값은 ROI 보정과 보조 학습 레이블로만 쓴다.
-- [ ] haic_agent/observation.py에 inference-safe HUD ROI 인터페이스를 두고 training/labels.py도 같은 함수를 사용한다.
-- [ ] .gitignore에는 학습 checkpoint, 평가 보고서, 제출 zip을 모을 artifacts/haic/만 추가한다. 이후 작업은 이 파일을 수정하지 않는다.
-- [ ] 결정론적 track_id/seed 목록을 학습, 튜닝, 보류 검증으로 분리하는 split 함수를 추가하고, 세트 중복을 거부한다.
-- [ ] 테스트 우선 작성: observation shape/range, reset 시 네 프레임 반복, 한 transition당 action 한 번과 raw tick 네 번, HUD crop 좌표와 레이블 시점 정렬, seed set 교집합 없음.
+- [x] 개발 가상환경에서 gymnasium, Box2D, torch, numpy, cv2, pygame import와 CarEnvironment reset/step을 확인한다. 이 설치 확인에만 Windows용 Box2D wheel을 쓰며 공식 requirements.txt는 수정하지 않는다.
+- [x] env_factory에 학습용 CarEnvironment 생성을 구현한다. warmup 50 raw tick, frame skip 4, stack 4와 전처리를 공식 로컬 경로와 맞춘다.
+- [x] labels에 수집기 전용 레이블을 정의한다: 속도, 네 바퀴 회전 신호, 조향각, yaw 속도, 타일 진행률, 충돌, 손상, off-track, finish. 현재 decision observation/action과 다음 observation 및 합산 reward를 한 transition으로 반환한다.
+- [x] HUD ROI 추출은 84×84 이미지에서만 동작하게 하고, 각 ROI 출력과 전체 프레임을 함께 보존한다. 원본 시뮬레이터 상태값은 ROI 보정과 보조 학습 레이블로만 쓴다.
+- [x] haic_agent/observation.py에 inference-safe HUD ROI 인터페이스를 두고 training/labels.py도 같은 함수를 사용한다.
+- [x] .gitignore에는 학습 checkpoint, 평가 보고서, 제출 zip을 모을 artifacts/haic/만 추가한다. 이후 작업은 이 파일을 수정하지 않는다.
+- [x] 결정론적 track_id/seed 목록을 학습, 튜닝, 보류 검증으로 분리하는 split 함수를 추가하고, 세트 중복을 거부한다.
+- [x] 테스트 우선 작성: observation shape/range, reset 시 네 프레임 반복, 한 transition당 action 한 번과 raw tick 네 번, HUD crop 좌표와 레이블 시점 정렬, seed set 교집합 없음.
 - [ ] 20개 이상의 서로 다른 주행 프레임에서 HUD branch가 속도·조향·yaw 보조 레이블을 추정하는 기준 오차를 기록한다. 부정확한 계기판 채널은 제거 가능하도록 입력 feature를 선택적으로 둔다.
 
 **통과 기준:** 기존 local contract 테스트와 새 수집기 테스트가 통과한다. 학습 로그에는 원시 상태 레이블과 관측/행동 전이의 시점 대응이 남고, 추론 Agent에 레이블 객체를 넘기는 경로가 없다.
@@ -66,13 +66,13 @@
 - 생성: tests/test_policy_network.py
 - 생성: tests/test_ppo_update.py
 
-- [ ] 네 프레임 전체를 받는 작은 CNN encoder와 고정 HUD ROI encoder를 구현하고, feature를 하나의 latent vector로 융합한다. HUD ROI branch는 전체 장면 branch를 대체하지 않는다.
-- [ ] actor-critic이 연속 조향·가속·제동 분포, value, 속도/휠/조향/yaw 보조 예측을 출력하도록 한다. 행동 변환은 steer [-1,1], gas/brake [0,1]을 보장하고 PPO log probability 계산과 일치시킨다.
-- [ ] rollout 저장소, terminal/truncation 처리, GAE, advantage 정규화, PPO clipped objective와 entropy/value/보조 손실을 구현한다.
-- [ ] 수집 전용 레이블과 reward를 구성한다. 새 도로 진행과 완주를 높이고 충돌, 오프트랙, 시간 경과를 낮춘다. 완료 순위와 독립적으로 공식 로컬 환경의 종료 조건도 함께 기록한다.
-- [ ] training/train_policy.py에 고정 seed, train/tune/held-out 분리, 저장 재개, 체크포인트 평가를 넣는다. smoke 실행은 짧게, 전체 학습 step은 인자로 조정 가능하게 한다.
-- [ ] 테스트 우선 작성: 출력 shape와 유한성, 행동 범위, 분포 log probability 유한성, 한 rollout minibatch에서 PPO 파라미터와 손실이 실제 갱신되는지, 종료 transition에서 GAE가 다음 에피소드로 새지 않는지.
-- [ ] HUD branch 포함/제외 ablation을 튜닝 split에서 측정해 보조 추정과 주행 성공에 기여하는지 확인한다.
+- [x] 네 프레임 전체를 받는 작은 CNN encoder와 고정 HUD ROI encoder를 구현하고, feature를 하나의 latent vector로 융합한다. HUD ROI branch는 전체 장면 branch를 대체하지 않는다.
+- [x] actor-critic이 연속 조향·가속·제동 분포, value, 속도/휠/조향/yaw 보조 예측을 출력하도록 한다. 행동 변환은 steer [-1,1], gas/brake [0,1]을 보장하고 PPO log probability 계산과 일치시킨다.
+- [x] rollout 저장소, terminal/truncation 처리, GAE, advantage 정규화, PPO clipped objective와 entropy/value/보조 손실을 구현한다.
+- [x] 수집 전용 레이블과 reward를 구성한다. 새 도로 진행과 완주를 높이고 충돌, 오프트랙, 시간 경과를 낮춘다. 완료 순위와 독립적으로 공식 로컬 환경의 종료 조건도 함께 기록한다.
+- [x] training/train_policy.py에 고정 seed, train/tune/held-out 분리, 저장 재개, 체크포인트 평가를 넣는다. smoke 실행은 짧게, 전체 학습 step은 인자로 조정 가능하게 한다.
+- [x] 테스트 우선 작성: 출력 shape와 유한성, 행동 범위, 분포 log probability 유한성, 한 rollout minibatch에서 PPO 파라미터와 손실이 실제 갱신되는지, 종료 transition에서 GAE가 다음 에피소드로 새지 않는지.
+- [x] HUD branch 포함/제외 ablation을 튜닝 split에서 측정해 보조 추정과 주행 성공에 기여하는지 확인한다.
 
 **통과 기준:** 짧은 CPU smoke 학습에서 loss와 gradient가 유한하고 checkpoint를 저장·다시 읽을 수 있다. 학습 중 추론 입력 형식은 공식 관측과 일치하며, 기준 모델 선택 지표는 누적 reward가 아니라 완주율 우선이다.
 
@@ -84,11 +84,11 @@
 - 생성: training/train_dynamics.py
 - 생성: tests/test_latent_dynamics.py
 
-- [ ] 정책 encoder latent와 현재 action을 받아 다음 latent의 변화량을 예측하는 작은 모델 여러 개를 구현한다.
-- [ ] 보조 head가 다음 시점 진행량/reward, collision 위험, off-track 위험을 예측한다. collision과 off-track은 희귀하므로 샘플 가중치 또는 균형 배치를 지원한다.
-- [ ] 정책 수집 transition으로 앙상블을 학습하고, holdout에서 latent 예측 오차와 위험 분류 지표를 기록한다. 레이블은 학습 과정에서만 읽는다.
-- [ ] 앙상블 간 예측 차이를 불확실성으로 산출하고, 학습 데이터 범위 밖에서 불확실성이 커지는지 검사한다.
-- [ ] 테스트 우선 작성: batch/horizon 차원, action cadence 정렬, finite next latent 및 위험 확률, 모델 간 불일치 점수, 작은 합성 transition 집합에서 손실 감소.
+- [x] 정책 encoder latent와 현재 action을 받아 다음 latent의 변화량을 예측하는 작은 모델 여러 개를 구현한다.
+- [x] 보조 head가 다음 시점 진행량/reward, collision 위험, off-track 위험을 예측한다. collision과 off-track은 희귀하므로 샘플 가중치 또는 균형 배치를 지원한다.
+- [x] 정책 수집 transition으로 앙상블을 학습하고, holdout에서 latent 예측 오차와 위험 분류 지표를 기록한다. 레이블은 학습 과정에서만 읽는다.
+- [x] 앙상블 간 예측 차이를 불확실성으로 산출하고, 학습 데이터 범위 밖에서 불확실성이 커지는지 검사한다.
+- [x] 테스트 우선 작성: batch/horizon 차원, action cadence 정렬, finite next latent 및 위험 확률, 모델 간 불일치 점수, 작은 합성 transition 집합에서 손실 감소.
 
 **통과 기준:** 평가 시 simulator import 없이 모델이 프레임에서 만든 latent/action만으로 예측한다. holdout 예측이 PPO 단독보다 명백히 비정상적인 위험 행동을 추천하지 않도록 불확실성 비용이 실제 후보 점수에 반영된다.
 
@@ -102,13 +102,13 @@
 - 생성: tests/test_agent_inference.py
 - 수정: local_runner.py
 
-- [ ] CEM은 PPO 행동 분포와 이전 계획을 초기 후보로 사용하고, 학습 전이 모델의 짧은 action sequence rollout으로 진행량, 시간 비용, collision/off-track 위험, ensemble uncertainty를 평가한다.
-- [ ] 기본 horizon과 population을 CPU에서 조정 가능하게 두고, 최고 시퀀스의 첫 행동만 실행한다. 다음 act에서는 이전 계획을 한 칸 이동해 재사용한다.
-- [ ] act 진입 직후부터 전체 호출을 재는 monotonic clock deadline을 둔다. 기본 예산은 4.5초이고 5초 전에 끝낸다. CEM candidate batch는 CPU에서 호출당 제한시간을 넘지 않는 크기로 고정한다. 수렴 시 조기 반환하며, 유효 계획이 없거나 시간이 끝나면 PPO의 즉시 행동을 반환한다.
-- [ ] Agent.reset은 계획 캐시와 모든 episode state를 초기화한다. Agent.act은 입력 shape/range를 확인하고 torch inference mode로 계산하며 유한한 범위 내 행동만 반환한다.
-- [ ] 추론 코드에서 시뮬레이터 모듈과 원시 state label import가 없는지 검사한다. import 금지 목록과 정적 제출 검사 규칙은 README의 제출 규약에 맞춘다.
-- [ ] local_runner에 계획 예산 선택 옵션을 더해 짧은 예산의 빠른 폐쇄루프 점검을 지원한다. 기본값은 Agent와 동일하게 4.5초로 유지한다.
-- [ ] 테스트 우선 작성: warm start 이동, reset 격리, 정책 단독 fallback, invalid/NaN 모델 출력 fallback, plan horizon shape, 예산 소진 전 유효 행동 반환, 4.5초 미만의 act 상한, 반복 episode 간 캐시 오염 없음.
+- [x] CEM은 PPO 행동 분포와 이전 계획을 초기 후보로 사용하고, 학습 전이 모델의 짧은 action sequence rollout으로 진행량, 시간 비용, collision/off-track 위험, ensemble uncertainty를 평가한다.
+- [x] 기본 horizon과 population을 CPU에서 조정 가능하게 두고, 최고 시퀀스의 첫 행동만 실행한다. 다음 act에서는 이전 계획을 한 칸 이동해 재사용한다.
+- [x] act 진입 직후부터 전체 호출을 재는 monotonic clock deadline을 둔다. 기본 예산은 4.5초이고 5초 전에 끝낸다. CEM candidate batch는 CPU에서 호출당 제한시간을 넘지 않는 크기로 고정한다. 수렴 시 조기 반환하며, 유효 계획이 없거나 시간이 끝나면 PPO의 즉시 행동을 반환한다.
+- [x] Agent.reset은 계획 캐시와 모든 episode state를 초기화한다. Agent.act은 입력 shape/range를 확인하고 torch inference mode로 계산하며 유한한 범위 내 행동만 반환한다.
+- [x] 추론 코드에서 시뮬레이터 모듈과 원시 state label import가 없는지 검사한다. import 금지 목록과 정적 제출 검사 규칙은 README의 제출 규약에 맞춘다.
+- [x] local_runner에 계획 예산 선택 옵션을 더해 짧은 예산의 빠른 폐쇄루프 점검을 지원한다. 기본값은 Agent와 동일하게 4.5초로 유지한다.
+- [x] 테스트 우선 작성: warm start 이동, reset 격리, 정책 단독 fallback, invalid/NaN 모델 출력 fallback, plan horizon shape, 예산 소진 전 유효 행동 반환, 4.5초 미만의 act 상한, 반복 episode 간 캐시 오염 없음.
 
 **통과 기준:** 모든 경로에서 행동은 유효하고 5초 제한을 넘지 않는다. 정상적인 주행 방향 선택은 정책과 학습 모델에서 오며, 코드 규칙은 결과 검증과 fallback만 수행한다.
 
@@ -133,7 +133,7 @@
 
 ## 전체 완료 검증
 
-- [x] 개발 가상환경에서 기존 테스트와 새 단위 테스트 실행: 78 passed, 1 expected server-parity skip.
+- [x] 개발 가상환경에서 기존 테스트와 새 단위 테스트 실행: 79 passed, 1 expected server-parity skip.
 - [x] PPO 256 decision update와 같은 checkpoint 기반 dynamics 128 update를 실행하고 checkpoint를 저장했다.
 - [x] 0.05초/2-decision 및 0.1초/300-decision fast-budget 폐쇄루프를 기록했다.
 - [x] 기본 4.5초, 2,000 cap PPO-only episode의 실제 종료와 호출/전체 시간을 기록했다.
