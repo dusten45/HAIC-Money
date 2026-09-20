@@ -87,7 +87,7 @@ def collect_rollout(
                 observation_tensor = torch.from_numpy(observation).unsqueeze(0)
                 with torch.no_grad():
                     output = model(observation_tensor)
-                    action, log_probability = model.sample_actions(output)
+                    action, log_probability, pretransform_action = model.sample_actions_with_pretransform(output)
                 transition = environment.step_transition(action.squeeze(0).cpu().numpy())
                 with torch.no_grad():
                     next_value = model(
@@ -96,6 +96,7 @@ def collect_rollout(
                 storage.add(
                     observation=observation_tensor.squeeze(0),
                     action=action.squeeze(0),
+                    pretransform_action=pretransform_action.squeeze(0),
                     log_probability=log_probability.item(),
                     value=output.value.item(),
                     next_value=next_value,
@@ -214,6 +215,7 @@ def evaluate_policy(
     return {
         "finish_rate": float(np.mean([result["finished"] for result in results])) if results else 0.0,
         "median_finished_lap_time_s": float(np.median(finish_times)) if finish_times else None,
+        "p90_finished_lap_time_s": float(np.percentile(finish_times, 90)) if finish_times else None,
         "mean_progress": float(np.mean([result["progress"] for result in results])) if results else 0.0,
         "mean_reward": float(np.mean([result["reward"] for result in results])) if results else 0.0,
         "auxiliary_mse": float(np.mean([result["auxiliary_mse"] for result in results])) if results else 0.0,
@@ -222,11 +224,13 @@ def evaluate_policy(
     }
 
 
-def selection_score(metrics: dict[str, float | None]) -> tuple[float, float, float]:
-    """Order checkpoints by completion, finished-lap time, then progress only."""
+def selection_score(metrics: dict[str, float | None]) -> tuple[float, float, float, float]:
+    """Order checkpoints by completion, median/p90 finished lap time, then progress."""
     lap_time = metrics["median_finished_lap_time_s"]
+    p90_lap_time = metrics.get("p90_finished_lap_time_s", lap_time)
     lap_component = -float(lap_time) if lap_time is not None else float("-inf")
-    return float(metrics["finish_rate"]), lap_component, float(metrics["mean_progress"])
+    p90_component = -float(p90_lap_time) if p90_lap_time is not None else float("-inf")
+    return float(metrics["finish_rate"]), lap_component, p90_component, float(metrics["mean_progress"])
 
 
 def hud_ablation(
@@ -271,7 +275,7 @@ def train(
         "split": {"train": split.train, "tune": split.tune, "held_out": split.held_out},
         "tune_metrics": tune_metrics,
         "hud_ablation": ablation,
-        "selection_metric": "finish_rate, negative_median_finished_lap_time_s, mean_progress",
+        "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress",
     }
     checkpoint_updated = save_best_checkpoint(
         checkpoint,

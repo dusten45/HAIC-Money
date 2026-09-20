@@ -10,6 +10,7 @@ from torch import Tensor
 class RolloutStep:
     observation: Tensor
     action: Tensor
+    pretransform_action: Tensor
     log_probability: float
     value: float
     next_value: float
@@ -25,6 +26,7 @@ class RolloutStep:
 class RolloutBatch:
     observations: Tensor
     actions: Tensor
+    pretransform_actions: Tensor
     old_log_probabilities: Tensor
     advantages: Tensor
     returns: Tensor
@@ -45,6 +47,7 @@ class RolloutStorage:
         *,
         observation: Tensor,
         action: Tensor,
+        pretransform_action: Tensor,
         log_probability: float,
         value: float,
         next_value: float,
@@ -57,6 +60,7 @@ class RolloutStorage:
             RolloutStep(
                 observation=observation.detach().cpu().float().clone(),
                 action=action.detach().cpu().float().clone(),
+                pretransform_action=pretransform_action.detach().cpu().float().clone(),
                 log_probability=float(log_probability),
                 value=float(value),
                 next_value=float(next_value),
@@ -98,6 +102,7 @@ class RolloutStorage:
         return RolloutBatch(
             observations=torch.stack([step.observation for step in self.steps]),
             actions=torch.stack([step.action for step in self.steps]),
+            pretransform_actions=torch.stack([step.pretransform_action for step in self.steps]),
             old_log_probabilities=torch.tensor(
                 [step.log_probability for step in self.steps], dtype=torch.float32
             ),

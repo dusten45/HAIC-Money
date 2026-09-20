@@ -14,10 +14,11 @@ class TestRolloutAdvantages(unittest.TestCase):
 
         storage = RolloutStorage()
         observation = torch.zeros(4, 84, 84)
-        action = torch.tensor([0.0, 0.5, 0.0])
+        action = torch.tensor([0.0, 0.5, 0.5])
         storage.add(
             observation=observation,
             action=action,
+            pretransform_action=torch.zeros(3),
             log_probability=0.0,
             value=0.5,
             next_value=999.0,
@@ -29,6 +30,7 @@ class TestRolloutAdvantages(unittest.TestCase):
         storage.add(
             observation=observation,
             action=action,
+            pretransform_action=torch.zeros(3),
             log_probability=0.0,
             value=0.0,
             next_value=0.0,
@@ -45,6 +47,71 @@ class TestRolloutAdvantages(unittest.TestCase):
 
 
 class TestPPOUpdate(unittest.TestCase):
+    def test_rollout_preserves_saturated_pretransform_actions_for_ppo_log_probability(self):
+        # Break caught: reconstructing a saturated bounded action with atanh or
+        # logit loses its sampled Normal value, changing PPO's ratio despite an
+        # unchanged policy.
+        from haic_agent.networks import VisualActorCritic
+        from training.rollout import RolloutStorage
+
+        model = VisualActorCritic()
+        output = model(torch.zeros(2, 4, 84, 84))
+        pretransform_actions = torch.tensor(
+            [[20.0, 100.0, -100.0], [-20.0, -100.0, 100.0]], dtype=torch.float32
+        )
+        bounded_actions = model._bound_actions(pretransform_actions)
+        old_log_probabilities = model.log_probability_from_pretransform(
+            pretransform_actions, output.action_mean, output.action_log_std
+        )
+        storage = RolloutStorage()
+        for index in range(2):
+            storage.add(
+                observation=torch.zeros(4, 84, 84),
+                action=bounded_actions[index],
+                pretransform_action=pretransform_actions[index],
+                log_probability=old_log_probabilities[index].item(),
+                value=0.0,
+                next_value=0.0,
+                reward=0.0,
+                terminated=False,
+                truncated=index == 1,
+                auxiliary_targets=torch.zeros(7),
+            )
+        storage.compute_returns_and_advantages(gamma=0.99, gae_lambda=0.95)
+        batch = storage.batch()
+        recomputed_log_probabilities = model.log_probability_from_pretransform(
+            batch.pretransform_actions, output.action_mean, output.action_log_std
+        )
+
+        self.assertTrue(torch.all(bounded_actions[:, 0].abs() == 1.0))
+        self.assertTrue(torch.all((bounded_actions[:, 1:] == 0.0) | (bounded_actions[:, 1:] == 1.0)))
+        torch.testing.assert_close(batch.old_log_probabilities, old_log_probabilities)
+        torch.testing.assert_close(recomputed_log_probabilities, old_log_probabilities)
+
+    def test_checkpoint_selection_uses_p90_finished_lap_time_before_progress(self):
+        # Break caught: selecting by progress after tied medians can replace a
+        # more reliable completed-lap candidate with a worse p90 lap time.
+        from training.train_policy import selection_score
+
+        slower_p90_more_progress = selection_score(
+            {
+                "finish_rate": 0.5,
+                "median_finished_lap_time_s": 20.0,
+                "p90_finished_lap_time_s": 30.0,
+                "mean_progress": 0.9,
+            }
+        )
+        faster_p90_less_progress = selection_score(
+            {
+                "finish_rate": 0.5,
+                "median_finished_lap_time_s": 20.0,
+                "p90_finished_lap_time_s": 25.0,
+                "mean_progress": 0.1,
+            }
+        )
+
+        self.assertGreater(faster_p90_less_progress, slower_p90_more_progress)
+
     def test_best_checkpoint_rejects_lower_ranked_candidates_and_persists_the_winner(self):
         # Break caught: unconditional policy.pt writes can replace a completed
         # fast-lap checkpoint with a lower-finish-rate or slower-lap candidate.
@@ -220,11 +287,12 @@ class TestPPOUpdate(unittest.TestCase):
             next_observation = torch.rand(4, 84, 84)
             with torch.no_grad():
                 output = model(observation.unsqueeze(0))
-                action, log_probability = model.sample_actions(output)
+                action, log_probability, pretransform_action = model.sample_actions_with_pretransform(output)
                 next_value = model(next_observation.unsqueeze(0)).value.item()
             storage.add(
                 observation=observation,
                 action=action.squeeze(0),
+                pretransform_action=pretransform_action.squeeze(0),
                 log_probability=log_probability.item(),
                 value=output.value.item(),
                 next_value=next_value,

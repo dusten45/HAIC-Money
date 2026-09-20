@@ -41,10 +41,9 @@ class PPOUpdater:
             permutation = torch.randperm(count)
             for indices in permutation.split(self.config.minibatch_size):
                 observations = batch.observations[indices]
-                actions = batch.actions[indices]
                 output = self.model(observations)
-                new_log_probabilities = self.model.log_probability(
-                    actions, output.action_mean, output.action_log_std
+                new_log_probabilities = self.model.log_probability_from_pretransform(
+                    batch.pretransform_actions[indices], output.action_mean, output.action_log_std
                 )
                 ratio = (new_log_probabilities - batch.old_log_probabilities[indices]).exp()
                 advantages = batch.advantages[indices]

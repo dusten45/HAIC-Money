@@ -144,12 +144,18 @@ class VisualActorCritic(nn.Module):
 
     def sample_actions(self, output: PolicyOutput) -> tuple[Tensor, Tensor]:
         """Sample bounded simulator actions and their matching transformed log probability."""
+        actions, log_probability, _ = self.sample_actions_with_pretransform(output)
+        return actions, log_probability
+
+    def sample_actions_with_pretransform(self, output: PolicyOutput) -> tuple[Tensor, Tensor, Tensor]:
+        """Sample actions while retaining exact Normal draws for PPO rollout storage."""
         distribution = Normal(output.action_mean, output.action_log_std.exp())
         unconstrained = distribution.rsample()
         actions = self._bound_actions(unconstrained)
-        log_probability = distribution.log_prob(unconstrained).sum(dim=1)
-        log_probability -= self._log_abs_det_jacobian(unconstrained)
-        return actions, log_probability
+        log_probability = self.log_probability_from_pretransform(
+            unconstrained, output.action_mean, output.action_log_std
+        )
+        return actions, log_probability, unconstrained
 
     def deterministic_actions(self, output: PolicyOutput) -> Tensor:
         """Transform policy means to bounded evaluation actions."""
@@ -160,6 +166,15 @@ class VisualActorCritic(nn.Module):
         unconstrained, log_abs_det_jacobian = self._unbound_actions(actions)
         distribution = Normal(action_mean, action_log_std.exp())
         return distribution.log_prob(unconstrained).sum(dim=1) - log_abs_det_jacobian
+
+    def log_probability_from_pretransform(
+        self, pretransform_actions: Tensor, action_mean: Tensor, action_log_std: Tensor
+    ) -> Tensor:
+        """Evaluate exact rollout Normal draws without lossy action inverse transforms."""
+        distribution = Normal(action_mean, action_log_std.exp())
+        return distribution.log_prob(pretransform_actions).sum(dim=1) - self._log_abs_det_jacobian(
+            pretransform_actions
+        )
 
     @staticmethod
     def entropy(action_log_std: Tensor) -> Tensor:
