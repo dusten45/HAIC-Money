@@ -181,7 +181,7 @@ class Agent:
             )
         except (RuntimeError, ValueError, TypeError, AttributeError):
             return action
-        if result is None:
+        if result is None or self.clock() >= deadline:
             return action
         planned_action = self._safe_action(result.action)
         return action if planned_action is None else planned_action

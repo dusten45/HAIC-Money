@@ -130,6 +130,8 @@ class CEMPlanner:
                 )
                 if not all(torch.isfinite(value).all() for value in values):
                     return None
+                if self.clock() >= deadline:
+                    return None
                 scores = scores + (
                     self.progress_weight * prediction.progress_delta
                     + self.reward_weight * prediction.reward
@@ -157,11 +159,14 @@ class CEMPlanner:
                 if self.clock() >= deadline:
                     break
                 continue
+            if self.clock() >= deadline:
+                break
             valid_candidates.append(chunk)
             valid_scores.append(score)
         if not valid_scores:
             return None
-        return torch.cat(valid_candidates, dim=0), torch.cat(valid_scores, dim=0)
+        combined = torch.cat(valid_candidates, dim=0), torch.cat(valid_scores, dim=0)
+        return None if self.clock() >= deadline else combined
 
     def plan(
         self,
@@ -190,21 +195,31 @@ class CEMPlanner:
             scored = self._candidate_scores(latent, candidates, dynamics, deadline=deadline)
             if scored is None:
                 break
+            if self.clock() >= deadline:
+                break
             valid_candidates, scores = scored
             top_score, top_index = scores.max(dim=0)
+            if self.clock() >= deadline:
+                break
             if best_score is None or top_score > best_score:
                 best_score = top_score.detach()
                 best_sequence = valid_candidates[int(top_index)].detach().clone()
             elite_count = min(self.elite_count, valid_candidates.shape[0])
             elite_indices = scores.topk(elite_count).indices
+            if self.clock() >= deadline:
+                break
             elites = valid_candidates[elite_indices]
             mean = elites.mean(dim=0, keepdim=True).expand(self.population, -1, -1).clone()
             std = elites.std(dim=0, unbiased=False, keepdim=True).clamp_min(0.05).expand_as(mean).clone()
+            if self.clock() >= deadline:
+                break
             warm = None
-        if best_sequence is None or best_score is None:
+        if self.clock() >= deadline or best_sequence is None or best_score is None:
             return None
         action = self._bounded(best_sequence[:1]).squeeze(0)
         if not self._valid_actions(action):
+            return None
+        if self.clock() >= deadline:
             return None
         self._cached_unconstrained = best_sequence.cpu()
         return PlanResult(action=action.cpu(), unconstrained_sequence=best_sequence.cpu(), score=float(best_score.cpu()))

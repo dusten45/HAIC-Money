@@ -60,3 +60,24 @@
   tests and is not referenced by Agent's inference path. Task 5 can remove the
   legacy export/package layout while making the final bundle include the
   `haic_agent` modules and both learned checkpoints.
+
+## Review fix round 1
+
+Review identified that one `dynamics.predict()` could cross the deadline and
+still be selected as a late CEM result. The regression injects an advancing
+clock: dynamics advances from 0 to 2 seconds under a 1-second Agent budget,
+while its otherwise attractive warm-start plan selects positive steering. RED
+returned that late planned action; GREEN now returns the immediate negative PPO
+fallback. Planner checks the same absolute deadline immediately after each
+prediction, before/after candidate aggregation and CEM selection work, before
+caching, and before returning `PlanResult`; Agent rechecks it after
+`planner.plan`.
+
+- Fix focused: 11 passed.
+- Fix full: 72 passed, 1 expected server-repository skip.
+- Fix smoke: the two-decision checkpoint-backed track 1/seed 42 local run
+  completed without timeout/invalid action and stopped only at requested
+  `max_steps`.
+- Fix CPU timing: three default-budget planner calls measured 0.172 s, 0.140
+  s, and 0.156 s (maximum 0.172 s, leaving 4.328 s inside the 4.5-second
+  budget); planner cache was populated on the valid paths.

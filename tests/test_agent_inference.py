@@ -48,6 +48,38 @@ class _NoPlan:
         return None
 
 
+class _AdvancingClock:
+    def __init__(self):
+        self.value = 0.0
+
+    def __call__(self):
+        return self.value
+
+    def advance(self, seconds):
+        self.value += seconds
+
+
+class _SlowForwardDynamics(_Dynamics):
+    def __init__(self, clock):
+        self.clock = clock
+
+    def predict(self, latent, action):
+        self.clock.advance(2.0)
+        return SimpleNamespace(
+            next_latent=latent,
+            progress_delta=torch.zeros(action.shape[0]),
+            reward=action[:, 0],
+            collision_probability=torch.zeros(action.shape[0]),
+            off_track_probability=torch.zeros(action.shape[0]),
+            uncertainty=torch.zeros(action.shape[0]),
+        )
+
+
+class _NegativeSteerPolicy(_Policy):
+    def action_parameters(self, latent):
+        return torch.tensor([[-1.0, 0.0, -1.0]]), torch.full((1, 3), -10.0)
+
+
 class TestAgentInference(unittest.TestCase):
     def test_default_checkpoint_names_load_the_visual_policy_and_dynamics_ensemble(self):
         # Break caught: default construction must load the trained PPO/CEM
@@ -129,6 +161,29 @@ class TestAgentInference(unittest.TestCase):
         malformed = agent.act(np.zeros((3, 84, 84), dtype=np.float32))
         self.assertTrue(np.all(np.isfinite(exhausted)))
         self.assertTrue(np.all(np.isfinite(malformed)))
+
+    def test_prediction_that_crosses_deadline_returns_immediate_policy_fallback(self):
+        # Break caught: a dynamics call can itself consume the remaining
+        # budget; its late CEM score must never replace the timely PPO action.
+        from agent import Agent
+        from haic_agent.planner import CEMPlanner
+
+        clock = _AdvancingClock()
+        planner = CEMPlanner(horizon=1, population=2, iterations=1, candidate_batch_size=2, clock=clock)
+        planner._cached_unconstrained = torch.tensor([[2.0, 0.0, -1.0]])
+        agent = Agent(
+            policy=_NegativeSteerPolicy(),
+            dynamics=_SlowForwardDynamics(clock),
+            planner=planner,
+            plan_budget=1.0,
+            clock=clock,
+        )
+
+        action = agent.act(np.zeros((4, 84, 84), dtype=np.float32))
+
+        expected = np.array([np.tanh(-1.0), 0.5, 1.0 / (1.0 + np.exp(1.0))], dtype=np.float32)
+        np.testing.assert_allclose(action, expected)
+        self.assertGreater(clock(), 1.0)
 
     def test_small_cpu_models_finish_an_act_under_default_budget(self):
         # Break caught: deadline must include encoding and actor work, not only
