@@ -59,7 +59,16 @@ def safe_reset(agent, observation, timeout_sec=DEFAULT_AGENT_TIMEOUT_SECONDS):
         raise outcome[0]
 
 
-def run_local_test(track_id, seed, max_steps, frame_skip, render_mode="human"):
+def run_local_test(
+    track_id,
+    seed,
+    max_steps,
+    frame_skip,
+    render_mode="human",
+    plan_budget=4.5,
+    policy_checkpoint=None,
+    dynamics_checkpoint=None,
+):
     print("=== 시작: 로컬 환경 테스트 ===")
 
     raw_frame_budget = max_steps * frame_skip + 200
@@ -73,7 +82,11 @@ def run_local_test(track_id, seed, max_steps, frame_skip, render_mode="human"):
 
     try:
         print("에이전트를 초기화합니다...")
-        agent = Agent()
+        agent = Agent(
+            plan_budget=plan_budget,
+            policy_checkpoint=policy_checkpoint,
+            dynamics_checkpoint=dynamics_checkpoint,
+        )
 
         observation, info = env.reset(
             seed=seed,
@@ -145,22 +158,37 @@ def run_local_test(track_id, seed, max_steps, frame_skip, render_mode="human"):
         env.close()
 
 
-if __name__ == "__main__":
+def build_argument_parser():
     parser = argparse.ArgumentParser(description="2026 HAIC 공식 로컬 주행 환경")
     parser.add_argument("--track-id", type=int, default=1)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-steps", type=int, default=2000)
     parser.add_argument("--frame-skip", type=int, default=4)
     parser.add_argument(
+        "--plan-budget",
+        type=float,
+        default=4.5,
+        help="한 act() 호출 전체에 허용할 CEM 계획 시간(초)",
+    )
+    parser.add_argument("--policy-checkpoint", help="PPO policy checkpoint path for local evaluation")
+    parser.add_argument("--dynamics-checkpoint", help="latent dynamics checkpoint path for local evaluation")
+    parser.add_argument(
         "--no-render",
         action="store_true",
         help="GUI 창 없이 실행합니다.",
     )
-    args = parser.parse_args()
+    return parser
+
+
+if __name__ == "__main__":
+    args = build_argument_parser().parse_args()
     run_local_test(
         args.track_id,
         args.seed,
         args.max_steps,
         args.frame_skip,
         render_mode=None if args.no_render else "human",
+        plan_budget=args.plan_budget,
+        policy_checkpoint=args.policy_checkpoint,
+        dynamics_checkpoint=args.dynamics_checkpoint,
     )

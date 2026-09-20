@@ -7,7 +7,7 @@ from pathlib import Path
 
 import torch
 
-from agent import Baseline1Actor
+from agent import Baseline1Actor, POLICY_MODEL_FILENAME
 from package_submission import (
     build_submission,
     create_submission_record,
@@ -22,14 +22,14 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_builds_root_only_submission_archive(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / POLICY_MODEL_FILENAME
             archive_path = directory_path / "submission.zip"
             torch.save(Baseline1Actor().state_dict(), model_path)
 
             build_submission(ROOT / "agent.py", model_path, archive_path)
 
             with zipfile.ZipFile(archive_path) as archive:
-                self.assertEqual(set(archive.namelist()), {"agent.py", "model.pt"})
+                self.assertEqual(set(archive.namelist()), {"agent.py", POLICY_MODEL_FILENAME})
 
     def test_rejects_banned_submission_import(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -44,7 +44,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_records_submission_provenance(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / POLICY_MODEL_FILENAME
             source_model_path = directory_path / "source.zip"
             torch.save(Baseline1Actor().state_dict(), model_path)
             source_model_path.write_bytes(b"source-model")
@@ -75,7 +75,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_cleans_partial_record_when_source_is_invalid(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / POLICY_MODEL_FILENAME
             torch.save(Baseline1Actor().state_dict(), model_path)
             submissions_dir = directory_path / "submissions"
 

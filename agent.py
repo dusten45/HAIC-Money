@@ -1,9 +1,18 @@
+import time
+
 import numpy as np
 import torch
 from torch import nn
 
+from haic_agent.dynamics import LatentDynamicsEnsemble
+from haic_agent.networks import VisualActorCritic
+from haic_agent.planner import CEMPlanner
 
-MODEL_FILENAME = "model.pt"
+
+POLICY_MODEL_FILENAME = "policy.pt"
+DYNAMICS_MODEL_FILENAME = "dynamics.pt"
+# Task 5's archive validator reads this conventional primary model filename.
+MODEL_FILENAME = "policy.pt"
 
 # Small single-observation CNN inference is faster and more predictable without
 # the default large CPU thread pool.
@@ -57,22 +66,122 @@ class Baseline1Actor(nn.Module):
 
 
 class Agent:
-    def __init__(self):
-        """Loads only the deterministic actor needed by the submission."""
-        self.model = Baseline1Actor()
-        state_dict = torch.load(
-            MODEL_FILENAME,
-            map_location="cpu",
-            weights_only=True,
-        )
-        self.model.load_state_dict(state_dict, strict=True)
-        self.model.eval()
+    """Pixel-only PPO action with deadline-bounded learned-model planning."""
+
+    def __init__(
+        self,
+        *,
+        policy=None,
+        dynamics=None,
+        planner=None,
+        plan_budget: float = 4.5,
+        clock=time.monotonic,
+        policy_checkpoint: str | None = None,
+        dynamics_checkpoint: str | None = None,
+    ):
+        """Build CPU inference models; optional injection keeps runtime testable.
+
+        A malformed or legacy model file leaves a randomly initialized visual
+        policy available for interface smoke tests.  It never activates the
+        old hand-authored baseline as a driving controller.
+        """
+        torch.set_num_threads(1)
+        self.clock = clock
+        self.plan_budget = min(max(float(plan_budget), 0.0), 4.5)
+        resolved_policy_checkpoint = POLICY_MODEL_FILENAME if policy_checkpoint is None else policy_checkpoint
+        resolved_dynamics_checkpoint = DYNAMICS_MODEL_FILENAME if dynamics_checkpoint is None else dynamics_checkpoint
+        self.policy = policy if policy is not None else self._load_policy(resolved_policy_checkpoint)
+        self.dynamics = dynamics if dynamics is not None else self._load_dynamics(resolved_dynamics_checkpoint)
+        self.planner = planner if planner is not None else CEMPlanner(clock=clock)
+        if hasattr(self.policy, "eval"):
+            self.policy.eval()
+        if self.dynamics is not None and hasattr(self.dynamics, "eval"):
+            self.dynamics.eval()
+
+    @staticmethod
+    def _load_policy(checkpoint: str | None):
+        policy = VisualActorCritic()
+        if checkpoint is None:
+            return policy
+        try:
+            saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+            state = saved.get("model_state") if isinstance(saved, dict) else None
+            if isinstance(state, dict):
+                policy.load_state_dict(state, strict=True)
+        except (FileNotFoundError, RuntimeError, ValueError, OSError):
+            pass
+        return policy
+
+    @staticmethod
+    def _load_dynamics(checkpoint: str | None):
+        if checkpoint is None:
+            return None
+        dynamics = LatentDynamicsEnsemble()
+        try:
+            saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
+            state = saved.get("model") if isinstance(saved, dict) else None
+            if isinstance(state, dict):
+                dynamics.load_state_dict(state, strict=True)
+                return dynamics
+        except (FileNotFoundError, RuntimeError, ValueError, OSError):
+            pass
+        return None
+
+    @staticmethod
+    def _safe_action(action) -> np.ndarray | None:
+        try:
+            candidate = np.asarray(action, dtype=np.float32).reshape(3)
+        except (TypeError, ValueError):
+            return None
+        if not np.all(np.isfinite(candidate)):
+            return None
+        return np.clip(candidate, [-1.0, 0.0, 0.0], [1.0, 1.0, 1.0]).astype(np.float32, copy=False)
+
+    @staticmethod
+    def _observation_tensor(observation):
+        pixels = np.asarray(observation, dtype=np.float32)
+        if pixels.shape != (4, 84, 84) or not np.all(np.isfinite(pixels)):
+            return None
+        if float(pixels.min()) < 0.0 or float(pixels.max()) > 1.0:
+            return None
+        return torch.from_numpy(pixels).unsqueeze(0)
 
     def reset(self, observation):
-        pass
+        """Clear all per-episode plan state; reset needs no simulator data."""
+        reset = getattr(self.planner, "reset", None)
+        if callable(reset):
+            reset()
 
     @torch.inference_mode()
     def act(self, observation) -> np.ndarray:
-        state = torch.as_tensor(np.asarray(observation, dtype=np.float32)).unsqueeze(0)
-        action = self.model.predict_action(state).squeeze(0).numpy()
-        return action.astype(np.float32, copy=False)
+        """Return a finite action before the end-to-end 4.5 second deadline."""
+        deadline = self.clock() + self.plan_budget
+        no_op = np.zeros(3, dtype=np.float32)
+        state = self._observation_tensor(observation)
+        if state is None:
+            return no_op
+        try:
+            latent = self.policy.encode_observation(state)
+            policy_mean, policy_log_std = self.policy.action_parameters(latent)
+            fallback = torch.cat((torch.tanh(policy_mean[:, :1]), torch.sigmoid(policy_mean[:, 1:])), dim=1)
+            action = self._safe_action(fallback.squeeze(0).cpu().numpy())
+        except (RuntimeError, ValueError, TypeError, AttributeError):
+            return no_op
+        if action is None:
+            return no_op
+        if self.dynamics is None or self.clock() >= deadline:
+            return action
+        try:
+            result = self.planner.plan(
+                latent,
+                policy_mean,
+                policy_log_std,
+                self.dynamics,
+                deadline=deadline,
+            )
+        except (RuntimeError, ValueError, TypeError, AttributeError):
+            return action
+        if result is None:
+            return action
+        planned_action = self._safe_action(result.action)
+        return action if planned_action is None else planned_action
