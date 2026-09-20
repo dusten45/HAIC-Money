@@ -25,6 +25,31 @@ class TestWebAssets(unittest.TestCase):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")
         self.assertIn("project([point[2], point[3]], bounds", script)
 
+    def test_site_contains_custom_generator_and_run_controls(self):
+        html = Path("web_simulator/index.html").read_text(encoding="utf-8")
+        for element_id in (
+            "map-kind",
+            "custom-template",
+            "design-seed",
+            "generate-custom-map",
+            "start-agent-run",
+            "start-manual-run",
+            "finish-manual-run",
+            "local-api-status",
+        ):
+            self.assertIn(f'id="{element_id}"', html)
+
+    def test_script_contains_api_fallback_and_manual_action_names(self):
+        script = Path("web_simulator/app.js").read_text(encoding="utf-8")
+        for token in (
+            "/api/health",
+            "generateCustomMap",
+            "startRun",
+            "sendManualAction",
+            "custom-track",
+        ):
+            self.assertIn(token, script)
+
 
 if __name__ == "__main__":
     unittest.main()

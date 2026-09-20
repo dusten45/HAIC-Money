@@ -89,6 +89,16 @@ class TestLocalSimulatorApi(unittest.TestCase):
         self.assertTrue(Path(finished["output"]).exists())
         self.assertEqual(finished["run"]["map_ref"]["map_id"], "custom-track-api")
 
+    def test_baseline_auto_run_returns_and_saves_run_log(self):
+        response = self.request(
+            "POST",
+            "/api/runs/auto",
+            {"map": self.custom_payload, "policy": "baseline"},
+        )
+        self.assertEqual(response["run"]["policy"]["kind"], "baseline")
+        self.assertGreater(len(response["steps"]), 0)
+        self.assertTrue(Path(response["output"]).exists())
+
     def test_unknown_session_returns_not_found(self):
         with self.assertRaises(HTTPError) as error:
             self.request("POST", "/api/runs/not-a-session/action", {"action": [0, 0, 0]})

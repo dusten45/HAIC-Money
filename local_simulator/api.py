@@ -110,7 +110,17 @@ class SimulationRegistry:
         document: MapDocument,
         record_frames: bool = False,
     ) -> tuple[dict[str, Any], Path]:
-        policy = self._policy("agent")
+        return self.run_automatic(document, "agent", record_frames=record_frames)
+
+    def run_automatic(
+        self,
+        document: MapDocument,
+        policy_kind: str,
+        record_frames: bool = False,
+    ) -> tuple[dict[str, Any], Path]:
+        if policy_kind not in {"agent", "baseline"}:
+            raise ValueError("automatic policy must be agent or baseline")
+        policy = self._policy(policy_kind)
         session = SimulationSession.start(document, policy, record_frames=record_frames)
         try:
             for _ in range(document.max_steps):
@@ -272,6 +282,15 @@ class LocalApiHandler:
                 document = self._document(payload)
                 response, _path = self.registry.run_agent(
                     document,
+                    record_frames=bool(payload.get("record_frames", False)),
+                )
+                self._json_response(response)
+                return
+            if path == "/api/runs/auto":
+                document = self._document(payload)
+                response, _path = self.registry.run_automatic(
+                    document,
+                    str(payload.get("policy", "baseline")),
                     record_frames=bool(payload.get("record_frames", False)),
                 )
                 self._json_response(response)
