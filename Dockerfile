@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsof \
     psmisc \
     less \
+    curl \
+    tar \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
@@ -29,9 +31,11 @@ RUN mkdir -p -m 755 /etc/apt/keyrings \
     && apt-get install -y --no-install-recommends gh \
     && rm -rf /var/lib/apt/lists/*
 
-RUN export NVM_DIR=/root/.nvm \
-    && source "$NVM_DIR/nvm.sh" \
-    && npm install -g @kilocode/cli \
+ARG KILO_VERSION=7.7.5
+ENV PATH="/root/.kilo/bin:${PATH}"
+
+RUN curl -fsSL https://kilo.ai/cli/install \
+    | bash -s -- --version "$KILO_VERSION" --no-modify-path \
     && kilo --version
 
 RUN mkdir -p /etc/haic /root/.config/kilo
@@ -58,8 +62,6 @@ RUN /venv/main/bin/python -c 'import sys, torch, gymnasium, stable_baselines3, c
     && gh --version | head -n 1 \
     && micro --version \
     && zsh --version \
-    && export NVM_DIR=/root/.nvm \
-    && source "$NVM_DIR/nvm.sh" \
     && kilo --version
 
 WORKDIR /workspace

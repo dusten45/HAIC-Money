@@ -1,6 +1,3 @@
-export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-
 if [[ "${VIRTUAL_ENV:-}" != "/venv/main" && -f /venv/main/bin/activate ]]; then
     source /venv/main/bin/activate
 fi
