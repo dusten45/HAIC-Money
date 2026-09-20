@@ -112,6 +112,25 @@ class TestSimulatorCli(unittest.TestCase):
                 second["geometry"]["centerline"],
             )
 
+    def test_technical_custom_map_cli_writes_recipe_metadata(self):
+        from local_simulator.map import main as map_main
+
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / "technical.json"
+            result = map_main(
+                [
+                    "--kind", "custom",
+                    "--template", "technical",
+                    "--design-seed", "42",
+                    "--output", str(path),
+                ]
+            )
+            self.assertEqual(result, 0)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["generator"]["template"], "technical")
+            self.assertEqual(payload["generator"]["generator_version"], 2)
+            self.assertGreaterEqual(payload["generator"]["corner_count"], 9)
+
 
 if __name__ == "__main__":
     unittest.main()

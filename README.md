@@ -405,6 +405,32 @@ D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.web `
 웹에서 바로 실행할 수 있습니다. 정적 `http.server`는 파일을 불러와 로그를 보는
 전용 모드로 계속 사용할 수 있습니다.
 
+### 자체 트랙 템플릿
+
+커스텀 트랙 생성기는 코너 배치와 곡률이 서로 다른 다섯 가지 템플릿을 제공합니다.
+
+| 템플릿 ID | 화면 이름 | 주행 특성 |
+| --- | --- | --- |
+| `oval` | 타원형 | 넓은 코너 네 개로 이루어진 기준 코스 |
+| `s_curve` | S 커브 | 좌우 방향이 바뀌는 연속 코너 |
+| `hairpin` | 헤어핀 | 급격한 코너와 제동·탈출 구간 |
+| `chicane` | 시케인 | 빠른 좌우 전환이 반복되는 코스 |
+| `technical` | 복합 기술형 | 서로 다른 반경과 코너 순서가 섞인 코스 |
+
+`--design-seed`는 코너 조합과 중심선을 결정합니다. 같은 생성기 버전, 템플릿,
+seed를 사용하면 같은 트랙을 다시 만들 수 있습니다. 생성된 맵은 기존 schema 2를
+그대로 사용하며, 코너 수와 순서는 `generator` 메타데이터에 기록됩니다.
+
+```powershell
+D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.map `
+  --kind custom --template technical --design-seed 42 `
+  --output D:\HAIC\maps\technical-42.json
+```
+
+장애물은 트랙 기하와 별도인 선택 레이어이므로, 필요한 경우 웹 편집기나 기존
+`--obstacle` 옵션으로 추가합니다. 자체 트랙은 에이전트의 일반화와 과적합을 점검하기
+위한 로컬 테스트용이며, 공식 평가의 비공개 트랙을 대신하거나 복제하지 않습니다.
+
 ### 사용자 장애물
 
 맵 파일은 `track_id`, `seed`, `obstacle_mode`, `max_steps`, `frame_skip`과 함께

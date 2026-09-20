@@ -67,6 +67,22 @@ class TestLocalSimulatorApi(unittest.TestCase):
         self.assertEqual(response["map_kind"], "custom")
         self.assertGreaterEqual(len(response["geometry"]["centerline"]), 12)
 
+    def test_technical_map_generation(self):
+        response = self.request(
+            "POST",
+            "/api/maps/generate",
+            {
+                "map_kind": "custom",
+                "map_id": "custom-track-api-technical",
+                "design_seed": 42,
+                "template": "technical",
+            },
+        )
+        self.assertEqual(response["schema_version"], 2)
+        self.assertEqual(response["generator"]["template"], "technical")
+        self.assertEqual(response["generator"]["generator_version"], 2)
+        self.assertGreaterEqual(response["generator"]["corner_count"], 9)
+
     def test_manual_run_start_action_finish_writes_run(self):
         started = self.request(
             "POST",

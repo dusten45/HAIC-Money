@@ -41,6 +41,13 @@ class TestWebAssets(unittest.TestCase):
         self.assertIn('value="technical"', html)
         self.assertIn('id="generated-track-summary"', html)
 
+    def test_initial_track_summary_matches_the_official_default_map(self):
+        html = Path("web_simulator/index.html").read_text(encoding="utf-8")
+        script = Path("web_simulator/app.js").read_text(encoding="utf-8")
+        self.assertIn('id="generated-track-summary" class="hint generated-track-summary">공식 트랙</p>', html)
+        initialize = script.split("function initialize()", 1)[1].split("window.HAICSimulator", 1)[0]
+        self.assertIn("updateGeneratedTrackSummary(state.mapSpec)", initialize)
+
     def test_script_contains_api_fallback_and_manual_action_names(self):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")
         for token in (

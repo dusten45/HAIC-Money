@@ -1583,6 +1583,7 @@
     setManualControls(false);
     syncForm();
     renderMap();
+    updateGeneratedTrackSummary(state.mapSpec);
     renderComparison();
     checkLocalApi().then((available) => {
       if (!available) setStatus("파일 보기 모드입니다. 로그 재생과 맵 JSON 저장은 계속 사용할 수 있습니다.", false);

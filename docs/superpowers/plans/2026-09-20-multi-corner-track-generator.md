@@ -480,6 +480,9 @@ The worktree already has staged Task 7 web changes in these paths. They must be 
 - Modify: `tests/test_local_simulator_api.py`
 - Modify: `tests/test_local_simulator_cli.py`
 - Modify: `README.md`
+- Modify: `tests/test_web_simulator_assets.py`
+- Modify: `web_simulator/index.html`
+- Modify: `web_simulator/app.js`
 
 **Interfaces:**
 - Consumes: Task 1's added `technical` template and Task 3's summary/seed behavior.
@@ -540,7 +543,7 @@ Expected: PASS with no new dependency, schema, official-physics, or legacy-log r
 
 - [ ] **Step 5: Verify the integrated page without saving test artifacts**
 
-Use the existing integrated page at `http://127.0.0.1:8765/`. Change the selected template without generating and confirm the current geometry stays unchanged; then generate `oval`, `s_curve`, `hairpin`, `chicane`, and `technical` at the same seed, confirming each new geometry and visible corner summary. Change the seed and confirm the profile changes. Do not press **맵 저장** during this check; this is a visual check only and should not add files to `D:\HAIC\maps`.
+Use the integrated page served from the feature worktree at `http://127.0.0.1:8766/`; leave any unrelated existing server on port 8765 untouched. Confirm the initial summary says `공식 트랙`; change the selected template without generating and confirm current geometry stays unchanged; then generate `oval`, `s_curve`, `hairpin`, `chicane`, and `technical` at the same seed, confirming each new geometry and visible corner summary. Change the seed and confirm the profile changes. Do not press **맵 저장** during this check; this is a visual check only and should not add files to `D:\HAIC\maps`.
 
 - [ ] **Step 6: Commit documentation and integration coverage**
 
