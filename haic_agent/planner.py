@@ -221,5 +221,17 @@ class CEMPlanner:
             return None
         if self.clock() >= deadline:
             return None
-        self._cached_unconstrained = best_sequence.cpu()
-        return PlanResult(action=action.cpu(), unconstrained_sequence=best_sequence.cpu(), score=float(best_score.cpu()))
+        action_cpu = action.cpu()
+        sequence_cpu = best_sequence.cpu()
+        score = float(best_score.cpu())
+        result = PlanResult(action=action_cpu, unconstrained_sequence=sequence_cpu, score=score)
+        if self.clock() >= deadline:
+            return None
+        previous_cache = self._cached_unconstrained
+        if self.clock() >= deadline:
+            return None
+        self._cached_unconstrained = sequence_cpu
+        if self.clock() >= deadline:
+            self._cached_unconstrained = previous_cache
+            return None
+        return result

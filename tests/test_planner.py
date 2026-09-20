@@ -29,6 +29,18 @@ class _RiskyDynamics(_ForwardDynamics):
         return SimpleNamespace(**values)
 
 
+class _FinalizationClock:
+    """Expires only after all candidate scoring/update deadline checks."""
+
+    def __init__(self, expire_after_calls):
+        self.calls = 0
+        self.expire_after_calls = expire_after_calls
+
+    def __call__(self):
+        self.calls += 1
+        return 0.0 if self.calls <= self.expire_after_calls else 2.0
+
+
 class TestCEMPlanner(unittest.TestCase):
     def test_plan_returns_bounded_first_action_and_horizon_sequence(self):
         # Break caught: flattening a CEM population can return a scalar action
@@ -100,6 +112,29 @@ class TestCEMPlanner(unittest.TestCase):
 
         self.assertIsNone(expired)
         self.assertIsNone(invalid)
+
+    def test_expiry_during_result_finalization_does_not_replace_prior_cache(self):
+        # Break caught: result tensor conversion/cache assignment happens after
+        # scoring, so a deadline there must reject the plan and preserve the
+        # next call's warm start from the prior valid episode state.
+        from haic_agent.planner import CEMPlanner
+
+        clock = _FinalizationClock(expire_after_calls=16)
+        planner = CEMPlanner(horizon=1, population=2, iterations=1, candidate_batch_size=2, clock=clock)
+        prior_cache = torch.tensor([[-3.0, 0.0, 0.0]])
+        planner._cached_unconstrained = prior_cache.clone()
+
+        result = planner.plan(
+            torch.zeros(1, 128),
+            torch.tensor([[1.0, 0.0, 0.0]]),
+            torch.full((1, 3), -10.0),
+            _ForwardDynamics(),
+            deadline=1.0,
+        )
+
+        self.assertIsNone(result)
+        torch.testing.assert_close(planner._cached_unconstrained, prior_cache)
+        self.assertGreater(clock.calls, 16)
 
 
 if __name__ == "__main__":

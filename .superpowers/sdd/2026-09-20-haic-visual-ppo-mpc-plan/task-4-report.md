@@ -81,3 +81,18 @@ caching, and before returning `PlanResult`; Agent rechecks it after
 - Fix CPU timing: three default-budget planner calls measured 0.172 s, 0.140
   s, and 0.156 s (maximum 0.172 s, leaving 4.328 s inside the 4.5-second
   budget); planner cache was populated on the valid paths.
+
+## Review fix round 2
+
+The cache commit was still vulnerable after the pre-cache deadline check:
+CPU tensor conversion and `PlanResult` construction could consume the final
+budget and then a late sequence could contaminate the next warm start. The
+planner now prepares CPU action/sequence/score and the result first, checks
+again, checks immediately before cache mutation, then checks immediately after
+mutation and restores the previous cache if expiration occurred.
+
+The regression uses a call-counting clock that expires on the post-cache
+check: the first 16 checks pass, cache write occurs, and check 17 expires.
+The old/mutated no-rollback branch returned a plan (RED); the restored branch
+returns no plan and verifies the previous cache byte-for-byte. This directly
+exercises cache rollback rather than an earlier finalization check.
