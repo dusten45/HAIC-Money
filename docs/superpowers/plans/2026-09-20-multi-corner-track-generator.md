@@ -320,6 +320,7 @@ git commit -m "fix: validate multi-corner road clearance"
 **Files:**
 - Modify: `web_simulator/index.html`
 - Modify: `web_simulator/app.js`
+- Modify: `web_simulator/styles.css`
 - Modify: `tests/test_web_simulator_assets.py`
 - Modify: `tests/test_web_simulator_client.py`
 

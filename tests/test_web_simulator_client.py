@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import shutil
 import subprocess
@@ -31,7 +32,14 @@ const map = createMap(options);
 if (map.schema_version !== 2 || map.map_kind !== "custom") throw new Error("wrong map schema");
 if (map.map_id !== "custom-track-fallback") throw new Error("map id was not preserved");
 if (map.generator.design_seed !== 37) throw new Error("design seed was not preserved");
-if (map.geometry.centerline.length !== 48) throw new Error("fallback track has the wrong point count");
+if (map.geometry.centerline.length < 12 || map.geometry.centerline.length > 4096) throw new Error("fallback track has the wrong point count");
+for (let index = 0; index < map.geometry.centerline.length; index += 1) {
+  const point = map.geometry.centerline[index];
+  const next = map.geometry.centerline[(index + 1) % map.geometry.centerline.length];
+  if (Math.hypot(next[0] - point[0], next[1] - point[1]) > 4.00001) {
+    throw new Error("fallback track has a segment longer than four world units");
+  }
+}
 if (map.max_steps !== 250 || map.frame_skip !== 2) throw new Error("common run settings were not preserved");
 const repeated = createMap(options);
 if (JSON.stringify(map.geometry.centerline) !== JSON.stringify(repeated.geometry.centerline)) {
@@ -44,6 +52,132 @@ if (JSON.stringify(map.geometry.centerline) !== JSON.stringify(repeated.geometry
             capture_output=True,
             text=True,
             check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_browser_fallback_matches_python_generator(self):
+        from local_simulator.track_generator import TEMPLATES, generate_custom_map
+
+        for template in sorted(TEMPLATES):
+            for seed in (0, 42, 4294967295):
+                with self.subTest(template=template, seed=seed):
+                    expected = generate_custom_map(f"custom-track-{template}", seed, template)
+                    options = {
+                        "map_id": f"custom-track-{template}",
+                        "design_seed": seed,
+                        "template": template,
+                        "width": 8,
+                        "max_steps": 2000,
+                        "frame_skip": 4,
+                        "obstacles": [],
+                    }
+                    script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const options = JSON.parse(process.argv[1]);
+const map = context.window.HAICSimulator.makeBrowserCustomMap(options);
+console.log(JSON.stringify({ centerline: map.geometry.centerline, generator: map.generator }));'''
+                    result = subprocess.run(
+                        [NODE, "-e", script, json.dumps(options)],
+                        cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+                    )
+                    self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                    actual = json.loads(result.stdout)
+                    expected_metadata = json.loads(json.dumps(dict(expected.generator)))
+                    self.assertEqual(actual["generator"], expected_metadata)
+                    self.assertEqual(
+                        actual["centerline"],
+                        [list(point) for point in expected.geometry.centerline],
+                    )
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_browser_fallback_rejects_unknown_template(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+let rejected = false;
+try {
+  context.window.HAICSimulator.makeBrowserCustomMap({
+    map_id: "custom-track-invalid", design_seed: 1, template: "unknown",
+    width: 8, max_steps: 2000, frame_skip: 4, obstacles: []
+  });
+} catch (error) {
+  rejected = /template/i.test(error.message);
+}
+if (!rejected) throw new Error("unknown template was not clearly rejected");'''
+        result = subprocess.run(
+            [NODE, "-e", script],
+            cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_browser_fallback_matches_python_at_width_limits(self):
+        from local_simulator.track_generator import generate_custom_map
+
+        for width in (0.5, 100.0):
+            with self.subTest(width=width):
+                expected = generate_custom_map("custom-track-width", 73, "technical", width=width)
+                options = {
+                    "map_id": "custom-track-width",
+                    "design_seed": 73,
+                    "template": "technical",
+                    "width": width,
+                    "max_steps": 2000,
+                    "frame_skip": 4,
+                    "obstacles": [],
+                }
+                script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const map = context.window.HAICSimulator.makeBrowserCustomMap(JSON.parse(process.argv[1]));
+console.log(JSON.stringify(map.geometry.centerline));'''
+                result = subprocess.run(
+                    [NODE, "-e", script, json.dumps(options)],
+                    cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                self.assertEqual(
+                    json.loads(result.stdout),
+                    [list(point) for point in expected.geometry.centerline],
+                )
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_browser_fallback_rejects_invalid_seed_and_width(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const base = {
+  map_id: "custom-track-invalid", design_seed: 1, template: "oval",
+  width: 8, max_steps: 2000, frame_skip: 4, obstacles: []
+};
+for (const invalid of [
+  { design_seed: -1 }, { design_seed: 4294967296 }, { design_seed: true }, { width: 100.1 }
+]) {
+  let rejected = false;
+  try {
+    context.window.HAICSimulator.makeBrowserCustomMap({ ...base, ...invalid });
+  } catch (error) {
+    rejected = /design_seed|width/i.test(error.message);
+  }
+  if (!rejected) throw new Error(`invalid input was accepted: ${JSON.stringify(invalid)}`);
+}'''
+        result = subprocess.run(
+            [NODE, "-e", script],
+            cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
         )
         self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
 

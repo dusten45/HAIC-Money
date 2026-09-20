@@ -38,6 +38,8 @@ class TestWebAssets(unittest.TestCase):
             "local-api-status",
         ):
             self.assertIn(f'id="{element_id}"', html)
+        self.assertIn('value="technical"', html)
+        self.assertIn('id="generated-track-summary"', html)
 
     def test_script_contains_api_fallback_and_manual_action_names(self):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")

@@ -136,7 +136,7 @@
           finiteNumber(point[1], `centerline[${index}].y`, -100000, 100000)
         ];
       });
-      if (centerline.length > 256) throw new Error("중심선은 최대 256개 점까지 편집할 수 있습니다.");
+      if (centerline.length > 4096) throw new Error("중심선은 최대 4096개 점까지 지원합니다.");
       const direction = Number(rawGeometry.direction ?? 1);
       if (![1, -1].includes(direction)) throw new Error("주행 방향은 1 또는 -1이어야 합니다.");
       return {
@@ -271,34 +271,14 @@
     const geometry = map.geometry;
     if (!geometry || !Array.isArray(geometry.centerline)) return "중심선이 없습니다. 트랙을 생성하거나 다시 불러오세요.";
     const points = geometry.centerline;
-    if (points.length < 12) return "중심선은 최소 12개 점이 필요합니다.";
     if (!Number.isFinite(geometry.width) || geometry.width < 0.5 || geometry.width > 100) return "도로 반폭은 0.5에서 100 사이여야 합니다.";
-    const lengths = points.map((point, index) => Math.hypot(
-      points[(index + 1) % points.length][0] - point[0],
-      points[(index + 1) % points.length][1] - point[1]
-    ));
-    if (lengths.some((length) => !Number.isFinite(length) || length <= 1e-6)) return "중심선에 중복되거나 잘못된 점이 있습니다.";
-    if (lengths.reduce((sum, length) => sum + length, 0) < geometry.width * 8) return "도로 폭에 비해 중심선이 너무 짧습니다.";
-    for (let first = 0; first < points.length; first += 1) {
-      for (let second = first + 1; second < points.length; second += 1) {
-        if (first === second || (first + 1) % points.length === second || (second + 1) % points.length === first) continue;
-        if (segmentsIntersect(points[first], points[(first + 1) % points.length], points[second], points[(second + 1) % points.length])) {
-          return `중심선이 ${first}번과 ${second}번 구간에서 교차합니다.`;
-        }
-      }
-    }
-    for (let index = 0; index < points.length; index += 1) {
-      const previous = points[(index - 1 + points.length) % points.length];
-      const point = points[index];
-      const following = points[(index + 1) % points.length];
-      const incoming = [point[0] - previous[0], point[1] - previous[1]];
-      const outgoing = [following[0] - point[0], following[1] - point[1]];
-      const dot = incoming[0] * outgoing[0] + incoming[1] * outgoing[1];
-      const cosine = dot / (lengths[(index - 1 + lengths.length) % lengths.length] * lengths[index]);
-      if (cosine < -0.995) return `${index}번 점의 회전이 너무 급합니다.`;
-    }
     if (!/^custom-track-[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(map.map_id || "")) return "맵 ID는 custom-track-으로 시작해야 합니다.";
-    return "";
+    try {
+      validateBrowserCustomGeometry(points, geometry.width);
+      return "";
+    } catch (error) {
+      return error.message;
+    }
   }
 
   function renderControlPointTable() {
@@ -309,6 +289,10 @@
     $("remove-control-point").disabled = points.length <= 12;
     if (!points.length) {
       table.innerHTML = '<tr><td colspan="3" class="empty-cell">트랙을 생성하면 중심선을 편집할 수 있습니다.</td></tr>';
+      return;
+    }
+    if (points.length > 256) {
+      table.innerHTML = '<tr><td colspan="3" class="empty-cell">중심선 샘플이 많아 직접 편집 표는 숨겼습니다. 트랙 형태를 바꾸려면 템플릿이나 seed를 조정하세요.</td></tr>';
       return;
     }
     table.innerHTML = points.map((point, index) => `
@@ -337,6 +321,8 @@
     const index = Number(input.dataset.pointIndex);
     const axis = Number(input.dataset.axis);
     state.mapSpec.geometry.centerline[index][axis] = value;
+    state.mapSpec.generator = {};
+    updateGeneratedTrackSummary(state.mapSpec);
     refreshCustomMapPreview();
   }
 
@@ -350,6 +336,8 @@
       const last = points[points.length - 1];
       points.push([(first[0] + last[0]) / 2, (first[1] + last[1]) / 2]);
     }
+    state.mapSpec.generator = {};
+    updateGeneratedTrackSummary(state.mapSpec);
     renderMap();
   }
 
@@ -358,6 +346,8 @@
     const points = state.mapSpec.geometry.centerline;
     if (points.length <= 12) throw new Error("유효성 검사를 위해 중심선 점을 최소 12개 유지해야 합니다.");
     points.pop();
+    state.mapSpec.generator = {};
+    updateGeneratedTrackSummary(state.mapSpec);
     renderMap();
   }
 
@@ -753,7 +743,30 @@
     state.preview = payload.preview || previewFromCustomMap(state.mapSpec);
     syncForm();
     renderMap();
+    updateGeneratedTrackSummary(state.mapSpec);
     setStatus(`${source}을 불러왔습니다.`, false);
+  }
+
+  function updateGeneratedTrackSummary(map) {
+    const target = $("generated-track-summary");
+    if (!target) return;
+    if (!map || map.map_kind !== "custom") {
+      target.textContent = "공식 트랙";
+      return;
+    }
+    const generator = map.generator || {};
+    const sequence = generator.corner_sequence;
+    if (!Number.isInteger(generator.corner_count) || !Array.isArray(sequence) ||
+        sequence.length !== generator.corner_count ||
+        !sequence.every((token) => typeof token === "string" && /^(left|right):(wide|medium|tight|hairpin)$/.test(token))) {
+      target.textContent = "직접 제작 맵";
+      return;
+    }
+    const directions = sequence.map((token) => token.split(":", 1)[0]);
+    const switches = directions.reduce((count, direction, index) =>
+      count + (index > 0 && direction !== directions[index - 1] ? 1 : 0), 0);
+    const hairpins = sequence.filter((token) => token.endsWith(":hairpin")).length;
+    target.textContent = `${generator.corner_count}개 코너 · 헤어핀 ${hairpins} · 방향 전환 ${switches}회`;
   }
 
   function applyCustomMap(payload) {
@@ -787,64 +800,365 @@
     };
   }
 
-  function browserGeneratedCenterline(template, seed) {
-    const random = seededRandom(seed);
-    if (template === "hairpin") {
-      const radius = 22 + random() * 4 - 2;
-      const length = 92 + random() * 10 - 5;
-      const lineCount = 12;
-      const arcCount = 12;
-      const points = [];
-      for (let index = 0; index < lineCount; index += 1) {
-        const ratio = index / lineCount;
-        points.push([-length / 2 + length * ratio, radius]);
-      }
-      for (let index = 0; index < arcCount; index += 1) {
-        const angle = Math.PI / 2 - Math.PI * index / arcCount;
-        points.push([length / 2 + radius * Math.cos(angle), radius * Math.sin(angle)]);
-      }
-      for (let index = 0; index < lineCount; index += 1) {
-        const ratio = index / lineCount;
-        points.push([length / 2 - length * ratio, -radius]);
-      }
-      for (let index = 0; index < arcCount; index += 1) {
-        const angle = -Math.PI / 2 - Math.PI * index / arcCount;
-        points.push([-length / 2 + radius * Math.cos(angle), radius * Math.sin(angle)]);
-      }
-      return points;
+  const TRACK_TEMPLATES = new Set(["oval", "s_curve", "hairpin", "chicane", "technical"]);
+  const CORNER_COUNT_RANGES = {
+    oval: [4, 4], s_curve: [6, 8], hairpin: [6, 9], chicane: [7, 10], technical: [9, 12]
+  };
+  const MAX_CENTERLINE_POINTS = 4096;
+
+  function createTrackRandom(seed) {
+    let value = seed >>> 0;
+    if (value === 0) value = 1;
+    const random = () => {
+      value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
+      return value / 4294967296;
+    };
+    random.index = (length) => Math.min(length - 1, Math.floor(random() * length));
+    random.uniform = (minimum, maximum) => minimum + (maximum - minimum) * random();
+    return random;
+  }
+
+  function cornerSequence(template, random) {
+    if (!TRACK_TEMPLATES.has(template)) {
+      throw new Error(`template must be one of ${Array.from(TRACK_TEMPLATES).sort().join(", ")}`);
     }
-    const settings = {
-      oval: [64 + random() * 12 - 6, 38 + random() * 8 - 4, 2, 0.025],
-      s_curve: [62 + random() * 10 - 5, 42 + random() * 8 - 4, 1, 0.07],
-      chicane: [60 + random() * 10 - 5, 40 + random() * 8 - 4, 3, 0.055]
-    }[template];
-    if (!settings) throw new Error("트랙 템플릿을 확인해주세요.");
-    const [radiusX, radiusY, harmonic, amplitude] = settings;
-    const phase = random() * 0.36 - 0.18;
-    return Array.from({ length: 48 }, (_item, index) => {
-      const angle = 2 * Math.PI * index / 48;
-      const radius = 1 + amplitude * Math.sin(harmonic * angle + phase);
-      return [radiusX * radius * Math.cos(angle), radiusY * radius * Math.sin(angle)];
-    });
+    const [minimum, maximum] = CORNER_COUNT_RANGES[template];
+    const count = minimum + random.index(maximum - minimum + 1);
+    if (template === "oval") return Array(count).fill("left:wide");
+    if (template === "s_curve") {
+      const direction = random() < 0.5 ? "left" : "right";
+      const classes = ["wide", "medium", "tight"];
+      return Array.from({ length: count }, (_item, index) => {
+        const cornerDirection = index % 2 === 0
+          ? direction
+          : (direction === "left" ? "right" : "left");
+        return `${cornerDirection}:${classes[random.index(classes.length)]}`;
+      });
+    }
+    if (template === "hairpin") {
+      const direction = random() < 0.5 ? "left" : "right";
+      const sequence = Array.from({ length: count }, () => `${direction}:${random() < 0.4 ? "wide" : "medium"}`);
+      sequence[Math.floor(count / 3)] = `${direction}:hairpin`;
+      const otherDirection = direction === "left" ? "right" : "left";
+      sequence[Math.floor((2 * count) / 3)] = `${otherDirection}:hairpin`;
+      return sequence;
+    }
+    if (template === "chicane") {
+      const direction = random() < 0.5 ? "left" : "right";
+      const otherDirection = direction === "left" ? "right" : "left";
+      return Array.from({ length: count }, (_item, index) => {
+        const cornerDirection = index % 2 === 0 ? direction : otherDirection;
+        return `${cornerDirection}:${random() < 0.65 ? "tight" : "medium"}`;
+      });
+    }
+    const classes = ["wide", "medium", "tight"];
+    for (let index = classes.length; index < count; index += 1) {
+      classes.push(classes[random.index(classes.length)]);
+    }
+    for (let index = classes.length - 1; index > 0; index -= 1) {
+      const swapIndex = random.index(index + 1);
+      [classes[index], classes[swapIndex]] = [classes[swapIndex], classes[index]];
+    }
+    return classes.map((cornerClass) => `${random() < 0.5 ? "left" : "right"}:${cornerClass}`);
+  }
+
+  function trackDistance(first, second) {
+    return Math.hypot(second[0] - first[0], second[1] - first[1]);
+  }
+
+  function trackInterpolate(start, end, ratio) {
+    return [start[0] + (end[0] - start[0]) * ratio, start[1] + (end[1] - start[1]) * ratio];
+  }
+
+  function quadraticBezier(start, control, end, ratio) {
+    const inverse = 1 - ratio;
+    return [
+      inverse * inverse * start[0] + 2 * inverse * ratio * control[0] + ratio * ratio * end[0],
+      inverse * inverse * start[1] + 2 * inverse * ratio * control[1] + ratio * ratio * end[1]
+    ];
+  }
+
+  function angleGaps(random, count) {
+    const weights = Array.from({ length: count }, () => 0.5 + random());
+    const weightTotal = weights.reduce((sum, weight) => sum + weight, 0);
+    const rawGaps = weights.map((weight) => 2 * Math.PI * weight / weightTotal);
+    const minimum = 20 * Math.PI / 180;
+    const maximum = 100 * Math.PI / 180;
+    const base = 2 * Math.PI / count;
+    let factor = 1;
+    for (const gap of rawGaps) {
+      const deviation = gap - base;
+      if (deviation > 0) factor = Math.min(factor, (maximum - base) / deviation);
+      else if (deviation < 0) factor = Math.min(factor, (base - minimum) / -deviation);
+    }
+    factor = Math.max(0, Math.min(1, factor * 0.999));
+    return rawGaps.map((gap) => base + factor * (gap - base));
+  }
+
+  function roundTrackCoordinate(value) {
+    const magnitude = Math.floor(Math.abs(value) * 100000 + 0.5) / 100000;
+    const rounded = value < 0 ? -magnitude : magnitude;
+    return rounded === 0 ? 0 : rounded;
+  }
+
+  function segmentCross(first, second, third) {
+    return (second[0] - first[0]) * (third[1] - first[1]) -
+      (second[1] - first[1]) * (third[0] - first[0]);
+  }
+
+  function pointSegmentDistance(point, start, end) {
+    const dx = end[0] - start[0];
+    const dy = end[1] - start[1];
+    const lengthSquared = dx * dx + dy * dy;
+    if (lengthSquared <= 1e-18) return trackDistance(point, start);
+    const ratio = Math.max(0, Math.min(1,
+      ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / lengthSquared));
+    return trackDistance(point, [start[0] + ratio * dx, start[1] + ratio * dy]);
+  }
+
+  function segmentsDistance(firstStart, firstEnd, secondStart, secondEnd) {
+    if (segmentsIntersect(firstStart, firstEnd, secondStart, secondEnd)) return 0;
+    return Math.min(
+      pointSegmentDistance(firstStart, secondStart, secondEnd),
+      pointSegmentDistance(firstEnd, secondStart, secondEnd),
+      pointSegmentDistance(secondStart, firstStart, firstEnd),
+      pointSegmentDistance(secondEnd, firstStart, firstEnd)
+    );
+  }
+
+  function areAdjacent(firstIndex, secondIndex, count) {
+    return firstIndex === secondIndex ||
+      (firstIndex + 1) % count === secondIndex ||
+      (secondIndex + 1) % count === firstIndex;
+  }
+
+  function roadBoundaries(centerline, width) {
+    const left = [];
+    const right = [];
+    for (let index = 0; index < centerline.length; index += 1) {
+      const point = centerline[index];
+      const previous = centerline[(index - 1 + centerline.length) % centerline.length];
+      const following = centerline[(index + 1) % centerline.length];
+      const incomingLength = trackDistance(previous, point);
+      const outgoingLength = trackDistance(point, following);
+      const incoming = [(point[0] - previous[0]) / incomingLength, (point[1] - previous[1]) / incomingLength];
+      const outgoing = [(following[0] - point[0]) / outgoingLength, (following[1] - point[1]) / outgoingLength];
+      const incomingNormal = [-incoming[1], incoming[0]];
+      const outgoingNormal = [-outgoing[1], outgoing[0]];
+      let normalX = incomingNormal[0] + outgoingNormal[0];
+      let normalY = incomingNormal[1] + outgoingNormal[1];
+      let normalLength = Math.hypot(normalX, normalY);
+      if (normalLength <= 1e-9) {
+        normalX = outgoingNormal[0];
+        normalY = outgoingNormal[1];
+        normalLength = 1;
+      }
+      const normal = [normalX / normalLength, normalY / normalLength];
+      const denominator = Math.abs(normal[0] * incomingNormal[0] + normal[1] * incomingNormal[1]);
+      const miterLength = Math.min(width / Math.max(denominator, 1e-6), width * 4);
+      const offset = [normal[0] * miterLength, normal[1] * miterLength];
+      left.push([point[0] + offset[0], point[1] + offset[1]]);
+      right.push([point[0] - offset[0], point[1] - offset[1]]);
+    }
+    return [left, right];
+  }
+
+  function roadEdgesIntersect(centerline, width) {
+    const count = centerline.length;
+    for (const boundary of roadBoundaries(centerline, width)) {
+      for (let firstIndex = 0; firstIndex < count; firstIndex += 1) {
+        const firstStart = boundary[firstIndex];
+        const firstEnd = boundary[(firstIndex + 1) % count];
+        for (let secondIndex = firstIndex + 1; secondIndex < count; secondIndex += 1) {
+          if (areAdjacent(firstIndex, secondIndex, count)) continue;
+          const secondStart = boundary[secondIndex];
+          const secondEnd = boundary[(secondIndex + 1) % count];
+          if (
+            Math.max(firstStart[0], firstEnd[0]) + 1e-9 < Math.min(secondStart[0], secondEnd[0]) ||
+            Math.max(secondStart[0], secondEnd[0]) + 1e-9 < Math.min(firstStart[0], firstEnd[0]) ||
+            Math.max(firstStart[1], firstEnd[1]) + 1e-9 < Math.min(secondStart[1], secondEnd[1]) ||
+            Math.max(secondStart[1], secondEnd[1]) + 1e-9 < Math.min(firstStart[1], firstEnd[1])
+          ) continue;
+          if (segmentsIntersect(firstStart, firstEnd, secondStart, secondEnd)) return true;
+        }
+      }
+    }
+
+    const lengths = centerline.map((point, index) => trackDistance(point, centerline[(index + 1) % count]));
+    const totalLength = lengths.reduce((sum, length) => sum + length, 0);
+    const midpointDistances = [];
+    let cumulative = 0;
+    for (const length of lengths) {
+      midpointDistances.push(cumulative + length * 0.5);
+      cumulative += length;
+    }
+    const requiredArcSeparation = Math.max(width * 4, 8);
+    const minimumCenterlineDistance = width * 2;
+    for (let firstIndex = 0; firstIndex < count; firstIndex += 1) {
+      const firstMidpoint = midpointDistances[firstIndex];
+      const firstStart = centerline[firstIndex];
+      const firstEnd = centerline[(firstIndex + 1) % count];
+      for (let secondIndex = firstIndex + 1; secondIndex < count; secondIndex += 1) {
+        if (areAdjacent(firstIndex, secondIndex, count)) continue;
+        let separation = Math.abs(midpointDistances[secondIndex] - firstMidpoint);
+        separation = Math.min(separation, totalLength - separation);
+        if (separation <= requiredArcSeparation) continue;
+        const secondStart = centerline[secondIndex];
+        const secondEnd = centerline[(secondIndex + 1) % count];
+        if (segmentsDistance(firstStart, firstEnd, secondStart, secondEnd) < minimumCenterlineDistance) return true;
+      }
+    }
+    return false;
+  }
+
+  function validateBrowserCustomGeometry(centerline, width) {
+    if (!Array.isArray(centerline) || centerline.length < 12) throw new Error("centerline must contain at least 12 points");
+    if (centerline.length > MAX_CENTERLINE_POINTS) throw new Error(`centerline must contain at most ${MAX_CENTERLINE_POINTS} points`);
+    if (!Number.isFinite(width) || width <= 0) throw new Error("width must be positive and finite");
+    const lengths = centerline.map((point, index) => trackDistance(point, centerline[(index + 1) % centerline.length]));
+    if (lengths.some((length) => length <= 1e-6)) throw new Error("centerline contains a zero-length segment");
+    if (lengths.reduce((sum, length) => sum + length, 0) < width * 8) throw new Error("centerline is too short for the selected width");
+    for (let firstIndex = 0; firstIndex < centerline.length; firstIndex += 1) {
+      for (let secondIndex = firstIndex + 1; secondIndex < centerline.length; secondIndex += 1) {
+        if (areAdjacent(firstIndex, secondIndex, centerline.length)) continue;
+        if (segmentsIntersect(
+          centerline[firstIndex], centerline[(firstIndex + 1) % centerline.length],
+          centerline[secondIndex], centerline[(secondIndex + 1) % centerline.length]
+        )) throw new Error(`centerline self-intersection between segments ${firstIndex} and ${secondIndex}`);
+      }
+    }
+    for (let index = 0; index < centerline.length; index += 1) {
+      const point = centerline[index];
+      const previous = centerline[(index - 1 + centerline.length) % centerline.length];
+      const following = centerline[(index + 1) % centerline.length];
+      const incoming = [point[0] - previous[0], point[1] - previous[1]];
+      const outgoing = [following[0] - point[0], following[1] - point[1]];
+      const cosine = (incoming[0] * outgoing[0] + incoming[1] * outgoing[1]) /
+        (lengths[(index - 1 + lengths.length) % lengths.length] * lengths[index]);
+      if (cosine < -0.995) throw new Error(`centerline turn is too sharp at point ${index}`);
+      const doubledArea = Math.abs(segmentCross(previous, point, following));
+      if (doubledArea > 1e-9) {
+        const radius = lengths[(index - 1 + lengths.length) % lengths.length] * lengths[index] *
+          trackDistance(previous, following) / (2 * doubledArea);
+        const minimumRadius = width * 1.05;
+        if (radius < minimumRadius) {
+          throw new Error(`turn radius ${radius} is below minimum ${minimumRadius} at point ${index}`);
+        }
+      }
+    }
+    if (roadEdgesIntersect(centerline, width)) throw new Error("road boundaries intersect or overlap");
+  }
+
+  function buildBrowserGeometryCandidate(template, designSeed, width) {
+    const random = createTrackRandom(designSeed);
+    const sequence = cornerSequence(template, random);
+    const count = sequence.length;
+    const gaps = angleGaps(random, count);
+    const scale = Math.max(1, width / 8);
+    const radiusX = (64 + random.uniform(-6, 6)) * scale;
+    const radiusY = (40 + random.uniform(-4, 4)) * scale;
+    const phase = random.uniform(0, 2 * Math.PI);
+    const templateAmplitude = { oval: 0.015, s_curve: 0.055, hairpin: 0.08, chicane: 0.085, technical: 0.11 }[template];
+    const classAmplitude = { wide: 0.035, medium: 0.085, tight: 0.14, hairpin: 0.22 };
+    const anchors = [];
+    let angle = random.uniform(0, 2 * Math.PI);
+    for (let index = 0; index < sequence.length; index += 1) {
+      const [direction, cornerClass] = sequence[index].split(":", 2);
+      const signedClassOffset = classAmplitude[cornerClass] * (direction === "left" ? 1 : -1);
+      const harmonic = 1 + (index % 3);
+      const radialModulation = templateAmplitude * Math.sin(harmonic * angle + phase);
+      const radialJitter = random.uniform(-0.025, 0.025);
+      const radialScale = 1 + signedClassOffset + radialModulation + radialJitter;
+      anchors.push([radiusX * radialScale * Math.cos(angle), radiusY * radialScale * Math.sin(angle)]);
+      angle += gaps[index];
+    }
+
+    const incomingPoints = [];
+    const outgoingPoints = [];
+    for (let index = 0; index < anchors.length; index += 1) {
+      const anchor = anchors[index];
+      const previous = anchors[(index - 1 + count) % count];
+      const following = anchors[(index + 1) % count];
+      const incomingLength = trackDistance(anchor, previous);
+      const outgoingLength = trackDistance(anchor, following);
+      const cornerClass = sequence[index].split(":", 2)[1];
+      const previousRay = [(previous[0] - anchor[0]) / incomingLength, (previous[1] - anchor[1]) / incomingLength];
+      const followingRay = [(following[0] - anchor[0]) / outgoingLength, (following[1] - anchor[1]) / outgoingLength];
+      const interiorCosine = Math.max(-1, Math.min(1, previousRay[0] * followingRay[0] + previousRay[1] * followingRay[1]));
+      const deflection = Math.PI - Math.acos(interiorCosine);
+      const halfDeflection = deflection * 0.5;
+      const radiusTarget = { wide: 2.2, medium: 1.8, tight: 1.35, hairpin: 1.25 }[cornerClass] * width;
+      const quadraticRadiusFactor = Math.sin(halfDeflection) / Math.max(Math.cos(halfDeflection) ** 2, 1e-9);
+      const trim = Math.min(radiusTarget * quadraticRadiusFactor, 0.45 * Math.min(incomingLength, outgoingLength));
+      incomingPoints.push(trackInterpolate(anchor, previous, trim / incomingLength));
+      outgoingPoints.push(trackInterpolate(anchor, following, trim / outgoingLength));
+    }
+
+    const points = [incomingPoints[0]];
+    for (let index = 0; index < count; index += 1) {
+      const anchor = anchors[index];
+      const outgoing = outgoingPoints[index];
+      const controlLength = Math.max(trackDistance(anchor, incomingPoints[index]), trackDistance(anchor, outgoing));
+      const curveSteps = Math.max(1, Math.ceil(2 * controlLength / 4));
+      for (let step = 1; step <= curveSteps; step += 1) {
+        points.push(quadraticBezier(incomingPoints[index], anchor, outgoing, step / curveSteps));
+      }
+      const nextIndex = (index + 1) % count;
+      const straightStart = outgoingPoints[index];
+      const straightEnd = incomingPoints[nextIndex];
+      const straightSteps = Math.max(1, Math.ceil(trackDistance(straightStart, straightEnd) / 4));
+      const lastStep = nextIndex !== 0 ? straightSteps : straightSteps - 1;
+      for (let step = 1; step <= lastStep; step += 1) {
+        points.push(trackInterpolate(straightStart, straightEnd, step / straightSteps));
+      }
+    }
+    const centerline = points.map(([x, y]) => [roundTrackCoordinate(x), roundTrackCoordinate(y)]);
+    if (centerline.length > MAX_CENTERLINE_POINTS) throw new Error(`generated centerline exceeds ${MAX_CENTERLINE_POINTS} points`);
+    validateBrowserCustomGeometry(centerline, width);
+    return { centerline, sequence };
   }
 
   function makeBrowserCustomMap(options) {
-    const designSeed = Math.trunc(finiteNumber(options.design_seed, "디자인 seed", 0, 4294967295));
+    if (!options || typeof options !== "object") throw new Error("options must be an object");
+    if (typeof options.design_seed !== "number" || !Number.isInteger(options.design_seed) || options.design_seed < 0 || options.design_seed > 4294967295) {
+      throw new Error("design_seed must be an integer between 0 and 4294967295");
+    }
+    const designSeed = options.design_seed;
+    if (!TRACK_TEMPLATES.has(options.template)) throw new Error(`template must be one of ${Array.from(TRACK_TEMPLATES).sort().join(", ")}`);
+    if (typeof options.width !== "number" || !Number.isFinite(options.width) || options.width < 0.5 || options.width > 100) {
+      throw new Error("width must be between 0.5 and 100");
+    }
+    const width = options.width;
+    const mapId = String(options.map_id);
+    if (!/^custom-track-[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(mapId)) throw new Error("map_id must match custom-track-... ");
+    let lastError;
+    let generated;
+    for (let attempt = 0; attempt < 32; attempt += 1) {
+      const attemptSeed = (designSeed + attempt * 0x9e3779b9) >>> 0;
+      try {
+        generated = buildBrowserGeometryCandidate(options.template, attemptSeed, width);
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!generated) throw new Error(`could not generate a valid ${options.template} track: ${lastError.message}`);
     return {
       schema_version: MAP_SCHEMA_VERSION,
-      map_id: String(options.map_id),
+      map_id: mapId,
       map_kind: "custom",
-      geometry: {
-        centerline: browserGeneratedCenterline(options.template, designSeed),
-        width: finiteNumber(options.width, "도로 반폭", 0.5, 100),
-        start_index: 0,
-        direction: 1
-      },
+      geometry: { centerline: generated.centerline, width, start_index: 0, direction: 1 },
       obstacle_mode: "custom_only",
       obstacles: Array.isArray(options.obstacles) ? options.obstacles : [],
       max_steps: Math.trunc(finiteNumber(options.max_steps, "max_steps", 1, 10000)),
       frame_skip: Math.trunc(finiteNumber(options.frame_skip, "frame_skip", 1, 16)),
-      generator: { template: options.template, design_seed: designSeed, client_fallback: true }
+      generator: {
+        template: options.template,
+        design_seed: designSeed,
+        generator_version: 2,
+        corner_count: generated.sequence.length,
+        corner_sequence: generated.sequence
+      }
     };
   }
 
