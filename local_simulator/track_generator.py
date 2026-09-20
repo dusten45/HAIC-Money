@@ -3,8 +3,6 @@ from __future__ import annotations
 from hashlib import sha256
 import json
 import math
-import random
-from typing import Iterable
 
 from .track_model import (
     MAX_SEED,
@@ -15,8 +13,34 @@ from .track_model import (
 )
 
 
-TEMPLATES = frozenset({"oval", "s_curve", "hairpin", "chicane"})
+TEMPLATES = frozenset({"oval", "s_curve", "hairpin", "chicane", "technical"})
+GENERATOR_VERSION = 2
+CORNER_COUNT_RANGES = {
+    "oval": (4, 4),
+    "s_curve": (6, 8),
+    "hairpin": (6, 9),
+    "chicane": (7, 10),
+    "technical": (9, 12),
+}
 MIN_CENTERLINE_POINTS = 12
+MAX_CENTERLINE_POINTS = 4096
+
+
+class _TrackRng:
+    def __init__(self, seed: int) -> None:
+        self.state = seed & 0xFFFFFFFF
+        if self.state == 0:
+            self.state = 1
+
+    def random(self) -> float:
+        self.state = (1664525 * self.state + 1013904223) & 0xFFFFFFFF
+        return self.state / 4294967296.0
+
+    def uniform(self, minimum: float, maximum: float) -> float:
+        return minimum + (maximum - minimum) * self.random()
+
+    def index(self, length: int) -> int:
+        return min(length - 1, int(self.random() * length))
 
 
 def _distance(first: tuple[float, float], second: tuple[float, float]) -> float:
@@ -139,88 +163,196 @@ def custom_geometry_fingerprint(geometry: CustomTrackGeometry) -> str:
     return sha256(encoded.encode("utf-8")).hexdigest()[:16]
 
 
-def _radial_loop(
-    count: int,
-    radius_x: float,
-    radius_y: float,
-    harmonic: int,
-    amplitude: float,
-    rng: random.Random,
-) -> tuple[tuple[float, float], ...]:
-    phase = rng.uniform(-0.18, 0.18)
-    points: list[tuple[float, float]] = []
-    for index in range(count):
-        angle = 2.0 * math.pi * index / count
-        modulation = 1.0 + amplitude * math.sin(harmonic * angle + phase)
-        points.append(
-            (
-                radius_x * modulation * math.cos(angle),
-                radius_y * modulation * math.sin(angle),
-            )
+def _corner_sequence(template: str, rng: _TrackRng) -> tuple[str, ...]:
+    if template not in TEMPLATES:
+        raise ValueError(f"template must be one of {sorted(TEMPLATES)}")
+    minimum, maximum = CORNER_COUNT_RANGES[template]
+    count = minimum + rng.index(maximum - minimum + 1)
+
+    if template == "oval":
+        return ("left:wide",) * count
+
+    if template == "s_curve":
+        direction = "left" if rng.random() < 0.5 else "right"
+        classes = ("wide", "medium", "tight")
+        return tuple(
+            f"{direction if index % 2 == 0 else ('right' if direction == 'left' else 'left')}:{classes[rng.index(len(classes))]}"
+            for index in range(count)
         )
-    return tuple(points)
+
+    if template == "hairpin":
+        direction = "left" if rng.random() < 0.5 else "right"
+        sequence = [
+            f"{direction}:{('wide' if rng.random() < 0.4 else 'medium')}"
+            for _ in range(count)
+        ]
+        sequence[count // 3] = f"{direction}:hairpin"
+        other_direction = "right" if direction == "left" else "left"
+        sequence[(2 * count) // 3] = f"{other_direction}:hairpin"
+        return tuple(sequence)
+
+    if template == "chicane":
+        direction = "left" if rng.random() < 0.5 else "right"
+        return tuple(
+            f"{direction if index % 2 == 0 else ('right' if direction == 'left' else 'left')}:{'tight' if rng.random() < 0.65 else 'medium'}"
+            for index in range(count)
+        )
+
+    classes = ["wide", "medium", "tight"]
+    classes.extend(classes[rng.index(len(classes))] for _ in range(count - len(classes)))
+    for index in range(len(classes) - 1, 0, -1):
+        swap_index = rng.index(index + 1)
+        classes[index], classes[swap_index] = classes[swap_index], classes[index]
+    return tuple(
+        f"{'left' if rng.random() < 0.5 else 'right'}:{corner_class}"
+        for corner_class in classes
+    )
 
 
-def _hairpin_loop(rng: random.Random) -> tuple[tuple[float, float], ...]:
-    radius = 22.0 + rng.uniform(-2.0, 2.0)
-    length = 92.0 + rng.uniform(-5.0, 5.0)
-    line_count = 12
-    arc_count = 12
-    points: list[tuple[float, float]] = []
-    for index in range(line_count):
-        ratio = index / line_count
-        points.append((-length / 2.0 + length * ratio, radius))
-    for index in range(arc_count):
-        angle = math.pi / 2.0 - math.pi * index / arc_count
-        points.append((length / 2.0 + radius * math.cos(angle), radius * math.sin(angle)))
-    for index in range(line_count):
-        ratio = index / line_count
-        points.append((length / 2.0 - length * ratio, -radius))
-    for index in range(arc_count):
-        angle = -math.pi / 2.0 - math.pi * index / arc_count
-        points.append((-length / 2.0 + radius * math.cos(angle), radius * math.sin(angle)))
-    return tuple(points)
+def _round_coordinate(value: float) -> float:
+    magnitude = math.floor(abs(value) * 100_000.0 + 0.5) / 100_000.0
+    rounded = math.copysign(magnitude, value)
+    return 0.0 if rounded == 0.0 else rounded
 
 
-def _generate_geometry(template: str, design_seed: int, width: float) -> CustomTrackGeometry:
+def _interpolate(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    ratio: float,
+) -> tuple[float, float]:
+    return (
+        start[0] + (end[0] - start[0]) * ratio,
+        start[1] + (end[1] - start[1]) * ratio,
+    )
+
+
+def _quadratic_bezier(
+    start: tuple[float, float],
+    control: tuple[float, float],
+    end: tuple[float, float],
+    ratio: float,
+) -> tuple[float, float]:
+    inverse = 1.0 - ratio
+    return (
+        inverse * inverse * start[0] + 2.0 * inverse * ratio * control[0] + ratio * ratio * end[0],
+        inverse * inverse * start[1] + 2.0 * inverse * ratio * control[1] + ratio * ratio * end[1],
+    )
+
+
+def _angle_gaps(rng: _TrackRng, count: int) -> tuple[float, ...]:
+    weights = tuple(0.5 + rng.random() for _ in range(count))
+    weight_total = sum(weights)
+    raw_gaps = tuple(2.0 * math.pi * weight / weight_total for weight in weights)
+    minimum = math.radians(20.0)
+    maximum = math.radians(100.0)
+    base = 2.0 * math.pi / count
+
+    # Pull the random gaps toward equal spacing only as much as needed to
+    # satisfy the geometric bounds. This preserves seeded variation while
+    # avoiding seeds that fail after a finite number of random retries.
+    factor = 1.0
+    for gap in raw_gaps:
+        deviation = gap - base
+        if deviation > 0.0:
+            factor = min(factor, (maximum - base) / deviation)
+        elif deviation < 0.0:
+            factor = min(factor, (base - minimum) / -deviation)
+    factor = max(0.0, min(1.0, factor * 0.999))
+    return tuple(base + factor * (gap - base) for gap in raw_gaps)
+
+
+def _generate_geometry(
+    template: str,
+    design_seed: int,
+    width: float,
+) -> tuple[CustomTrackGeometry, tuple[str, ...]]:
     if template not in TEMPLATES:
         raise ValueError(f"template must be one of {sorted(TEMPLATES)}")
     design_seed = _require_int("design_seed", design_seed, 0, MAX_SEED)
     width = _require_float("width", width, 0.5, 100.0)
-    rng = random.Random(design_seed)
-    count = 48
-    if template == "oval":
-        points = _radial_loop(
-            count,
-            64.0 + rng.uniform(-6.0, 6.0),
-            38.0 + rng.uniform(-4.0, 4.0),
-            2,
-            0.025,
-            rng,
+    rng = _TrackRng(design_seed)
+    sequence = _corner_sequence(template, rng)
+    count = len(sequence)
+    gaps = _angle_gaps(rng, count)
+
+    scale = max(1.0, width / 8.0)
+    radius_x = (64.0 + rng.uniform(-6.0, 6.0)) * scale
+    radius_y = (40.0 + rng.uniform(-4.0, 4.0)) * scale
+    phase = rng.uniform(0.0, 2.0 * math.pi)
+    template_amplitude = {
+        "oval": 0.015,
+        "s_curve": 0.055,
+        "hairpin": 0.08,
+        "chicane": 0.085,
+        "technical": 0.11,
+    }[template]
+    class_amplitude = {"wide": 0.035, "medium": 0.085, "tight": 0.14, "hairpin": 0.22}
+
+    anchors: list[tuple[float, float]] = []
+    angle = rng.uniform(0.0, 2.0 * math.pi)
+    for index, token in enumerate(sequence):
+        direction, corner_class = token.split(":", 1)
+        signed_class_offset = class_amplitude[corner_class] * (1.0 if direction == "left" else -1.0)
+        harmonic = 1 + (index % 3)
+        radial_modulation = template_amplitude * math.sin(harmonic * angle + phase)
+        radial_jitter = rng.uniform(-0.025, 0.025)
+        radial_scale = 1.0 + signed_class_offset + radial_modulation + radial_jitter
+        anchors.append(
+            (
+                radius_x * radial_scale * math.cos(angle),
+                radius_y * radial_scale * math.sin(angle),
+            )
         )
-    elif template == "s_curve":
-        points = _radial_loop(
-            count,
-            62.0 + rng.uniform(-5.0, 5.0),
-            42.0 + rng.uniform(-4.0, 4.0),
-            1,
-            0.07,
-            rng,
+        angle += gaps[index]
+
+    trim_ratios = {"wide": 0.30, "medium": 0.25, "tight": 0.21, "hairpin": 0.19}
+    incoming_points: list[tuple[float, float]] = []
+    outgoing_points: list[tuple[float, float]] = []
+    for index, anchor in enumerate(anchors):
+        previous = anchors[(index - 1) % count]
+        following = anchors[(index + 1) % count]
+        incoming_length = _distance(anchor, previous)
+        outgoing_length = _distance(anchor, following)
+        corner_class = sequence[index].split(":", 1)[1]
+        trim = min(
+            trim_ratios[corner_class] * min(incoming_length, outgoing_length),
+            0.35 * min(incoming_length, outgoing_length),
         )
-    elif template == "chicane":
-        points = _radial_loop(
-            count,
-            60.0 + rng.uniform(-5.0, 5.0),
-            40.0 + rng.uniform(-4.0, 4.0),
-            3,
-            0.055,
-            rng,
-        )
-    else:
-        points = _hairpin_loop(rng)
-    geometry = CustomTrackGeometry(centerline=points, width=width)
+        incoming_points.append(_interpolate(anchor, previous, trim / incoming_length))
+        outgoing_points.append(_interpolate(anchor, following, trim / outgoing_length))
+
+    points: list[tuple[float, float]] = [incoming_points[0]]
+    for index, anchor in enumerate(anchors):
+        outgoing = outgoing_points[index]
+        control_length = max(_distance(anchor, incoming_points[index]), _distance(anchor, outgoing))
+        curve_steps = max(1, math.ceil(2.0 * control_length / 4.0))
+        for step in range(1, curve_steps + 1):
+            points.append(
+                _quadratic_bezier(
+                    incoming_points[index],
+                    anchor,
+                    outgoing,
+                    step / curve_steps,
+                )
+            )
+
+        next_index = (index + 1) % count
+        straight_start = outgoing_points[index]
+        straight_end = incoming_points[next_index]
+        straight_steps = max(1, math.ceil(_distance(straight_start, straight_end) / 4.0))
+        last_step = straight_steps if next_index != 0 else straight_steps - 1
+        for step in range(1, last_step + 1):
+            points.append(_interpolate(straight_start, straight_end, step / straight_steps))
+
+    quantized = tuple(
+        (_round_coordinate(point[0]), _round_coordinate(point[1]))
+        for point in points
+    )
+    if len(quantized) > MAX_CENTERLINE_POINTS:
+        raise ValueError(f"generated centerline exceeds {MAX_CENTERLINE_POINTS} points")
+    geometry = CustomTrackGeometry(centerline=quantized, width=width)
     validate_custom_geometry(geometry)
-    return geometry
+    return geometry, sequence
 
 
 def generate_custom_map(
@@ -231,14 +363,20 @@ def generate_custom_map(
     max_steps: int = 2000,
     frame_skip: int = 4,
 ) -> CustomMapSpec:
-    geometry = _generate_geometry(template, design_seed, width)
+    geometry, corner_sequence = _generate_geometry(template, design_seed, width)
     return CustomMapSpec(
         map_id=map_id,
         geometry=geometry,
         obstacles=(),
         max_steps=max_steps,
         frame_skip=frame_skip,
-        generator=(("design_seed", design_seed), ("template", template)),
+        generator=(
+            ("design_seed", design_seed),
+            ("generator_version", GENERATOR_VERSION),
+            ("corner_count", len(corner_sequence)),
+            ("corner_sequence", corner_sequence),
+            ("template", template),
+        ),
     )
 
 
