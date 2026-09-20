@@ -50,7 +50,7 @@
 - [x] .gitignore에는 학습 checkpoint, 평가 보고서, 제출 zip을 모을 artifacts/haic/만 추가한다. 이후 작업은 이 파일을 수정하지 않는다.
 - [x] 결정론적 track_id/seed 목록을 학습, 튜닝, 보류 검증으로 분리하는 split 함수를 추가하고, 세트 중복을 거부한다.
 - [x] 테스트 우선 작성: observation shape/range, reset 시 네 프레임 반복, 한 transition당 action 한 번과 raw tick 네 번, HUD crop 좌표와 레이블 시점 정렬, seed set 교집합 없음.
-- [ ] 20개 이상의 서로 다른 주행 프레임에서 HUD branch가 속도·조향·yaw 보조 레이블을 추정하는 기준 오차를 기록한다. 부정확한 계기판 채널은 제거 가능하도록 입력 feature를 선택적으로 둔다.
+- [x] 96개 서로 다른 decision frame에서 속도·휠·조향·yaw 보조 레이블 오차를 기록했다(`artifacts/haic/task5-hud-validation-20.json`). HUD branch의 오차 변화는 미미했고 steering/yaw는 약간 악화되어, HUD branch를 선택적으로 끌 수 있게 유지하고 전체 프레임 경로만으로도 추론 가능하게 했다. 이 pilot은 track 3/seed 201 한 주행에서만 측정했고 ROI별 feature mask는 추가하지 않았다.
 
 **통과 기준:** 기존 local contract 테스트와 새 수집기 테스트가 통과한다. 학습 로그에는 원시 상태 레이블과 관측/행동 전이의 시점 대응이 남고, 추론 Agent에 레이블 객체를 넘기는 경로가 없다.
 
@@ -121,10 +121,10 @@
 - 생성: tests/test_submission_layout.py
 - 수정: README.md
 
-- [x] 비렌더링 CarEnvironment로 동일한 seed 목록에서 PPO-only와 PPO+CEM을 모두 주행시키고 episode JSONL과 요약 JSON을 남긴다. 0.1초 budget, 300-decision fast 비교는 10개 held-out tuple에서 완료했으며 max_steps DNF를 그대로 기록했다.
+- [x] 비렌더링 CarEnvironment로 동일한 seed 목록에서 PPO-only와 PPO+CEM을 모두 주행시키고 episode JSONL과 요약 JSON을 남긴다. 0.1초 budget, 2,000 decision cap의 paired comparison 10개 held-out tuple을 끝까지 실행했고, 모두 자연 off_track DNF를 기록했다(`artifacts/haic/task5-eval-fast-fullcap/`).
 - [x] 튜닝 seed 결과로만 planner horizon/population/uncertainty weight를 선택하고 held-out seed는 최종 비교에만 사용하도록 구현했다. 10개 held-out tuple을 고정하고 중복을 거부한다.
 - [x] 빠른 반복용 짧은 budget 결과와 기본 4.5초 budget 결과를 구분해 기록했다. 기본 4.5초, 2,000 cap PPO-only episode는 268 decision 후 off_track DNF로 종료했다.
-- [x] 제출 ZIP은 현재 planner를 비활성화한다. 300-decision fast tune/held-out 결과는 완주 성능을 입증하지 못하므로 PPO-only를 보수적으로 선택했고, ZIP runtime config가 이 선택을 강제한다.
+- [x] 제출 ZIP은 현재 planner를 비활성화한다. 2,000-cap held-out 결과에서 PPO+CEM 진행률이 PPO-only보다 낮고 두 모드 모두 0/10 완주였으므로 PPO-only를 선택했고, ZIP runtime config가 이 선택을 강제한다.
 - [x] 최종 CPU 검증은 import/Agent 생성 10초, reset/act 각 5초, finite action, 2회 연속 reset 격리와 프로세스 RSS를 점검했다. package smoke는 init 1.328초, act 최대 0.015초, RSS 201,940,992 bytes였다.
 - [x] package_submission.py는 agent.py, 필요한 haic_agent 모듈, CPU 가중치만 ZIP 루트에 넣고 학습 코드·labels·dataset·.venv를 제외한다. 깨끗한 임시 디렉터리 static 검사와 strict CPU checkpoint load를 통과했다.
 - [x] 사용자 실행법에 venv 생성, Windows 전용 Box2D 설치 우회, 학습, 보류 시드 평가, 제출 묶음 생성을 적었다. 공식 requirements.txt와 공식 평가용 의존성은 그대로 뒀다.
@@ -137,7 +137,7 @@
 - [x] PPO 256 decision update와 같은 checkpoint 기반 dynamics 128 update를 실행하고 checkpoint를 저장했다.
 - [x] 0.05초/2-decision 및 0.1초/300-decision fast-budget 폐쇄루프를 기록했다.
 - [x] 기본 4.5초, 2,000 cap PPO-only episode의 실제 종료와 호출/전체 시간을 기록했다.
-- [ ] 최소 10개 보류 seed의 2,000-cap PPO-only/PPO+CEM 최종 비교. 현재 10개 비교는 300-decision fast-budget partial 결과이므로 이 항목을 완료로 표시하지 않는다.
+- [x] 최소 10개 보류 seed의 2,000-cap PPO-only/PPO+CEM paired 비교: 0.1초 fast budget에서 두 모드 모두 0/10 완주 및 자연 off_track 종료. 평균 진행률 PPO-only 0.077411, PPO+CEM 0.074530. 기본 4.5초 예산에서 PPO-only 전체 에피소드도 별도로 기록했으며, 4.5초 CEM paired 비교는 미실행.
 - [x] 제출 ZIP을 깨끗한 임시 디렉터리로 풀어 정적 검사와 strict CPU inference smoke를 수행했다.
 
 계획 검토자는 특히 per-act 4.5초 상한, 실제 전체 episode 실행시간, HUD branch의 유효성 기준, 손상/off-track 및 결승선 경계 사례, 검증 시드 분리 기준을 확인한다.

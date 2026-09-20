@@ -474,8 +474,11 @@ python -m training.evaluate_closed_loop `
 ```
 
 기본값은 행동 호출당 4.5초, episode cap 2,000 decision입니다. 빠른 반복은 작은 budget을
-명시해 별도 보고서에 저장합니다. 짧은 cap의 `max_steps` 결과는 완주율 근거가 아니므로,
-제출 전에는 2,000 cap 결과를 다시 실행해야 합니다.
+명시해 별도 보고서에 저장합니다. 2026-09-20 검증에서 0.1초 budget, 2,000 decision cap으로
+10개 held-out tuple을 비교했습니다. 두 모드 모두 10개 전부 자연 off-track DNF였으며 평균
+진행률은 PPO-only `0.077411`, PPO+CEM `0.074530`이었습니다. 4.5초 budget의 PPO-only 전체
+에피소드도 별도로 측정했고 268 decision 뒤 off-track으로 종료했습니다. 빠른 2,000-cap 결과는
+CEM의 대회 성능을 보장하지 않으므로 제출 기본값은 PPO-only입니다.
 
 ### 제출 ZIP
 
@@ -488,15 +491,18 @@ python -m training.evaluate_closed_loop `
 python -m training.package_submission `
   --policy-checkpoint artifacts/haic/ppo/policy.pt `
   --dynamics-checkpoint artifacts/haic/dynamics/dynamics.pt `
-  --evaluation-summary artifacts/haic/evaluation/summary.json `
+  --evaluation-summary artifacts/haic/task5-eval-fast-fullcap/summary.json `
   --output artifacts/haic/submission/submission.zip `
   --smoke-test
 ```
 
-현재 256-decision pilot은 학습과 추론 경로를 검증한 결과입니다. 완주율이나 대회 성능은 아직
-입증하지 않았으며, 10개 held-out episode의 2,000-cap 최종 비교를 재실행한 뒤에만 성능 주장을
-할 수 있습니다.
+현재 256-decision PPO와 128-transition dynamics는 학습·추론 경로의 pilot입니다. 완주율과
+대회 성능은 아직 입증되지 않았습니다. 전체 이미지 CNN과 HUD ROI branch를 같은 96개 고유
+decision frame에서 비교한 오차 기록은 `artifacts/haic/task5-hud-validation-20.json`에 있습니다.
+HUD branch의 보조 오차 개선은 미미했고 steering/yaw는 약간 악화되어, branch를 끌 수 있는 구조를
+유지했습니다. 이 HUD 결과는 한 track/seed만 사용했으므로 일반화 근거로 보지 않습니다.
 
-기록된 0.1초 fast-budget, 300-decision partial 비교에서는 held-out 10개에서 PPO-only 평균
-progress가 `0.07741`, PPO+CEM이 `0.07493`이었고 두 모드 모두 `0/10` 완주였습니다. 이는
-제출 성능 근거가 아니며, 현재 ZIP이 PPO-only로 계획기를 끄는 이유를 남긴 점검 결과입니다.
+비교 episode별 기록과 요약은 `artifacts/haic/task5-eval-fast-fullcap/episodes.jsonl` 및
+`summary.json`에 있습니다. 보류 시드 비교에서 CEM이 개선되지 않아 생성된 제출 ZIP은 계획기를
+끄며, 나중에 더 오래 학습한 checkpoint에서 개선이 확인되면 요약 JSON을 전달해 같은 패키저로
+재생성할 수 있습니다.
