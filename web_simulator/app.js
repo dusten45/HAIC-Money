@@ -23,6 +23,7 @@
     runState: null,
     apiAvailable: false,
     manualRunId: null,
+    manualVehicle: null,
     manualTimer: null,
     manualPaused: true,
     manualActionInFlight: false,
@@ -95,6 +96,16 @@
     if (!Number.isFinite(number) || number < minimum || number > maximum) {
       throw new Error(`${name}은 ${minimum}에서 ${maximum} 사이여야 합니다.`);
     }
+    return number;
+  }
+
+  function integerNumber(value, name, minimum, maximum) {
+    if ((typeof value === "string" && value.trim() === "") ||
+        (typeof value !== "string" && typeof value !== "number")) {
+      throw new Error(`${name}은 정수여야 합니다.`);
+    }
+    const number = finiteNumber(value, name, minimum, maximum);
+    if (!Number.isInteger(number)) throw new Error(`${name}은 정수여야 합니다.`);
     return number;
   }
 
@@ -374,7 +385,7 @@
     };
   }
 
-  function drawTrack(canvas, preview, obstacles, emptyId = "canvas-empty") {
+  function drawTrack(canvas, preview, obstacles, emptyId = "canvas-empty", vehicle = null) {
     const context = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -445,6 +456,24 @@
     context.arc(start.x, start.y, 5, 0, Math.PI * 2);
     context.fillStyle = "#8eb5ff";
     context.fill();
+    if (vehicle && Array.isArray(vehicle.position) && vehicle.position.length === 2) {
+      const position = project(vehicle.position, bounds, width, height);
+      context.save();
+      context.translate(position.x, position.y);
+      context.rotate(-Number(vehicle.angle || 0));
+      context.beginPath();
+      context.moveTo(11, 0);
+      context.lineTo(-7, 6);
+      context.lineTo(-5, 0);
+      context.lineTo(-7, -6);
+      context.closePath();
+      context.fillStyle = "#ff6f74";
+      context.fill();
+      context.strokeStyle = "#fff";
+      context.lineWidth = 1.5;
+      context.stroke();
+      context.restore();
+    }
   }
 
   function renderObstacleTable() {
@@ -466,7 +495,7 @@
   function renderMap() {
     renderObstacleTable();
     renderControlPointTable();
-    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles);
+    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
     const map = state.mapSpec;
     $("map-status").textContent = map.map_kind === "custom"
       ? `${map.map_id} · ${map.obstacles.length}개 장애물`
@@ -805,6 +834,7 @@
     oval: [4, 4], s_curve: [6, 8], hairpin: [6, 9], chicane: [7, 10], technical: [9, 12]
   };
   const MAX_CENTERLINE_POINTS = 4096;
+  const MAX_GENERATED_TRACK_WIDTH = 9;
 
   function createTrackRandom(seed) {
     let value = seed >>> 0;
@@ -826,29 +856,27 @@
     const count = minimum + random.index(maximum - minimum + 1);
     if (template === "oval") return Array(count).fill("left:wide");
     if (template === "s_curve") {
-      const direction = random() < 0.5 ? "left" : "right";
+      const directions = ["left", "right", "left", "left", "right", "left"];
+      while (directions.length < count) {
+        directions.push(directions[directions.length - 1] === "left" ? "right" : "left");
+      }
       const classes = ["wide", "medium", "tight"];
-      return Array.from({ length: count }, (_item, index) => {
-        const cornerDirection = index % 2 === 0
-          ? direction
-          : (direction === "left" ? "right" : "left");
-        return `${cornerDirection}:${classes[random.index(classes.length)]}`;
-      });
+      return directions.map((direction) => `${direction}:${classes[random.index(classes.length)]}`);
     }
     if (template === "hairpin") {
-      const direction = random() < 0.5 ? "left" : "right";
-      const sequence = Array.from({ length: count }, () => `${direction}:${random() < 0.4 ? "wide" : "medium"}`);
-      sequence[Math.floor(count / 3)] = `${direction}:hairpin`;
-      const otherDirection = direction === "left" ? "right" : "left";
-      sequence[Math.floor((2 * count) / 3)] = `${otherDirection}:hairpin`;
+      const sequence = Array.from({ length: count }, () => `left:${random() < 0.4 ? "wide" : "medium"}`);
+      const hairpinIndices = [Math.floor(count / 3), Math.floor((2 * count) / 3)];
+      const rightHairpin = hairpinIndices[random.index(2)];
+      for (const index of hairpinIndices) {
+        sequence[index] = `${index === rightHairpin ? "right" : "left"}:hairpin`;
+      }
       return sequence;
     }
     if (template === "chicane") {
-      const direction = random() < 0.5 ? "left" : "right";
-      const otherDirection = direction === "left" ? "right" : "left";
+      const directions = Array.from({ length: count }, (_item, index) => index % 2 === 0 ? "left" : "right");
+      if (count % 2 === 0) directions[count - 1] = "left";
       return Array.from({ length: count }, (_item, index) => {
-        const cornerDirection = index % 2 === 0 ? direction : otherDirection;
-        return `${cornerDirection}:${random() < 0.65 ? "tight" : "medium"}`;
+        return `${directions[index]}:${random() < 0.65 ? "tight" : "medium"}`;
       });
     }
     const classes = ["wide", "medium", "tight"];
@@ -859,7 +887,9 @@
       const swapIndex = random.index(index + 1);
       [classes[index], classes[swapIndex]] = [classes[swapIndex], classes[index]];
     }
-    return classes.map((cornerClass) => `${random() < 0.5 ? "left" : "right"}:${cornerClass}`);
+    const directions = Array.from({ length: count }, (_item, index) => index % 2 === 0 ? "left" : "right");
+    if (count % 2 === 0) directions[count - 1] = "left";
+    return classes.map((cornerClass, index) => `${directions[index]}:${cornerClass}`);
   }
 
   function trackDistance(first, second) {
@@ -893,6 +923,85 @@
     }
     factor = Math.max(0, Math.min(1, factor * 0.999));
     return rawGaps.map((gap) => base + factor * (gap - base));
+  }
+
+  function profileAngleGaps(gaps, sequence) {
+    const constrainedCorners = [];
+    sequence.forEach((token, index) => {
+      if (token.startsWith("right:") || token.endsWith(":hairpin")) constrainedCorners.push(index);
+    });
+    if (!constrainedCorners.length) return gaps;
+
+    const count = sequence.length;
+    const constrainedGaps = new Set();
+    for (const index of constrainedCorners) {
+      const adjacent = [(index - 1 + count) % count, index];
+      if (adjacent.some((gapIndex) => constrainedGaps.has(gapIndex))) {
+        throw new Error("corner profile contains adjacent concave turns");
+      }
+      adjacent.forEach((gapIndex) => constrainedGaps.add(gapIndex));
+    }
+    const remainingIndices = Array.from({ length: count }, (_item, index) => index)
+      .filter((index) => !constrainedGaps.has(index));
+    if (!remainingIndices.length) throw new Error("corner profile has no unconstrained straight intervals");
+    const minimumPairTotal = Math.max(40, (360 - 100 * remainingIndices.length) / constrainedCorners.length);
+    const maximumPairTotal = Math.min(200, (360 - 20 * remainingIndices.length) / constrainedCorners.length);
+    if (maximumPairTotal < minimumPairTotal) throw new Error("corner profile cannot fit within the angle-gap bounds");
+    const pairTotal = Math.max(minimumPairTotal, Math.min(80, maximumPairTotal));
+    const remainingTotal = 360 - pairTotal * constrainedCorners.length;
+    const remainingBase = remainingTotal / remainingIndices.length;
+    if (remainingBase < 20 || remainingBase > 100) throw new Error("corner profile cannot fit within the angle-gap bounds");
+
+    const rawDegrees = remainingIndices.map((index) => gaps[index] * 180 / Math.PI);
+    const rawMean = rawDegrees.reduce((sum, gap) => sum + gap, 0) / rawDegrees.length;
+    let factor = 1;
+    for (const gap of rawDegrees) {
+      const deviation = gap - rawMean;
+      if (deviation > 0) factor = Math.min(factor, (100 - remainingBase) / deviation);
+      else if (deviation < 0) factor = Math.min(factor, (remainingBase - 20) / -deviation);
+    }
+    factor = Math.max(0, Math.min(1, factor * 0.999));
+    const adjusted = Array(count).fill(pairTotal * 0.5 * Math.PI / 180);
+    remainingIndices.forEach((index, position) => {
+      adjusted[index] = (remainingBase + factor * (rawDegrees[position] - rawMean)) * Math.PI / 180;
+    });
+    return adjusted;
+  }
+
+  function roundTrackMetric(value, places) {
+    const scale = 10 ** places;
+    const magnitude = Math.floor(Math.abs(value) * scale + 0.5) / scale;
+    return value < 0 ? -magnitude : magnitude;
+  }
+
+  function measureCornerProfiles(centerline, ranges, width) {
+    const turns = [];
+    const radii = [];
+    const count = centerline.length;
+    for (const [start, end] of ranges) {
+      let totalTurn = 0;
+      const localRadii = [];
+      for (let index = start; index <= end; index += 1) {
+        const previous = centerline[(index - 1 + count) % count];
+        const point = centerline[index % count];
+        const following = centerline[(index + 1) % count];
+        const incoming = [point[0] - previous[0], point[1] - previous[1]];
+        const outgoing = [following[0] - point[0], following[1] - point[1]];
+        const cross = incoming[0] * outgoing[1] - incoming[1] * outgoing[0];
+        const dot = incoming[0] * outgoing[0] + incoming[1] * outgoing[1];
+        const turn = Math.atan2(cross, dot);
+        totalTurn += turn;
+        const sideA = Math.hypot(...incoming);
+        const sideB = Math.hypot(...outgoing);
+        const sideC = trackDistance(previous, following);
+        if (start < index && index < end && Math.abs(cross) > 1e-9 && Math.abs(turn) > Math.PI / 1800) {
+          localRadii.push(sideA * sideB * sideC / (2 * Math.abs(cross)));
+        }
+      }
+      turns.push(roundTrackMetric(totalTurn * 180 / Math.PI, 2));
+      radii.push(roundTrackMetric((localRadii.length ? Math.min(...localRadii) : 1e6) / width, 3));
+    }
+    return { turns, radii };
   }
 
   function roundTrackCoordinate(value) {
@@ -1049,45 +1158,68 @@
     if (roadEdgesIntersect(centerline, width)) throw new Error("road boundaries intersect or overlap");
   }
 
+  const CORNER_RADIUS_WIDTH_RANGES = {
+    wide: [1.45, 3.2], medium: [1.1, 2.7], tight: [1.45, 2.0], hairpin: [1.45, 1.9]
+  };
+
   function buildBrowserGeometryCandidate(template, designSeed, width) {
     const random = createTrackRandom(designSeed);
     const sequence = cornerSequence(template, random);
     const count = sequence.length;
-    const gaps = angleGaps(random, count);
-    const scale = Math.max(1, width / 8);
-    const radiusX = (64 + random.uniform(-6, 6)) * scale;
-    const radiusY = (40 + random.uniform(-4, 4)) * scale;
+    const gaps = profileAngleGaps(angleGaps(random, count), sequence);
+    const radiusX = 150 + (width - 8) + random.uniform(-6, 6);
+    let radiusY = 93.75 + (width - 8) * 0.625 + random.uniform(-4, 4);
+    const roundness = Math.max(0, Math.min(1, (width - 8) / 92));
+    const targetAxisRatio = template !== "oval" ? 1 : 1.6 - 0.45 * roundness;
+    radiusY = Math.max(radiusY, radiusX / targetAxisRatio);
     const phase = random.uniform(0, 2 * Math.PI);
-    const templateAmplitude = { oval: 0.015, s_curve: 0.055, hairpin: 0.08, chicane: 0.085, technical: 0.11 }[template];
-    const classAmplitude = { wide: 0.035, medium: 0.085, tight: 0.14, hairpin: 0.22 };
+    const templateAmplitude = { oval: 0.015, s_curve: 0.02, hairpin: 0.02, chicane: 0.03, technical: 0.04 }[template];
+    const classAdjustment = { wide: 0.01, medium: 0, tight: -0.01, hairpin: 0 };
+    const directions = sequence.map((token) => token.split(":", 1)[0]);
+    const wideTrackRatio = Math.max(0, Math.min(1, (width - 8) / 92));
+    const regularLeftRadius = 1.15 - 0.1 * wideTrackRatio;
+    const regularRightRadius = 0.5 + 0.25 * wideTrackRatio;
+    const nestedLeftRadius = 0.9 + 0.15 * wideTrackRatio;
     const anchors = [];
     let angle = random.uniform(0, 2 * Math.PI);
-    for (let index = 0; index < sequence.length; index += 1) {
+    for (let index = 0; index < count; index += 1) {
       const [direction, cornerClass] = sequence[index].split(":", 2);
-      const signedClassOffset = classAmplitude[cornerClass] * (direction === "left" ? 1 : -1);
-      const harmonic = 1 + (index % 3);
-      const radialModulation = templateAmplitude * Math.sin(harmonic * angle + phase);
+      const directionSign = direction === "left" ? 1 : -1;
+      const radialModulation = templateAmplitude * Math.sin((1 + (index % 3)) * angle + phase);
       const radialJitter = random.uniform(-0.025, 0.025);
-      const radialScale = 1 + signedClassOffset + radialModulation + radialJitter;
-      anchors.push([radiusX * radialScale * Math.cos(angle), radiusY * radialScale * Math.sin(angle)]);
+      let directionRadius;
+      if (cornerClass === "hairpin") {
+        directionRadius = direction === "left" ? 1.8 - 0.5 * wideTrackRatio : 0.04 + 0.7 * wideTrackRatio;
+        anchors.push([
+          radiusX * (directionRadius + radialJitter) * Math.cos(angle),
+          radiusY * (directionRadius + radialJitter) * Math.sin(angle)
+        ]);
+      } else {
+        directionRadius = direction === "left" && directions[(index - 1 + count) % count] === "right" &&
+          directions[(index + 1) % count] === "right"
+          ? nestedLeftRadius
+          : (direction === "left" ? regularLeftRadius : regularRightRadius);
+        const radialScale = directionRadius + directionSign * classAdjustment[cornerClass] + radialModulation + radialJitter;
+        anchors.push([radiusX * radialScale * Math.cos(angle), radiusY * radialScale * Math.sin(angle)]);
+      }
       angle += gaps[index];
     }
 
     const incomingPoints = [];
     const outgoingPoints = [];
-    for (let index = 0; index < anchors.length; index += 1) {
+    for (let index = 0; index < count; index += 1) {
       const anchor = anchors[index];
       const previous = anchors[(index - 1 + count) % count];
       const following = anchors[(index + 1) % count];
       const incomingLength = trackDistance(anchor, previous);
       const outgoingLength = trackDistance(anchor, following);
-      const cornerClass = sequence[index].split(":", 2)[1];
       const previousRay = [(previous[0] - anchor[0]) / incomingLength, (previous[1] - anchor[1]) / incomingLength];
       const followingRay = [(following[0] - anchor[0]) / outgoingLength, (following[1] - anchor[1]) / outgoingLength];
       const interiorCosine = Math.max(-1, Math.min(1, previousRay[0] * followingRay[0] + previousRay[1] * followingRay[1]));
-      const deflection = Math.PI - Math.acos(interiorCosine);
-      const halfDeflection = deflection * 0.5;
-      const radiusTarget = { wide: 2.2, medium: 1.8, tight: 1.35, hairpin: 1.25 }[cornerClass] * width;
+      const halfDeflection = (Math.PI - Math.acos(interiorCosine)) * 0.5;
+      const cornerClass = sequence[index].split(":", 2)[1];
+      const radiusTarget = { wide: 2.6, medium: 2.2, tight: 1.7, hairpin: 1.6 }[cornerClass] *
+        width * (1 + 0.4 * Math.max(0, Math.min(1, (width - 8) / 92)));
       const quadraticRadiusFactor = Math.sin(halfDeflection) / Math.max(Math.cos(halfDeflection) ** 2, 1e-9);
       const trim = Math.min(radiusTarget * quadraticRadiusFactor, 0.45 * Math.min(incomingLength, outgoingLength));
       incomingPoints.push(trackInterpolate(anchor, previous, trim / incomingLength));
@@ -1095,14 +1227,17 @@
     }
 
     const points = [incomingPoints[0]];
+    const ranges = [];
     for (let index = 0; index < count; index += 1) {
+      const cornerStart = points.length - 1;
       const anchor = anchors[index];
       const outgoing = outgoingPoints[index];
       const controlLength = Math.max(trackDistance(anchor, incomingPoints[index]), trackDistance(anchor, outgoing));
-      const curveSteps = Math.max(1, Math.ceil(2 * controlLength / 4));
+      const curveSteps = Math.max(4, Math.ceil(2 * controlLength / 4));
       for (let step = 1; step <= curveSteps; step += 1) {
         points.push(quadraticBezier(incomingPoints[index], anchor, outgoing, step / curveSteps));
       }
+      ranges.push([cornerStart, points.length - 1]);
       const nextIndex = (index + 1) % count;
       const straightStart = outgoingPoints[index];
       const straightEnd = incomingPoints[nextIndex];
@@ -1114,8 +1249,33 @@
     }
     const centerline = points.map(([x, y]) => [roundTrackCoordinate(x), roundTrackCoordinate(y)]);
     if (centerline.length > MAX_CENTERLINE_POINTS) throw new Error(`generated centerline exceeds ${MAX_CENTERLINE_POINTS} points`);
+    const measured = measureCornerProfiles(centerline, ranges, width);
+    for (let index = 0; index < count; index += 1) {
+      const token = sequence[index];
+      const expectedSign = token.startsWith("left:") ? 1 : -1;
+      const minimumTurn = token.endsWith(":hairpin") ? 90 : 20;
+      if (expectedSign * measured.turns[index] < minimumTurn) throw new Error(`measured corner turn does not match ${token}`);
+      const cornerClass = token.split(":", 2)[1];
+      const [minimumRadius, maximumRadius] = CORNER_RADIUS_WIDTH_RANGES[cornerClass];
+      if (measured.radii[index] < minimumRadius || measured.radii[index] > maximumRadius) {
+        throw new Error(`measured corner radius does not match ${token}`);
+      }
+    }
     validateBrowserCustomGeometry(centerline, width);
-    return { centerline, sequence };
+    return { centerline, sequence, turns: measured.turns, radii: measured.radii };
+  }
+
+  function generateBrowserGeometry(template, designSeed, width) {
+    let lastError;
+    for (let attempt = 0; attempt < 64; attempt += 1) {
+      const attemptSeed = (designSeed + attempt * 0x9e3779b9) >>> 0;
+      try {
+        return buildBrowserGeometryCandidate(template, attemptSeed, width);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw new Error(`could not generate a valid ${template} track: ${lastError.message}`);
   }
 
   function makeBrowserCustomMap(options) {
@@ -1125,24 +1285,13 @@
     }
     const designSeed = options.design_seed;
     if (!TRACK_TEMPLATES.has(options.template)) throw new Error(`template must be one of ${Array.from(TRACK_TEMPLATES).sort().join(", ")}`);
-    if (typeof options.width !== "number" || !Number.isFinite(options.width) || options.width < 0.5 || options.width > 100) {
-      throw new Error("width must be between 0.5 and 100");
+    if (typeof options.width !== "number" || !Number.isFinite(options.width) || options.width < 0.5 || options.width > MAX_GENERATED_TRACK_WIDTH) {
+      throw new Error(`width must be between 0.5 and ${MAX_GENERATED_TRACK_WIDTH} for generated tracks`);
     }
     const width = options.width;
     const mapId = String(options.map_id);
     if (!/^custom-track-[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(mapId)) throw new Error("map_id must match custom-track-... ");
-    let lastError;
-    let generated;
-    for (let attempt = 0; attempt < 32; attempt += 1) {
-      const attemptSeed = (designSeed + attempt * 0x9e3779b9) >>> 0;
-      try {
-        generated = buildBrowserGeometryCandidate(options.template, attemptSeed, width);
-        break;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-    if (!generated) throw new Error(`could not generate a valid ${options.template} track: ${lastError.message}`);
+    const generated = generateBrowserGeometry(options.template, designSeed, width);
     return {
       schema_version: MAP_SCHEMA_VERSION,
       map_id: mapId,
@@ -1155,18 +1304,20 @@
       generator: {
         template: options.template,
         design_seed: designSeed,
-        generator_version: 2,
+        generator_version: 3,
         corner_count: generated.sequence.length,
-        corner_sequence: generated.sequence
+        corner_sequence: generated.sequence,
+        corner_turn_degrees: generated.turns,
+        corner_radius_widths: generated.radii
       }
     };
   }
 
   async function generateCustomMap() {
-    const designSeed = Math.trunc(finiteNumber($("design-seed").value, "디자인 seed", 0, 4294967295));
+    const designSeed = integerNumber($("design-seed").value, "디자인 seed", 0, 4294967295);
     const mapId = $("custom-map-id").value.trim();
     const template = $("custom-template").value;
-    const width = finiteNumber($("custom-width").value, "도로 반폭", 0.5, 100);
+    const width = finiteNumber($("custom-width").value, "도로 반폭", 0.5, MAX_GENERATED_TRACK_WIDTH);
     if (!/^custom-track-[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(mapId)) throw new Error("자체 맵 ID는 custom-track-으로 시작해야 합니다.");
     const payload = {
       map_kind: "custom",
@@ -1315,6 +1466,13 @@
         timeoutMs: 15000
       });
       const step = response.step || {};
+      if (Array.isArray(step.position) && step.position.length === 2) {
+        state.manualVehicle = {
+          position: step.position.map(Number),
+          angle: Number(step.angle || 0)
+        };
+        drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
+      }
       setLiveRunStatus(`스텝 ${Number(step.step || 0) + 1} · 진행 ${formatPercent(step.progress)}`);
       if (response.done) {
         state.manualPaused = true;
@@ -1347,10 +1505,13 @@
         body: JSON.stringify({ map, policy: "manual", record_frames: recordFrames })
       });
       state.manualRunId = started.run_id;
+      state.preview = { track: started.track, official_obstacles: [] };
+      state.manualVehicle = null;
       state.manualPaused = false;
       state.manualKeys.clear();
       setManualControls(true);
       updateManualActionStatus();
+      renderMap();
       setLiveRunStatus("수동 주행 중");
       setStatus("방향키로 주행하세요. 종료하면 run.json을 저장합니다.", false);
       scheduleManualAction();
@@ -1536,7 +1697,7 @@
         const limits = { progress: [0, 1], lateral: [-1, 1], radius: [.2, 4] }[key];
         state.mapSpec.obstacles[index][key] = finiteNumber(input.value, key, limits[0], limits[1]);
         if (state.mapSpec.map_kind === "custom") state.preview = previewFromCustomMap(state.mapSpec);
-        drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles);
+    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
       } catch (error) { setStatus(error.message, true); }
     });
     $("obstacle-table").addEventListener("click", (event) => {
@@ -1593,6 +1754,7 @@
   window.HAICSimulator = {
     loadRunLog,
     normalizeMap,
+    drawTrack,
     renderRunFrame,
     setPlaybackRunning,
     advancePlayback,

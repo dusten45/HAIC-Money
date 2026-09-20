@@ -419,7 +419,12 @@ D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.web `
 
 `--design-seed`는 코너 조합과 중심선을 결정합니다. 같은 생성기 버전, 템플릿,
 seed를 사용하면 같은 트랙을 다시 만들 수 있습니다. 생성된 맵은 기존 schema 2를
-그대로 사용하며, 코너 수와 순서는 `generator` 메타데이터에 기록됩니다.
+그대로 사용하며, 생성기 버전 3은 코너 수·순서·실제 회전 방향·반경을
+`generator` 메타데이터에 기록합니다. 기존 맵의 중심선은 버전이 바뀌어도 자동으로
+재생성되지 않습니다.
+새 트랙 생성기의 도로 반폭은 0.5–9입니다. 더 큰 폭은 고정된 게임 플레이 영역에서
+안전한 다중 코너를 보장하지 못해 생성을 거부합니다. 기존에 저장한 폭이 큰 맵은
+불러올 수 있지만, 실행 전 형상 안전성 검사를 통과해야 합니다.
 
 ```powershell
 D:\HAIC\haic-env\Scripts\python.exe -m local_simulator.map `

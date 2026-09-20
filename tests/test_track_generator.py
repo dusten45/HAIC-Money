@@ -73,7 +73,7 @@ class TestTrackGenerator(unittest.TestCase):
                 )
                 self.assertGreaterEqual(len(result.geometry.centerline), 12)
 
-    def test_generation_v2_records_distinct_corner_profiles(self):
+    def test_generation_v3_records_distinct_corner_profiles(self):
         from local_simulator.track_generator import TEMPLATES, generate_custom_map
 
         self.assertEqual(
@@ -94,7 +94,7 @@ class TestTrackGenerator(unittest.TestCase):
             first_meta = dict(first.generator)
             second_meta = dict(second.generator)
             self.assertEqual(first, second)
-            self.assertEqual(first_meta["generator_version"], 2)
+            self.assertEqual(first_meta["generator_version"], 3)
             self.assertEqual(first_meta["corner_count"], len(first_meta["corner_sequence"]))
             self.assertGreaterEqual(first_meta["corner_count"], expected_ranges[template][0])
             self.assertLessEqual(first_meta["corner_count"], expected_ranges[template][1])
@@ -122,6 +122,41 @@ class TestTrackGenerator(unittest.TestCase):
                 self.assertGreaterEqual(len({token.split(":", 1)[1] for token in sequence}), 3)
             profiles[template] = tuple(first_meta["corner_sequence"])
         self.assertNotEqual(profiles["oval"], profiles["technical"])
+
+    def test_measured_corner_turns_match_the_advertised_profile(self):
+        from local_simulator.track_generator import TEMPLATES, generate_custom_map
+
+        radius_ranges = {
+            "wide": (1.45, 3.2),
+            "medium": (1.1, 2.7),
+            "tight": (1.45, 2.0),
+            "hairpin": (1.45, 1.9),
+        }
+        for width in (8.0, 9.0):
+            for template in sorted(TEMPLATES):
+                for seed in (0, 42, 73, 4294967295):
+                    generated = generate_custom_map(
+                        f"custom-track-turns-{template}",
+                        seed,
+                        template,
+                        width=width,
+                    )
+                    metadata = dict(generated.generator)
+                    sequence = metadata["corner_sequence"]
+                    measured_turns = metadata["corner_turn_degrees"]
+                    measured_radii = metadata["corner_radius_widths"]
+                    self.assertEqual(len(measured_turns), len(sequence))
+                    self.assertEqual(len(measured_radii), len(sequence))
+                    for token, turn_degrees, radius_widths in zip(sequence, measured_turns, measured_radii):
+                        direction, corner_class = token.split(":", 1)
+                        low_radius, high_radius = radius_ranges[corner_class]
+                        with self.subTest(template=template, seed=seed, width=width, token=token, turn=turn_degrees):
+                            self.assertGreater(abs(turn_degrees), 20.0)
+                            self.assertGreater(turn_degrees if direction == "left" else -turn_degrees, 0.0)
+                            self.assertGreaterEqual(radius_widths, low_radius)
+                            self.assertLessEqual(radius_widths, high_radius)
+                            if corner_class == "hairpin":
+                                self.assertGreaterEqual(abs(turn_degrees), 90.0)
 
     def test_boundary_seeds_are_repeatable_and_each_template_varies(self):
         from local_simulator.track_generator import generate_custom_map
@@ -178,7 +213,7 @@ class TestTrackGenerator(unittest.TestCase):
     def test_generator_handles_width_limits_and_rejects_out_of_range_width(self):
         from local_simulator.track_generator import generate_custom_map
 
-        for width in (0.5, 100.0):
+        for width in (0.5, 9.0):
             document = generate_custom_map("custom-track-width", 73, "technical", width=width)
             self.assertTrue(
                 all(
@@ -187,8 +222,20 @@ class TestTrackGenerator(unittest.TestCase):
                     for value in point
                 )
             )
-        with self.assertRaisesRegex(ValueError, "width"):
-            generate_custom_map("custom-track-invalid-width", 73, "technical", width=100.1)
+        for width in (9.01, 100.0):
+            with self.subTest(width=width), self.assertRaisesRegex(ValueError, "width"):
+                generate_custom_map("custom-track-invalid-width", 73, "technical", width=width)
+
+    def test_generator_retries_enough_candidates_at_maximum_supported_width(self):
+        from local_simulator.track_generator import generate_custom_map
+
+        generated = generate_custom_map(
+            "custom-track-retry-boundary",
+            58,
+            "technical",
+            width=9.0,
+        )
+        self.assertEqual(dict(generated.generator)["generator_version"], 3)
 
     def test_generated_road_boundaries_do_not_intersect(self):
         from local_simulator.track_generator import (

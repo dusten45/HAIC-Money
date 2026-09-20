@@ -19,7 +19,7 @@ from .schema import (
     map_to_dict,
 )
 from .session import SimulationSession
-from .track_generator import generate_custom_map
+from .track_generator import generate_custom_map, validate_custom_geometry
 
 
 MAX_CONTROL_BODY_BYTES = 256 * 1024
@@ -71,6 +71,8 @@ class SimulationRegistry:
 
     def save_map(self, document: MapDocument) -> Path:
         artifact_id = _safe_artifact_id(document.map_id)
+        if isinstance(document, CustomMapSpec):
+            validate_custom_geometry(document.geometry)
         path = self.maps_root / f"{artifact_id}.json"
         payload = map_to_dict(document)
         payload["preview"] = build_map_preview(document)
@@ -92,6 +94,13 @@ class SimulationRegistry:
         with self._lock:
             self._active[run_id] = ActiveRun(run_id, session)
         return run_id
+
+    def track_snapshot(self, run_id: str) -> dict[str, Any]:
+        with self._lock:
+            active = self._active.get(run_id)
+        if active is None:
+            raise KeyError(f"unknown run_id: {run_id}")
+        return asdict(active.session.track)
 
     def action(self, run_id: str, action: object) -> dict[str, Any]:
         with self._lock:
@@ -302,7 +311,11 @@ class LocalApiHandler:
                     str(payload.get("policy", "manual")),
                     record_frames=bool(payload.get("record_frames", False)),
                 )
-                self._json_response({"run_id": run_id, "map": map_to_dict(document)})
+                self._json_response({
+                    "run_id": run_id,
+                    "map": map_to_dict(document),
+                    "track": self.registry.track_snapshot(run_id),
+                })
                 return
             if path.startswith("/api/runs/") and path.endswith("/action"):
                 run_id = path.split("/")[-2]

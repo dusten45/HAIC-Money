@@ -76,6 +76,53 @@ class TestCustomEnvironment(unittest.TestCase):
             finally:
                 environment.close()
 
+    def test_max_supported_generated_width_stays_within_the_playfield(self):
+        from local_simulator.environment import create_environment, reset_environment
+        from local_simulator.track_generator import TEMPLATES, generate_custom_map
+
+        for template in sorted(TEMPLATES):
+            document = generate_custom_map(
+                f"custom-track-wide-boundary-{template}",
+                73,
+                template,
+                width=9.0,
+            )
+            environment, _raw = create_environment(document, render_mode=None)
+            try:
+                reset_environment(environment, document)
+                _observation, _reward, terminated, truncated, _info = environment.step(
+                    np.array([0.0, 1.0, 0.0], dtype=np.float32)
+                )
+                self.assertFalse(terminated or truncated)
+            finally:
+                environment.close()
+
+    def test_extreme_generation_width_is_rejected_instead_of_creating_an_undrivable_map(self):
+        from local_simulator.track_generator import TEMPLATES, generate_custom_map
+
+        for template in sorted(TEMPLATES):
+            with self.subTest(template=template), self.assertRaisesRegex(ValueError, "width"):
+                generate_custom_map(
+                    f"custom-track-too-wide-{template}",
+                    73,
+                    template,
+                    width=100.0,
+                )
+
+    def test_map_payload_can_be_inspected_but_unsafe_geometry_cannot_run(self):
+        from local_simulator.environment import create_environment
+        from local_simulator.schema import map_from_dict, map_to_dict
+        from local_simulator.track_generator import generate_custom_map
+
+        payload = map_to_dict(generate_custom_map("custom-track-inspection", 73, "oval"))
+        payload["geometry"]["centerline"] = [
+            [-30, -30], [-15, -30], [0, -30], [0, 0], [3, 0], [3, 3],
+            [30, 3], [30, 15], [30, 30], [0, 30], [-30, 30], [-30, 0],
+        ]
+        document = map_from_dict(payload)
+        with self.assertRaisesRegex(ValueError, "turn radius"):
+            create_environment(document, render_mode=None)
+
 
 if __name__ == "__main__":
     unittest.main()

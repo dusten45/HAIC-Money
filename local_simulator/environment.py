@@ -11,6 +11,7 @@ from core.vendor.car_racing import CarRacing, TRACK_WIDTH
 from env_wrapper import CarEnvironment
 from .custom_environment import CustomCarRacing
 from .schema import CustomMapSpec, MapDocument, MapSpec
+from .track_generator import validate_custom_geometry
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,7 @@ def create_environment(
     render_mode: str | None = "rgb_array",
 ) -> tuple[CarEnvironment, CarRacing]:
     if isinstance(spec, CustomMapSpec):
+        validate_custom_geometry(spec.geometry)
         raw_environment: CarRacing = CustomCarRacing(
             spec.geometry,
             render_mode=render_mode,
@@ -88,7 +90,9 @@ def snapshot_track(environment: CarEnvironment) -> TrackSnapshot:
         )
         for alpha, beta, x, y in track
     )
-    return TrackSnapshot(points=points, width=float(TRACK_WIDTH))
+    custom_geometry = getattr(environment.unwrapped, "custom_geometry", None)
+    width = custom_geometry.width if custom_geometry is not None else TRACK_WIDTH
+    return TrackSnapshot(points=points, width=float(width))
 
 
 def _custom_obstacle_position(

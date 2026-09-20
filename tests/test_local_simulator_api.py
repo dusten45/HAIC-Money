@@ -80,14 +80,38 @@ class TestLocalSimulatorApi(unittest.TestCase):
         )
         self.assertEqual(response["schema_version"], 2)
         self.assertEqual(response["generator"]["template"], "technical")
-        self.assertEqual(response["generator"]["generator_version"], 2)
+        self.assertEqual(response["generator"]["generator_version"], 3)
         self.assertGreaterEqual(response["generator"]["corner_count"], 9)
+
+    def test_generated_track_rejects_widths_outside_the_safe_limit(self):
+        with self.assertRaises(HTTPError) as error:
+            self.request(
+                "POST",
+                "/api/maps/generate",
+                {
+                    "map_kind": "custom",
+                    "map_id": "custom-track-too-wide",
+                    "design_seed": 42,
+                    "template": "technical",
+                    "width": 100,
+                },
+            )
+        self.assertEqual(error.exception.code, 400)
 
     def test_manual_run_start_action_finish_writes_run(self):
         started = self.request(
             "POST",
             "/api/runs/start",
             {"map": self.custom_payload, "policy": "manual"},
+        )
+        self.assertEqual(started["track"]["width"], self.custom_payload["geometry"]["width"])
+        self.assertEqual(
+            len(started["track"]["points"]),
+            len(self.custom_payload["geometry"]["centerline"]),
+        )
+        self.assertEqual(
+            [point[2:] for point in started["track"]["points"]],
+            self.custom_payload["geometry"]["centerline"],
         )
         stepped = self.request(
             "POST",
@@ -119,6 +143,27 @@ class TestLocalSimulatorApi(unittest.TestCase):
         with self.assertRaises(HTTPError) as error:
             self.request("POST", "/api/runs/not-a-session/action", {"action": [0, 0, 0]})
         self.assertEqual(error.exception.code, 404)
+
+    def test_unsafe_custom_geometry_is_rejected_before_save_or_run(self):
+        unsafe_map = dict(self.custom_payload)
+        unsafe_map["geometry"] = {
+            "centerline": [
+                [-30, -30], [-15, -30], [0, -30], [0, 0], [3, 0], [3, 3],
+                [30, 3], [30, 15], [30, 30], [0, 30], [-30, 30], [-30, 0],
+            ],
+            "width": 8.0,
+            "start_index": 0,
+            "direction": 1,
+        }
+        for path, payload in (
+            ("/api/maps/save", {"map": unsafe_map}),
+            ("/api/runs/start", {"map": unsafe_map, "policy": "manual"}),
+        ):
+            with self.subTest(path=path):
+                with self.assertRaises(HTTPError) as error:
+                    self.request("POST", path, payload)
+                self.assertEqual(error.exception.code, 400)
+        self.assertFalse((Path(self.artifacts.name) / "maps" / "custom-track-api.json").exists())
 
 
 if __name__ == "__main__":

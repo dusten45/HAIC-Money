@@ -77,7 +77,12 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--map-id")
     parser.add_argument("--design-seed", type=int, default=42)
     parser.add_argument("--template", choices=tuple(sorted(TEMPLATES)), default="oval")
-    parser.add_argument("--width", type=float, default=8.0)
+    parser.add_argument(
+        "--width",
+        type=float,
+        default=8.0,
+        help="generated custom-track half-width (0.5 to 9 world units)",
+    )
     parser.add_argument(
         "--control-point",
         action="append",
