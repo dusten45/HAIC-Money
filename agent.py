@@ -7,6 +7,7 @@ from torch import nn
 from haic_agent.dynamics import LatentDynamicsEnsemble
 from haic_agent.networks import VisualActorCritic
 from haic_agent.planner import CEMPlanner
+from haic_agent.runtime_config import PLANNER_ENABLED, PLANNER_SETTINGS, STRICT_CHECKPOINT_LOADING
 
 
 POLICY_MODEL_FILENAME = "policy.pt"
@@ -74,6 +75,8 @@ class Agent:
         policy=None,
         dynamics=None,
         planner=None,
+        planner_enabled: bool | None = None,
+        strict_checkpoint_loading: bool | None = None,
         plan_budget: float = 4.5,
         clock=time.monotonic,
         policy_checkpoint: str | None = None,
@@ -87,19 +90,33 @@ class Agent:
         """
         torch.set_num_threads(1)
         self.clock = clock
+        self.planner_enabled = PLANNER_ENABLED if planner_enabled is None else bool(planner_enabled)
+        self.strict_checkpoint_loading = (
+            STRICT_CHECKPOINT_LOADING if strict_checkpoint_loading is None else bool(strict_checkpoint_loading)
+        )
         self.plan_budget = min(max(float(plan_budget), 0.0), 4.5)
         resolved_policy_checkpoint = POLICY_MODEL_FILENAME if policy_checkpoint is None else policy_checkpoint
-        resolved_dynamics_checkpoint = DYNAMICS_MODEL_FILENAME if dynamics_checkpoint is None else dynamics_checkpoint
-        self.policy = policy if policy is not None else self._load_policy(resolved_policy_checkpoint)
-        self.dynamics = dynamics if dynamics is not None else self._load_dynamics(resolved_dynamics_checkpoint)
-        self.planner = planner if planner is not None else CEMPlanner(clock=clock)
+        resolved_dynamics_checkpoint = (
+            DYNAMICS_MODEL_FILENAME if dynamics_checkpoint is None and self.planner_enabled else dynamics_checkpoint
+        )
+        self.policy = policy if policy is not None else self._load_policy(
+            resolved_policy_checkpoint, strict=self.strict_checkpoint_loading
+        )
+        self.dynamics = (
+            (dynamics if dynamics is not None else self._load_dynamics(
+                resolved_dynamics_checkpoint, strict=self.strict_checkpoint_loading
+            ))
+            if self.planner_enabled
+            else None
+        )
+        self.planner = planner if planner is not None else CEMPlanner(**PLANNER_SETTINGS, clock=clock)
         if hasattr(self.policy, "eval"):
             self.policy.eval()
         if self.dynamics is not None and hasattr(self.dynamics, "eval"):
             self.dynamics.eval()
 
     @staticmethod
-    def _load_policy(checkpoint: str | None):
+    def _load_policy(checkpoint: str | None, *, strict: bool = False):
         policy = VisualActorCritic()
         if checkpoint is None:
             return policy
@@ -108,12 +125,15 @@ class Agent:
             state = saved.get("model_state") if isinstance(saved, dict) else None
             if isinstance(state, dict):
                 policy.load_state_dict(state, strict=True)
-        except (FileNotFoundError, RuntimeError, ValueError, OSError):
-            pass
+            elif strict:
+                raise ValueError("policy checkpoint lacks model_state")
+        except (FileNotFoundError, RuntimeError, ValueError, OSError) as error:
+            if strict:
+                raise RuntimeError(f"failed to load required policy checkpoint: {checkpoint}") from error
         return policy
 
     @staticmethod
-    def _load_dynamics(checkpoint: str | None):
+    def _load_dynamics(checkpoint: str | None, *, strict: bool = False):
         if checkpoint is None:
             return None
         dynamics = LatentDynamicsEnsemble()
@@ -123,8 +143,11 @@ class Agent:
             if isinstance(state, dict):
                 dynamics.load_state_dict(state, strict=True)
                 return dynamics
-        except (FileNotFoundError, RuntimeError, ValueError, OSError):
-            pass
+            if strict:
+                raise ValueError("dynamics checkpoint lacks model")
+        except (FileNotFoundError, RuntimeError, ValueError, OSError) as error:
+            if strict:
+                raise RuntimeError(f"failed to load required dynamics checkpoint: {checkpoint}") from error
         return None
 
     @staticmethod
@@ -169,7 +192,7 @@ class Agent:
             return no_op
         if action is None:
             return no_op
-        if self.dynamics is None or self.clock() >= deadline:
+        if not self.planner_enabled or self.dynamics is None or self.clock() >= deadline:
             return action
         try:
             result = self.planner.plan(

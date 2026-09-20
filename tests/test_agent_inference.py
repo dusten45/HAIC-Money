@@ -162,6 +162,18 @@ class TestAgentInference(unittest.TestCase):
         self.assertTrue(np.all(np.isfinite(exhausted)))
         self.assertTrue(np.all(np.isfinite(malformed)))
 
+    def test_explicit_planner_disable_never_loads_or_calls_dynamics(self):
+        # Break caught: PPO-only evaluation must stay PPO-only even when a
+        # packaged dynamics.pt is present beside the agent source.
+        from agent import Agent
+
+        agent = Agent(policy=_Policy(), dynamics=_Dynamics(), planner=_NoPlan(), planner_enabled=False)
+        action = agent.act(np.zeros((4, 84, 84), dtype=np.float32))
+
+        self.assertIsNone(agent.dynamics)
+        self.assertFalse(agent.planner_enabled)
+        self.assertTrue(np.all(np.isfinite(action)))
+
     def test_prediction_that_crosses_deadline_returns_immediate_policy_fallback(self):
         # Break caught: a dynamics call can itself consume the remaining
         # budget; its late CEM score must never replace the timely PPO action.

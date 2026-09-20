@@ -429,3 +429,74 @@ python package_submission.py \
 
 현재 작업 공간에는 Python 3.11 Docker가 없으므로, 업로드 전 Python 3.11 Linux 환경에서는
 같은 명령에 `--python python3.11`을 지정해 다시 확인해야 합니다.
+
+## 13. 시각 PPO 및 학습된 CEM 계획기 실험
+
+아래 경로는 이 저장소의 `variables-6` 환경에서만 학습용 상태 레이블을 읽습니다. 제출
+에이전트는 84×84 흑백 프레임 네 장과 ZIP 안의 가중치만 사용합니다.
+
+### 개발 가상환경
+
+공식 `requirements.txt`는 평가 Linux 환경을 위한 고정 파일이므로 수정하지 않습니다. 현재
+Windows 개발 환경에서 `box2d-py` 빌드가 SWIG 단계에서 실패하면, 공식 설치 뒤 개발용 wheel만
+추가로 설치합니다.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pip install Box2D==2.3.10
+```
+
+### 학습과 예측 모델 재학습
+
+먼저 실제 PPO rollout/update를 실행하고, 같은 정책 checkpoint에서 latent dynamics를 다시
+학습합니다. 아래 256 decision update는 실험 기준선일 뿐 대회 성능을 뜻하지 않습니다.
+
+```powershell
+python -m training.train_policy --output artifacts/haic/ppo --total-steps 256 --max-decisions 64
+python -m training.train_dynamics --output artifacts/haic/dynamics --steps 128 --max-decisions 64 `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt
+```
+
+### 보류 시드 평가
+
+평가기는 train/tune/held-out tuple이 겹치면 실패합니다. tune split에서 horizon, population,
+uncertainty cost 후보를 먼저 비교하고, 그 뒤 같은 10개 held-out tuple에서 PPO-only와 PPO+CEM을
+비교합니다. `episodes.jsonl`에는 완료·DNF·오류를 모두 남기고 `summary.json`에는 latency와
+집계를 남깁니다.
+
+```powershell
+python -m training.evaluate_closed_loop `
+  --output artifacts/haic/evaluation `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt `
+  --dynamics-checkpoint artifacts/haic/dynamics/dynamics.pt
+```
+
+기본값은 행동 호출당 4.5초, episode cap 2,000 decision입니다. 빠른 반복은 작은 budget을
+명시해 별도 보고서에 저장합니다. 짧은 cap의 `max_steps` 결과는 완주율 근거가 아니므로,
+제출 전에는 2,000 cap 결과를 다시 실행해야 합니다.
+
+### 제출 ZIP
+
+아래 명령은 ZIP 루트에 `agent.py`, 필요한 `haic_agent` 추론 모듈, `policy.pt`, `dynamics.pt`만
+넣습니다. 깨끗한 임시 디렉터리에서 CPU import, 두 번의 reset/act, 유한 행동, 5초 호출 제한과
+프로세스 RSS 1 GiB를 확인합니다. `--disable-planner`는 tune 결과가 충분히 입증되지 않은 현재
+기준선의 보수적 PPO-only 제출 설정입니다.
+
+```powershell
+python -m training.package_submission `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt `
+  --dynamics-checkpoint artifacts/haic/dynamics/dynamics.pt `
+  --evaluation-summary artifacts/haic/evaluation/summary.json `
+  --output artifacts/haic/submission/submission.zip `
+  --smoke-test
+```
+
+현재 256-decision pilot은 학습과 추론 경로를 검증한 결과입니다. 완주율이나 대회 성능은 아직
+입증하지 않았으며, 10개 held-out episode의 2,000-cap 최종 비교를 재실행한 뒤에만 성능 주장을
+할 수 있습니다.
+
+기록된 0.1초 fast-budget, 300-decision partial 비교에서는 held-out 10개에서 PPO-only 평균
+progress가 `0.07741`, PPO+CEM이 `0.07493`이었고 두 모드 모두 `0/10` 완주였습니다. 이는
+제출 성능 근거가 아니며, 현재 ZIP이 PPO-only로 계획기를 끄는 이유를 남긴 점검 결과입니다.
