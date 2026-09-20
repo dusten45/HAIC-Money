@@ -52,6 +52,31 @@ class TestVisualActorCritic(unittest.TestCase):
         self.assertTrue(torch.all(actions[:, 1:] <= 1.0))
         torch.testing.assert_close(log_probability, recomputed_log_probability)
 
+    def test_extreme_policy_scale_and_saturated_actions_keep_transformed_density_finite(self):
+        # Break caught: an unconstrained log standard deviation can overflow a
+        # Normal scale, while saturated tanh/sigmoid actions make log-Jacobians
+        # negative infinity during PPO collection.
+        from haic_agent.networks import VisualActorCritic
+
+        model = VisualActorCritic()
+        with torch.no_grad():
+            model.policy_log_std.fill_(100.0)
+        output = model(torch.zeros(4, 4, 84, 84))
+        actions, sampled_log_probability = model.sample_actions(output)
+        saturated_actions = torch.tensor(
+            [[1.0, 1.0, 0.0], [-1.0, 0.0, 1.0]], dtype=torch.float32
+        )
+        boundary_log_probability = model.log_probability(
+            saturated_actions,
+            output.action_mean[:2],
+            output.action_log_std[:2],
+        )
+
+        self.assertTrue(torch.isfinite(output.action_log_std).all())
+        self.assertTrue(torch.isfinite(actions).all())
+        self.assertTrue(torch.isfinite(sampled_log_probability).all())
+        self.assertTrue(torch.isfinite(boundary_log_probability).all())
+
     def test_encoder_contract_returns_128_latents_for_pixel_batches(self):
         # Break caught: changing the encoder width breaks downstream dynamics
         # models that consume the frozen 128-dimensional latent contract.

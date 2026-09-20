@@ -45,6 +45,65 @@ class TestRolloutAdvantages(unittest.TestCase):
 
 
 class TestPPOUpdate(unittest.TestCase):
+    def test_best_checkpoint_rejects_lower_ranked_candidates_and_persists_the_winner(self):
+        # Break caught: unconditional policy.pt writes can replace a completed
+        # fast-lap checkpoint with a lower-finish-rate or slower-lap candidate.
+        from haic_agent.networks import VisualActorCritic
+        from training.ppo import PPOConfig, PPOUpdater
+        from training.train_policy import save_best_checkpoint
+
+        winning_metrics = {
+            "finish_rate": 0.5,
+            "median_finished_lap_time_s": 20.0,
+            "mean_progress": 0.2,
+        }
+        lower_finish_metrics = {
+            "finish_rate": 0.4,
+            "median_finished_lap_time_s": 1.0,
+            "mean_progress": 1.0,
+        }
+        slower_lap_metrics = {
+            "finish_rate": 0.5,
+            "median_finished_lap_time_s": 30.0,
+            "mean_progress": 1.0,
+        }
+        equal_rank_lower_progress = {
+            "finish_rate": 0.5,
+            "median_finished_lap_time_s": 20.0,
+            "mean_progress": 0.1,
+        }
+        model = VisualActorCritic()
+        updater = PPOUpdater(model, PPOConfig())
+        with tempfile.TemporaryDirectory() as directory:
+            checkpoint = Path(directory) / "policy.pt"
+            self.assertTrue(
+                save_best_checkpoint(
+                    checkpoint, model, updater, step=10, tune_metrics=winning_metrics, metadata={}
+                )
+            )
+            with torch.no_grad():
+                next(model.parameters()).add_(1.0)
+            self.assertFalse(
+                save_best_checkpoint(
+                    checkpoint, model, updater, step=20, tune_metrics=lower_finish_metrics, metadata={}
+                )
+            )
+            self.assertFalse(
+                save_best_checkpoint(
+                    checkpoint, model, updater, step=30, tune_metrics=slower_lap_metrics, metadata={}
+                )
+            )
+            self.assertFalse(
+                save_best_checkpoint(
+                    checkpoint, model, updater, step=40,
+                    tune_metrics=equal_rank_lower_progress, metadata={}
+                )
+            )
+            saved = torch.load(checkpoint, map_location="cpu")
+
+        self.assertEqual(saved["step"], 10)
+        self.assertEqual(saved["metadata"]["tune_metrics"], winning_metrics)
+
     def test_tune_evaluation_reports_auxiliary_estimation_error_from_pixel_predictions(self):
         # Break caught: a HUD ablation that reports only driving outcome cannot
         # show whether its visual auxiliary predictions contributed anything.

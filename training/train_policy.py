@@ -138,6 +138,27 @@ def load_checkpoint(path: Path, model: VisualActorCritic, updater: PPOUpdater) -
     return {"step": int(checkpoint["step"]), "metadata": dict(checkpoint["metadata"])}
 
 
+def save_best_checkpoint(
+    path: Path,
+    model: VisualActorCritic,
+    updater: PPOUpdater,
+    *,
+    step: int,
+    tune_metrics: dict[str, float | None],
+    metadata: dict[str, Any],
+) -> bool:
+    """Persist a candidate only when its tune rank beats the stored checkpoint."""
+    if path.is_file():
+        stored = torch.load(path, map_location="cpu")
+        stored_metrics = stored.get("metadata", {}).get("tune_metrics")
+        if stored_metrics is not None and selection_score(tune_metrics) <= selection_score(stored_metrics):
+            return False
+    checkpoint_metadata = dict(metadata)
+    checkpoint_metadata["tune_metrics"] = tune_metrics
+    save_checkpoint(path, model, updater, step=step, metadata=checkpoint_metadata)
+    return True
+
+
 def evaluate_policy(
     model: VisualActorCritic,
     episodes: Iterable[tuple[int, int]],
@@ -252,8 +273,21 @@ def train(
         "hud_ablation": ablation,
         "selection_metric": "finish_rate, negative_median_finished_lap_time_s, mean_progress",
     }
-    save_checkpoint(checkpoint, model, updater, step=start_step + total_steps, metadata=metadata)
-    return {"checkpoint": str(checkpoint), "losses": losses, "tune_metrics": tune_metrics, "ablation": ablation}
+    checkpoint_updated = save_best_checkpoint(
+        checkpoint,
+        model,
+        updater,
+        step=start_step + total_steps,
+        tune_metrics=tune_metrics,
+        metadata=metadata,
+    )
+    return {
+        "checkpoint": str(checkpoint),
+        "checkpoint_updated": checkpoint_updated,
+        "losses": losses,
+        "tune_metrics": tune_metrics,
+        "ablation": ablation,
+    }
 
 
 def parse_args() -> argparse.Namespace:

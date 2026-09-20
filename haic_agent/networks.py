@@ -14,6 +14,8 @@ LATENT_SIZE = 128
 ACTION_SIZE = 3
 AUXILIARY_SIZE = 7
 _ACTION_EPSILON = 1e-6
+MIN_LOG_STD = -5.0
+MAX_LOG_STD = 2.0
 
 
 @dataclass(frozen=True)
@@ -97,7 +99,8 @@ class VisualActorCritic(nn.Module):
         if latent.ndim != 2 or latent.shape[1] != LATENT_SIZE:
             raise ValueError("latent must have shape (B, 128)")
         action_mean = self.policy_mean(latent)
-        return action_mean, self.policy_log_std.expand_as(action_mean)
+        action_log_std = self.policy_log_std.clamp(MIN_LOG_STD, MAX_LOG_STD)
+        return action_mean, action_log_std.expand_as(action_mean)
 
     def forward(self, observation_tensor: Tensor) -> PolicyOutput:
         latent = self.encode_observation(observation_tensor)
@@ -124,10 +127,20 @@ class VisualActorCritic(nn.Module):
         steer = actions[:, :1].clamp(-1.0 + _ACTION_EPSILON, 1.0 - _ACTION_EPSILON)
         pedals = actions[:, 1:].clamp(_ACTION_EPSILON, 1.0 - _ACTION_EPSILON)
         unconstrained = torch.cat((torch.atanh(steer), torch.logit(pedals)), dim=1)
-        log_abs_det_jacobian = torch.cat(
-            (torch.log1p(-steer.square()), torch.log(pedals * (1.0 - pedals))), dim=1
-        ).sum(dim=1)
-        return unconstrained, log_abs_det_jacobian
+        return unconstrained, VisualActorCritic._log_abs_det_jacobian(unconstrained)
+
+    @staticmethod
+    def _log_abs_det_jacobian(unconstrained_actions: Tensor) -> Tensor:
+        """Compute transform log-Jacobians from pre-transform values without saturation loss."""
+        steer = unconstrained_actions[:, :1]
+        pedals = unconstrained_actions[:, 1:]
+        steer_log_det = 2.0 * (
+            torch.log(torch.tensor(2.0, device=steer.device, dtype=steer.dtype))
+            - steer
+            - F.softplus(-2.0 * steer)
+        )
+        pedal_log_det = -F.softplus(-pedals) - F.softplus(pedals)
+        return torch.cat((steer_log_det, pedal_log_det), dim=1).sum(dim=1)
 
     def sample_actions(self, output: PolicyOutput) -> tuple[Tensor, Tensor]:
         """Sample bounded simulator actions and their matching transformed log probability."""
@@ -135,10 +148,7 @@ class VisualActorCritic(nn.Module):
         unconstrained = distribution.rsample()
         actions = self._bound_actions(unconstrained)
         log_probability = distribution.log_prob(unconstrained).sum(dim=1)
-        log_probability -= torch.cat(
-            (torch.log1p(-actions[:, :1].square()), torch.log(actions[:, 1:] * (1.0 - actions[:, 1:]))),
-            dim=1,
-        ).sum(dim=1)
+        log_probability -= self._log_abs_det_jacobian(unconstrained)
         return actions, log_probability
 
     def deterministic_actions(self, output: PolicyOutput) -> Tensor:
