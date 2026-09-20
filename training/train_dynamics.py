@@ -15,6 +15,7 @@ from torch.nn import functional as F
 from haic_agent.dynamics import DynamicsEnsembleOutput, LatentDynamicsEnsemble
 from haic_agent.networks import ACTION_SIZE, LATENT_SIZE, VisualActorCritic
 from training.env_factory import CollectedTransition, TrackSeedSplit, create_training_environment, split_track_seeds
+from training.labels import collect_labels
 
 
 DEFAULT_SPLIT = split_track_seeds(
@@ -102,23 +103,63 @@ def rare_event_positive_weight(target: Tensor) -> Tensor:
     return torch.clamp(negatives / positives, min=1.0)
 
 
-def _weighted_risk_loss(logits: Tensor, target: Tensor) -> Tensor:
-    expanded_target = target.unsqueeze(0).expand_as(logits)
-    return F.binary_cross_entropy_with_logits(
-        logits, expanded_target, pos_weight=rare_event_positive_weight(target)
+def member_bootstrap_indices(
+    num_members: int,
+    batch_size: int,
+    *,
+    generator: torch.Generator | None = None,
+    device: torch.device | None = None,
+) -> Tensor:
+    """Draw an independent same-size bootstrap sample for each ensemble member."""
+    if num_members < 1 or batch_size < 1:
+        raise ValueError("num_members and batch_size must both be positive")
+    return torch.randint(
+        batch_size,
+        (num_members, batch_size),
+        generator=generator,
+        device=device,
     )
 
 
-def dynamics_loss(output: DynamicsEnsembleOutput, batch: DynamicsBatch) -> DynamicsLoss:
+def _bootstrap_indices_for(output: DynamicsEnsembleOutput, batch: DynamicsBatch, indices: Tensor | None) -> Tensor:
+    member_count, batch_size = output.progress_delta.shape
+    if indices is None:
+        return torch.arange(batch_size, device=batch.latent.device).repeat(member_count, 1)
+    if indices.shape != (member_count, batch_size):
+        raise ValueError("member bootstrap indices must have shape (num_members, batch_size)")
+    return indices.to(device=batch.latent.device, dtype=torch.long)
+
+
+def _memberwise_mse(prediction: Tensor, target: Tensor, indices: Tensor) -> Tensor:
+    return torch.stack(
+        [F.mse_loss(prediction[member, index], target[index]) for member, index in enumerate(indices)]
+    ).mean()
+
+
+def _memberwise_risk_loss(logits: Tensor, target: Tensor, indices: Tensor) -> Tensor:
+    return torch.stack(
+        [
+            F.binary_cross_entropy_with_logits(
+                logits[member, index],
+                target[index],
+                pos_weight=rare_event_positive_weight(target[index]),
+            )
+            for member, index in enumerate(indices)
+        ]
+    ).mean()
+
+
+def dynamics_loss(
+    output: DynamicsEnsembleOutput, batch: DynamicsBatch, *, member_indices: Tensor | None = None
+) -> DynamicsLoss:
     """Score every member against aligned one-decision targets."""
+    indices = _bootstrap_indices_for(output, batch, member_indices)
     target_latent_residual = batch.next_latent - batch.latent
-    latent = F.mse_loss(
-        output.next_latent_residual, target_latent_residual.unsqueeze(0).expand_as(output.next_latent_residual)
-    )
-    progress = F.mse_loss(output.progress_delta, batch.progress_delta.unsqueeze(0).expand_as(output.progress_delta))
-    reward = F.mse_loss(output.reward, batch.reward.unsqueeze(0).expand_as(output.reward))
-    collision = _weighted_risk_loss(output.collision_logits, batch.collision)
-    off_track = _weighted_risk_loss(output.off_track_logits, batch.off_track)
+    latent = _memberwise_mse(output.next_latent_residual, target_latent_residual, indices)
+    progress = _memberwise_mse(output.progress_delta, batch.progress_delta, indices)
+    reward = _memberwise_mse(output.reward, batch.reward, indices)
+    collision = _memberwise_risk_loss(output.collision_logits, batch.collision, indices)
+    off_track = _memberwise_risk_loss(output.off_track_logits, batch.off_track, indices)
     total = latent + progress + reward + collision + off_track
     return DynamicsLoss(total, latent, progress, reward, collision, off_track)
 
@@ -129,7 +170,10 @@ def train_dynamics_step(
     """Perform one finite, class-balanced supervised update."""
     model.train()
     optimizer.zero_grad(set_to_none=True)
-    loss = dynamics_loss(model(batch.latent, batch.action), batch)
+    indices = member_bootstrap_indices(
+        len(model.members), batch.latent.shape[0], device=batch.latent.device
+    )
+    loss = dynamics_loss(model(batch.latent, batch.action), batch, member_indices=indices)
     loss.total.backward()
     torch.nn.utils.clip_grad_norm_(model.parameters(), 10.0)
     optimizer.step()
@@ -207,13 +251,14 @@ def collect_dynamics_batch(
     previous_progress: list[float] = []
     for track_id, seed in episodes:
         environment = create_training_environment(track_id=track_id, seed=seed, max_decisions=max_decisions)
-        observation, _ = environment.reset()
-        progress = 0.0
+        observation, reset_info = environment.reset()
+        progress = collect_labels(environment, reset_info).tile_progress
         try:
             for _ in range(max_decisions):
                 with torch.no_grad():
                     output = policy(torch.from_numpy(observation).unsqueeze(0))
-                    action = policy.deterministic_actions(output).squeeze(0).cpu().numpy()
+                    action, _ = policy.sample_actions(output)
+                    action = action.squeeze(0).cpu().numpy()
                 transition = environment.step_transition(action)
                 transitions.append(transition)
                 previous_progress.append(progress)

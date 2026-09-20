@@ -1,12 +1,158 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import torch
 
 
 class TestLatentDynamicsEnsemble(unittest.TestCase):
+    @staticmethod
+    def _labels(*, progress: float) -> object:
+        from training.labels import TrainingLabels
+
+        return TrainingLabels(
+            speed=0.0,
+            wheel_omega=(0.0, 0.0, 0.0, 0.0),
+            steering_angle=0.0,
+            yaw_rate=0.0,
+            tile_progress=progress,
+            collision=False,
+            damage=0.0,
+            off_track=False,
+            finished=False,
+        )
+
+    def test_collection_uses_reset_boundary_progress_for_first_decision_delta(self):
+        # Break caught: treating post-warmup reset progress as zero inflates the
+        # first transition's four-tick target by the warmup road traversal.
+        from haic_agent.observation import extract_hud_features
+        from training.env_factory import CollectedTransition
+        from training.train_dynamics import collect_dynamics_batch
+
+        pixels = np.zeros((4, 84, 84), dtype=np.float32)
+        transition = CollectedTransition(
+            observation=pixels,
+            action=np.zeros(3, dtype=np.float32),
+            next_observation=pixels,
+            reward=0.0,
+            terminated=True,
+            truncated=False,
+            labels=self._labels(progress=0.55),
+            hud_features=extract_hud_features(pixels),
+        )
+
+        class _Environment:
+            def reset(self):
+                return pixels, {"after_warmup": True}
+
+            def step_transition(self, action):
+                return transition
+
+            def close(self):
+                pass
+
+        class _Policy:
+            def __call__(self, observation):
+                return object()
+
+            def sample_actions(self, output):
+                return torch.tensor([[0.0, 0.2, 0.0]]), torch.zeros(1)
+
+            def encode_observation(self, observations):
+                return torch.zeros(observations.shape[0], 128)
+
+        environment = _Environment()
+        with patch("training.train_dynamics.create_training_environment", return_value=environment), patch(
+            "training.train_dynamics.collect_labels", return_value=self._labels(progress=0.40)
+        ):
+            batch = collect_dynamics_batch(_Policy(), [(1, 1)], max_decisions=1)
+
+        torch.testing.assert_close(batch.progress_delta, torch.tensor([0.15]))
+
+    def test_collection_samples_bounded_policy_actions_at_identical_observations(self):
+        # Break caught: using only policy means hides action-prior regions from
+        # the dynamics ensemble and makes its uncertainty falsely narrow.
+        from haic_agent.observation import extract_hud_features
+        from dataclasses import replace
+        from training.env_factory import CollectedTransition
+        from training.train_dynamics import collect_dynamics_batch
+
+        pixels = np.zeros((4, 84, 84), dtype=np.float32)
+        transitions = [
+            CollectedTransition(
+                observation=pixels,
+                action=np.zeros(3, dtype=np.float32),
+                next_observation=pixels,
+                reward=0.0,
+                terminated=False,
+                truncated=False,
+                labels=self._labels(progress=0.0),
+                hud_features=extract_hud_features(pixels),
+            ),
+            CollectedTransition(
+                observation=pixels,
+                action=np.zeros(3, dtype=np.float32),
+                next_observation=pixels,
+                reward=0.0,
+                terminated=True,
+                truncated=False,
+                labels=self._labels(progress=0.0),
+                hud_features=extract_hud_features(pixels),
+            ),
+        ]
+
+        class _Environment:
+            def reset(self):
+                return pixels, {}
+
+            def step_transition(self, action):
+                return replace(transitions.pop(0), action=np.asarray(action, dtype=np.float32).copy())
+
+            def close(self):
+                pass
+
+        class _Policy:
+            def __init__(self):
+                self.actions = iter(
+                    (
+                        torch.tensor([[-0.4, 0.2, 0.1]]),
+                        torch.tensor([[0.7, 0.8, 0.0]]),
+                    )
+                )
+
+            def __call__(self, observation):
+                return object()
+
+            def sample_actions(self, output):
+                return next(self.actions), torch.zeros(1)
+
+            def encode_observation(self, observations):
+                return torch.zeros(observations.shape[0], 128)
+
+        with patch("training.train_dynamics.create_training_environment", return_value=_Environment()), patch(
+            "training.train_dynamics.collect_labels", return_value=self._labels(progress=0.0)
+        ):
+            batch = collect_dynamics_batch(_Policy(), [(1, 1)], max_decisions=2)
+
+        self.assertFalse(torch.equal(batch.action[0], batch.action[1]))
+        self.assertTrue(torch.all(batch.action[:, 0].abs() <= 1.0))
+        self.assertTrue(torch.all((batch.action[:, 1:] >= 0.0) & (batch.action[:, 1:] <= 1.0)))
+
+    def test_member_bootstrap_indices_are_distinct_and_reproducible(self):
+        # Break caught: training each member on the same full batch collapses
+        # ensemble disagreement even when the dataset is sparse.
+        from training.train_dynamics import member_bootstrap_indices
+
+        first = member_bootstrap_indices(4, 12, generator=torch.Generator().manual_seed(71))
+        second = member_bootstrap_indices(4, 12, generator=torch.Generator().manual_seed(71))
+
+        torch.testing.assert_close(first, second)
+        self.assertEqual(first.shape, (4, 12))
+        self.assertTrue(torch.all((first >= 0) & (first < 12)))
+        self.assertTrue(any(not torch.equal(first[0], first[index]) for index in range(1, 4)))
+
     def test_forward_and_predict_keep_batch_and_horizon_dimensions_finite(self):
         # Break caught: flattening candidate horizons mixes CEM action sequences
         # or returns a scalar uncertainty for the entire candidate population.
