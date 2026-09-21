@@ -1,0 +1,47 @@
+{
+  "name": "drqv2-steering-logit-proposal-v1",
+  "status": "proposal only; not implemented or launched",
+  "motivation": "The final actor has large pre-tanh steering logits and mostly vanishing squash derivatives on retained replay, with similar saturation on fresh cells. No measured systematic Q1-only optimism or dominant final-policy gas/brake conflict singles out another repair.",
+  "causality_caveat": "Confirmation finishers are also highly steering-saturated. This tests gradient starvation, not an established causal explanation of crashes or off-track failures.",
+  "single_change": {
+    "actor_objective": "existing negative Q1 objective + steering_logit_l2 * mean(pre_tanh_steering_logit ** 2)",
+    "control_coefficient": 0.0,
+    "treatment_coefficient": 0.001,
+    "coefficient_rationale": "Fixed before any trial, not optimized on confirmation: at |logit|=10 this adds a 0.1 per-state penalty and a direct 0.02 logit gradient where the squash path can vanish. This scale is a testable choice, not established optimality.",
+    "coefficient_sweep": false,
+    "reward_or_action_mapping_change": false
+  },
+  "matched_design": {
+    "arms": ["current-contract native control", "steering-logit L2 only"],
+    "training_seeds_each_arm": [0, 1],
+    "decisions_per_run": 131072,
+    "cpu_selection_checkpoints": [65536, 131072],
+    "track_ids": [1, 2, 3, 4],
+    "sampler_seed": 917,
+    "same_indexed_episode_stream_across_arms_and_seeds": true,
+    "batch_size": 64,
+    "warmup_steps": 10000,
+    "replay_capacity": 100000,
+    "updates_per_step": 1,
+    "max_steps": 2000,
+    "frame_skip": 4,
+    "other_learning_parameters": "Freeze the pilot values and corrected replay/RNG implementation identically for both arms. Do not compare the treatment only to the historical dirty-source pilot.",
+    "unchanged": ["four-frame observations", "raw official reward", "no normalization or shaping", "no smoothing or fifth plane", "continuous symmetric action mapping", "critic architecture and losses", "augmentation", "exploration", "update ratio"]
+  },
+  "evaluation": {
+    "selection_cells": "Existing consumed screen IDs101-103 x seeds31001-31008, same for both arms, exported CPU21 actors only",
+    "proposed_fresh_confirmation": {"track_ids": [211, 212, 213, 214], "seeds": [32101, 32102, 32103, 32104, 32105, 32106, 32107, 32108], "repeats": 2},
+    "proposed_fresh_blind": {"track_ids": [221, 222, 223], "seeds": [32201, 32202, 32203, 32204, 32205, 32206, 32207, 32208], "repeats": 2},
+    "training_exclusion": "Before launch, freeze an executable protocol excluding all old and new reserved geometry seeds across every track ID; the current trainer protocol schema must explicitly carry this full reservation set.",
+    "consumed_confirmation": "31101-31108 must never be advertised as fresh again",
+    "old_blind": "31201-31208 remains reserved and unused",
+    "confirmation_selection": "Freeze actor hashes from the screen before confirmation; do not select a checkpoint or alter coefficients on confirmation/blind results"
+  },
+  "acceptance": {
+    "primary": "Repeated nonzero unseen completion across training seeds and improved finish outcomes against the matched control; progress alone is insufficient",
+    "mechanistic": "Measure pre-tanh logits, squash derivatives and saturation without treating their reduction alone as success",
+    "failure": "If the mechanistic metrics improve but completion does not, reject this repair hypothesis instead of sweeping the coefficient",
+    "operational": "Preserve restore parity, CPU21 reset/action trace reproducibility, resource limits and immutable selection artifacts"
+  },
+  "not_proposed": ["PPO improvements", "DreamerV3 or TD-MPC2 implementation", "EMA or action clipping", "reward shaping", "multiple simultaneous architecture/objective changes", "unconditional million-step scale-up"]
+}

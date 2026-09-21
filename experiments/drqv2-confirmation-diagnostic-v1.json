@@ -1,0 +1,28 @@
+{
+  "kind": "post-screen diagnostic decision",
+  "recorded_before_confirmation": true,
+  "actor_sha256": "e0483df7c7887e9fd9e670450e223ec1b6f2598224ee23f9efe329cce4a2681e",
+  "frozen_protocol": "experiments/drqv2-promotion-v1.json",
+  "frozen_protocol_sha256": "f53db79f5d9c9695acd37a862fe1f1f9797dc293764c05f68579900dcf337a96",
+  "screen_artifact": "evaluations/20260921T163826075624Z_drqv2-promotion-v1-screen",
+  "screen_result": {
+    "canonical_cells": 24,
+    "reload_repeats": 2,
+    "finishes_each_repeat": 0,
+    "mean_progress": 0.7218224192100996,
+    "mean_damage": 0.4583333333333333,
+    "operationally_eligible": true,
+    "deterministic_action_traces": true
+  },
+  "promotion_gate": "FAILED: the predeclared new screen has no completion",
+  "diagnostic_confirmation": {
+    "purpose": "Complete the requested independent replication of the historical 4/24 signal with the same frozen actor, not candidate selection or promotion.",
+    "cells": "The existing, not-yet-used confirmation partition in the unchanged frozen protocol: track IDs111-114 x seeds31101-31108, two CPU reloads.",
+    "selection_or_tuning_allowed": false,
+    "can_reverse_failed_screen_gate": false,
+    "can_authorize_blind_evaluation": false,
+    "can_authorize_scale_up": false
+  },
+  "next_action": "Analyze telemetry and at most one justified controlled follow-up; no hyperparameter sweep, PPO return or alternative algorithm implementation.",
+  "blind_status": "Reserved and unused"
+}
