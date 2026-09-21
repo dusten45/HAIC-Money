@@ -715,3 +715,60 @@ python -m training.benchmark_corridor `
 이 수치는 픽셀 교사만 단독 실행한 벤치마크 기록이며 PPO actor의 주행 결과나 제출 후보가 아닙니다.
 교사 모듈을 제외한 제출 ZIP은 학습된 PPO actor checkpoint를 strict-load하며, 이전 corridor 모드
 패키징 옵션은 제거했습니다. ZIP smoke test는 제출 Agent의 import/reset/act와 메모리만 검증합니다.
+
+## 16. 사용자 트랙과 로컬 시뮬레이터
+
+`local_simulator`는 공식 로컬 물리 환경을 이용해 재현 가능한 맵을 만들고, baseline 또는
+`agent.py`로 실행한 주행을 `run.json`으로 저장합니다. `web_simulator`는 맵과 로그를 브라우저에서
+미리 보고 재생하며, 브라우저에서 물리 시뮬레이션을 직접 실행하지 않습니다. 큰 맵·로그는 기본적으로
+`D:/HAIC`에 저장하고, 해당 드라이브가 없으면 저장소 아래 `.haic-artifacts/`를 사용합니다.
+
+### 맵 생성과 실행
+
+고유한 기술 트랙은 같은 generator version, 템플릿, seed, 폭으로 다시 만들 수 있습니다.
+`extreme_technical`은 12·14·16개 주요 코너 중 하나를 선택하고, 코너를 공유하지 않는 S자 구간을
+최소 3개, 75–105도 범위의 급코너를 최소 3개 포함하도록 검증합니다.
+
+```powershell
+python -m local_simulator.map --kind custom --template extreme_technical `
+  --design-seed 73 --width 8 `
+  --output .haic-artifacts/maps/extreme-73.json
+
+python -m local_simulator.run --map .haic-artifacts/maps/extreme-73.json `
+  --policy agent --project-root . `
+  --output .haic-artifacts/runs/extreme-73.json
+```
+
+일반 템플릿은 `oval`, `s_curve`, `hairpin`, `chicane`, `technical`을 사용할 수 있습니다.
+커스텀 장애물은 공식 장애물과 별도로 추가하며, `official` 모드에서는 사용자 장애물을 함께 지정할 수
+없습니다.
+
+```powershell
+python -m local_simulator.map --track-id 1 --seed 99 `
+  --obstacle-mode official_plus_custom `
+  --obstacle 0.42,-0.25,1.2 --auto-obstacles 4 `
+  --output .haic-artifacts/maps/obstacles-99.json
+```
+
+`local_simulator.run`은 기본 `baseline` 정책 외에 `--policy agent`를 지원합니다. 긴 재생 화면을
+JSON에 포함하려면 `--record-frames`를 추가하세요. 프레임 로그는 용량이 커질 수 있습니다.
+
+### 브라우저에서 보기
+
+저장된 맵·로그 파일만 열어 재생하려면 정적 서버를 사용할 수 있습니다.
+
+```powershell
+python -m http.server 8000 --directory web_simulator
+```
+
+통합 Track Lab 서버는 브라우저 UI와 로컬 API를 함께 제공해 웹에서 맵 생성, 시뮬레이션, 수동 주행과
+로그 저장을 할 수 있습니다.
+
+```powershell
+python -m local_simulator.web --host 127.0.0.1 --port 8765 `
+  --project-root . --artifact-root .haic-artifacts
+```
+
+자체 트랙은 에이전트의 일반화와 과적합을 점검하는 로컬 도구이며, 공식 평가 트랙을 복제하거나
+대체하지 않습니다. 맵 생성 및 트랙 안전 검증이 실패하면 다른 레이아웃으로 조용히 대체하지 않고
+오류를 반환합니다.
