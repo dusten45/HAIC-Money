@@ -4,7 +4,6 @@ from dataclasses import asdict
 import json
 import os
 import random
-import resource
 import shlex
 import subprocess
 import sys
@@ -16,6 +15,11 @@ import numpy as np
 
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 import torch
+
+try:
+    import resource
+except ImportError:  # Windows does not provide the POSIX resource module.
+    resource = None
 
 import tracking
 from action_smoothing import normalize_action_smoothing
@@ -191,8 +195,16 @@ def training_memory():
         for line in status.read_text().splitlines():
             if line.startswith(("VmRSS:", "VmHWM:")):
                 fields[line.split(":")[0]] = int(line.split()[1]) / 1024
+    peak_rss_mib = fields.get("VmHWM")
+    if peak_rss_mib is None:
+        if resource is not None:
+            peak_rss_mib = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+        else:
+            from evaluate_policy import peak_rss_bytes
+
+            peak_rss_mib = peak_rss_bytes() / (1024 * 1024)
     return {"rss_mib": fields.get("VmRSS"),
-            "rss_peak_mib": fields.get("VmHWM", resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024)}
+            "rss_peak_mib": peak_rss_mib}
 
 
 def save_and_select(agent, observation, run_dir, run_config, args, best, trainer_state):

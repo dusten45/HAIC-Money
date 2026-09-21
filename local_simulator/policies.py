@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import inspect
 from pathlib import Path
 import sys
 from uuid import uuid4
@@ -67,16 +68,27 @@ class AgentPolicy:
         if spec is None or spec.loader is None:
             raise RuntimeError(f"could not load agent module: {self.agent_path}")
         module = importlib.util.module_from_spec(spec)
-        sys.path.insert(0, str(self.project_root))
+        project_root_entry = str(self.project_root)
+        sys.path.insert(0, project_root_entry)
         try:
             spec.loader.exec_module(module)
+            agent_class = getattr(module, "Agent", None)
+            if agent_class is None:
+                raise ValueError("agent.py must define an Agent class")
+            try:
+                accepts_project_root = "project_root" in inspect.signature(agent_class).parameters
+            except (TypeError, ValueError):
+                accepts_project_root = False
+            self.agent = (
+                agent_class(project_root=str(self.project_root))
+                if accepts_project_root
+                else agent_class()
+            )
         finally:
-            if sys.path and sys.path[0] == str(self.project_root):
-                sys.path.pop(0)
-        agent_class = getattr(module, "Agent", None)
-        if agent_class is None:
-            raise ValueError("agent.py must define an Agent class")
-        self.agent = agent_class()
+            for index, entry in enumerate(sys.path):
+                if entry is project_root_entry:
+                    del sys.path[index]
+                    break
 
     def reset(self, observation: np.ndarray) -> None:
         reset = getattr(self.agent, "reset", None)

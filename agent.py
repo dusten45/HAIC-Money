@@ -1,3 +1,4 @@
+import math
 import pickle
 import time
 
@@ -104,6 +105,7 @@ class Agent:
         self,
         model_path: str | None = None,
         *,
+        project_root: str | None = None,
         policy=None,
         dynamics=None,
         planner=None,
@@ -114,6 +116,15 @@ class Agent:
         policy_checkpoint: str | None = None,
         dynamics_checkpoint: str | None = None,
     ):
+        resolved_project_root = (
+            str(project_root).rstrip("/\\") if project_root is not None else None
+        )
+        resolved_policy_checkpoint = policy_checkpoint
+        if resolved_policy_checkpoint is None and resolved_project_root is not None:
+            resolved_policy_checkpoint = f"{resolved_project_root}/{POLICY_MODEL_FILENAME}"
+        resolved_dynamics_checkpoint = dynamics_checkpoint
+        if resolved_dynamics_checkpoint is None and resolved_project_root is not None:
+            resolved_dynamics_checkpoint = f"{resolved_project_root}/{DYNAMICS_MODEL_FILENAME}"
         haic_options_requested = (
             any(
                 value is not None
@@ -131,9 +142,16 @@ class Agent:
             or (plan_budget is not None and float(plan_budget) != 4.5)
         )
         if not haic_options_requested:
+            resolved_model_path = model_path
+            if resolved_model_path is None:
+                resolved_model_path = (
+                    f"{resolved_project_root}/{MODEL_FILENAME}"
+                    if resolved_project_root is not None
+                    else MODEL_FILENAME
+                )
             try:
                 payload = torch.load(
-                    MODEL_FILENAME if model_path is None else model_path,
+                    resolved_model_path,
                     map_location="cpu",
                     weights_only=True,
                 )
@@ -142,7 +160,10 @@ class Agent:
                     raise
                 # The inference-only HAIC archive contains policy.pt instead of
                 # the root baseline model.pt.
-                self._init_haic()
+                self._init_haic(
+                    policy_checkpoint=resolved_policy_checkpoint,
+                    dynamics_checkpoint=resolved_dynamics_checkpoint,
+                )
             else:
                 model_format = payload.get("format") if isinstance(payload, dict) else None
                 if model_format == DRQ_ACTOR_FORMAT:
@@ -160,8 +181,8 @@ class Agent:
             strict_checkpoint_loading=strict_checkpoint_loading,
             plan_budget=plan_budget,
             clock=clock,
-            policy_checkpoint=policy_checkpoint,
-            dynamics_checkpoint=dynamics_checkpoint,
+            policy_checkpoint=resolved_policy_checkpoint,
+            dynamics_checkpoint=resolved_dynamics_checkpoint,
         )
 
     def _init_drq(self, payload):
@@ -345,7 +366,10 @@ class Agent:
             if strict_checkpoint_loading is None
             else bool(strict_checkpoint_loading)
         )
-        self.plan_budget = min(max(float(4.5 if plan_budget is None else plan_budget), 0.0), 4.5)
+        requested_plan_budget = float(4.5 if plan_budget is None else plan_budget)
+        if not math.isfinite(requested_plan_budget):
+            raise ValueError("plan_budget must be finite")
+        self.plan_budget = min(max(requested_plan_budget, 0.0), 4.5)
         resolved_policy_checkpoint = (
             POLICY_MODEL_FILENAME if policy_checkpoint is None else policy_checkpoint
         )

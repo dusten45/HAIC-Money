@@ -1,3 +1,8 @@
+import json
+import os
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -123,6 +128,64 @@ class TestRunLog(unittest.TestCase):
             policy.reset(observation)
 
             self.assertEqual(tuple(policy.act(observation)), (0.25, 0.5, 0.0))
+
+    def test_agent_policy_uses_project_root_checkpoint_from_a_different_cwd(self):
+        import torch
+
+        from agent import Baseline1Actor
+
+        repository_root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as project, tempfile.TemporaryDirectory() as other_cwd:
+            project_root = Path(project)
+            foreign_cwd = Path(other_cwd)
+            for dependency in ("action_smoothing.py", "action_representation.py"):
+                shutil.copy2(repository_root / dependency, project_root / dependency)
+
+            for path, steering in (
+                (project_root / "model.pt", 0.75),
+                (foreign_cwd / "model.pt", -0.75),
+            ):
+                actor = Baseline1Actor()
+                with torch.no_grad():
+                    actor.action_net.weight.zero_()
+                    actor.action_net.bias.copy_(torch.tensor([steering, 0.25, 0.0]))
+                torch.save(actor.state_dict(), path)
+
+            script = r'''import json
+import sys
+from pathlib import Path
+
+import numpy as np
+from local_simulator.policies import AgentPolicy
+
+agent_path = Path(sys.argv[1])
+project_root = Path(sys.argv[2])
+policy = AgentPolicy(agent_path, project_root)
+action = policy.act(np.zeros((4, 84, 84), dtype=np.float32))
+print(json.dumps(action.tolist()))'''
+            python_path = os.environ.get("PYTHONPATH", "")
+            child_environment = os.environ.copy()
+            child_environment["PYTHONPATH"] = os.pathsep.join(
+                value for value in (str(repository_root), python_path) if value
+            )
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-c",
+                    script,
+                    str(repository_root / "agent.py"),
+                    str(project_root),
+                ],
+                cwd=foreign_cwd,
+                env=child_environment,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=30,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            action = json.loads(result.stdout)
+            self.assertGreater(action[0], 0.5)
 
 
 if __name__ == "__main__":

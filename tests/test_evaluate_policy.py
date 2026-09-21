@@ -2,6 +2,7 @@ import hashlib
 import importlib
 import json
 import os
+import sys
 import time
 import tempfile
 import unittest
@@ -507,13 +508,18 @@ class TestEvaluatePolicy(unittest.TestCase):
             actor = self.drq_candidate(root)
             candidate, = discover_candidates([actor])
             candidate["_worker_model_path"] = str(actor)
-            args = SimpleNamespace(python="/cpu-venv/bin/python", max_steps=2,
+            explicit_python = (
+                r"C:\cpu-venv\bin\python.exe"
+                if sys.platform == "win32"
+                else "/cpu-venv/bin/python"
+            )
+            args = SimpleNamespace(python=explicit_python, max_steps=2,
                                    frame_skip=4, timeout_seconds=30)
             completed = SimpleNamespace(returncode=0, stdout=json.dumps(self.episode()), stderr="")
             with patch.dict("os.environ", {"PYTHONPATH": "/unsafe/repository"}):
                 with patch("evaluate_policy.subprocess.run", return_value=completed) as run:
                     result = run_isolated_cell(candidate, 1, 0, 0, args, root / "evaluate_policy.py")
-            self.assertEqual(run.call_args.args[0][0], "/cpu-venv/bin/python")
+            self.assertEqual(run.call_args.args[0][0], explicit_python)
             self.assertEqual(run.call_args.kwargs["cwd"], root)
             self.assertNotIn("PYTHONPATH", run.call_args.kwargs["env"])
             self.assertEqual(run.call_args.kwargs["env"]["CUDA_VISIBLE_DEVICES"], "")

@@ -183,6 +183,12 @@ class TestAgentInference(unittest.TestCase):
         self.assertTrue(np.all(np.isfinite(exhausted)))
         self.assertTrue(np.all(np.isfinite(malformed)))
 
+    def test_nonfinite_planner_budget_is_rejected(self):
+        from agent import Agent
+
+        with self.assertRaisesRegex(ValueError, "finite"):
+            Agent(policy=_Policy(), planner=_NoPlan(), plan_budget=float("nan"))
+
     def test_nonnumeric_observation_returns_safe_action(self):
         # Break caught: dtype conversion errors must not escape act() before
         # its safe-action handling can protect the inference contract.
