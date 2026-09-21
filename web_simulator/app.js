@@ -150,13 +150,18 @@
       if (centerline.length > 4096) throw new Error("중심선은 최대 4096개 점까지 지원합니다.");
       const direction = Number(rawGeometry.direction ?? 1);
       if (![1, -1].includes(direction)) throw new Error("주행 방향은 1 또는 -1이어야 합니다.");
+      const geometryWidth = finiteNumber(rawGeometry.width, "width", 0.5, 100);
+      const oversizedObstacle = obstacles.find((obstacle) => obstacle.radius > geometryWidth);
+      if (oversizedObstacle) {
+        throw new Error(`obstacle radius ${oversizedObstacle.radius} exceeds custom road width ${geometryWidth}`);
+      }
       return {
         ...common,
         map_kind: "custom",
         map_id: mapId,
         geometry: {
           centerline,
-          width: finiteNumber(rawGeometry.width, "width", 0.5, 100),
+          width: geometryWidth,
           start_index: Math.trunc(finiteNumber(rawGeometry.start_index ?? 0, "start_index", 0, Math.max(0, centerline.length - 1))),
           direction
         },
@@ -243,11 +248,17 @@
   function previewFromCustomMap(map) {
     if (!map || map.map_kind !== "custom" || !map.geometry || !map.geometry.centerline.length) return null;
     const centerline = map.geometry.centerline;
-    const points = centerline.map(([x, y], index) => {
-      const previous = centerline[(index - 1 + centerline.length) % centerline.length];
-      const following = centerline[(index + 1) % centerline.length];
+    const pointCount = centerline.length;
+    const startIndex = Number(map.geometry.start_index ?? 0);
+    const direction = Number(map.geometry.direction ?? 1);
+    const orderedCenterline = Array.from({ length: pointCount }, (_unused, index) =>
+      centerline[(startIndex + direction * index + pointCount) % pointCount]
+    );
+    const points = orderedCenterline.map(([x, y], index) => {
+      const previous = orderedCenterline[(index - 1 + pointCount) % pointCount];
+      const following = orderedCenterline[(index + 1) % pointCount];
       const tangent = Math.atan2(following[1] - previous[1], following[0] - previous[0]);
-      return [index / centerline.length, tangent - Math.PI / 2, x, y];
+      return [index / pointCount, tangent - Math.PI / 2, x, y];
     });
     return {
       track: { points, width: map.geometry.width },
@@ -284,6 +295,9 @@
     const points = geometry.centerline;
     if (!Number.isFinite(geometry.width) || geometry.width < 0.5 || geometry.width > 100) return "도로 반폭은 0.5에서 100 사이여야 합니다.";
     if (!/^custom-track-[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(map.map_id || "")) return "맵 ID는 custom-track-으로 시작해야 합니다.";
+    const oversizedObstacle = (Array.isArray(map.obstacles) ? map.obstacles : [])
+      .find((obstacle) => obstacle && obstacle.radius > geometry.width);
+    if (oversizedObstacle) return `장애물 반경 ${oversizedObstacle.radius}이 도로 반폭 ${geometry.width}보다 큽니다.`;
     try {
       validateBrowserCustomGeometry(points, geometry.width);
       return "";
@@ -448,7 +462,8 @@
       const index = Math.min(points.length - 1, Math.max(0, Math.round(obstacle.progress * (points.length - 1))));
       const trackPoint = points[index];
       const beta = trackPoint[1];
-      const offset = obstacle.lateral * Math.min(preview.track.width * .6, preview.track.width - obstacle.radius);
+      const maxOffset = Math.max(0, Math.min(preview.track.width * .6, preview.track.width - obstacle.radius));
+      const offset = obstacle.lateral * maxOffset;
       drawObstacle([trackPoint[2] + offset * Math.cos(beta), trackPoint[3] + offset * Math.sin(beta)], obstacle.radius, "#7ce2b2");
     });
     const start = mapped[0];
@@ -1992,7 +2007,9 @@
     finishRun,
     makeBrowserCustomMap,
     formatGeneratedTrackSummary,
-    manualActionFromKeys
+    manualActionFromKeys,
+    previewFromCustomMap,
+    customMapValidation
   };
   document.addEventListener("DOMContentLoaded", initialize);
 }());

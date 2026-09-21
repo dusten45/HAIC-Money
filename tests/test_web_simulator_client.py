@@ -413,6 +413,97 @@ if (!fills.includes("#ff6f74") || !calls.includes("translate") || !calls.include
         )
         self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
 
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_custom_map_browser_preview_honors_start_index_and_direction(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const map = {
+  schema_version: 2,
+  map_kind: "custom",
+  map_id: "custom-track-oriented",
+  obstacles: [],
+  geometry: {
+    centerline: [[0, 0], [10, 0], [10, 10], [0, 10]],
+    width: 3,
+    start_index: 2,
+    direction: -1
+  }
+};
+const preview = context.window.HAICSimulator.previewFromCustomMap(map);
+const centers = preview.track.points.map((point) => point.slice(2));
+const expected = [[10, 10], [10, 0], [0, 0], [0, 10]];
+if (JSON.stringify(centers) !== JSON.stringify(expected)) {
+  throw new Error(`browser custom preview ignored map ordering: ${JSON.stringify(centers)}`);
+}
+if (JSON.stringify(preview.track.points.map((point) => point[0])) !== "[0,0.25,0.5,0.75]") {
+  throw new Error("ordered preview progress is not monotonic");
+}'''
+        result = subprocess.run(
+            [NODE, "-e", script], cwd=Path.cwd(), capture_output=True, text=True,
+            encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_browser_rejects_oversized_custom_obstacles_and_avoids_negative_preview_offset(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {}, getElementById() { return null; } } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const api = context.window.HAICSimulator;
+const map = {
+  schema_version: 2,
+  map_kind: "custom",
+  map_id: "custom-track-narrow",
+  max_steps: 2000,
+  frame_skip: 4,
+  obstacles: [{ progress: 0, lateral: 1, radius: 0.6 }],
+  geometry: {
+    centerline: Array.from({ length: 12 }, (_unused, index) => {
+      const angle = 2 * Math.PI * index / 12;
+      return [10 * Math.cos(angle), 10 * Math.sin(angle)];
+    }),
+    width: 0.5,
+    start_index: 0,
+    direction: 1
+  }
+};
+let rejected = false;
+try {
+  api.normalizeMap(map);
+} catch (error) {
+  rejected = /radius.*road width/i.test(error.message);
+}
+if (!rejected) throw new Error("custom obstacle radius wider than the road was accepted");
+if (!/반경.*반폭/.test(api.customMapValidation(map))) {
+  throw new Error("custom map validation did not report the oversized obstacle");
+}
+
+const arcs = [];
+const drawing = {
+  clearRect() {}, fillRect() {}, beginPath() {}, lineTo() {}, moveTo() {}, closePath() {},
+  fill() {}, stroke() {}, setLineDash() {}, arc(x, y, radius) { arcs.push([x, y, radius]); }
+};
+const canvas = { width: 400, height: 300, getContext() { return drawing; } };
+api.drawTrack(canvas, {
+  track: { width: 0.5, points: [[0, 0, 0, 0], [0.25, 0, 10, 0], [0.5, 0, 10, 10], [0.75, 0, 0, 10]] },
+  official_obstacles: []
+}, map.obstacles);
+if (arcs.length < 2 || arcs[0][0] !== arcs[1][0] || arcs[0][1] !== arcs[1][1]) {
+  throw new Error("invalid obstacle preview applied a negative lateral offset");
+}'''
+        result = subprocess.run(
+            [NODE, "-e", script], cwd=Path.cwd(), capture_output=True, text=True,
+            encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

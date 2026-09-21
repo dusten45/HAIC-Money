@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import ipaddress
 import json
 from pathlib import Path
 import re
 import threading
 from typing import Any
+from urllib.parse import urlsplit
 from uuid import uuid4
 
 from .logging import run_log_to_dict, save_run_log
@@ -230,6 +232,52 @@ class LocalApiHandler:
     def _error(self, message: str, status: int) -> None:
         self._json_response({"error": message}, status=status)
 
+    def _is_same_origin_request(self) -> bool:
+        fetch_site = self.headers.get("Sec-Fetch-Site")
+        if fetch_site and fetch_site not in {"same-origin", "none"}:
+            return False
+        origin = self.headers.get("Origin")
+        if origin is None:
+            return True
+        try:
+            parsed_origin = urlsplit(origin)
+            request_authority = urlsplit(f"//{self.headers.get('Host', '')}")
+            if (
+                parsed_origin.scheme not in {"http", "https"}
+                or not parsed_origin.netloc
+                or parsed_origin.path
+                or parsed_origin.query
+                or parsed_origin.fragment
+                or parsed_origin.username is not None
+                or parsed_origin.password is not None
+            ):
+                return False
+            origin_host = parsed_origin.hostname
+            request_host = request_authority.hostname
+            if not origin_host or not request_host or origin_host.casefold() != request_host.casefold():
+                return False
+            origin_port = parsed_origin.port or (443 if parsed_origin.scheme == "https" else 80)
+            request_port = request_authority.port or 80
+            if origin_port != request_port:
+                return False
+            try:
+                ipaddress.ip_address(origin_host)
+            except ValueError:
+                if origin_host.casefold() != "localhost":
+                    return False
+        except ValueError:
+            return False
+        return True
+
+    def _validate_mutating_request(self) -> bool:
+        if self.headers.get_content_type().casefold() != "application/json":
+            self._error("Content-Type must be application/json", 415)
+            return False
+        if not self._is_same_origin_request():
+            self._error("cross-origin requests are not allowed", 403)
+            return False
+        return True
+
     def _read_json(self) -> dict[str, Any]:
         length_header = self.headers.get("Content-Length")
         try:
@@ -271,6 +319,8 @@ class LocalApiHandler:
         from urllib.parse import urlsplit
 
         path = urlsplit(self.path).path.rstrip("/")
+        if not self._validate_mutating_request():
+            return
         try:
             payload = self._read_json()
             if path == "/api/maps/generate":

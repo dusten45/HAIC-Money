@@ -2,12 +2,31 @@ from __future__ import annotations
 
 import argparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import ipaddress
 import mimetypes
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 from .api import LocalApiHandler, SimulationRegistry
 from .map import default_artifact_root
+
+
+def _is_loopback_host(host: str) -> bool:
+    normalized = host.strip().lower().strip("[]")
+    if normalized == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(normalized).is_loopback
+    except ValueError:
+        return False
+
+
+def _loopback_host_argument(host: str) -> str:
+    if not _is_loopback_host(host):
+        raise argparse.ArgumentTypeError(
+            "the unauthenticated local simulator may only bind to a loopback host"
+        )
+    return host
 
 
 class LocalWebHandler(LocalApiHandler, BaseHTTPRequestHandler):
@@ -51,6 +70,10 @@ def create_server(
     project_root: Path | None = None,
     artifact_root: Path | None = None,
 ) -> ThreadingHTTPServer:
+    if not _is_loopback_host(host):
+        raise ValueError(
+            "the unauthenticated local simulator may only bind to a loopback host"
+        )
     resolved_project_root = Path(project_root or Path.cwd()).resolve()
     resolved_static_root = resolved_project_root / "web_simulator"
     registry = SimulationRegistry(
@@ -74,7 +97,12 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Serve the HAIC Track Lab and its local simulation API."
     )
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument(
+        "--host",
+        type=_loopback_host_argument,
+        default="127.0.0.1",
+        help="loopback address only; remote binding requires an authenticated service",
+    )
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
     parser.add_argument("--artifact-root", type=Path, default=default_artifact_root())

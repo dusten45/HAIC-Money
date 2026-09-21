@@ -67,6 +67,44 @@ class TestLocalSimulatorApi(unittest.TestCase):
         self.assertEqual(response["map_kind"], "custom")
         self.assertGreaterEqual(len(response["geometry"]["centerline"]), 12)
 
+    def test_mutating_requests_require_json_and_same_origin_in_browsers(self):
+        body = json.dumps({
+            "map_kind": "custom",
+            "map_id": "custom-track-origin-check",
+            "design_seed": 7,
+            "template": "oval",
+        }).encode("utf-8")
+        requests = (
+            ({"Content-Type": "text/plain", "Origin": "http://attacker.example"}, 415),
+            ({"Content-Type": "application/json", "Origin": "http://attacker.example"}, 403),
+            ({"Content-Type": "application/json", "Origin": self.base_url}, 200),
+        )
+        for headers, expected_status in requests:
+            with self.subTest(headers=headers):
+                request = Request(
+                    self.base_url + "/api/maps/generate",
+                    data=body,
+                    headers=headers,
+                    method="POST",
+                )
+                try:
+                    with urlopen(request, timeout=10) as response:
+                        status = response.status
+                except HTTPError as error:
+                    status = error.code
+                self.assertEqual(status, expected_status)
+
+    def test_server_rejects_non_loopback_bind_without_authentication(self):
+        from local_simulator.web import create_server
+
+        with self.assertRaisesRegex(ValueError, "loopback"):
+            create_server(
+                host="0.0.0.0",
+                port=0,
+                project_root=Path.cwd(),
+                artifact_root=Path(self.artifacts.name),
+            )
+
     def test_technical_map_generation(self):
         response = self.request(
             "POST",
