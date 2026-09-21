@@ -393,6 +393,106 @@ class TestEvaluatePolicy(unittest.TestCase):
         self.assertGreater(ranking_key(ranked(.5, .8, 100)), ranking_key(ranked(.5, .2, 10)))
         self.assertGreater(ranking_key(ranked(.5, .8, 10)), ranking_key(ranked(.5, .8, 100)))
 
+    def test_diagnostic_confirmation_requires_explicit_custom_confirmation(self):
+        for options in (
+            [], ["--protocol-file", "protocol.json", "--partition", "screen"],
+            ["--protocol-file", "protocol.json", "--partition", "blind"],
+        ):
+            with self.subTest(options=options), patch(
+                "sys.argv", ["evaluate_policy.py", "--diagnostic-confirmation", *options]
+            ):
+                args = parse_args()
+                with self.assertRaisesRegex(ValueError, "requires custom partition=confirmation"):
+                    validate_protocol_request(args)
+                with self.assertRaisesRegex(ValueError, "requires custom partition=confirmation"):
+                    run_checkpoint_protocol(args, "ad-hoc")
+
+    def test_diagnostic_confirmation_only_relaxes_screen_completion(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            spec_path = root / "protocol.json"
+            spec_path.write_text(json.dumps(self.protocol_spec()))
+            args = SimpleNamespace(
+                model=[actor], run_dir=root, legacy_model=None, protocol_file=spec_path,
+                partition="screen", output=root / "screen.json", previous_evaluation=None,
+                max_steps=2, frame_skip=4, evaluations_dir=root / "evaluations", timeout_seconds=30,
+                diagnostic_confirmation=False,
+            )
+
+            def worker(candidate, track_id, seed, repeat, **_arguments):
+                episode = {**self.episode(repeat), "candidate_id": candidate["candidate_id"],
+                           "track_id": track_id, "seed": seed}
+                if scenario == "nondeterministic" and repeat == 1:
+                    episode["action_trace_sha256"] = "b" * 64
+                if scenario == "resource_failure" and repeat == 1:
+                    episode["peak_rss_bytes"] = MAX_PROCESS_RSS_BYTES + 1
+                if args.partition == "confirmation":
+                    episode.update(finished=True, lap_time_ms=80, progress=1.0)
+                return episode
+
+            for scenario in ("nondeterministic", "resource_failure", "zero_finish"):
+                args.partition = "screen"
+                args.diagnostic_confirmation = False
+                args.previous_evaluation = None
+                args.output = root / f"{scenario}-screen.json"
+                with patch("evaluate_policy.run_isolated_cell", side_effect=worker):
+                    run_checkpoint_protocol(args, "ad-hoc")
+                args.previous_evaluation = args.output
+                args.partition = "confirmation"
+                args.output = root / f"{scenario}-confirmation.json"
+                with self.assertRaisesRegex(ValueError, "nonzero completion"):
+                    run_checkpoint_protocol(args, "ad-hoc")
+                args.diagnostic_confirmation = True
+                if scenario != "zero_finish":
+                    with self.assertRaisesRegex(ValueError, "operational success"):
+                        run_checkpoint_protocol(args, "ad-hoc")
+                    continue
+                screen_pointer = json.loads(args.previous_evaluation.read_text())
+                self.assertFalse(screen_pointer["diagnostic_only"])
+                with self.assertRaisesRegex(ValueError, "protocol"):
+                    previous_evaluation_metadata(
+                        args.previous_evaluation, "confirmation", "changed-protocol",
+                        screen_pointer["ranked"][0], diagnostic_confirmation=True,
+                    )
+                with self.assertRaisesRegex(ValueError, "exact actor"):
+                    previous_evaluation_metadata(
+                        args.previous_evaluation, "confirmation", screen_pointer["protocol_sha256"],
+                        {"archive_sha256": "changed-actor"}, diagnostic_confirmation=True,
+                    )
+                args.model = [actor, actor]
+                with self.assertRaisesRegex(ValueError, "one already-selected actor"):
+                    run_checkpoint_protocol(args, "ad-hoc")
+                args.model = [actor]
+                with patch("evaluate_policy.run_isolated_cell", side_effect=worker):
+                    result_dir = run_checkpoint_protocol(args, "ad-hoc")
+            pointer_bytes = args.output.read_text()
+            manifest_bytes = (result_dir / "manifest.json").read_text()
+            pointer = json.loads(pointer_bytes)
+            candidate = pointer["ranked"][0]
+            self.assertTrue(pointer["diagnostic_only"])
+            self.assertTrue(json.loads(manifest_bytes)["diagnostic_only"])
+            self.assertTrue(candidate["diagnostic_only"])
+            self.assertTrue(candidate["eligible"])
+            self.assertEqual(candidate["summary"]["finish_rate"], 1.0)
+            self.assertEqual(json.loads((result_dir / "summary.json").read_text()), pointer["ranked"])
+            self.assertIn("DIAGNOSTIC ONLY: NON-PROMOTING", (result_dir / "report.md").read_text())
+            self.assertIn("failed screen remains failed", (result_dir / "report.md").read_text())
+            for location in ("pointer", "manifest", "summary"):
+                with self.subTest(diagnostic_marker=location):
+                    pointer = json.loads(pointer_bytes)
+                    manifest = json.loads(manifest_bytes)
+                    pointer["diagnostic_only"] = location == "pointer"
+                    manifest["diagnostic_only"] = location == "manifest"
+                    pointer["ranked"][0]["diagnostic_only"] = location == "summary"
+                    args.output.write_text(json.dumps(pointer))
+                    (result_dir / "summary.json").write_text(json.dumps(pointer["ranked"]))
+                    (result_dir / "manifest.json").write_text(json.dumps(manifest))
+                    with self.assertRaisesRegex(ValueError, "diagnostic-only"):
+                        previous_evaluation_metadata(
+                            args.output, "blind", pointer["protocol_sha256"], candidate,
+                        )
+
     def test_isolated_worker_uses_explicit_interpreter_and_frozen_cwd(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

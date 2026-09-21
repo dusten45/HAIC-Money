@@ -890,7 +890,14 @@ def write_json(path: Path, value) -> None:
 
 
 def write_protocol_report(path: Path, protocol: str, ranked) -> None:
-    lines = ["# Checkpoint Evaluation", "", f"Protocol: `{protocol}`", "", "## Ranking", ""]
+    lines = ["# Checkpoint Evaluation", "", f"Protocol: `{protocol}`", ""]
+    if any(candidate.get("diagnostic_only", False) for candidate in ranked):
+        lines.extend([
+            "**DIAGNOSTIC ONLY: NON-PROMOTING. diagnostic_only=true.**",
+            "A failed screen remains failed even if this diagnostic finishes; this result cannot authorize blind evaluation or promotion.",
+            "",
+        ])
+    lines.extend(["## Ranking", ""])
     for rank, candidate in enumerate(ranked, start=1):
         summary = candidate["summary"]
         lines.append(
@@ -971,7 +978,11 @@ def serializable_candidates(candidates) -> list[dict]:
     ]
 
 
-def previous_evaluation_metadata(path: Path, partition: str, protocol_sha256: str, candidate: dict) -> dict:
+def previous_evaluation_metadata(
+    path: Path, partition: str, protocol_sha256: str, candidate: dict, *, diagnostic_confirmation=False,
+) -> dict:
+    if diagnostic_confirmation and partition != "confirmation":
+        raise ValueError("diagnostic confirmation cannot authorize another partition")
     pointer_bytes = path.read_bytes()
     pointer = json.loads(pointer_bytes)
     previous_dir = Path(pointer["evaluation_dir"])
@@ -991,14 +1002,19 @@ def previous_evaluation_metadata(path: Path, partition: str, protocol_sha256: st
     ):
         raise ValueError("previous evaluation must match the immutable preceding partition and protocol")
     selected = summary[0]
+    if any(record.get("diagnostic_only", False) for record in (pointer, manifest, selected)):
+        raise ValueError("diagnostic-only evaluations cannot authorize blind evaluation or promotion")
+    finish_rate = selected.get("summary", {}).get("finish_rate")
     if (
         selected.get("archive_sha256") != candidate["archive_sha256"]
         or selected.get("eligible") is not True or selected.get("determinism_audited") is not True
         or selected.get("cpu_reload_matches") is not True
         or selected.get("operational_failures") != 0
-        or not 0 < selected.get("summary", {}).get("finish_rate", 0.0) <= 1.0
+        or type(finish_rate) not in (int, float) or not 0 <= finish_rate <= 1.0
+        or (not diagnostic_confirmation and finish_rate == 0.0)
     ):
-        raise ValueError("previous evaluation must establish repeated nonzero completion for this exact actor")
+        required = "operational success" if diagnostic_confirmation else "nonzero completion"
+        raise ValueError(f"previous evaluation must establish repeated {required} for this exact actor")
     previous_actor = (previous_dir / selected["evaluation_archive_path"]).resolve()
     if not previous_actor.is_relative_to(previous_dir.resolve()) or sha256_file(previous_actor) != candidate["archive_sha256"]:
         raise ValueError("previous immutable actor does not match the selected actor")
@@ -1018,6 +1034,11 @@ def previous_evaluation_metadata(path: Path, partition: str, protocol_sha256: st
 
 
 def run_checkpoint_protocol(args, protocol_name: str) -> Path:
+    diagnostic_only = bool(getattr(args, "diagnostic_confirmation", False))
+    if diagnostic_only and (
+        getattr(args, "protocol_file", None) is None or args.partition != "confirmation"
+    ):
+        raise ValueError("--diagnostic-confirmation requires custom partition=confirmation")
     spec = None
     protocol_sha256 = None
     if getattr(args, "protocol_file", None) is not None:
@@ -1045,6 +1066,7 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
     if spec is None and any(candidate["algorithm"] == "drq-v2" for candidate in candidates):
         raise ValueError("DrQ actors require an explicit --protocol-file")
     for candidate in candidates:
+        candidate["diagnostic_only"] = diagnostic_only
         candidate["expected_cells"] = len(protocol["track_ids"]) * len(protocol["seeds"])
         candidate["expected_results"] = candidate["expected_cells"] * protocol["repeats"]
         if (
@@ -1073,6 +1095,7 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
             raise ValueError("confirmation and blind require --previous-evaluation")
         previous_evaluation = previous_evaluation_metadata(
             args.previous_evaluation, args.partition, protocol_sha256, candidates[0],
+            diagnostic_confirmation=diagnostic_only,
         )
     temporary_dir, final_dir = protocol_output_dir(args.evaluations_dir, protocol_name)
     started_at = datetime.now(timezone.utc)
@@ -1099,6 +1122,7 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
             "protocol": protocol_name,
             "protocol_sha256": protocol_sha256,
             "partition": getattr(args, "partition", None),
+            "diagnostic_only": diagnostic_only,
             "run_dir": str(args.run_dir.resolve()),
             "previous_evaluation": previous_evaluation,
             "started_at_utc": started_at.isoformat().replace("+00:00", "Z"),
@@ -1174,6 +1198,7 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
                 "protocol_name": protocol_name,
                 "protocol_sha256": protocol_sha256,
                 "partition": getattr(args, "partition", None),
+                "diagnostic_only": diagnostic_only,
                 "ranked": ranked,
             }, handle, indent=2, sort_keys=True)
             handle.write("\n")
@@ -1195,6 +1220,10 @@ def parse_args():
     parser.add_argument("--protocol-file", type=Path, help="frozen screen/confirmation/blind JSON spec")
     parser.add_argument("--partition", choices=("screen", "confirmation", "blind"))
     parser.add_argument("--previous-evaluation", type=Path, help="immutable preceding partition result pointer")
+    parser.add_argument(
+        "--diagnostic-confirmation", action="store_true",
+        help="non-promoting confirmation after an operationally valid zero-finish screen",
+    )
     parser.add_argument("--python", help="CPU worker interpreter; default is the current interpreter")
     parser.add_argument("--check-runtime", action="store_true", help="validate this interpreter before training")
     parser.add_argument(
@@ -1238,6 +1267,8 @@ def validate_protocol_request(args) -> None:
     if args.workers <= 0:
         raise ValueError("--workers must be positive")
     custom = args.protocol_file is not None
+    if args.diagnostic_confirmation and (not custom or args.partition != "confirmation"):
+        raise ValueError("--diagnostic-confirmation requires custom partition=confirmation")
     if (args.protocol != "ad-hoc" or custom) and args.run_dir is None:
         raise ValueError("--run-dir is required for a checkpoint protocol")
     if custom:
