@@ -54,10 +54,15 @@ python -c "import gymnasium, Box2D, torch, numpy, cv2; print('설치 완료')"
 python local_runner.py --track-id 1 --seed 42
 ```
 
-기본 `Agent`는 학습된 visual actor만 사용합니다. 개발 모드에서 checkpoint가 없으면
-인터페이스 smoke 용도의 무작위 초기 actor를 만들지만, 제출 패키지는 strict loading으로
-유효한 `policy.pt`가 없으면 실행을 거부합니다. 픽셀 corridor 교사는 학습 데이터 수집에만
-사용하며 `Agent`나 제출 ZIP에서는 호출할 수 없습니다.
+`Agent`는 PPO visual actor를 실행하며 corridor 규칙 제어기로 전환하지 않습니다. 개발 중 checkpoint가
+없으면 인터페이스 smoke 용도의 초기 actor를 만들 수 있지만, 대회 제출 ZIP은 strict checkpoint
+loading을 사용해 유효한 학습 `policy.pt`가 없으면 실행을 거부합니다. 화면의 도로·속도·장애물을
+읽는 corridor 교사는 train split의 시연 수집과 학습 전용 벤치마크에서만 쓰고 `Agent` 및 제출 ZIP에는
+포함하지 않습니다. CEM은 별도 학습 모델과 평가 결과가 선택한 경우에만 PPO 행동 제안을 보정합니다.
+
+`local_runner.py --track-id N --seed S`에서 고정 공식 트랙을 만들면 해당 트랙에 장애물 6개가
+항상 배치됩니다. Track Lab 맵은 `official`, `custom_only`, `official_plus_custom` 모드로 공식
+장애물과 사용자 장애물을 구분해 평가할 수 있습니다.
 
 주요 옵션:
 
@@ -504,11 +509,13 @@ decision frame에서 비교한 오차 기록은 `artifacts/haic/task5-hud-valida
 HUD branch의 보조 오차 개선은 미미했고 steering/yaw는 약간 악화되어, branch를 끌 수 있는 구조를
 유지했습니다. 이 HUD 결과는 한 track/seed만 사용했으므로 일반화 근거로 보지 않습니다.
 
-화면의 아스팔트 띠와 밝은 장애물을 추적하는 `VisionCorridorAgent`는 train split에서만 PPO actor의
-시연을 수집하고, 짧은 behavior-cloning 워밍업에 씁니다. PPO update가 시작된 뒤 교사 손실은
-사용하지 않습니다. 최종 `Agent`와 제출 ZIP은 학습된 visual actor만 행동에 사용하며 교사 모듈은
-ZIP에서 제외합니다. 과거 corridor-only 후보의 완주 기록은 교사 성능으로만 취급하고 학습 정책의
-SOTA나 제출 후보로 계산하지 않습니다.
+`training/vision_teacher.py`는 train split에서 PPO 시연을 수집하는 교사입니다. 교사는 아스팔트
+중심선, HUD 속도 막대, 밝은 장애물 픽셀을 사용하며, 교사 페달은 PPO actor의 보정된 액션 범위로
+비율 변환해 actor 상한의 75%로 제한하고, 같은 액션을 시연 라벨과 수집 환경에 적용합니다. 이 여유는
+`tanh` action 평균이 포화되는 것을 줄여 PPO가 더 낮은 throttle이나 brake도 탐색하게 합니다.
+behavior-cloning 워밍업 후 PPO 학습이
+시작되면 교사 손실은 끕니다. corridor 제어기는 제출 코드에서 불러오지 않으며, corridor 단독 주행
+기록은 학습 정책의 SOTA나 제출 성능으로 계산하지 않습니다.
 
 비교 episode별 기록과 요약은 `artifacts/haic/task5-eval-fast-fullcap/episodes.jsonl` 및
 `summary.json`에 있습니다. 보류 시드 비교에서 CEM이 개선되지 않아 생성된 제출 ZIP은 계획기를
@@ -589,3 +596,36 @@ transition을 32배 늘린 비교 후보입니다. update 사이의 빠른 tune 
 PPO update, tune 평가, HUD ablation의 경과 시간이 각각 기록됩니다. ZIP 제출
 전에는 tune 성능으로 정책을 고르고, held-out에서 PPO-only와 PPO+CEM을 같은 map/seed에 대해
 비교해야 합니다. smoke 실행은 연결 상태만 확인하며 성능 근거로 쓰지 않습니다.
+
+## 15. 학습 교사의 속도·장애물 벤치마크
+
+주행기는 도로가 곧으면 가속하고, 화면에서 읽은 속도가 도로 굴곡에 맞춘 목표를 넘으면 제동합니다.
+장애물이 보이면 회피 방향을 유지하면서 목표 속도를 낮춥니다. `act()`는 프레임만 사용하고, 별도
+벤치마크가 평가용 시뮬레이터 계측값으로 속도·가속도·충돌을 기록합니다.
+
+```powershell
+python -m training.benchmark_corridor `
+  --site-map-split training/maps/site/site_map_split.json `
+  --site-group held_out --site-limit 1 `
+  --max-decisions 800 `
+  --output artifacts/haic/corridor-controller-candidate-v3/benchmark.json
+```
+
+기본 벤치마크는 공식 track 1/seed 42, track 2/seed 101을 실행합니다. 위 명령은 held-out 사이트
+맵 1개도 더합니다. 속도와 가속도는 CarRacing 물리 단위의 decision 간 측정값이며, 가속도 피크는
+관측 간 속도 차이를 0.08초로 나눈 값입니다.
+
+| 조건 | 장애물 | 완주 시간 | 평균 속도 | 최고 속도 | 피크 가속 | 충돌·손상 |
+|---|---:|---:|---:|---:|---:|---:|
+| 공식 track 1 / seed 42 | 6 | 23.98초 | 41.28 | 56.04 | 58.72 | 0회 / 0% |
+| 공식 track 2 / seed 101 | 6 | 25.28초 | 41.13 | 57.30 | 58.72 | 0회 / 0% |
+| held-out 사용자 맵 / seed 20260923 | 5 | 20.14초 | 39.99 | 53.11 | 58.66 | 0회 / 0% |
+
+세 조건 모두 완주했고 행동 호출 p95는 Windows 로컬에서 약 16ms였습니다. 같은 track 1/seed 42의
+이전 `.005` 고정 가속 후보 기록 47.34초와 비교하면 이번 결과는 23.98초입니다. 사용자가 알려준
+선두 기록(track 1 17초, track 2 20초)에는 아직 6.98초와 5.28초 뒤처지므로, 이 후보를 1등 수준이라고
+판단하지 않습니다. 사용자 맵 항목은 하나의 고정 도로 설계에서 실행한 시드 하나입니다.
+
+이 수치는 픽셀 교사만 단독 실행한 벤치마크 기록이며 PPO actor의 주행 결과나 제출 후보가 아닙니다.
+교사 모듈을 제외한 제출 ZIP은 학습된 PPO actor checkpoint를 strict-load하며, 이전 corridor 모드
+패키징 옵션은 제거했습니다. ZIP smoke test는 제출 Agent의 import/reset/act와 메모리만 검증합니다.

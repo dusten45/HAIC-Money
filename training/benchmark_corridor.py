@@ -15,6 +15,25 @@ from training.site_maps import SiteMapEpisode, SiteMapSplit, load_site_map_split
 
 DEFAULT_TRACKS = ((1, 42), (2, 101))
 DEFAULT_SITE_MAP_SPLIT = Path("training/maps/site/site_map_split.json")
+CONTROLLER_PROFILES = {
+    "safe": {"cruise_speed": 62.0, "curve_speed_penalty": 2.0, "max_gas": 0.12},
+    "fast": {"cruise_speed": 70.0, "curve_speed_penalty": 2.0, "max_gas": 0.18},
+    "fast_plus": {"cruise_speed": 72.0, "curve_speed_penalty": 2.0, "max_gas": 0.20},
+    "race": {"cruise_speed": 76.0, "curve_speed_penalty": 1.5, "max_gas": 0.24},
+    "slow_obstacle": {
+        "cruise_speed": 62.0,
+        "curve_speed_penalty": 2.0,
+        "max_gas": 0.12,
+        "obstacle_far_speed": 36.0,
+        "obstacle_near_speed": 26.0,
+    },
+    "strong_avoid": {
+        "cruise_speed": 62.0,
+        "curve_speed_penalty": 2.0,
+        "max_gas": 0.12,
+        "obstacle_steer_scale": 1.7,
+    },
+}
 
 
 def _parse_track(value: str) -> tuple[int, int]:
@@ -47,47 +66,73 @@ def run_corridor_benchmark(
     *,
     tracks: Iterable[tuple[int, int]] = DEFAULT_TRACKS,
     site_episodes: Iterable[SiteMapEpisode] = (),
+    profiles: Iterable[str] = ("safe",),
     max_decisions: int = 800,
 ) -> dict[str, object]:
     """Run repeated pixel-only driving checks and retain failures and motion data."""
     episodes: tuple[TrainingEpisode, ...] = tuple(tracks) + tuple(site_episodes)
+    selected_profiles = tuple(dict.fromkeys(profiles))
     if not episodes:
         raise ValueError("at least one official track or site-map episode is required")
+    if not selected_profiles:
+        raise ValueError("at least one controller profile is required")
+    invalid_profiles = set(selected_profiles) - set(CONTROLLER_PROFILES)
+    if invalid_profiles:
+        raise ValueError(f"unknown controller profile(s): {sorted(invalid_profiles)}")
     if max_decisions < 1:
         raise ValueError("max_decisions must be positive")
 
     records = []
-    for episode in episodes:
-        agent = VisionCorridorAgent()
-        if isinstance(episode, SiteMapEpisode):
-            record = run_episode(
-                mode="corridor",
-                episode=episode,
-                agent=agent,
-                max_decisions=max_decisions,
-                plan_budget_seconds=0.0,
-            )
-        else:
-            track_id, seed = episode
-            record = run_episode(
-                mode="corridor",
-                track_id=int(track_id),
-                seed=int(seed),
-                agent=agent,
-                max_decisions=max_decisions,
-                plan_budget_seconds=0.0,
-            )
-        record["controller_mode"] = "corridor"
-        records.append(record)
+    for profile in selected_profiles:
+        settings = CONTROLLER_PROFILES[profile]
+        for episode in episodes:
+            agent = VisionCorridorAgent(**settings)
+            if isinstance(episode, SiteMapEpisode):
+                record = run_episode(
+                    mode="corridor",
+                    episode=episode,
+                    agent=agent,
+                    max_decisions=max_decisions,
+                    plan_budget_seconds=0.0,
+                    capture_trace=True,
+                )
+            else:
+                track_id, seed = episode
+                record = run_episode(
+                    mode="corridor",
+                    track_id=int(track_id),
+                    seed=int(seed),
+                    agent=agent,
+                    max_decisions=max_decisions,
+                    plan_budget_seconds=0.0,
+                    capture_trace=True,
+                )
+            record["controller_mode"] = "corridor"
+            record["controller_profile"] = profile
+            record["controller_diagnostics"] = agent.diagnostics()
+            records.append(record)
+
+    summary = aggregate_episode_results(records)
+    summary["by_profile"] = {
+        profile: aggregate_episode_results(
+            [record for record in records if record["controller_profile"] == profile]
+        )["by_mode"]["corridor"]
+        for profile in selected_profiles
+    }
 
     return {
         "schema_version": 1,
         "controller": "pixel corridor, HUD speed governor, and obstacle avoidance",
         "controller_inputs": "84x84 grayscale image stack only",
-        "motion_metrics_source": "local simulator telemetry sampled at the decision interval",
+        "motion_metrics_source": "local simulator speed magnitude sampled at the decision interval",
+        "acceleration_note": (
+            "peak acceleration/deceleration use nonterminal speed deltas; a terminal-step delta is reported separately"
+        ),
+        "trace_note": "per-decision action, progress, speed, collision, and damage are retained",
         "max_decisions": int(max_decisions),
+        "profiles": {profile: CONTROLLER_PROFILES[profile] for profile in selected_profiles},
         "episodes": records,
-        "summary": aggregate_episode_results(records),
+        "summary": summary,
     }
 
 
@@ -103,6 +148,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--site-map-split", type=Path)
     parser.add_argument("--site-group", choices=("train", "tune", "held_out"), default="held_out")
     parser.add_argument("--site-limit", type=int)
+    parser.add_argument(
+        "--profile",
+        dest="profiles",
+        action="append",
+        choices=tuple(CONTROLLER_PROFILES),
+        help="controller profile to compare; repeat to compare several (default: safe)",
+    )
     parser.add_argument("--max-decisions", type=int, default=800)
     parser.add_argument(
         "--output",
@@ -126,6 +178,7 @@ def main() -> None:
     report = run_corridor_benchmark(
         tracks=tracks,
         site_episodes=site_episodes,
+        profiles=tuple(args.profiles) if args.profiles else ("safe",),
         max_decisions=args.max_decisions,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)

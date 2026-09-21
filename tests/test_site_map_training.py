@@ -165,6 +165,7 @@ class TestSiteMapEnvironment(unittest.TestCase):
 
         self.assertEqual(result["map_id"], episode.map_id)
         self.assertEqual(result["map_kind"], "custom")
+        self.assertEqual(result["obstacle_mode"], "custom_only")
         self.assertEqual(result["site_obstacle_count"], 5)
         self.assertEqual(result["obstacle_count"], 5)
 

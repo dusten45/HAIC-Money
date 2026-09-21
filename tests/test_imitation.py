@@ -45,7 +45,7 @@ class TestTeacherDemonstrations(unittest.TestCase):
 
             def act(self, observation):
                 del observation
-                return np.asarray([0.2, 0.005, 0.0], dtype=np.float32)
+                return np.asarray([0.2, 0.04, 0.0], dtype=np.float32)
 
         def create_environment(episode, *, max_decisions, render_mode=None):
             del max_decisions, render_mode
@@ -78,6 +78,56 @@ class TestTeacherDemonstrations(unittest.TestCase):
             demonstrations.pretransform_actions
         )
         torch.testing.assert_close(decoded, expected, atol=1e-6, rtol=0.0)
+
+    def test_teacher_pedals_are_rescaled_before_labels_and_environment_steps(self):
+        from haic_agent.networks import VisualActorCritic
+        from training.env_factory import split_track_seeds
+        from training.imitation import collect_teacher_demonstrations
+
+        split = split_track_seeds(train=((1, 10),), tune=((2, 20),), held_out=((3, 30),))
+        executed_actions = []
+
+        class _Environment:
+            def reset(self):
+                return np.zeros((4, 84, 84), dtype=np.float32), {}
+
+            def step_transition(self, action):
+                executed_actions.append(action.copy())
+                done = len(executed_actions) == 3
+                return SimpleNamespace(
+                    next_observation=np.zeros((4, 84, 84), dtype=np.float32),
+                    terminated=done,
+                    truncated=False,
+                )
+
+            def close(self):
+                pass
+
+        class _Teacher:
+            def reset(self, observation=None):
+                del observation
+                self.actions = iter(
+                    ((0.2, 0.12, 0.0), (-0.3, 0.0, 0.28), (-0.2, 0.06, 0.0))
+                )
+
+            def act(self, observation):
+                del observation
+                return np.asarray(next(self.actions), dtype=np.float32)
+
+        with patch("training.imitation.create_episode_environment", return_value=_Environment()):
+            demonstrations = collect_teacher_demonstrations(
+                split, max_decisions=5, teacher_factory=_Teacher
+            )
+
+        expected_policy_actions = np.asarray(
+            ((0.2, 0.015, 0.0), (-0.3, 0.0, 0.0225), (-0.2, 0.0075, 0.0)),
+            dtype=np.float32,
+        )
+        np.testing.assert_allclose(executed_actions, expected_policy_actions, atol=1e-6)
+        decoded_labels = VisualActorCritic._bound_actions(demonstrations.pretransform_actions)
+        torch.testing.assert_close(
+            decoded_labels, torch.from_numpy(expected_policy_actions), atol=1e-6, rtol=0.0
+        )
 
     def test_empty_training_split_is_rejected(self):
         from training.env_factory import split_track_seeds
@@ -126,7 +176,7 @@ class TestTeacherDemonstrations(unittest.TestCase):
 
             def act(self, observation):
                 del observation
-                return np.asarray([0.2, 0.005, 0.0], dtype=np.float32)
+                return np.asarray([0.2, 0.04, 0.0], dtype=np.float32)
 
         def create_environment(episode, *, max_decisions, render_mode=None):
             del max_decisions, render_mode
@@ -230,6 +280,7 @@ class TestBehavioralCloningWarmup(unittest.TestCase):
         self.assertEqual(metrics["observation_storage_dtype"], "torch.float32")
         self.assertTrue(np.isfinite(metrics["initial_action_mse"]))
         self.assertTrue(np.isfinite(metrics["final_action_mse"]))
+        self.assertEqual(metrics["teacher_policy_cap_fraction"], 0.75)
         self.assertLess(metrics["final_action_mse"], metrics["initial_action_mse"])
 
     def test_zero_warmup_epochs_are_rejected_by_the_training_helper(self):

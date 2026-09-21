@@ -103,13 +103,15 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertTrue(result["smoke"]["finite_action"])
             self.assertFalse(result["planner_enabled"])
             self.assertEqual(result["planner_settings"]["horizon"], 4)
-            self.assertIn("haic_agent/corridor_agent.py", result["layout"]["files"])
+            self.assertNotIn("haic_agent/corridor_agent.py", result["layout"]["files"])
+            self.assertNotIn("controller_mode", result["layout"])
             self.assertEqual(result["layout"]["runtime_policy"], "trained_visual_actor")
             with zipfile.ZipFile(archive) as zipped:
                 names = set(zipped.namelist())
             self.assertIn("agent.py", names)
             self.assertIn("policy.pt", names)
             self.assertIn("dynamics.pt", names)
+            self.assertNotIn("haic_agent/corridor_agent.py", names)
             self.assertFalse(any(name.startswith("training/") for name in names))
             self.assertFalse(any(".venv" in name or "labels" in name for name in names))
             manifest = validate_submission_archive(archive)
@@ -117,7 +119,7 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertFalse(manifest["planner_enabled"])
             self.assertTrue(manifest["strict_checkpoint_loading"])
 
-    def test_corridor_package_selects_pixel_controller_and_disables_planner(self):
+    def test_package_api_cannot_select_corridor_runtime_mode(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             policy = directory_path / "policy.pt"
@@ -126,20 +128,16 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             torch.save({"model_state": VisualActorCritic().state_dict()}, policy)
             torch.save({"model": LatentDynamicsEnsemble().state_dict()}, dynamics)
 
-            result = build_submission(
-                source_root=ROOT,
-                policy_checkpoint=policy,
-                dynamics_checkpoint=dynamics,
-                archive_path=archive,
-                smoke_test=True,
-                planner_enabled=False,
-                controller_mode="corridor",
-            )
-
-            self.assertEqual(result["layout"]["controller_mode"], "corridor")
-            self.assertEqual(result["layout"]["runtime_policy"], "vision_corridor_controller")
-            self.assertEqual(result["smoke"]["controller_mode"], "corridor")
-            self.assertFalse(result["planner_enabled"])
+            with self.assertRaises(TypeError):
+                build_submission(
+                    source_root=ROOT,
+                    policy_checkpoint=policy,
+                    dynamics_checkpoint=dynamics,
+                    archive_path=archive,
+                    smoke_test=False,
+                    planner_enabled=False,
+                    controller_mode="corridor",
+                )
 
 
 if __name__ == "__main__":

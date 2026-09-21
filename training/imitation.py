@@ -10,9 +10,11 @@ import numpy as np
 import torch
 from torch.nn import functional as F
 
-from haic_agent.networks import VisualActorCritic
+from haic_agent.networks import MAX_BRAKE, MAX_GAS, VisualActorCritic
 from training.env_factory import TrainingSplit, create_episode_environment
 from training.vision_teacher import VisionCorridorAgent
+
+TEACHER_POLICY_CAP_FRACTION = 0.75
 
 
 @dataclass(frozen=True)
@@ -42,7 +44,21 @@ def _teacher_action_tensor(action: Any) -> torch.Tensor:
         raise ValueError("teacher action must be finite [steer, gas, brake]") from error
     if values.shape != (3,) or not np.all(np.isfinite(values)):
         raise ValueError("teacher action must be finite [steer, gas, brake]")
-    bounded = torch.from_numpy(values.copy()).unsqueeze(0)
+    bounded_values = values.copy()
+    bounded_values[0] = np.clip(bounded_values[0], -1.0, 1.0)
+    bounded_values[1] = (
+        np.clip(bounded_values[1], 0.0, VisionCorridorAgent.MAX_TEACHER_GAS)
+        / VisionCorridorAgent.MAX_TEACHER_GAS
+        * MAX_GAS
+        * TEACHER_POLICY_CAP_FRACTION
+    )
+    bounded_values[2] = (
+        np.clip(bounded_values[2], 0.0, VisionCorridorAgent.MAX_TEACHER_BRAKE)
+        / VisionCorridorAgent.MAX_TEACHER_BRAKE
+        * MAX_BRAKE
+        * TEACHER_POLICY_CAP_FRACTION
+    )
+    bounded = torch.from_numpy(bounded_values).unsqueeze(0)
     pretransform, _ = VisualActorCritic._unbound_actions(bounded)
     return pretransform.squeeze(0)
 
@@ -86,11 +102,12 @@ def collect_teacher_demonstrations(
                     raise ValueError("teacher observation must be finite normalized 4x84x84 pixels")
                 action = np.asarray(teacher.act(observation), dtype=np.float32)
                 target = _teacher_action_tensor(action)
+                policy_action = VisualActorCritic._bound_actions(target.unsqueeze(0))[0].numpy()
                 observations.append(
                     torch.from_numpy(np.rint(pixels * 255.0).astype(np.uint8))
                 )
                 pretransform_actions.append(target)
-                transition = environment.step_transition(action)
+                transition = environment.step_transition(policy_action)
                 observation = transition.next_observation
                 if transition.terminated or transition.truncated:
                     break
@@ -164,6 +181,11 @@ def collect_dagger_demonstrations(
                         raise ValueError("DAgger observation must be finite normalized 4x84x84 pixels")
                     teacher_action = np.asarray(teacher.act(observation), dtype=np.float32)
                     target = _teacher_action_tensor(teacher_action)
+                    bounded_teacher_action = (
+                        VisualActorCritic._bound_actions(target.unsqueeze(0))[0]
+                        .cpu()
+                        .numpy()
+                    )
                     with torch.no_grad():
                         output = policy(torch.from_numpy(pixels.copy()).unsqueeze(0))
                         learner_action = (
@@ -174,7 +196,7 @@ def collect_dagger_demonstrations(
                     )
                     pretransform_actions.append(target)
                     use_teacher = rng.random() < teacher_action_probability
-                    executed_action = teacher_action if use_teacher else learner_action
+                    executed_action = bounded_teacher_action if use_teacher else learner_action
                     teacher_executed_steps += int(use_teacher)
                     transition = environment.step_transition(executed_action)
                     observation = transition.next_observation
@@ -339,6 +361,7 @@ def behavioral_cloning_warmup(
         "demonstration_steps": int(count),
         "demonstration_collection_method": demonstrations.collection_method,
         "teacher_action_fraction": float(demonstrations.teacher_action_fraction),
+        "teacher_policy_cap_fraction": float(TEACHER_POLICY_CAP_FRACTION),
         "observation_storage_dtype": str(demonstrations.observations.dtype),
         "demonstration_storage_bytes": int(
             demonstrations.observations.nelement()

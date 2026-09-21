@@ -9,4 +9,3 @@ PLANNER_SETTINGS = {
     "uncertainty_cost": 1.0,
 }
 STRICT_CHECKPOINT_LOADING = False
-CONTROLLER_MODE = "auto"
