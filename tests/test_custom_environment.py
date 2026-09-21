@@ -109,6 +109,27 @@ class TestCustomEnvironment(unittest.TestCase):
                     width=100.0,
                 )
 
+    def test_extreme_corner_count_variants_reset_and_step(self):
+        from local_simulator.environment import create_environment, reset_environment
+        from local_simulator.track_generator import generate_custom_map
+
+        observed_counts = set()
+        for seed in (0, 42, 73):
+            document = generate_custom_map(f"custom-track-env-{seed}", seed, "extreme_technical")
+            observed_counts.add(dict(document.generator)["corner_count"])
+            environment, _raw = create_environment(document, render_mode=None)
+            try:
+                observation, _info = reset_environment(environment, document)
+                self.assertEqual(observation.shape, (4, 84, 84))
+                next_observation, *_ = environment.step(
+                    np.array([0.0, 1.0, 0.0], dtype=np.float32)
+                )
+                self.assertEqual(next_observation.shape, (4, 84, 84))
+            finally:
+                environment.close()
+
+        self.assertEqual(observed_counts, {12, 14, 16})
+
     def test_map_payload_can_be_inspected_but_unsafe_geometry_cannot_run(self):
         from local_simulator.environment import create_environment
         from local_simulator.schema import map_from_dict, map_to_dict

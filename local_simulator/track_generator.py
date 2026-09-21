@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from hashlib import sha256
 import json
 import math
@@ -13,14 +14,15 @@ from .track_model import (
 )
 
 
-TEMPLATES = frozenset({"oval", "s_curve", "hairpin", "chicane", "technical"})
-GENERATOR_VERSION = 3
+TEMPLATES = frozenset({"oval", "s_curve", "hairpin", "chicane", "technical", "extreme_technical"})
+GENERATOR_VERSION = 5
 CORNER_COUNT_RANGES = {
     "oval": (4, 4),
     "s_curve": (6, 8),
     "hairpin": (6, 9),
     "chicane": (7, 10),
     "technical": (9, 12),
+    "extreme_technical": (12, 16),
 }
 CORNER_RADIUS_WIDTH_RANGES = {
     "wide": (1.45, 3.2),
@@ -31,6 +33,24 @@ CORNER_RADIUS_WIDTH_RANGES = {
 MAX_GENERATED_TRACK_WIDTH = 9.0
 MIN_CENTERLINE_POINTS = 12
 MAX_CENTERLINE_POINTS = 4096
+
+
+@dataclass(frozen=True)
+class _ExtremeRoute:
+    vertices: tuple[tuple[float, float], ...]
+    corner_sequence: tuple[str, ...]
+    s_section_pairs: tuple[tuple[int, int], ...]
+
+
+@dataclass(frozen=True)
+class _ExtremeGeometryResult:
+    geometry: CustomTrackGeometry
+    corner_sequence: tuple[str, ...]
+    corner_turn_degrees: tuple[float, ...]
+    corner_radius_widths: tuple[float, ...]
+    s_section_pairs: tuple[tuple[int, int], ...]
+    s_section_connector_lengths: tuple[float, ...]
+    near_90_corner_count: int
 
 
 class _TrackRng:
@@ -322,8 +342,12 @@ def _corner_sequence(
 ) -> tuple[str, ...]:
     if template not in TEMPLATES:
         raise ValueError(f"template must be one of {sorted(TEMPLATES)}")
-    minimum, maximum = CORNER_COUNT_RANGES[template]
-    count = minimum + rng.index(maximum - minimum + 1)
+    if template == "extreme_technical":
+        rng.random()
+        count = 12 + 2 * rng.index(3)
+    else:
+        minimum, maximum = CORNER_COUNT_RANGES[template]
+        count = minimum + rng.index(maximum - minimum + 1)
 
     if template == "oval":
         return ("left:wide",) * count
@@ -358,6 +382,19 @@ def _corner_sequence(
             f"{directions[index]}:{'tight' if rng.random() < 0.65 else 'medium'}"
             for index in range(count)
         )
+
+    if template == "extreme_technical":
+        sequence = []
+        hairpin_count = count // 4
+        hairpin_indices = {
+            1 + index * count // hairpin_count
+            for index in range(hairpin_count)
+        }
+        for index in range(count):
+            direction = "right" if index in hairpin_indices else "left"
+            corner_class = "hairpin" if direction == "right" else "medium"
+            sequence.append(f"{direction}:{corner_class}")
+        return tuple(sequence)
 
     classes = ["wide", "medium", "tight"]
     classes.extend(classes[rng.index(len(classes))] for _ in range(count - len(classes)))
@@ -425,6 +462,8 @@ def _angle_gaps(rng: _TrackRng, count: int) -> tuple[float, ...]:
 def _profile_angle_gaps(
     gaps: tuple[float, ...],
     sequence: tuple[str, ...],
+    *,
+    compact_s_turns: bool = False,
 ) -> tuple[float, ...]:
     constrained_corners = [
         index
@@ -455,7 +494,8 @@ def _profile_angle_gaps(
     )
     if maximum_pair_total < minimum_pair_total:
         raise ValueError("corner profile cannot fit within the angle-gap bounds")
-    pair_total_degrees = max(minimum_pair_total, min(80.0, maximum_pair_total))
+    preferred_pair_total = 60.0 if compact_s_turns else 80.0
+    pair_total_degrees = max(minimum_pair_total, min(preferred_pair_total, maximum_pair_total))
     remaining_total_degrees = 360.0 - pair_total_degrees * len(constrained_corners)
     remaining_base = remaining_total_degrees / len(remaining_indices)
     if not 20.0 <= remaining_base <= 100.0:
@@ -520,6 +560,225 @@ def _measure_corner_profiles(
     return tuple(turns), tuple(radii)
 
 
+def _build_extreme_route(
+    design_seed: int, width: float, attempt_index: int
+) -> _ExtremeRoute:
+    count = len(_corner_sequence("extreme_technical", _TrackRng(design_seed)))
+    if count not in {12, 14, 16}:
+        raise ValueError(f"unsupported extreme corner count {count}")
+    rng = _TrackRng((design_seed + attempt_index * 0x9E3779B9) & 0xFFFFFFFF)
+    radius_x = 150.0 + (width - 8.0) + rng.uniform(-6.0, 6.0)
+    radius_y = 93.75 + 0.625 * (width - 8.0) + rng.uniform(-4.0, 4.0)
+    corners = [
+        (-radius_x, -radius_y),
+        (radius_x, -radius_y),
+        (radius_x, radius_y),
+        (-radius_x, radius_y),
+    ]
+    if rng.index(2):
+        corners = [(x, -y) for x, y in reversed(corners)]
+    shift = rng.index(4)
+    corners = corners[shift:] + corners[:shift]
+    vectors = []
+    for index, start in enumerate(corners):
+        end = corners[(index + 1) % 4]
+        length = _distance(start, end)
+        vectors.append(((end[0] - start[0]) / length, (end[1] - start[1]) / length))
+    # Inward is the left normal because this is a counter-clockwise loop.
+    roundness = max(0.0, min(1.0, (width - 8.0) / 92.0))
+    tangent = 1.7 * width * (1.0 + 0.4 * roundness) * math.sqrt(2.0)
+    if count == 12:
+        selected_sides = (0, 2) if rng.index(2) == 0 else (1, 3)
+    elif count == 14:
+        dogleg_corner = rng.index(4)
+        selected_sides = tuple(
+            side for side in range(4)
+            if side not in {dogleg_corner, (dogleg_corner - 1) % 4}
+        )
+    else:
+        side_lengths = tuple(_distance(corners[index], corners[(index + 1) % 4]) for index in range(4))
+        longest = max(side_lengths)
+        long_sides = tuple(index for index, length in enumerate(side_lengths) if length == longest)
+        short_sides = tuple(index for index in range(4) if index not in long_sides)
+        selected_sides = (*long_sides, short_sides[rng.index(len(short_sides))])
+
+    feature_points: list[tuple[tuple[float, float], tuple[float, float]]] = []
+    side_events: dict[int, tuple[float, float, float]] = {}
+    for side in selected_sides:
+        start, end = corners[side], corners[(side + 1) % 4]
+        length = _distance(start, end)
+        u = vectors[side]
+        inward = (-u[1], u[0])
+        s_gap = rng.uniform(0.6 * width, 2.2 * width)
+        p_gap = rng.uniform(0.6 * width, 1.4 * width)
+        depth = 2.0 * tangent + s_gap
+        leg = 2.0 * tangent + p_gap
+        usable = length - 12.0 * width - leg
+        if usable < 0.0:
+            raise ValueError("extreme notch does not fit its side")
+        if count == 14:
+            near_start = side == (dogleg_corner + 1) % 4
+            end_jitter = rng.uniform(0.0, min(2.0 * width, usable))
+            position = 6.0 * width + end_jitter if near_start else length - 6.0 * width - leg - end_jitter
+        elif count == 16 and side in selected_sides[:2]:
+            short_side = selected_sides[2]
+            near_start = (side + 1) % 4 == short_side
+            end_jitter = rng.uniform(0.0, min(2.0 * width, usable))
+            position = (
+                6.0 * width + end_jitter
+                if near_start
+                else length - 6.0 * width - leg - end_jitter
+            )
+        else:
+            position = 6.0 * width + rng.random() * usable
+        side_events[side] = (position, depth, leg)
+
+    vertices: list[tuple[float, float]] = []
+    for side, start in enumerate(corners):
+        if not vertices:
+            vertices.append(start)
+        if side in side_events:
+            position, depth, leg = side_events[side]
+            u = vectors[side]
+            inward = (-u[1], u[0])
+            first = (start[0] + u[0] * position, start[1] + u[1] * position)
+            second = (first[0] + inward[0] * depth, first[1] + inward[1] * depth)
+            third = (second[0] + u[0] * leg, second[1] + u[1] * leg)
+            fourth = (third[0] - inward[0] * depth, third[1] - inward[1] * depth)
+            vertices.extend((first, second, third, fourth))
+            feature_points.append((first, second))
+            feature_points.append((third, fourth))
+        vertices.append(corners[(side + 1) % 4])
+
+    # Do not keep the repeated closing corner while replacing an outer turn.
+    if vertices[-1] == vertices[0]:
+        vertices.pop()
+    if count == 14:
+        u, v = vectors[dogleg_corner - 1], vectors[dogleg_corner]
+        a = 2.0 * tangent + rng.uniform(0.6 * width, 2.2 * width)
+        b = 2.0 * tangent + rng.uniform(0.6 * width, 2.2 * width)
+        corner = corners[dogleg_corner]
+        entry = (corner[0] - a * u[0], corner[1] - a * u[1])
+        elbow = (entry[0] + b * v[0], entry[1] + b * v[1])
+        exit_point = (corner[0] + b * v[0], corner[1] + b * v[1])
+        index = vertices.index(corner)
+        vertices[index:index + 1] = [entry, elbow, exit_point]
+        feature_points.append((entry, elbow))
+
+    indices = {point: index for index, point in enumerate(vertices)}
+    pairs = tuple((indices[first], indices[second]) for first, second in feature_points)
+    turns = []
+    for index, point in enumerate(vertices):
+        previous = vertices[index - 1]
+        following = vertices[(index + 1) % len(vertices)]
+        incoming = (point[0] - previous[0], point[1] - previous[1])
+        outgoing = (following[0] - point[0], following[1] - point[1])
+        cross = incoming[0] * outgoing[1] - incoming[1] * outgoing[0]
+        turns.append("left:tight" if cross > 0 else "right:tight")
+    return _ExtremeRoute(tuple(vertices), tuple(turns), pairs)
+
+
+def _round_extreme_route(route: _ExtremeRoute, width: float) -> _ExtremeGeometryResult:
+    anchors = route.vertices
+    count = len(anchors)
+    incoming_points = []
+    outgoing_points = []
+    tangents = []
+    roundness = max(0.0, min(1.0, (width - 8.0) / 92.0))
+    for index, anchor in enumerate(anchors):
+        previous, following = anchors[index - 1], anchors[(index + 1) % count]
+        incoming_length, outgoing_length = _distance(anchor, previous), _distance(anchor, following)
+        u = ((previous[0] - anchor[0]) / incoming_length, (previous[1] - anchor[1]) / incoming_length)
+        v = ((following[0] - anchor[0]) / outgoing_length, (following[1] - anchor[1]) / outgoing_length)
+        cosine = max(-1.0, min(1.0, u[0] * v[0] + u[1] * v[1]))
+        half = (math.pi - math.acos(cosine)) / 2.0
+        radius = 1.7 * width * (1.0 + 0.4 * roundness)
+        trim = radius * math.sin(half) / max(math.cos(half) ** 2, 1e-9)
+        trim = min(trim, 0.45 * incoming_length, 0.45 * outgoing_length)
+        incoming_points.append(_interpolate(anchor, previous, trim / incoming_length))
+        outgoing_points.append(_interpolate(anchor, following, trim / outgoing_length))
+        tangents.append(trim)
+
+    points = [incoming_points[0]]
+    ranges = []
+    for index, anchor in enumerate(anchors):
+        start = len(points) - 1
+        control_length = max(_distance(anchor, incoming_points[index]), _distance(anchor, outgoing_points[index]))
+        steps = max(4, math.ceil(2.0 * control_length / 4.0))
+        for step in range(1, steps + 1):
+            points.append(_quadratic_bezier(incoming_points[index], anchor, outgoing_points[index], step / steps))
+        ranges.append((start, len(points) - 1))
+        next_index = (index + 1) % count
+        edge_length = _distance(outgoing_points[index], incoming_points[next_index])
+        steps = max(1, math.ceil(edge_length / 4.0))
+        last = steps if next_index else steps - 1
+        for step in range(1, last + 1):
+            points.append(_interpolate(outgoing_points[index], incoming_points[next_index], step / steps))
+    quantized = tuple((_round_coordinate(x), _round_coordinate(y)) for x, y in points)
+    if len(quantized) > MAX_CENTERLINE_POINTS:
+        raise ValueError(f"generated centerline exceeds {MAX_CENTERLINE_POINTS} points")
+    geometry = CustomTrackGeometry(centerline=quantized, width=width)
+    measured_turns, measured_radii = _measure_corner_profiles(quantized, tuple(ranges), width)
+    connectors = tuple(
+        _distance(anchors[first], anchors[second]) - tangents[first] - tangents[second]
+        for first, second in route.s_section_pairs
+    )
+    near_90 = sum(75.0 <= abs(turn) <= 105.0 for turn in measured_turns)
+    return _ExtremeGeometryResult(
+        geometry,
+        route.corner_sequence,
+        measured_turns,
+        measured_radii,
+        route.s_section_pairs,
+        connectors,
+        near_90,
+    )
+
+
+def _validate_extreme_profile(candidate: _ExtremeGeometryResult) -> None:
+    count = len(candidate.corner_sequence)
+    if count not in {12, 14, 16}:
+        raise ValueError(f"extreme corner count {count} is unsupported")
+    if len(candidate.s_section_pairs) < 3:
+        raise ValueError("extreme route needs at least three S sections")
+    if not (len(candidate.corner_turn_degrees) == len(candidate.corner_radius_widths) == count):
+        raise ValueError("extreme corner metadata lengths do not match the route")
+    if len(candidate.s_section_connector_lengths) != len(candidate.s_section_pairs):
+        raise ValueError("extreme S-section metadata lengths do not match the route")
+    if any(not 0.6 * candidate.geometry.width - 1e-5 <= length <= 2.2 * candidate.geometry.width + 1e-5
+           for length in candidate.s_section_connector_lengths):
+        raise ValueError("extreme S-section connector must be 0.6–2.2 track widths")
+    for token, turn, radius in zip(candidate.corner_sequence, candidate.corner_turn_degrees, candidate.corner_radius_widths):
+        direction, corner_class = token.split(":", 1)
+        if (1.0 if direction == "left" else -1.0) * turn < 20.0:
+            raise ValueError(f"measured corner turn does not match {token}")
+        low, high = CORNER_RADIUS_WIDTH_RANGES[corner_class]
+        if not low <= radius <= high:
+            raise ValueError(f"measured corner radius does not match {token}")
+    measured = sum(75.0 <= abs(turn) <= 105.0 for turn in candidate.corner_turn_degrees)
+    if measured < 3 or measured != candidate.near_90_corner_count:
+        raise ValueError("extreme route needs at least three measured near-90-degree corners")
+
+
+def _generate_extreme_geometry(design_seed: int, width: float) -> _ExtremeGeometryResult:
+    design_seed = _require_int("design_seed", design_seed, 0, MAX_SEED)
+    width = _require_float("width", width, 0.5, MAX_GENERATED_TRACK_WIDTH)
+    last_error = None
+    for attempt_index in range(64):
+        try:
+            candidate = _round_extreme_route(_build_extreme_route(design_seed, width, attempt_index), width)
+            _validate_extreme_profile(candidate)
+            validate_custom_geometry(candidate.geometry)
+        except ValueError as error:
+            last_error = error
+            continue
+        return candidate
+    raise ValueError(
+        f"could not generate a valid extreme_technical track for seed {design_seed} "
+        f"and width {width}: {last_error}"
+    )
+
+
 def _build_geometry_candidate(
     template: str,
     design_seed: int,
@@ -528,7 +787,11 @@ def _build_geometry_candidate(
     rng = _TrackRng(design_seed)
     sequence = _corner_sequence(template, rng)
     count = len(sequence)
-    gaps = _profile_angle_gaps(_angle_gaps(rng, count), sequence)
+    gaps = _profile_angle_gaps(
+        _angle_gaps(rng, count),
+        sequence,
+        compact_s_turns=template == "extreme_technical",
+    )
 
     radius_x = 150.0 + (width - 8.0) + rng.uniform(-6.0, 6.0)
     radius_y = 93.75 + (width - 8.0) * 0.625 + rng.uniform(-4.0, 4.0)
@@ -542,6 +805,7 @@ def _build_geometry_candidate(
         "hairpin": 0.02,
         "chicane": 0.03,
         "technical": 0.04,
+        "extreme_technical": 0.055,
     }[template]
     class_adjustment = {"wide": 0.01, "medium": 0.0, "tight": -0.01, "hairpin": 0.0}
 
@@ -715,26 +979,40 @@ def generate_custom_map(
     max_steps: int = 2000,
     frame_skip: int = 4,
 ) -> CustomMapSpec:
-    geometry, corner_sequence, corner_turns, corner_radii = _generate_geometry(
-        template,
-        design_seed,
-        width,
-    )
+    extreme_result = None
+    if template == "extreme_technical":
+        extreme_result = _generate_extreme_geometry(design_seed, width)
+        geometry = extreme_result.geometry
+        corner_sequence = extreme_result.corner_sequence
+        corner_turns = extreme_result.corner_turn_degrees
+        corner_radii = extreme_result.corner_radius_widths
+    else:
+        geometry, corner_sequence, corner_turns, corner_radii = _generate_geometry(
+            template,
+            design_seed,
+            width,
+        )
+    generator_metadata = [
+        ("design_seed", design_seed),
+        ("generator_version", GENERATOR_VERSION),
+        ("corner_count", len(corner_sequence)),
+        ("corner_sequence", corner_sequence),
+        ("corner_turn_degrees", corner_turns),
+        ("corner_radius_widths", corner_radii),
+        ("template", template),
+    ]
+    if extreme_result is not None:
+        generator_metadata.extend((
+            ("s_section_count", len(extreme_result.s_section_pairs)),
+            ("near_90_corner_count", extreme_result.near_90_corner_count),
+        ))
     return CustomMapSpec(
         map_id=map_id,
         geometry=geometry,
         obstacles=(),
         max_steps=max_steps,
         frame_skip=frame_skip,
-        generator=(
-            ("design_seed", design_seed),
-            ("generator_version", GENERATOR_VERSION),
-            ("corner_count", len(corner_sequence)),
-            ("corner_sequence", corner_sequence),
-            ("corner_turn_degrees", corner_turns),
-            ("corner_radius_widths", corner_radii),
-            ("template", template),
-        ),
+        generator=tuple(generator_metadata),
     )
 
 

@@ -73,12 +73,12 @@ class TestTrackGenerator(unittest.TestCase):
                 )
                 self.assertGreaterEqual(len(result.geometry.centerline), 12)
 
-    def test_generation_v3_records_distinct_corner_profiles(self):
+    def test_generation_v5_records_distinct_corner_profiles(self):
         from local_simulator.track_generator import TEMPLATES, generate_custom_map
 
         self.assertEqual(
             TEMPLATES,
-            frozenset({"oval", "s_curve", "hairpin", "chicane", "technical"}),
+            frozenset({"oval", "s_curve", "hairpin", "chicane", "technical", "extreme_technical"}),
         )
         profiles = {}
         expected_ranges = {
@@ -87,6 +87,7 @@ class TestTrackGenerator(unittest.TestCase):
             "hairpin": (6, 9),
             "chicane": (7, 10),
             "technical": (9, 12),
+            "extreme_technical": (12, 16),
         }
         for template in sorted(TEMPLATES):
             first = generate_custom_map(f"custom-track-{template}", 90421, template)
@@ -94,10 +95,12 @@ class TestTrackGenerator(unittest.TestCase):
             first_meta = dict(first.generator)
             second_meta = dict(second.generator)
             self.assertEqual(first, second)
-            self.assertEqual(first_meta["generator_version"], 3)
+            self.assertEqual(first_meta["generator_version"], 5)
             self.assertEqual(first_meta["corner_count"], len(first_meta["corner_sequence"]))
             self.assertGreaterEqual(first_meta["corner_count"], expected_ranges[template][0])
             self.assertLessEqual(first_meta["corner_count"], expected_ranges[template][1])
+            if template == "extreme_technical":
+                self.assertIn(first_meta["corner_count"], {12, 14, 16})
             sequence = first_meta["corner_sequence"]
             self.assertEqual(len(sequence), first_meta["corner_count"])
             self.assertTrue(all(token.split(":", 1)[0] in {"left", "right"} for token in sequence))
@@ -222,9 +225,82 @@ class TestTrackGenerator(unittest.TestCase):
                     for value in point
                 )
             )
+            for seed in (0, 42, 73):
+                generate_custom_map(
+                    f"custom-track-extreme-width-{seed}", seed, "extreme_technical", width=width
+                )
         for width in (9.01, 100.0):
             with self.subTest(width=width), self.assertRaisesRegex(ValueError, "width"):
                 generate_custom_map("custom-track-invalid-width", 73, "technical", width=width)
+
+    def test_extreme_route_uses_closed_orthogonal_skeleton(self):
+        import math
+        from local_simulator.track_generator import _build_extreme_route
+
+        observed_counts = set()
+        for width in (8.0, 9.0):
+            for seed in (0, 1, 42, 73, 300, 1200, 4294967295):
+                route = _build_extreme_route(seed, width, attempt_index=0)
+                repeated_route = _build_extreme_route(seed, width, attempt_index=0)
+                retry_route = _build_extreme_route(seed, width, attempt_index=1)
+                count = len(route.vertices)
+                observed_counts.add(count)
+                self.assertEqual(route, repeated_route)
+                self.assertIn(count, {12, 14, 16})
+                self.assertEqual(len(route.corner_sequence), count)
+                self.assertTrue(all(token.endswith(":tight") for token in route.corner_sequence))
+                self.assertEqual(len(retry_route.vertices), count)
+                self.assertEqual(len(retry_route.s_section_pairs), len(route.s_section_pairs))
+
+                for index, point in enumerate(route.vertices):
+                    following = route.vertices[(index + 1) % count]
+                    dx, dy = following[0] - point[0], following[1] - point[1]
+                    self.assertGreater(math.hypot(dx, dy), 0.0)
+                    self.assertTrue(abs(dx) < 1e-7 or abs(dy) < 1e-7)
+
+                directions = [token.split(":", 1)[0] for token in route.corner_sequence]
+                used_corners = set()
+                self.assertGreaterEqual(len(route.s_section_pairs), 3)
+                for first, second in route.s_section_pairs:
+                    self.assertEqual(second, (first + 1) % count)
+                    self.assertNotIn(first, used_corners)
+                    self.assertNotIn(second, used_corners)
+                    self.assertNotEqual(directions[first], directions[second])
+                    radius_target = 1.7 * width * (1.0 + 0.4 * max(0.0, min(1.0, (width - 8.0) / 92.0)))
+                    tangent_trim = radius_target * math.sqrt(2.0)
+                    remaining_straight = math.dist(route.vertices[first], route.vertices[second]) - 2.0 * tangent_trim
+                    self.assertGreaterEqual(remaining_straight, 0.6 * width - 1e-5)
+                    self.assertLessEqual(remaining_straight, 2.2 * width + 1e-5)
+                    used_corners.update((first, second))
+        self.assertEqual(observed_counts, {12, 14, 16})
+
+    def test_extreme_generation_reports_measured_corner_metadata(self):
+        from local_simulator.track_generator import _generate_extreme_geometry, generate_custom_map
+
+        observed_counts = set()
+        for width in (8.0, 9.0):
+            for seed in (0, 1, 42, 73, 300, 1200, 4294967295):
+                candidate = _generate_extreme_geometry(seed, width)
+                self.assertGreaterEqual(len(candidate.s_section_connector_lengths), 3)
+                self.assertTrue(all(0.6 * width - 1e-5 <= value <= 2.2 * width + 1e-5 for value in candidate.s_section_connector_lengths))
+                document = generate_custom_map(f"custom-track-extreme-{seed}", seed, "extreme_technical", width=width)
+                metadata = dict(document.generator)
+                count = metadata["corner_count"]
+                observed_counts.add(count)
+                self.assertIn(count, {12, 14, 16})
+                self.assertEqual(len(metadata["corner_sequence"]), count)
+                self.assertEqual(len(metadata["corner_turn_degrees"]), count)
+                self.assertEqual(len(metadata["corner_radius_widths"]), count)
+                self.assertGreaterEqual(metadata["s_section_count"], 3)
+                measured_near_90 = sum(75.0 <= abs(turn) <= 105.0 for turn in metadata["corner_turn_degrees"])
+                self.assertEqual(metadata["near_90_corner_count"], measured_near_90)
+                self.assertGreaterEqual(measured_near_90, 3)
+        self.assertEqual(observed_counts, {12, 14, 16})
+        repeated = generate_custom_map("custom-track-extreme-repeat", 73, "extreme_technical")
+        repeated_again = generate_custom_map("custom-track-extreme-repeat", 73, "extreme_technical")
+        self.assertEqual(repeated, repeated_again)
+        geometries = {generate_custom_map(f"custom-track-extreme-diversity-{seed}", seed, "extreme_technical").geometry.centerline for seed in range(16)}
+        self.assertGreaterEqual(len(geometries), 8)
 
     def test_generator_retries_enough_candidates_at_maximum_supported_width(self):
         from local_simulator.track_generator import generate_custom_map
@@ -235,7 +311,7 @@ class TestTrackGenerator(unittest.TestCase):
             "technical",
             width=9.0,
         )
-        self.assertEqual(dict(generated.generator)["generator_version"], 3)
+        self.assertEqual(dict(generated.generator)["generator_version"], 5)
 
     def test_generated_road_boundaries_do_not_intersect(self):
         from local_simulator.track_generator import (
@@ -274,6 +350,16 @@ class TestTrackGenerator(unittest.TestCase):
                 with self.subTest(template=template, seed=seed):
                     document = generate_custom_map(f"custom-track-{template}-{seed}", seed, template)
                     validate_custom_geometry(document.geometry)
+                    if template == "extreme_technical":
+                        metadata = dict(document.generator)
+                        self.assertIn(metadata["corner_count"], {12, 14, 16})
+                        self.assertGreaterEqual(metadata["s_section_count"], 3)
+                        measured_near_90 = sum(
+                            75.0 <= abs(turn) <= 105.0
+                            for turn in metadata["corner_turn_degrees"]
+                        )
+                        self.assertGreaterEqual(measured_near_90, 3)
+                        self.assertEqual(metadata["near_90_corner_count"], measured_near_90)
 
 
 if __name__ == "__main__":
