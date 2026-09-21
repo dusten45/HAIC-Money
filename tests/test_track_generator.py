@@ -275,7 +275,35 @@ class TestTrackGenerator(unittest.TestCase):
         self.assertEqual(observed_counts, {12, 14, 16})
 
     def test_extreme_generation_reports_measured_corner_metadata(self):
-        from local_simulator.track_generator import _generate_extreme_geometry, generate_custom_map
+        import math
+        from local_simulator.track_generator import (
+            _build_extreme_route,
+            _generate_extreme_geometry,
+            _round_coordinate,
+            _round_extreme_route,
+            generate_custom_map,
+        )
+
+        def tangent_trim(route, index, width):
+            vertices = route.vertices
+            previous = vertices[index - 1]
+            anchor = vertices[index]
+            following = vertices[(index + 1) % len(vertices)]
+            incoming_length = math.dist(previous, anchor)
+            outgoing_length = math.dist(anchor, following)
+            incoming = (
+                (previous[0] - anchor[0]) / incoming_length,
+                (previous[1] - anchor[1]) / incoming_length,
+            )
+            outgoing = (
+                (following[0] - anchor[0]) / outgoing_length,
+                (following[1] - anchor[1]) / outgoing_length,
+            )
+            cosine = max(-1.0, min(1.0, incoming[0] * outgoing[0] + incoming[1] * outgoing[1]))
+            half_deflection = (math.pi - math.acos(cosine)) / 2.0
+            radius = 1.7 * width * (1.0 + 0.4 * max(0.0, min(1.0, (width - 8.0) / 92.0)))
+            trim = radius * math.sin(half_deflection) / math.cos(half_deflection) ** 2
+            return min(trim, 0.45 * incoming_length, 0.45 * outgoing_length)
 
         observed_counts = set()
         for width in (8.0, 9.0):
@@ -283,6 +311,48 @@ class TestTrackGenerator(unittest.TestCase):
                 candidate = _generate_extreme_geometry(seed, width)
                 self.assertGreaterEqual(len(candidate.s_section_connector_lengths), 3)
                 self.assertTrue(all(0.6 * width - 1e-5 <= value <= 2.2 * width + 1e-5 for value in candidate.s_section_connector_lengths))
+
+                route = None
+                rounded = None
+                for attempt_index in range(64):
+                    attempted_route = _build_extreme_route(seed, width, attempt_index)
+                    attempted_result = _round_extreme_route(attempted_route, width)
+                    if attempted_result.geometry == candidate.geometry:
+                        route = attempted_route
+                        rounded = attempted_result
+                        break
+                self.assertIsNotNone(route)
+                self.assertIsNotNone(rounded)
+                for (first, second), reported_length in zip(
+                    rounded.s_section_pairs,
+                    rounded.s_section_connector_lengths,
+                ):
+                    edge_length = math.dist(route.vertices[first], route.vertices[second])
+                    first_trim = tangent_trim(route, first, width)
+                    second_trim = tangent_trim(route, second, width)
+                    first_endpoint = tuple(
+                        _round_coordinate(
+                            route.vertices[first][axis]
+                            + (route.vertices[second][axis] - route.vertices[first][axis])
+                            * first_trim / edge_length
+                        )
+                        for axis in (0, 1)
+                    )
+                    second_endpoint = tuple(
+                        _round_coordinate(
+                            route.vertices[second][axis]
+                            + (route.vertices[first][axis] - route.vertices[second][axis])
+                            * second_trim / edge_length
+                        )
+                        for axis in (0, 1)
+                    )
+                    self.assertIn(first_endpoint, candidate.geometry.centerline)
+                    self.assertIn(second_endpoint, candidate.geometry.centerline)
+                    measured_length = math.dist(first_endpoint, second_endpoint)
+                    self.assertAlmostEqual(reported_length, measured_length, places=9)
+                    self.assertGreaterEqual(measured_length, 0.6 * width - 1e-5)
+                    self.assertLessEqual(measured_length, 2.2 * width + 1e-5)
+
                 document = generate_custom_map(f"custom-track-extreme-{seed}", seed, "extreme_technical", width=width)
                 metadata = dict(document.generator)
                 count = metadata["corner_count"]

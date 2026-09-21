@@ -683,7 +683,6 @@ def _round_extreme_route(route: _ExtremeRoute, width: float) -> _ExtremeGeometry
     count = len(anchors)
     incoming_points = []
     outgoing_points = []
-    tangents = []
     roundness = max(0.0, min(1.0, (width - 8.0) / 92.0))
     for index, anchor in enumerate(anchors):
         previous, following = anchors[index - 1], anchors[(index + 1) % count]
@@ -697,7 +696,6 @@ def _round_extreme_route(route: _ExtremeRoute, width: float) -> _ExtremeGeometry
         trim = min(trim, 0.45 * incoming_length, 0.45 * outgoing_length)
         incoming_points.append(_interpolate(anchor, previous, trim / incoming_length))
         outgoing_points.append(_interpolate(anchor, following, trim / outgoing_length))
-        tangents.append(trim)
 
     points = [incoming_points[0]]
     ranges = []
@@ -720,7 +718,10 @@ def _round_extreme_route(route: _ExtremeRoute, width: float) -> _ExtremeGeometry
     geometry = CustomTrackGeometry(centerline=quantized, width=width)
     measured_turns, measured_radii = _measure_corner_profiles(quantized, tuple(ranges), width)
     connectors = tuple(
-        _distance(anchors[first], anchors[second]) - tangents[first] - tangents[second]
+        _distance(
+            tuple(_round_coordinate(value) for value in outgoing_points[first]),
+            tuple(_round_coordinate(value) for value in incoming_points[second]),
+        )
         for first, second in route.s_section_pairs
     )
     near_90 = sum(75.0 <= abs(turn) <= 105.0 for turn in measured_turns)
