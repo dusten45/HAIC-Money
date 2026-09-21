@@ -104,10 +104,28 @@ class TestTrainingCollector(unittest.TestCase):
 
         self.assertEqual(raw_environment.raw_steps, 54)
         self.assertEqual(transition.labels.speed, 54.0)
+        self.assertEqual(transition.observation_labels.speed, 50.0)
+        self.assertEqual(transition.observation_labels.tile_progress, 0.5)
         self.assertEqual(transition.labels.wheel_omega, (54.0, 55.0, 56.0, 57.0))
         self.assertAlmostEqual(transition.labels.steering_angle, 0.545)
         self.assertEqual(transition.labels.yaw_rate, 5.4)
         self.assertEqual(transition.labels.tile_progress, 0.54)
+
+    def test_collected_labels_include_track_relative_lateral_and_heading_errors(self):
+        from types import SimpleNamespace
+
+        from training.labels import collect_labels
+
+        raw_environment = _RawEnvironment()
+        raw_environment.track = [(0.0, 0.2, 0.0, 0.0), (0.1, 0.0, 1.0, 2.0)]
+        raw_environment.car.hull.position = (3.0, 2.0)
+        # The car's local +Y axis is forward, so its body-angle error matches beta.
+        raw_environment.car.hull.angle = 0.5
+
+        labels = collect_labels(SimpleNamespace(unwrapped=raw_environment), {})
+
+        self.assertAlmostEqual(getattr(labels, "lateral_error", float("nan")), 2.0)
+        self.assertAlmostEqual(getattr(labels, "heading_error", float("nan")), 0.5)
 
     def test_split_rejects_an_episode_present_in_training_and_holdout(self):
         # Break caught: a future edit permits a held-out track/seed pair to

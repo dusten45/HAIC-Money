@@ -50,19 +50,21 @@ class TestCEMPlanner(unittest.TestCase):
         planner = CEMPlanner(horizon=4, population=24, iterations=3, candidate_batch_size=8)
         result = planner.plan(
             torch.zeros(1, 128),
-            torch.full((1, 3), 0.25),
-            torch.full((1, 3), -2.0),
+            torch.full((1, 2), 0.25),
+            torch.full((1, 2), -2.0),
             _ForwardDynamics(),
             deadline=float("inf"),
         )
 
         self.assertIsNotNone(result)
         self.assertEqual(result.action.shape, (3,))
-        self.assertEqual(result.unconstrained_sequence.shape, (4, 3))
+        self.assertEqual(result.unconstrained_sequence.shape, (4, 2))
         self.assertTrue(torch.isfinite(result.action).all())
         self.assertGreaterEqual(float(result.action[0]), -1.0)
         self.assertLessEqual(float(result.action[0]), 1.0)
         self.assertTrue(torch.all((result.action[1:] >= 0.0) & (result.action[1:] <= 1.0)))
+        self.assertLessEqual(float(result.action[1]), 0.0200001)
+        self.assertTrue(float(result.action[1] == 0.0 or result.action[2] == 0.0))
 
     def test_warm_start_shifts_previous_unconstrained_sequence_and_reset_isolates_episode(self):
         # Break caught: reusing a plan without a one-decision shift makes the
@@ -70,11 +72,11 @@ class TestCEMPlanner(unittest.TestCase):
         from haic_agent.planner import CEMPlanner
 
         planner = CEMPlanner(horizon=3, population=12, iterations=1, candidate_batch_size=6)
-        cached = torch.tensor([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]])
+        cached = torch.tensor([[0.1, 0.2], [0.4, 0.5], [0.7, 0.9]])
         planner._cached_unconstrained = cached.clone()
 
         shifted = planner.warm_start()
-        torch.testing.assert_close(shifted, torch.tensor([[0.4, 0.5, 0.6], [0.7, 0.8, 0.9], [0.7, 0.8, 0.9]]))
+        torch.testing.assert_close(shifted, torch.tensor([[0.4, 0.5], [0.7, 0.9], [0.7, 0.9]]))
         planner.reset()
         self.assertIsNone(planner.warm_start())
 
@@ -91,7 +93,7 @@ class TestCEMPlanner(unittest.TestCase):
             uncertainty_cost=3.0,
         )
         latent = torch.zeros(2, 128)
-        actions = torch.tensor([[[-0.25, 0.5, 0.0]], [[0.25, 0.5, 0.0]]])
+        actions = torch.tensor([[[-0.25, 0.01, 0.0]], [[0.25, 0.01, 0.0]]])
         scores = planner.score_sequences(latent, actions, _RiskyDynamics(), deadline=float("inf"))
 
         self.assertIsNotNone(scores)
@@ -104,10 +106,10 @@ class TestCEMPlanner(unittest.TestCase):
 
         planner = CEMPlanner(horizon=3, population=8, iterations=1)
         expired = planner.plan(
-            torch.zeros(1, 128), torch.zeros(1, 3), torch.zeros(1, 3), _ForwardDynamics(), deadline=-1.0
+            torch.zeros(1, 128), torch.zeros(1, 2), torch.zeros(1, 2), _ForwardDynamics(), deadline=-1.0
         )
         invalid = planner.plan(
-            torch.zeros(1, 128), torch.full((1, 3), float("nan")), torch.zeros(1, 3), _ForwardDynamics(), deadline=float("inf")
+            torch.zeros(1, 128), torch.full((1, 2), float("nan")), torch.zeros(1, 2), _ForwardDynamics(), deadline=float("inf")
         )
 
         self.assertIsNone(expired)
@@ -121,13 +123,13 @@ class TestCEMPlanner(unittest.TestCase):
 
         clock = _FinalizationClock(expire_after_calls=16)
         planner = CEMPlanner(horizon=1, population=2, iterations=1, candidate_batch_size=2, clock=clock)
-        prior_cache = torch.tensor([[-3.0, 0.0, 0.0]])
+        prior_cache = torch.tensor([[-3.0, 0.0]])
         planner._cached_unconstrained = prior_cache.clone()
 
         result = planner.plan(
             torch.zeros(1, 128),
-            torch.tensor([[1.0, 0.0, 0.0]]),
-            torch.full((1, 3), -10.0),
+            torch.tensor([[1.0, 0.0]]),
+            torch.full((1, 2), -10.0),
             _ForwardDynamics(),
             deadline=1.0,
         )

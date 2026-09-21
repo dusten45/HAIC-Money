@@ -1,6 +1,7 @@
 """Pixel-only visual actor-critic network used by PPO and later planners."""
 
 from dataclasses import dataclass
+import math
 
 import torch
 from torch import Tensor, nn
@@ -11,8 +12,13 @@ from haic_agent.observation import HUD_ROIS
 
 
 LATENT_SIZE = 128
+POLICY_ACTION_SIZE = 2
 ACTION_SIZE = 3
-AUXILIARY_SIZE = 7
+AUXILIARY_SIZE = 10
+MAX_GAS = 0.02
+MAX_BRAKE = 0.03
+INITIAL_STEERING_COMMAND = -0.12
+INITIAL_LONGITUDINAL_COMMAND = 0.55
 _ACTION_EPSILON = 1e-6
 MIN_LOG_STD = -5.0
 MAX_LOG_STD = 2.0
@@ -22,10 +28,11 @@ MAX_LOG_STD = 2.0
 class PolicyOutput:
     """Policy prediction for a pixel batch.
 
-    ``action_mean`` and ``action_log_std`` parameterize an unconstrained
-    three-dimensional Normal prior.  ``value`` is shaped ``(B,)`` and the
-    seven auxiliary targets are speed, four wheel angular velocities,
-    steering angle, and yaw rate in that order.
+    ``action_mean`` and ``action_log_std`` parameterize a two-dimensional
+    Normal prior over steering and signed longitudinal control. ``value`` is
+    shaped ``(B,)`` and the ten auxiliary targets are speed, four wheel
+    angular velocities, steering angle, yaw rate, normalized lateral offset,
+    and sine/cosine of heading error in that order.
     """
 
     latent: Tensor
@@ -64,8 +71,19 @@ class VisualActorCritic(nn.Module):
             nn.ReLU(),
         )
         self.fusion = nn.Sequential(nn.Linear(128, LATENT_SIZE), nn.ReLU())
-        self.policy_mean = nn.Linear(LATENT_SIZE, ACTION_SIZE)
-        self.policy_log_std = nn.Parameter(torch.zeros(ACTION_SIZE))
+        self.policy_mean = nn.Linear(LATENT_SIZE, POLICY_ACTION_SIZE)
+        nn.init.orthogonal_(self.policy_mean.weight, gain=0.01)
+        nn.init.zeros_(self.policy_mean.bias)
+        with torch.no_grad():
+            self.policy_mean.bias[0] = torch.atanh(
+                torch.tensor(INITIAL_STEERING_COMMAND)
+            )
+            self.policy_mean.bias[1] = torch.atanh(
+                torch.tensor(INITIAL_LONGITUDINAL_COMMAND)
+            )
+        self.policy_log_std = nn.Parameter(
+            torch.log(torch.tensor((0.35, 0.4), dtype=torch.float32))
+        )
         self.value_head = nn.Linear(LATENT_SIZE, 1)
         self.auxiliary_head = nn.Linear(LATENT_SIZE, AUXILIARY_SIZE)
 
@@ -115,32 +133,63 @@ class VisualActorCritic(nn.Module):
 
     @staticmethod
     def _bound_actions(unconstrained_actions: Tensor) -> Tensor:
-        return torch.cat(
-            (torch.tanh(unconstrained_actions[:, :1]), torch.sigmoid(unconstrained_actions[:, 1:])),
-            dim=1,
-        )
+        if unconstrained_actions.ndim < 2 or unconstrained_actions.shape[-1] != POLICY_ACTION_SIZE:
+            raise ValueError("policy action coordinates must end in width 2")
+        steering = torch.tanh(unconstrained_actions[..., :1])
+        longitudinal = torch.tanh(unconstrained_actions[..., 1:2])
+        gas = MAX_GAS * longitudinal.clamp(min=0.0)
+        brake = MAX_BRAKE * (-longitudinal).clamp(min=0.0)
+        return torch.cat((steering, gas, brake), dim=-1)
 
     @staticmethod
     def _unbound_actions(actions: Tensor) -> tuple[Tensor, Tensor]:
         if actions.ndim != 2 or actions.shape[1] != ACTION_SIZE:
             raise ValueError("actions must have shape (B, 3)")
+        if not torch.isfinite(actions).all():
+            raise ValueError("actions must be finite")
+        gas_values = actions[:, 1:2]
+        brake_values = actions[:, 2:3]
+        if torch.any(gas_values > MAX_GAS + _ACTION_EPSILON):
+            raise ValueError(f"gas must not exceed the learned throttle limit {MAX_GAS}")
+        if torch.any(brake_values > MAX_BRAKE + _ACTION_EPSILON):
+            raise ValueError(f"brake must not exceed the calibrated limit {MAX_BRAKE}")
+        if torch.any((gas_values > _ACTION_EPSILON) & (brake_values > _ACTION_EPSILON)):
+            raise ValueError("gas and brake cannot both be active")
         steer = actions[:, :1].clamp(-1.0 + _ACTION_EPSILON, 1.0 - _ACTION_EPSILON)
-        pedals = actions[:, 1:].clamp(_ACTION_EPSILON, 1.0 - _ACTION_EPSILON)
-        unconstrained = torch.cat((torch.atanh(steer), torch.logit(pedals)), dim=1)
+        gas = gas_values.clamp(min=0.0, max=MAX_GAS)
+        brake = brake_values.clamp(min=0.0, max=MAX_BRAKE)
+        longitudinal = torch.where(
+            gas > 0.0, gas / MAX_GAS, -brake / MAX_BRAKE
+        )
+        longitudinal = longitudinal.clamp(-1.0 + _ACTION_EPSILON, 1.0 - _ACTION_EPSILON)
+        unconstrained = torch.cat((torch.atanh(steer), torch.atanh(longitudinal)), dim=1)
         return unconstrained, VisualActorCritic._log_abs_det_jacobian(unconstrained)
 
     @staticmethod
     def _log_abs_det_jacobian(unconstrained_actions: Tensor) -> Tensor:
-        """Compute transform log-Jacobians from pre-transform values without saturation loss."""
+        """Compute log-Jacobians for steering and signed pedal coordinates."""
         steer = unconstrained_actions[:, :1]
-        pedals = unconstrained_actions[:, 1:]
+        longitudinal = unconstrained_actions[:, 1:2]
         steer_log_det = 2.0 * (
             torch.log(torch.tensor(2.0, device=steer.device, dtype=steer.dtype))
             - steer
             - F.softplus(-2.0 * steer)
         )
-        pedal_log_det = -F.softplus(-pedals) - F.softplus(pedals)
-        return torch.cat((steer_log_det, pedal_log_det), dim=1).sum(dim=1)
+        longitudinal_log_det = 2.0 * (
+            torch.log(torch.tensor(2.0, device=longitudinal.device, dtype=longitudinal.dtype))
+            - longitudinal
+            - F.softplus(-2.0 * longitudinal)
+        )
+        pedal_scale_log_det = torch.where(
+            longitudinal > 0.0,
+            torch.full_like(longitudinal, math.log(MAX_GAS)),
+            torch.where(
+                longitudinal < 0.0,
+                torch.full_like(longitudinal, math.log(MAX_BRAKE)),
+                torch.zeros_like(longitudinal),
+            ),
+        )
+        return (steer_log_det + longitudinal_log_det + pedal_scale_log_det).sum(dim=1)
 
     def sample_actions(self, output: PolicyOutput) -> tuple[Tensor, Tensor]:
         """Sample bounded simulator actions and their matching transformed log probability."""
@@ -172,7 +221,7 @@ class VisualActorCritic(nn.Module):
     ) -> Tensor:
         """Evaluate exact rollout Normal draws without lossy action inverse transforms."""
         distribution = Normal(action_mean, action_log_std.exp())
-        return distribution.log_prob(pretransform_actions).sum(dim=1) - self._log_abs_det_jacobian(
+        return distribution.log_prob(pretransform_actions).sum(dim=-1) - self._log_abs_det_jacobian(
             pretransform_actions
         )
 

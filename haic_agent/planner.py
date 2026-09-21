@@ -8,7 +8,13 @@ import torch
 from torch import Tensor
 
 from haic_agent.dynamics import LatentDynamicsEnsemble
-from haic_agent.networks import ACTION_SIZE, LATENT_SIZE
+from haic_agent.networks import (
+    ACTION_SIZE,
+    LATENT_SIZE,
+    MAX_GAS,
+    POLICY_ACTION_SIZE,
+    VisualActorCritic,
+)
 
 
 @dataclass(frozen=True)
@@ -23,9 +29,9 @@ class PlanResult:
 class CEMPlanner:
     """Anytime cross-entropy planning using policy prior and dynamics risk.
 
-    The stored sequence stays in unconstrained action coordinates.  This makes
-    a shifted warm start consistent with the policy's Normal prior, while only
-    bounded actions ever leave the planner.
+    The stored sequence stays in the policy's unconstrained steering and signed
+    pedal coordinates. The dynamics model receives the corresponding bounded
+    three-value simulator action.
     """
 
     def __init__(
@@ -64,18 +70,21 @@ class CEMPlanner:
 
     @staticmethod
     def _bounded(unconstrained: Tensor) -> Tensor:
-        return torch.cat((torch.tanh(unconstrained[..., :1]), torch.sigmoid(unconstrained[..., 1:])), dim=-1)
+        return VisualActorCritic._bound_actions(unconstrained)
 
     @staticmethod
     def _valid_actions(actions: Tensor) -> bool:
-        return bool(
+        in_range = bool(
             actions.shape[-1] == ACTION_SIZE
             and torch.isfinite(actions).all()
             and torch.all(actions[..., :1] >= -1.0)
             and torch.all(actions[..., :1] <= 1.0)
             and torch.all(actions[..., 1:] >= 0.0)
             and torch.all(actions[..., 1:] <= 1.0)
+            and torch.all(actions[..., 1] <= MAX_GAS + 1e-7)
         )
+        mutually_exclusive = not bool(torch.any((actions[..., 1] > 1e-8) & (actions[..., 2] > 1e-8)))
+        return in_range and mutually_exclusive
 
     def reset(self) -> None:
         """Forget a previous episode's action sequence."""
@@ -86,7 +95,7 @@ class CEMPlanner:
         if self._cached_unconstrained is None:
             return None
         cached = self._cached_unconstrained
-        if cached.shape != (self.horizon, ACTION_SIZE) or not torch.isfinite(cached).all():
+        if cached.shape != (self.horizon, POLICY_ACTION_SIZE) or not torch.isfinite(cached).all():
             return None
         return torch.cat((cached[1:], cached[-1:]), dim=0)
 
@@ -94,8 +103,8 @@ class CEMPlanner:
     def _valid_inputs(latent: Tensor, policy_mean: Tensor, policy_log_std: Tensor) -> bool:
         return bool(
             latent.shape == (1, LATENT_SIZE)
-            and policy_mean.shape == (1, ACTION_SIZE)
-            and policy_log_std.shape == (1, ACTION_SIZE)
+            and policy_mean.shape == (1, POLICY_ACTION_SIZE)
+            and policy_log_std.shape == (1, POLICY_ACTION_SIZE)
             and torch.isfinite(latent).all()
             and torch.isfinite(policy_mean).all()
             and torch.isfinite(policy_log_std).all()
@@ -180,8 +189,13 @@ class CEMPlanner:
         """Improve the actor's Normal prior until ``deadline`` and return best."""
         if self.clock() >= deadline or not self._valid_inputs(latent, policy_mean, policy_log_std):
             return None
-        mean = policy_mean.detach().reshape(1, 1, ACTION_SIZE).expand(self.population, self.horizon, -1).clone()
-        log_std = policy_log_std.detach().clamp(-5.0, 2.0).reshape(1, 1, ACTION_SIZE)
+        mean = (
+            policy_mean.detach()
+            .reshape(1, 1, POLICY_ACTION_SIZE)
+            .expand(self.population, self.horizon, -1)
+            .clone()
+        )
+        log_std = policy_log_std.detach().clamp(-5.0, 2.0).reshape(1, 1, POLICY_ACTION_SIZE)
         std = log_std.exp().expand_as(mean)
         warm = self.warm_start()
         best_sequence: Tensor | None = None

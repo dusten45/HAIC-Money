@@ -17,12 +17,12 @@ class _Policy:
         return torch.zeros(observations.shape[0], 128)
 
     def action_parameters(self, latent):
-        return torch.tensor([[0.2, 0.0, -1.0]]), torch.full((1, 3), -3.0)
+        return torch.tensor([[0.2, 0.25]]), torch.full((1, 2), -3.0)
 
 
 class _InvalidPolicy(_Policy):
     def action_parameters(self, latent):
-        return torch.full((1, 3), float("nan")), torch.zeros(1, 3)
+        return torch.full((1, 2), float("nan")), torch.zeros(1, 2)
 
 
 class _Dynamics:
@@ -77,7 +77,7 @@ class _SlowForwardDynamics(_Dynamics):
 
 class _NegativeSteerPolicy(_Policy):
     def action_parameters(self, latent):
-        return torch.tensor([[-1.0, 0.0, -1.0]]), torch.full((1, 3), -10.0)
+        return torch.tensor([[-1.0, 0.25]]), torch.full((1, 2), -10.0)
 
 
 class TestAgentInference(unittest.TestCase):
@@ -126,7 +126,7 @@ class TestAgentInference(unittest.TestCase):
 
         action = fallback.act(pixels)
         invalid_action = invalid.act(pixels)
-        np.testing.assert_allclose(action, np.array([np.tanh(0.2), 0.5, 1.0 / (1.0 + np.exp(1.0))], dtype=np.float32))
+        np.testing.assert_allclose(action, np.array([np.tanh(0.2), 0.02 * np.tanh(0.25), 0.0], dtype=np.float32))
         for value in (action, invalid_action):
             self.assertEqual(value.shape, (3,))
             self.assertTrue(np.all(np.isfinite(value)))
@@ -182,7 +182,7 @@ class TestAgentInference(unittest.TestCase):
 
         clock = _AdvancingClock()
         planner = CEMPlanner(horizon=1, population=2, iterations=1, candidate_batch_size=2, clock=clock)
-        planner._cached_unconstrained = torch.tensor([[2.0, 0.0, -1.0]])
+        planner._cached_unconstrained = torch.tensor([[2.0, 0.25]])
         agent = Agent(
             policy=_NegativeSteerPolicy(),
             dynamics=_SlowForwardDynamics(clock),
@@ -193,7 +193,7 @@ class TestAgentInference(unittest.TestCase):
 
         action = agent.act(np.zeros((4, 84, 84), dtype=np.float32))
 
-        expected = np.array([np.tanh(-1.0), 0.5, 1.0 / (1.0 + np.exp(1.0))], dtype=np.float32)
+        expected = np.array([np.tanh(-1.0), 0.02 * np.tanh(0.25), 0.0], dtype=np.float32)
         np.testing.assert_allclose(action, expected)
         self.assertGreater(clock(), 1.0)
 

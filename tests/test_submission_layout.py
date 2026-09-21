@@ -103,6 +103,8 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertTrue(result["smoke"]["finite_action"])
             self.assertFalse(result["planner_enabled"])
             self.assertEqual(result["planner_settings"]["horizon"], 4)
+            self.assertIn("haic_agent/corridor_agent.py", result["layout"]["files"])
+            self.assertEqual(result["layout"]["runtime_policy"], "trained_visual_actor")
             with zipfile.ZipFile(archive) as zipped:
                 names = set(zipped.namelist())
             self.assertIn("agent.py", names)
@@ -114,6 +116,30 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertEqual(manifest["root_agent"], "agent.py")
             self.assertFalse(manifest["planner_enabled"])
             self.assertTrue(manifest["strict_checkpoint_loading"])
+
+    def test_corridor_package_selects_pixel_controller_and_disables_planner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            policy = directory_path / "policy.pt"
+            dynamics = directory_path / "dynamics.pt"
+            archive = directory_path / "corridor.zip"
+            torch.save({"model_state": VisualActorCritic().state_dict()}, policy)
+            torch.save({"model": LatentDynamicsEnsemble().state_dict()}, dynamics)
+
+            result = build_submission(
+                source_root=ROOT,
+                policy_checkpoint=policy,
+                dynamics_checkpoint=dynamics,
+                archive_path=archive,
+                smoke_test=True,
+                planner_enabled=False,
+                controller_mode="corridor",
+            )
+
+            self.assertEqual(result["layout"]["controller_mode"], "corridor")
+            self.assertEqual(result["layout"]["runtime_policy"], "vision_corridor_controller")
+            self.assertEqual(result["smoke"]["controller_mode"], "corridor")
+            self.assertFalse(result["planner_enabled"])
 
 
 if __name__ == "__main__":

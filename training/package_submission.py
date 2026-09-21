@@ -19,6 +19,7 @@ from haic_agent.networks import VisualActorCritic
 INFERENCE_FILES = (
     "agent.py",
     "haic_agent/__init__.py",
+    "haic_agent/corridor_agent.py",
     "haic_agent/observation.py",
     "haic_agent/networks.py",
     "haic_agent/dynamics.py",
@@ -100,16 +101,37 @@ def validate_submission_archive(archive_path: Path) -> dict[str, Any]:
              and isinstance(node.value, ast.Constant) and isinstance(node.value.value, bool)),
             None,
         )
+        controller_mode = next(
+            (
+                node.value.value
+                for node in tree.body
+                if isinstance(node, ast.Assign)
+                and any(
+                    isinstance(target, ast.Name) and target.id == "CONTROLLER_MODE"
+                    for target in node.targets
+                )
+                and isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)
+            ),
+            None,
+        )
         required_settings = {"horizon", "population", "iterations", "candidate_batch_size", "uncertainty_cost"}
-        if not isinstance(settings, dict) or set(settings) != required_settings or strict_loading is not True:
-            raise ValueError("runtime planner settings or strict checkpoint loading is invalid")
+        if (
+            not isinstance(settings, dict)
+            or set(settings) != required_settings
+            or strict_loading is not True
+            or controller_mode not in {"auto", "learned", "corridor"}
+        ):
+            raise ValueError("runtime inference settings or strict checkpoint loading are invalid")
     return {"root_agent": "agent.py", "files": list(names), "archive_bytes": archive_path.stat().st_size,
-            "planner_enabled": planner_enabled, "planner_settings": settings, "strict_checkpoint_loading": strict_loading}
+            "planner_enabled": planner_enabled, "planner_settings": settings, "strict_checkpoint_loading": strict_loading,
+            "controller_mode": controller_mode,
+            "runtime_policy": "vision_corridor_controller" if controller_mode == "corridor" else "trained_visual_actor"}
 
 
 def smoke_submission(
     archive_path: Path, *, expected_planner_enabled: bool, expected_planner_settings: dict[str, Any],
-    python_executable: str = sys.executable,
+    expected_controller_mode: str = "auto", python_executable: str = sys.executable,
 ) -> dict[str, Any]:
     """Unpack into a clean directory and enforce CPU import/reset/act limits."""
     child = """
@@ -161,6 +183,7 @@ print(json.dumps({
   'finite_action': all(bool(np.isfinite(action).all()) and np.asarray(action).shape == (3,) for action in actions),
   'process_rss_bytes': process_rss_bytes(),
   'planner_enabled': agent.planner_enabled,
+  'controller_mode': agent.controller_mode,
   'planner_settings': {name: getattr(agent.planner, name) for name in ('horizon', 'population', 'iterations', 'candidate_batch_size', 'uncertainty_cost')},
 }))
 """
@@ -182,6 +205,9 @@ print(json.dumps({
         raise RuntimeError(f"CPU inference validity or memory check failed: {result}")
     if result["planner_enabled"] != expected_planner_enabled or result["planner_settings"] != expected_planner_settings:
         raise RuntimeError(f"packaged planner runtime differs from requested selection: {result}")
+    expected_effective_mode = "corridor" if expected_controller_mode == "corridor" else "learned"
+    if result["controller_mode"] != expected_effective_mode:
+        raise RuntimeError(f"packaged controller runtime differs from requested selection: {result}")
     return result
 
 
@@ -219,10 +245,13 @@ def resolve_package_selection(
 def build_submission(
     *, source_root: Path, policy_checkpoint: Path, dynamics_checkpoint: Path, archive_path: Path, smoke_test: bool = False,
     planner_enabled: bool = True, planner_settings: dict[str, Any] | None = None,
+    controller_mode: str = "auto",
     python_executable: str = sys.executable,
 ) -> dict[str, Any]:
     """Package the two trained CPU checkpoints with only their inference code."""
     sources = _archive_sources(source_root)
+    if controller_mode not in {"auto", "learned", "corridor"}:
+        raise ValueError("controller_mode must be 'auto', 'learned', or 'corridor'")
     checkpoints = {"policy.pt": policy_checkpoint, "dynamics.pt": dynamics_checkpoint}
     for target, path in checkpoints.items():
         if path.name != target:
@@ -240,7 +269,8 @@ def build_submission(
                     '"""Package-selected inference mode."""\n\n'
                     f'PLANNER_ENABLED = {bool(planner_enabled)!r}\n'
                     f'PLANNER_SETTINGS = {selected_settings!r}\n'
-                    'STRICT_CHECKPOINT_LOADING = True\n',
+                    'STRICT_CHECKPOINT_LOADING = True\n'
+                    f'CONTROLLER_MODE = {controller_mode!r}\n',
                 )
             else:
                 archive.write(path, arcname=name)
@@ -249,7 +279,9 @@ def build_submission(
     manifest = validate_submission_archive(archive_path)
     smoke = (
         smoke_submission(archive_path, expected_planner_enabled=bool(planner_enabled),
-                         expected_planner_settings=selected_settings, python_executable=python_executable)
+                         expected_planner_settings=selected_settings,
+                         expected_controller_mode=controller_mode,
+                         python_executable=python_executable)
         if smoke_test else None
     )
     if manifest["planner_enabled"] != bool(planner_enabled):
@@ -257,7 +289,7 @@ def build_submission(
     if manifest["planner_settings"] != selected_settings:
         raise RuntimeError("submission planner settings do not match packaging selection")
     return {"archive": str(archive_path), "layout": manifest, "smoke": smoke, "planner_enabled": bool(planner_enabled),
-            "planner_settings": selected_settings}
+            "planner_settings": selected_settings, "controller_mode": controller_mode}
 
 
 def parse_args() -> argparse.Namespace:
@@ -268,6 +300,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=Path("artifacts/haic/submission/submission.zip"))
     parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument("--evaluation-summary", type=Path)
+    parser.add_argument(
+        "--controller-mode",
+        choices=("auto", "learned", "corridor"),
+        default="auto",
+        help="auto uses a valid learned policy and otherwise the pixel corridor controller",
+    )
     planner_group = parser.add_mutually_exclusive_group()
     planner_group.add_argument("--enable-planner", action="store_true")
     planner_group.add_argument("--disable-planner", action="store_true")
@@ -288,6 +326,7 @@ def main() -> None:
         smoke_test=args.smoke_test,
         planner_enabled=planner_enabled,
         planner_settings=planner_settings,
+        controller_mode=args.controller_mode,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
 

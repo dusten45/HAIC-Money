@@ -14,8 +14,17 @@ from torch.nn import functional as F
 
 from haic_agent.dynamics import DynamicsEnsembleOutput, LatentDynamicsEnsemble
 from haic_agent.networks import ACTION_SIZE, LATENT_SIZE, VisualActorCritic
-from training.env_factory import CollectedTransition, TrackSeedSplit, create_training_environment, split_track_seeds
+from training.env_factory import (
+    CollectedTransition,
+    TrainingEpisode,
+    TrainingSplit,
+    create_episode_environment,
+    create_training_environment,
+    describe_split,
+    split_track_seeds,
+)
 from training.labels import collect_labels
+from training.site_maps import load_site_map_split
 
 
 DEFAULT_SPLIT = split_track_seeds(
@@ -242,15 +251,21 @@ def _close_environment(environment: Any) -> None:
 
 def collect_dynamics_batch(
     policy: VisualActorCritic,
-    episodes: Iterable[tuple[int, int]],
+    episodes: Iterable[TrainingEpisode],
     *,
     max_decisions: int,
 ) -> DynamicsBatch:
     """Collect policy transitions at the four-raw-tick decision cadence."""
     transitions: list[CollectedTransition] = []
     previous_progress: list[float] = []
-    for track_id, seed in episodes:
-        environment = create_training_environment(track_id=track_id, seed=seed, max_decisions=max_decisions)
+    for episode in episodes:
+        if isinstance(episode, tuple):
+            track_id, seed = episode
+            environment = create_training_environment(
+                track_id=int(track_id), seed=int(seed), max_decisions=max_decisions
+            )
+        else:
+            environment = create_episode_environment(episode, max_decisions=max_decisions)
         observation, reset_info = environment.reset()
         progress = collect_labels(environment, reset_info).tile_progress
         try:
@@ -300,7 +315,7 @@ def train(
     seed: int,
     policy_checkpoint: Path | None = None,
     allow_random_policy: bool = False,
-    split: TrackSeedSplit = DEFAULT_SPLIT,
+    split: TrainingSplit = DEFAULT_SPLIT,
 ) -> dict[str, Any]:
     """Collect train transitions, fit the ensemble, and report held-out metrics."""
     set_reproducible_seed(seed)
@@ -323,7 +338,7 @@ def train(
         step=steps,
         metadata={
             "seed": seed,
-            "split": {"train": split.train, "tune": split.tune, "held_out": split.held_out},
+            "split": describe_split(split),
             "held_out_metrics": held_out_metrics,
             "target_cadence": "next_decision_after_four_raw_ticks",
             "policy_source": policy_source,
@@ -339,6 +354,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-decisions", type=int, default=500)
     parser.add_argument("--seed", type=int, default=20260920)
     parser.add_argument("--policy-checkpoint", type=Path)
+    parser.add_argument("--site-map-split", type=Path)
     parser.add_argument("--smoke", action="store_true")
     return parser.parse_args()
 
@@ -352,6 +368,7 @@ def main() -> None:
         seed=args.seed,
         policy_checkpoint=args.policy_checkpoint,
         allow_random_policy=args.smoke,
+        split=load_site_map_split(args.site_map_split) if args.site_map_split else DEFAULT_SPLIT,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
 

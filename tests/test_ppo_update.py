@@ -18,26 +18,26 @@ class TestRolloutAdvantages(unittest.TestCase):
         storage.add(
             observation=observation,
             action=action,
-            pretransform_action=torch.zeros(3),
+            pretransform_action=torch.zeros(2),
             log_probability=0.0,
             value=0.5,
             next_value=999.0,
             reward=1.0,
             terminated=True,
             truncated=False,
-            auxiliary_targets=torch.zeros(7),
+            auxiliary_targets=torch.zeros(10),
         )
         storage.add(
             observation=observation,
             action=action,
-            pretransform_action=torch.zeros(3),
+            pretransform_action=torch.zeros(2),
             log_probability=0.0,
             value=0.0,
             next_value=0.0,
             reward=100.0,
             terminated=False,
             truncated=True,
-            auxiliary_targets=torch.zeros(7),
+            auxiliary_targets=torch.zeros(10),
         )
 
         storage.compute_returns_and_advantages(gamma=0.99, gae_lambda=0.95)
@@ -57,7 +57,7 @@ class TestPPOUpdate(unittest.TestCase):
         model = VisualActorCritic()
         output = model(torch.zeros(2, 4, 84, 84))
         pretransform_actions = torch.tensor(
-            [[20.0, 100.0, -100.0], [-20.0, -100.0, 100.0]], dtype=torch.float32
+            [[20.0, 100.0], [-20.0, -100.0]], dtype=torch.float32
         )
         bounded_actions = model._bound_actions(pretransform_actions)
         old_log_probabilities = model.log_probability_from_pretransform(
@@ -75,7 +75,7 @@ class TestPPOUpdate(unittest.TestCase):
                 reward=0.0,
                 terminated=False,
                 truncated=index == 1,
-                auxiliary_targets=torch.zeros(7),
+                auxiliary_targets=torch.zeros(10),
             )
         storage.compute_returns_and_advantages(gamma=0.99, gae_lambda=0.95)
         batch = storage.batch()
@@ -84,7 +84,8 @@ class TestPPOUpdate(unittest.TestCase):
         )
 
         self.assertTrue(torch.all(bounded_actions[:, 0].abs() == 1.0))
-        self.assertTrue(torch.all((bounded_actions[:, 1:] == 0.0) | (bounded_actions[:, 1:] == 1.0)))
+        self.assertTrue(torch.all((bounded_actions[:, 1] == 0.0) | (bounded_actions[:, 2] == 0.0)))
+        self.assertTrue(torch.all(bounded_actions[:, 1] <= 0.0200001))
         torch.testing.assert_close(batch.old_log_probabilities, old_log_probabilities)
         torch.testing.assert_close(recomputed_log_probabilities, old_log_probabilities)
 
@@ -299,7 +300,7 @@ class TestPPOUpdate(unittest.TestCase):
                 reward=float(index + 1) / 10.0,
                 terminated=False,
                 truncated=index == 7,
-                auxiliary_targets=torch.zeros(7),
+                auxiliary_targets=torch.zeros(10),
             )
         storage.compute_returns_and_advantages(gamma=0.99, gae_lambda=0.95)
         before = next(model.parameters()).detach().clone()
