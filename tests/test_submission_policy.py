@@ -1,6 +1,12 @@
 import json
+import copy
+import os
+import shutil
+import subprocess
+import sys
 import unittest
 import tempfile
+from dataclasses import asdict
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,12 +18,25 @@ from action_smoothing import (
     canonical_action_control,
     canonical_action_smoothing,
 )
-from agent import Agent, Baseline1Actor
+from agent import Agent, Baseline1Actor, DRQ_ACTOR_FORMAT
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
+from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
+from drq_v2 import DrQActor as NativeDrQActor, DrQv2Config
 
 
 class TestSubmissionPolicy(unittest.TestCase):
+    def drq_payload(self):
+        config = DrQv2Config(feature_dim=16, hidden_dim=16, device="cuda")
+        actor = NativeDrQActor(feature_dim=16, hidden_dim=16)
+        return actor, {
+            "format": DRQ_ACTOR_FORMAT,
+            "config": asdict(config),
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+            "state_dict": actor.state_dict(),
+        }
+
     def test_predict_action_has_submission_bounds(self):
         actor = Baseline1Actor()
         with torch.no_grad():
@@ -116,6 +135,108 @@ class TestSubmissionPolicy(unittest.TestCase):
         np.testing.assert_allclose(first, [0.5, 1.0, 0.0])
         np.testing.assert_allclose(second, [0.75, 1.0, 0.0])
         np.testing.assert_allclose(reset_first, first)
+
+    def test_drq_export_matches_native_actor_and_full_reset_sequence(self):
+        source, payload = self.drq_payload()
+        rng = np.random.default_rng(17)
+        observations = [
+            np.zeros((4, 84, 84), dtype=np.float32),
+            np.ones((4, 84, 84), dtype=np.float32),
+            rng.random((4, 84, 84), dtype=np.float32),
+        ]
+        expected = [ActionAdapter().to_official(source.act(obs)) for obs in observations]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            torch.save(payload, path)
+            before = torch.get_rng_state().clone()
+            agent = Agent(path)
+            self.assertTrue(torch.equal(before, torch.get_rng_state()))
+            np.testing.assert_array_equal(agent.act(observations[0]), expected[0])
+            agent.reset(observations[0])
+            first = [agent.act(obs) for obs in observations]
+            for obs in reversed(observations):
+                agent.act(obs)
+            agent.reset(observations[0])
+            second = [agent.act(obs) for obs in observations]
+            fresh = Agent(path)
+            third = [fresh.act(obs) for obs in observations]
+        np.testing.assert_array_equal(first, expected)
+        np.testing.assert_array_equal(first, second)
+        np.testing.assert_array_equal(first, third)
+        self.assertTrue(all(parameter.device.type == "cpu" for parameter in agent.model.parameters()))
+
+    def test_drq_rejects_malformed_exports_and_observations(self):
+        _, payload = self.drq_payload()
+        cases = []
+        unknown = copy.deepcopy(payload)
+        unknown["format"] = "unknown-actor"
+        cases.append(unknown)
+        for section, key, value in (
+            ("observation_spec", "channel_order", "HWC"),
+            ("observation_spec", "high", 255.0),
+            ("action_spec", "frame_skip", 8),
+            ("action_spec", "order", ("gas", "steer", "brake")),
+            ("config", "hidden_dim", 32),
+        ):
+            malformed = copy.deepcopy(payload)
+            malformed[section][key] = value
+            cases.append(malformed)
+        nonfinite = copy.deepcopy(payload)
+        nonfinite["state_dict"]["policy.bias"][0] = float("nan")
+        cases.append(nonfinite)
+        missing = copy.deepcopy(payload)
+        del missing["state_dict"]["policy.bias"]
+        cases.append(missing)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            for index, malformed in enumerate(cases):
+                with self.subTest(case=index):
+                    torch.save(malformed, path)
+                    with self.assertRaises((ValueError, RuntimeError)):
+                        Agent(path)
+            torch.save(payload, path)
+            agent = Agent(path)
+            for observation in (
+                np.zeros((4, 84, 84), dtype=np.uint8),
+                np.zeros((84, 84, 4), dtype=np.float32),
+                np.full((4, 84, 84), 1.1, dtype=np.float32),
+                np.full((4, 84, 84), np.nan, dtype=np.float32),
+            ):
+                with self.assertRaisesRegex(ValueError, "observation"):
+                    agent.act(observation)
+
+    def test_drq_root_only_runtime_does_not_import_training_modules(self):
+        _, payload = self.drq_payload()
+        root = Path(__file__).resolve().parents[1]
+        code = """
+import builtins
+original_import = builtins.__import__
+def restricted(name, *args, **kwargs):
+    if name.split('.')[0] in {'stable_baselines3', 'drq_v2', 'common_adapter', 'train'}:
+        raise AssertionError('training import: ' + name)
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = restricted
+from agent import Agent
+import numpy as np
+agent = Agent()
+observation = np.zeros((4, 84, 84), dtype=np.float32)
+first = agent.act(observation)
+agent.reset(observation)
+assert np.array_equal(first, agent.act(observation))
+assert first.shape == (3,) and np.isfinite(first).all()
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            for filename in ("agent.py", "action_smoothing.py", "action_representation.py"):
+                shutil.copy2(root / filename, path / filename)
+            torch.save(payload, path / "model.pt")
+            environment = dict(os.environ, CUDA_VISIBLE_DEVICES="", PYTHONDONTWRITEBYTECODE="1")
+            environment.pop("PYTHONPATH", None)
+            result = subprocess.run(
+                [sys.executable, "-B", "-c", code], cwd=path,
+                env=environment, capture_output=True, text=True, timeout=15,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == "__main__":

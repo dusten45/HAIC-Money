@@ -72,6 +72,20 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
+    def test_explicit_drq_actor_is_packaged_under_declared_model_filename(self):
+        from drq_v2 import DrQv2Agent, DrQv2Config
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            actor = DrQv2Agent(DrQv2Config(replay_capacity=8)).export_actor(path / "actor.pt")
+            archive = build_submission(ROOT / "agent.py", actor, path / "submission.zip")
+            with zipfile.ZipFile(archive) as package:
+                self.assertIn("model.pt", package.namelist())
+                self.assertNotIn("actor.pt", package.namelist())
+                self.assertEqual(package.read("model.pt"), actor.read_bytes())
+                self.assertNotIn("drq_v2.py", package.namelist())
+                self.assertNotIn("common_adapter.py", package.namelist())
+
     def test_rejects_banned_submission_import(self):
         with tempfile.TemporaryDirectory() as directory:
             agent_path = Path(directory) / "agent.py"
