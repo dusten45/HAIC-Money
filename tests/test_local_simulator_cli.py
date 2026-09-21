@@ -128,8 +128,29 @@ class TestSimulatorCli(unittest.TestCase):
             self.assertEqual(result, 0)
             payload = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual(payload["generator"]["template"], "technical")
-            self.assertEqual(payload["generator"]["generator_version"], 3)
+            self.assertEqual(payload["generator"]["generator_version"], 5)
             self.assertGreaterEqual(payload["generator"]["corner_count"], 9)
+
+    def test_extreme_technical_custom_map_cli_writes_recipe_metadata(self):
+        from local_simulator.map import main as map_main
+
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / "extreme.json"
+            result = map_main(
+                [
+                    "--kind", "custom",
+                    "--template", "extreme_technical",
+                    "--design-seed", "73",
+                    "--output", str(path),
+                ]
+            )
+            self.assertEqual(result, 0)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            self.assertEqual(payload["schema_version"], 2)
+            self.assertEqual(payload["generator"]["generator_version"], 5)
+            self.assertIn(payload["generator"]["corner_count"], {12, 14, 16})
+            self.assertGreaterEqual(payload["generator"]["s_section_count"], 3)
+            self.assertGreaterEqual(payload["generator"]["near_90_corner_count"], 3)
 
 
 if __name__ == "__main__":

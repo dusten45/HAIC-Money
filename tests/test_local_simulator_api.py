@@ -80,8 +80,26 @@ class TestLocalSimulatorApi(unittest.TestCase):
         )
         self.assertEqual(response["schema_version"], 2)
         self.assertEqual(response["generator"]["template"], "technical")
-        self.assertEqual(response["generator"]["generator_version"], 3)
+        self.assertEqual(response["generator"]["generator_version"], 5)
         self.assertGreaterEqual(response["generator"]["corner_count"], 9)
+
+    def test_extreme_technical_map_generation(self):
+        response = self.request(
+            "POST",
+            "/api/maps/generate",
+            {
+                "map_kind": "custom",
+                "map_id": "custom-track-api-extreme",
+                "design_seed": 42,
+                "template": "extreme_technical",
+            },
+        )
+        self.assertEqual(response["schema_version"], 2)
+        self.assertEqual(response["generator"]["template"], "extreme_technical")
+        self.assertEqual(response["generator"]["generator_version"], 5)
+        self.assertIn(response["generator"]["corner_count"], {12, 14, 16})
+        self.assertGreaterEqual(response["generator"]["s_section_count"], 3)
+        self.assertGreaterEqual(response["generator"]["near_90_corner_count"], 3)
 
     def test_generated_track_rejects_widths_outside_the_safe_limit(self):
         with self.assertRaises(HTTPError) as error:
