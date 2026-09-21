@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-promotion-v1",
+  "frame_skip": 4,
+  "max_steps": 2000,
+  "training_track_ids": [1, 2, 3, 4],
+  "selection_order": ["unseen_finish_rate", "progress", "completed_lap_time"],
+  "partitions": {
+    "screen": {
+      "track_ids": [101, 102, 103],
+      "seeds": [31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008],
+      "repeats": 2
+    },
+    "confirmation": {
+      "track_ids": [111, 112, 113, 114],
+      "seeds": [31101, 31102, 31103, 31104, 31105, 31106, 31107, 31108],
+      "repeats": 2
+    },
+    "blind": {
+      "track_ids": [121, 122, 123],
+      "seeds": [31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208],
+      "repeats": 2
+    }
+  },
+  "provenance": {
+    "historical_pilot": "runs/20260921-043514_drqv2-pilot-131072/actor.pt",
+    "historical_signal": {"finishes": 4, "episodes": 24, "mean_progress": 0.8071804189673344, "mean_damage": 0.45},
+    "historical_grid_status": "Not recorded; exact disjointness from the undocumented historical pilot screen cannot be proven.",
+    "freshness": "Fixed before evaluating; disjoint track IDs and geometry seeds from every documented previous evaluation. All geometry seeds reserved from new training.",
+    "historical_ppo_status": "Unmatched historical evidence only; reward, representation and effective sampler streams differ. No causal algorithm-only comparison claimed."
+  },
+  "gates": {
+    "screen": "Nonzero canonical completion plus exact two-reload traces and CPU operational eligibility.",
+    "confirmation": "Freeze the screen-selected actor hash before fresh confirmation. Nonzero finishes on both identical independent reload passes; repeats are a determinism test, not additional independent cells.",
+    "scale_up": "Screen and confirmation pass; four training seeds with the same indexed sampled-track stream and explicit CPU checkpoint selection. Not final submission promotion.",
+    "blind": "Only the frozen selected candidate after confirmation. No selection or tuning on blind cells.",
+    "submission": "Repeated unseen completion, blind and CPU Torch 2.1 package gates; no package release from progress alone."
+  },
+  "matched_scale_up": {
+    "training_seeds": [0, 1, 2, 3],
+    "total_steps_per_seed": 1048576,
+    "checkpoint_interval": 262144,
+    "track_ids": [1, 2, 3, 4],
+    "track_sampler_seed": 917,
+    "sampled_track_protocol": "numpy.default_rng(917): independently draw track ID and uint32 geometry seed each episode, reject all protocol seeds. Equal episode-index streams, not equal consumed prefix lengths.",
+    "replay_capacity": 100000,
+    "warmup_steps": 10000,
+    "batch_size": 64,
+    "updates_per_step": 1,
+    "reward": "raw official reward; no normalization, shaping, collision penalty or smoothing",
+    "budget_comparator": "1048576 high-level decisions matches historical PPO budget only; no historical PPO run is a fully matched frozen-contract control.",
+    "freshness_after_selection": "The confirmation and blind partitions above certify only the pilot decision. Scale-up requires new pre-registered confirmation/blind cells, never reuse these for final promotion."
+  }
+}
