@@ -147,6 +147,7 @@ class TestSimulatorCli(unittest.TestCase):
             self.assertEqual(result, 0)
             payload = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual(payload["schema_version"], 2)
+            self.assertEqual(payload["generator"]["template"], "extreme_technical")
             self.assertEqual(payload["generator"]["generator_version"], 5)
             self.assertIn(payload["generator"]["corner_count"], {12, 14, 16})
             self.assertGreaterEqual(payload["generator"]["s_section_count"], 3)
