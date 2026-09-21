@@ -54,6 +54,10 @@ db.sqlite3-journal
 # Versioned experiment artifacts
 !runs/**/train.log
 runs/_latest
+# Keep newly generated DrQ weights/replay and evaluation tensors local.
+runs/**/*.pt
+evaluations/**/candidates/*.pt
+evaluations/**/*.npz
 
 instance/
 .webassets-cache
