@@ -687,7 +687,7 @@ def snapshot_candidates(temporary_dir: Path, candidates) -> None:
         snapshot_sha256 = sha256_file(archive)
         if snapshot_sha256 != candidate["archive_sha256"]:
             raise RuntimeError(f"checkpoint changed while snapshotting: {candidate['source_path']}")
-        candidate["evaluation_archive_path"] = str(archive.relative_to(temporary_dir))
+        candidate["evaluation_archive_path"] = archive.relative_to(temporary_dir).as_posix()
         candidate["evaluation_archive_sha256"] = snapshot_sha256
         if candidate.get("vecnormalize_path"):
             vecnormalize_source = Path(candidate["vecnormalize_path"])
@@ -698,8 +698,8 @@ def snapshot_candidates(temporary_dir: Path, candidates) -> None:
                 raise RuntimeError(
                     f"VecNormalize changed while snapshotting: {vecnormalize_source}"
                 )
-            candidate["evaluation_vecnormalize_path"] = str(
-                vecnormalize_archive.relative_to(temporary_dir)
+            candidate["evaluation_vecnormalize_path"] = (
+                vecnormalize_archive.relative_to(temporary_dir).as_posix()
             )
             candidate["evaluation_vecnormalize_sha256"] = vecnormalize_snapshot_sha256
         candidate["_worker_model_path"] = str(archive)

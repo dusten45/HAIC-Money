@@ -2,13 +2,14 @@ import tempfile
 import unittest
 import hashlib
 import json
+import sys
 import zipfile
 from pathlib import Path
 
 import torch
 
 from action_smoothing import canonical_action_smoothing, normalize_action_smoothing
-from agent import Baseline1Actor
+from agent import Baseline1Actor, MODEL_FILENAME
 from export_policy import export_payload
 from package_submission import (
     build_submission,
@@ -33,7 +34,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_builds_root_only_submission_archive(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             archive_path = directory_path / "submission.zip"
             torch.save(
                 export_payload(
@@ -52,20 +53,20 @@ class TestSubmissionPackage(unittest.TestCase):
                         "agent.py",
                         "action_smoothing.py",
                         "action_representation.py",
-                        "model.pt",
+                        MODEL_FILENAME,
                     },
                 )
 
     def test_smoke_test_resets_and_runs_two_actions(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             archive_path = directory_path / "submission.zip"
             torch.save(Baseline1Actor().state_dict(), model_path)
 
             build_submission(ROOT / "agent.py", model_path, archive_path)
 
-            result = smoke_submission(archive_path, str(ROOT / ".venv/bin/python"))
+            result = smoke_submission(archive_path, sys.executable)
 
         self.assertEqual(result["shape"], [3])
         self.assertTrue(result["finite"])
@@ -85,7 +86,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_records_submission_provenance(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             source_model_path = directory_path / "source.zip"
             torch.save(Baseline1Actor().state_dict(), model_path)
             source_model_path.write_bytes(b"source-model")
@@ -120,7 +121,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_records_periodic_checkpoint_normalizer_provenance(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             checkpoint_dir = directory_path / "checkpoints"
             checkpoint_dir.mkdir()
             source_model_path = checkpoint_dir / "ppo_baseline_10_steps.zip"
@@ -152,7 +153,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_cleans_partial_record_when_source_is_invalid(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             torch.save(Baseline1Actor().state_dict(), model_path)
             submissions_dir = directory_path / "submissions"
 
@@ -172,7 +173,7 @@ class TestSubmissionPackage(unittest.TestCase):
     def test_rejects_model_source_smoothing_mismatch(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
-            model_path = directory_path / "model.pt"
+            model_path = directory_path / MODEL_FILENAME
             source_model_path = directory_path / "source.zip"
             torch.save(
                 {

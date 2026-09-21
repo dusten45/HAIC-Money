@@ -107,10 +107,14 @@ class TestEvaluatePolicy(unittest.TestCase):
             directory_path = Path(directory)
             source = directory_path / "source.zip"
             source.write_bytes(b"original")
+            vecnormalize_source = directory_path / "source.vecnormalize.pkl"
+            vecnormalize_source.write_bytes(b"statistics")
             candidate = {
                 "candidate_id": "candidate",
                 "source_path": str(source),
                 "archive_sha256": hashlib.sha256(b"original").hexdigest(),
+                "vecnormalize_path": str(vecnormalize_source),
+                "vecnormalize_sha256": hashlib.sha256(b"statistics").hexdigest(),
             }
             output = directory_path / "output"
             output.mkdir()
@@ -120,6 +124,10 @@ class TestEvaluatePolicy(unittest.TestCase):
 
             self.assertEqual((output / "candidates/candidate.zip").read_bytes(), b"original")
             self.assertEqual(candidate["evaluation_archive_path"], "candidates/candidate.zip")
+            self.assertEqual(
+                candidate["evaluation_vecnormalize_path"],
+                "candidates/candidate.vecnormalize.pkl",
+            )
 
     def test_runtime_snapshot_includes_train_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:

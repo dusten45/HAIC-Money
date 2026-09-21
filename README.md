@@ -54,8 +54,11 @@ python -c "import gymnasium, Box2D, torch, numpy, cv2; print('설치 완료')"
 python local_runner.py --track-id 1 --seed 42
 ```
 
-기본 `agent.py`는 조향이나 제동 없이 가속하는 예시입니다. 정상적으로 창이 열리고
-차량이 움직이면 환경 설치가 완료된 것입니다.
+`Agent`는 기존 baseline `model.pt`와 HAIC visual-policy `policy.pt` 실행 형식을 모두
+지원합니다. `model.pt`가 있으면 기존 baseline을 사용하고, HAIC checkpoint나 설정을 지정했거나
+baseline checkpoint가 없으면 `policy.pt`/선택적 `dynamics.pt` 경로를 사용합니다. HAIC 개발
+모드의 `auto` 설정은 학습 정책을 불러올 수 없으면 픽셀 corridor controller로 대체할 수 있지만,
+strict 설정의 inference ZIP은 유효한 학습 checkpoint가 없으면 실행을 거부합니다.
 
 주요 옵션:
 
@@ -438,6 +441,9 @@ python export_policy.py \
 `action_smoothing.py`가 포함됩니다. `agent.py`는 Stable-Baselines3를 import하지
 않습니다.
 
+HAIC PPO/CEM 형식의 inference-only ZIP은 별도 `training.package_submission` 경로로 생성하며,
+`policy.pt`, `dynamics.pt`, `agent.py`, 필요한 `haic_agent` 모듈을 포함합니다.
+
 ### 독립 checkpoint 평가
 
 `evaluate_policy.py`는 학습 run을 만들거나 `runs/_latest`를 바꾸지 않고, CPU
@@ -510,3 +516,161 @@ python package_submission.py \
 
 현재 작업 공간에는 Python 3.11 Docker가 없으므로, 업로드 전 Python 3.11 Linux 환경에서는
 같은 명령에 `--python python3.11`을 지정해 다시 확인해야 합니다.
+
+## 13. 시각 PPO 및 학습된 CEM 계획기 실험
+
+아래 경로는 이 저장소의 `variables-6` 환경에서만 학습용 상태 레이블을 읽습니다. 제출
+에이전트는 84×84 흑백 프레임 네 장과 ZIP 안의 가중치만 사용합니다.
+
+### 개발 가상환경
+
+공식 `requirements.txt`는 평가 Linux 환경을 위한 고정 파일이므로 수정하지 않습니다. 현재
+Windows 개발 환경에서 `box2d-py` 빌드가 SWIG 단계에서 실패하면, 공식 설치 뒤 개발용 wheel만
+추가로 설치합니다.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pip install Box2D==2.3.10
+```
+
+### 학습과 예측 모델 재학습
+
+먼저 실제 PPO rollout/update를 실행하고, 같은 정책 checkpoint에서 latent dynamics를 다시
+학습합니다. 아래 256 decision update는 실험 기준선일 뿐 대회 성능을 뜻하지 않습니다.
+
+```powershell
+python -m training.train_policy --output artifacts/haic/ppo --total-steps 256 --max-decisions 64
+python -m training.train_dynamics --output artifacts/haic/dynamics --steps 128 --max-decisions 64 `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt
+```
+
+### 보류 시드 평가
+
+평가기는 train/tune/held-out tuple이 겹치면 실패합니다. tune split에서 horizon, population,
+uncertainty cost 후보를 먼저 비교하고, 그 뒤 같은 10개 held-out tuple에서 PPO-only와 PPO+CEM을
+비교합니다. `episodes.jsonl`에는 완료·DNF·오류를 모두 남기고 `summary.json`에는 latency와
+집계를 남깁니다.
+
+```powershell
+python -m training.evaluate_closed_loop `
+  --output artifacts/haic/evaluation `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt `
+  --dynamics-checkpoint artifacts/haic/dynamics/dynamics.pt
+```
+
+기본값은 행동 호출당 4.5초, episode cap 2,000 decision입니다. 빠른 반복은 작은 budget을
+명시해 별도 보고서에 저장합니다. 2026-09-20 검증에서 0.1초 budget, 2,000 decision cap으로
+10개 held-out tuple을 비교했습니다. 두 모드 모두 10개 전부 자연 off-track DNF였으며 평균
+진행률은 PPO-only `0.077411`, PPO+CEM `0.074530`이었습니다. 4.5초 budget의 PPO-only 전체
+에피소드도 별도로 측정했고 268 decision 뒤 off-track으로 종료했습니다. 빠른 2,000-cap 결과는
+CEM의 대회 성능을 보장하지 않으므로 제출 기본값은 PPO-only입니다.
+
+### 제출 ZIP
+
+아래 명령은 ZIP 루트에 `agent.py`, 필요한 `haic_agent` 추론 모듈, `policy.pt`, `dynamics.pt`만
+넣습니다. 깨끗한 임시 디렉터리에서 CPU import, 두 번의 reset/act, 유한 행동, 5초 호출 제한과
+프로세스 RSS 1 GiB를 확인합니다. `--disable-planner`는 tune 결과가 충분히 입증되지 않은 현재
+기준선의 보수적 PPO-only 제출 설정입니다.
+
+```powershell
+python -m training.package_submission `
+  --policy-checkpoint artifacts/haic/ppo/policy.pt `
+  --dynamics-checkpoint artifacts/haic/dynamics/dynamics.pt `
+  --evaluation-summary artifacts/haic/task5-eval-fast-fullcap/summary.json `
+  --output artifacts/haic/submission/submission.zip `
+  --smoke-test
+```
+
+현재 256-decision PPO와 128-transition dynamics는 학습·추론 경로의 pilot입니다. 완주율과
+대회 성능은 아직 입증되지 않았습니다. 전체 이미지 CNN과 HUD ROI branch를 같은 96개 고유
+decision frame에서 비교한 오차 기록은 `artifacts/haic/task5-hud-validation-20.json`에 있습니다.
+HUD branch의 보조 오차 개선은 미미했고 steering/yaw는 약간 악화되어, branch를 끌 수 있는 구조를
+유지했습니다. 이 HUD 결과는 한 track/seed만 사용했으므로 일반화 근거로 보지 않습니다.
+
+화면의 아스팔트 띠와 밝은 장애물을 추적하는 `VisionCorridorAgent`는 train split에서만 PPO actor의
+시연을 수집하고, 짧은 behavior-cloning 워밍업에 씁니다. PPO update가 시작된 뒤 교사 손실은
+사용하지 않습니다. 최종 `Agent`와 제출 ZIP은 학습된 visual actor만 행동에 사용하며 교사 모듈은
+ZIP에서 제외합니다. 과거 corridor-only 후보의 완주 기록은 교사 성능으로만 취급하고 학습 정책의
+SOTA나 제출 후보로 계산하지 않습니다.
+
+비교 episode별 기록과 요약은 `artifacts/haic/task5-eval-fast-fullcap/episodes.jsonl` 및
+`summary.json`에 있습니다. 보류 시드 비교에서 CEM이 개선되지 않아 생성된 제출 ZIP은 계획기를
+끄며, 나중에 더 오래 학습한 checkpoint에서 개선이 확인되면 요약 JSON을 전달해 같은 패키저로
+재생성할 수 있습니다.
+
+## 14. Track Lab 사이트 맵으로 학습·평가
+
+`training/maps/site/`에는 Track Lab 웹 UI에서 저장한 technical 맵 4개와 split manifest가
+있습니다. 네 맵 모두 중심선·도로 폭 8·사용자 장애물 5개를 그대로 보존합니다. canonical
+`custom-track-haic-obstacles-20260920`과 별도 train 맵은 PPO transition 수집에 쓰고, 다른
+맵 하나는 tune, 네 번째 맵은 최종 held-out 비교에만 씁니다. held-out의 다섯 항목은 **한 개
+맵 설계에서 환경 seed만 바꾼 반복**이므로, 다섯 개의 독립적인 도로 모양으로 일반화했다고
+해석하면 안 됩니다.
+
+커스텀 중심선으로 CarRacing 도로 타일과 finish line을 구성합니다. 장애물 progress/lateral/
+radius는 사이트의 정의대로 Box2D 원형 장애물 위치로 옮기고, 수집 환경 warmup 뒤 붙입니다.
+물리 접촉은 기존 충돌 손상 시스템으로 전달됩니다. 폐쇄루프 JSONL에는 map ID, map 종류,
+장애물 수, seed, 충돌, 손상, 진행률, 종료 사유와 act latency가 남습니다.
+
+현재 페달 수정 후보는 정책 안에서 `steer`와 signed longitudinal 두 값을 학습하고, 실행할 때
+기존 `[steer, gas, brake]` 형식으로 변환합니다. 양수 longitudinal은 최대 가속 `0.02`, 음수는
+최대 제동 `0.03`으로 바뀌므로 한 행동에서 가속과 제동이 겹치지 않습니다. 사이트 튜닝 지도에서
+입력축별 고정 행동을 비교해 외부 steer `-0.12`가 첫 굽이에 맞는 방향임을 확인했고, 초기 행동은
+조향 `-0.12`, 가속 `0.01` 근처로 둡니다. 같은 출발 상태에서 제동 `0.01`은 속도를 `12.14`에서
+`7.26`으로 낮췄고, `0.03`은 20결정 내 정지시켜 제동 상한을 낮췄습니다. 측정 원본은
+`artifacts/haic/action-axis-calibration-v1.json`에 있습니다. 이는 초기 정책값일 뿐이며,
+이후 steering과 pedal 선택은 화면을 입력받는 PPO가 학습합니다. 이 제한은
+성능이 확인된 제출 설정이 아니므로 시드별 tune 및 held-out 결과와 함께 판단해야 합니다. 초기
+탐색 표준편차는 steer `0.35`, signed pedal `0.4`로 두어 가속뿐 아니라 제동 행동도 PPO rollout에
+나오게 합니다. 각 update의 실제 steer/gas/brake 비율을 학습 결과에 기록합니다. 추가로 훈련 보상에는
+시뮬레이터에서만 계산하는 차선 중심·방향 오차를 넣어, PPO가 같은 조향을 고정 출력하지 않고
+화면 상태에 맞춰 조정하도록 돕습니다. 이 기하 정답은 제출 추론에 전달하지 않습니다.
+
+후속 trace에서 v6/v7의 deterministic actor가 steer 약 `-0.13`, gas 약 `0.0115`를 거의 고정
+출력했고, route reward만으로는 화면 상태에 따른 조향 변화가 생기지 않았습니다. 그래서 policy
+입력과 같은 시점에 수집한 lateral offset과 heading error의 sine/cosine도 시각 보조 목표로
+추가했습니다. 이 라벨은 현재 관측 프레임과 같은 상태에서 읽으며, 이전처럼 행동 한 번 뒤의
+상태를 현재 화면의 정답으로 쓰지 않습니다. PPO는 계속 최종 행동을 학습하고 이 보조 헤드는
+시각 표현을 학습시키는 용도입니다. 보조 목표를 늘린 모델은 가중치 차원이 달라지므로 이전 ZIP의
+체크포인트와 섞지 말고 새로 학습한 후 tune/held-out 결과를 확인합니다.
+
+현재 learner는 train 맵에서만 교사 픽셀·행동 쌍을 수집하고, 기본 3 epoch 동안 actor 평균에
+MSE를 적용한 뒤 같은 actor를 PPO로 fine-tune합니다. 시연은 episode당 최대 800 decision에서
+자르며 픽셀은 uint8로 저장했다가 batch 단위로 `[0, 1]` 정규화합니다. tune/held-out은 교사 수집과
+워밍업에 전달되지 않습니다. 워밍업 손실, 시연 수, 메모리 크기, 수집·학습 시간은 checkpoint
+metadata와 학습 JSON에 남습니다. `--teacher-warmup-epochs 0`은 BC 없이 비교하는 옵션입니다.
+
+```powershell
+python -m training.train_policy `
+  --site-map-split training/maps/site/site_map_split.json `
+  --output artifacts/haic/site-map-ppo `
+  --total-steps 8192 --updates 4 --max-decisions 2000 `
+  --evaluation-max-decisions 800 `
+  --teacher-warmup-epochs 3 --teacher-max-decisions 800
+
+python -m training.train_dynamics `
+  --site-map-split training/maps/site/site_map_split.json `
+  --output artifacts/haic/site-map-dynamics `
+  --policy-checkpoint artifacts/haic/site-map-ppo/policy.pt `
+  --steps 2000 --max-decisions 500
+
+python -m training.evaluate_closed_loop `
+  --site-map-split training/maps/site/site_map_split.json `
+  --output artifacts/haic/site-map-evaluation `
+  --policy-checkpoint artifacts/haic/site-map-ppo/policy.pt `
+  --dynamics-checkpoint artifacts/haic/site-map-dynamics/dynamics.pt `
+  --plan-budget 4.5 --max-decisions 2000
+```
+
+8,192 transition은 네 번의 on-policy PPO update로 나눠 사용합니다. 각 update 뒤 새 정책으로
+다음 rollout을 수집하고, tune 성능이 가장 높은 체크포인트를 보관합니다. 수집기 decision cap에서
+episode를 끊을 때는 GAE에 truncation 경계를 전달해 다음 reset episode의 보상이 이전 주행에
+섞이지 않게 합니다. critic이 큰 점수 합계에 끌려가지 않도록 학습 보상은 `0.1`배로 두고,
+속도·바퀴 회전·조향·yaw 보조 정답도 물리 단위 범위로 정규화합니다. 기존 256-step ZIP보다
+transition을 32배 늘린 비교 후보입니다. update 사이의 빠른 tune 선택은 800 decision cap으로
+실행하고, 최종 tune은 전체 2,000 decision cap으로 다시 평가합니다. 실행 결과에는 rollout,
+PPO update, tune 평가, HUD ablation의 경과 시간이 각각 기록됩니다. ZIP 제출
+전에는 tune 성능으로 정책을 고르고, held-out에서 PPO-only와 PPO+CEM을 같은 map/seed에 대해
+비교해야 합니다. smoke 실행은 연결 상태만 확인하며 성능 근거로 쓰지 않습니다.
