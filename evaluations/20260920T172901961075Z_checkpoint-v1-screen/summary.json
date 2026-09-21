@@ -1,0 +1,273 @@
+[
+  {
+    "action_control": {
+      "input_channels": 4,
+      "method": "none",
+      "schema_version": 1
+    },
+    "action_control_fingerprint": "4bfab49639a57a6f3c8ea5a8a13f734c4309fd634532a3d7ba70b6bbb34c0b99",
+    "action_control_present": false,
+    "action_smoothing": {
+      "alpha": [
+        0.6,
+        1.0,
+        1.0
+      ],
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "alpha",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "action_smoothing_fingerprint": "6d3b7538afb4f66958009337b736356091b7a3cd82b73d93475ebd45a323c418",
+    "action_smoothing_present": true,
+    "aliases": [
+      "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model.zip"
+    ],
+    "archive_sha256": "345aa296994fe895050a764f9fac19f13245283d8b755fed0311663a95061ea7",
+    "by_track": {
+      "1": {
+        "avg_damage": 0.5,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.43086329320871053,
+        "avg_reward": 326.32234288227124,
+        "avg_steering_delta_abs_mean": 0.21597502380609512,
+        "avg_steps": 244.0,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      },
+      "2": {
+        "avg_damage": 0.7,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.2560770788289331,
+        "avg_reward": 198.63612850249612,
+        "avg_steering_delta_abs_mean": 0.2019236534833908,
+        "avg_steps": 126.25,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "3": {
+        "avg_damage": 1.0,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.27286210976927505,
+        "avg_reward": 212.02115944283935,
+        "avg_steering_delta_abs_mean": 0.24634342640638351,
+        "avg_steps": 134.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 4
+        }
+      },
+      "4": {
+        "avg_damage": 0.85,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.5529188398211852,
+        "avg_reward": 446.47788949473806,
+        "avg_steering_delta_abs_mean": 0.2735299840569496,
+        "avg_steps": 248.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 3,
+          "off_track": 1
+        }
+      }
+    },
+    "candidate_id": "b6a6ec64e38f181c-6d3b7538-4bfab496",
+    "canonical_episodes": 16,
+    "determinism_audited": false,
+    "eligible": false,
+    "evaluation_archive_path": "candidates/b6a6ec64e38f181c-6d3b7538-4bfab496.zip",
+    "evaluation_archive_sha256": "345aa296994fe895050a764f9fac19f13245283d8b755fed0311663a95061ea7",
+    "evaluation_vecnormalize_path": "candidates/b6a6ec64e38f181c-6d3b7538-4bfab496.vecnormalize.pkl",
+    "evaluation_vecnormalize_sha256": "eb21bd5ede384577b9b745006c88a1367f16614be944926fbb63a31bfe5394b7",
+    "is_comparator": false,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "b6a6ec64e38f181c3f4ac7de8ec6a77d48c51d90c055a24fc9bbe4398cb5140d",
+    "run_config_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/config.json",
+    "run_config_sha256": "468cd18d582d3e31f5f1676c624f3eaf48c7f2c1d8634cad4bc6cc515aa93cea",
+    "run_frame_skip": 4,
+    "run_max_steps": 2000,
+    "source_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model.zip",
+    "summary": {
+      "avg_damage": 0.7625,
+      "avg_lap_time_ms": null,
+      "avg_progress": 0.3781803304070259,
+      "avg_reward": 295.8643800805862,
+      "avg_steering_delta_abs_mean": 0.23444302193820477,
+      "avg_steps": 188.4375,
+      "best_lap_time_ms": null,
+      "finish_rate": 0.0,
+      "n_episodes": 16,
+      "termination_reasons": {
+        "crash": 10,
+        "off_track": 6
+      }
+    },
+    "vecnormalize_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "eb21bd5ede384577b9b745006c88a1367f16614be944926fbb63a31bfe5394b7"
+  },
+  {
+    "action_control": {
+      "input_channels": 4,
+      "method": "none",
+      "schema_version": 1
+    },
+    "action_control_fingerprint": "4bfab49639a57a6f3c8ea5a8a13f734c4309fd634532a3d7ba70b6bbb34c0b99",
+    "action_control_present": false,
+    "action_smoothing": {
+      "alpha": 1.0,
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "none",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "action_smoothing_fingerprint": "be3de0136a18ad729ca9ecbcf807365f01f3727878faeb8dac76972e70fdcdfb",
+    "action_smoothing_present": true,
+    "aliases": [
+      "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model.zip"
+    ],
+    "archive_sha256": "68b98893f9f0111250a6f92e233849b9933e80e1ef858f03be1729f27530e353",
+    "by_track": {
+      "1": {
+        "avg_damage": 0.7,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.2769361789655685,
+        "avg_reward": 209.59522863913259,
+        "avg_steering_delta_abs_mean": 0.3956582807004452,
+        "avg_steps": 151.0,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "2": {
+        "avg_damage": 0.44999999999999996,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.17645165402008922,
+        "avg_reward": 120.41070369365707,
+        "avg_steering_delta_abs_mean": 0.29822447523474693,
+        "avg_steps": 122.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      },
+      "3": {
+        "avg_damage": 0.65,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.3674654265342301,
+        "avg_reward": 270.22447620778985,
+        "avg_steering_delta_abs_mean": 0.37305524200201035,
+        "avg_steps": 225.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "4": {
+        "avg_damage": 0.55,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.6247064664728117,
+        "avg_reward": 489.5655161463569,
+        "avg_steering_delta_abs_mean": 0.33531777933239937,
+        "avg_steps": 320.5,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      }
+    },
+    "candidate_id": "9f18c5353f08b6bb-be3de013-4bfab496",
+    "canonical_episodes": 16,
+    "determinism_audited": false,
+    "eligible": false,
+    "evaluation_archive_path": "candidates/9f18c5353f08b6bb-be3de013-4bfab496.zip",
+    "evaluation_archive_sha256": "68b98893f9f0111250a6f92e233849b9933e80e1ef858f03be1729f27530e353",
+    "evaluation_vecnormalize_path": "candidates/9f18c5353f08b6bb-be3de013-4bfab496.vecnormalize.pkl",
+    "evaluation_vecnormalize_sha256": "73b800ba499c01ab1e4c6c276b18f843e3012aa53e51ef27de1da4e601293962",
+    "is_comparator": false,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "9f18c5353f08b6bb89187b546cc7bad13fe75de64960b28fff6ecc221e4dcb0d",
+    "run_config_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/config.json",
+    "run_config_sha256": "1242fd8de9d3af005e363130e010e68c3089caf780240a82b7cd2b0d7dfdec12",
+    "run_frame_skip": 4,
+    "run_max_steps": 2000,
+    "source_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model.zip",
+    "summary": {
+      "avg_damage": 0.5875,
+      "avg_lap_time_ms": null,
+      "avg_progress": 0.36138993149817483,
+      "avg_reward": 272.4489811717341,
+      "avg_steering_delta_abs_mean": 0.35056394431740046,
+      "avg_steps": 205.0,
+      "best_lap_time_ms": null,
+      "finish_rate": 0.0,
+      "n_episodes": 16,
+      "termination_reasons": {
+        "crash": 6,
+        "off_track": 10
+      }
+    },
+    "vecnormalize_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "73b800ba499c01ab1e4c6c276b18f843e3012aa53e51ef27de1da4e601293962"
+  }
+]

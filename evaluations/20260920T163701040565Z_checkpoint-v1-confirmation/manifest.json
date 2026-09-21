@@ -1,0 +1,121 @@
+{
+  "action_smoothing": null,
+  "action_smoothing_by_candidate": {
+    "9f18c5353f08b6bb-be3de013": {
+      "alpha": 1.0,
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "none",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "f9cba18ea8846d04-fff88850": {
+      "alpha": [
+        0.35,
+        1.0,
+        1.0
+      ],
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "alpha",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    }
+  },
+  "action_smoothing_fingerprints": [
+    "be3de0136a18ad729ca9ecbcf807365f01f3727878faeb8dac76972e70fdcdfb",
+    "fff88850218df807550b56f814a8da7d124af2c3c342e276f250afcd346b5d45"
+  ],
+  "cell_matrix": {
+    "repeats": 2,
+    "seeds": [
+      20101,
+      20102,
+      20103,
+      20104,
+      20105,
+      20106,
+      20107,
+      20108
+    ],
+    "track_ids": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "finished_at_utc": "2026-09-20T16:51:17.089403Z",
+  "frame_skip": 4,
+  "git": {
+    "commit": "116aa96ff41de67fc578b7977ca544652128aa83",
+    "dirty": true
+  },
+  "max_steps": 2000,
+  "protocol": "checkpoint-v1-confirmation",
+  "runtime": {
+    "cpu_environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "executable": "/workspace/HAIC-Money/.venv/bin/python",
+    "packages": {
+      "gymnasium": "0.29.1",
+      "numpy": "1.26.0",
+      "opencv-python": "4.8.1.78",
+      "stable-baselines3": "2.2.1",
+      "torch": "2.1.0"
+    },
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "python": "3.11.16 (main, Sep  1 2026, 14:18:37) [Clang 22.1.3 ]",
+    "runtime_sources": {
+      "action_smoothing.py": "c0c9199170e5fbaa15306d7ad3f99a5033c71765bdae1afd6ba1e27c6da05bf2",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "evaluate_policy.py": "9f7321645969ecf4dba87c2d7c56716242475108e2578e13e27f2fb8778763c7",
+      "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+      "train.py": "a4af559aeb58e9ec8b37ae7be662dac5e8af4b8c57fc946d0d9fe7f6ce88f590"
+    },
+    "torch_cuda": "12.1"
+  },
+  "schema_version": 1,
+  "started_at_utc": "2026-09-20T16:37:01.040744Z",
+  "timeout_seconds": 120
+}

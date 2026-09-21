@@ -1,0 +1,59 @@
+[
+  {
+    "action_control": {
+      "input_channels": 4,
+      "method": "none",
+      "schema_version": 1
+    },
+    "action_control_fingerprint": "4bfab49639a57a6f3c8ea5a8a13f734c4309fd634532a3d7ba70b6bbb34c0b99",
+    "action_control_present": false,
+    "action_smoothing": {
+      "alpha": [
+        0.6,
+        1.0,
+        1.0
+      ],
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "alpha",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "action_smoothing_fingerprint": "6d3b7538afb4f66958009337b736356091b7a3cd82b73d93475ebd45a323c418",
+    "action_smoothing_present": true,
+    "aliases": [
+      "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model.zip"
+    ],
+    "archive_sha256": "345aa296994fe895050a764f9fac19f13245283d8b755fed0311663a95061ea7",
+    "candidate_id": "b6a6ec64e38f181c-6d3b7538-4bfab496",
+    "evaluation_archive_path": "candidates/b6a6ec64e38f181c-6d3b7538-4bfab496.zip",
+    "evaluation_archive_sha256": "345aa296994fe895050a764f9fac19f13245283d8b755fed0311663a95061ea7",
+    "evaluation_vecnormalize_path": "candidates/b6a6ec64e38f181c-6d3b7538-4bfab496.vecnormalize.pkl",
+    "evaluation_vecnormalize_sha256": "eb21bd5ede384577b9b745006c88a1367f16614be944926fbb63a31bfe5394b7",
+    "is_comparator": false,
+    "norm_obs": false,
+    "policy_sha256": "b6a6ec64e38f181c3f4ac7de8ec6a77d48c51d90c055a24fc9bbe4398cb5140d",
+    "run_config_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/config.json",
+    "run_config_sha256": "468cd18d582d3e31f5f1676c624f3eaf48c7f2c1d8634cad4bc6cc515aa93cea",
+    "run_frame_skip": 4,
+    "run_max_steps": 2000,
+    "source_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model.zip",
+    "vecnormalize_path": "runs/20260920-165819_ppo-cnn-smoothing-steering-ema060-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "eb21bd5ede384577b9b745006c88a1367f16614be944926fbb63a31bfe5394b7"
+  }
+]

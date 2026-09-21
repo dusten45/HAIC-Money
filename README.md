@@ -372,6 +372,32 @@ python train.py --name ppo-cnn-baseline1-1
 - 학습 seed `42,1337,2024,777`로 seen 평가, holdout seed `10001`~`10008`로 best model 선택
 - holdout의 완주율, 평균 진행률, 평균 랩타임 순서로 `best_model.zip`을 선택
 - 마지막 rollout도 학습 종료 직후 평가하므로 최종 모델이 미평가 상태로 남지 않음
+- model 선택 평가는 저장된 checkpoint를 CPU에서 새로 load해 수행하고, best model은
+  다시 load해 per-episode 결과가 같은지 기록한다. 이는 GPU 학습 경로와 공식 CPU
+  제출 경로 사이의 수치적 궤적 차이를 조기에 드러내기 위한 검증이다.
+
+학습 worker는 기본적으로 매 episode마다 새 `(track_id, seed)`를 결정적으로
+sample한다. 따라서 `--track-ids 1,2,3`은 obstacle layout도 다양화하고, 도로
+geometry는 unsigned 32-bit seed 전체에서 새로 생성한다. sampler는 평가에 쓰는
+seed를 피하며, `--track-sampler-seed`로 재현할 수 있다. 예전의 고정 worker layout은
+비교 실험에서만 `--training-track-mode fixed`로 사용한다.
+
+완주를 아직 학습하지 못한 정책에는 training-only obstacle curriculum을 사용할 수
+있다. `--training-obstacles none`은 road geometry와 차량 물리는 유지하되 obstacle을
+만들지 않는다. 이 phase의 checkpoint를 저장한 뒤, paired VecNormalize state와 함께
+`--training-obstacles official`인 새 run으로 resume한다. `evaluate()`와 제출 검증은
+항상 official six-obstacle environment를 사용한다.
+
+충돌 때문에 실패하는 정책에는 `--collision-penalty 5.0` training-only ablation을
+사용할 수 있다. frame skip 동안 하나 이상 충돌한 agent action마다 native reward에서
+한 번만 차감하며, official evaluation과 submission에는 적용되지 않는다.
+
+bang-bang 조향을 비교할 때는 `--action-smoothing steering-ema`를 사용한다.
+EMA는 고수준 agent action마다 한 번 적용되고 episode reset에서 `[0, 0, 0]`으로
+초기화된다. 기본 alpha `0.35`는 조향에만 적용하며 gas/brake는 alpha `1.0`으로
+유지한다. 동일한 canonical config와 fingerprint가 training, CPU evaluation,
+export payload, submission Agent에 기록된다. `none`은 같은 stateful 경로의 alpha
+`1.0` control이다.
 
 resume 시에는 같은 checkpoint의 VecNormalize 통계가 자동으로 탐색됩니다.
 
@@ -408,8 +434,63 @@ python export_policy.py \
   --benchmark-calls 500
 ```
 
-제출 ZIP에는 export된 `model.pt`와 `agent.py`만 포함하면 됩니다. `agent.py`는
-Stable-Baselines3를 import하지 않습니다.
+제출 ZIP에는 export된 `model.pt`, `agent.py`, 그리고 stateful smoothing을 공유하는
+`action_smoothing.py`가 포함됩니다. `agent.py`는 Stable-Baselines3를 import하지
+않습니다.
+
+### 독립 checkpoint 평가
+
+`evaluate_policy.py`는 학습 run을 만들거나 `runs/_latest`를 바꾸지 않고, CPU
+single-thread deterministic action으로 checkpoint를 비교합니다. `checkpoint-v1`
+protocol은 `policy.pth` hash로 alias checkpoint를 제거하고, environment/source hash,
+per-episode action trace, damage, termination class, runtime을 immutable artifact로
+기록합니다.
+
+전체 checkpoint screen은 다음처럼 실행합니다. 이 protocol은 track ID `1`~`4`와
+unseen seed `20001`~`20004`의 고정 matrix를 사용한다.
+
+```bash
+python evaluate_policy.py \
+  --protocol checkpoint-v1-screen \
+  --run-dir runs/<run>
+```
+
+결과는 `evaluations/<UTC>_checkpoint-v1-screen/`에 원자적으로 생성된다. `summary.json`
+은 finish, 진행률, track별 결과를 정렬해 기록하고, `episodes.jsonl`은 모든 cell의
+원시 결과를 기록한다. `checkpoint-v1-confirmation`은 별도 seed 집합에서 각 cell을 두
+번 실행해 action trace와 종료 결과의 결정성을 검사한다. Screen은 model promotion을
+위한 결정성 audit을 수행하지 않으므로, screen의 상위 후보를 바로 선택하면 안 된다.
+
+confirmation에는 screen 상위 후보만 `--model`로 명시한다.
+
+```bash
+python evaluate_policy.py \
+  --protocol checkpoint-v1-confirmation \
+  --run-dir runs/<run> \
+  --model runs/<run>/checkpoints/ppo_baseline_<step>.zip
+```
+
+과거 정책을 비교만 하려면 `--legacy-model`을 명시한다. comparator는 결과에 포함되지만
+promotion 대상은 아니다.
+
+한 후보를 선택한 뒤에는 `checkpoint-v1-blind`를 한 번만 사용한다. 이 protocol은
+track ID `7,8,9`, seed `20201`~`20208`을 각 두 번 실행해 final generalization과
+결정성을 함께 확인한다.
+
+작은 임시 비교에는 ad-hoc mode를 사용할 수 있지만, 이 결과는 protocol 결과와 직접
+비교하거나 model selection에 사용하지 않는다.
+
+```bash
+python evaluate_policy.py \
+  --model runs/<run>/best_model.zip \
+  --model runs/<run>/model.zip \
+  --track-ids 1,2,3 \
+  --seeds 20001,20002,20003,20004,20005,20006,20007,20008 \
+  --output runs/<run>/broad-evaluation.json
+```
+
+새 정책의 model selection은 finish, 진행률, 랩타임 순으로 수행한다. screen/selection에
+사용한 seed와 track ID는 최종 보고용 grid에서 재사용하지 않는다.
 
 ### 제출 ZIP 검증
 

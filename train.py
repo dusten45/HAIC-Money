@@ -1,4 +1,7 @@
 import argparse
+from collections import Counter
+import hashlib
+import json
 import sys
 from pathlib import Path
 from typing import Sequence
@@ -11,6 +14,24 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
 
 import tracking
+from action_smoothing import (
+    action_control_fingerprint,
+    action_smoothing_fingerprint,
+    append_action_control_plane,
+    build_action_smoother,
+    canonical_action_smoothing,
+    normalize_action_smoothing,
+    normalize_action_control,
+    read_embedded_action_smoothing,
+    write_embedded_action_smoothing,
+    validate_action_control,
+)
+from action_representation import (
+    action_representation_fingerprint,
+    canonical_action_representation,
+    map_policy_action,
+    normalize_action_representation,
+)
 from core.vendor.car_racing import CarRacing
 from env_wrapper import CarEnvironment
 
@@ -22,10 +43,11 @@ CHECKPOINT_PREFIX = "ppo_baseline"
 VECNORM_FILENAME = "model_vecnormalize.pkl"
 BEST_MODEL_FILENAME = "best_model"
 BEST_VECNORM_FILENAME = "best_model_vecnormalize.pkl"
+UINT32_SEED_UPPER = 2**32
 
 
 class HaicTrack(gym.Wrapper):
-    def __init__(self, track_id, seed, max_steps, frame_skip=FRAME_SKIP):
+    def __init__(self, track_id, seed, max_steps, frame_skip=FRAME_SKIP, obstacles=True):
         raw_frame_budget = max_steps * frame_skip + RAW_FRAME_BUDGET_MARGIN
         inner = TimeLimit(
             CarRacing(continuous=True, render_mode=None),
@@ -35,9 +57,53 @@ class HaicTrack(gym.Wrapper):
         super().__init__(wrapped)
         self.track_id = track_id
         self.seed = seed
+        self.obstacles = obstacles
 
     def reset(self, *, seed=None, options=None):
-        return self.env.reset(seed=self.seed, options={"track_id": self.track_id})
+        reset_options = {"track_id": self.track_id} if self.obstacles else None
+        observation, info = self.env.reset(seed=self.seed, options=reset_options)
+        info = dict(info or {})
+        info.update(track_id=self.track_id, seed=self.seed)
+        return observation, info
+
+
+def sample_worker_seeds(master_seed: int, n_envs: int) -> list[int]:
+    sequences = np.random.SeedSequence(master_seed).spawn(n_envs)
+    return [int(sequence.generate_state(1, dtype=np.uint32)[0]) for sequence in sequences]
+
+
+def sample_track_seed(rng, excluded_seeds: frozenset[int]) -> int:
+    while True:
+        seed = int(rng.integers(0, UINT32_SEED_UPPER, dtype=np.uint64))
+        if seed not in excluded_seeds:
+            return seed
+
+
+class SampledHaicTrack(HaicTrack):
+    """Training environment that draws a fresh official track for every episode."""
+
+    def __init__(
+        self,
+        track_ids,
+        sampler_seed,
+        max_steps,
+        frame_skip=FRAME_SKIP,
+        excluded_seeds=(),
+        obstacles=True,
+    ):
+        if not track_ids:
+            raise ValueError("track_ids must contain at least one value")
+        super().__init__(int(track_ids[0]), 0, max_steps, frame_skip, obstacles)
+        self._track_ids = tuple(int(track_id) for track_id in track_ids)
+        self._rng = np.random.default_rng(sampler_seed)
+        self._excluded_seeds = frozenset(int(seed) for seed in excluded_seeds)
+
+    def reset(self, *, seed=None, options=None):
+        if seed is not None:
+            self._rng = np.random.default_rng(seed)
+        self.track_id = int(self._rng.choice(self._track_ids))
+        self.seed = sample_track_seed(self._rng, self._excluded_seeds)
+        return super().reset()
 
 
 class FinishBonus(gym.Wrapper):
@@ -50,11 +116,149 @@ class FinishBonus(gym.Wrapper):
         return observation, reward, terminated, truncated, info
 
 
-def build_env(track_id, seed, max_steps, frame_skip, reward_shaping):
-    env = HaicTrack(track_id, seed, max_steps, frame_skip)
+class CollisionPenalty(gym.Wrapper):
+    def __init__(self, env, penalty):
+        super().__init__(env)
+        if not np.isfinite(penalty) or penalty < 0:
+            raise ValueError("collision penalty must be finite and non-negative")
+        self.penalty = float(penalty)
+
+    def step(self, action):
+        observation, reward, terminated, truncated, info = self.env.step(action)
+        if info.get("collision", False):
+            reward -= self.penalty
+        return observation, reward, terminated, truncated, info
+
+
+class ActionSmoothing(gym.Wrapper):
+    """Apply one stateful smoother per environment action step."""
+
+    def __init__(self, env, config, action_control=None):
+        super().__init__(env)
+        self.action_smoothing = normalize_action_smoothing(config)
+        self.action_control = normalize_action_control(action_control)
+        validate_action_control(self.action_smoothing, self.action_control)
+        self.smoother = build_action_smoother(self.action_smoothing)
+        self.last_action = None
+        if self.action_control["input_channels"] == 5:
+            shape = self.observation_space.shape
+            if len(shape) != 3 or shape[0] != 4:
+                raise ValueError("action control expects 4-channel image observations")
+            self.observation_space = gym.spaces.Box(
+                low=0.0,
+                high=1.0,
+                shape=(5, shape[1], shape[2]),
+                dtype=np.float32,
+            )
+
+    def _augment_observation(self, observation):
+        return append_action_control_plane(
+            observation,
+            self.action_control,
+            self.smoother.last_action,
+        )
+
+    def reset(self, *, seed=None, options=None):
+        result = self.env.reset(seed=seed, options=options)
+        self.smoother.reset(initial_action=self.action_smoothing["initial_action"])
+        self.last_action = np.asarray(self.smoother.last_action, dtype=np.float32)
+        observation, info = result
+        return self._augment_observation(observation), info
+
+    def step(self, action):
+        smoothed = np.asarray(self.smoother.smooth(action), dtype=np.float32)
+        self.last_action = smoothed.copy()
+        observation, reward, terminated, truncated, info = self.env.step(smoothed)
+        return self._augment_observation(observation), reward, terminated, truncated, info
+
+
+class MultiDiscreteActionAdapter(gym.Wrapper):
+    def __init__(self, env, action_representation):
+        super().__init__(env)
+        self.action_representation = normalize_action_representation(action_representation)
+        if not self.action_representation["method"].startswith("multidiscrete_steer_longitudinal_"):
+            raise ValueError("adapter requires MultiDiscrete action representation")
+        self.action_space = gym.spaces.MultiDiscrete(self.action_representation["nvec"])
+        self.last_policy_action = None
+
+    def step(self, action):
+        policy_action = np.asarray(action, dtype=np.int64)
+        continuous_action = map_policy_action(policy_action, self.action_representation)
+        self.last_policy_action = policy_action.copy()
+        return self.env.step(continuous_action)
+
+
+def action_smoothing_from_args(method: str, alpha: float):
+    if method == "none":
+        return normalize_action_smoothing()
+    if method == "steering-ema":
+        return canonical_action_smoothing("alpha", [float(alpha), 1.0, 1.0])
+    raise ValueError(f"unsupported action smoothing method: {method}")
+
+
+def action_control_from_args(method: str):
+    return normalize_action_control(method and {"method": method})
+
+
+def action_representation_from_args(method: str):
+    return canonical_action_representation(method)
+
+
+def build_env(
+    track_id,
+    seed,
+    max_steps,
+    frame_skip,
+    reward_shaping,
+    obstacles=True,
+    collision_penalty=0.0,
+    action_smoothing=None,
+    action_control=None,
+    action_representation=None,
+):
+    env = HaicTrack(track_id, seed, max_steps, frame_skip, obstacles)
     env = TimeLimit(env, max_episode_steps=max_steps)
+    if collision_penalty:
+        env = CollisionPenalty(env, collision_penalty)
     if reward_shaping:
         env = FinishBonus(env)
+    if action_smoothing is not None or action_control is not None:
+        env = ActionSmoothing(env, action_smoothing, action_control)
+    if normalize_action_representation(action_representation)["method"] != "continuous_box":
+        env = MultiDiscreteActionAdapter(env, action_representation)
+    return env
+
+
+def build_sampled_env(
+    track_ids,
+    sampler_seed,
+    max_steps,
+    frame_skip,
+    reward_shaping,
+    excluded_seeds,
+    obstacles,
+    collision_penalty=0.0,
+    action_smoothing=None,
+    action_control=None,
+    action_representation=None,
+):
+    env = SampledHaicTrack(
+        track_ids,
+        sampler_seed,
+        max_steps,
+        frame_skip,
+        excluded_seeds,
+        obstacles,
+    )
+    env = TimeLimit(env, max_episode_steps=max_steps)
+    if collision_penalty:
+        env = CollisionPenalty(env, collision_penalty)
+    if reward_shaping:
+        env = FinishBonus(env)
+    if action_smoothing is not None or action_control is not None:
+        env = ActionSmoothing(env, action_smoothing, action_control)
+    if normalize_action_representation(action_representation)["method"] != "continuous_box":
+        env = MultiDiscreteActionAdapter(env, action_representation)
     return env
 
 
@@ -66,14 +270,55 @@ def make_vec_env(
     frame_skip: int,
     reward_shaping: bool,
     vec_type: str = "subproc",
+    training_track_mode: str = "sampled",
+    track_sampler_seed: int = 917,
+    excluded_seeds=(),
+    training_obstacles: str = "official",
+    collision_penalty: float = 0.0,
+    action_smoothing=None,
+    action_control=None,
+    action_representation=None,
 ):
+    if training_track_mode not in {"fixed", "sampled"}:
+        raise ValueError(f"unsupported training_track_mode: {training_track_mode}")
+    if training_obstacles not in {"official", "none"}:
+        raise ValueError(f"unsupported training_obstacles: {training_obstacles}")
+    if not np.isfinite(collision_penalty) or collision_penalty < 0:
+        raise ValueError("collision_penalty must be finite and non-negative")
+    obstacles = training_obstacles == "official"
+
     def env_fns():
+        worker_seeds = sample_worker_seeds(track_sampler_seed, n_envs)
         for i in range(n_envs):
             track_id = int(track_ids[i % len(track_ids)])
             seed = int(seeds[i % len(seeds)])
-            yield lambda tid=track_id, sd=seed: build_env(
-                tid, sd, max_steps, frame_skip, reward_shaping
-            )
+            if training_track_mode == "sampled":
+                yield lambda sampler_seed=worker_seeds[i]: build_sampled_env(
+                    track_ids,
+                    sampler_seed,
+                    max_steps,
+                    frame_skip,
+                    reward_shaping,
+                    excluded_seeds,
+                    obstacles,
+                    collision_penalty,
+                    action_smoothing,
+                    action_control,
+                    action_representation,
+                )
+            else:
+                yield lambda tid=track_id, sd=seed: build_env(
+                    tid,
+                    sd,
+                    max_steps,
+                    frame_skip,
+                    reward_shaping,
+                    obstacles,
+                    collision_penalty,
+                    action_smoothing,
+                    action_control,
+                    action_representation,
+                )
 
     env_fn_list = list(env_fns())
     if vec_type == "subproc":
@@ -81,18 +326,44 @@ def make_vec_env(
     return DummyVecEnv(env_fn_list)
 
 
-def evaluate(model, track_id, seed, max_steps, frame_skip, episodes=1):
+def evaluate(
+    model,
+    track_id,
+    seed,
+    max_steps,
+    frame_skip,
+    episodes=1,
+    action_smoothing=None,
+    action_control=None,
+    action_representation=None,
+):
     results = []
     for _ in range(episodes):
-        env = build_env(track_id, seed, max_steps, frame_skip, reward_shaping=False)
+        env = build_env(
+            track_id,
+            seed,
+            max_steps,
+            frame_skip,
+            reward_shaping=False,
+            obstacles=True,
+            collision_penalty=0.0,
+            action_smoothing=action_smoothing,
+            action_control=action_control,
+            action_representation=action_representation,
+        )
         observation, _ = env.reset()
         start_time_s = env.unwrapped.t
         total_reward = 0.0
         done = False
         steps = 0
+        executed_actions = []
         while not done:
             action, _ = model.predict(observation, deterministic=True)
             observation, reward, terminated, truncated, info = env.step(action)
+            executed_action = getattr(env, "last_action", None)
+            if executed_action is None:
+                executed_action = np.asarray(action, dtype=np.float32)
+            executed_actions.append(np.asarray(executed_action, dtype=np.float32).copy())
             total_reward += reward
             steps += 1
             done = terminated or truncated
@@ -110,6 +381,13 @@ def evaluate(model, track_id, seed, max_steps, frame_skip, episodes=1):
                 "finished": info.get("finished", False),
                 "finish_time_s": finish_time_s,
                 "lap_time_ms": lap_time_ms,
+                "damage": info.get("damage", 0.0),
+                "retire_reason": info.get("retire_reason"),
+                "steering_delta_abs_mean": (
+                    float(np.mean(np.abs(np.diff(np.asarray(executed_actions)[:, 0]))))
+                    if len(executed_actions) > 1
+                    else 0.0
+                ),
             }
         )
         env.close()
@@ -120,6 +398,10 @@ def summarize(results):
     total = len(results)
     finished = [r for r in results if r["finished"]]
     lap_times = [r["lap_time_ms"] for r in results if r.get("lap_time_ms") is not None]
+    termination_reasons = Counter(
+        "finished" if result["finished"] else result.get("retire_reason") or "time_limit"
+        for result in results
+    )
     return {
         "n_episodes": total,
         "finish_rate": len(finished) / total if total else 0.0,
@@ -128,7 +410,21 @@ def summarize(results):
         "avg_steps": float(np.mean([r["steps"] for r in results])) if total else 0.0,
         "avg_lap_time_ms": float(np.mean(lap_times)) if lap_times else None,
         "best_lap_time_ms": float(np.min(lap_times)) if lap_times else None,
+        "avg_damage": float(np.mean([r.get("damage", 0.0) for r in results])) if total else 0.0,
+        "avg_steering_delta_abs_mean": (
+            float(np.mean([r.get("steering_delta_abs_mean", 0.0) for r in results]))
+            if total else 0.0
+        ),
+        "termination_reasons": dict(sorted(termination_reasons.items())),
     }
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def find_vecnormalize_path(resume_path, explicit_path):
@@ -153,6 +449,40 @@ def find_vecnormalize_path(resume_path, explicit_path):
     return None
 
 
+def resume_run_config(resume_path):
+    checkpoint = Path(resume_path)
+    run_dir = checkpoint.parent.parent if checkpoint.parent.name == "checkpoints" else checkpoint.parent
+    config_path = run_dir / "config.json"
+    if not config_path.is_file():
+        return {}
+    try:
+        recorded = json.loads(config_path.read_text())
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"invalid resume run config: {config_path}") from error
+    config = recorded.get("config", {})
+    if not isinstance(config, dict):
+        raise ValueError(f"invalid resume run config payload: {config_path}")
+    return config
+
+
+def validate_action_smoothing_resume(source_config, requested_config, allow_change):
+    source = normalize_action_smoothing(source_config)
+    requested = normalize_action_smoothing(requested_config)
+    changed = action_smoothing_fingerprint(source) != action_smoothing_fingerprint(requested)
+    if changed and not allow_change:
+        raise ValueError("--action-smoothing must match the resumed checkpoint transform")
+    return changed
+
+
+def validate_action_control_resume(source_config, requested_config, allow_change):
+    source = normalize_action_control(source_config)
+    requested = normalize_action_control(requested_config)
+    changed = action_control_fingerprint(source) != action_control_fingerprint(requested)
+    if changed and not allow_change:
+        raise ValueError("--action-control must match the resumed checkpoint representation")
+    return changed
+
+
 class HoldoutEvaluator:
     def __init__(
         self,
@@ -163,6 +493,9 @@ class HoldoutEvaluator:
         frame_skip,
         eval_episodes,
         run_dir,
+        action_smoothing=None,
+        action_control=None,
+        action_representation=None,
     ):
         self.eval_track_ids = eval_track_ids
         self.seen_eval_seeds = seen_eval_seeds
@@ -171,6 +504,9 @@ class HoldoutEvaluator:
         self.frame_skip = frame_skip
         self.eval_episodes = eval_episodes
         self.run_dir = run_dir
+        self.action_smoothing = normalize_action_smoothing(action_smoothing)
+        self.action_control = normalize_action_control(action_control)
+        self.action_representation = normalize_action_representation(action_representation)
         self.best_score = None
         self.best_step = None
 
@@ -182,6 +518,9 @@ class HoldoutEvaluator:
                     evaluate(
                         model, tid, seed, self.max_steps, self.frame_skip,
                         episodes=self.eval_episodes,
+                        action_smoothing=self.action_smoothing,
+                        action_control=self.action_control,
+                        action_representation=self.action_representation,
                     )
                 )
         return results
@@ -198,17 +537,36 @@ class HoldoutEvaluator:
     def _save_best_model(self, model, metrics):
         best_path = self.run_dir / BEST_MODEL_FILENAME
         model.save(str(best_path))
+        best_archive = Path(f"{best_path}.zip")
+        write_embedded_action_smoothing(
+            best_archive,
+            getattr(model, "haic_action_smoothing", self.action_smoothing),
+        )
         vecnormalize = model.get_vec_normalize_env()
         if vecnormalize is not None:
             vecnormalize.save(str(self.run_dir / BEST_VECNORM_FILENAME))
-        tracking.write_json(self.run_dir / "best_model_metrics.json", metrics)
+        return best_archive
+
+    def _load_cpu_snapshot(self, model):
+        snapshot = self.run_dir / ".evaluation_snapshot"
+        archive = snapshot.with_suffix(".zip")
+        model.save(str(snapshot))
+        write_embedded_action_smoothing(
+            archive,
+            getattr(model, "haic_action_smoothing", self.action_smoothing),
+        )
+        try:
+            return PPO.load(str(archive), device="cpu"), file_sha256(archive)
+        finally:
+            archive.unlink(missing_ok=True)
 
     def evaluate(self, model, is_final=False):
         step = int(model.num_timesteps)
-        seen_metrics = summarize(self._evaluate_seeds(model, self.seen_eval_seeds))
-        holdout_metrics = summarize(
-            self._evaluate_seeds(model, self.holdout_eval_seeds)
-        )
+        cpu_model, evaluation_checkpoint_sha256 = self._load_cpu_snapshot(model)
+        seen_episodes = self._evaluate_seeds(cpu_model, self.seen_eval_seeds)
+        holdout_episodes = self._evaluate_seeds(cpu_model, self.holdout_eval_seeds)
+        seen_metrics = summarize(seen_episodes)
+        holdout_metrics = summarize(holdout_episodes)
         score = self._selection_score(holdout_metrics)
         is_best = self.best_score is None or score > self.best_score
         if is_best:
@@ -220,11 +578,42 @@ class HoldoutEvaluator:
             "is_final": is_final,
             "seen": seen_metrics,
             "holdout": holdout_metrics,
+            "seen_episodes": seen_episodes,
+            "holdout_episodes": holdout_episodes,
+            "action_smoothing": self.action_smoothing,
+            "action_smoothing_fingerprint": action_smoothing_fingerprint(
+                self.action_smoothing
+            ),
+            "action_control": self.action_control,
+            "action_control_fingerprint": action_control_fingerprint(self.action_control),
+            "action_representation": self.action_representation,
+            "action_representation_fingerprint": action_representation_fingerprint(
+                self.action_representation
+            ),
+            "evaluation_checkpoint_sha256": evaluation_checkpoint_sha256,
             "best_model_updated": is_best,
             "best_model_step": self.best_step,
         }
         if is_best:
-            self._save_best_model(model, metrics)
+            best_archive = self._save_best_model(model, metrics)
+            metrics["best_model_sha256"] = file_sha256(best_archive)
+            cpu_best = PPO.load(str(best_archive), device="cpu")
+            reloaded_seen_episodes = self._evaluate_seeds(cpu_best, self.seen_eval_seeds)
+            reloaded_holdout_episodes = self._evaluate_seeds(
+                cpu_best, self.holdout_eval_seeds
+            )
+            metrics["cpu_reload_seen_matches_selection"] = (
+                reloaded_seen_episodes == seen_episodes
+            )
+            metrics["cpu_reload_holdout_matches_selection"] = (
+                reloaded_holdout_episodes == holdout_episodes
+            )
+            if not (
+                metrics["cpu_reload_seen_matches_selection"]
+                and metrics["cpu_reload_holdout_matches_selection"]
+            ):
+                raise RuntimeError("persisted best model disagrees with CPU selection")
+            tracking.write_json(self.run_dir / "best_model_metrics.json", metrics)
         tracking.log_metrics(self.run_dir, metrics)
         print(
             f"[eval @ {metrics['step']}] "
@@ -248,6 +637,11 @@ def checkpoint_paths(checkpoint_dir: Path, step: int):
 def save_checkpoint(model, checkpoint_dir: Path, step: int):
     model_path, vecnormalize_path = checkpoint_paths(checkpoint_dir, step)
     model.save(str(model_path))
+    model_archive = Path(f"{model_path}.zip") if model_path.suffix != ".zip" else model_path
+    write_embedded_action_smoothing(
+        model_archive,
+        getattr(model, "haic_action_smoothing", normalize_action_smoothing()),
+    )
     vecnormalize = model.get_vec_normalize_env()
     if vecnormalize is not None:
         vecnormalize.save(str(vecnormalize_path))
@@ -333,12 +727,62 @@ def parse_args():
     parser = argparse.ArgumentParser(description="PPO + CNN 학습 (HAIC CarRacing)")
     parser.add_argument("--track-ids", type=str, default="1")
     parser.add_argument("--seeds", type=str, default="42,1337,2024,777")
+    parser.add_argument(
+        "--training-track-mode", choices=["sampled", "fixed"], default="sampled",
+        help="sample fresh (track_id, seed) pairs each episode, or retain fixed worker tracks",
+    )
+    parser.add_argument(
+        "--track-sampler-seed", type=int, default=917,
+        help="master RNG seed for reproducible sampled training tracks",
+    )
+    parser.add_argument(
+        "--training-obstacles", choices=["official", "none"], default="official",
+        help="official six-obstacle training or obstacle-free curriculum warm start",
+    )
     parser.add_argument("--n-envs", type=int, default=8)
     parser.add_argument("--vec-type", type=str, choices=["dummy", "subproc"], default="subproc")
     parser.add_argument("--total-timesteps", type=int, default=1_000_000)
     parser.add_argument("--max-steps", type=int, default=2000)
     parser.add_argument("--frame-skip", type=int, default=FRAME_SKIP)
     parser.add_argument("--no-shaping", action="store_true", help="완주 보너스 비활성화")
+    parser.add_argument(
+        "--collision-penalty", type=float, default=0.0,
+        help="training-only native reward penalty per aggregated collision action",
+    )
+    parser.add_argument(
+        "--action-smoothing",
+        choices=["none", "steering-ema"],
+        default="none",
+        help="stateful action intervention shared by training, evaluation, and submission",
+    )
+    parser.add_argument(
+        "--action-smoothing-alpha",
+        type=float,
+        default=0.35,
+        help="steering EMA alpha (smaller values smooth more strongly)",
+    )
+    parser.add_argument(
+        "--allow-action-smoothing-change",
+        action="store_true",
+        help="allow an explicit action-transform change when resuming a checkpoint",
+    )
+    parser.add_argument(
+        "--action-control",
+        choices=["none", "constant-plane", "previous-steering-plane"],
+        default="none",
+        help="policy observation representation for action-transform state",
+    )
+    parser.add_argument(
+        "--action-representation",
+        choices=[
+            "continuous-box",
+            "multidiscrete-steer-longitudinal-v1",
+            "multidiscrete-steer-longitudinal-v2",
+        ],
+        # Keep action grids explicit to avoid silently resuming incompatible heads.
+        default="continuous-box",
+        help="policy action space mapped to official continuous controls",
+    )
     parser.add_argument("--no-norm-reward", action="store_true", help="보상 정규화 비활성화")
     parser.add_argument("--learning-rate", type=float, default=1e-4)
     parser.add_argument("--n-steps", type=int, default=2048)
@@ -415,6 +859,10 @@ def validate_training_options(args, seeds, holdout_eval_seeds):
         raise ValueError("--save-freq and --eval-freq must be non-negative")
     if args.eval_episodes <= 0:
         raise ValueError("--eval-episodes must be positive")
+    if not np.isfinite(args.collision_penalty) or args.collision_penalty < 0:
+        raise ValueError("--collision-penalty must be finite and non-negative")
+    if not np.isfinite(args.action_smoothing_alpha) or not 0 < args.action_smoothing_alpha <= 1:
+        raise ValueError("--action-smoothing-alpha must be finite and in (0, 1]")
 
 
 def main():
@@ -423,6 +871,42 @@ def main():
     seeds = [int(s) for s in args.seeds.split(",") if s.strip()]
     reward_shaping = not args.no_shaping
     norm_reward = not args.no_norm_reward
+    action_smoothing = action_smoothing_from_args(
+        args.action_smoothing, args.action_smoothing_alpha
+    )
+    action_control = action_control_from_args(args.action_control)
+    action_representation = action_representation_from_args(args.action_representation)
+    validate_action_control(action_smoothing, action_control)
+    source_resume_config = resume_run_config(args.resume) if args.resume else {}
+    source_resume_frame_skip = source_resume_config.get("frame_skip")
+    if source_resume_frame_skip is not None and source_resume_frame_skip != args.frame_skip:
+        raise ValueError(
+            f"resume frame_skip {source_resume_frame_skip} does not match "
+            f"requested frame_skip {args.frame_skip}"
+        )
+    embedded_resume_smoothing = (
+        read_embedded_action_smoothing(args.resume) if args.resume else None
+    )
+    recorded_resume_smoothing = (
+        normalize_action_smoothing(source_resume_config["action_smoothing"])
+        if "action_smoothing" in source_resume_config
+        else None
+    )
+    if (
+        embedded_resume_smoothing is not None
+        and recorded_resume_smoothing is not None
+        and action_smoothing_fingerprint(embedded_resume_smoothing)
+        != action_smoothing_fingerprint(recorded_resume_smoothing)
+    ):
+        raise ValueError("resume checkpoint and run config action smoothing do not match")
+    source_resume_smoothing = (
+        embedded_resume_smoothing
+        or recorded_resume_smoothing
+        or normalize_action_smoothing()
+    )
+    source_resume_control = normalize_action_control(
+        source_resume_config.get("action_control")
+    )
 
     eval_track_ids = (
         [int(t) for t in args.eval_track_ids.split(",") if t.strip()] or track_ids
@@ -435,18 +919,47 @@ def main():
     ]
     validate_training_options(args, seeds, holdout_eval_seeds)
 
+    if args.resume:
+        action_smoothing_changed = validate_action_smoothing_resume(
+            source_resume_smoothing,
+            action_smoothing,
+            args.allow_action_smoothing_change,
+        )
+        action_control_changed = validate_action_control_resume(
+            source_resume_control,
+            action_control,
+            args.allow_action_smoothing_change,
+        )
+    else:
+        action_smoothing_changed = False
+        action_control_changed = False
+
     config = {
         "variables_version": GAME_VARIABLES_VERSION,
         "algorithm": "PPO",
         "policy": "CnnPolicy",
         "track_ids": track_ids,
         "seeds": seeds,
+        "training_track_mode": args.training_track_mode,
+        "track_sampler_seed": args.track_sampler_seed,
+        "sampled_seed_range": [0, UINT32_SEED_UPPER - 1],
+        "training_obstacles": args.training_obstacles,
+        "evaluation_obstacles": "official",
         "n_envs": args.n_envs,
         "vec_type": args.vec_type,
         "total_timesteps": args.total_timesteps,
         "max_steps": args.max_steps,
         "frame_skip": args.frame_skip,
         "reward_shaping": reward_shaping,
+        "collision_penalty": args.collision_penalty,
+        "action_smoothing": action_smoothing,
+        "action_smoothing_fingerprint": action_smoothing_fingerprint(action_smoothing),
+        "action_smoothing_changed_on_resume": action_smoothing_changed,
+        "action_control": action_control,
+        "action_control_fingerprint": action_control_fingerprint(action_control),
+        "action_control_changed_on_resume": action_control_changed,
+        "action_representation": action_representation,
+        "action_representation_fingerprint": action_representation_fingerprint(action_representation),
         "norm_reward": norm_reward,
         "learning_rate": args.learning_rate,
         "n_steps": args.n_steps,
@@ -459,6 +972,9 @@ def main():
         "seed": args.seed,
         "resume_from": args.resume or None,
         "resume_vecnormalize": args.resume_vecnormalize or None,
+        "resume_frame_skip": source_resume_frame_skip,
+        "resume_action_smoothing": source_resume_smoothing if args.resume else None,
+        "resume_action_control": source_resume_control if args.resume else None,
         "eval_track_ids": eval_track_ids,
         "seen_eval_seeds": seen_eval_seeds,
         "holdout_eval_seeds": holdout_eval_seeds,
@@ -494,14 +1010,32 @@ def main():
     print(f"variables version: {GAME_VARIABLES_VERSION}")
     print(f"track_ids: {track_ids}")
     print(f"seeds: {seeds}")
+    print(
+        f"training track mode: {args.training_track_mode} "
+        f"sampler_seed: {args.track_sampler_seed} obstacles: {args.training_obstacles}"
+    )
     print(f"n_envs: {args.n_envs}  total_timesteps: {args.total_timesteps}")
-    print(f"reward_shaping: {reward_shaping}  norm_reward: {norm_reward}")
+    print(
+        f"reward_shaping: {reward_shaping}  norm_reward: {norm_reward} "
+        f"collision_penalty: {args.collision_penalty}"
+    )
+    print(
+        f"action smoothing: {args.action_smoothing} "
+        f"config={action_smoothing}"
+    )
+    print(f"action control: {args.action_control} config={action_control}")
+    print(f"action representation: {args.action_representation}")
     print(f"target_kl: {args.target_kl}")
     print(f"seen eval seeds: {seen_eval_seeds}")
     print(f"holdout eval seeds: {holdout_eval_seeds}")
     if args.resume:
         print(f"resume from: {args.resume}")
         print(f"resume vecnormalize: {vecnormalize_stats_path}")
+        if action_smoothing_changed:
+            print(
+                "[info] resume action smoothing differs from requested config; "
+                "recording this as an explicit intervention change"
+            )
 
     raw_env = make_vec_env(
         track_ids,
@@ -511,6 +1045,14 @@ def main():
         args.frame_skip,
         reward_shaping=reward_shaping,
         vec_type=args.vec_type,
+        training_track_mode=args.training_track_mode,
+        track_sampler_seed=args.track_sampler_seed,
+        excluded_seeds=set(seen_eval_seeds) | set(holdout_eval_seeds),
+        training_obstacles=args.training_obstacles,
+        collision_penalty=args.collision_penalty,
+        action_smoothing=action_smoothing,
+        action_control=action_control,
+        action_representation=action_representation,
     )
     if norm_reward:
         if args.resume and vecnormalize_stats_path is not None:
@@ -539,6 +1081,9 @@ def main():
             device="auto",
             policy_kwargs={"normalize_images": False},
         )
+    model.haic_action_smoothing = action_smoothing
+    model.haic_action_control = action_control
+    model.haic_action_representation = action_representation
 
     evaluator = HoldoutEvaluator(
         eval_track_ids,
@@ -548,6 +1093,9 @@ def main():
         args.frame_skip,
         args.eval_episodes,
         run_dir,
+        action_smoothing=action_smoothing,
+        action_control=action_control,
+        action_representation=action_representation,
     )
     train_in_segments(
         model,
@@ -560,6 +1108,13 @@ def main():
     )
 
     model.save(str(save_path))
+    final_archive = (
+        save_path if save_path.suffix == ".zip" else Path(f"{save_path}.zip")
+    )
+    write_embedded_action_smoothing(
+        final_archive,
+        getattr(model, "haic_action_smoothing", action_smoothing),
+    )
     print(f"saved model: {save_path}.zip")
     if model.get_vec_normalize_env() is not None:
         vecnorm_path = run_dir / VECNORM_FILENAME

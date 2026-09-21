@@ -1,0 +1,262 @@
+[
+  {
+    "action_smoothing": {
+      "alpha": 1.0,
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "none",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "action_smoothing_fingerprint": "be3de0136a18ad729ca9ecbcf807365f01f3727878faeb8dac76972e70fdcdfb",
+    "action_smoothing_present": true,
+    "aliases": [
+      "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model.zip"
+    ],
+    "archive_sha256": "68b98893f9f0111250a6f92e233849b9933e80e1ef858f03be1729f27530e353",
+    "by_track": {
+      "1": {
+        "avg_damage": 0.7,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.2769361789655685,
+        "avg_reward": 209.59522863913259,
+        "avg_steering_delta_abs_mean": 0.3956582807004452,
+        "avg_steps": 151.0,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "2": {
+        "avg_damage": 0.44999999999999996,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.17645165402008922,
+        "avg_reward": 120.41070369365707,
+        "avg_steering_delta_abs_mean": 0.29822447523474693,
+        "avg_steps": 122.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      },
+      "3": {
+        "avg_damage": 0.65,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.3674654265342301,
+        "avg_reward": 270.22447620778985,
+        "avg_steering_delta_abs_mean": 0.37305524200201035,
+        "avg_steps": 225.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "4": {
+        "avg_damage": 0.55,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.6247064664728117,
+        "avg_reward": 489.5655161463569,
+        "avg_steering_delta_abs_mean": 0.33531777933239937,
+        "avg_steps": 320.5,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      }
+    },
+    "candidate_id": "9f18c5353f08b6bb-be3de013",
+    "canonical_episodes": 16,
+    "determinism_audited": false,
+    "eligible": false,
+    "evaluation_archive_path": "candidates/9f18c5353f08b6bb-be3de013.zip",
+    "evaluation_archive_sha256": "68b98893f9f0111250a6f92e233849b9933e80e1ef858f03be1729f27530e353",
+    "evaluation_vecnormalize_path": "candidates/9f18c5353f08b6bb-be3de013.vecnormalize.pkl",
+    "evaluation_vecnormalize_sha256": "73b800ba499c01ab1e4c6c276b18f843e3012aa53e51ef27de1da4e601293962",
+    "is_comparator": false,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "9f18c5353f08b6bb89187b546cc7bad13fe75de64960b28fff6ecc221e4dcb0d",
+    "run_config_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/config.json",
+    "run_config_sha256": "1242fd8de9d3af005e363130e010e68c3089caf780240a82b7cd2b0d7dfdec12",
+    "run_frame_skip": 4,
+    "run_max_steps": 2000,
+    "source_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model.zip",
+    "summary": {
+      "avg_damage": 0.5875,
+      "avg_lap_time_ms": null,
+      "avg_progress": 0.36138993149817483,
+      "avg_reward": 272.4489811717341,
+      "avg_steering_delta_abs_mean": 0.35056394431740046,
+      "avg_steps": 205.0,
+      "best_lap_time_ms": null,
+      "finish_rate": 0.0,
+      "n_episodes": 16,
+      "termination_reasons": {
+        "crash": 6,
+        "off_track": 10
+      }
+    },
+    "vecnormalize_path": "runs/20260920-152212_ppo-cnn-smoothing-control-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "73b800ba499c01ab1e4c6c276b18f843e3012aa53e51ef27de1da4e601293962"
+  },
+  {
+    "action_smoothing": {
+      "alpha": [
+        0.35,
+        1.0,
+        1.0
+      ],
+      "clip_order": "before_and_after",
+      "high": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "initial_action": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "low": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "max_delta": null,
+      "method": "alpha",
+      "schema_version": 1,
+      "update_unit": "policy_action"
+    },
+    "action_smoothing_fingerprint": "fff88850218df807550b56f814a8da7d124af2c3c342e276f250afcd346b5d45",
+    "action_smoothing_present": true,
+    "aliases": [
+      "runs/20260920-155851_ppo-cnn-smoothing-steering-ema-v1/best_model.zip"
+    ],
+    "archive_sha256": "8f6a6c760d9d28e9d8a173cf425f26b3ba7f230be3c1ad833633c9714ef61a90",
+    "by_track": {
+      "1": {
+        "avg_damage": 0.65,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.21668359437714563,
+        "avg_reward": 155.54264405071248,
+        "avg_steering_delta_abs_mean": 0.10269348789006472,
+        "avg_steps": 135.5,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      },
+      "2": {
+        "avg_damage": 0.55,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.3132098291038345,
+        "avg_reward": 234.5938787773964,
+        "avg_steering_delta_abs_mean": 0.13897287100553513,
+        "avg_steps": 116.75,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 1,
+          "out_of_bounds": 1
+        }
+      },
+      "3": {
+        "avg_damage": 0.3,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.26490055811565105,
+        "avg_reward": 198.359607789218,
+        "avg_steering_delta_abs_mean": 0.104829803109169,
+        "avg_steps": 149.0,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 3
+        }
+      },
+      "4": {
+        "avg_damage": 0.6,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.2827833526678263,
+        "avg_reward": 228.44240234139116,
+        "avg_steering_delta_abs_mean": 0.12497840449213982,
+        "avg_steps": 118.5,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 4,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 2
+        }
+      }
+    },
+    "candidate_id": "f9cba18ea8846d04-fff88850",
+    "canonical_episodes": 16,
+    "determinism_audited": false,
+    "eligible": false,
+    "evaluation_archive_path": "candidates/f9cba18ea8846d04-fff88850.zip",
+    "evaluation_archive_sha256": "8f6a6c760d9d28e9d8a173cf425f26b3ba7f230be3c1ad833633c9714ef61a90",
+    "evaluation_vecnormalize_path": "candidates/f9cba18ea8846d04-fff88850.vecnormalize.pkl",
+    "evaluation_vecnormalize_sha256": "80fdd11f99099042320286784d09390d0e6452d07fbe81464357decde9901301",
+    "is_comparator": false,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "f9cba18ea8846d0447d04675e02058c08dc28132fda3be2dc7640121bf1a7bbb",
+    "run_config_path": "runs/20260920-155851_ppo-cnn-smoothing-steering-ema-v1/config.json",
+    "run_config_sha256": "d745ecca4d1a35f5ac334e827125d9fbf4aa60fbe9da19ce112359605aebee07",
+    "run_frame_skip": 4,
+    "run_max_steps": 2000,
+    "source_path": "runs/20260920-155851_ppo-cnn-smoothing-steering-ema-v1/best_model.zip",
+    "summary": {
+      "avg_damage": 0.525,
+      "avg_lap_time_ms": null,
+      "avg_progress": 0.2693943335661143,
+      "avg_reward": 204.2346332396795,
+      "avg_steering_delta_abs_mean": 0.11786864162422717,
+      "avg_steps": 129.9375,
+      "best_lap_time_ms": null,
+      "finish_rate": 0.0,
+      "n_episodes": 16,
+      "termination_reasons": {
+        "crash": 7,
+        "off_track": 8,
+        "out_of_bounds": 1
+      }
+    },
+    "vecnormalize_path": "runs/20260920-155851_ppo-cnn-smoothing-steering-ema-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "80fdd11f99099042320286784d09390d0e6452d07fbe81464357decde9901301"
+  }
+]

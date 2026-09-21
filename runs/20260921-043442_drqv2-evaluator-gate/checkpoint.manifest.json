@@ -1,0 +1,122 @@
+{
+  "action": {
+    "fingerprint": "51cf16d2850eeca7031eb0c155bf04239b9207085d9a139e5de8c2d718bfecf4",
+    "frame_skip": 4,
+    "native_high": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "native_low": [
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    "official_high": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "official_low": [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    "order": [
+      "steer",
+      "gas",
+      "brake"
+    ]
+  },
+  "algorithm": "drq-v2",
+  "dependency_lockfile": {
+    "path": "requirements.txt",
+    "sha256": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2"
+  },
+  "extra": {
+    "algorithm": "drq-v2",
+    "drq_config": {
+      "action_dim": 3,
+      "actor_learning_rate": 0.0001,
+      "actor_update_frequency": 2,
+      "augmentation_pad": 4,
+      "batch_size": 8,
+      "critic_learning_rate": 0.0001,
+      "device": "cpu",
+      "exploration_duration": 100000,
+      "exploration_final_std": 0.05,
+      "exploration_initial_std": 0.2,
+      "feature_dim": 256,
+      "gamma": 0.99,
+      "hidden_dim": 256,
+      "n_step": 3,
+      "observation_shape": [
+        4,
+        84,
+        84
+      ],
+      "replay_capacity": 128,
+      "target_policy_noise": 0.2,
+      "target_policy_noise_clip": 0.5,
+      "target_update_frequency": 2,
+      "tau": 0.01,
+      "warmup_steps": 100
+    },
+    "environment_steps": 100,
+    "frame_skip": 4,
+    "max_steps": 200,
+    "reward_contract": {
+      "norm_reward": false,
+      "reward_shaping": false
+    },
+    "seed": 0,
+    "seeds": [
+      0
+    ],
+    "total_steps": 100,
+    "track_ids": [
+      1
+    ],
+    "track_sampler_seed": 917
+  },
+  "frame_skip": 4,
+  "hardware": {
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39"
+  },
+  "max_steps": 200,
+  "observation": {
+    "channel_order": "CHW",
+    "dtype": "float32",
+    "fingerprint": "e51233d7c43372af7c560d529b0cbb84dad5b7a9e0e6637514cf010ea8adee39",
+    "normalization": [
+      0.0,
+      1.0
+    ],
+    "shape": [
+      4,
+      84,
+      84
+    ]
+  },
+  "paths": {
+    "model": "/workspace/HAIC-Money/runs/20260921-043442_drqv2-evaluator-gate/checkpoint.pt",
+    "optimizer": "/workspace/HAIC-Money/runs/20260921-043442_drqv2-evaluator-gate/checkpoint.pt",
+    "replay": "/workspace/HAIC-Money/runs/20260921-043442_drqv2-evaluator-gate/checkpoint.pt",
+    "rng": "/workspace/HAIC-Money/runs/20260921-043442_drqv2-evaluator-gate/checkpoint.pt"
+  },
+  "reward_contract": {
+    "norm_reward": false,
+    "reward_shaping": false
+  },
+  "schema_version": 1,
+  "seeds": [
+    0
+  ],
+  "source_hashes": {
+    "common_adapter.py": "8166e9dd3b01eb414b82aaee1e88e21ac2371f751d6ab7456da3a98197759ca7",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "drq_v2.py": "b8edbf81d9288256bd83f02316d8adced6187c7927d958f080046c6d710623b6",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  }
+}

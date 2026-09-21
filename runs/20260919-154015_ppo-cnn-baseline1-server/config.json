@@ -1,0 +1,65 @@
+{
+  "name": "ppo-cnn-baseline1-server",
+  "created_at_utc": "2026-09-19T15:40:15Z",
+  "git": {
+    "commit": "426f216",
+    "dirty": false
+  },
+  "command_line": "train.py --name ppo-cnn-baseline1-server --track-ids 1 --seeds 42,1337,2024,777 --n-envs 8 --total-timesteps 1000000",
+  "config": {
+    "variables_version": "variables-6",
+    "algorithm": "PPO",
+    "policy": "CnnPolicy",
+    "track_ids": [
+      1
+    ],
+    "seeds": [
+      42,
+      1337,
+      2024,
+      777
+    ],
+    "n_envs": 8,
+    "vec_type": "subproc",
+    "total_timesteps": 1000000,
+    "max_steps": 2000,
+    "frame_skip": 4,
+    "reward_shaping": true,
+    "norm_reward": true,
+    "learning_rate": 0.0001,
+    "n_steps": 2048,
+    "batch_size": 256,
+    "n_epochs": 5,
+    "gamma": 0.99,
+    "clip_range": 0.2,
+    "ent_coef": 0.0,
+    "target_kl": 0.03,
+    "seed": 0,
+    "resume_from": null,
+    "resume_vecnormalize": null,
+    "eval_track_ids": [
+      1
+    ],
+    "seen_eval_seeds": [
+      42,
+      1337,
+      2024,
+      777
+    ],
+    "holdout_eval_seeds": [
+      10001,
+      10002,
+      10003,
+      10004,
+      10005,
+      10006,
+      10007,
+      10008
+    ],
+    "eval_freq": 65536,
+    "eval_episodes": 1,
+    "eval_requested": false,
+    "skip_final_eval": false
+  },
+  "pip_freeze": []
+}

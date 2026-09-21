@@ -1,0 +1,166 @@
+[
+  {
+    "aliases": [
+      "runs/20260920-051554_ppo-cnn-sampled-curriculum-v1/best_model.zip"
+    ],
+    "archive_sha256": "a761055d4c03ffcd31ad35f7b53542c1b4df77bd3d32a124ef44b3f787c227d8",
+    "by_track": {
+      "7": {
+        "avg_damage": 0.25,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.34767355040839487,
+        "avg_reward": 268.09988636863386,
+        "avg_steps": 180.875,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 7
+        }
+      },
+      "8": {
+        "avg_damage": 0.45,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.3011828188978416,
+        "avg_reward": 222.63415485808244,
+        "avg_steps": 147.125,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 3,
+          "off_track": 4,
+          "out_of_bounds": 1
+        }
+      },
+      "9": {
+        "avg_damage": 0.675,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.35427820929481585,
+        "avg_reward": 261.02954525505123,
+        "avg_steps": 183.875,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 4,
+          "off_track": 3,
+          "out_of_bounds": 1
+        }
+      }
+    },
+    "candidate_id": "be66f6d4fad400cd",
+    "canonical_episodes": 24,
+    "determinism_audited": true,
+    "eligible": true,
+    "evaluation_archive_path": "candidates/be66f6d4fad400cd.zip",
+    "evaluation_archive_sha256": "a761055d4c03ffcd31ad35f7b53542c1b4df77bd3d32a124ef44b3f787c227d8",
+    "is_comparator": false,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "be66f6d4fad400cdc52375e9ae4a481e052609b27dd818d1477d41108cfc5bc1",
+    "run_config_path": "runs/20260920-051554_ppo-cnn-sampled-curriculum-v1/config.json",
+    "run_config_sha256": "941ee55ce60f7d62c916abcbacb2713bb2e989bab43e9f1a0299a1ee4a25f773",
+    "source_path": "runs/20260920-051554_ppo-cnn-sampled-curriculum-v1/best_model.zip",
+    "summary": {
+      "avg_damage": 0.4583333333333333,
+      "avg_lap_time_ms": null,
+      "avg_progress": 0.3343781928670175,
+      "avg_reward": 250.5878621605892,
+      "avg_steps": 170.625,
+      "best_lap_time_ms": null,
+      "finish_rate": 0.0,
+      "n_episodes": 24,
+      "termination_reasons": {
+        "crash": 8,
+        "off_track": 14,
+        "out_of_bounds": 2
+      }
+    },
+    "vecnormalize_path": "runs/20260920-051554_ppo-cnn-sampled-curriculum-v1/best_model_vecnormalize.pkl",
+    "vecnormalize_sha256": "f194d124d5a6b99d3426832628d324b280a1f9f0c01ecada59be3d3adcc14248"
+  },
+  {
+    "aliases": [
+      "runs/20260919-071218_ppo-cnn-baseline1-server/model.zip"
+    ],
+    "archive_sha256": "fdfe97f19dd50dd0bd95c7e4e1df1c9f8443e840935f657de54a307a680c843a",
+    "by_track": {
+      "7": {
+        "avg_damage": 0.675,
+        "avg_lap_time_ms": 23220.0,
+        "avg_progress": 0.4498019341105546,
+        "avg_reward": 373.2032700707916,
+        "avg_steps": 173.5,
+        "best_lap_time_ms": 23220.0,
+        "finish_rate": 0.125,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 4,
+          "finished": 1,
+          "off_track": 3
+        }
+      },
+      "8": {
+        "avg_damage": 0.7,
+        "avg_lap_time_ms": 21780.0,
+        "avg_progress": 0.371076505480054,
+        "avg_reward": 306.727841440294,
+        "avg_steps": 142.875,
+        "best_lap_time_ms": 21780.0,
+        "finish_rate": 0.125,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 4,
+          "finished": 1,
+          "off_track": 3
+        }
+      },
+      "9": {
+        "avg_damage": 0.7000000000000001,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.4197214268809393,
+        "avg_reward": 342.54776284117827,
+        "avg_steps": 174.875,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 8,
+        "termination_reasons": {
+          "crash": 4,
+          "off_track": 4
+        }
+      }
+    },
+    "candidate_id": "d3363a57dffccda6",
+    "canonical_episodes": 24,
+    "determinism_audited": true,
+    "eligible": false,
+    "evaluation_archive_path": "candidates/d3363a57dffccda6.zip",
+    "evaluation_archive_sha256": "fdfe97f19dd50dd0bd95c7e4e1df1c9f8443e840935f657de54a307a680c843a",
+    "is_comparator": true,
+    "norm_obs": false,
+    "operational_failures": 0,
+    "policy_sha256": "d3363a57dffccda6653b1210cac996efdcc5ba69e756e7547a9130c4c3eb77bb",
+    "run_config_path": "runs/20260919-071218_ppo-cnn-baseline1-server/config.json",
+    "run_config_sha256": "a44e82024fc33ec43f83eba470efa27cfbadc5fa248730cf644ab7d9b380d834",
+    "source_path": "runs/20260919-071218_ppo-cnn-baseline1-server/model.zip",
+    "summary": {
+      "avg_damage": 0.6916666666666665,
+      "avg_lap_time_ms": 22500.0,
+      "avg_progress": 0.41353328882384927,
+      "avg_reward": 340.8262914507546,
+      "avg_steps": 163.75,
+      "best_lap_time_ms": 21780.0,
+      "finish_rate": 0.08333333333333333,
+      "n_episodes": 24,
+      "termination_reasons": {
+        "crash": 12,
+        "finished": 2,
+        "off_track": 10
+      }
+    },
+    "vecnormalize_path": "runs/20260919-071218_ppo-cnn-baseline1-server/model_vecnormalize.pkl",
+    "vecnormalize_sha256": "574c270c660f731c884294a1791ed3839ff55193bbbc48621aee34c37a80f1c4"
+  }
+]

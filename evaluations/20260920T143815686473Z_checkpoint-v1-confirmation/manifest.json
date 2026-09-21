@@ -1,0 +1,61 @@
+{
+  "cell_matrix": {
+    "repeats": 2,
+    "seeds": [
+      20101,
+      20102,
+      20103,
+      20104,
+      20105,
+      20106,
+      20107,
+      20108
+    ],
+    "track_ids": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "finished_at_utc": "2026-09-20T14:53:53.436855Z",
+  "git": {
+    "commit": "116aa96ff41de67fc578b7977ca544652128aa83",
+    "dirty": true
+  },
+  "protocol": "checkpoint-v1-confirmation",
+  "runtime": {
+    "cpu_environment": {
+      "CUDA_VISIBLE_DEVICES": "",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "executable": "/workspace/HAIC-Money/.venv/bin/python",
+    "packages": {
+      "gymnasium": "0.29.1",
+      "numpy": "1.26.0",
+      "opencv-python": "4.8.1.78",
+      "stable-baselines3": "2.2.1",
+      "torch": "2.1.0"
+    },
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "python": "3.11.16 (main, Sep  1 2026, 14:18:37) [Clang 22.1.3 ]",
+    "runtime_sources": {
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "evaluate_policy.py": "e1d6c16483e700d58b66f0538f07f65b81ee96cf383e17b53a3982eaf2bc0cda",
+      "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+      "train.py": "e9c7d53ce9236ec142e4d8a88a33638d62a8e8f06ef5880220714bcb05d0d8ac"
+    },
+    "torch_cuda": "12.1"
+  },
+  "schema_version": 1,
+  "started_at_utc": "2026-09-20T14:38:15.686648Z",
+  "timeout_seconds": 120
+}

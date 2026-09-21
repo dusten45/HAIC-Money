@@ -1,0 +1,379 @@
+{
+  "protocol": {
+    "deterministic": true,
+    "track_ids": [
+      1,
+      2,
+      3
+    ],
+    "seeds": [
+      20001,
+      20002,
+      20003,
+      20004,
+      20005,
+      20006,
+      20007,
+      20008
+    ],
+    "max_steps": 2000,
+    "frame_skip": 4,
+    "episodes_per_model": 24
+  },
+  "models": [
+    {
+      "model_path": "runs/20260919-132336_ppo-cnn-baseline1-1-fresh-16x1024/best_model.zip",
+      "summary": {
+        "n_episodes": 24,
+        "finish_rate": 0.0,
+        "avg_progress": 0.3566014714245756,
+        "avg_reward": 278.3345131072667,
+        "avg_steps": 168.29166666666666,
+        "avg_lap_time_ms": null,
+        "best_lap_time_ms": null,
+        "avg_damage": 0.6583333333333333,
+        "termination_reasons": {
+          "crash": 12,
+          "off_track": 11,
+          "time_limit": 1
+        }
+      },
+      "by_track": {
+        "1": {
+          "n_episodes": 8,
+          "finish_rate": 0.0,
+          "avg_progress": 0.3956491765898503,
+          "avg_reward": 314.76138493920604,
+          "avg_steps": 185.25,
+          "avg_lap_time_ms": null,
+          "best_lap_time_ms": null,
+          "avg_damage": 0.6000000000000001,
+          "termination_reasons": {
+            "crash": 3,
+            "off_track": 5
+          }
+        },
+        "2": {
+          "n_episodes": 8,
+          "finish_rate": 0.0,
+          "avg_progress": 0.35693166896809414,
+          "avg_reward": 293.64387731745273,
+          "avg_steps": 141.25,
+          "avg_lap_time_ms": null,
+          "best_lap_time_ms": null,
+          "avg_damage": 0.7749999999999999,
+          "termination_reasons": {
+            "crash": 5,
+            "off_track": 3
+          }
+        },
+        "3": {
+          "n_episodes": 8,
+          "finish_rate": 0.0,
+          "avg_progress": 0.31722356871578244,
+          "avg_reward": 226.59827706514122,
+          "avg_steps": 178.375,
+          "avg_lap_time_ms": null,
+          "best_lap_time_ms": null,
+          "avg_damage": 0.6,
+          "termination_reasons": {
+            "crash": 4,
+            "off_track": 3,
+            "time_limit": 1
+          }
+        }
+      },
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 20001,
+          "steps": 368,
+          "reward": 498.8481099656095,
+          "progress": 0.6529209621993127,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.6000000000000001,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 20002,
+          "steps": 216,
+          "reward": 365.32413793102023,
+          "progress": 0.4586206896551724,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 20003,
+          "steps": 286,
+          "reward": 418.0232081911099,
+          "progress": 0.5392491467576792,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.8,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 20004,
+          "steps": 179,
+          "reward": 322.6652329749002,
+          "progress": 0.4014336917562724,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.0,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 20005,
+          "steps": 157,
+          "reward": 450.7135135135089,
+          "progress": 0.5195195195195195,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 1,
+          "seed": 20006,
+          "steps": 157,
+          "reward": 174.96223776224053,
+          "progress": 0.24475524475524477,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 20007,
+          "steps": 52,
+          "reward": 142.53333333333376,
+          "progress": 0.17,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 1,
+          "seed": 20008,
+          "steps": 67,
+          "reward": 145.0213058419253,
+          "progress": 0.17869415807560138,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 2,
+          "seed": 20001,
+          "steps": 230,
+          "reward": 378.79037800685967,
+          "progress": 0.47766323024054985,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.6000000000000001,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 2,
+          "seed": 20002,
+          "steps": 71,
+          "reward": 261.25517241379305,
+          "progress": 0.296551724137931,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 2,
+          "seed": 20003,
+          "steps": 39,
+          "reward": 107.26689419795254,
+          "progress": 0.1296928327645051,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 2,
+          "seed": 20004,
+          "steps": 35,
+          "reward": 97.11111111111137,
+          "progress": 0.11827956989247312,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 2,
+          "seed": 20005,
+          "steps": 52,
+          "reward": 153.37417417417475,
+          "progress": 0.18018018018018017,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 2,
+          "seed": 20006,
+          "steps": 179,
+          "reward": 327.0013986013893,
+          "progress": 0.40559440559440557,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 2,
+          "seed": 20007,
+          "steps": 355,
+          "reward": 737.9999999999799,
+          "progress": 0.8866666666666667,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.4,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 2,
+          "seed": 20008,
+          "steps": 169,
+          "reward": 286.35189003436125,
+          "progress": 0.36082474226804123,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 3,
+          "seed": 20001,
+          "steps": 36,
+          "reward": 81.81993127147783,
+          "progress": 0.10309278350515463,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 3,
+          "seed": 20002,
+          "steps": 48,
+          "reward": 146.31724137931081,
+          "progress": 0.1724137931034483,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 3,
+          "seed": 20003,
+          "steps": 190,
+          "reward": 142.43003412969665,
+          "progress": 0.22525597269624573,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.4,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 3,
+          "seed": 20004,
+          "steps": 55,
+          "reward": 214.55913978494692,
+          "progress": 0.24372759856630824,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 3,
+          "seed": 20005,
+          "steps": 167,
+          "reward": 127.59429429429801,
+          "progress": 0.3003003003003003,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": null
+        },
+        {
+          "track_id": 3,
+          "seed": 20006,
+          "steps": 319,
+          "reward": 375.89650349648224,
+          "progress": 0.5104895104895105,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.0,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 3,
+          "seed": 20007,
+          "steps": 124,
+          "reward": 287.0666666666675,
+          "progress": 0.3433333333333333,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 3,
+          "seed": 20008,
+          "steps": 488,
+          "reward": 437.1024054982499,
+          "progress": 0.6391752577319587,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        }
+      ]
+    }
+  ],
+  "wall_seconds": 110.20186940399981
+}

@@ -13,6 +13,15 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from action_smoothing import (
+    action_control_fingerprint,
+    action_smoothing_fingerprint,
+    normalize_action_smoothing,
+    normalize_action_control,
+    read_embedded_action_smoothing,
+)
+from train import find_vecnormalize_path
+
 
 MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
 MAX_EXTRACTED_BYTES = 2 * 1024 * 1024 * 1024
@@ -90,6 +99,16 @@ def safe_label(label: str):
     return normalized
 
 
+def resolve_python_executable(python_executable: str):
+    # ZIP smoke tests run from a temporary extraction directory. Preserve bare
+    # PATH commands, but anchor a supplied relative path before changing CWD.
+    # Do not resolve symlinks: virtualenv launchers rely on their .venv path to
+    # locate pyvenv.cfg and site-packages.
+    if "/" not in python_executable or Path(python_executable).is_absolute():
+        return python_executable
+    return str(Path.cwd() / python_executable)
+
+
 def source_model_metadata(source_model_path: Path | None):
     if source_model_path is None:
         return None
@@ -97,15 +116,18 @@ def source_model_metadata(source_model_path: Path | None):
         raise FileNotFoundError(source_model_path)
 
     metadata = file_metadata(source_model_path)
-    if source_model_path.stem == "best_model":
-        vecnormalize_path = source_model_path.with_name("best_model_vecnormalize.pkl")
-    else:
-        vecnormalize_path = source_model_path.with_name("model_vecnormalize.pkl")
+    vecnormalize_path = find_vecnormalize_path(source_model_path, "")
     metadata["vecnormalize"] = (
-        file_metadata(vecnormalize_path) if vecnormalize_path.is_file() else None
+        file_metadata(vecnormalize_path)
+        if vecnormalize_path is not None and vecnormalize_path.is_file()
+        else None
     )
 
-    run_dir = source_model_path.parent
+    run_dir = (
+        source_model_path.parent.parent
+        if source_model_path.parent.name == "checkpoints"
+        else source_model_path.parent
+    )
     metadata["run_config"] = (
         file_metadata(run_dir / "config.json")
         if (run_dir / "config.json").is_file()
@@ -117,6 +139,91 @@ def source_model_metadata(source_model_path: Path | None):
         else None
     )
     return metadata
+
+
+def model_action_smoothing(model_path: Path, source_model_path: Path | None = None):
+    """Resolve the exact smoother config carried by the model or its run."""
+
+    source_config = None
+    embedded_config = (
+        read_embedded_action_smoothing(source_model_path)
+        if source_model_path is not None
+        else None
+    )
+    if source_model_path is not None:
+        run_dir = (
+            source_model_path.parent.parent
+            if source_model_path.parent.name == "checkpoints"
+            else source_model_path.parent
+        )
+        config_path = run_dir / "config.json"
+        if config_path.is_file():
+            recorded = json.loads(config_path.read_text())
+            source_config = normalize_action_smoothing(
+                recorded.get("config", {}).get("action_smoothing")
+            )
+    if embedded_config is not None and source_config is not None:
+        if action_smoothing_fingerprint(embedded_config) != action_smoothing_fingerprint(source_config):
+            raise ValueError("checkpoint and source run action smoothing configs do not match")
+    source_config = embedded_config or source_config
+
+    payload_config = None
+    try:
+        import torch
+
+        payload = torch.load(model_path, map_location="cpu", weights_only=True)
+    except Exception:
+        payload = None
+    if isinstance(payload, dict):
+        if payload.get("action_smoothing") is not None:
+            payload_config = normalize_action_smoothing(payload["action_smoothing"])
+    if source_config is not None and payload_config is not None:
+        if action_smoothing_fingerprint(source_config) != action_smoothing_fingerprint(payload_config):
+            raise ValueError("model and source run action smoothing configs do not match")
+    if payload_config is None and source_config is not None:
+        # A raw actor state dict has no place to carry the transform that Agent
+        # must execute.  Refuse to misreport a smoothed source as a no-op model.
+        if action_smoothing_fingerprint(source_config) != action_smoothing_fingerprint(
+            normalize_action_smoothing()
+        ):
+            raise ValueError(
+                "raw model payload cannot carry the source action smoothing config"
+            )
+    return payload_config or source_config or normalize_action_smoothing()
+
+
+def model_action_control(model_path: Path, source_model_path: Path | None = None):
+    source_config = None
+    if source_model_path is not None:
+        run_dir = (
+            source_model_path.parent.parent
+            if source_model_path.parent.name == "checkpoints"
+            else source_model_path.parent
+        )
+        config_path = run_dir / "config.json"
+        if config_path.is_file():
+            recorded = json.loads(config_path.read_text())
+            source_config = normalize_action_control(
+                recorded.get("config", {}).get("action_control")
+            )
+    try:
+        import torch
+
+        payload = torch.load(model_path, map_location="cpu", weights_only=True)
+    except Exception:
+        payload = None
+    payload_config = (
+        normalize_action_control(payload.get("action_control"))
+        if isinstance(payload, dict) and payload.get("action_control") is not None
+        else None
+    )
+    if source_config is not None and payload_config is not None:
+        if action_control_fingerprint(source_config) != action_control_fingerprint(payload_config):
+            raise ValueError("model and source run action control configs do not match")
+    action_control = payload_config or source_config or normalize_action_control()
+    if isinstance(payload, dict) and payload.get("input_channels", action_control["input_channels"]) != action_control["input_channels"]:
+        raise ValueError("model input channels do not match action control config")
+    return action_control
 
 
 def model_filename(agent_path: Path):
@@ -171,7 +278,41 @@ def validate_agent_source(agent_path: Path):
     return model_filename(agent_path)
 
 
-def validate_submission_archive(archive_path: Path, expected_model_filename: str):
+def agent_dependency_paths(agent_path: Path):
+    """Resolve local Python modules imported by the submission agent."""
+
+    tree = ast.parse(agent_path.read_text(), filename=str(agent_path))
+    modules = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            modules.update(alias.name.split(".")[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            modules.add(node.module.split(".")[0])
+    dependencies = []
+    if "action_smoothing" in modules:
+        dependency = agent_path.with_name("action_smoothing.py")
+        if not dependency.is_file():
+            raise FileNotFoundError(dependency)
+        violations = agent_static_violations(dependency)
+        if violations:
+            raise ValueError("; ".join(violations))
+        dependencies.append(dependency)
+    if "action_representation" in modules:
+        dependency = agent_path.with_name("action_representation.py")
+        if not dependency.is_file():
+            raise FileNotFoundError(dependency)
+        violations = agent_static_violations(dependency)
+        if violations:
+            raise ValueError("; ".join(violations))
+        dependencies.append(dependency)
+    return dependencies
+
+
+def validate_submission_archive(
+    archive_path: Path,
+    expected_model_filename: str,
+    expected_modules=(),
+):
     if archive_path.stat().st_size > MAX_ARCHIVE_BYTES:
         raise ValueError("submission ZIP exceeds 500 MiB")
 
@@ -180,8 +321,11 @@ def validate_submission_archive(archive_path: Path, expected_model_filename: str
         names = [info.filename for info in files]
         if len(files) > MAX_FILE_COUNT:
             raise ValueError("submission ZIP exceeds 1,000 files")
-        if set(names) != {"agent.py", expected_model_filename}:
-            raise ValueError("submission ZIP must contain only root agent.py and model")
+        expected_names = {"agent.py", expected_model_filename, *expected_modules}
+        if set(names) != expected_names:
+            raise ValueError(
+                "submission ZIP must contain agent, model, and declared modules"
+            )
         if any("/" in name or "\\" in name for name in names):
             raise ValueError("submission files must be at ZIP root")
 
@@ -208,16 +352,24 @@ def build_submission(agent_path: Path, model_path: Path, archive_path: Path):
         )
     if not model_path.is_file():
         raise FileNotFoundError(model_path)
+    dependencies = agent_dependency_paths(agent_path)
 
     archive_path.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.write(agent_path, arcname="agent.py")
         archive.write(model_path, arcname=expected_model_filename)
-    validate_submission_archive(archive_path, expected_model_filename)
+        for dependency in dependencies:
+            archive.write(dependency, arcname=dependency.name)
+    validate_submission_archive(
+        archive_path,
+        expected_model_filename,
+        expected_modules=[dependency.name for dependency in dependencies],
+    )
     return archive_path
 
 
 def smoke_submission(archive_path: Path, python_executable: str):
+    python_executable = resolve_python_executable(python_executable)
     child_code = """
 import json
 import time
@@ -228,14 +380,21 @@ from agent import Agent
 agent = Agent()
 init_seconds = time.perf_counter() - start
 observation = np.zeros((4, 84, 84), dtype=np.float32)
+unreset_action = agent.act(observation)
+agent.reset(observation)
 start = time.perf_counter()
-action = agent.act(observation)
+first_action = agent.act(observation)
+actions = [first_action, agent.act(observation)]
+agent.reset(observation)
+reset_action = agent.act(observation)
 act_seconds = time.perf_counter() - start
 print(json.dumps({
     "init_seconds": init_seconds,
     "act_seconds": act_seconds,
-    "shape": list(action.shape),
-    "finite": bool(np.isfinite(action).all()),
+    "shape": list(actions[-1].shape),
+    "finite": bool(all(np.isfinite(action).all() for action in actions)),
+    "reset_matches_first": bool(np.array_equal(first_action, reset_action)),
+    "unreset_matches_first": bool(np.array_equal(unreset_action, first_action)),
 }))
 """
     with tempfile.TemporaryDirectory() as directory:
@@ -259,7 +418,12 @@ print(json.dumps({
         raise RuntimeError(f"Agent import and construction exceeded 10 s: {result}")
     if result["act_seconds"] > 5:
         raise RuntimeError(f"Agent.act() exceeded 5 s: {result}")
-    if result["shape"] != [3] or not result["finite"]:
+    if (
+        result["shape"] != [3]
+        or not result["finite"]
+        or not result["reset_matches_first"]
+        or not result["unreset_matches_first"]
+    ):
         raise RuntimeError(f"Agent returned an invalid action: {result}")
     return result
 
@@ -274,6 +438,7 @@ def create_submission_record(
     python_executable: str,
     command_line: str | None = None,
 ):
+    python_executable = resolve_python_executable(python_executable)
     created_at = datetime.now(timezone.utc)
     submission_id = f"{created_at.strftime('%Y%m%dT%H%M%S%fZ')}_{safe_label(label)}"
     record_dir = submissions_dir / submission_id
@@ -289,6 +454,8 @@ def create_submission_record(
         raise FileNotFoundError(model_path)
 
     source_model = source_model_metadata(source_model_path)
+    action_smoothing = model_action_smoothing(model_path, source_model_path)
+    action_control = model_action_control(model_path, source_model_path)
     provenance = git_provenance()
     submissions_dir.mkdir(parents=True, exist_ok=True)
     temporary_dir = Path(tempfile.mkdtemp(prefix=".pending-", dir=submissions_dir))
@@ -309,6 +476,11 @@ def create_submission_record(
                 "python_executable": python_executable,
             },
             "agent": file_metadata(agent_path),
+            "dependencies": [file_metadata(path) for path in agent_dependency_paths(agent_path)],
+            "action_smoothing": action_smoothing,
+            "action_smoothing_fingerprint": action_smoothing_fingerprint(action_smoothing),
+            "action_control": action_control,
+            "action_control_fingerprint": action_control_fingerprint(action_control),
             "model": file_metadata(model_path),
             "source_model": source_model,
             "submission_zip": {

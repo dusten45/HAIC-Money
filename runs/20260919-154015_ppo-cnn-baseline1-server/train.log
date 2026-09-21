@@ -1,0 +1,49 @@
+run_dir: /workspace/HAIC-Money/runs/20260919-154015_ppo-cnn-baseline1-server
+=== HAIC PPO 학습 시작 ===
+variables version: variables-6
+track_ids: [1]
+seeds: [42, 1337, 2024, 777]
+n_envs: 8  total_timesteps: 1000000
+reward_shaping: True  norm_reward: True
+target_kl: 0.03
+seen eval seeds: [42, 1337, 2024, 777]
+holdout eval seeds: [10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008]
+Using cuda device
+Traceback (most recent call last):
+  File "/workspace/HAIC-Money/train.py", line 573, in <module>
+    main()
+  File "/workspace/HAIC-Money/train.py", line 552, in main
+    train_in_segments(
+  File "/workspace/HAIC-Money/train.py", line 287, in train_in_segments
+    model.learn(
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/ppo/ppo.py", line 315, in learn
+    return super().learn(
+           ^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 277, in learn
+    continue_training = self.collect_rollouts(self.env, callback, self.rollout_buffer, n_rollout_steps=self.n_steps)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/on_policy_algorithm.py", line 194, in collect_rollouts
+    new_obs, rewards, dones, infos = env.step(clipped_actions)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/vec_env/base_vec_env.py", line 206, in step
+    return self.step_wait()
+           ^^^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/vec_env/vec_normalize.py", line 181, in step_wait
+    obs, rewards, dones, infos = self.venv.step_wait()
+                                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/vec_env/subproc_vec_env.py", line 129, in step_wait
+    results = [remote.recv() for remote in self.remotes]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/HAIC-Money/.venv/lib/python3.11/site-packages/stable_baselines3/common/vec_env/subproc_vec_env.py", line 129, in <listcomp>
+    results = [remote.recv() for remote in self.remotes]
+               ^^^^^^^^^^^^^
+  File "/.uv/python_install/cpython-3.11.16-linux-x86_64-gnu/lib/python3.11/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+          ^^^^^^^^^^^^^^^^^^
+  File "/.uv/python_install/cpython-3.11.16-linux-x86_64-gnu/lib/python3.11/multiprocessing/connection.py", line 430, in _recv_bytes
+    buf = self._recv(4)
+          ^^^^^^^^^^^^^
+  File "/.uv/python_install/cpython-3.11.16-linux-x86_64-gnu/lib/python3.11/multiprocessing/connection.py", line 395, in _recv
+    chunk = read(handle, remaining)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

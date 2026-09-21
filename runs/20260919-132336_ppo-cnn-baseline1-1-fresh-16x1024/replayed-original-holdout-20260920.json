@@ -1,0 +1,155 @@
+{
+  "protocol": {
+    "deterministic": true,
+    "track_ids": [
+      1
+    ],
+    "seeds": [
+      10001,
+      10002,
+      10003,
+      10004,
+      10005,
+      10006,
+      10007,
+      10008
+    ],
+    "max_steps": 2000,
+    "frame_skip": 4,
+    "episodes_per_model": 8
+  },
+  "models": [
+    {
+      "model_path": "runs/20260919-132336_ppo-cnn-baseline1-1-fresh-16x1024/best_model.zip",
+      "summary": {
+        "n_episodes": 8,
+        "finish_rate": 0.0,
+        "avg_progress": 0.34492261438686433,
+        "avg_reward": 266.61447933463944,
+        "avg_steps": 179.25,
+        "avg_lap_time_ms": null,
+        "best_lap_time_ms": null,
+        "avg_damage": 0.6,
+        "termination_reasons": {
+          "crash": 2,
+          "off_track": 6
+        }
+      },
+      "by_track": {
+        "1": {
+          "n_episodes": 8,
+          "finish_rate": 0.0,
+          "avg_progress": 0.34492261438686433,
+          "avg_reward": 266.61447933463944,
+          "avg_steps": 179.25,
+          "avg_lap_time_ms": null,
+          "best_lap_time_ms": null,
+          "avg_damage": 0.6,
+          "termination_reasons": {
+            "crash": 2,
+            "off_track": 6
+          }
+        }
+      },
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 10001,
+          "steps": 143,
+          "reward": 97.34545454545722,
+          "progress": 0.1606060606060606,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 10002,
+          "steps": 48,
+          "reward": 141.17735849056663,
+          "progress": 0.16666666666666666,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 1,
+          "seed": 10003,
+          "steps": 242,
+          "reward": 567.2926640926457,
+          "progress": 0.6718146718146718,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.6000000000000001,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 10004,
+          "steps": 413,
+          "reward": 586.3723270439912,
+          "progress": 0.7578616352201258,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 10005,
+          "steps": 54,
+          "reward": 183.78720538720614,
+          "progress": 0.21212121212121213,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        {
+          "track_id": 1,
+          "seed": 10006,
+          "steps": 186,
+          "reward": 312.26666666665653,
+          "progress": 0.3933333333333333,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.8,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 10007,
+          "steps": 210,
+          "reward": 224.60534124629194,
+          "progress": 0.314540059347181,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.6000000000000001,
+          "retire_reason": "off_track"
+        },
+        {
+          "track_id": 1,
+          "seed": 10008,
+          "steps": 138,
+          "reward": 20.06881720430036,
+          "progress": 0.08243727598566308,
+          "finished": false,
+          "finish_time_s": null,
+          "lap_time_ms": null,
+          "damage": 0.4,
+          "retire_reason": "off_track"
+        }
+      ]
+    }
+  ],
+  "wall_seconds": 37.76670517899947
+}
