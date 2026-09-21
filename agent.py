@@ -1,9 +1,9 @@
+import pickle
 import time
 
 import numpy as np
 import torch
 from torch import nn
-
 
 MODEL_FILENAME = "model.pt"
 POLICY_MODEL_FILENAME = "policy.pt"
@@ -73,7 +73,6 @@ class Agent:
         planner=None,
         planner_enabled: bool | None = None,
         strict_checkpoint_loading: bool | None = None,
-        controller_mode: str | None = None,
         plan_budget: float | None = None,
         clock=None,
         policy_checkpoint: str | None = None,
@@ -88,7 +87,6 @@ class Agent:
                     planner,
                     planner_enabled,
                     strict_checkpoint_loading,
-                    controller_mode,
                     clock,
                     policy_checkpoint,
                     dynamics_checkpoint,
@@ -116,7 +114,6 @@ class Agent:
             planner=planner,
             planner_enabled=planner_enabled,
             strict_checkpoint_loading=strict_checkpoint_loading,
-            controller_mode=controller_mode,
             plan_budget=plan_budget,
             clock=clock,
             policy_checkpoint=policy_checkpoint,
@@ -205,18 +202,15 @@ class Agent:
         planner=None,
         planner_enabled: bool | None = None,
         strict_checkpoint_loading: bool | None = None,
-        controller_mode: str | None = None,
         plan_budget: float | None = None,
         clock=None,
         policy_checkpoint: str | None = None,
         dynamics_checkpoint: str | None = None,
     ):
-        from haic_agent.corridor_agent import VisionCorridorAgent
         from haic_agent.dynamics import LatentDynamicsEnsemble
         from haic_agent.networks import VisualActorCritic
         from haic_agent.planner import CEMPlanner
         from haic_agent.runtime_config import (
-            CONTROLLER_MODE,
             PLANNER_ENABLED,
             PLANNER_SETTINGS,
             STRICT_CHECKPOINT_LOADING,
@@ -233,11 +227,6 @@ class Agent:
         resolved_policy_checkpoint = (
             POLICY_MODEL_FILENAME if policy_checkpoint is None else policy_checkpoint
         )
-        requested_controller_mode = (
-            CONTROLLER_MODE if controller_mode is None else controller_mode
-        )
-        if requested_controller_mode not in {"auto", "learned", "corridor"}:
-            raise ValueError("controller_mode must be 'auto', 'learned', or 'corridor'")
         configured_planner_enabled = (
             PLANNER_ENABLED if planner_enabled is None else bool(planner_enabled)
         )
@@ -246,42 +235,22 @@ class Agent:
             if dynamics_checkpoint is None and configured_planner_enabled
             else dynamics_checkpoint
         )
-        self.controller_mode = requested_controller_mode
-        self.corridor_controller = None
-        self.policy = None
+        self.policy = policy if policy is not None else self._load_policy(
+            resolved_policy_checkpoint,
+            strict=self.strict_checkpoint_loading,
+        )
+        self.planner_enabled = configured_planner_enabled
         self.dynamics = None
         self._visual_actor_critic_class = VisualActorCritic
-        if requested_controller_mode == "corridor":
-            self.controller_mode = "corridor"
-            self.corridor_controller = VisionCorridorAgent()
-            self.planner_enabled = False
-        else:
-            if policy is None:
-                self.policy, policy_loaded = self._load_policy_with_status(
-                    resolved_policy_checkpoint,
+        if self.planner_enabled:
+            self.dynamics = (
+                dynamics
+                if dynamics is not None
+                else self._load_dynamics(
+                    resolved_dynamics_checkpoint,
                     strict=self.strict_checkpoint_loading,
                 )
-            else:
-                self.policy = policy
-                policy_loaded = True
-            if requested_controller_mode == "learned" and not policy_loaded:
-                raise RuntimeError("learned controller requires a valid policy checkpoint")
-            if requested_controller_mode == "auto" and not policy_loaded:
-                self.controller_mode = "corridor"
-                self.corridor_controller = VisionCorridorAgent()
-                self.policy = None
-                self.planner_enabled = False
-            else:
-                self.controller_mode = "learned"
-                self.planner_enabled = configured_planner_enabled
-                self.dynamics = (
-                    dynamics
-                    if dynamics is not None
-                    else self._load_dynamics(
-                        resolved_dynamics_checkpoint,
-                        strict=self.strict_checkpoint_loading,
-                    )
-                ) if self.planner_enabled else None
+            )
         self.planner = (
             planner if planner is not None else CEMPlanner(**PLANNER_SETTINGS, clock=resolved_clock)
         )
@@ -295,11 +264,10 @@ class Agent:
     def _load_policy_with_status(checkpoint: str | None, *, strict: bool = False):
         from haic_agent.networks import VisualActorCritic
 
-        policy = VisualActorCritic()
         if checkpoint is None:
             if strict:
                 raise RuntimeError("failed to load required policy checkpoint: None")
-            return policy, False
+            return None, False
         try:
             saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
             state = saved.get("model_state") if isinstance(saved, dict) else None
@@ -309,17 +277,28 @@ class Agent:
                 return policy, True
             if strict:
                 raise ValueError("policy checkpoint lacks model_state")
-        except (FileNotFoundError, RuntimeError, ValueError, OSError) as error:
+        except (
+            FileNotFoundError,
+            RuntimeError,
+            ValueError,
+            OSError,
+            pickle.UnpicklingError,
+            EOFError,
+        ) as error:
             if strict:
                 raise RuntimeError(
                     f"failed to load required policy checkpoint: {checkpoint}"
                 ) from error
-        return policy, False
+        return None, False
 
     @staticmethod
     def _load_policy(checkpoint: str | None, *, strict: bool = False):
         policy, _loaded = Agent._load_policy_with_status(checkpoint, strict=strict)
-        return policy
+        if policy is not None:
+            return policy
+        from haic_agent.networks import VisualActorCritic
+
+        return VisualActorCritic()
 
     @staticmethod
     def _load_dynamics(checkpoint: str | None, *, strict: bool = False):
@@ -336,7 +315,14 @@ class Agent:
                 return dynamics
             if strict:
                 raise ValueError("dynamics checkpoint lacks model")
-        except (FileNotFoundError, RuntimeError, ValueError, OSError) as error:
+        except (
+            FileNotFoundError,
+            RuntimeError,
+            ValueError,
+            OSError,
+            pickle.UnpicklingError,
+            EOFError,
+        ) as error:
             if strict:
                 raise RuntimeError(
                     f"failed to load required dynamics checkpoint: {checkpoint}"
@@ -357,7 +343,10 @@ class Agent:
 
     @staticmethod
     def _observation_tensor(observation):
-        pixels = np.asarray(observation, dtype=np.float32)
+        try:
+            pixels = np.asarray(observation, dtype=np.float32)
+        except (TypeError, ValueError, OverflowError):
+            return None
         if pixels.shape != (4, 84, 84) or not np.all(np.isfinite(pixels)):
             return None
         if float(pixels.min()) < 0.0 or float(pixels.max()) > 1.0:
@@ -372,8 +361,6 @@ class Agent:
         reset = getattr(self.planner, "reset", None)
         if callable(reset):
             reset()
-        if self.corridor_controller is not None:
-            self.corridor_controller.reset(observation)
         del observation
 
     @torch.inference_mode()
@@ -413,9 +400,6 @@ class Agent:
             return np.asarray(action, dtype=np.float32)
 
         """Return a finite action before the end-to-end 4.5 second deadline."""
-        if self.controller_mode == "corridor":
-            action = self._safe_action(self.corridor_controller.act(observation))
-            return np.zeros(3, dtype=np.float32) if action is None else action
         deadline = self.clock() + self.plan_budget
         no_op = np.zeros(3, dtype=np.float32)
         state = self._observation_tensor(observation)

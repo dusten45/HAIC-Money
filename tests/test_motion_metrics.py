@@ -17,6 +17,20 @@ class TestMotionMetrics(unittest.TestCase):
         self.assertEqual(metrics["peak_deceleration"], -10.0)
         self.assertAlmostEqual(metrics["p95_abs_acceleration"], 27.0)
 
+    def test_separates_collision_speed_drops_from_braking_metrics(self):
+        from training.evaluate_closed_loop import summarize_motion_metrics
+
+        metrics = summarize_motion_metrics(
+            speeds=[40.0, 38.0, 5.0, 4.0],
+            accelerations=[-25.0, -412.5, -12.5],
+            non_collision_accelerations=[-25.0, -12.5],
+            collision_accelerations=[-412.5],
+        )
+
+        self.assertEqual(metrics["peak_deceleration"], -412.5)
+        self.assertEqual(metrics["non_collision_peak_deceleration"], -25.0)
+        self.assertEqual(metrics["collision_peak_deceleration"], -412.5)
+
     def test_empty_motion_trace_reports_unavailable_values(self):
         from training.evaluate_closed_loop import summarize_motion_metrics
 

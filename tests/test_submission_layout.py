@@ -15,7 +15,7 @@ from training.evaluate_closed_loop import (
     choose_planner_from_tune,
     validate_episode_splits,
 )
-from training.package_submission import build_submission, validate_submission_archive
+from training.package_submission import build_submission, validate_checkpoints, validate_submission_archive
 from training.package_submission import resolve_package_selection
 
 
@@ -65,6 +65,45 @@ class TestClosedLoopEvaluationContract(unittest.TestCase):
 
 
 class TestInferenceOnlySubmissionArchive(unittest.TestCase):
+    def test_corrupt_checkpoints_raise_the_packaging_error_contract(self):
+        for index, contents in enumerate((b"", b"not a checkpoint")):
+            with self.subTest(contents=contents), tempfile.TemporaryDirectory() as directory:
+                directory_path = Path(directory)
+                policy = directory_path / f"policy-{index}.pt"
+                dynamics = directory_path / f"dynamics-{index}.pt"
+                policy.write_bytes(contents)
+                dynamics.write_bytes(contents)
+
+                with self.assertRaisesRegex(ValueError, "strict-loadable CPU checkpoints"):
+                    validate_checkpoints(policy, dynamics)
+
+    def test_invalid_planner_values_are_rejected_even_when_planner_is_disabled(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            policy = directory_path / "policy.pt"
+            dynamics = directory_path / "dynamics.pt"
+            archive = directory_path / "invalid-submission.zip"
+            torch.save({"model_state": VisualActorCritic().state_dict()}, policy)
+            torch.save({"model": LatentDynamicsEnsemble().state_dict()}, dynamics)
+
+            with self.assertRaisesRegex(ValueError, "planner settings"):
+                build_submission(
+                    source_root=ROOT,
+                    policy_checkpoint=policy,
+                    dynamics_checkpoint=dynamics,
+                    archive_path=archive,
+                    planner_enabled=False,
+                    planner_settings={
+                        "horizon": 0,
+                        "population": 16,
+                        "iterations": 2,
+                        "candidate_batch_size": 8,
+                        "uncertainty_cost": 1.0,
+                    },
+                )
+
+            self.assertFalse(archive.exists())
+
     def test_package_selection_uses_summary_or_safely_disables_planner(self):
         disabled, default_settings = resolve_package_selection(None)
         self.assertFalse(disabled)
@@ -103,13 +142,15 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertTrue(result["smoke"]["finite_action"])
             self.assertFalse(result["planner_enabled"])
             self.assertEqual(result["planner_settings"]["horizon"], 4)
-            self.assertIn("haic_agent/corridor_agent.py", result["layout"]["files"])
+            self.assertNotIn("haic_agent/corridor_agent.py", result["layout"]["files"])
+            self.assertNotIn("controller_mode", result["layout"])
             self.assertEqual(result["layout"]["runtime_policy"], "trained_visual_actor")
             with zipfile.ZipFile(archive) as zipped:
                 names = set(zipped.namelist())
             self.assertIn("agent.py", names)
             self.assertIn("policy.pt", names)
             self.assertIn("dynamics.pt", names)
+            self.assertNotIn("haic_agent/corridor_agent.py", names)
             self.assertFalse(any(name.startswith("training/") for name in names))
             self.assertFalse(any(".venv" in name or "labels" in name for name in names))
             manifest = validate_submission_archive(archive)
@@ -117,7 +158,7 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             self.assertFalse(manifest["planner_enabled"])
             self.assertTrue(manifest["strict_checkpoint_loading"])
 
-    def test_corridor_package_selects_pixel_controller_and_disables_planner(self):
+    def test_package_api_cannot_select_corridor_runtime_mode(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             policy = directory_path / "policy.pt"
@@ -126,20 +167,16 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
             torch.save({"model_state": VisualActorCritic().state_dict()}, policy)
             torch.save({"model": LatentDynamicsEnsemble().state_dict()}, dynamics)
 
-            result = build_submission(
-                source_root=ROOT,
-                policy_checkpoint=policy,
-                dynamics_checkpoint=dynamics,
-                archive_path=archive,
-                smoke_test=True,
-                planner_enabled=False,
-                controller_mode="corridor",
-            )
-
-            self.assertEqual(result["layout"]["controller_mode"], "corridor")
-            self.assertEqual(result["layout"]["runtime_policy"], "vision_corridor_controller")
-            self.assertEqual(result["smoke"]["controller_mode"], "corridor")
-            self.assertFalse(result["planner_enabled"])
+            with self.assertRaises(TypeError):
+                build_submission(
+                    source_root=ROOT,
+                    policy_checkpoint=policy,
+                    dynamics_checkpoint=dynamics,
+                    archive_path=archive,
+                    smoke_test=False,
+                    planner_enabled=False,
+                    controller_mode="corridor",
+                )
 
 
 if __name__ == "__main__":

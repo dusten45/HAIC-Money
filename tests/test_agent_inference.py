@@ -81,6 +81,25 @@ class _NegativeSteerPolicy(_Policy):
 
 
 class TestAgentInference(unittest.TestCase):
+    def test_corrupt_checkpoints_fall_back_only_in_non_strict_mode(self):
+        # Break caught: weights_only deserialization errors must not escape
+        # development fallback or bypass the strict packaging error contract.
+        from agent import Agent
+
+        with tempfile.TemporaryDirectory() as directory:
+            for index, contents in enumerate((b"", b"not a checkpoint")):
+                checkpoint = Path(directory) / f"corrupt-{index}.pt"
+                checkpoint.write_bytes(contents)
+                with self.subTest(contents=contents):
+                    policy, loaded = Agent._load_policy_with_status(str(checkpoint), strict=False)
+                    self.assertIsNone(policy)
+                    self.assertFalse(loaded)
+                    self.assertIsNone(Agent._load_dynamics(str(checkpoint), strict=False))
+                    with self.assertRaisesRegex(RuntimeError, "failed to load required policy checkpoint"):
+                        Agent._load_policy_with_status(str(checkpoint), strict=True)
+                    with self.assertRaisesRegex(RuntimeError, "failed to load required dynamics checkpoint"):
+                        Agent._load_dynamics(str(checkpoint), strict=True)
+
     def test_default_checkpoint_names_load_the_visual_policy_and_dynamics_ensemble(self):
         # Break caught: default construction must load the trained PPO/CEM
         # pair packaged for evaluation instead of silently disabling planning.
@@ -163,6 +182,18 @@ class TestAgentInference(unittest.TestCase):
         malformed = agent.act(np.zeros((3, 84, 84), dtype=np.float32))
         self.assertTrue(np.all(np.isfinite(exhausted)))
         self.assertTrue(np.all(np.isfinite(malformed)))
+
+    def test_nonnumeric_observation_returns_safe_action(self):
+        # Break caught: dtype conversion errors must not escape act() before
+        # its safe-action handling can protect the inference contract.
+        from agent import Agent
+
+        agent = Agent(policy=_Policy(), dynamics=None, planner=_NoPlan())
+        malformed = np.full((4, 84, 84), "not-a-number")
+
+        action = agent.act(malformed)
+
+        np.testing.assert_array_equal(action, np.zeros(3, dtype=np.float32))
 
     def test_explicit_planner_disable_never_loads_or_calls_dynamics(self):
         # Break caught: PPO-only evaluation must stay PPO-only even when a

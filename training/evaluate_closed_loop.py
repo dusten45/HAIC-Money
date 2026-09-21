@@ -87,14 +87,31 @@ def _percentile(values: list[float], percentile: float) -> float | None:
 
 
 def summarize_motion_metrics(
-    *, speeds: Iterable[float], accelerations: Iterable[float]
+    *,
+    speeds: Iterable[float],
+    accelerations: Iterable[float],
+    non_collision_accelerations: Iterable[float] | None = None,
+    collision_accelerations: Iterable[float] = (),
 ) -> dict[str, float | None]:
-    """Summarize decision-rate speed and signed speed-change measurements."""
+    """Summarize speed changes, separating collision impacts from normal motion."""
+    acceleration_sequence = tuple(accelerations)
     speed_values = np.asarray(tuple(speeds), dtype=np.float64)
-    acceleration_values = np.asarray(tuple(accelerations), dtype=np.float64)
+    acceleration_values = np.asarray(acceleration_sequence, dtype=np.float64)
+    non_collision_values = np.asarray(
+        tuple(
+            acceleration_sequence
+            if non_collision_accelerations is None
+            else non_collision_accelerations
+        ),
+        dtype=np.float64,
+    )
+    collision_values = np.asarray(tuple(collision_accelerations), dtype=np.float64)
     speed_values = speed_values[np.isfinite(speed_values)]
     acceleration_values = acceleration_values[np.isfinite(acceleration_values)]
+    non_collision_values = non_collision_values[np.isfinite(non_collision_values)]
+    collision_values = collision_values[np.isfinite(collision_values)]
     absolute_acceleration = np.abs(acceleration_values)
+    non_collision_absolute_acceleration = np.abs(non_collision_values)
     return {
         "mean_speed": float(np.mean(speed_values)) if speed_values.size else None,
         "p50_speed": _percentile(speed_values.tolist(), 50),
@@ -109,6 +126,23 @@ def summarize_motion_metrics(
         ),
         "peak_deceleration": (
             float(np.min(acceleration_values)) if acceleration_values.size else None
+        ),
+        "non_collision_mean_abs_acceleration": (
+            float(np.mean(non_collision_absolute_acceleration))
+            if non_collision_absolute_acceleration.size
+            else None
+        ),
+        "non_collision_p95_abs_acceleration": _percentile(
+            non_collision_absolute_acceleration.tolist(), 95
+        ),
+        "non_collision_peak_acceleration": (
+            float(np.max(non_collision_values)) if non_collision_values.size else None
+        ),
+        "non_collision_peak_deceleration": (
+            float(np.min(non_collision_values)) if non_collision_values.size else None
+        ),
+        "collision_peak_deceleration": (
+            float(np.min(collision_values)) if collision_values.size else None
         ),
     }
 
@@ -133,6 +167,12 @@ def aggregate_episode_results(results: Iterable[dict[str, Any]]) -> dict[str, An
             "p95_abs_acceleration",
             "peak_acceleration",
             "peak_deceleration",
+            "non_collision_mean_abs_acceleration",
+            "non_collision_p95_abs_acceleration",
+            "non_collision_peak_acceleration",
+            "non_collision_peak_deceleration",
+            "collision_peak_deceleration",
+            "terminal_speed_change_per_second",
         )
         by_mode[mode] = {
             "episodes": len(selected),
@@ -195,6 +235,7 @@ def run_episode(
     agent: Any,
     max_decisions: int,
     plan_budget_seconds: float,
+    capture_trace: bool = False,
     environment_factory: Callable[..., Any] = create_training_environment,
 ) -> dict[str, Any]:
     """Run one full local episode or record its error/DNF with timing evidence."""
@@ -207,6 +248,10 @@ def run_episode(
     info: dict[str, Any] = {}
     speeds: list[float] = []
     accelerations: list[float] = []
+    non_collision_accelerations: list[float] = []
+    collision_accelerations: list[float] = []
+    terminal_speed_change: float | None = None
+    decision_trace: list[dict[str, Any]] = []
     steps = 0
     terminated = False
     truncated = False
@@ -214,6 +259,7 @@ def run_episode(
     start_simulation_time: float | None = None
     site_map_id: str | None = None
     site_map_kind: str | None = None
+    obstacle_mode: str | None = None
     resolved_track_id = track_id
     if episode is not None:
         if isinstance(episode, SiteMapEpisode):
@@ -239,6 +285,9 @@ def run_episode(
         observation, info = environment.reset()
         site_map_id = info.get("site_map_id", site_map_id)
         site_map_kind = info.get("site_map_kind", site_map_kind)
+        obstacle_mode = info.get(
+            "obstacle_mode", "official" if resolved_track_id is not None else None
+        )
         start_simulation_time = float(getattr(environment.unwrapped, "t", 0.0))
         raw_step = getattr(environment, "environment", None)
         frame_skip = int(getattr(raw_step, "_skip_frames", 4))
@@ -266,11 +315,78 @@ def run_episode(
             else:
                 consecutive_invalid_actions = 0
             observation, _, terminated, truncated, info = environment.step(action)
+            obstacle_mode = info.get("obstacle_mode", obstacle_mode)
             collisions += int(bool(info.get("collision", False)))
             velocity = environment.unwrapped.car.hull.linearVelocity
             speed = float(np.hypot(float(velocity[0]), float(velocity[1])))
             speeds.append(speed)
-            accelerations.append((speed - previous_speed) / decision_seconds)
+            speed_change_per_second = (speed - previous_speed) / decision_seconds
+            collision_this_step = bool(info.get("collision", False))
+            terminal_transition = bool(
+                terminated or truncated or info.get("retire_reason") is not None
+            )
+            if terminal_transition:
+                terminal_speed_change = speed_change_per_second
+            else:
+                accelerations.append(speed_change_per_second)
+                if not collision_this_step:
+                    non_collision_accelerations.append(speed_change_per_second)
+            if collision_this_step:
+                collision_accelerations.append(speed_change_per_second)
+            if capture_trace:
+                trace_progress = info.get("progress")
+                raw_environment = environment.unwrapped
+                car_position = raw_environment.car.hull.position
+                obstacle_positions = [
+                    (float(body.position[0]), float(body.position[1]))
+                    for body in getattr(raw_environment, "obstacles", ())
+                ]
+                nearest_obstacle = None
+                if obstacle_positions:
+                    car_x, car_y = float(car_position[0]), float(car_position[1])
+                    nearest_obstacle = min(
+                        enumerate(obstacle_positions),
+                        key=lambda item: float(
+                            np.hypot(item[1][0] - car_x, item[1][1] - car_y)
+                        ),
+                    )
+                step_diagnostics = getattr(agent, "last_step_diagnostics", None)
+                decision_trace.append(
+                    {
+                        "step": steps + 1,
+                        "progress": (
+                            float(trace_progress) if trace_progress is not None else None
+                        ),
+                        "speed": speed,
+                        "speed_change_per_second": speed_change_per_second,
+                        "steer": float(action[0]),
+                        "gas": float(action[1]),
+                        "brake": float(action[2]),
+                        "collision": bool(info.get("collision", False)),
+                        "damage": float(info.get("damage", 0.0)),
+                        "car_x": float(car_position[0]),
+                        "car_y": float(car_position[1]),
+                        "car_yaw": float(raw_environment.car.hull.angle),
+                        "nearest_obstacle_index": (
+                            int(nearest_obstacle[0]) if nearest_obstacle is not None else None
+                        ),
+                        "nearest_obstacle_distance": (
+                            float(
+                                np.hypot(
+                                    nearest_obstacle[1][0] - float(car_position[0]),
+                                    nearest_obstacle[1][1] - float(car_position[1]),
+                                )
+                            )
+                            if nearest_obstacle is not None
+                            else None
+                        ),
+                        "controller": (
+                            step_diagnostics()
+                            if callable(step_diagnostics)
+                            else None
+                        ),
+                    }
+                )
             previous_speed = speed
             steps += 1
             if terminated or truncated:
@@ -293,12 +409,15 @@ def run_episode(
             "seed": int(seed),
             "map_id": site_map_id,
             "map_kind": site_map_kind or ("official" if resolved_track_id is not None else None),
+            "obstacle_mode": obstacle_mode,
             "site_obstacle_count": int(info.get("site_obstacle_count", 0)),
             "obstacle_count": int(
                 info.get("obstacle_count", len(getattr(environment.unwrapped, "obstacles", ())))
             ),
             "completed": bool(completed),
             "lapTimeMs": lap_time_ms,
+            "terminal_speed_change_per_second": terminal_speed_change,
+            "decision_trace": decision_trace if capture_trace else None,
             "progress": progress,
             "damage": float(info.get("damage", 0.0)),
             "collisions": collisions,
@@ -314,7 +433,12 @@ def run_episode(
             "per_call_limit_s": 5.0,
             "plan_budget_s": float(plan_budget_seconds),
             "torch_seed": int(seed),
-            **summarize_motion_metrics(speeds=speeds, accelerations=accelerations),
+            **summarize_motion_metrics(
+                speeds=speeds,
+                accelerations=accelerations,
+                non_collision_accelerations=non_collision_accelerations,
+                collision_accelerations=collision_accelerations,
+            ),
         }
     except Exception as error:
         return {
@@ -323,10 +447,13 @@ def run_episode(
             "seed": int(seed),
             "map_id": site_map_id,
             "map_kind": site_map_kind,
+            "obstacle_mode": obstacle_mode,
             "site_obstacle_count": int(info.get("site_obstacle_count", 0)),
             "obstacle_count": int(info.get("obstacle_count", 0)),
             "completed": False,
             "lapTimeMs": None,
+            "terminal_speed_change_per_second": terminal_speed_change,
+            "decision_trace": decision_trace if capture_trace else None,
             "progress": float(info.get("progress", 0.0)),
             "damage": float(info.get("damage", 0.0)),
             "collisions": collisions,
@@ -343,7 +470,12 @@ def run_episode(
             "per_call_limit_s": 5.0,
             "plan_budget_s": float(plan_budget_seconds),
             "torch_seed": int(seed),
-            **summarize_motion_metrics(speeds=speeds, accelerations=accelerations),
+            **summarize_motion_metrics(
+                speeds=speeds,
+                accelerations=accelerations,
+                non_collision_accelerations=non_collision_accelerations,
+                collision_accelerations=collision_accelerations,
+            ),
         }
     finally:
         if environment is not None:
