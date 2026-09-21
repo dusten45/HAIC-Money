@@ -1,6 +1,8 @@
 import unittest
+from types import SimpleNamespace
 
 from local_simulator.schema import CustomObstacle, MapSpec
+from local_simulator.track_model import CustomMapSpec, CustomTrackGeometry
 
 
 class TestEnvironmentSetup(unittest.TestCase):
@@ -64,6 +66,48 @@ class TestEnvironmentSetup(unittest.TestCase):
             self.assertEqual(len(environment.unwrapped.obstacles), 1)
         finally:
             environment.close()
+
+    def test_custom_obstacle_radius_cannot_exceed_custom_road_width(self):
+        _, _, map_custom_obstacles, _ = self._environment_api()
+        from local_simulator.track_model import CustomObstacle as TrackObstacle
+        from local_simulator.preview import build_map_preview
+        from training.site_environment import site_obstacle_specs
+        from training.site_maps import load_site_map_payload
+
+        spec = CustomMapSpec(
+            map_id="custom-track-narrow",
+            geometry=CustomTrackGeometry(
+                centerline=((0.0, 0.0), (10.0, 0.0), (10.0, 10.0), (0.0, 10.0)),
+                width=0.5,
+            ),
+            obstacles=(TrackObstacle(progress=0.5, lateral=1.0, radius=0.6),),
+            max_steps=20,
+            frame_skip=4,
+        )
+        environment = SimpleNamespace(
+            unwrapped=SimpleNamespace(track=[(0.0, 0.0, 0.0, 0.0)])
+        )
+
+        with self.assertRaisesRegex(ValueError, "radius.*road width"):
+            map_custom_obstacles(environment, spec)
+        with self.assertRaisesRegex(ValueError, "radius.*road width"):
+            build_map_preview(spec)
+
+        site_map = load_site_map_payload(
+            {
+                "schema_version": 2,
+                "map_kind": "custom",
+                "map_id": "custom-track-narrow",
+                "geometry": {
+                    "centerline": [[0.0, 0.0], [10.0, 0.0], [10.0, 10.0], [0.0, 10.0]],
+                    "width": 0.5,
+                },
+                "obstacles": [{"progress": 0.5, "lateral": 1.0, "radius": 0.6}],
+            }
+        )
+        track = [(0.0, 0.0, 0.0, 0.0)]
+        with self.assertRaisesRegex(ValueError, "radius.*road width"):
+            site_obstacle_specs(site_map, track)
 
 
 if __name__ == "__main__":

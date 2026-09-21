@@ -10,6 +10,54 @@ NODE = shutil.which("node")
 
 class TestWebSimulatorClient(unittest.TestCase):
     @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_comparison_renders_untrusted_run_id_as_text(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const table = {
+  children: [],
+  replaceChildren(...children) { this.children = children; }
+};
+const context = {
+  window: {},
+  document: {
+    addEventListener() {},
+    getElementById(id) { return id === "run-table" ? table : null; },
+    createElement(tagName) {
+      return {
+        tagName,
+        children: [],
+        append(...children) { this.children.push(...children); },
+        textContent: "",
+        className: "",
+        title: "",
+        colSpan: 0
+      };
+    }
+  }
+};
+vm.createContext(context);
+vm.runInContext(source, context);
+const runId = '"><img src=x onerror="globalThis.injected=true">unsafe';
+context.window.HAICSimulator.renderComparison([
+  { run: { run_id: runId }, summary: { finished: false, progress: 0.5, damage: 0.1, collision_count: 0 } }
+]);
+if (context.injected) throw new Error("run id markup was executed");
+const runIdCell = table.children[0].children[0];
+if (runIdCell.title !== runId) throw new Error("run id title was not preserved literally");
+if (runIdCell.textContent !== runId.slice(0, 10)) throw new Error("run id was not rendered as literal text");
+if (runIdCell.children.length !== 0) throw new Error("run id created markup nodes");'''
+        result = subprocess.run(
+            [NODE, "-e", script],
+            cwd=Path.cwd(),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
     def test_browser_fallback_map_preserves_seed_and_custom_id(self):
         script = r'''
 const fs = require("fs");

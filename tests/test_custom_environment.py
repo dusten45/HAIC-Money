@@ -4,6 +4,32 @@ import numpy as np
 
 
 class TestCustomEnvironment(unittest.TestCase):
+    def test_custom_map_start_and_direction_match_preview_and_simulation(self):
+        from dataclasses import replace
+
+        from local_simulator.environment import create_environment, reset_environment
+        from local_simulator.preview import custom_track_snapshot
+        from local_simulator.track_generator import generate_custom_map
+
+        generated = generate_custom_map("custom-track-oriented", 29, "s_curve")
+        geometry = replace(generated.geometry, start_index=3, direction=-1)
+        document = replace(generated, geometry=geometry)
+        count = len(geometry.centerline)
+        expected_centers = tuple(
+            geometry.centerline[(geometry.start_index + geometry.direction * offset) % count]
+            for offset in range(count)
+        )
+        preview = custom_track_snapshot(document)
+        environment, raw = create_environment(document, render_mode=None)
+        try:
+            reset_environment(environment, document)
+            preview_centers = tuple((point[2], point[3]) for point in preview.points)
+            simulation_centers = tuple((point[2], point[3]) for point in raw.track)
+            self.assertEqual(preview_centers, expected_centers)
+            self.assertEqual(simulation_centers, expected_centers)
+        finally:
+            environment.close()
+
     def test_custom_environment_has_track_and_expected_observation(self):
         from local_simulator.environment import create_environment, reset_environment
         from local_simulator.track_generator import generate_custom_map

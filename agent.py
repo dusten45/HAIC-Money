@@ -8,6 +8,7 @@ from torch import nn
 MODEL_FILENAME = "model.pt"
 POLICY_MODEL_FILENAME = "policy.pt"
 DYNAMICS_MODEL_FILENAME = "dynamics.pt"
+DRQ_ACTOR_FORMAT = "haic-drq-v2-actor-v1"
 
 # Small single-observation CNN inference is faster and more predictable without
 # the default large CPU thread pool.
@@ -62,11 +63,46 @@ class Baseline1Actor(nn.Module):
         )
 
 
+class DrQFeatures(nn.Module):
+    def __init__(self, feature_dim):
+        super().__init__()
+        self.convolution = nn.Sequential(
+            nn.Conv2d(4, 32, 3, stride=2), nn.ReLU(),
+            nn.Conv2d(32, 32, 3, stride=2), nn.ReLU(),
+            nn.Conv2d(32, 32, 3, stride=2), nn.ReLU(),
+            nn.Conv2d(32, 32, 3, stride=2), nn.ReLU(),
+        )
+        self.linear = nn.Sequential(
+            nn.Flatten(), nn.Linear(512, feature_dim),
+            nn.LayerNorm(feature_dim), nn.Tanh(),
+        )
+
+    def forward(self, observation):
+        return self.linear(self.convolution(observation.float() - 0.5))
+
+
+class DrQActor(nn.Module):
+    """Inference-only architecture matching the native DrQ actor state keys."""
+
+    def __init__(self, feature_dim, hidden_dim):
+        super().__init__()
+        self.encoder = DrQFeatures(feature_dim)
+        self.trunk = nn.Sequential(
+            nn.Linear(feature_dim, hidden_dim), nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim), nn.ReLU(),
+        )
+        self.policy = nn.Linear(hidden_dim, 3)
+
+    def forward(self, observation):
+        return torch.tanh(self.policy(self.trunk(self.encoder(observation))))
+
+
 class Agent:
     """Load either the root baseline model or the packaged HAIC visual policy."""
 
     def __init__(
         self,
+        model_path: str | None = None,
         *,
         policy=None,
         dynamics=None,
@@ -97,16 +133,24 @@ class Agent:
         if not haic_options_requested:
             try:
                 payload = torch.load(
-                    MODEL_FILENAME,
+                    MODEL_FILENAME if model_path is None else model_path,
                     map_location="cpu",
                     weights_only=True,
                 )
             except FileNotFoundError:
+                if model_path is not None:
+                    raise
                 # The inference-only HAIC archive contains policy.pt instead of
                 # the root baseline model.pt.
                 self._init_haic()
             else:
-                self._init_baseline(payload)
+                model_format = payload.get("format") if isinstance(payload, dict) else None
+                if model_format == DRQ_ACTOR_FORMAT:
+                    self._init_drq(payload)
+                elif model_format is not None:
+                    raise ValueError(f"unsupported model format: {model_format}")
+                else:
+                    self._init_baseline(payload)
             return
         self._init_haic(
             policy=policy,
@@ -119,6 +163,83 @@ class Agent:
             policy_checkpoint=policy_checkpoint,
             dynamics_checkpoint=dynamics_checkpoint,
         )
+
+    def _init_drq(self, payload):
+        # These helpers are intentionally lazy: HAIC-only submissions do not
+        # include the baseline action-contract modules.
+        from action_smoothing import normalize_action_control, normalize_action_smoothing
+        from action_representation import normalize_action_representation
+
+        config = payload.get("config", {})
+        observation_spec = payload.get("observation_spec", {})
+        action_spec = payload.get("action_spec", {})
+        expected_observation = {
+            "shape": (4, 84, 84), "dtype": "float32", "channel_order": "CHW",
+            "low": 0.0, "high": 1.0, "uint8_scale": 255,
+            "control_plane_fingerprint": None,
+        }
+        expected_action = {
+            "native_low": (-1.0, -1.0, -1.0), "native_high": (1.0, 1.0, 1.0),
+            "official_low": (-1.0, 0.0, 0.0), "official_high": (1.0, 1.0, 1.0),
+            "frame_skip": 4, "order": ("steer", "gas", "brake"),
+            "method": "symmetric-native-to-haic-box",
+        }
+        for name, actual, expected in (
+            ("observation", observation_spec, expected_observation),
+            ("action", action_spec, expected_action),
+        ):
+            if not isinstance(actual, dict):
+                raise ValueError(f"invalid DrQ {name} spec")
+            for key, value in expected.items():
+                recorded = actual.get(key)
+                if isinstance(value, tuple) and isinstance(recorded, (list, tuple)):
+                    recorded = tuple(recorded)
+                if key not in actual or recorded != value:
+                    raise ValueError(f"unsupported DrQ {name} spec: {key}")
+        if (
+            not isinstance(config, dict)
+            or config.get("observation_shape") not in ((4, 84, 84), [4, 84, 84])
+            or config.get("action_dim") != 3
+            or any(
+                type(config.get(key)) is not int or config[key] <= 0
+                for key in ("feature_dim", "hidden_dim")
+            )
+        ):
+            raise ValueError("invalid DrQ actor architecture config")
+        if (
+            normalize_action_smoothing(payload.get("action_smoothing"))
+            != normalize_action_smoothing()
+            or normalize_action_control(payload.get("action_control"))
+            != normalize_action_control()
+            or normalize_action_representation(payload.get("action_representation"))
+            != normalize_action_representation()
+        ):
+            raise ValueError("DrQ export must use the frozen unsmoothed action contract")
+        state_dict = payload.get("state_dict")
+        if not isinstance(state_dict, dict) or not state_dict or any(
+            not isinstance(value, torch.Tensor)
+            or value.dtype != torch.float32
+            or not torch.isfinite(value).all()
+            for value in state_dict.values()
+        ):
+            raise ValueError("invalid or non-finite DrQ actor state")
+        for key, shape in (
+            ("encoder.linear.1.weight", (config["feature_dim"], 512)),
+            ("trunk.0.weight", (config["hidden_dim"], config["feature_dim"])),
+            ("policy.weight", (3, config["hidden_dim"])),
+        ):
+            if key not in state_dict or tuple(state_dict[key].shape) != shape:
+                raise ValueError(f"DrQ actor config does not match state: {key}")
+        with torch.random.fork_rng(devices=[]):
+            self.model = DrQActor(config["feature_dim"], config["hidden_dim"])
+        self.model.load_state_dict(state_dict, strict=True)
+        self.model.eval()
+        self.format = DRQ_ACTOR_FORMAT
+        self._runtime_mode = "drq"
+        self.export_metadata = {
+            key: value for key, value in payload.items() if key != "state_dict"
+        }
+        self.reset(None)
 
     def _init_baseline(self, payload):
         # Keep these imports local: the HAIC-only archive does not ship the
@@ -192,6 +313,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._runtime_mode = "baseline"
+        self.format = None
         self.reset(None)
 
     def _init_haic(
@@ -355,6 +477,9 @@ class Agent:
 
     def reset(self, observation):
         """Clear the state owned by the selected runtime."""
+        if self._runtime_mode == "drq":
+            # The deterministic actor is feed-forward.
+            return
         if self._runtime_mode == "baseline":
             self.smoother.reset(initial_action=self.action_smoothing["initial_action"])
             return
@@ -365,6 +490,26 @@ class Agent:
 
     @torch.inference_mode()
     def act(self, observation) -> np.ndarray:
+        if self._runtime_mode == "drq":
+            observation = np.asarray(observation)
+            if (
+                observation.shape != (4, 84, 84)
+                or observation.dtype != np.float32
+                or not np.isfinite(observation).all()
+                or np.any(observation < 0.0)
+                or np.any(observation > 1.0)
+            ):
+                raise ValueError(
+                    "DrQ observation must be float32 CHW (4, 84, 84) in [0, 1]"
+                )
+            native = self.model(
+                torch.as_tensor(np.ascontiguousarray(observation)).unsqueeze(0)
+            ).squeeze(0).numpy()
+            action = np.clip(native, -1.0, 1.0).astype(np.float32)
+            action[1:] = (action[1:] + 1.0) * 0.5
+            if not np.isfinite(action).all():
+                raise ValueError("DrQ actor produced a non-finite action")
+            return action
         if self._runtime_mode == "baseline":
             controlled = self._append_action_control_plane(
                 observation,

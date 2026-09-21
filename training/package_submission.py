@@ -16,6 +16,7 @@ import torch
 
 from haic_agent.dynamics import LatentDynamicsEnsemble
 from haic_agent.networks import VisualActorCritic
+from haic_agent.planner import validate_planner_dimensions
 
 
 INFERENCE_FILES = (
@@ -52,16 +53,12 @@ def validate_planner_settings(settings: Any) -> dict[str, Any]:
     }
     if not isinstance(settings, dict) or set(settings) != required:
         raise ValueError("planner settings must define exactly the required fields")
-    minimums = {
-        "horizon": 1,
-        "population": 2,
-        "iterations": 1,
-        "candidate_batch_size": 1,
-    }
-    for name, minimum in minimums.items():
-        value = settings[name]
-        if type(value) is not int or value < minimum:
-            raise ValueError(f"planner settings {name} must be an integer >= {minimum}")
+    validate_planner_dimensions(
+        settings["horizon"],
+        settings["population"],
+        settings["iterations"],
+        settings["candidate_batch_size"],
+    )
     uncertainty_cost = settings["uncertainty_cost"]
     try:
         finite_uncertainty_cost = float(uncertainty_cost)

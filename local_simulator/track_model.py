@@ -93,6 +93,13 @@ class CustomTrackGeometry:
         if self.direction not in (-1, 1):
             raise ValueError("direction must be -1 or 1")
 
+    def ordered_centerline(self) -> tuple[tuple[float, float], ...]:
+        point_count = len(self.centerline)
+        return tuple(
+            self.centerline[(self.start_index + self.direction * offset) % point_count]
+            for offset in range(point_count)
+        )
+
 
 @dataclass(frozen=True)
 class CustomMapSpec:

@@ -8,7 +8,7 @@ from .schema import CustomMapSpec, MapDocument
 
 
 def custom_track_snapshot(spec: CustomMapSpec) -> TrackSnapshot:
-    points = spec.geometry.centerline
+    points = spec.geometry.ordered_centerline()
     projected: list[tuple[float, float, float, float]] = []
     for index, (x, y) in enumerate(points):
         previous = points[(index - 1) % len(points)]
@@ -28,6 +28,10 @@ def _custom_obstacle_position(
     track = custom_track_snapshot(spec)
     index = min(len(track.points) - 1, max(0, round(progress * (len(track.points) - 1))))
     _alpha, beta, x, y = track.points[index]
+    if radius > spec.geometry.width:
+        raise ValueError(
+            f"obstacle radius {radius} exceeds custom road width {spec.geometry.width}"
+        )
     max_offset = min(spec.geometry.width * 0.6, spec.geometry.width - radius)
     offset = lateral * max_offset
     return (

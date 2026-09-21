@@ -346,10 +346,6 @@ def validate_submission_archive(
 
 def build_submission(agent_path: Path, model_path: Path, archive_path: Path):
     expected_model_filename = validate_agent_source(agent_path)
-    if model_path.name != expected_model_filename:
-        raise ValueError(
-            f"agent expects {expected_model_filename}, but model path is {model_path.name}"
-        )
     if not model_path.is_file():
         raise FileNotFoundError(model_path)
     dependencies = agent_dependency_paths(agent_path)

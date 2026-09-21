@@ -268,6 +268,23 @@ without real-environment completion and a valid package.
 For each implemented algorithm, record one explicit run directory and never
 infer a candidate from `_latest`.
 
+The 2026-09-21 inventory found no historical PPO run fully matching the frozen
+four-channel, unsmoothed, raw-reward contract. The named continuous control has
+a fifth plane, EMA, shaping and reward normalization, and SB3's initial reset
+overrides the declared sampler stream. Use it only as historical evidence.
+The next DrQ experiment can match the 1,048,576-decision budget and share an
+indexed episode stream across its own training seeds; do not call this an
+algorithm-only matched PPO comparison or claim equal consumed rollout prefixes.
+
+The pilot promotion protocol is predeclared in
+`experiments/drqv2-promotion-v1.json`. Its fresh screen, confirmation and reserved
+blind partitions replace the already-consumed legacy evaluation cells for this
+decision. Freeze the actor hash before confirmation, never select on confirmation
+or blind outcomes, and reserve new confirmation/blind cells for subsequent
+scale-up. The historical pilot's exact 24 screen cells were not recorded;
+disjointness is established against documented cells, not undocumented history.
+Training must exclude every geometry seed in all frozen partitions.
+
 - Smoke: 1 seed, 2,000--10,000 steps, pipeline and checkpoint tests.
 - Pilot: 2 seeds, 131,072 steps, fixed screen cells only.
 - Matched: 4 seeds, same track/seed schedule, same observation/action/reward

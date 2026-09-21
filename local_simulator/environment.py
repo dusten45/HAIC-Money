@@ -106,6 +106,10 @@ def _custom_obstacle_position(
     index = min(len(track) - 1, max(0, round(progress * (len(track) - 1))))
     _alpha, beta, x, y = track[index]
     track_width = spec.geometry.width if isinstance(spec, CustomMapSpec) else TRACK_WIDTH
+    if radius > track_width:
+        raise ValueError(
+            f"obstacle radius {radius} exceeds custom road width {track_width}"
+        )
     max_offset = min(track_width * 0.6, track_width - radius)
     offset = lateral * max_offset
     return (

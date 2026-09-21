@@ -42,6 +42,12 @@ class _FinalizationClock:
 
 
 class TestCEMPlanner(unittest.TestCase):
+    def test_constructor_rejects_unsafe_plan_dimensions_before_allocating(self):
+        from haic_agent.planner import CEMPlanner
+
+        with self.assertRaisesRegex(ValueError, "planner settings"):
+            CEMPlanner(horizon=10_000_000, population=2, iterations=1)
+
     def test_plan_returns_bounded_first_action_and_horizon_sequence(self):
         # Break caught: flattening a CEM population can return a scalar action
         # or an unbounded Normal sample to the CarRacing interface.

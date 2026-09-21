@@ -22,8 +22,9 @@ class CustomCarRacing(CarRacing):
         super().__init__(render_mode=render_mode, continuous=True)
         self.custom_geometry = geometry
 
-    def _normal_angles(self) -> tuple[float, ...]:
-        points = self.custom_geometry.centerline
+    def _normal_angles(
+        self, points: tuple[tuple[float, float], ...]
+    ) -> tuple[float, ...]:
         angles: list[float] = []
         for index, point in enumerate(points):
             previous = points[(index - 1) % len(points)]
@@ -36,8 +37,8 @@ class CustomCarRacing(CarRacing):
         return tuple(angles)
 
     def _create_track(self) -> bool:
-        points = self.custom_geometry.centerline
-        normals = self._normal_angles()
+        points = self.custom_geometry.ordered_centerline()
+        normals = self._normal_angles(points)
         half_width = self.custom_geometry.width
         self.road = []
         track: list[tuple[float, float, float, float]] = []

@@ -16,6 +16,36 @@ from haic_agent.networks import (
     VisualActorCritic,
 )
 
+MAX_PLANNER_HORIZON = 32
+MAX_PLANNER_POPULATION = 256
+MAX_PLANNER_ITERATIONS = 8
+MAX_PLANNER_CANDIDATE_BATCH_SIZE = 64
+MAX_PLANNER_ROLLOUT_STEPS = 4_096
+
+
+def validate_planner_dimensions(
+    horizon: int,
+    population: int,
+    iterations: int,
+    candidate_batch_size: int,
+) -> None:
+    """Reject planner dimensions outside the packaged CPU inference budget."""
+    dimensions = {
+        "horizon": (horizon, 1, MAX_PLANNER_HORIZON),
+        "population": (population, 2, MAX_PLANNER_POPULATION),
+        "iterations": (iterations, 1, MAX_PLANNER_ITERATIONS),
+        "candidate_batch_size": (candidate_batch_size, 1, MAX_PLANNER_CANDIDATE_BATCH_SIZE),
+    }
+    for name, (value, minimum, maximum) in dimensions.items():
+        if type(value) is not int or not minimum <= value <= maximum:
+            raise ValueError(
+                f"planner settings {name} must be an integer between {minimum} and {maximum}"
+            )
+    if horizon * population * iterations > MAX_PLANNER_ROLLOUT_STEPS:
+        raise ValueError(
+            "planner settings total rollout work exceeds the safe inference limit"
+        )
+
 
 @dataclass(frozen=True)
 class PlanResult:
@@ -50,8 +80,12 @@ class CEMPlanner:
         uncertainty_cost: float = 1.0,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
-        if horizon < 1 or population < 2 or iterations < 1 or candidate_batch_size < 1:
-            raise ValueError("horizon, population, iterations, and candidate_batch_size must be positive")
+        validate_planner_dimensions(
+            horizon,
+            population,
+            iterations,
+            candidate_batch_size,
+        )
         if not 0.0 < elite_fraction <= 1.0:
             raise ValueError("elite_fraction must be in (0, 1]")
         self.horizon = int(horizon)

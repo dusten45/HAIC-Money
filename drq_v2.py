@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import random
+import warnings
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Iterable
@@ -147,22 +148,18 @@ class Uint8Replay:
             return None
         slot, episode_id = record
         current_step = int(self.episode_steps[slot])
-        first_record = self._record(sequence - current_step)
-        if first_record is None or first_record[1] != episode_id:
+        if current_step < 0:
             return None
-        first_slot, _ = first_record
         channels = self.observation_spec.shape[0]
         result = np.empty(self.observation_spec.shape, dtype=np.uint8)
         for channel in range(channels):
-            offset = channel - channels + 1
-            if current_step + offset < 0:
-                result[channel] = self.frames[first_slot]
-                continue
+            # Clamp only reset padding; later stacks do not need the episode start.
+            offset = max(channel - channels + 1, -current_step)
             frame_record = self._record(sequence + offset)
             if frame_record is None:
                 return None
             frame_slot, frame_episode = frame_record
-            if frame_episode != episode_id:
+            if frame_episode != episode_id or self.episode_steps[frame_slot] != current_step + offset:
                 return None
             result[channel] = self.frames[frame_slot]
         return result
@@ -171,7 +168,8 @@ class Uint8Replay:
         first = self._record(start)
         if first is None:
             return None
-        _, episode_id = first
+        first_slot, episode_id = first
+        first_step = int(self.episode_steps[first_slot])
         total_reward = 0.0
         horizon = 0
         endpoint = None
@@ -180,6 +178,8 @@ class Uint8Replay:
             if record is None or record[1] != episode_id:
                 return None
             slot, _ = record
+            if self.episode_steps[slot] != first_step + offset:
+                return None
             total_reward += (self.gamma**offset) * float(self.rewards[slot])
             horizon = offset + 1
             endpoint = slot
@@ -197,6 +197,13 @@ class Uint8Replay:
                 return None
             discount = self.gamma**horizon if not self.terminal[endpoint] else 0.0
         else:
+            next_record = self._record(start + horizon)
+            if (
+                next_record is None
+                or next_record[1] != episode_id
+                or self.episode_steps[next_record[0]] != first_step + horizon
+            ):
+                return None
             next_observation = self._stack(start + horizon)
             if next_observation is None:
                 return None
@@ -436,6 +443,7 @@ class DrQv2Config:
     device: str = "cpu"
 
     def __post_init__(self) -> None:
+        self.observation_shape = tuple(self.observation_shape)
         if tuple(self.observation_shape) != (4, 84, 84):
             raise ValueError("DrQ-v2 is frozen to four 84x84 channels")
         if self.action_dim != 3:
@@ -457,6 +465,8 @@ class DrQv2Agent:
     ):
         self.config = config or DrQv2Config()
         self.observation_spec = observation_spec or ObservationSpec()
+        if self.observation_spec.channel_order != "CHW" or self.observation_spec.control_plane_fingerprint is not None:
+            raise ValueError("DrQ-v2 requires the frozen CHW observation without a control plane")
         self.action_adapter = ActionAdapter(action_spec or ActionSpec())
         self.device = torch.device(self.config.device)
         if self.device.type != "cpu" and not torch.cuda.is_available():
@@ -626,6 +636,9 @@ class DrQv2Agent:
             "gradient_steps": self.gradient_steps,
             "numpy_rng_state": copy.deepcopy(self.rng.bit_generator.state),
             "torch_rng_state": torch.get_rng_state(),
+            "torch_cuda_rng_state": (
+                torch.cuda.get_rng_state(self.device) if self.device.type == "cuda" else None
+            ),
             "python_rng_state": random.getstate(),
         }
 
@@ -635,10 +648,10 @@ class DrQv2Agent:
         *,
         source_paths: Iterable[str | Path] = (),
         run_metadata: dict[str, Any] | None = None,
+        trainer_state: dict[str, Any] | None = None,
     ) -> Path:
+        """Save learner state plus opaque trainer data, not a live simulator snapshot."""
         path = Path(path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        torch.save(self._payload(), path)
         manifest = build_checkpoint_manifest(
             algorithm="drq-v2",
             reward_contract=(run_metadata or {}).get("reward_contract", {}),
@@ -654,15 +667,58 @@ class DrQv2Agent:
             observation_spec=self.observation_spec,
             extra={"environment_steps": self.environment_steps, **(run_metadata or {})},
         )
+        payload = self._payload()
+        payload["manifest"] = manifest
+        if trainer_state is not None:
+            payload["trainer_state"] = copy.deepcopy(trainer_state)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(payload, path)
         write_checkpoint_manifest(path.with_suffix(".manifest.json"), manifest)
         return path
 
-    def load_checkpoint(self, path: str | Path) -> None:
-        payload = torch.load(path, map_location=self.device, weights_only=False)
+    def load_checkpoint(self, path: str | Path) -> dict[str, Any] | None:
+        """Restore the learner and return trainer data without restoring an environment."""
+        payload = torch.load(path, map_location="cpu", weights_only=False)
         if payload.get("format") != "haic-drq-v2-checkpoint-v1":
             raise ValueError("unsupported DrQ-v2 checkpoint format")
-        if tuple(payload["config"]["observation_shape"]) != tuple(self.config.observation_shape):
-            raise ValueError("checkpoint observation shape does not match agent")
+        saved_config = asdict(DrQv2Config(**payload["config"]))
+        current_config = asdict(self.config)
+        mismatches = [
+            key for key in current_config
+            if key != "device" and saved_config[key] != current_config[key]
+        ]
+        if mismatches:
+            raise ValueError(f"checkpoint configuration does not match agent: {', '.join(mismatches)}")
+        saved_observation = ObservationSpec(**payload["observation_spec"])
+        saved_action = ActionSpec(**payload["action_spec"])
+        if saved_observation.fingerprint != self.observation_spec.fingerprint:
+            raise ValueError("checkpoint observation specification does not match agent")
+        if saved_action.fingerprint != self.action_adapter.spec.fingerprint:
+            raise ValueError("checkpoint action specification does not match agent")
+        manifest = payload.get("manifest")
+        if manifest is None and Path(path).with_suffix(".manifest.json").is_file():
+            manifest = json.loads(Path(path).with_suffix(".manifest.json").read_text())
+        if manifest is not None:
+            expected = build_checkpoint_manifest(
+                algorithm="drq-v2", reward_contract={}, frame_skip=saved_action.frame_skip,
+                max_steps=0, seeds=[], dependency_lockfile=None,
+                observation_spec=saved_observation, action_spec=saved_action,
+            )
+            for key in ("schema_version", "algorithm", "observation", "action", "frame_skip"):
+                if manifest.get(key) != expected[key]:
+                    raise ValueError(f"checkpoint manifest {key} does not match the saved contract")
+        saved_device = torch.device(saved_config["device"])
+        cuda_rng_state = payload.get("torch_cuda_rng_state")
+        if saved_device.type == "cuda" and cuda_rng_state is None:
+            warnings.warn(
+                "Legacy CUDA checkpoint has no CUDA RNG state; exact stochastic continuation is unavailable",
+                RuntimeWarning, stacklevel=2,
+            )
+        elif saved_device.type != self.device.type:
+            warnings.warn(
+                "Checkpoint device type changed; exact stochastic continuation is not guaranteed",
+                RuntimeWarning, stacklevel=2,
+            )
         self.actor.load_state_dict(payload["actor"])
         self.critic_one.load_state_dict(payload["critic_one"])
         self.critic_two.load_state_dict(payload["critic_two"])
@@ -675,7 +731,10 @@ class DrQv2Agent:
         self.gradient_steps = int(payload["gradient_steps"])
         self.rng.bit_generator.state = copy.deepcopy(payload["numpy_rng_state"])
         torch.set_rng_state(payload["torch_rng_state"].cpu())
+        if self.device.type == "cuda" and cuda_rng_state is not None:
+            torch.cuda.set_rng_state(cuda_rng_state.cpu(), device=self.device)
         random.setstate(payload["python_rng_state"])
+        return copy.deepcopy(payload.get("trainer_state"))
 
     def export_actor(self, path: str | Path) -> Path:
         path = Path(path)
@@ -694,18 +753,21 @@ class DrQv2Agent:
 
 
 def load_exported_actor(path: str | Path, *, device: str = "cpu") -> tuple[DrQActor, ActionAdapter, ObservationSpec]:
-    payload = torch.load(path, map_location=device, weights_only=False)
+    payload = torch.load(path, map_location="cpu", weights_only=False)
     if payload.get("format") != "haic-drq-v2-actor-v1":
         raise ValueError("unsupported DrQ-v2 actor export")
     config = DrQv2Config(**payload["config"])
     observation_spec = ObservationSpec(**payload["observation_spec"])
     action_spec = ActionSpec(**payload["action_spec"])
-    actor = DrQActor(
-        config.observation_shape[0],
-        config.action_dim,
-        config.feature_dim,
-        config.hidden_dim,
-    ).to(device)
+    # Initialization is overwritten by saved weights and must not advance training RNG.
+    with torch.random.fork_rng(devices=[]):
+        actor = DrQActor(
+            config.observation_shape[0],
+            config.action_dim,
+            config.feature_dim,
+            config.hidden_dim,
+        )
     actor.load_state_dict(payload["state_dict"])
+    actor.to(device)
     actor.eval()
     return actor, ActionAdapter(action_spec), observation_spec

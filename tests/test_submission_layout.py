@@ -15,7 +15,12 @@ from training.evaluate_closed_loop import (
     choose_planner_from_tune,
     validate_episode_splits,
 )
-from training.package_submission import build_submission, validate_checkpoints, validate_submission_archive
+from training.package_submission import (
+    build_submission,
+    validate_checkpoints,
+    validate_planner_settings,
+    validate_submission_archive,
+)
 from training.package_submission import resolve_package_selection
 
 
@@ -103,6 +108,27 @@ class TestInferenceOnlySubmissionArchive(unittest.TestCase):
                 )
 
             self.assertFalse(archive.exists())
+
+    def test_planner_settings_reject_unbounded_dimensions_and_total_work(self):
+        baseline = {
+            "horizon": 4,
+            "population": 16,
+            "iterations": 2,
+            "candidate_batch_size": 8,
+            "uncertainty_cost": 1.0,
+        }
+        oversized = (
+            {"horizon": 10_000_000},
+            {"population": 10_000_000},
+            {"iterations": 10_000_000},
+            {"candidate_batch_size": 10_000_000},
+            {"horizon": 32, "population": 256, "iterations": 8, "candidate_batch_size": 64},
+        )
+        for changes in oversized:
+            with self.subTest(changes=changes):
+                settings = {**baseline, **changes}
+                with self.assertRaisesRegex(ValueError, "planner settings"):
+                    validate_planner_settings(settings)
 
     def test_package_selection_uses_summary_or_safely_disables_planner(self):
         disabled, default_settings = resolve_package_selection(None)

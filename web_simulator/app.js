@@ -687,22 +687,44 @@
     });
   }
 
-  function renderComparison() {
-    const rows = summarizeRuns(state.logs);
+  function renderComparison(logs = state.logs) {
+    const rows = summarizeRuns(logs);
     const table = $("run-table");
     if (!rows.length) {
-      table.innerHTML = '<tr><td colspan="6" class="empty-cell">로그를 추가하면 기록이 쌓입니다.</td></tr>';
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+      cell.colSpan = 6;
+      cell.className = "empty-cell";
+      cell.textContent = "로그를 추가하면 기록이 쌓입니다.";
+      row.append(cell);
+      table.replaceChildren(row);
       return;
     }
-    table.innerHTML = rows.map((row) => `
-      <tr>
-        <td title="${row.run_id}">${row.run_id.slice(0, 10)}</td>
-        <td class="${row.finished ? "finished" : "dnf"}">${row.finished ? "FINISHED" : "DNF"}</td>
-        <td>${formatLapTime(row.lap_time_ms)}</td>
-        <td>${formatPercent(row.progress)}</td>
-        <td>${formatPercent(row.damage)}</td>
-        <td>${row.collision_count}</td>
-      </tr>`).join("");
+    const tableRows = rows.map((row) => {
+      const tableRow = document.createElement("tr");
+      const runIdCell = document.createElement("td");
+      runIdCell.title = row.run_id;
+      runIdCell.textContent = row.run_id.slice(0, 10);
+      tableRow.append(runIdCell);
+
+      const resultCell = document.createElement("td");
+      resultCell.className = row.finished ? "finished" : "dnf";
+      resultCell.textContent = row.finished ? "FINISHED" : "DNF";
+      tableRow.append(resultCell);
+
+      for (const value of [
+        formatLapTime(row.lap_time_ms),
+        formatPercent(row.progress),
+        formatPercent(row.damage),
+        String(row.collision_count)
+      ]) {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        tableRow.append(cell);
+      }
+      return tableRow;
+    });
+    table.replaceChildren(...tableRows);
   }
 
   let animationId = null;
@@ -1962,6 +1984,7 @@
     setPlaybackRunning,
     advancePlayback,
     summarizeRuns,
+    renderComparison,
     generateCustomMap,
     applyCustomMap,
     startRun,
