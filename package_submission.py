@@ -442,10 +442,6 @@ def create_submission_record(
         raise FileExistsError(record_dir)
 
     expected_model_filename = validate_agent_source(agent_path)
-    if model_path.name != expected_model_filename:
-        raise ValueError(
-            f"agent expects {expected_model_filename}, but model path is {model_path.name}"
-        )
     if not model_path.is_file():
         raise FileNotFoundError(model_path)
 
@@ -477,7 +473,7 @@ def create_submission_record(
             "action_smoothing_fingerprint": action_smoothing_fingerprint(action_smoothing),
             "action_control": action_control,
             "action_control_fingerprint": action_control_fingerprint(action_control),
-            "model": file_metadata(model_path),
+            "model": {**file_metadata(model_path), "archive_path": expected_model_filename},
             "source_model": source_model,
             "submission_zip": {
                 "path": "submission.zip",

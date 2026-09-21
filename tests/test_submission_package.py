@@ -2,6 +2,7 @@ import tempfile
 import unittest
 import hashlib
 import json
+import sys
 import zipfile
 from pathlib import Path
 
@@ -85,6 +86,14 @@ class TestSubmissionPackage(unittest.TestCase):
                 self.assertEqual(package.read("model.pt"), actor.read_bytes())
                 self.assertNotIn("drq_v2.py", package.namelist())
                 self.assertNotIn("common_adapter.py", package.namelist())
+            record, manifest = create_submission_record(
+                ROOT / "agent.py", actor, None, path / "records", "drq-explicit-actor",
+                smoke_test=False, python_executable=sys.executable,
+            )
+            self.assertEqual(manifest["model"]["archive_path"], "model.pt")
+            self.assertEqual(manifest["model"]["sha256"], hashlib.sha256(actor.read_bytes()).hexdigest())
+            with zipfile.ZipFile(record / "submission.zip") as package:
+                self.assertEqual(package.read("model.pt"), actor.read_bytes())
 
     def test_rejects_banned_submission_import(self):
         with tempfile.TemporaryDirectory() as directory:
