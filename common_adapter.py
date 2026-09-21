@@ -38,9 +38,9 @@ class ObservationSpec:
             raise ValueError("channel_order must be CHW or HWC")
         if np.dtype(self.dtype) != np.dtype(np.float32):
             raise ValueError("the frozen observation contract uses float32")
-        if not np.isfinite([self.low, self.high]).all() or self.low >= self.high:
-            raise ValueError("observation bounds must be finite and ordered")
-        if int(self.uint8_scale) != 255:
+        if self.low != 0.0 or self.high != 1.0:
+            raise ValueError("the frozen observation range is [0, 1]")
+        if self.uint8_scale != 255:
             raise ValueError("uint8_scale must remain 255 for the HAIC contract")
 
     @property
@@ -116,6 +116,19 @@ class ActionSpec:
     frame_skip: int = 4
     order: tuple[str, str, str] = ("steer", "gas", "brake")
     method: str = "symmetric-native-to-haic-box"
+
+    def __post_init__(self) -> None:
+        if (
+            tuple(self.native_low) != (-1.0, -1.0, -1.0)
+            or tuple(self.native_high) != (1.0, 1.0, 1.0)
+            or tuple(self.official_low) != (-1.0, 0.0, 0.0)
+            or tuple(self.official_high) != (1.0, 1.0, 1.0)
+        ):
+            raise ValueError("action bounds must match the frozen symmetric-to-HAIC contract")
+        if tuple(self.order) != ("steer", "gas", "brake") or self.method != "symmetric-native-to-haic-box":
+            raise ValueError("action order and mapping must match the frozen HAIC contract")
+        if self.frame_skip != 4:
+            raise ValueError("the frozen action contract requires frame_skip=4")
 
     @property
     def fingerprint(self) -> str:
@@ -390,11 +403,12 @@ def build_checkpoint_manifest(
 ) -> dict[str, Any]:
     observation_spec = observation_spec or ObservationSpec()
     action_spec = action_spec or ActionSpec(frame_skip=frame_skip)
+    if frame_skip != action_spec.frame_skip:
+        raise ValueError("manifest frame_skip does not match the action specification")
     source_hashes = {}
     for path in source_paths:
         path = Path(path)
-        if path.is_file():
-            source_hashes[str(path)] = file_sha256(path)
+        source_hashes[str(path)] = file_sha256(path)
     lock_hash = None
     if dependency_lockfile is not None and Path(dependency_lockfile).is_file():
         lock_hash = file_sha256(dependency_lockfile)
