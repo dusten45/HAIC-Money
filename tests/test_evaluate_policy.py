@@ -1,26 +1,83 @@
 import hashlib
+import importlib
+import json
+import os
+import time
 import tempfile
 import unittest
 import zipfile
 import pickle
 from types import SimpleNamespace
 from pathlib import Path
+from dataclasses import asdict
 from unittest.mock import patch
 
+import numpy as np
+import torch
+
+import evaluate_policy
+from agent import DRQ_ACTOR_FORMAT, DrQActor
+from common_adapter import ActionSpec, ObservationSpec
 from evaluate_policy import (
+    MAX_PROCESS_RSS_BYTES,
     PROTOCOLS,
+    candidate_summary,
     determinism_audit,
     discover_candidates,
+    evaluate_cell,
     evaluate_model,
+    load_protocol_spec,
     parse_int_list,
+    parse_worker_output,
+    previous_evaluation_metadata,
     ranking_key,
+    run_checkpoint_protocol,
+    run_isolated_cell,
     snapshot_candidates,
     snapshot_runtime,
     terminal_class,
+    timed_policy_call,
+    validate_cpu_runtime,
+    validate_protocol_request,
+    parse_args,
 )
 
 
 class TestEvaluatePolicy(unittest.TestCase):
+    def drq_candidate(self, root):
+        actor = root / "actor.pt"
+        torch.save({
+            "format": DRQ_ACTOR_FORMAT,
+            "config": {"observation_shape": (4, 84, 84), "action_dim": 3,
+                       "feature_dim": 16, "hidden_dim": 16},
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+            "state_dict": DrQActor(16, 16).state_dict(),
+        }, actor)
+        (root / "config.json").write_text(json.dumps({
+            "config": {"algorithm": "drq-v2", "max_steps": 2, "frame_skip": 4},
+        }))
+        return actor
+
+    def protocol_spec(self):
+        return {
+            "name": "unit-protocol", "max_steps": 2, "frame_skip": 4,
+            "partitions": {
+                partition: {"track_ids": [index + 1], "seeds": [index], "repeats": 2}
+                for index, partition in enumerate(("screen", "confirmation", "blind"))
+            },
+        }
+
+    def episode(self, repeat=0):
+        return {
+            "status": "ok", "candidate_id": "candidate", "track_id": 1, "seed": 0,
+            "repeat": repeat, "steps": 2, "reward": 1.0, "progress": 0.5,
+            "finished": False, "lap_time_ms": None, "damage": 0.0,
+            "termination_class": "max_steps", "action_trace_sha256": "a" * 64,
+            "process_initialization_seconds": .1, "agent_reset_seconds": .001,
+            "max_action_seconds": .001, "peak_rss_bytes": 128 * 1024 * 1024,
+        }
+
     def test_blind_protocol_is_disjoint_from_training_and_development_sets(self):
         blind_seeds = set(PROTOCOLS["checkpoint-v1-blind"]["seeds"])
         development_seeds = set(PROTOCOLS["checkpoint-v1-screen"]["seeds"])
@@ -28,6 +85,12 @@ class TestEvaluatePolicy(unittest.TestCase):
 
         self.assertTrue(blind_seeds.isdisjoint(development_seeds))
         self.assertTrue(blind_seeds.isdisjoint({42, 777, 1337, 2024}))
+
+    def test_import_does_not_mutate_training_process_environment(self):
+        with patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "keep-visible", "OMP_NUM_THREADS": "7"}):
+            importlib.reload(evaluate_policy)
+            self.assertEqual(os.environ["CUDA_VISIBLE_DEVICES"], "keep-visible")
+            self.assertEqual(os.environ["OMP_NUM_THREADS"], "7")
     def test_parse_int_list_requires_unique_bounded_values(self):
         self.assertEqual(parse_int_list("1,2,3", "--track-ids", 1), [1, 2, 3])
         with self.assertRaisesRegex(ValueError, "duplicates"):
@@ -127,6 +190,298 @@ class TestEvaluatePolicy(unittest.TestCase):
             self.assertEqual(worker.name, "evaluate_policy.py")
             self.assertTrue((worker.parent / "tracking.py").is_file())
             self.assertTrue((worker.parent / "action_smoothing.py").is_file())
+            self.assertTrue((worker.parent / "agent.py").is_file())
+
+    def test_drq_discovery_without_sb3_normalizer_and_immutable_snapshot(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            (root / "config.json").write_text(json.dumps({"config": {
+                "algorithm": "drq-v2", "max_steps": 2, "frame_skip": 4,
+            }}))
+            with patch("evaluate_policy.PPO.load", side_effect=AssertionError("SB3 load")):
+                candidate, = discover_candidates([actor], run_dir=root)
+            self.assertEqual(candidate["algorithm"], "drq-v2")
+            self.assertIsNone(candidate["vecnormalize_path"])
+            self.assertEqual(candidate["run_max_steps"], 2)
+            self.assertEqual(candidate["export_metadata"]["format"], DRQ_ACTOR_FORMAT)
+            self.assertEqual(candidate["export_spec_fingerprints"]["action_spec"], ActionSpec().fingerprint)
+            output = root / "snapshot"
+            output.mkdir()
+            original_hash = candidate["archive_sha256"]
+            snapshot_candidates(output, [candidate])
+            actor.write_bytes(b"mutated")
+            snapshot = output / candidate["evaluation_archive_path"]
+            self.assertEqual(snapshot.suffix, ".pt")
+            self.assertEqual(hashlib.sha256(snapshot.read_bytes()).hexdigest(), original_hash)
+            self.assertTrue((output / candidate["evaluation_run_config_path"]).is_file())
+
+    def test_custom_protocol_rejects_overlap_and_single_repeat_screen(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "protocol.json"
+            spec = self.protocol_spec()
+            path.write_text(json.dumps(spec))
+            self.assertEqual(load_protocol_spec(path), spec)
+            spec["partitions"]["blind"]["seeds"] = [0]
+            path.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(ValueError, "disjoint"):
+                load_protocol_spec(path)
+            spec = self.protocol_spec()
+            spec["partitions"]["screen"]["repeats"] = 1
+            path.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(ValueError, "two independent"):
+                load_protocol_spec(path)
+
+    def test_screen_only_protocol_is_reserved_for_harness_smoke(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "protocol.json"
+            spec = self.protocol_spec()
+            spec["partitions"] = {"screen": spec["partitions"]["screen"]}
+            path.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(ValueError, "partitions"):
+                load_protocol_spec(path)
+            spec["purpose"] = "harness-smoke"
+            path.write_text(json.dumps(spec))
+            self.assertEqual(load_protocol_spec(path), spec)
+
+    def test_explicit_run_rejects_missing_config_or_unrelated_actor(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            (root / "config.json").unlink()
+            with self.assertRaisesRegex(ValueError, "config.json provenance"):
+                discover_candidates([actor], run_dir=root)
+            other = root / "unrelated"
+            other.mkdir()
+            with self.assertRaisesRegex(ValueError, "belong"):
+                discover_candidates([actor], run_dir=other)
+
+    def test_custom_protocol_publishes_repeat_selection_summary_and_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            spec_path = root / "protocol.json"
+            spec_path.write_text(json.dumps(self.protocol_spec()))
+            args = SimpleNamespace(
+                model=[actor], run_dir=root, legacy_model=None, protocol_file=spec_path,
+                partition="screen", output=root / "pointer.json", max_steps=2,
+                frame_skip=4, evaluations_dir=root / "evaluations", timeout_seconds=30, workers=2,
+            )
+
+            def worker(candidate, track_id, seed, repeat, **_arguments):
+                if repeat == 0:
+                    time.sleep(.01)
+                return {**self.episode(repeat), "candidate_id": candidate["candidate_id"],
+                        "track_id": track_id, "seed": seed, "runtime": {"test": True}}
+
+            with patch("evaluate_policy.run_isolated_cell", side_effect=worker) as run:
+                result_dir = run_checkpoint_protocol(args, "ad-hoc")
+            pointer = json.loads(args.output.read_text())
+            ranked = json.loads((result_dir / "summary.json").read_text())
+            self.assertEqual(run.call_count, 2)
+            self.assertEqual(pointer["ranked"], ranked)
+            self.assertEqual(Path(pointer["evaluation_dir"]), result_dir)
+            self.assertEqual(pointer["partition"], "screen")
+            self.assertEqual(pointer["protocol_sha256"], hashlib.sha256(spec_path.read_bytes()).hexdigest())
+            self.assertTrue(ranked[0]["eligible"])
+            self.assertTrue(ranked[0]["determinism_audited"])
+            self.assertTrue(ranked[0]["cpu_reload_matches"])
+            self.assertEqual(ranked[0]["summary"]["n_episodes"], 1)
+            self.assertEqual((result_dir / "protocol_spec.json").read_bytes(), spec_path.read_bytes())
+            with self.assertRaises(FileExistsError):
+                run_checkpoint_protocol(args, "ad-hoc")
+
+    def test_blind_rejects_multiple_candidates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            spec = root / "protocol.json"
+            spec.write_text(json.dumps(self.protocol_spec()))
+            with patch("sys.argv", ["evaluate_policy.py", "--model", "one.pt", "--model", "two.pt",
+                                     "--run-dir", str(root), "--protocol-file", str(spec),
+                                     "--partition", "blind"]):
+                args = parse_args()
+            with self.assertRaisesRegex(ValueError, "one already-selected"):
+                validate_protocol_request(args)
+
+    def test_duplicate_repeats_and_failed_reload_cannot_be_selected(self):
+        candidate = {"candidate_id": "candidate", "expected_cells": 1, "expected_results": 2}
+        episodes = [self.episode(), self.episode()]
+        _, non_reproducible, unaudited = determinism_audit(episodes)
+        summary = candidate_summary(candidate, episodes, non_reproducible, unaudited)
+        self.assertFalse(summary["eligible"])
+        failed = {**self.episode(1), "status": "exception"}
+        episodes = [self.episode(), failed]
+        _, non_reproducible, unaudited = determinism_audit(episodes)
+        summary = candidate_summary(candidate, episodes, non_reproducible, unaudited)
+        self.assertFalse(summary["eligible"])
+        self.assertFalse(summary["cpu_reload_matches"])
+        self.assertEqual(summary["operational_failures"], 1)
+
+    def test_resource_violation_in_second_repeat_blocks_selection(self):
+        candidate = {"candidate_id": "candidate", "algorithm": "drq-v2",
+                     "expected_cells": 1, "expected_results": 2}
+        for key, value in (
+            ("process_initialization_seconds", 10.01), ("agent_reset_seconds", 5.01),
+            ("max_action_seconds", 5.01), ("peak_rss_bytes", MAX_PROCESS_RSS_BYTES + 1),
+            ("max_action_seconds", float("nan")),
+        ):
+            with self.subTest(resource=key, value=value):
+                episodes = [self.episode(), {**self.episode(1), key: value}]
+                _, non_reproducible, unaudited = determinism_audit(episodes)
+                summary = candidate_summary(candidate, episodes, non_reproducible, unaudited)
+                self.assertFalse(summary["eligible"])
+                self.assertFalse(summary["cpu_reload_matches"])
+                self.assertEqual(summary["operational_failures"], 1)
+
+    def test_confirmation_and_blind_bind_immutable_predecessor_receipt(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            spec_path = root / "protocol.json"
+            spec_path.write_text(json.dumps(self.protocol_spec()))
+            args = SimpleNamespace(
+                model=[actor], run_dir=root, legacy_model=None, protocol_file=spec_path,
+                partition="screen", output=root / "screen.json", previous_evaluation=None,
+                max_steps=2, frame_skip=4, evaluations_dir=root / "evaluations", timeout_seconds=30,
+            )
+
+            def worker(candidate, track_id, seed, repeat, **_arguments):
+                return {**self.episode(repeat), "candidate_id": candidate["candidate_id"],
+                        "track_id": track_id, "seed": seed, "finished": True,
+                        "lap_time_ms": 80, "progress": 1.0}
+
+            with patch("evaluate_policy.run_isolated_cell", side_effect=worker):
+                screen_dir = run_checkpoint_protocol(args, "ad-hoc")
+                screen_pointer = args.output
+                args.partition = "confirmation"
+                args.output = root / "confirmation.json"
+                with self.assertRaisesRegex(ValueError, "previous-evaluation"):
+                    run_checkpoint_protocol(args, "ad-hoc")
+                args.previous_evaluation = screen_pointer
+                confirmation_dir = run_checkpoint_protocol(args, "ad-hoc")
+                self.assertEqual(
+                    (confirmation_dir / "previous_evaluation.json").read_bytes(), screen_pointer.read_bytes()
+                )
+                confirmation_pointer = args.output
+                args.partition = "blind"
+                args.output = root / "blind.json"
+                with self.assertRaisesRegex(ValueError, "preceding partition"):
+                    run_checkpoint_protocol(args, "ad-hoc")
+                args.previous_evaluation = confirmation_pointer
+                run_checkpoint_protocol(args, "ad-hoc")
+            pointer = json.loads(screen_pointer.read_text())
+            candidate = pointer["ranked"][0]
+            with self.assertRaisesRegex(ValueError, "protocol"):
+                previous_evaluation_metadata(screen_pointer, "confirmation", "wrong-hash", candidate)
+            with self.assertRaisesRegex(ValueError, "exact actor"):
+                previous_evaluation_metadata(screen_pointer, "confirmation", pointer["protocol_sha256"],
+                                             {**candidate, "archive_sha256": "wrong-actor"})
+            pointer["ranked"][0]["summary"]["finish_rate"] = 0.0
+            screen_pointer.write_text(json.dumps(pointer))
+            with self.assertRaisesRegex(ValueError, "immutable"):
+                previous_evaluation_metadata(screen_pointer, "confirmation", pointer["protocol_sha256"], candidate)
+            (screen_dir / "summary.json").write_text(json.dumps(pointer["ranked"]))
+            with self.assertRaisesRegex(ValueError, "nonzero completion"):
+                previous_evaluation_metadata(screen_pointer, "confirmation", pointer["protocol_sha256"], candidate)
+
+    def test_selection_order_is_finish_rate_progress_completed_lap(self):
+        def ranked(finish, progress, lap):
+            return {"eligible": True, "operational_failures": 0, "by_track": {},
+                    "summary": {"finish_rate": finish, "avg_progress": progress,
+                                "avg_lap_time_ms": lap}}
+        self.assertGreater(ranking_key(ranked(.5, .2, 100)), ranking_key(ranked(0, 1, None)))
+        self.assertGreater(ranking_key(ranked(.5, .8, 100)), ranking_key(ranked(.5, .2, 10)))
+        self.assertGreater(ranking_key(ranked(.5, .8, 10)), ranking_key(ranked(.5, .8, 100)))
+
+    def test_isolated_worker_uses_explicit_interpreter_and_frozen_cwd(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.drq_candidate(root)
+            candidate, = discover_candidates([actor])
+            candidate["_worker_model_path"] = str(actor)
+            args = SimpleNamespace(python="/cpu-venv/bin/python", max_steps=2,
+                                   frame_skip=4, timeout_seconds=30)
+            completed = SimpleNamespace(returncode=0, stdout=json.dumps(self.episode()), stderr="")
+            with patch.dict("os.environ", {"PYTHONPATH": "/unsafe/repository"}):
+                with patch("evaluate_policy.subprocess.run", return_value=completed) as run:
+                    result = run_isolated_cell(candidate, 1, 0, 0, args, root / "evaluate_policy.py")
+            self.assertEqual(run.call_args.args[0][0], "/cpu-venv/bin/python")
+            self.assertEqual(run.call_args.kwargs["cwd"], root)
+            self.assertNotIn("PYTHONPATH", run.call_args.kwargs["env"])
+            self.assertEqual(run.call_args.kwargs["env"]["CUDA_VISIBLE_DEVICES"], "")
+            self.assertEqual(result["status"], "ok")
+
+    def test_drq_cell_resets_agent_records_trace_and_computes_official_lap(self):
+        class Environment:
+            def __init__(self):
+                self.unwrapped = self
+                self.t = 1.0
+                self.closed = False
+
+            def reset(self):
+                return np.zeros((4, 84, 84), dtype=np.float32), {}
+
+            def step(self, action):
+                self.t += .08
+                return np.zeros((4, 84, 84), dtype=np.float32), 1.0, False, True, {
+                    "finished": True, "finish_time_s": self.t, "progress": 1.0,
+                    "damage": 0.2,
+                }
+
+            def close(self):
+                self.closed = True
+
+        with tempfile.TemporaryDirectory() as directory:
+            actor = self.drq_candidate(Path(directory))
+            env = Environment()
+            with patch("evaluate_policy.build_env", return_value=env):
+                with patch("agent.Agent.reset", autospec=True) as reset, patch(
+                    "evaluate_policy.peak_rss_bytes", return_value=128 * 1024 * 1024
+                ):
+                    result = evaluate_cell(actor, 1, 0, 2, 4)
+            self.assertEqual(reset.call_count, 2)
+            self.assertEqual(result["lap_time_ms"], 80)
+            self.assertFalse(result["terminated"])
+            self.assertTrue(result["truncated"])
+            self.assertEqual(len(result["actions"]), 1)
+            self.assertEqual(len(result["action_trace_sha256"]), 64)
+            self.assertGreater(result["peak_rss_bytes"], 0)
+            self.assertGreater(result["max_action_seconds"], 0)
+            self.assertTrue(env.closed)
+            with patch("evaluate_policy.build_env", return_value=Environment()):
+                with patch("evaluate_policy.peak_rss_bytes", return_value=MAX_PROCESS_RSS_BYTES + 1):
+                    with self.assertRaises(MemoryError):
+                        evaluate_cell(actor, 1, 0, 2, 4)
+
+    def test_policy_call_budget_and_malformed_worker_output(self):
+        with self.assertRaises(TimeoutError):
+            timed_policy_call(time.sleep, .05, seconds=.001)
+        for output in ('null', '[]', '{"status": "ok"}', 'not json'):
+            self.assertEqual(parse_worker_output(output)["error_type"], "WorkerOutputError")
+
+    def test_cpu_runtime_validation_rejects_cuda_build_or_wrong_torch(self):
+        runtime = {
+            "python_version": [3, 11], "sys_platform": "linux", "torch_cuda": None,
+            "cuda_available": False, "torch_threads": 1, "torch_interop_threads": 1,
+            "packages": {"torch": "2.1.0+cpu", "numpy": "1.26.0",
+                         "gymnasium": "0.29.1", "opencv-python": "4.8.1.78"},
+        }
+        validate_cpu_runtime(runtime)
+        with self.assertRaisesRegex(ValueError, "pinned"):
+            validate_cpu_runtime({**runtime, "torch_cuda": "12.1"})
+        runtime["packages"]["torch"] = "2.11.0+cpu"
+        with self.assertRaisesRegex(ValueError, "pinned"):
+            validate_cpu_runtime(runtime)
+
+    def test_runtime_preflight_validates_protocol_before_training(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "protocol.json"
+            for spec, expected in ((self.protocol_spec(), 0), ({"name": "invalid"}, 1)):
+                path.write_text(json.dumps(spec))
+                with patch("sys.argv", ["evaluate_policy.py", "--check-runtime", "--protocol-file", str(path)]):
+                    with patch("evaluate_policy.runtime_metadata", return_value={}), patch("evaluate_policy.validate_cpu_runtime"):
+                        with patch("torch.set_num_interop_threads"), patch("builtins.print"):
+                            self.assertEqual(evaluate_policy.main(), expected)
 
 
 
