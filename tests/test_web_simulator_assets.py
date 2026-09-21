@@ -39,7 +39,11 @@ class TestWebAssets(unittest.TestCase):
         ):
             self.assertIn(f'id="{element_id}"', html)
         self.assertIn('value="technical"', html)
+        self.assertIn('value="extreme_technical"', html)
         self.assertIn('id="generated-track-summary"', html)
+        script = Path("web_simulator/app.js").read_text(encoding="utf-8")
+        self.assertIn("S자", script)
+        self.assertIn("90° 급코너", script)
 
     def test_initial_track_summary_matches_the_official_default_map(self):
         html = Path("web_simulator/index.html").read_text(encoding="utf-8")

@@ -60,7 +60,8 @@ if (JSON.stringify(map.geometry.centerline) !== JSON.stringify(repeated.geometry
         from local_simulator.track_generator import TEMPLATES, generate_custom_map
 
         for template in sorted(TEMPLATES):
-            for seed in (0, 42, 4294967295):
+            seeds = (0, 1, 42, 73, 300, 1200, 4294967295) if template == "extreme_technical" else (0, 42, 4294967295)
+            for seed in seeds:
                 with self.subTest(template=template, seed=seed):
                     expected = generate_custom_map(f"custom-track-{template}", seed, template)
                     options = {
@@ -122,35 +123,90 @@ if (!rejected) throw new Error("unknown template was not clearly rejected");'''
     def test_browser_fallback_matches_python_at_width_limits(self):
         from local_simulator.track_generator import generate_custom_map
 
-        for width in (0.5, 9.0):
-            with self.subTest(width=width):
-                expected = generate_custom_map("custom-track-width", 73, "technical", width=width)
-                options = {
-                    "map_id": "custom-track-width",
-                    "design_seed": 73,
-                    "template": "technical",
-                    "width": width,
-                    "max_steps": 2000,
-                    "frame_skip": 4,
-                    "obstacles": [],
-                }
-                script = r'''const fs = require("fs");
+        for template in ("technical", "extreme_technical"):
+            for width in (0.5, 9.0):
+                seeds = (0, 42, 73) if template == "extreme_technical" else (73,)
+                for seed in seeds:
+                    with self.subTest(template=template, width=width, seed=seed):
+                        expected = generate_custom_map("custom-track-width", seed, template, width=width)
+                        options = {
+                            "map_id": "custom-track-width",
+                            "design_seed": seed,
+                            "template": template,
+                            "width": width,
+                            "max_steps": 2000,
+                            "frame_skip": 4,
+                            "obstacles": [],
+                        }
+                        script = r'''const fs = require("fs");
 const vm = require("vm");
 const source = fs.readFileSync("web_simulator/app.js", "utf8");
 const context = { window: {}, document: { addEventListener() {} } };
 vm.createContext(context);
 vm.runInContext(source, context);
 const map = context.window.HAICSimulator.makeBrowserCustomMap(JSON.parse(process.argv[1]));
-console.log(JSON.stringify(map.geometry.centerline));'''
-                result = subprocess.run(
-                    [NODE, "-e", script, json.dumps(options)],
-                    cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
-                )
-                self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
-                self.assertEqual(
-                    json.loads(result.stdout),
-                    [list(point) for point in expected.geometry.centerline],
-                )
+console.log(JSON.stringify({ centerline: map.geometry.centerline, generator: map.generator }));'''
+                        result = subprocess.run(
+                            [NODE, "-e", script, json.dumps(options)],
+                            cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+                        )
+                        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+                        actual = json.loads(result.stdout)
+                        self.assertEqual(actual["generator"], json.loads(json.dumps(dict(expected.generator))))
+                        self.assertEqual(
+                            actual["centerline"],
+                            [list(point) for point in expected.geometry.centerline],
+                        )
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_extreme_track_summary_reports_generated_metrics(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const format = context.window.HAICSimulator.formatGeneratedTrackSummary;
+const summary = format({
+  map_kind: "custom",
+  generator: {
+    template: "extreme_technical",
+    corner_count: 14,
+    s_section_count: 3,
+    near_90_corner_count: 5
+  }
+});
+if (summary !== "14개 코너 · S자 3구간 · 90° 급코너 5개") {
+  throw new Error(`unexpected summary: ${summary}`);
+}
+const official = format({ map_kind: "official" });
+if (official !== "공식 트랙") throw new Error(`unexpected official summary: ${official}`);
+const legacy = format({
+  map_kind: "custom",
+  generator: {
+    corner_count: 4,
+    corner_sequence: ["left:wide", "left:wide", "left:wide", "left:wide"]
+  }
+});
+if (legacy !== "4개 코너 · 헤어핀 0 · 방향 전환 0회") {
+  throw new Error(`unexpected legacy summary: ${legacy}`);
+}
+const version4Extreme = format({
+  map_kind: "custom",
+  generator: {
+    template: "extreme_technical",
+    corner_count: 12,
+    corner_sequence: Array(12).fill("left:wide")
+  }
+});
+if (version4Extreme !== "12개 코너 · 헤어핀 0 · 방향 전환 0회") {
+  throw new Error(`unexpected version-4 summary: ${version4Extreme}`);
+}'''
+        result = subprocess.run(
+            [NODE, "-e", script], cwd=Path.cwd(), capture_output=True, text=True,
+            encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
 
     @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
     def test_browser_fallback_rejects_invalid_seed_and_width(self):

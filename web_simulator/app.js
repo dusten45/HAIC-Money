@@ -779,23 +779,31 @@
   function updateGeneratedTrackSummary(map) {
     const target = $("generated-track-summary");
     if (!target) return;
+    target.textContent = formatGeneratedTrackSummary(map);
+  }
+
+  function formatGeneratedTrackSummary(map) {
     if (!map || map.map_kind !== "custom") {
-      target.textContent = "공식 트랙";
-      return;
+      return "공식 트랙";
     }
     const generator = map.generator || {};
+    if (generator.template === "extreme_technical" &&
+        Number.isInteger(generator.corner_count) &&
+        Number.isInteger(generator.s_section_count) &&
+        Number.isInteger(generator.near_90_corner_count)) {
+      return `${generator.corner_count}개 코너 · S자 ${generator.s_section_count}구간 · 90° 급코너 ${generator.near_90_corner_count}개`;
+    }
     const sequence = generator.corner_sequence;
     if (!Number.isInteger(generator.corner_count) || !Array.isArray(sequence) ||
         sequence.length !== generator.corner_count ||
         !sequence.every((token) => typeof token === "string" && /^(left|right):(wide|medium|tight|hairpin)$/.test(token))) {
-      target.textContent = "직접 제작 맵";
-      return;
+      return "직접 제작 맵";
     }
     const directions = sequence.map((token) => token.split(":", 1)[0]);
     const switches = directions.reduce((count, direction, index) =>
       count + (index > 0 && direction !== directions[index - 1] ? 1 : 0), 0);
     const hairpins = sequence.filter((token) => token.endsWith(":hairpin")).length;
-    target.textContent = `${generator.corner_count}개 코너 · 헤어핀 ${hairpins} · 방향 전환 ${switches}회`;
+    return `${generator.corner_count}개 코너 · 헤어핀 ${hairpins} · 방향 전환 ${switches}회`;
   }
 
   function applyCustomMap(payload) {
@@ -829,9 +837,10 @@
     };
   }
 
-  const TRACK_TEMPLATES = new Set(["oval", "s_curve", "hairpin", "chicane", "technical"]);
+  const TRACK_TEMPLATES = new Set(["oval", "s_curve", "hairpin", "chicane", "technical", "extreme_technical"]);
   const CORNER_COUNT_RANGES = {
-    oval: [4, 4], s_curve: [6, 8], hairpin: [6, 9], chicane: [7, 10], technical: [9, 12]
+    oval: [4, 4], s_curve: [6, 8], hairpin: [6, 9], chicane: [7, 10], technical: [9, 12],
+    extreme_technical: [12, 16]
   };
   const MAX_CENTERLINE_POINTS = 4096;
   const MAX_GENERATED_TRACK_WIDTH = 9;
@@ -853,7 +862,10 @@
       throw new Error(`template must be one of ${Array.from(TRACK_TEMPLATES).sort().join(", ")}`);
     }
     const [minimum, maximum] = CORNER_COUNT_RANGES[template];
-    const count = minimum + random.index(maximum - minimum + 1);
+    if (template === "extreme_technical") random();
+    const count = template === "extreme_technical"
+      ? 12 + 2 * random.index(3)
+      : minimum + random.index(maximum - minimum + 1);
     if (template === "oval") return Array(count).fill("left:wide");
     if (template === "s_curve") {
       const directions = ["left", "right", "left", "left", "right", "left"];
@@ -877,6 +889,17 @@
       if (count % 2 === 0) directions[count - 1] = "left";
       return Array.from({ length: count }, (_item, index) => {
         return `${directions[index]}:${random() < 0.65 ? "tight" : "medium"}`;
+      });
+    }
+    if (template === "extreme_technical") {
+      const hairpinCount = Math.floor(count / 4);
+      const hairpinIndices = new Set(
+        Array.from({ length: hairpinCount }, (_item, index) => 1 + Math.floor(index * count / hairpinCount))
+      );
+      return Array.from({ length: count }, (_item, index) => {
+        const direction = hairpinIndices.has(index) ? "right" : "left";
+        const cornerClass = direction === "right" ? "hairpin" : "medium";
+        return `${direction}:${cornerClass}`;
       });
     }
     const classes = ["wide", "medium", "tight"];
@@ -925,7 +948,7 @@
     return rawGaps.map((gap) => base + factor * (gap - base));
   }
 
-  function profileAngleGaps(gaps, sequence) {
+  function profileAngleGaps(gaps, sequence, compactSTurns = false) {
     const constrainedCorners = [];
     sequence.forEach((token, index) => {
       if (token.startsWith("right:") || token.endsWith(":hairpin")) constrainedCorners.push(index);
@@ -947,7 +970,8 @@
     const minimumPairTotal = Math.max(40, (360 - 100 * remainingIndices.length) / constrainedCorners.length);
     const maximumPairTotal = Math.min(200, (360 - 20 * remainingIndices.length) / constrainedCorners.length);
     if (maximumPairTotal < minimumPairTotal) throw new Error("corner profile cannot fit within the angle-gap bounds");
-    const pairTotal = Math.max(minimumPairTotal, Math.min(80, maximumPairTotal));
+    const preferredPairTotal = compactSTurns ? 60 : 80;
+    const pairTotal = Math.max(minimumPairTotal, Math.min(preferredPairTotal, maximumPairTotal));
     const remainingTotal = 360 - pairTotal * constrainedCorners.length;
     const remainingBase = remainingTotal / remainingIndices.length;
     if (remainingBase < 20 || remainingBase > 100) throw new Error("corner profile cannot fit within the angle-gap bounds");
@@ -1166,14 +1190,20 @@
     const random = createTrackRandom(designSeed);
     const sequence = cornerSequence(template, random);
     const count = sequence.length;
-    const gaps = profileAngleGaps(angleGaps(random, count), sequence);
+    const gaps = profileAngleGaps(
+      angleGaps(random, count),
+      sequence,
+      template === "extreme_technical"
+    );
     const radiusX = 150 + (width - 8) + random.uniform(-6, 6);
     let radiusY = 93.75 + (width - 8) * 0.625 + random.uniform(-4, 4);
     const roundness = Math.max(0, Math.min(1, (width - 8) / 92));
     const targetAxisRatio = template !== "oval" ? 1 : 1.6 - 0.45 * roundness;
     radiusY = Math.max(radiusY, radiusX / targetAxisRatio);
     const phase = random.uniform(0, 2 * Math.PI);
-    const templateAmplitude = { oval: 0.015, s_curve: 0.02, hairpin: 0.02, chicane: 0.03, technical: 0.04 }[template];
+    const templateAmplitude = {
+      oval: 0.015, s_curve: 0.02, hairpin: 0.02, chicane: 0.03, technical: 0.04, extreme_technical: 0.055
+    }[template];
     const classAdjustment = { wide: 0.01, medium: 0, tight: -0.01, hairpin: 0 };
     const directions = sequence.map((token) => token.split(":", 1)[0]);
     const wideTrackRatio = Math.max(0, Math.min(1, (width - 8) / 92));
@@ -1266,6 +1296,7 @@
   }
 
   function generateBrowserGeometry(template, designSeed, width) {
+    if (template === "extreme_technical") return generateBrowserExtremeGeometry(designSeed, width);
     let lastError;
     for (let attempt = 0; attempt < 64; attempt += 1) {
       const attemptSeed = (designSeed + attempt * 0x9e3779b9) >>> 0;
@@ -1276,6 +1307,174 @@
       }
     }
     throw new Error(`could not generate a valid ${template} track: ${lastError.message}`);
+  }
+
+  function buildBrowserExtremeRoute(designSeed, width, attemptIndex) {
+    const countRandom = createTrackRandom(designSeed);
+    countRandom();
+    const count = 12 + 2 * countRandom.index(3);
+    const rng = createTrackRandom((designSeed + attemptIndex * 0x9E3779B9) >>> 0);
+    const radiusX = 150 + (width - 8) + rng.uniform(-6, 6);
+    const radiusY = 93.75 + 0.625 * (width - 8) + rng.uniform(-4, 4);
+    let corners = [[-radiusX, -radiusY], [radiusX, -radiusY], [radiusX, radiusY], [-radiusX, radiusY]];
+    if (rng.index(2)) corners = corners.slice().reverse().map(([x, y]) => [x, -y]);
+    const shift = rng.index(4);
+    corners = corners.slice(shift).concat(corners.slice(0, shift));
+    const vectors = corners.map((start, index) => {
+      const end = corners[(index + 1) % 4];
+      const length = trackDistance(start, end);
+      return [(end[0] - start[0]) / length, (end[1] - start[1]) / length];
+    });
+    const roundness = Math.max(0, Math.min(1, (width - 8) / 92));
+    const tangent = 1.7 * width * (1 + 0.4 * roundness) * Math.sqrt(2);
+    let doglegCorner = null;
+    let selectedSides;
+    if (count === 12) {
+      selectedSides = rng.index(2) === 0 ? [0, 2] : [1, 3];
+    } else if (count === 14) {
+      doglegCorner = rng.index(4);
+      selectedSides = [0, 1, 2, 3].filter((side) => side !== doglegCorner && side !== (doglegCorner - 1 + 4) % 4);
+    } else {
+      const sideLengths = corners.map((point, index) => trackDistance(point, corners[(index + 1) % 4]));
+      const longest = Math.max(...sideLengths);
+      const longSides = sideLengths.map((length, index) => length === longest ? index : -1).filter((index) => index >= 0);
+      const shortSides = [0, 1, 2, 3].filter((side) => !longSides.includes(side));
+      selectedSides = [...longSides, shortSides[rng.index(shortSides.length)]];
+    }
+    const sideEvents = new Map();
+    const featurePoints = [];
+    for (const side of selectedSides) {
+      const start = corners[side], end = corners[(side + 1) % 4];
+      const length = trackDistance(start, end), u = vectors[side], inward = [-u[1], u[0]];
+      const sGap = rng.uniform(0.6 * width, 2.2 * width);
+      const pGap = rng.uniform(0.6 * width, 1.4 * width);
+      const depth = 2 * tangent + sGap, leg = 2 * tangent + pGap;
+      const usable = length - 12 * width - leg;
+      if (usable < 0) throw new Error("extreme notch does not fit its side");
+      let position;
+      if (count === 14) {
+        const nearStart = side === (doglegCorner + 1) % 4;
+        const jitter = rng.uniform(0, Math.min(2 * width, usable));
+        position = nearStart ? 6 * width + jitter : length - 6 * width - leg - jitter;
+      } else if (count === 16 && selectedSides.slice(0, 2).includes(side)) {
+        const shortSide = selectedSides[2];
+        const nearStart = (side + 1) % 4 === shortSide;
+        const jitter = rng.uniform(0, Math.min(2 * width, usable));
+        position = nearStart ? 6 * width + jitter : length - 6 * width - leg - jitter;
+      } else {
+        position = 6 * width + rng() * usable;
+      }
+      sideEvents.set(side, { position, depth, leg });
+    }
+    const vertices = [];
+    for (let side = 0; side < 4; side += 1) {
+      const start = corners[side];
+      if (!vertices.length) vertices.push(start);
+      if (sideEvents.has(side)) {
+        const { position, depth, leg } = sideEvents.get(side);
+        const u = vectors[side], inward = [-u[1], u[0]];
+        const first = [start[0] + u[0] * position, start[1] + u[1] * position];
+        const second = [first[0] + inward[0] * depth, first[1] + inward[1] * depth];
+        const third = [second[0] + u[0] * leg, second[1] + u[1] * leg];
+        const fourth = [third[0] - inward[0] * depth, third[1] - inward[1] * depth];
+        vertices.push(first, second, third, fourth);
+        featurePoints.push([first, second], [third, fourth]);
+      }
+      vertices.push(corners[(side + 1) % 4]);
+    }
+    if (vertices.length > 1 && vertices[vertices.length - 1][0] === vertices[0][0] && vertices[vertices.length - 1][1] === vertices[0][1]) vertices.pop();
+    if (count === 14) {
+      const u = vectors[(doglegCorner - 1 + 4) % 4], v = vectors[doglegCorner];
+      const a = 2 * tangent + rng.uniform(0.6 * width, 2.2 * width);
+      const b = 2 * tangent + rng.uniform(0.6 * width, 2.2 * width);
+      const corner = corners[doglegCorner];
+      const entry = [corner[0] - a * u[0], corner[1] - a * u[1]];
+      const elbow = [entry[0] + b * v[0], entry[1] + b * v[1]];
+      const exit = [corner[0] + b * v[0], corner[1] + b * v[1]];
+      const index = vertices.findIndex(([x, y]) => x === corner[0] && y === corner[1]);
+      vertices.splice(index, 1, entry, elbow, exit);
+      featurePoints.push([entry, elbow]);
+    }
+    const indices = new Map(vertices.map((point, index) => [JSON.stringify(point), index]));
+    const sSectionPairs = featurePoints.map(([first, second]) => [indices.get(JSON.stringify(first)), indices.get(JSON.stringify(second))]);
+    const cornerSequence = vertices.map((point, index) => {
+      const previous = vertices[(index - 1 + vertices.length) % vertices.length];
+      const following = vertices[(index + 1) % vertices.length];
+      const incoming = [point[0] - previous[0], point[1] - previous[1]];
+      const outgoing = [following[0] - point[0], following[1] - point[1]];
+      return `${incoming[0] * outgoing[1] - incoming[1] * outgoing[0] > 0 ? "left" : "right"}:tight`;
+    });
+    return { vertices, cornerSequence, sSectionPairs };
+  }
+
+  function roundBrowserExtremeRoute(route, width) {
+    const anchors = route.vertices, count = anchors.length;
+    const incomingPoints = [], outgoingPoints = [];
+    const roundness = Math.max(0, Math.min(1, (width - 8) / 92));
+    for (let index = 0; index < count; index += 1) {
+      const anchor = anchors[index], previous = anchors[(index - 1 + count) % count], following = anchors[(index + 1) % count];
+      const incomingLength = trackDistance(anchor, previous), outgoingLength = trackDistance(anchor, following);
+      const u = [(previous[0] - anchor[0]) / incomingLength, (previous[1] - anchor[1]) / incomingLength];
+      const v = [(following[0] - anchor[0]) / outgoingLength, (following[1] - anchor[1]) / outgoingLength];
+      const cosine = Math.max(-1, Math.min(1, u[0] * v[0] + u[1] * v[1]));
+      const half = (Math.PI - Math.acos(cosine)) / 2;
+      const radius = 1.7 * width * (1 + 0.4 * roundness);
+      const trim = Math.min(radius * Math.sin(half) / Math.max(Math.cos(half) ** 2, 1e-9), 0.45 * incomingLength, 0.45 * outgoingLength);
+      incomingPoints.push(trackInterpolate(anchor, previous, trim / incomingLength));
+      outgoingPoints.push(trackInterpolate(anchor, following, trim / outgoingLength));
+    }
+    const points = [incomingPoints[0]], ranges = [];
+    for (let index = 0; index < count; index += 1) {
+      const start = points.length - 1, anchor = anchors[index];
+      const controlLength = Math.max(trackDistance(anchor, incomingPoints[index]), trackDistance(anchor, outgoingPoints[index]));
+      const steps = Math.max(4, Math.ceil(2 * controlLength / 4));
+      for (let step = 1; step <= steps; step += 1) points.push(quadraticBezier(incomingPoints[index], anchor, outgoingPoints[index], step / steps));
+      ranges.push([start, points.length - 1]);
+      const nextIndex = (index + 1) % count;
+      const edgeLength = trackDistance(outgoingPoints[index], incomingPoints[nextIndex]);
+      const edgeSteps = Math.max(1, Math.ceil(edgeLength / 4));
+      const last = nextIndex ? edgeSteps : edgeSteps - 1;
+      for (let step = 1; step <= last; step += 1) points.push(trackInterpolate(outgoingPoints[index], incomingPoints[nextIndex], step / edgeSteps));
+    }
+    const centerline = points.map(([x, y]) => [roundTrackCoordinate(x), roundTrackCoordinate(y)]);
+    if (centerline.length > MAX_CENTERLINE_POINTS) throw new Error(`generated centerline exceeds ${MAX_CENTERLINE_POINTS} points`);
+    const measured = measureCornerProfiles(centerline, ranges, width);
+    const sSectionConnectorLengths = route.sSectionPairs.map(([first, second]) =>
+      trackDistance(outgoingPoints[first].map(roundTrackCoordinate), incomingPoints[second].map(roundTrackCoordinate)));
+    const near90CornerCount = measured.turns.filter((turn) => 75 <= Math.abs(turn) && Math.abs(turn) <= 105).length;
+    return { centerline, sequence: route.cornerSequence, turns: measured.turns, radii: measured.radii,
+      sSectionPairs: route.sSectionPairs, sSectionConnectorLengths, near90CornerCount };
+  }
+
+  function validateBrowserExtremeProfile(candidate, width) {
+    const count = candidate.sequence.length;
+    if (![12, 14, 16].includes(count)) throw new Error(`extreme corner count ${count} is unsupported`);
+    if (candidate.sSectionPairs.length < 3) throw new Error("extreme route needs at least three S sections");
+    if (candidate.turns.length !== count || candidate.radii.length !== count) throw new Error("extreme corner metadata lengths do not match the route");
+    if (candidate.sSectionConnectorLengths.length !== candidate.sSectionPairs.length) throw new Error("extreme S-section metadata lengths do not match the route");
+    if (candidate.sSectionConnectorLengths.some((length) => !(0.6 * width - 1e-5 <= length && length <= 2.2 * width + 1e-5))) throw new Error("extreme S-section connector must be 0.6–2.2 track widths");
+    for (let index = 0; index < count; index += 1) {
+      const [direction, cornerClass] = candidate.sequence[index].split(":", 2);
+      if ((direction === "left" ? 1 : -1) * candidate.turns[index] < 20) throw new Error(`measured corner turn does not match ${candidate.sequence[index]}`);
+      const [low, high] = CORNER_RADIUS_WIDTH_RANGES[cornerClass];
+      if (!(low <= candidate.radii[index] && candidate.radii[index] <= high)) throw new Error(`measured corner radius does not match ${candidate.sequence[index]}`);
+    }
+    const near90 = candidate.turns.filter((turn) => 75 <= Math.abs(turn) && Math.abs(turn) <= 105).length;
+    if (near90 < 3 || near90 !== candidate.near90CornerCount) throw new Error("extreme route needs at least three measured near-90-degree corners");
+  }
+
+  function generateBrowserExtremeGeometry(designSeed, width) {
+    let lastError;
+    for (let attemptIndex = 0; attemptIndex < 64; attemptIndex += 1) {
+      try {
+        const route = buildBrowserExtremeRoute(designSeed, width, attemptIndex);
+        const candidate = roundBrowserExtremeRoute(route, width);
+        validateBrowserExtremeProfile(candidate, width);
+        validateBrowserCustomGeometry(candidate.centerline, width);
+        return candidate;
+      } catch (error) { lastError = error; }
+    }
+    throw new Error(`could not generate a valid extreme_technical track for seed ${designSeed} and width ${width}: ${lastError.message}`);
   }
 
   function makeBrowserCustomMap(options) {
@@ -1304,11 +1503,15 @@
       generator: {
         template: options.template,
         design_seed: designSeed,
-        generator_version: 3,
+        generator_version: 5,
         corner_count: generated.sequence.length,
         corner_sequence: generated.sequence,
         corner_turn_degrees: generated.turns,
-        corner_radius_widths: generated.radii
+        corner_radius_widths: generated.radii,
+        ...(options.template === "extreme_technical" ? {
+          s_section_count: generated.sSectionPairs.length,
+          near_90_corner_count: generated.near90CornerCount
+        } : {})
       }
     };
   }
@@ -1765,6 +1968,7 @@
     sendManualAction,
     finishRun,
     makeBrowserCustomMap,
+    formatGeneratedTrackSummary,
     manualActionFromKeys
   };
   document.addEventListener("DOMContentLoaded", initialize);
