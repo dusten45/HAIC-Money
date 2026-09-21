@@ -36,7 +36,7 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
   tracks 1--4, sampler 917, 131,072 high-level steps, batch 64, warmup 10,000,
   replay 100,000, one update per step, raw rewards and no smoothing.
 - Its exported CPU actor recorded **4/24 finishes (16.7%), progress 0.807180419,
-  damage 0.45**. This is the strongest migration signal, not final promotion.
+  damage 0.45** historically. Preserve this evidence, not a promotion verdict.
 - The actor (1,179,316 bytes) and checkpoint (1,204,218,555 bytes) are present on
   this server. Actor SHA256:
   `e0483df7c7887e9fd9e670450e223ec1b6f2598224ee23f9efe329cce4a2681e`.
@@ -45,6 +45,47 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
   Do not infer the old grid from CLI defaults or claim proven historical
   disjointness. The old `cpu_action_parity` flag checked same-device restore,
   not actual exported CPU parity.
+- Fresh CPU21 evaluation of that SAME actor is now complete. Screen IDs
+  101--103/seeds 31001--31008: **0/24 finishes**, progress **0.721822419**, damage
+  **0.458333333**, repeated twice with exact action traces. The screen gate failed.
+- To complete the requested replication without erasing that failure, the
+  already-frozen confirmation IDs 111--114/seeds 31101--31108 were run in explicit
+  **non-promoting diagnostic mode**: **4/32 finishes (12.5%) on BOTH reloads**,
+  progress **0.696825936**, damage **0.43125**, completed-lap mean **39,380 ms**.
+  Thus the completion signal reproduced, but consistency/promotion did not.
+- **No checkpoint promotion, blind evaluation, million-step scale-up or submission
+  release.** DrQ-v2 remains first candidate; do not interpret this as rejection of
+  the algorithm family. The implementation is a native variant, not an exact
+  author reproduction: separate encoders/strides, deterministic Q1-only actor
+  objective and independent actor augmentation differ from the author source.
+- Decision, telemetry, limitations and immutable artifact paths:
+  `experiments/drqv2-promotion-v1-result.json`. The diagnostic-only decision was
+  committed before confirmation in `experiments/drqv2-confirmation-diagnostic-v1.json`.
+  These 56 fresh cells have 16 geometry seeds; 112 reload executions are not 112
+  independent trials. Confirmation seeds 31101--31108 are now consumed.
+
+## Implemented Pipeline And Verification
+
+- `train_drqv2.py` saves explicit immutable checkpoint directories, exports the
+  actor, and invokes `evaluate_policy.py` in a separate CPU21 interpreter.
+  Use `--run-dir`, `--protocol-file`, `--eval-python`, `--eval-freq`, and optionally
+  `--eval-workers`. No `_latest` lookup. Best selection uses CPU finish/progress/lap.
+- Full trainer checkpoints carry replay, optimizer/CPU/CUDA RNG, warmup/sampler
+  state, current-episode action prefix and selected incumbent. `--resume` verifies
+  identical runtime/source/protocol, reconstructs physics and checks observations.
+  Legacy checkpoints remain loadable for evidence, not exact live-training resume.
+- Circular replay reconstruction, cross-episode rejection, real CPU export parity,
+  CUDA determinism, selection ties and actual actor-loss logging are regression-tested.
+  Submission `Agent` loads DrQ exports without training/SB3 imports. Packaging accepts
+  an explicit `actor.pt`, archives it as `model.pt`, and records both identities.
+- Committed-code GPU smoke: `runs/20260921-drqv2-selection-gpu-gate/`, 2,000 steps,
+  1,001 updates, CPU evaluation at 1,000/2,000 selected 1,000. Explicit continuation:
+  `runs/20260921-drqv2-selection-gpu-resume/`, 3,000 total steps/2,001 updates, same
+  incumbent retained, bounded replay. CPU and CUDA closed-loop split-run tests are
+  bitwise exact with deterministic CUDA settings.
+- Tests: **130 passed, 1 skipped**. The skip needs a separate server-reference
+  checkout. CPU21 contract/deployment subset: **63 passed, 2 CUDA-only skips**.
+  Official environment sources and the working training stack are unchanged.
 
 ## Current Runtime
 
@@ -55,10 +96,10 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
 - Separate gate interpreter: `/tmp/kilo/haic-cpu21/bin/python`, Torch 2.1.0+cpu,
   NumPy 1.26.0, Gymnasium 0.29.1, OpenCV 4.8.1.78. SB3 2.2.1 is installed only
   for harness compatibility, not needed by DrQ inference.
-- Historical pilot actor passed this CPU runtime with SB3 imports blocked:
-  two identical 401-action real episodes on smoke cell `(1,0)`, peak process
-  RSS 286 MiB, maximum measured action latency below 1 ms. This is an adapter
-  compatibility smoke, not a completion or submission-package gate.
+- All 112 fresh evaluation workers passed CPU gates and repeat traces: maximum
+  whole-worker RSS about **344 MiB**, action **2.66 ms**, initialization **1.02 s**.
+  Temporary root-only ZIP/actual packaging CLI smoke also passed in CPU21 (~1.1 MB).
+  This is not an actual official submission-container or competition score receipt.
 - Temporary CPU environment can be recreated with Python 3.11 and the above
   pinned versions, using the official PyTorch CPU wheel index for Torch only.
 
@@ -86,21 +127,18 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
 
 ## Current Priority
 
-1. Finish isolated exported-CPU periodic checkpoint selection, deterministic
-   reload/resource gates, CUDA RNG restore, circular-replay regression tests,
-   explicit episode schedule and safe partial-episode resume.
-2. Freeze and execute `experiments/drqv2-promotion-v1.json`: new screen IDs
-   101--103/seeds 31001--31008, confirmation IDs 111--114/seeds 31101--31108,
-   reserved blind IDs 121--123/seeds 31201--31208, each with two CPU reloads.
-   These are disjoint from recorded prior cells; undocumented historical pilot
-   cells and its realized training schedule cannot be proven disjoint.
-3. Require repeated nonzero confirmation and CPU gates before scale-up. The
-   predeclared next design uses four DrQ seeds, the same indexed sampled-track
-   stream, 1,048,576 decisions each and explicit CPU checkpoint selection. This
-   matches PPO's budget, not its full historical contract. Reserve new final
-   confirmation/blind cells for scale-up; do not reuse pilot validation cells.
-4. If confirmation fails, inspect saturation, exploration, representation,
-   replay/update and terminal telemetry before one evidence-backed intervention.
-   Do not sweep hyperparameters or begin DreamerV3/TD-MPC2 prematurely.
-5. No submission release or lap-time optimization until completion and blind
-   gates pass. Preserve immutable evaluation artifacts and explicit actor hashes.
+1. Keep the failed screen gate and successful diagnostic replication both visible.
+   Do not promote using a diagnostic receipt or reuse consumed confirmation as fresh.
+   Blind IDs 121--123/seeds 31201--31208 remain untouched.
+2. Only one controlled follow-up is proposed, NOT implemented/launched:
+   `experiments/drqv2-steering-logit-proposal-v1.json`. It adds pre-tanh steering-logit
+   L2 to the actor objective, with a matched current-code control and fixed coefficient.
+   No smoothing, reward/action change, critic overhaul or parameter sweep.
+3. Evidence: steering saturation 88.2% on fresh screen; pre-tanh absolute logit
+   median 9.93 and exactly-zero float32 squash derivative on 55.8% of 4,096 retained
+   states. Q1 is not systematically more optimistic than Q2. **Saturation is not a
+   proven failure cause**: confirmation finishers also saturate (91.9%). Test improved
+   completion, not just reduced saturation, and reject an ineffective repair.
+4. Four-seed 1,048,576-decision matched scale-up remains conditional in the original
+   protocol. It matches PPO's budget, not its historical reward/observation/sampler
+   contract. No DreamerV3/TD-MPC2 implementation or PPO return during this gate.
