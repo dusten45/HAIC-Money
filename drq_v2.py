@@ -334,6 +334,19 @@ def random_shift(
         generator.manual_seed(int(seed))
     padded = F.pad(observations, (pad, pad, pad, pad), mode="replicate")
     height, width = observations.shape[-2:]
+    if observations.is_cuda and observations.is_contiguous() and observations.shape[0] > 0:
+        batch, channels = observations.shape[:2]
+        # Keep scalar y,x draws in order: batching them changes CUDA RNG consumption.
+        shifts = torch.stack([
+            torch.randint(0, 2 * pad + 1, (), generator=generator, device=observations.device)
+            for _ in range(2 * batch)
+        ]).reshape(batch, 2)
+        rows = torch.arange(height, device=observations.device)
+        columns = torch.arange(width, device=observations.device)
+        indices = ((rows[None, :, None] + shifts[:, 0, None, None]) * padded.shape[-1]
+                   + columns[None, None, :] + shifts[:, 1, None, None])
+        indices = indices.reshape(batch, 1, height * width).expand(-1, channels, -1)
+        return padded.flatten(2).gather(2, indices).reshape(batch, channels, height, width)
     result = torch.empty_like(observations)
     for index in range(observations.shape[0]):
         top = int(torch.randint(0, 2 * pad + 1, (), generator=generator, device=observations.device))

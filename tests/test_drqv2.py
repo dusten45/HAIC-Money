@@ -39,6 +39,28 @@ def _pixel_stack(episode, step):
     ])
 
 
+def _random_shift_reference(observations, *, pad=4, seed=None):
+    """The original scalar-draw/slice-copy augmentation, kept as an RNG oracle."""
+    if observations.ndim != 4:
+        raise ValueError("random_shift expects BCHW observations")
+    if pad < 0:
+        raise ValueError("padding must be non-negative")
+    if pad == 0:
+        return observations.clone()
+    generator = None
+    if seed is not None:
+        generator = torch.Generator(device=observations.device)
+        generator.manual_seed(int(seed))
+    padded = torch.nn.functional.pad(observations, (pad, pad, pad, pad), mode="replicate")
+    height, width = observations.shape[-2:]
+    result = torch.empty_like(observations)
+    for index in range(observations.shape[0]):
+        top = int(torch.randint(0, 2 * pad + 1, (), generator=generator, device=observations.device))
+        left = int(torch.randint(0, 2 * pad + 1, (), generator=generator, device=observations.device))
+        result[index] = padded[index, :, top : top + height, left : left + width]
+    return result
+
+
 class _SequenceEnv:
     def __init__(self, outcomes):
         self.outcomes = list(outcomes)
@@ -274,13 +296,13 @@ class TestUint8Replay(unittest.TestCase):
 
 
 class TestDrQv2(unittest.TestCase):
-    def make_agent(self, device="cpu", seed=3, steering_logit_l2=0.0):
+    def make_agent(self, device="cpu", seed=3, steering_logit_l2=0.0, batch_size=2):
         agent = DrQv2Agent(DrQv2Config(
-            replay_capacity=32, batch_size=2, warmup_steps=0, n_step=3,
+            replay_capacity=max(32, 2 * batch_size), batch_size=batch_size, warmup_steps=0, n_step=3,
             feature_dim=16, hidden_dim=16, device=device,
             steering_logit_l2=steering_logit_l2,
         ), seed=seed)
-        for step in range(12):
+        for step in range(max(12, batch_size + 4)):
             agent.observe(Transition(
                 observation=_pixel_stack(0, step), action=np.zeros(3, dtype=np.float32),
                 reward=step + 1, next_observation=_pixel_stack(0, step + 1),
@@ -311,6 +333,101 @@ class TestDrQv2(unittest.TestCase):
         self.assertEqual(first.dtype, torch.uint8)
         self.assertEqual(first.shape, observations.shape)
         self.assertTrue(torch.equal(first, second))
+
+    def check_random_shift_reference_parity(self, device):
+        devices = [torch.cuda.current_device()] if device == "cuda" else []
+        for batch in (0, 1, 4, 64):
+            pixels = np.arange(batch * 4 * 84 * 84, dtype=np.int64).reshape(batch, 4, 84, 84)
+            for dtype in (np.uint8, np.float32):
+                array = (pixels % 251).astype(dtype)
+                if dtype == np.float32:
+                    array /= 255.0
+                for layout in ("contiguous", "transposed", "channels_last"):
+                    observation = torch.as_tensor(array, device=device)
+                    if layout == "transposed":
+                        observation = observation.transpose(2, 3)
+                    elif layout == "channels_last":
+                        observation = observation.contiguous(memory_format=torch.channels_last)
+                    for pad in (0, 1, 4):
+                        for seed in (None, 91):
+                            with self.subTest(device=device, batch=batch, dtype=dtype, layout=layout, pad=pad, seed=seed):
+                                cpu_before = torch.get_rng_state().clone()
+                                cuda_before = torch.cuda.get_rng_state() if devices else None
+                                with torch.random.fork_rng(devices=devices):
+                                    expected = _random_shift_reference(observation, pad=pad, seed=seed)
+                                    expected_cpu_rng = torch.get_rng_state()
+                                    expected_cuda_rng = torch.cuda.get_rng_state() if devices else None
+                                with (
+                                    mock.patch("drq_v2.torch.randint", wraps=torch.randint) as draws,
+                                    mock.patch("drq_v2.torch.stack", wraps=torch.stack) as stack,
+                                ):
+                                    actual = random_shift(observation, pad=pad, seed=seed)
+                                self.assertTrue(torch.equal(expected, actual))
+                                self.assertEqual(actual.dtype, expected.dtype)
+                                self.assertEqual(actual.shape, expected.shape)
+                                self.assertEqual(actual.stride(), expected.stride())
+                                self.assertEqual(actual.is_contiguous(), expected.is_contiguous())
+                                self.assertEqual(draws.call_count, 2 * batch if pad else 0)
+                                self.assertTrue(all(call.args[:3] == (0, 2 * pad + 1, ()) for call in draws.call_args_list))
+                                fast_path = device == "cuda" and observation.is_contiguous() and batch > 0 and pad > 0
+                                self.assertEqual(stack.call_count, int(fast_path))
+                                self.assertTrue(torch.equal(torch.get_rng_state(), expected_cpu_rng))
+                                if devices:
+                                    self.assertTrue(torch.equal(torch.cuda.get_rng_state(), expected_cuda_rng))
+                                if seed is not None or pad == 0 or batch == 0:
+                                    self.assertTrue(torch.equal(torch.get_rng_state(), cpu_before))
+                                    if devices:
+                                        self.assertTrue(torch.equal(torch.cuda.get_rng_state(), cuda_before))
+                                if pad == 0 and batch:
+                                    self.assertNotEqual(actual.data_ptr(), observation.data_ptr())
+
+    def test_random_shift_cpu_preserves_reference_outputs_layouts_and_rng(self):
+        self.check_random_shift_reference_parity("cpu")
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
+    def test_random_shift_cuda_preserves_reference_outputs_layouts_and_rng(self):
+        self.check_random_shift_reference_parity("cuda")
+
+    def check_augmented_checkpoint_continuation(self, device):
+        observation = ObservationSpec().from_uint8(_pixel_stack(0, 68))
+        for coefficient in (0.0, 0.001):
+            with self.subTest(coefficient=coefficient), tempfile.TemporaryDirectory() as directory:
+                agent = self.make_agent(device, seed=91, steering_logit_l2=coefficient, batch_size=64)
+                with mock.patch("drq_v2.random_shift", _random_shift_reference):
+                    agent.update()
+                    agent.update()
+                    checkpoint = agent.save_checkpoint(Path(directory) / "checkpoint.pt")
+                    # Both branches restore; stale parameter gradients are not checkpointed.
+                    agent = DrQv2Agent(agent.config, seed=99)
+                    agent.load_checkpoint(checkpoint)
+                    expected = []
+                    for _ in range(4):
+                        metrics = agent.update()
+                        actions = [agent.act(observation, deterministic=deterministic) for deterministic in (True, False)]
+                        expected.append((metrics, actions, copy.deepcopy(agent._payload()), {
+                            name: [parameter.grad.clone() if parameter.grad is not None else None
+                                   for parameter in getattr(agent, name).parameters()]
+                            for name in ("actor", "critic_one", "critic_two", "target_one", "target_two")
+                        }))
+                restored = DrQv2Agent(agent.config, seed=99)
+                restored.load_checkpoint(checkpoint)
+                for metrics, actions, state, gradients in expected:
+                    self.assertEqual(restored.update(), metrics)
+                    actual_actions = [restored.act(observation, deterministic=deterministic) for deterministic in (True, False)]
+                    self.assert_state_equal(actions, actual_actions)
+                    self.assert_state_equal(state, restored._payload())
+                    for name, expected_gradients in gradients.items():
+                        self.assert_state_equal(expected_gradients, [parameter.grad for parameter in getattr(restored, name).parameters()])
+                self.assertEqual(restored.gradient_steps, 6)
+                self.assertEqual(sum(row[0]["actor_updated"] for row in expected), 2)
+
+    def test_cpu_batch64_checkpoint_matches_original_augmentation_for_both_objectives(self):
+        self.check_augmented_checkpoint_continuation("cpu")
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
+    def test_cuda_batch64_checkpoint_matches_original_augmentation_for_both_objectives(self):
+        with torch.backends.cudnn.flags(benchmark=False, deterministic=True):
+            self.check_augmented_checkpoint_continuation("cuda")
 
     def test_steering_logit_coefficient_is_finite_nonnegative_and_zero_by_default(self):
         self.assertEqual(DrQv2Config().steering_logit_l2, 0.0)
@@ -419,8 +536,8 @@ class TestDrQv2(unittest.TestCase):
         with torch.random.fork_rng(devices=[torch.cuda.current_device()] if device == "cuda" else []):
             for _ in range(2):
                 values = baseline._batch_tensors(baseline.replay.sample(baseline.config.batch_size))
-                current = random_shift(values["observation"], pad=baseline.config.augmentation_pad)
-                following = random_shift(values["next_observation"], pad=baseline.config.augmentation_pad)
+                current = _random_shift_reference(values["observation"], pad=baseline.config.augmentation_pad)
+                following = _random_shift_reference(values["next_observation"], pad=baseline.config.augmentation_pad)
                 with torch.no_grad():
                     next_action = baseline.actor(following)
                     noise = (torch.randn_like(next_action) * baseline.config.target_policy_noise).clamp(
@@ -443,7 +560,7 @@ class TestDrQv2(unittest.TestCase):
                 if baseline.gradient_steps % baseline.config.actor_update_frequency == 0:
                     for parameter in critics:
                         parameter.requires_grad_(False)
-                    actor_observation = random_shift(values["observation"], pad=baseline.config.augmentation_pad)
+                    actor_observation = _random_shift_reference(values["observation"], pad=baseline.config.augmentation_pad)
                     actor_loss = -baseline.critic_one(actor_observation, baseline.actor(actor_observation)).mean()
                     baseline.actor_optimizer.zero_grad(set_to_none=True)
                     actor_loss.backward()
