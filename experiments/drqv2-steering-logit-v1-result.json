@@ -1,0 +1,502 @@
+{
+  "aggregate_confirmation": {
+    "control": {
+      "actor_cell_observations": 64,
+      "finish_rate": 0.203125,
+      "finishes": 13,
+      "mean_damage": 0.24062499999999998,
+      "mean_progress": 0.6872898715668238
+    },
+    "steering_l2": {
+      "actor_cell_observations": 64,
+      "finish_rate": 0.046875,
+      "finishes": 3,
+      "mean_damage": 0.403125,
+      "mean_progress": 0.47113696387069187
+    }
+  },
+  "blind": {
+    "status": "not_run"
+  },
+  "confirmation_gate_passed": false,
+  "date": "2026-09-22",
+  "evidence_counts": {
+    "canonical_actor_checkpoint_cells": 320,
+    "confirmation_executions": 256,
+    "distinct_geometry_seeds": 16,
+    "distinct_track_geometry_cells": 56,
+    "screen_executions": 384,
+    "training_runs": 4,
+    "training_seeds": 2
+  },
+  "frozen_candidates_sha256": "6d8e1f23243a29e36a8b40a21434bb05c4887c05896f7f8c004fcf458c464d53",
+  "interpretation": "Reject the predeclared fixed L2 treatment: fewer fresh confirmation finishes in BOTH training seeds. The unregularized controls themselves reproduce completion in both seeds; this is not a DrQ family failure or permission to promote a post-hoc control finalist.",
+  "limits": [
+    "Repeated reloads and obstacle variants are correlated, not independent trials.",
+    "Only two training seeds and a131072-decision budget perrun.",
+    "No causal algorithm-only comparison with historical PPO.",
+    "No official submission-container execution or release.",
+    "New weights, full replay and detailed runtime/action bundles are retained locally, not committed."
+  ],
+  "name": "drqv2-steering-logit-v1-result",
+  "next_stage_permitted": false,
+  "official_submission_authorized": false,
+  "operational_failures": 0,
+  "operational_maxima": {
+    "action_seconds": 0.004064028151333332,
+    "initialization_seconds": 1.2180209243670106,
+    "whole_worker_rss_bytes": 361299968
+  },
+  "paired_comparison": [
+    {
+      "control_finishes": 6,
+      "finish_delta": -3,
+      "paired_losses": 5,
+      "paired_wins": 2,
+      "passed": false,
+      "seed": 0,
+      "treatment_finishes": 3,
+      "treatment_screen_finishes": 3
+    },
+    {
+      "control_finishes": 7,
+      "finish_delta": -7,
+      "paired_losses": 7,
+      "paired_wins": 0,
+      "passed": false,
+      "seed": 1,
+      "treatment_finishes": 0,
+      "treatment_screen_finishes": 0
+    }
+  ],
+  "post_study_diagnostics": {
+    "status": "completed on two shared-state source pools",
+    "report": "experiments/drqv2-steering-logit-v1-diagnostics.json",
+    "last_controlled_axis": "augmentation_pad4 versus1, with steering_logit_l2=0 in both arms"
+  },
+  "pre_confirmation_finalist": "steering_l2-seed0",
+  "promotion": false,
+  "protocol": "experiments/drqv2-steering-logit-v1.json",
+  "protocol_sha256": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
+  "result_sha256": "4b80a9106ebc825d15377c02ac868ef29d4bb9ab318649709f3a281956beaeb6",
+  "run_budget": {
+    "actor_updates": 60536,
+    "environment_decisions": 131072,
+    "gradient_updates": 121073,
+    "replay_entries": 100000
+  },
+  "run_root": "runs/20260922-drq-steering-l2-v1-fast",
+  "runs": [
+    {
+      "actor": "runs/20260922-drq-steering-l2-v1-fast/control-seed0/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "arm": "control",
+      "checkpoint": "runs/20260922-drq-steering-l2-v1-fast/control-seed0/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "f432a2040ed4d376a70d53cdab50429912a7bd1d178c125b844a5042136fe059",
+          "checkpoint_sha256": "a26dddb83cb9a622e73ba68af0691764c6add98b23170d695ef4ba8c917fafcf",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00022608041763305664
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.26666666666666666,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.25445843644662297,
+            "avg_reward": 120.19838858819223,
+            "avg_steering_delta_abs_mean": 0.25287660645941895,
+            "avg_steps": 319.375,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 1,
+              "off_track": 23
+            }
+          }
+        },
+        {
+          "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+          "checkpoint_sha256": "239b1430237ff00b2b31815f6e8a5d93e71489bca928badcb21a8a1425e1ac50",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 8.189678192138672e-05
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.25,
+            "avg_lap_time_ms": 47180.0,
+            "avg_progress": 0.7833909765538669,
+            "avg_reward": 552.8600953620739,
+            "avg_steering_delta_abs_mean": 0.3656683328251044,
+            "avg_steps": 560.1666666666666,
+            "best_lap_time_ms": 43640.0,
+            "finish_rate": 0.2916666666666667,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 2,
+              "finished": 7,
+              "off_track": 15
+            }
+          }
+        }
+      ],
+      "coefficient": 0.0,
+      "confirmation": {
+        "avg_damage": 0.31875,
+        "avg_lap_time_ms": 45353.333333333336,
+        "avg_progress": 0.7357567331961599,
+        "avg_reward": 520.1036622393892,
+        "avg_steering_delta_abs_mean": 0.33160507353022695,
+        "avg_steps": 520.5625,
+        "best_lap_time_ms": 41520.0,
+        "finish_rate": 0.1875,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 3,
+          "finished": 6,
+          "off_track": 23
+        }
+      },
+      "confirmation_diagnostic_only": false,
+      "confirmation_pointer": "runs/20260922-drq-steering-l2-v1-fast/control-seed0/confirmation.json",
+      "confirmation_pointer_sha256": "0e22dfaf353bcd7b7d706242c568182104ce3011f0ba2f2d951566232dc02ad6",
+      "confirmatory_actor_change": false,
+      "name": "control-seed0",
+      "screen": {
+        "avg_damage": 0.25,
+        "avg_lap_time_ms": 47180.0,
+        "avg_progress": 0.7833909765538669,
+        "avg_reward": 552.8600953620739,
+        "avg_steering_delta_abs_mean": 0.3656683328251044,
+        "avg_steps": 560.1666666666666,
+        "best_lap_time_ms": 43640.0,
+        "finish_rate": 0.2916666666666667,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 7,
+          "off_track": 15
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 0
+    },
+    {
+      "actor": "runs/20260922-drq-steering-l2-v1-fast/control-seed1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "arm": "control",
+      "checkpoint": "runs/20260922-drq-steering-l2-v1-fast/control-seed1/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "abc39be53c0a4df242f02556185a208dae420f20868677c3207d4bef85f04266",
+          "checkpoint_sha256": "f615832dd420a812fb490e7f678d1337cc14cb1250c918f0f9a26f101f1885a5",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.0015200376510620117
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.3666666666666667,
+            "avg_lap_time_ms": 66360.0,
+            "avg_progress": 0.41223312677619145,
+            "avg_reward": 241.4730789177506,
+            "avg_steering_delta_abs_mean": 0.1818488094334801,
+            "avg_steps": 410.625,
+            "best_lap_time_ms": 66360.0,
+            "finish_rate": 0.041666666666666664,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 3,
+              "finished": 1,
+              "off_track": 20
+            }
+          }
+        },
+        {
+          "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+          "checkpoint_sha256": "fdd9666fa20020d6c461379e4a01257254c43baf49f01ffa237fc23f1227c3e3",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00024211406707763672
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.20833333333333334,
+            "avg_lap_time_ms": 42000.0,
+            "avg_progress": 0.7384631537437607,
+            "avg_reward": 536.4489392186375,
+            "avg_steering_delta_abs_mean": 0.2863486496110757,
+            "avg_steps": 488.8333333333333,
+            "best_lap_time_ms": 39260.0,
+            "finish_rate": 0.20833333333333334,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "finished": 5,
+              "off_track": 19
+            }
+          }
+        }
+      ],
+      "coefficient": 0.0,
+      "confirmation": {
+        "avg_damage": 0.1625,
+        "avg_lap_time_ms": 39120.0,
+        "avg_progress": 0.6388230099374876,
+        "avg_reward": 470.69493898072494,
+        "avg_steering_delta_abs_mean": 0.27492199186235666,
+        "avg_steps": 401.75,
+        "best_lap_time_ms": 36480.0,
+        "finish_rate": 0.21875,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 3,
+          "finished": 7,
+          "off_track": 22
+        }
+      },
+      "confirmation_diagnostic_only": false,
+      "confirmation_pointer": "runs/20260922-drq-steering-l2-v1-fast/control-seed1/confirmation.json",
+      "confirmation_pointer_sha256": "803e790038b40005cad9e83eaba2eec8792027dcb165a42cb865fd4cc3c8a011",
+      "confirmatory_actor_change": false,
+      "name": "control-seed1",
+      "screen": {
+        "avg_damage": 0.20833333333333334,
+        "avg_lap_time_ms": 42000.0,
+        "avg_progress": 0.7384631537437607,
+        "avg_reward": 536.4489392186375,
+        "avg_steering_delta_abs_mean": 0.2863486496110757,
+        "avg_steps": 488.8333333333333,
+        "best_lap_time_ms": 39260.0,
+        "finish_rate": 0.20833333333333334,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "finished": 5,
+          "off_track": 19
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 1
+    },
+    {
+      "actor": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed0/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "f148e89ed1cb1cc01bce01e386746e05ff7e8326ea2550f74369def9d0f08e45",
+      "arm": "steering_l2",
+      "checkpoint": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed0/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "b00d1f39f5e58881a915c7d2f49e57c96dc03f0d13e4045d513699177ffc144c",
+          "checkpoint_sha256": "1d5ea39153ba4597a150ac57470959cf42660dd5d29d7652efa3436af148612e",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.000572502613067627
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.23333333333333336,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.42994226611431136,
+            "avg_reward": 223.94888492253799,
+            "avg_steering_delta_abs_mean": 0.32010932577153045,
+            "avg_steps": 498.7083333333333,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 2,
+              "off_track": 22
+            }
+          }
+        },
+        {
+          "actor_sha256": "f148e89ed1cb1cc01bce01e386746e05ff7e8326ea2550f74369def9d0f08e45",
+          "checkpoint_sha256": "747be5d9c3eda478b40cfb4ee2cb553120c7355a395d53e6cb3c6633bfaddfab",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.0006162524223327637
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.3166666666666667,
+            "avg_lap_time_ms": 47760.0,
+            "avg_progress": 0.5995116964555282,
+            "avg_reward": 419.57664859707955,
+            "avg_steering_delta_abs_mean": 0.29950582298139733,
+            "avg_steps": 433.5833333333333,
+            "best_lap_time_ms": 45320.0,
+            "finish_rate": 0.125,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 2,
+              "finished": 3,
+              "off_track": 19
+            }
+          }
+        }
+      ],
+      "coefficient": 0.001,
+      "confirmation": {
+        "avg_damage": 0.48125,
+        "avg_lap_time_ms": 44140.0,
+        "avg_progress": 0.5199133982187294,
+        "avg_reward": 369.2634522619716,
+        "avg_steering_delta_abs_mean": 0.3174665942788124,
+        "avg_steps": 358.0,
+        "best_lap_time_ms": 41340.0,
+        "finish_rate": 0.09375,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 10,
+          "finished": 3,
+          "off_track": 19
+        }
+      },
+      "confirmation_diagnostic_only": false,
+      "confirmation_pointer": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed0/confirmation.json",
+      "confirmation_pointer_sha256": "4b424a3070cfe47310cfbb41a4874b8fa9cd715cb4dde55dd7c8fbe8d358f8eb",
+      "confirmatory_actor_change": false,
+      "name": "steering_l2-seed0",
+      "screen": {
+        "avg_damage": 0.3166666666666667,
+        "avg_lap_time_ms": 47760.0,
+        "avg_progress": 0.5995116964555282,
+        "avg_reward": 419.57664859707955,
+        "avg_steering_delta_abs_mean": 0.29950582298139733,
+        "avg_steps": 433.5833333333333,
+        "best_lap_time_ms": 45320.0,
+        "finish_rate": 0.125,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 3,
+          "off_track": 19
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 0
+    },
+    {
+      "actor": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "ab38d2ffd438142e968d278e528089e268e5b90886bce685e7cd0193033c84ca",
+      "arm": "steering_l2",
+      "checkpoint": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed1/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "d3d91d64fa93cc0080a5e88d00eaecd37b603d970167487cebc667dcddcaa874",
+          "checkpoint_sha256": "1a95f3fda33180a33c016f3362d16bceaa02f1abc6df533efceb8a085c282203",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.0004565119743347168
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.45,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.36383532347497843,
+            "avg_reward": 266.87527561654287,
+            "avg_steering_delta_abs_mean": 0.3892564022292693,
+            "avg_steps": 226.125,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 7,
+              "off_track": 17
+            }
+          }
+        },
+        {
+          "actor_sha256": "ab38d2ffd438142e968d278e528089e268e5b90886bce685e7cd0193033c84ca",
+          "checkpoint_sha256": "9054dce412817b52e2efb06c2bdf149c5c9831bd9c5811534e470411b1cf08ee",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 2.092123031616211e-05
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.18333333333333335,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.5465170333550899,
+            "avg_reward": 421.85698549664613,
+            "avg_steering_delta_abs_mean": 0.35940903052687645,
+            "avg_steps": 295.375,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 1,
+              "off_track": 23
+            }
+          }
+        }
+      ],
+      "coefficient": 0.001,
+      "confirmation": {
+        "avg_damage": 0.325,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.42236052952265435,
+        "avg_reward": 321.53558356590145,
+        "avg_steering_delta_abs_mean": 0.2903475980274379,
+        "avg_steps": 233.40625,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 6,
+          "off_track": 26
+        }
+      },
+      "confirmation_diagnostic_only": true,
+      "confirmation_pointer": "runs/20260922-drq-steering-l2-v1-fast/steering_l2-seed1/confirmation.json",
+      "confirmation_pointer_sha256": "ff5d07b88158d25274bcbee965e040fe70a2251a258e9bde2decf8c5f0e582ce",
+      "confirmatory_actor_change": false,
+      "name": "steering_l2-seed1",
+      "screen": {
+        "avg_damage": 0.18333333333333335,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.5465170333550899,
+        "avg_reward": 421.85698549664613,
+        "avg_steering_delta_abs_mean": 0.35940903052687645,
+        "avg_steps": 295.375,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 1,
+          "off_track": 23
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 1
+    }
+  ],
+  "single_variable": "steering_logit_l2 coefficient0.0 versus0.001",
+  "source_revision": "8e5fa4661d51fbe0f9657bb1386012b79ea79da8",
+  "status": "rejected"
+}

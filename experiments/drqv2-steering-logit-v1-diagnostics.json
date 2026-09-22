@@ -1,0 +1,413 @@
+{
+  "decision": {
+    "justification": "Current independent control actors retain pad4-view steering disagreement across both shared replay pools. One bounded training ablation is justified, not guaranteed to improve.",
+    "l2_accepted": false,
+    "last_controlled_axis": "augmentation_pad4 versus1, steering_logit_l2=0 in BOTH arms",
+    "narrow_zero_squash_derivative_mechanism_restored": true,
+    "no_coefficient_sweep_or_combined_repair": true,
+    "no_more_trials_after_this": true,
+    "uniform_desaturation_or_useful_physical_control_restored": false
+  },
+  "diagnostic_only": true,
+  "limitations": [
+    "Control-policy retained training states, not L2 on-policy or unseen evaluation states.",
+    "Temporal and shift interventions may be out of distribution or remove information.",
+    "Smaller test shifts naturally reduce action differences; this does not establish that weaker training augmentation improves completion.",
+    "L2 seed0 already reduced shift disagreement but worsened completion; agreement is not an acceptance metric.",
+    "The0.46 proxy assumes nominal steering-joint limits; actual wheel states were not stored.",
+    "Indices shared numerically across pools are not identical states; observation hashes differ."
+  ],
+  "pools": [
+    {
+      "actors": [
+        {
+          "absolute_logit": {
+            "max": 22.580801010131836,
+            "mean": 7.482971350123989,
+            "median": 6.7676191329956055,
+            "min": 0.000697895884513855,
+            "p95": 16.31342382431029
+          },
+          "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+          "gas_brake_overlap_gt_01": 0.1708984375,
+          "mean_gas_brake": [
+            0.9169087732734624,
+            0.14786961502977647
+          ],
+          "name": "control-seed0",
+          "past_reverse_sign_flip": 0.07763671875,
+          "squash_derivative": {
+            "max": 0.9999995231628418,
+            "mean": 0.05708612213493325,
+            "median": 5.304813385009766e-06,
+            "min": 0.0,
+            "p95": 0.5089614868164061
+          },
+          "steer_abs_ge_046": 0.97509765625,
+          "steer_abs_ge_099": 0.84033203125,
+          "view_pair_sign_flip": {
+            "1": 0.03515625,
+            "4": 0.09228515625
+          },
+          "zero_derivative_fraction": 0.33837890625
+        },
+        {
+          "absolute_logit": {
+            "max": 8.412035942077637,
+            "mean": 2.895414352067746,
+            "median": 3.0185378789901733,
+            "min": 0.0015711933374404907,
+            "p95": 4.945646023750301
+          },
+          "actor_sha256": "f148e89ed1cb1cc01bce01e386746e05ff7e8326ea2550f74369def9d0f08e45",
+          "gas_brake_overlap_gt_01": 0.31884765625,
+          "mean_gas_brake": [
+            0.9640870537405135,
+            0.175307514378801
+          ],
+          "name": "steering_l2-seed0",
+          "past_reverse_sign_flip": 0.11669921875,
+          "squash_derivative": {
+            "max": 0.9999975562095642,
+            "mean": 0.11430000606924295,
+            "median": 0.009508669376373291,
+            "min": 2.384185791015625e-07,
+            "p95": 0.8051599621772756
+          },
+          "steer_abs_ge_046": 0.9482421875,
+          "steer_abs_ge_099": 0.63330078125,
+          "view_pair_sign_flip": {
+            "1": 0.02001953125,
+            "4": 0.05712890625
+          },
+          "zero_derivative_fraction": 0.0
+        },
+        {
+          "absolute_logit": {
+            "max": 18.752071380615234,
+            "mean": 4.893544888553151,
+            "median": 4.51130223274231,
+            "min": 0.004004405811429024,
+            "p95": 11.500240755081176
+          },
+          "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+          "gas_brake_overlap_gt_01": 0.318359375,
+          "mean_gas_brake": [
+            0.919547831043019,
+            0.1916477602062514
+          ],
+          "name": "control-seed1",
+          "past_reverse_sign_flip": 0.09326171875,
+          "squash_derivative": {
+            "max": 0.9999839663505554,
+            "mean": 0.1452825759188272,
+            "median": 0.0004824995994567871,
+            "min": 0.0,
+            "p95": 0.9211463421583171
+          },
+          "steer_abs_ge_046": 0.9140625,
+          "steer_abs_ge_099": 0.6796875,
+          "view_pair_sign_flip": {
+            "1": 0.037109375,
+            "4": 0.09033203125
+          },
+          "zero_derivative_fraction": 0.1328125
+        },
+        {
+          "absolute_logit": {
+            "max": 8.361690521240234,
+            "mean": 3.4754453345876755,
+            "median": 3.5859034061431885,
+            "min": 0.012357758358120918,
+            "p95": 5.3070714473724365
+          },
+          "actor_sha256": "ab38d2ffd438142e968d278e528089e268e5b90886bce685e7cd0193033c84ca",
+          "gas_brake_overlap_gt_01": 0.046875,
+          "mean_gas_brake": [
+            0.8197970055625774,
+            0.04486229189205915
+          ],
+          "name": "steering_l2-seed1",
+          "past_reverse_sign_flip": 0.09375,
+          "squash_derivative": {
+            "max": 0.9998472929000854,
+            "mean": 0.054616638604784384,
+            "median": 0.0030670464038848877,
+            "min": 2.384185791015625e-07,
+            "p95": 0.3877959817647925
+          },
+          "steer_abs_ge_046": 0.97607421875,
+          "steer_abs_ge_099": 0.82568359375,
+          "view_pair_sign_flip": {
+            "1": 0.02490234375,
+            "4": 0.08349609375
+          },
+          "zero_derivative_fraction": 0.0
+        }
+      ],
+      "artifact": "runs/20260922-drq-steering-l2-v1-fast/diagnostics-control-seed0.json",
+      "runtime": {
+        "device": "cpu",
+        "interop_threads": 1,
+        "numpy": "1.26.0",
+        "python": "3.11.14",
+        "threads": 1,
+        "torch": "2.1.0+cpu"
+      },
+      "sample": {
+        "distribution": {
+          "adjacent_frame_pixel_mae": {
+            "max": 0.0862339380196523,
+            "mean": 0.014203363365745604,
+            "median": 0.012150137832910943,
+            "min": 0.0,
+            "p95": 0.03826495412980001
+          },
+          "all_frames_identical_fraction": 0.001953125,
+          "episode_count": 246,
+          "episode_step": {
+            "max": 1300.0,
+            "mean": 250.5498046875,
+            "median": 205.0,
+            "min": 0.0,
+            "p95": 631.2999999999997
+          },
+          "negative_raw_reward_fraction": 0.68798828125,
+          "raw_reward": {
+            "max": 9.980623245239258,
+            "mean": 0.6840044596901862,
+            "median": -0.4000000059604645,
+            "min": -0.4000000059604645,
+            "p95": 3.290036916732788
+          },
+          "recorded_native_action_mean": [
+            0.005147709045559168,
+            0.6914658546447754,
+            -0.4128601849079132
+          ],
+          "terminal_nstep_endpoint_fraction": 0.00732421875
+        },
+        "indices": {
+          "dtype": "<i8",
+          "sha256": "d462020fb214494b64fca129e07589319b45ab0c6050e4b0cd3c435a957b392d",
+          "shape": [
+            2048
+          ]
+        },
+        "layout": "BCHW, oldest to newest; uint8 / 255 once before minimal Agent inference",
+        "observations": {
+          "dtype": "|u1",
+          "sha256": "3e70ed5d87fab5cb9555f81c20f25b12ab78a75b18b639c1d2201bdea6b9a6da",
+          "shape": [
+            2048,
+            4,
+            84,
+            84
+          ]
+        },
+        "seed": 20260921,
+        "selection": "first valid n-step starts in a seeded permutation of retained sequence IDs; no replacement",
+        "size": 2048
+      },
+      "sha256": "5de1962409ed13499bfbf9f9c09605a5e88f20540c1977cddd3a4a934baf3c4e",
+      "source_checkpoint_sha256": "239b1430237ff00b2b31815f6e8a5d93e71489bca928badcb21a8a1425e1ac50",
+      "source_control_seed": 0
+    },
+    {
+      "actors": [
+        {
+          "absolute_logit": {
+            "max": 23.8668155670166,
+            "mean": 7.5018021276264335,
+            "median": 6.840109348297119,
+            "min": 0.0014509707689285278,
+            "p95": 16.42837505340576
+          },
+          "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+          "gas_brake_overlap_gt_01": 0.09765625,
+          "mean_gas_brake": [
+            0.946046913653845,
+            0.07521747534337919
+          ],
+          "name": "control-seed0",
+          "past_reverse_sign_flip": 0.09716796875,
+          "squash_derivative": {
+            "max": 0.9999979138374329,
+            "mean": 0.0764840935007669,
+            "median": 4.589557647705078e-06,
+            "min": 0.0,
+            "p95": 0.6427969366312016
+          },
+          "steer_abs_ge_046": 0.96630859375,
+          "steer_abs_ge_099": 0.7998046875,
+          "view_pair_sign_flip": {
+            "1": 0.033203125,
+            "4": 0.09326171875
+          },
+          "zero_derivative_fraction": 0.36669921875
+        },
+        {
+          "absolute_logit": {
+            "max": 8.677289962768555,
+            "mean": 2.557666441758556,
+            "median": 2.7378495931625366,
+            "min": 0.00037075579166412354,
+            "p95": 4.346525001525879
+          },
+          "actor_sha256": "f148e89ed1cb1cc01bce01e386746e05ff7e8326ea2550f74369def9d0f08e45",
+          "gas_brake_overlap_gt_01": 0.298828125,
+          "mean_gas_brake": [
+            0.9737893981655361,
+            0.1308636139438022
+          ],
+          "name": "steering_l2-seed0",
+          "past_reverse_sign_flip": 0.11181640625,
+          "squash_derivative": {
+            "max": 0.9999998807907104,
+            "mean": 0.1572853454563301,
+            "median": 0.016609787940979004,
+            "min": 1.1920928955078125e-07,
+            "p95": 0.9058165043592449
+          },
+          "steer_abs_ge_046": 0.92431640625,
+          "steer_abs_ge_099": 0.52490234375,
+          "view_pair_sign_flip": {
+            "1": 0.03564453125,
+            "4": 0.08251953125
+          },
+          "zero_derivative_fraction": 0.0
+        },
+        {
+          "absolute_logit": {
+            "max": 21.452926635742188,
+            "mean": 4.491469389871895,
+            "median": 3.5532678365707397,
+            "min": 0.00010007410310208797,
+            "p95": 12.180334997177118
+          },
+          "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+          "gas_brake_overlap_gt_01": 0.31103515625,
+          "mean_gas_brake": [
+            0.9211393591249362,
+            0.16890345876163337
+          ],
+          "name": "control-seed1",
+          "past_reverse_sign_flip": 0.10498046875,
+          "squash_derivative": {
+            "max": 1.0,
+            "mean": 0.19732749776449054,
+            "median": 0.0032735466957092285,
+            "min": 0.0,
+            "p95": 0.9578174203634262
+          },
+          "steer_abs_ge_046": 0.87353515625,
+          "steer_abs_ge_099": 0.5908203125,
+          "view_pair_sign_flip": {
+            "1": 0.0341796875,
+            "4": 0.09326171875
+          },
+          "zero_derivative_fraction": 0.1376953125
+        },
+        {
+          "absolute_logit": {
+            "max": 8.204399108886719,
+            "mean": 3.610954497855346,
+            "median": 3.7331446409225464,
+            "min": 0.0029406417161226273,
+            "p95": 5.637501835823058
+          },
+          "actor_sha256": "ab38d2ffd438142e968d278e528089e268e5b90886bce685e7cd0193033c84ca",
+          "gas_brake_overlap_gt_01": 0.0244140625,
+          "mean_gas_brake": [
+            0.585645353057771,
+            0.036111715948209167
+          ],
+          "name": "steering_l2-seed1",
+          "past_reverse_sign_flip": 0.10791015625,
+          "squash_derivative": {
+            "max": 0.9999913573265076,
+            "mean": 0.0660346164368093,
+            "median": 0.0022855401039123535,
+            "min": 3.5762786865234375e-07,
+            "p95": 0.5857733428478219
+          },
+          "steer_abs_ge_046": 0.970703125,
+          "steer_abs_ge_099": 0.814453125,
+          "view_pair_sign_flip": {
+            "1": 0.0380859375,
+            "4": 0.109375
+          },
+          "zero_derivative_fraction": 0.0
+        }
+      ],
+      "artifact": "runs/20260922-drq-steering-l2-v1-fast/diagnostics-control-seed1.json",
+      "runtime": {
+        "device": "cpu",
+        "interop_threads": 1,
+        "numpy": "1.26.0",
+        "python": "3.11.14",
+        "threads": 1,
+        "torch": "2.1.0+cpu"
+      },
+      "sample": {
+        "distribution": {
+          "adjacent_frame_pixel_mae": {
+            "max": 0.1025069286974049,
+            "mean": 0.012943354696479286,
+            "median": 0.011730618173195205,
+            "min": 0.0,
+            "p95": 0.028865814844456297
+          },
+          "all_frames_identical_fraction": 0.00048828125,
+          "episode_count": 222,
+          "episode_step": {
+            "max": 1263.0,
+            "mean": 262.65185546875,
+            "median": 223.0,
+            "min": 0.0,
+            "p95": 620.9499999999996
+          },
+          "negative_raw_reward_fraction": 0.6474609375,
+          "raw_reward": {
+            "max": 6.768458843231201,
+            "mean": 0.806635425920831,
+            "median": -0.4000000059604645,
+            "min": -0.4000000059604645,
+            "p95": 3.271757185459135
+          },
+          "recorded_native_action_mean": [
+            -0.16057199239730835,
+            0.8844907879829407,
+            -0.5366355776786804
+          ],
+          "terminal_nstep_endpoint_fraction": 0.00634765625
+        },
+        "indices": {
+          "dtype": "<i8",
+          "sha256": "d462020fb214494b64fca129e07589319b45ab0c6050e4b0cd3c435a957b392d",
+          "shape": [
+            2048
+          ]
+        },
+        "layout": "BCHW, oldest to newest; uint8 / 255 once before minimal Agent inference",
+        "observations": {
+          "dtype": "|u1",
+          "sha256": "c14d7e16e80d7ae3c5fd6e088ea3bd95373605a237e59cd1c872e403eaadf56d",
+          "shape": [
+            2048,
+            4,
+            84,
+            84
+          ]
+        },
+        "seed": 20260921,
+        "selection": "first valid n-step starts in a seeded permutation of retained sequence IDs; no replacement",
+        "size": 2048
+      },
+      "sha256": "47cc0376ed575ea7994e6b6cdce2339bb9b834d50df2b413e644ef6b48705b1a",
+      "source_checkpoint_sha256": "fdd9666fa20020d6c461379e4a01257254c43baf49f01ffa237fc23f1227c3e3",
+      "source_control_seed": 1
+    }
+  ],
+  "study": "experiments/drqv2-steering-logit-v1.json"
+}

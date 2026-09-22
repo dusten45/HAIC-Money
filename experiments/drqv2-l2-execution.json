@@ -1,7 +1,7 @@
 {
   "study": "experiments/drqv2-steering-logit-v1.json",
   "protocol_sha256": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
-  "status": "training beyond four valid midpoint CPU checkpoints; final selection and confirmation pending",
+  "status": "completed and rejected: fresh confirmation finish deltas -3 and -7; no blind evaluation",
   "active_run_root": "runs/20260922-drq-steering-l2-v1-fast",
   "background_process": "bgp_0c7326ca40019ohzuLZLaxrMQl",
   "source_revision": "8e5fa46",
@@ -66,6 +66,8 @@
     "scope": "Operational midpoint audit only; no final actor choice, performance verdict or gate modification"
   },
   "post_study": {
+    "result": "experiments/drqv2-steering-logit-v1-result.json",
+    "diagnostics": "experiments/drqv2-steering-logit-v1-diagnostics.json",
     "shared_state_probe": "diagnose_drqv2.py, pinned CPU21, one explicit control replay for all four selected actors",
     "do_not_weaken": "Both seeds must pass predeclared finish improvement, operational and nonzero screen/confirmation gates before the pre-frozen finalist enters fresh blind",
     "additional_trials": "At most one more artifact-justified single-axis controlled experiment after L2; otherwise stop. No new algorithm or coefficient sweep."
