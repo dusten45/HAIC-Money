@@ -233,7 +233,8 @@ def save_and_select(agent, observation, run_dir, run_config, args, best, trainer
     report = evaluate_checkpoint(actor_path, run_dir / "protocol.json", directory / "evaluation.json", args)
     result = report["ranked"][0]
     record = {
-        "step": step, "checkpoint": str(checkpoint.resolve()),
+        "step": step, "gradient_steps": agent.gradient_steps, "replay_size": agent.replay.size,
+        "checkpoint": str(checkpoint.resolve()),
         "checkpoint_sha256": file_sha256(checkpoint),
         "actor": str(actor_path.resolve()), "actor_sha256": file_sha256(actor_path),
         "evaluation_dir": report["evaluation_dir"], "cpu_result": result, "parity": parity,

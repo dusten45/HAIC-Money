@@ -314,7 +314,11 @@ def test_real_closed_loop_training_matches_uninterrupted_resume(tmp_path, device
             with patch("train_drqv2.check_evaluation_runtime", return_value={}), patch("tracking.pip_freeze", return_value=[]):
                 main()
         checkpoint = tmp_path / name / "checkpoints" / f"step-{target:09d}" / "checkpoint.pt"
-        return checkpoint, torch.load(checkpoint, map_location="cpu", weights_only=False)
+        payload = torch.load(checkpoint, map_location="cpu", weights_only=False)
+        selection = json.loads((checkpoint.parent / "selection.json").read_text())
+        assert selection["gradient_steps"] == payload["gradient_steps"]
+        assert selection["replay_size"] == min(target, 32)
+        return checkpoint, payload
 
     _, uninterrupted = train("full", 12)
     checkpoint, _ = train("partial", 8)
