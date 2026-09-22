@@ -19,8 +19,8 @@ def jsonl(path, rows):
     path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows))
 
 
-def spec():
-    return {
+def spec(parameter="steering_logit_l2"):
+    protocol = {
         "name": "matched-test", "max_steps": 6, "frame_skip": 4, "training_track_ids": [1, 2, 3, 4],
         "reserved_training_seeds": [7],
         "partitions": {name: {"track_ids": [100 + index], "seeds": list(range(90 + 10 * index, 94 + 10 * index)), "repeats": 2}
@@ -29,12 +29,24 @@ def spec():
                              "total_steps": 12, "eval_freq": 6, "checkpoint_steps": [6, 12],
                              "batch_size": 2, "warmup_steps": 6, "replay_capacity": 16,
                              "updates_per_step": 1, "track_sampler_seed": 917,
-                             "unchanged_drq_config": {"gamma": 0.99, "n_step": 3, "device": "cuda"}},
+                             "unchanged_drq_config": {"gamma": 0.99, "n_step": 3, "device": "cuda", "augmentation_pad": 4}},
         "frozen_selection": {"finalist_arm": "steering_l2"},
         "gates": {"confirmation_comparison": {"required_training_seeds": [0, 1],
                                                "min_treatment_finishes_each_seed": 1,
                                                "min_paired_finish_delta_each_seed": 1}},
     }
+    if parameter == "augmentation_pad":
+        matched = protocol["matched_training"]
+        matched["arm_parameter"] = parameter
+        matched["arms"] = {"control": 4, "augmentation_pad1": 1}
+        del matched["unchanged_drq_config"]["augmentation_pad"]
+        matched["unchanged_drq_config"]["steering_logit_l2"] = 0.0
+        protocol["frozen_selection"]["finalist_arm"] = "augmentation_pad1"
+    return protocol
+
+
+def treatment_arm(args):
+    return runner.read_json(args.protocol_file)["frozen_selection"]["finalist_arm"]
 
 
 def runtime(manifest):
@@ -111,6 +123,7 @@ def publish_training(root, job, screens, alias=False):
     protocol = runner.read_json(root / "protocol.json")
     manifest = runner.read_json(root / "manifest.json")
     execution, matched = manifest["execution"], protocol["matched_training"]
+    parameter = matched.get("arm_parameter", "steering_logit_l2")
     run = Path(job["run_dir"])
     run.mkdir()
     config = {"algorithm": "drq-v2", "seed": job["seed"], "track_ids": protocol["training_track_ids"],
@@ -126,11 +139,11 @@ def publish_training(root, job, screens, alias=False):
               "runtime": {"torch_threads": 1, "deterministic_algorithms": True, "cudnn_deterministic": True, "cudnn_benchmark": False},
               "drq_config": {**matched["unchanged_drq_config"], "batch_size": matched["batch_size"],
                              "warmup_steps": matched["warmup_steps"], "replay_capacity": matched["replay_capacity"],
-                             "device": execution["device"], "steering_logit_l2": matched["arms"][job["arm"]]}}
+                             "device": execution["device"], parameter: matched["arms"][job["arm"]]}}
     config.update({key: matched[key] for key in ("total_steps", "eval_freq", "updates_per_step", "track_sampler_seed")})
     put(run / "config.json", {"config": config, "command_line": shlex.join(job["command"][2:])})
     (run / "protocol.json").write_bytes((root / "protocol.json").read_bytes())
-    duration = 3 + job["seed"] + (2 if job["arm"] == "steering_l2" else 0)
+    duration = 3 + job["seed"] + (2 if job["arm"] != "control" else 0)
     episodes = []
     global_step, episode_id = 0, 0
     while True:
@@ -150,7 +163,7 @@ def publish_training(root, job, screens, alias=False):
     for step in matched["checkpoint_steps"]:
         directory = run / "checkpoints" / f"step-{step:09d}"
         directory.mkdir(parents=True)
-        identity = "shared-treatment" if alias and job["arm"] == "steering_l2" else job["name"]
+        identity = "shared-treatment" if alias and job["arm"] != "control" else job["name"]
         actor, checkpoint = directory / "actor.pt", directory / "checkpoint.pt"
         actor.write_bytes(f"{identity}-{step}".encode())
         checkpoint.write_bytes(f"checkpoint-{job['name']}-{step}".encode())
@@ -170,14 +183,16 @@ def publish_training(root, job, screens, alias=False):
     put(run / "result.json", {"environment_steps": matched["total_steps"], "gradient_steps": updates, "selected_checkpoint": best})
 
 
-@pytest.fixture
-def study(tmp_path, monkeypatch):
+@pytest.fixture(params=["steering_logit_l2", "augmentation_pad"])
+def study(tmp_path, monkeypatch, request):
     protocol_file = tmp_path / "protocol.json"
-    put(protocol_file, spec())
+    protocol = spec(request.param)
+    put(protocol_file, protocol)
     args = runner.parse_args(["--protocol-file", str(protocol_file), "--run-root", str(tmp_path / "study"),
                               "--train-python", "/explicit/gpu/bin/python", "--eval-python", "/explicit/cpu/bin/python"])
-    screens = {f"{arm}-seed{seed}": (1 if arm == "control" else 2) for arm in runner.ARMS for seed in runner.SEEDS}
-    confirms = {"control-seed0": 1, "control-seed1": 1, "steering_l2-seed0": 2, "steering_l2-seed1": 3}
+    screens = {f"{arm}-seed{seed}": (1 if arm == "control" else 2) for arm in protocol["matched_training"]["arms"] for seed in runner.SEEDS}
+    treatment = protocol["frozen_selection"]["finalist_arm"]
+    confirms = {"control-seed0": 1, "control-seed1": 1, f"{treatment}-seed0": 2, f"{treatment}-seed1": 3}
     calls = []
 
     def process(command, **kwargs):
@@ -247,6 +262,110 @@ def test_interpreter_symlink_is_not_resolved(study, tmp_path):
     assert (root / "source/train_drqv2.py").is_file()
 
 
+def test_fixed_axis_commands_differ_only_by_active_parameter_and_run_identity(study):
+    args, *_ = study
+    root, protocol, manifest = runner.initialize(args)
+    matched = protocol["matched_training"]
+    parameter = matched.get("arm_parameter", "steering_logit_l2")
+    baseline = None
+    for job in manifest["jobs"]:
+        command = job["command"]
+        options = dict(zip(command[3::2], command[4::2]))
+        assert len(command[3:]) == 2 * len(options)
+        assert options["--run-dir"] == str(root / job["name"])
+        assert "--resume" not in options
+        if parameter == "augmentation_pad":
+            assert options["--augmentation-pad"] == str(matched["arms"][job["arm"]])
+            assert options["--steering-logit-l2"] == "0.0"
+        else:
+            assert "--augmentation-pad" not in options
+            assert options["--steering-logit-l2"] == str(matched["arms"][job["arm"]])
+        excluded = {"--name", "--run-dir", "--evaluations-dir", "--seed", f"--{parameter.replace('_', '-')}"}
+        normalized = [(key, value) for key, value in options.items() if key not in excluded]
+        assert baseline is None or normalized == baseline
+        baseline = normalized
+
+
+@pytest.mark.parametrize("study", ["steering_logit_l2"], indirect=True)
+def test_legacy_l2_commands_and_recovery_remain_compatible(complete, study):
+    root, protocol, manifest, args = complete
+    assert "arm_parameter" not in protocol["matched_training"]
+    for job in manifest["jobs"]:
+        run = root / job["name"]
+        # Original command ordering and numeric spellings are persisted evidence.
+        legacy_command = [
+            "/explicit/gpu/bin/python", "-B", str(root / "source/train_drqv2.py"),
+            "--name", job["name"], "--run-dir", str(run), "--protocol-file", str(root / "protocol.json"),
+            "--track-ids", "1,2,3,4", "--max-steps", "6", "--frame-skip", "4", "--seed", str(job["seed"]),
+            "--steering-logit-l2", "0.0" if job["arm"] == "control" else "0.001",
+            "--device", "cuda", "--eval-python", "/explicit/cpu/bin/python", "--eval-workers", "2",
+            "--evaluations-dir", str(run / "evaluations"), "--torch-threads", "1", "--total-steps", "12",
+            "--eval-freq", "6", "--batch-size", "2", "--warmup-steps", "6", "--replay-capacity", "16",
+            "--updates-per-step", "1", "--track-sampler-seed", "917",
+        ]
+        assert json.dumps(job["command"]).encode() == json.dumps(legacy_command).encode()
+    explicit = json.loads(json.dumps(protocol))
+    explicit["matched_training"]["arm_parameter"] = "steering_logit_l2"
+    runner.validate_protocol(explicit)
+    assert runner.training_jobs(root, explicit, manifest["execution"]) == manifest["jobs"]
+    before = (root / "manifest.json").read_bytes()
+    args.evaluate_only = True
+    _, first = runner.run_study(args)
+    frozen = (root / "frozen_candidates.json").read_bytes()
+    _, repeated = runner.run_study(args)
+    assert first["promotion"] and repeated["promotion"] and len(study[3]) == 5
+    assert (root / "manifest.json").read_bytes() == before
+    assert (root / "frozen_candidates.json").read_bytes() == frozen
+
+
+@pytest.mark.parametrize("parameter", ["steering_logit_l2", "augmentation_pad"])
+@pytest.mark.parametrize("mutation", ["extra_arm", "sweep", "inactive_change", "missing_inactive", "active_unchanged", "wrong_finalist", "invalid_type"])
+def test_protocol_rejects_extra_axes_sweeps_and_compound_changes(parameter, mutation):
+    protocol = spec(parameter)
+    matched = protocol["matched_training"]
+    fixed = "steering_logit_l2" if parameter == "augmentation_pad" else "augmentation_pad"
+    if mutation == "extra_arm":
+        matched["arms"]["another_trial"] = 2
+    elif mutation == "sweep":
+        matched["arms"][protocol["frozen_selection"]["finalist_arm"]] = 2
+    elif mutation == "inactive_change":
+        matched["unchanged_drq_config"][fixed] = 0.001 if fixed == "steering_logit_l2" else 1
+    elif mutation == "missing_inactive":
+        del matched["unchanged_drq_config"][fixed]
+    elif mutation == "active_unchanged":
+        matched["unchanged_drq_config"][parameter] = matched["arms"]["control"]
+    elif mutation == "wrong_finalist":
+        protocol["frozen_selection"]["finalist_arm"] = "control"
+    else:
+        matched["arms"]["control"] = 4.0 if parameter == "augmentation_pad" else False
+    with pytest.raises(ValueError):
+        runner.validate_protocol(protocol)
+
+
+@pytest.mark.parametrize("parameter", [None, "lambda", "gamma", ["augmentation_pad"]])
+def test_unknown_arm_parameter_is_rejected(parameter):
+    protocol = spec()
+    protocol["matched_training"]["arm_parameter"] = parameter
+    with pytest.raises(ValueError, match="unsupported matched arm_parameter"):
+        runner.validate_protocol(protocol)
+
+
+@pytest.mark.parametrize("all_runs", [False, True])
+def test_inactive_config_parameter_is_never_exempt_from_matching(complete, all_runs):
+    root, protocol, manifest, args = complete
+    parameter = protocol["matched_training"].get("arm_parameter", "steering_logit_l2")
+    fixed = "steering_logit_l2" if parameter == "augmentation_pad" else "augmentation_pad"
+    jobs = manifest["jobs"] if all_runs else manifest["jobs"][-1:]
+    for job in jobs:
+        path = Path(job["run_dir"]) / "config.json"
+        value = runner.read_json(path)
+        value["config"]["drq_config"][fixed] = 0.001 if fixed == "steering_logit_l2" else 1
+        put(path, value)
+    with pytest.raises(ValueError, match="drq_config mismatch"):
+        runner.freeze_candidates(root, protocol, manifest)
+    assert not (root / "frozen_candidates.json").exists()
+
+
 def test_ranking_finish_progress_lap_and_nonfinite():
     assert runner.selection_score(score(.1, .1, 100)) > runner.selection_score(score(0, 1))
     assert runner.selection_score(score(.1, .8, 300)) > runner.selection_score(score(.1, .1, 100))
@@ -261,18 +380,19 @@ def test_ranking_finish_progress_lap_and_nonfinite():
 
 def test_four_complete_jobs_freeze_before_confirmation_and_never_rerank(study):
     args, screens, confirms, calls = study
+    treatment = treatment_arm(args)
     path, result = runner.run_study(args)
     assert result["status"] == "passed" and result["promotion"]
     assert result["next_stage_permitted"] and not result["official_submission_authorized"]
     frozen = runner.read_sealed(args.run_root / "frozen_candidates.json")
     assert [candidate["step"] for candidate in frozen["candidates"]] == [6] * 4
-    assert frozen["finalist"] == "steering_l2-seed0"
+    assert frozen["finalist"] == f"{treatment}-seed0"
     assert len(set(frozen["episode_prefix_lengths"].values())) > 1
     assert result["paired_comparison"][1]["treatment_finishes"] > result["paired_comparison"][0]["treatment_finishes"]
     assert len(calls) == 9
     blind = calls[-1][0]
     assert blind[blind.index("--partition") + 1] == "blind"
-    assert "steering_l2-seed0" in blind[blind.index("--model") + 1]
+    assert f"{treatment}-seed0" in blind[blind.index("--model") + 1]
     assert all("--previous-evaluation" in command for command, _ in calls[4:])
     original = path.read_bytes()
     args.evaluate_only = True
@@ -284,19 +404,20 @@ def test_four_complete_jobs_freeze_before_confirmation_and_never_rerank(study):
 @pytest.mark.parametrize("case", ["zero_screen", "tie", "regression", "zero_confirmation"])
 def test_diagnostics_progress_and_one_seed_gain_cannot_promote(study, case):
     args, screens, confirms, calls = study
+    treatment = f"{treatment_arm(args)}-seed1"
     if case == "zero_screen":
-        screens["steering_l2-seed1"] = 0
-        confirms["steering_l2-seed1"] = 4
+        screens[treatment] = 0
+        confirms[treatment] = 4
     elif case == "tie":
-        confirms["steering_l2-seed1"] = 1
+        confirms[treatment] = 1
     elif case == "regression":
-        confirms["control-seed1"], confirms["steering_l2-seed1"] = 3, 2
+        confirms["control-seed1"], confirms[treatment] = 3, 2
     else:
-        confirms["steering_l2-seed1"] = 0
+        confirms[treatment] = 0
     _, result = runner.run_study(args)
     assert result["status"] == "rejected" and not result["promotion"]
     assert result["blind"]["status"] == "not_run" and len(calls) == 8
-    confirmation = next(command for command, _ in calls if "--partition" in command and "steering_l2-seed1" in command[command.index("--run-dir") + 1])
+    confirmation = next(command for command, _ in calls if "--partition" in command and treatment in command[command.index("--run-dir") + 1])
     assert ("--diagnostic-confirmation" in confirmation) == (case == "zero_screen")
 
 
@@ -306,7 +427,7 @@ def test_zero_screen_control_is_diagnostic_comparator_not_promoted(study):
     _, result = runner.run_study(args)
     assert result["promotion"]
     assert result["confirmations"]["control-seed0"]["diagnostic_only"]
-    assert result["finalist"].startswith("steering_l2")
+    assert result["finalist"].startswith(treatment_arm(args))
 
 
 def test_zero_blind_completion_blocks_promotion_without_fallback(study):
@@ -371,7 +492,7 @@ def test_all_gpu_jobs_finish_and_failures_are_recorded(study, monkeypatch):
 ])
 def test_rejects_incomplete_or_unmatched_training(complete, mutation, message):
     root, protocol, manifest, args = complete
-    run = root / ("steering_l2-seed1" if mutation == "schedule_arm" else "control-seed1")
+    run = root / (f"{treatment_arm(args)}-seed1" if mutation == "schedule_arm" else "control-seed1")
     if mutation in ("partial_budget", "extra_budget", "updates"):
         record = runner.read_json(run / "result.json")
         record["gradient_steps" if mutation == "updates" else "environment_steps"] += 1 if mutation == "extra_budget" else -1
@@ -497,7 +618,7 @@ def test_orphan_published_confirmation_without_pointer_is_not_repeated(complete,
 def test_recovery_rejects_mutated_published_confirmation(study):
     args, screens, confirms, calls = study
     runner.run_study(args)
-    pointer = args.run_root / "steering_l2-seed0/confirmation.json"
+    pointer = args.run_root / f"{treatment_arm(args)}-seed0/confirmation.json"
     with pointer.open("a") as handle:
         handle.write(" ")
     args.evaluate_only = True
@@ -535,14 +656,15 @@ def test_recovery_rejects_mutated_frozen_source(study):
 
 def test_duplicate_actor_lineage_does_not_replace_required_training_seeds(study):
     args, screens, _, _ = study
+    treatment = treatment_arm(args)
     root, protocol, manifest = runner.initialize(args)
     for job in manifest["jobs"]:
         publish_training(root, job, screens, alias=True)
     frozen = runner.freeze_candidates(root, protocol, manifest)
     assert frozen["training_runs"] == 4 and frozen["unique_selected_actors"] == 3
-    assert frozen["paired_training_seeds"] == [0, 1] and frozen["arm_counts"] == {"control": 2, "steering_l2": 2}
-    assert ["steering_l2-seed0", "steering_l2-seed1"] in frozen["actor_lineage_groups"].values()
-    config_path = root / "steering_l2-seed1/config.json"
+    assert frozen["paired_training_seeds"] == [0, 1] and frozen["arm_counts"] == {"control": 2, treatment: 2}
+    assert [f"{treatment}-seed0", f"{treatment}-seed1"] in frozen["actor_lineage_groups"].values()
+    config_path = root / f"{treatment}-seed1/config.json"
     value = runner.read_json(config_path)
     value["config"]["seed"] = 0
     put(config_path, value)

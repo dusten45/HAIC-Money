@@ -55,6 +55,7 @@ def parse_args():
     parser.add_argument("--replay-capacity", type=int, default=10_000)
     parser.add_argument("--updates-per-step", type=int, default=1)
     parser.add_argument("--steering-logit-l2", type=float, default=0.0)
+    parser.add_argument("--augmentation-pad", type=int, default=4)
     parser.add_argument("--eval-freq", type=int, default=32768)
     parser.add_argument("--eval-python", default=sys.executable)
     parser.add_argument("--eval-workers", type=int, default=1)
@@ -304,6 +305,8 @@ def main():
         raise ValueError("invalid step, update, horizon, thread or evaluation interval")
     if args.frame_skip != 4:
         raise ValueError("the first algorithm comparison freezes frame_skip=4")
+    if args.augmentation_pad < 0:
+        raise ValueError("augmentation-pad must be nonnegative")
     if any(path and "_latest" in path.parts for path in (args.resume, args.run_dir, args.protocol_file, args.evaluations_dir)):
         raise ValueError("DrQ training requires explicit paths, not _latest")
     if args.run_dir and args.run_dir.exists():
@@ -325,6 +328,7 @@ def main():
         batch_size=args.batch_size,
         replay_capacity=args.replay_capacity,
         steering_logit_l2=args.steering_logit_l2,
+        augmentation_pad=args.augmentation_pad,
     )
     run_config = {
         "algorithm": "drq-v2",

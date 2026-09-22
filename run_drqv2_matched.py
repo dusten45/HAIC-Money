@@ -1,4 +1,4 @@
-"""Run the predeclared four-run steering-L2 comparison, without importing ML code."""
+"""Run a fixed four-run steering-L2 or augmentation-pad comparison without ML imports."""
 
 import argparse
 import copy
@@ -25,7 +25,8 @@ TRAIN_SOURCES = (
 )
 SOURCES = (*TRAIN_SOURCES, "run_drqv2_matched.py", "evaluate_policy.py", "agent.py",
            "tracking.py", "action_smoothing.py", "action_representation.py", "requirements.txt")
-ARMS = {"control": 0.0, "steering_l2": 0.001}
+AXES = {"steering_logit_l2": {"control": 0.0, "steering_l2": 0.001},
+        "augmentation_pad": {"control": 4, "augmentation_pad1": 1}}
 SEEDS = [0, 1]
 LIMITS = {"process_initialization_seconds": 10, "agent_reset_seconds": 5,
           "max_action_seconds": 5, "peak_rss_bytes": 1024**3}
@@ -94,6 +95,23 @@ def reserved_seeds(protocol):
         *(matrix["seeds"] for matrix in protocol["partitions"].values())))
 
 
+def matched_axis(protocol):
+    matched = protocol["matched_training"]
+    parameter = matched.get("arm_parameter", "steering_logit_l2")
+    require(isinstance(parameter, str) and parameter in AXES, "unsupported matched arm_parameter")
+    arms = AXES[parameter]
+    value_types = (int,) if parameter == "augmentation_pad" else (int, float)
+    require(matched.get("arms") == arms and all(type(value) in value_types for value in matched["arms"].values()),
+            "fixed arms required; no extra arms or sweeps")
+    unchanged = matched["unchanged_drq_config"]
+    require(parameter not in unchanged, "active arm_parameter must not appear in unchanged_drq_config")
+    fixed, expected = ("steering_logit_l2", 0.0) if parameter == "augmentation_pad" else ("augmentation_pad", 4)
+    fixed_types = (int, float) if fixed == "steering_logit_l2" else (int,)
+    require(type(unchanged.get(fixed)) in fixed_types and unchanged[fixed] == expected,
+            f"inactive {fixed} must remain {expected}; compound changes are forbidden")
+    return parameter, arms
+
+
 def validate_protocol(protocol):
     require(type(protocol.get("frame_skip")) is int and protocol["frame_skip"] == 4
             and type(protocol.get("max_steps")) is int and protocol["max_steps"] > 0,
@@ -101,10 +119,9 @@ def validate_protocol(protocol):
     require(protocol.get("training_track_ids") == [1, 2, 3, 4]
             and all(type(track) is int for track in protocol["training_track_ids"]), "wrong training track pool")
     matched = protocol["matched_training"]
-    require(matched.get("arms") == ARMS and matched.get("seeds") == SEEDS
-            and all(type(seed) is int for seed in matched["seeds"])
-            and all(type(value) in (int, float) for value in matched["arms"].values()),
-            "fixed arms/seeds required; no sweeps")
+    _, arms = matched_axis(protocol)
+    require(matched.get("seeds") == SEEDS and all(type(seed) is int for seed in matched["seeds"]),
+            "fixed training seeds required; no sweeps")
     for key in ("total_steps", "eval_freq", "batch_size", "warmup_steps", "replay_capacity", "updates_per_step"):
         require(type(matched[key]) is int and matched[key] > 0, f"invalid matched_training.{key}")
     require(type(matched["track_sampler_seed"]) is int and matched["track_sampler_seed"] >= 0,
@@ -137,7 +154,8 @@ def validate_protocol(protocol):
     require(gate["required_training_seeds"] == [0, 1]
             and gate["min_treatment_finishes_each_seed"] == 1
             and gate["min_paired_finish_delta_each_seed"] == 1, "unexpected confirmation criterion")
-    require(protocol["frozen_selection"]["finalist_arm"] == "steering_l2", "wrong finalist arm")
+    require(protocol["frozen_selection"]["finalist_arm"] == next(arm for arm in arms if arm != "control"),
+            "wrong finalist arm")
 
 
 def child_environment():
@@ -151,7 +169,8 @@ def child_environment():
 def training_jobs(root, protocol, execution):
     jobs = []
     matched = protocol["matched_training"]
-    for arm in ("control", "steering_l2"):
+    parameter, arms = matched_axis(protocol)
+    for arm in arms:
         for seed in SEEDS:
             name = f"{arm}-seed{seed}"
             run = root / name
@@ -159,7 +178,7 @@ def training_jobs(root, protocol, execution):
                 "name": name, "run-dir": run, "protocol-file": root / "protocol.json",
                 "track-ids": ",".join(map(str, protocol["training_track_ids"])),
                 "max-steps": protocol["max_steps"], "frame-skip": protocol["frame_skip"],
-                "seed": seed, "steering-logit-l2": ARMS[arm],
+                "seed": seed, "steering-logit-l2": arms[arm] if parameter == "steering_logit_l2" else 0.0,
                 "device": execution["device"], "eval-python": execution["eval_python"],
                 "eval-workers": execution["eval_workers"], "evaluations-dir": run / "evaluations",
                 "torch-threads": 1,
@@ -168,6 +187,9 @@ def training_jobs(root, protocol, execution):
                 "total_steps", "eval_freq", "batch_size", "warmup_steps", "replay_capacity",
                 "updates_per_step", "track_sampler_seed",
             )})
+            # Preserve the exact commands already sealed by existing L2 studies.
+            if parameter == "augmentation_pad":
+                options["augmentation-pad"] = arms[arm]
             command = [execution["train_python"], "-B", str(root / "source/train_drqv2.py")]
             for key, value in options.items():
                 command.extend([f"--{key}", str(value)])
@@ -407,6 +429,7 @@ def episode_schedule(path, protocol):
 def validate_runs(root, protocol, manifest):
     candidates, schedules, files, baseline = [], {}, {}, None
     matched = protocol["matched_training"]
+    parameter, arms = matched_axis(protocol)
     source_map = {name: digest for name, digest in manifest["source_sha256"].items()
                   if name in TRAIN_SOURCES or name.startswith("core/")}
     for job in manifest["jobs"]:
@@ -426,7 +449,7 @@ def validate_runs(root, protocol, manifest):
             require(key in config and config[key] == value, f"{job['name']} config mismatch: {key}")
         expected_drq = {**protocol["matched_training"]["unchanged_drq_config"],
                         **{key: matched[key] for key in ("batch_size", "warmup_steps", "replay_capacity")},
-                        "device": manifest["execution"]["device"], "steering_logit_l2": ARMS[job["arm"]]}
+                        "device": manifest["execution"]["device"], parameter: arms[job["arm"]]}
         require(config["drq_config"] == expected_drq, f"{job['name']} drq_config mismatch")
         require(config["action_smoothing"]["method"] == "none" and config["evaluation_runtime"]["status"] == "ok",
                 "smoothing or invalid CPU preflight")
@@ -435,8 +458,8 @@ def validate_runs(root, protocol, manifest):
                 and config["runtime"]["cudnn_deterministic"] is True and config["runtime"]["cudnn_benchmark"] is False,
                 "nondeterministic training runtime")
         normalized = copy.deepcopy(config)
-        del normalized["seed"], normalized["drq_config"]["steering_logit_l2"]
-        require(baseline is None or baseline == normalized, "saved run configs differ beyond seed/coefficient")
+        del normalized["seed"], normalized["drq_config"][parameter]
+        require(baseline is None or baseline == normalized, "saved run configs differ beyond seed/active parameter")
         baseline = normalized
         require(type(result["environment_steps"]) is int and result["environment_steps"] == matched["total_steps"],
                 "incomplete or exceeded exact training budget")
@@ -527,7 +550,7 @@ def freeze_candidates(root, protocol, manifest):
         frozen = read_sealed(path)
         verify_files(frozen["files"])
     candidates, lengths, files = validate_runs(root, protocol, manifest)
-    finalist = max((candidate for candidate in candidates if candidate["arm"] == "steering_l2"),
+    finalist = max((candidate for candidate in candidates if candidate["arm"] == protocol["frozen_selection"]["finalist_arm"]),
                    key=lambda candidate: (*selection_score(candidate["screen"]["result"]), -candidate["seed"]))
     groups = {}
     for candidate in candidates:
@@ -535,7 +558,7 @@ def freeze_candidates(root, protocol, manifest):
     expected = {"protocol_sha256": manifest["protocol_sha256"], "manifest_sha256": sha256(root / "manifest.json"),
                 "candidates": candidates, "finalist": finalist["name"], "episode_prefix_lengths": lengths,
                 "actor_lineage_groups": groups, "training_runs": len(candidates), "paired_training_seeds": SEEDS,
-                "arm_counts": {arm: sum(candidate["arm"] == arm for candidate in candidates) for arm in ARMS},
+                "arm_counts": {arm: sum(candidate["arm"] == arm for candidate in candidates) for arm in protocol["matched_training"]["arms"]},
                 "unique_selected_actors": len(groups),
                 "lineage_note": "Every arm/seed requires its own complete training lineage. Equal actor hashes and reloads are not independent policy evidence.",
                 "commands": {candidate["name"]: evaluation_command(root, candidate, "confirmation", protocol, manifest["execution"])
@@ -594,11 +617,11 @@ def evaluate_fixed(root, candidate, partition, command, protocol, manifest):
         return {"status": "error", "command": command, "error": f"{type(error).__name__}: {error}"}
 
 
-def confirmation_gate(candidates, confirmations):
+def confirmation_gate(candidates, confirmations, protocol):
     pairs = []
     for seed in SEEDS:
         control, treatment = (next(candidate for candidate in candidates if candidate["arm"] == arm and candidate["seed"] == seed)
-                              for arm in ("control", "steering_l2"))
+                              for arm in ("control", protocol["frozen_selection"]["finalist_arm"]))
         reports = [confirmations[candidate["name"]] for candidate in (control, treatment)]
         if any(report["status"] != "ok" for report in reports):
             pairs.append({"seed": seed, "passed": False, "reason": "missing/invalid confirmation"})
@@ -672,7 +695,7 @@ def run_study(args):
                 if report["status"] == "ok":
                     verify_files(report["files"])
             verify_files(manifest["files"])
-            result["confirmation_gate_passed"], result["paired_comparison"] = confirmation_gate(frozen["candidates"], confirmations)
+            result["confirmation_gate_passed"], result["paired_comparison"] = confirmation_gate(frozen["candidates"], confirmations, protocol)
             result["errors"].extend(report["error"] for report in confirmations.values() if report["status"] != "ok")
             if result["confirmation_gate_passed"]:
                 gate_path = root / "confirmation_gate.json"

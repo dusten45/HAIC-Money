@@ -163,7 +163,7 @@ def test_training_evaluates_after_update_at_each_checkpoint_and_final(tmp_path):
 
     args = ["train_drqv2.py", "--name", "test", "--run-dir", str(tmp_path / "run"),
             "--total-steps", "5", "--warmup-steps", "2", "--batch-size", "2",
-            "--replay-capacity", "8", "--eval-freq", "2", "--steering-logit-l2", "0.001"]
+            "--replay-capacity", "8", "--eval-freq", "2", "--steering-logit-l2", "0.001", "--augmentation-pad", "1"]
     with patch("sys.argv", args), patch("train_drqv2.build_sampled_env", return_value=Environment()) as build:
         with patch("train_drqv2.save_and_select", side_effect=checkpoint), patch("tracking.pip_freeze", return_value=[]), patch("train_drqv2.check_evaluation_runtime", return_value={}):
             main()
@@ -173,6 +173,7 @@ def test_training_evaluates_after_update_at_each_checkpoint_and_final(tmp_path):
     recorded = json.loads((tmp_path / "run/config.json").read_text())["config"]
     assert recorded["updates_per_step"] == 1
     assert recorded["drq_config"]["steering_logit_l2"] == .001
+    assert recorded["drq_config"]["augmentation_pad"] == 1
     assert recorded["protocol"]["partitions"]["screen"]["repeats"] == 2
     events = [json.loads(line) for line in (tmp_path / "run/episodes.jsonl").read_text().splitlines()]
     assert len([event for event in events if event["event"] == "end"]) == 5
@@ -192,6 +193,9 @@ def test_training_rejects_duplicate_run_directory_and_nonfrozen_frame_skip(tmp_p
             main()
     with patch("sys.argv", args + ["--frame-skip", "8"]):
         with pytest.raises(ValueError, match="frame_skip=4"):
+            main()
+    with patch("sys.argv", args + ["--augmentation-pad", "-1"]):
+        with pytest.raises(ValueError, match="augmentation-pad"):
             main()
 
 
