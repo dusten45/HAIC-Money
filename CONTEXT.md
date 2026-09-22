@@ -162,6 +162,10 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
    Live learning metrics also match all four original prefixes exactly through17,000
    steps; wall time per1,000 steps fell from about94.5s to31.5s. Operator state and
    restart evidence are in `experiments/drqv2-l2-execution.json`.
+   At04:28 UTC all four65,536 checkpoints passed an independent CPU audit:192/192
+   traces rehashed, exact paired outcomes, zero operational failures, max344.6MiB RSS
+   and3.95ms action time. All runs had reached92k--95k with finite metrics and exact
+   update counters. Final131,072 selection and fresh confirmation remain pending.
 5. Offline evidence is in `experiments/drqv2-pre-l2-diagnostics.json`; reusable
    `diagnose_drqv2.py` compares all actors on one fixed replay-state sample under
    CPU21. History IS used; no new frame-skip/terminal bug was found. Logit saturation,

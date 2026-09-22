@@ -1,7 +1,7 @@
 {
   "study": "experiments/drqv2-steering-logit-v1.json",
   "protocol_sha256": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
-  "status": "training; no completed study outcome yet",
+  "status": "training beyond four valid midpoint CPU checkpoints; final selection and confirmation pending",
   "active_run_root": "runs/20260922-drq-steering-l2-v1-fast",
   "background_process": "bgp_0c7326ca40019ohzuLZLaxrMQl",
   "source_revision": "8e5fa46",
@@ -40,6 +40,30 @@
     "live_seconds_per_1000_steps_before_range": [94.15, 94.81],
     "live_seconds_per_1000_steps_after_range": [31.27, 31.76],
     "interpretation": "Approximately3x measured end-to-end improvement under four-job concurrency; not a second learning hypothesis or an extra completed experiment"
+  },
+  "midpoint_audit": {
+    "observed_utc": "2026-09-22T04:28:28Z",
+    "checkpoint_step": 65536,
+    "gradient_steps_each_checkpoint": 55537,
+    "replay_entries_each_checkpoint": 65536,
+    "all_four_checkpoint_and_actor_hashes_verified": true,
+    "restore_and_cpu_export_error_each_checkpoint": 0.0,
+    "cpu_rows_each_run": 48,
+    "total_action_traces_independently_rehashed": 192,
+    "paired_actions_and_outcomes_exact": true,
+    "operational_failures": 0,
+    "worker_runtime": "Linux/Python3.11/Torch2.1.0+cpu/NumPy1.26.0, no CUDA, intra/inter threads1",
+    "max_whole_worker_rss_mib_approx": 344.563,
+    "max_initialization_seconds_approx": 1.141,
+    "max_action_milliseconds_approx": 3.946,
+    "last_logged_training_steps": {
+      "control-seed0": 94000,
+      "control-seed1": 93000,
+      "steering_l2-seed0": 92000,
+      "steering_l2-seed1": 95000
+    },
+    "finite_training_metrics_and_exact_update_counters": true,
+    "scope": "Operational midpoint audit only; no final actor choice, performance verdict or gate modification"
   },
   "post_study": {
     "shared_state_probe": "diagnose_drqv2.py, pinned CPU21, one explicit control replay for all four selected actors",
