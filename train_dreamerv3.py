@@ -334,13 +334,13 @@ def main():
     print(f"run_dir: {run_dir}", flush=True)
 
     environment = build_sampled_env(
-        track_ids=track_ids,
-        track_sampler_seed=args.track_sampler_seed,
-        max_steps=args.max_steps,
-        frame_skip=args.frame_skip,
+        track_ids,
+        args.track_sampler_seed,
+        args.max_steps,
+        args.frame_skip,
         reward_shaping=False,
         excluded_seeds=excluded_seeds,
-        randomize_on_reset=True,
+        obstacles=True,
     )
     agent = DreamerV3Agent(config, seed=args.seed)
     collector = EpisodeCollector(environment, action_adapter=agent.action_adapter, gamma=config.gamma)

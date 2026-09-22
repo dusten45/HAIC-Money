@@ -1004,7 +1004,7 @@ def snapshot_candidates(temporary_dir: Path, candidates) -> None:
     candidate_dir = temporary_dir / "candidates"
     candidate_dir.mkdir()
     for candidate in candidates:
-        suffix = ".pt" if candidate.get("algorithm") == "drq-v2" else ".zip"
+        suffix = Path(candidate["source_path"]).suffix
         archive = candidate_dir / f"{candidate['candidate_id']}{suffix}"
         shutil.copy2(candidate["source_path"], archive)
         snapshot_sha256 = sha256_file(archive)

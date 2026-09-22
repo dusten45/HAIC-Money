@@ -371,6 +371,34 @@ class Uint8SequenceReplay:
             + self.sequence_ids.nbytes
         )
 
+    def state_dict(self) -> dict[str, Any]:
+        return {
+            "capacity": self.capacity,
+            "cursor": self.cursor,
+            "size": self.size,
+            "total_steps": self.total_steps,
+            "observations": self.observations[:self.size].copy(),
+            "actions": self.actions[:self.size].copy(),
+            "rewards": self.rewards[:self.size].copy(),
+            "is_first": self.is_first[:self.size].copy(),
+            "is_last": self.is_last[:self.size].copy(),
+            "is_terminal": self.is_terminal[:self.size].copy(),
+            "sequence_ids": self.sequence_ids[:self.size].copy(),
+        }
+
+    def load_state_dict(self, state: dict[str, Any]) -> None:
+        self.cursor = int(state["cursor"])
+        self.size = int(state["size"])
+        self.total_steps = int(state["total_steps"])
+        n = self.size
+        self.observations[:n] = state["observations"]
+        self.actions[:n] = state["actions"]
+        self.rewards[:n] = state["rewards"]
+        self.is_first[:n] = state["is_first"]
+        self.is_last[:n] = state["is_last"]
+        self.is_terminal[:n] = state["is_terminal"]
+        self.sequence_ids[:n] = state["sequence_ids"]
+
 
 @dataclass
 class DreamerV3Config:
@@ -771,6 +799,7 @@ class DreamerV3Agent:
             "critic_optimizer": self.critic_optimizer.state_dict(),
             "torch_rng_state": torch.get_rng_state(),
             "numpy_rng_state": np.random.get_state(),
+            "replay": self.replay.state_dict(),
             "run_metadata": run_metadata,
             "trainer_state": trainer_state,
         }
@@ -805,6 +834,9 @@ class DreamerV3Agent:
         np.random.set_state(payload["numpy_rng_state"])
         if "torch_cuda_rng_state" in payload and torch.cuda.is_available() and self.device.type == "cuda":
             torch.cuda.set_rng_state(payload["torch_cuda_rng_state"], self.device)
+
+        if "replay" in payload:
+            self.replay.load_state_dict(payload["replay"])
 
         return payload.get("trainer_state")
 
