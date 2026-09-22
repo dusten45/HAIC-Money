@@ -389,8 +389,12 @@ class DrQActor(nn.Module):
         )
         self.policy = nn.Linear(hidden_dim, action_dim)
 
-    def forward(self, observation: torch.Tensor) -> torch.Tensor:
-        return torch.tanh(self.policy(self.trunk(self.encoder(observation))))
+    def forward(
+        self, observation: torch.Tensor, *, return_logits: bool = False,
+    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
+        logits = self.policy(self.trunk(self.encoder(observation)))
+        action = torch.tanh(logits)
+        return (action, logits) if return_logits else action
 
     @torch.inference_mode()
     def act(self, observation: np.ndarray, deterministic: bool = True, noise_std: float = 0.0) -> np.ndarray:
@@ -431,6 +435,7 @@ class DrQv2Config:
     gamma: float = 0.99
     actor_learning_rate: float = 1e-4
     critic_learning_rate: float = 1e-4
+    steering_logit_l2: float = 0.0
     tau: float = 0.01
     actor_update_frequency: int = 2
     target_update_frequency: int = 2
@@ -452,6 +457,8 @@ class DrQv2Config:
             raise ValueError("invalid replay/update sizes")
         if not 0.0 < self.gamma <= 1.0 or not 0.0 < self.tau <= 1.0:
             raise ValueError("gamma and tau must be in (0, 1]")
+        if not np.isfinite(self.steering_logit_l2) or self.steering_logit_l2 < 0.0:
+            raise ValueError("steering_logit_l2 must be finite and nonnegative")
 
 
 class DrQv2Agent:
@@ -509,6 +516,7 @@ class DrQv2Agent:
         )
         self.environment_steps = 0
         self.gradient_steps = 0
+        self.last_actor_metrics: dict[str, float] = {}
         self._hard_update_targets()
 
     def _hard_update_targets(self) -> None:
@@ -561,6 +569,8 @@ class DrQv2Agent:
             "target_mean": 0.0,
             "replay_size": float(self.replay.size),
             "gradient_steps": float(self.gradient_steps),
+            "actor_updated": 0.0,
+            **self.last_actor_metrics,
         }
         if self.replay.size < max(self.config.batch_size, self.config.warmup_steps):
             return zero
@@ -586,33 +596,74 @@ class DrQv2Agent:
         critic_loss = F.mse_loss(q1, target) + F.mse_loss(q2, target)
         self.critic_optimizer.zero_grad(set_to_none=True)
         critic_loss.backward()
-        torch.nn.utils.clip_grad_norm_(
+        critic_grad_norm = torch.nn.utils.clip_grad_norm_(
             list(self.critic_one.parameters()) + list(self.critic_two.parameters()), 10.0
         )
         self.critic_optimizer.step()
         self.gradient_steps += 1
         actor_loss = torch.zeros((), device=self.device)
-        if self.gradient_steps % self.config.actor_update_frequency == 0:
+        actor_updated = self.gradient_steps % self.config.actor_update_frequency == 0
+        if actor_updated:
             for parameter in list(self.critic_one.parameters()) + list(self.critic_two.parameters()):
                 parameter.requires_grad_(False)
             actor_observation = random_shift(values["observation"], pad=self.config.augmentation_pad)
-            actor_loss = -self.critic_one(actor_observation, self.actor(actor_observation)).mean()
+            actor_action, actor_logits = self.actor(actor_observation, return_logits=True)
+            actor_q_loss = -self.critic_one(actor_observation, actor_action).mean()
+            steering_logits = actor_logits[:, 0]
+            steering_penalty = torch.zeros((), device=self.device)
+            actor_loss = actor_q_loss
+            # Do not add a zero-weight branch to the baseline autograd graph.
+            if self.config.steering_logit_l2 > 0.0:
+                steering_penalty = self.config.steering_logit_l2 * steering_logits.square().mean()
+                actor_loss = actor_q_loss + steering_penalty
             self.actor_optimizer.zero_grad(set_to_none=True)
             actor_loss.backward()
-            torch.nn.utils.clip_grad_norm_(self.actor.parameters(), 10.0)
+            steering_head_grad_norm = (
+                self.actor.policy.weight.grad[0].square().sum()
+                + self.actor.policy.bias.grad[0].square()
+            ).sqrt()
+            actor_grad_norm = torch.nn.utils.clip_grad_norm_(self.actor.parameters(), 10.0)
             self.actor_optimizer.step()
+            with torch.no_grad():
+                steering_logits = steering_logits.detach()
+                steering_action = actor_action[:, 0].detach()
+                squash_derivative = 1.0 - steering_action.square()
+                actor_metrics = {
+                    "actor_q_loss": actor_q_loss.detach(),
+                    "steering_logit_l2_penalty": steering_penalty.detach(),
+                    "steering_logit_mean_square": steering_logits.square().mean(),
+                    "steering_logit_abs_mean": steering_logits.abs().mean(),
+                    "steering_logit_abs_max": steering_logits.abs().max(),
+                    "steering_saturation_fraction": (steering_action.abs() >= 0.99).float().mean(),
+                    "steering_abs_ge_0_46_fraction": (steering_action.abs() >= 0.46).float().mean(),
+                    "steering_tanh_derivative_mean": squash_derivative.mean(),
+                    "steering_tanh_zero_fraction": (squash_derivative == 0.0).float().mean(),
+                    # Reuse the existing clipping norms; only the small steering head is extra.
+                    "actor_grad_norm": actor_grad_norm,
+                    "actor_steering_head_grad_norm": steering_head_grad_norm,
+                    "steering_logit_l2_grad_norm": (
+                        steering_logits * (2.0 * self.config.steering_logit_l2 / steering_logits.numel())
+                    ).norm(),
+                }
+                self.last_actor_metrics = dict(zip(
+                    actor_metrics, torch.stack(list(actor_metrics.values())).cpu().tolist(),
+                ))
+                self.last_actor_metrics["actor_metrics_gradient_step"] = float(self.gradient_steps)
             for parameter in list(self.critic_one.parameters()) + list(self.critic_two.parameters()):
                 parameter.requires_grad_(True)
         if self.gradient_steps % self.config.target_update_frequency == 0:
             self._soft_update_targets()
         metrics = {
             "critic_loss": float(critic_loss.detach().cpu()),
+            "critic_grad_norm": float(critic_grad_norm.detach().cpu()),
             "actor_loss": float(actor_loss.detach().cpu()),
+            "actor_updated": float(actor_updated),
             "q1_mean": float(q1.detach().mean().cpu()),
             "q2_mean": float(q2.detach().mean().cpu()),
             "target_mean": float(target.detach().mean().cpu()),
             "replay_size": float(self.replay.size),
             "gradient_steps": float(self.gradient_steps),
+            **self.last_actor_metrics,
         }
         if not all(np.isfinite(value) for value in metrics.values()):
             raise FloatingPointError(f"non-finite DrQ-v2 update: {metrics}")
@@ -634,6 +685,7 @@ class DrQv2Agent:
             "replay": self.replay.state_dict(),
             "environment_steps": self.environment_steps,
             "gradient_steps": self.gradient_steps,
+            "last_actor_metrics": self.last_actor_metrics.copy(),
             "numpy_rng_state": copy.deepcopy(self.rng.bit_generator.state),
             "torch_rng_state": torch.get_rng_state(),
             "torch_cuda_rng_state": (
@@ -681,8 +733,11 @@ class DrQv2Agent:
         payload = torch.load(path, map_location="cpu", weights_only=False)
         if payload.get("format") != "haic-drq-v2-checkpoint-v1":
             raise ValueError("unsupported DrQ-v2 checkpoint format")
-        saved_config = asdict(DrQv2Config(**payload["config"]))
         current_config = asdict(self.config)
+        saved_keys, current_keys = set(payload["config"]), set(current_config)
+        if saved_keys not in (current_keys, current_keys - {"steering_logit_l2"}):
+            raise ValueError("checkpoint configuration fields do not match agent")
+        saved_config = asdict(DrQv2Config(**payload["config"]))
         mismatches = [
             key for key in current_config
             if key != "device" and saved_config[key] != current_config[key]
@@ -729,6 +784,7 @@ class DrQv2Agent:
         self.replay.load_state_dict(payload["replay"])
         self.environment_steps = int(payload["environment_steps"])
         self.gradient_steps = int(payload["gradient_steps"])
+        self.last_actor_metrics = dict(payload.get("last_actor_metrics", {}))
         self.rng.bit_generator.state = copy.deepcopy(payload["numpy_rng_state"])
         torch.set_rng_state(payload["torch_rng_state"].cpu())
         if self.device.type == "cuda" and cuda_rng_state is not None:

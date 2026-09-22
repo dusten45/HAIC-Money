@@ -50,6 +50,7 @@ def parse_args():
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--replay-capacity", type=int, default=10_000)
     parser.add_argument("--updates-per-step", type=int, default=1)
+    parser.add_argument("--steering-logit-l2", type=float, default=0.0)
     parser.add_argument("--eval-freq", type=int, default=32768)
     parser.add_argument("--eval-python", default=sys.executable)
     parser.add_argument("--eval-workers", type=int, default=1)
@@ -98,6 +99,12 @@ def training_protocol(args):
         if reserved.intersection(seeds):
             raise ValueError("partition seeds must be disjoint, not just track/seed pairs")
         reserved.update(seeds)
+    extra_reserved = protocol.get("reserved_training_seeds", [])
+    if not isinstance(extra_reserved, list) or any(type(seed) is not int or not 0 <= seed < 2**32 for seed in extra_reserved):
+        raise ValueError("reserved_training_seeds must be a list of valid uint32 integers")
+    if len(set(extra_reserved)) != len(extra_reserved):
+        raise ValueError("reserved_training_seeds must not contain duplicates")
+    reserved.update(extra_reserved)
     return protocol, sorted(reserved)
 
 
@@ -304,6 +311,7 @@ def main():
         warmup_steps=args.warmup_steps,
         batch_size=args.batch_size,
         replay_capacity=args.replay_capacity,
+        steering_logit_l2=args.steering_logit_l2,
     )
     run_config = {
         "algorithm": "drq-v2",
@@ -373,7 +381,7 @@ def main():
     sampler_rng = environment.get_wrapper_attr("_rng")
     sampler_before_reset = copy.deepcopy(sampler_rng.bit_generator.state)
     episode_reward, episode_actions = 0.0, []
-    latest_metrics, best, last_actor_loss = {}, None, None
+    latest_metrics, best, last_actor_metrics = {}, None, {}
     if args.resume:
         state = agent.load_checkpoint(args.resume)
         observation, reset_info = restore_collector(collector, sampler_rng, rng, state, run_config)
@@ -381,7 +389,7 @@ def main():
         episode_reward = state["episode_reward"]
         episode_actions = list(state["episode_actions"])
         best = resume_selection(args.resume, state, run_dir / "protocol.json")
-        last_actor_loss = state.get("last_actor_loss")
+        last_actor_metrics = state.get("last_actor_metrics", {})
         tracking.write_json(run_dir / "selection.json", best)
     else:
         observation, reset_info = collector.reset()
@@ -410,7 +418,10 @@ def main():
                     previous_updates = agent.gradient_steps
                     latest_metrics = agent.update()
                     if agent.gradient_steps > previous_updates and agent.gradient_steps % config.actor_update_frequency == 0:
-                        last_actor_loss = latest_metrics["actor_loss"]
+                        last_actor_metrics = {
+                            key: value for key, value in latest_metrics.items()
+                            if key.startswith(("actor_", "steering_"))
+                        }
                 if transition.done:
                     actions = np.asarray(episode_actions)
                     log_episode({
@@ -422,6 +433,7 @@ def main():
                         **{key: transition.info.get(key) for key in ("finished", "progress", "damage", "retire_reason")},
                         "native_action_mean": actions.mean(axis=0).tolist(),
                         "native_saturation_fraction": (np.abs(actions) >= .99).mean(axis=0).tolist(),
+                        "steering_abs_ge_0_46_fraction": float((np.abs(actions[:, 0]) >= .46).mean()),
                     })
                     episode_reward, episode_actions = 0.0, []
                     sampler_before_reset = copy.deepcopy(sampler_rng.bit_generator.state)
@@ -432,7 +444,8 @@ def main():
                 if (step + 1) % 1000 == 0 or step + 1 == args.total_steps:
                     record = {"step": step + 1, **latest_metrics,
                               "exploration_std": agent.exploration_std(),
-                              "last_updated_actor_loss": last_actor_loss,
+                              "last_updated_actor_loss": last_actor_metrics.get("actor_loss"),
+                              "last_actor_update": last_actor_metrics,
                               "replay_bytes": agent.replay.memory_bytes,
                               **training_memory(),
                               "elapsed_seconds": time.perf_counter() - started}
@@ -447,7 +460,7 @@ def main():
                         "episode_actions": episode_actions, "episode_reward": episode_reward,
                         "observation": observation,
                         "selected_checkpoint": best,
-                        "last_actor_loss": last_actor_loss,
+                        "last_actor_metrics": last_actor_metrics,
                     }
                     best = save_and_select(agent, observation, run_dir, run_config, args, best, trainer_state)
         tracking.write_json(run_dir / "result.json", {

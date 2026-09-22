@@ -1,6 +1,8 @@
 import copy
 import hashlib
+import json
 import random
+import subprocess
 import tempfile
 import unittest
 import warnings
@@ -272,10 +274,11 @@ class TestUint8Replay(unittest.TestCase):
 
 
 class TestDrQv2(unittest.TestCase):
-    def make_agent(self, device="cpu", seed=3):
+    def make_agent(self, device="cpu", seed=3, steering_logit_l2=0.0):
         agent = DrQv2Agent(DrQv2Config(
             replay_capacity=32, batch_size=2, warmup_steps=0, n_step=3,
             feature_dim=16, hidden_dim=16, device=device,
+            steering_logit_l2=steering_logit_l2,
         ), seed=seed)
         for step in range(12):
             agent.observe(Transition(
@@ -309,13 +312,178 @@ class TestDrQv2(unittest.TestCase):
         self.assertEqual(first.shape, observations.shape)
         self.assertTrue(torch.equal(first, second))
 
-    def check_checkpoint_continuation(self, device):
-        agent = self.make_agent(device)
+    def test_steering_logit_coefficient_is_finite_nonnegative_and_zero_by_default(self):
+        self.assertEqual(DrQv2Config().steering_logit_l2, 0.0)
+        self.assertEqual(DrQv2Config(steering_logit_l2=0.001).steering_logit_l2, 0.001)
+        for coefficient in (-0.001, float("nan"), float("inf"), float("-inf")):
+            with self.subTest(coefficient=coefficient), self.assertRaisesRegex(ValueError, "steering_logit_l2"):
+                DrQv2Config(steering_logit_l2=coefficient)
+
+    def test_actor_objective_uses_only_steering_logits_from_same_forward_and_view(self):
+        agent = self.make_agent(steering_logit_l2=0.001)
+        agent.config.actor_update_frequency = 1
+        with torch.no_grad():
+            agent.actor.policy.weight.zero_()
+            agent.actor.policy.bias.copy_(torch.tensor([2.0, 20.0, -30.0]))
+        actor_outputs, q_outputs = [], []
+        forward_actor, forward_q = agent.actor.forward, agent.critic_one.forward
+
+        def record_actor(observation, **kwargs):
+            result = forward_actor(observation, **kwargs)
+            actor_outputs.append((observation, result))
+            return result
+
+        def record_q(observation, action):
+            result = forward_q(observation, action)
+            q_outputs.append((observation, action, result.detach().clone()))
+            return result
+
+        with (
+            mock.patch.object(agent.actor, "forward", side_effect=record_actor) as actor_forward,
+            mock.patch.object(agent.critic_one, "forward", side_effect=record_q),
+            mock.patch("drq_v2.random_shift", wraps=random_shift) as augmentation,
+        ):
+            metrics = agent.update()
+        self.assertEqual(actor_forward.call_count, 2)  # Target action, then actor objective.
+        self.assertEqual(actor_forward.call_args.kwargs, {"return_logits": True})
+        self.assertEqual(augmentation.call_count, 3)  # Keep the independent actor augmentation.
+        actor_observation, (action, logits) = actor_outputs[-1]
+        self.assertIs(q_outputs[-1][0], actor_observation)
+        self.assertIs(q_outputs[-1][1], action)
+        self.assertTrue(torch.equal(action, logits.tanh()))
+        expected_q_loss = -q_outputs[-1][2].mean()
+        expected_penalty = 0.001 * logits[:, 0].detach().square().mean()
+        self.assertEqual(metrics["actor_q_loss"], float(expected_q_loss))
+        self.assertEqual(metrics["steering_logit_mean_square"], 4.0)
+        self.assertEqual(metrics["steering_logit_l2_penalty"], float(expected_penalty))
+        self.assertEqual(metrics["actor_loss"], float(expected_q_loss + expected_penalty))
+        self.assertEqual(metrics["steering_logit_abs_mean"], 2.0)
+        self.assertEqual(metrics["steering_logit_abs_max"], 2.0)
+        self.assertEqual(metrics["steering_saturation_fraction"], 0.0)
+        self.assertAlmostEqual(metrics["steering_tanh_derivative_mean"], 1.0 - float(torch.tanh(torch.tensor(2.0)).square()))
+        self.assertAlmostEqual(metrics["steering_logit_l2_grad_norm"], 0.004 / np.sqrt(2))
+        self.assertGreater(metrics["actor_grad_norm"], 0.0)
+        self.assertGreater(metrics["critic_grad_norm"], 0.0)
+
+    def test_steering_penalty_gradient_survives_exact_tanh_saturation(self):
+        for coefficient in (0.0, 0.001):
+            with self.subTest(coefficient=coefficient):
+                agent = self.make_agent(steering_logit_l2=coefficient)
+                agent.config.actor_update_frequency = 1
+                with torch.no_grad():
+                    agent.actor.policy.weight.zero_()
+                    agent.actor.policy.bias.copy_(torch.tensor([20.0, 30.0, -40.0]))
+                before = copy.deepcopy(agent.actor.state_dict())
+                metrics = agent.update()
+                self.assertEqual(metrics["steering_logit_mean_square"], 400.0)
+                self.assertEqual(metrics["steering_saturation_fraction"], 1.0)
+                self.assertEqual(metrics["steering_tanh_derivative_mean"], 0.0)
+                self.assertEqual(metrics["steering_tanh_zero_fraction"], 1.0)
+                torch.testing.assert_close(
+                    agent.actor.policy.bias.grad, torch.tensor([40.0 * coefficient, 0.0, 0.0]),
+                )
+                self.assertTrue(torch.equal(agent.actor.policy.weight.grad[1:], torch.zeros_like(agent.actor.policy.weight.grad[1:])))
+                self.assertTrue(torch.equal(before["policy.bias"][1:], agent.actor.policy.bias[1:]))
+                self.assertAlmostEqual(metrics["steering_logit_l2_grad_norm"], 40.0 * coefficient / np.sqrt(2))
+                if coefficient:
+                    self.assertGreater(metrics["actor_grad_norm"], 0.0)
+                    self.assertGreater(metrics["actor_steering_head_grad_norm"], 0.0)
+                    self.assertLess(float(agent.actor.policy.bias[0].detach()), 20.0)
+                else:
+                    self.assertEqual(metrics["actor_grad_norm"], 0.0)
+                    self.assert_state_equal(before, agent.actor.state_dict())
+
+    def check_zero_coefficient_baseline(self, device):
+        baseline, agent = self.make_agent(device), self.make_agent(device)
+        observation = ObservationSpec().from_uint8(_pixel_stack(0, 12))
+        tensor = torch.as_tensor(observation, device=device).unsqueeze(0)
+        rng_before = torch.get_rng_state().clone()
+        cuda_before = torch.cuda.get_rng_state_all() if torch.cuda.is_initialized() else []
+        with torch.no_grad():
+            logits = baseline.actor.policy(baseline.actor.trunk(baseline.actor.encoder(tensor)))
+            expected_action = torch.tanh(logits)
+            self.assertTrue(torch.equal(agent.actor(tensor), expected_action))
+            action, actual_logits = agent.actor(tensor, return_logits=True)
+            self.assertTrue(torch.equal(actual_logits, logits))
+            self.assertTrue(torch.equal(action, expected_action))
+        native = expected_action.squeeze(0).cpu().numpy()
+        np.testing.assert_array_equal(agent.act(observation), native)
+        noisy = np.clip(native + baseline.rng.normal(0.0, baseline.exploration_std(), size=native.shape), -1.0, 1.0).astype(np.float32)
+        np.testing.assert_array_equal(agent.act(observation, deterministic=False), noisy)
+        self.assertTrue(torch.equal(rng_before, torch.get_rng_state()))
+        if cuda_before:
+            self.assert_state_equal(cuda_before, torch.cuda.get_rng_state_all())
+
+        # Independent reference of the pre-regularization update, including its RNG order.
+        expected_losses = []
+        with torch.random.fork_rng(devices=[torch.cuda.current_device()] if device == "cuda" else []):
+            for _ in range(2):
+                values = baseline._batch_tensors(baseline.replay.sample(baseline.config.batch_size))
+                current = random_shift(values["observation"], pad=baseline.config.augmentation_pad)
+                following = random_shift(values["next_observation"], pad=baseline.config.augmentation_pad)
+                with torch.no_grad():
+                    next_action = baseline.actor(following)
+                    noise = (torch.randn_like(next_action) * baseline.config.target_policy_noise).clamp(
+                        -baseline.config.target_policy_noise_clip, baseline.config.target_policy_noise_clip,
+                    )
+                    next_action = (next_action + noise).clamp(-1.0, 1.0)
+                    target = values["reward"] + values["discount"] * torch.minimum(
+                        baseline.target_one(following, next_action), baseline.target_two(following, next_action),
+                    )
+                q1 = baseline.critic_one(current, values["action"])
+                q2 = baseline.critic_two(current, values["action"])
+                critic_loss = torch.nn.functional.mse_loss(q1, target) + torch.nn.functional.mse_loss(q2, target)
+                baseline.critic_optimizer.zero_grad(set_to_none=True)
+                critic_loss.backward()
+                critics = list(baseline.critic_one.parameters()) + list(baseline.critic_two.parameters())
+                torch.nn.utils.clip_grad_norm_(critics, 10.0)
+                baseline.critic_optimizer.step()
+                baseline.gradient_steps += 1
+                actor_loss = torch.zeros((), device=device)
+                if baseline.gradient_steps % baseline.config.actor_update_frequency == 0:
+                    for parameter in critics:
+                        parameter.requires_grad_(False)
+                    actor_observation = random_shift(values["observation"], pad=baseline.config.augmentation_pad)
+                    actor_loss = -baseline.critic_one(actor_observation, baseline.actor(actor_observation)).mean()
+                    baseline.actor_optimizer.zero_grad(set_to_none=True)
+                    actor_loss.backward()
+                    torch.nn.utils.clip_grad_norm_(baseline.actor.parameters(), 10.0)
+                    baseline.actor_optimizer.step()
+                    for parameter in critics:
+                        parameter.requires_grad_(True)
+                if baseline.gradient_steps % baseline.config.target_update_frequency == 0:
+                    baseline._soft_update_targets()
+                expected_losses.append((float(critic_loss.detach()), float(actor_loss.detach())))
+            expected_state = copy.deepcopy(baseline._payload())
+        metrics = [agent.update(), agent.update()]
+        self.assertEqual(expected_losses, [(row["critic_loss"], row["actor_loss"]) for row in metrics])
+        self.assertEqual(metrics[-1]["actor_loss"], metrics[-1]["actor_q_loss"])
+        self.assertEqual(metrics[-1]["steering_logit_l2_penalty"], 0.0)
+        self.assertEqual(metrics[-1]["steering_logit_l2_grad_norm"], 0.0)
+        actual_state = agent._payload()
+        expected_state.pop("last_actor_metrics")
+        actual_state.pop("last_actor_metrics")
+        self.assert_state_equal(expected_state, actual_state)
+        for expected, actual in zip(baseline.actor.parameters(), agent.actor.parameters()):
+            self.assertTrue(torch.equal(expected.grad, actual.grad))
+
+    def test_zero_coefficient_preserves_baseline_cpu_actions_updates_and_rng(self):
+        self.check_zero_coefficient_baseline("cpu")
+
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
+    def test_zero_coefficient_preserves_baseline_cuda_actions_updates_and_rng(self):
+        with torch.backends.cudnn.flags(benchmark=False, deterministic=True):
+            self.check_zero_coefficient_baseline("cuda")
+
+    def check_checkpoint_continuation(self, device, steering_logit_l2):
+        agent = self.make_agent(device, steering_logit_l2=steering_logit_l2)
         actor_before = copy.deepcopy(agent.actor.state_dict())
         critics_before = [copy.deepcopy(critic.state_dict()) for critic in (agent.critic_one, agent.critic_two)]
         targets_before = [copy.deepcopy(target.state_dict()) for target in (agent.target_one, agent.target_two)]
-        agent.update()
+        first_metrics = agent.update()
         self.assertEqual(agent.gradient_steps, 1)
+        self.assertEqual(first_metrics["actor_updated"], 0.0)
+        self.assertEqual(agent.last_actor_metrics, {})
         self.assert_state_equal(actor_before, agent.actor.state_dict())
         for before, target in zip(targets_before, (agent.target_one, agent.target_two)):
             self.assert_state_equal(before, target.state_dict())
@@ -323,6 +491,11 @@ class TestDrQv2(unittest.TestCase):
             self.assertTrue(any(not torch.equal(before[key], critic.state_dict()[key]) for key in before))
         metrics = agent.update()
         self.assertEqual(agent.gradient_steps, 2)
+        self.assertEqual(metrics["actor_updated"], 1.0)
+        self.assertEqual(metrics["actor_metrics_gradient_step"], 2.0)
+        self.assertAlmostEqual(
+            metrics["steering_logit_l2_penalty"], steering_logit_l2 * metrics["steering_logit_mean_square"],
+        )
         self.assertTrue(all(np.isfinite(value) for value in metrics.values()))
         self.assertTrue(any(not torch.equal(actor_before[key], agent.actor.state_dict()[key]) for key in actor_before))
         self.assertTrue(agent.actor_optimizer.state)
@@ -342,17 +515,26 @@ class TestDrQv2(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             checkpoint = Path(directory) / "checkpoint.pt"
             agent.save_checkpoint(checkpoint, trainer_state=trainer_state)
+            saved = torch.load(checkpoint, map_location="cpu", weights_only=False)
+            self.assertEqual(saved["config"]["steering_logit_l2"], steering_logit_l2)
+            self.assertEqual(saved["last_actor_metrics"], agent.last_actor_metrics)
             checkpoint.with_suffix(".manifest.json").unlink()
             expected_action = agent.act(observation, deterministic=False)
             expected_python_random = random.random()
             expected_batch = agent.replay.sample(2)
             expected_metrics = [agent.update(), agent.update()]
+            self.assertEqual(expected_metrics[0]["actor_updated"], 0.0)
+            self.assertEqual(expected_metrics[0]["actor_loss"], 0.0)
+            for key, value in saved["last_actor_metrics"].items():
+                self.assertEqual(expected_metrics[0][key], value)
+            self.assertEqual(expected_metrics[1]["actor_metrics_gradient_step"], 4.0)
             expected_state = copy.deepcopy(agent._payload())
             restored = DrQv2Agent(agent.config, seed=99)
             with mock.patch("drq_v2.torch.load", wraps=torch.load) as loader:
                 returned_state = restored.load_checkpoint(checkpoint)
                 self.assertEqual(loader.call_args.kwargs["map_location"], "cpu")
             self.assert_state_equal(trainer_state, returned_state)
+            self.assertEqual(restored.last_actor_metrics, saved["last_actor_metrics"])
             np.testing.assert_array_equal(expected_action, restored.act(observation, deterministic=False))
             self.assertEqual(expected_python_random, random.random())
             self.assert_state_equal(expected_batch, restored.replay.sample(2))
@@ -360,12 +542,16 @@ class TestDrQv2(unittest.TestCase):
             self.assert_state_equal(expected_state, restored._payload())
 
     def test_cpu_checkpoint_restores_actor_targets_and_stochastic_updates(self):
-        self.check_checkpoint_continuation("cpu")
+        for coefficient in (0.0, 0.001):
+            with self.subTest(coefficient=coefficient):
+                self.check_checkpoint_continuation("cpu", coefficient)
 
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
     def test_cuda_checkpoint_restores_actor_targets_and_stochastic_updates(self):
         with torch.backends.cudnn.flags(benchmark=False, deterministic=True):
-            self.check_checkpoint_continuation("cuda")
+            for coefficient in (0.0, 0.001):
+                with self.subTest(coefficient=coefficient):
+                    self.check_checkpoint_continuation("cuda", coefficient)
 
     def test_checkpoint_rejects_contract_mismatch_before_mutating_agent(self):
         agent = self.make_agent()
@@ -380,6 +566,7 @@ class TestDrQv2(unittest.TestCase):
                 (("config", "augmentation_pad"), 2),
                 (("config", "replay_capacity"), 64),
                 (("config", "gamma"), 0.9),
+                (("config", "steering_logit_l2"), 0.001),
                 (("observation_spec", "high"), 255.0),
                 (("observation_spec", "channel_order"), "HWC"),
                 (("observation_spec", "control_plane_fingerprint"), "extra-plane"),
@@ -406,6 +593,8 @@ class TestDrQv2(unittest.TestCase):
         agent = self.make_agent()
         payload = agent._payload()
         payload.pop("torch_cuda_rng_state")
+        payload.pop("last_actor_metrics")
+        payload["config"].pop("steering_logit_l2")
         # Configuration reconstructed from the historical JSON manifest has a list shape.
         config = replace(agent.config, observation_shape=list(agent.config.observation_shape))
         with tempfile.TemporaryDirectory() as directory:
@@ -424,6 +613,43 @@ class TestDrQv2(unittest.TestCase):
                     else:
                         self.assertEqual(caught, [])
                     self.assert_state_equal(agent.actor.state_dict(), restored.actor.state_dict())
+                    self.assertEqual(restored.last_actor_metrics, {})
+
+    def test_checkpoint_only_defaults_the_known_legacy_zero_coefficient(self):
+        agent = self.make_agent()
+        payload = agent._payload()
+        payload["config"].pop("steering_logit_l2")
+        legacy = copy.deepcopy(payload)
+        restored = self.make_agent(seed=99)
+        before = copy.deepcopy(restored._payload())
+        with tempfile.TemporaryDirectory() as directory:
+            checkpoint = Path(directory) / "legacy.pt"
+            for missing in payload["config"]:
+                with self.subTest(missing=missing):
+                    corrupt = copy.deepcopy(legacy)
+                    corrupt["config"].pop(missing)
+                    torch.save(corrupt, checkpoint)
+                    with self.assertRaisesRegex(ValueError, "configuration fields"):
+                        restored.load_checkpoint(checkpoint)
+                    self.assert_state_equal(before, restored._payload())
+            corrupt = copy.deepcopy(legacy)
+            corrupt["config"]["unknown_objective"] = 0.0
+            torch.save(corrupt, checkpoint)
+            with self.assertRaisesRegex(ValueError, "configuration fields"):
+                restored.load_checkpoint(checkpoint)
+            torch.save(legacy, checkpoint)
+            restored.load_checkpoint(checkpoint)
+            self.assert_state_equal(agent.actor.state_dict(), restored.actor.state_dict())
+            treatment = self.make_agent(steering_logit_l2=0.001)
+            before = copy.deepcopy(treatment._payload())
+            with self.assertRaisesRegex(ValueError, "steering_logit_l2"):
+                treatment.load_checkpoint(checkpoint)
+            self.assert_state_equal(before, treatment._payload())
+            treatment.save_checkpoint(checkpoint)
+            before = copy.deepcopy(restored._payload())
+            with self.assertRaisesRegex(ValueError, "steering_logit_l2"):
+                restored.load_checkpoint(checkpoint)
+            self.assert_state_equal(before, restored._payload())
 
     @unittest.skipUnless(torch.cuda.is_available(), "CUDA unavailable")
     def test_cuda_checkpoint_can_relocate_weights_and_optimizer_to_cpu(self):
@@ -444,25 +670,79 @@ class TestDrQv2(unittest.TestCase):
             self.assertTrue(all(np.isfinite(value) for value in restored.update().values()))
 
     def test_export_load_preserves_rng_and_cpu_action_trace(self):
-        agent = self.make_agent()
-        agent.update()
-        agent.update()
+        from agent import Agent
+
         observations = [ObservationSpec().from_uint8(_pixel_stack(0, step)) for step in (0, 1, 5)]
+        for coefficient in (0.0, 0.001):
+            agent = self.make_agent(steering_logit_l2=coefficient)
+            agent.update()
+            agent.update()
+            expected = CPUActorAdapter(agent.actor, agent.action_adapter).deterministic_trace(observations)
+            for legacy in ((False, True) if coefficient == 0.0 else (False,)):
+                with self.subTest(coefficient=coefficient, legacy=legacy), tempfile.TemporaryDirectory() as directory:
+                    export = agent.export_actor(Path(directory) / "actor.pt")
+                    payload = torch.load(export, map_location="cpu", weights_only=True)
+                    self.assertEqual(payload["config"]["steering_logit_l2"], coefficient)
+                    self.assertEqual(set(payload["state_dict"]), set(agent.actor.state_dict()))
+                    if legacy:
+                        payload["config"].pop("steering_logit_l2")
+                        torch.save(payload, export)
+                    before = torch.get_rng_state().clone()
+                    cuda_before = torch.cuda.get_rng_state_all() if torch.cuda.is_initialized() else []
+                    actor, adapter, spec = load_exported_actor(export)
+                    submission = Agent(model_path=export)
+                    self.assertTrue(torch.equal(before, torch.get_rng_state()))
+                    if cuda_before:
+                        self.assert_state_equal(cuda_before, torch.cuda.get_rng_state_all())
+                    policy = CPUActorAdapter(actor, adapter, spec)
+                    self.assertEqual(expected, policy.deterministic_trace(observations))
+                    self.assertEqual(expected, policy.deterministic_trace(observations))
+                    for _ in range(2):
+                        submission.reset(observations[0])
+                        actual = [submission.act(observation).tolist() for observation in observations]
+                        self.assertEqual(expected["actions"], actual)
+                    actions = np.asarray(expected["actions"])
+                    self.assertTrue(np.all(actions >= [-1.0, 0.0, 0.0]))
+                    self.assertTrue(np.all(actions <= [1.0, 1.0, 1.0]))
+
+    def test_current_runtime_export_loads_in_isolated_cpu21_minimal_agent(self):
+        cpu_python = Path("/tmp/kilo/haic-cpu21/bin/python")
+        if not cpu_python.is_file():
+            self.skipTest("isolated Torch 2.1 CPU interpreter unavailable")
+        agent = self.make_agent("cuda" if torch.cuda.is_available() else "cpu", steering_logit_l2=0.001)
+        agent.update()
+        agent.update()
+        observations = [np.full((4, 84, 84), value, dtype=np.float32) for value in (0.0, 0.25, 1.0)]
+        expected = CPUActorAdapter(copy.deepcopy(agent.actor).cpu(), agent.action_adapter).deterministic_trace(observations)
+        script = """
+import json
+import sys
+import numpy as np
+import torch
+from agent import Agent
+
+assert torch.__version__ == '2.1.0+cpu'
+assert not {'drq_v2', 'common_adapter', 'train_drqv2', 'stable_baselines3'} & set(sys.modules)
+observations = [np.full((4, 84, 84), value, dtype=np.float32) for value in (0.0, 0.25, 1.0)]
+traces = []
+for _ in range(2):
+    policy = Agent(model_path=sys.argv[1])
+    policy.reset(observations[0])
+    traces.append([policy.act(observation).tolist() for observation in observations])
+print(json.dumps({'traces': traces, 'coefficient': policy.export_metadata['config']['steering_logit_l2']}))
+"""
         with tempfile.TemporaryDirectory() as directory:
             export = agent.export_actor(Path(directory) / "actor.pt")
-            before = torch.get_rng_state().clone()
-            cuda_before = torch.cuda.get_rng_state_all() if torch.cuda.is_initialized() else []
-            actor, adapter, spec = load_exported_actor(export)
-            self.assertTrue(torch.equal(before, torch.get_rng_state()))
-            if cuda_before:
-                self.assert_state_equal(cuda_before, torch.cuda.get_rng_state_all())
-            expected = CPUActorAdapter(agent.actor, agent.action_adapter).deterministic_trace(observations)
-            policy = CPUActorAdapter(actor, adapter, spec)
-            self.assertEqual(expected, policy.deterministic_trace(observations))
-            self.assertEqual(expected, policy.deterministic_trace(observations))
-            actions = np.asarray(expected["actions"])
-            self.assertTrue(np.all(actions >= [-1.0, 0.0, 0.0]))
-            self.assertTrue(np.all(actions <= [1.0, 1.0, 1.0]))
+            result = subprocess.run(
+                [str(cpu_python), "-c", script, str(export)],
+                cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True, timeout=30,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        actual = json.loads(result.stdout)
+        self.assertEqual(actual["coefficient"], 0.001)
+        self.assertEqual(actual["traces"][0], actual["traces"][1])
+        # CPU reloads must be exact; different Torch versions can round differently.
+        np.testing.assert_allclose(actual["traces"][0], expected["actions"], rtol=0.0, atol=1e-6)
 
     def test_manifest_source_hash_is_stable(self):
         with tempfile.TemporaryDirectory() as directory:

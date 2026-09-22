@@ -64,6 +64,22 @@ def test_protocol_rejects_silently_changed_training_track_pool(tmp_path):
         training_protocol(args)
 
 
+def test_training_reserves_consumed_and_current_protocol_seeds(tmp_path):
+    path = tmp_path / "protocol.json"
+    protocol = {"name": "test", "frame_skip": 4, "max_steps": 2000,
+                "reserved_training_seeds": [42, 20101, 31001, 31101, 32101],
+                "partitions": {"screen": {"track_ids": [101], "seeds": [31001], "repeats": 2},
+                               "confirmation": {"track_ids": [211], "seeds": [32101], "repeats": 2}}}
+    args = Namespace(protocol_file=path, frame_skip=4, max_steps=2000)
+    path.write_text(json.dumps(protocol))
+    assert training_protocol(args)[1] == [42, 20101, 31001, 31101, 32101]
+    for invalid in ([1, 1], [True], [-1], [2**32], "42"):
+        protocol["reserved_training_seeds"] = invalid
+        path.write_text(json.dumps(protocol))
+        with pytest.raises(ValueError, match="reserved_training_seeds"):
+            training_protocol(args)
+
+
 def test_checkpoint_evaluation_is_subprocess_and_checks_actor_identity(tmp_path):
     from train import file_sha256
 
@@ -147,7 +163,7 @@ def test_training_evaluates_after_update_at_each_checkpoint_and_final(tmp_path):
 
     args = ["train_drqv2.py", "--name", "test", "--run-dir", str(tmp_path / "run"),
             "--total-steps", "5", "--warmup-steps", "2", "--batch-size", "2",
-            "--replay-capacity", "8", "--eval-freq", "2"]
+            "--replay-capacity", "8", "--eval-freq", "2", "--steering-logit-l2", "0.001"]
     with patch("sys.argv", args), patch("train_drqv2.build_sampled_env", return_value=Environment()) as build:
         with patch("train_drqv2.save_and_select", side_effect=checkpoint), patch("tracking.pip_freeze", return_value=[]), patch("train_drqv2.check_evaluation_runtime", return_value={}):
             main()
@@ -156,6 +172,7 @@ def test_training_evaluates_after_update_at_each_checkpoint_and_final(tmp_path):
     assert build.call_args.kwargs["excluded_seeds"] == [14001, 14002, 14003, 14004]
     recorded = json.loads((tmp_path / "run/config.json").read_text())["config"]
     assert recorded["updates_per_step"] == 1
+    assert recorded["drq_config"]["steering_logit_l2"] == .001
     assert recorded["protocol"]["partitions"]["screen"]["repeats"] == 2
     events = [json.loads(line) for line in (tmp_path / "run/episodes.jsonl").read_text().splitlines()]
     assert len([event for event in events if event["event"] == "end"]) == 5
@@ -273,7 +290,8 @@ def test_resume_keeps_prior_actor_on_equal_selection_scores(tmp_path):
 
 
 @pytest.mark.parametrize("device", ["cpu", "cuda"])
-def test_real_closed_loop_training_matches_uninterrupted_resume(tmp_path, device):
+@pytest.mark.parametrize("coefficient", [0.0, .001])
+def test_real_closed_loop_training_matches_uninterrupted_resume(tmp_path, device, coefficient):
     if device == "cuda" and not torch.cuda.is_available():
         pytest.skip("CUDA required")
     from train import file_sha256
@@ -288,7 +306,8 @@ def test_real_closed_loop_training_matches_uninterrupted_resume(tmp_path, device
         argv = ["train_drqv2.py", "--name", name, "--run-dir", str(tmp_path / name),
                 "--total-steps", str(target), "--max-steps", "6", "--device", device,
                 "--warmup-steps", "5", "--batch-size", "2", "--replay-capacity", "32",
-                "--updates-per-step", "2", "--eval-freq", "4", "--eval-track-ids", "9", "--eval-seeds", "9"]
+                "--updates-per-step", "2", "--eval-freq", "4", "--eval-track-ids", "9", "--eval-seeds", "9",
+                "--steering-logit-l2", str(coefficient)]
         if resume:
             argv += ["--resume", str(resume)]
         with patch("sys.argv", argv), patch("train_drqv2.evaluate_checkpoint", side_effect=evaluation):
@@ -312,3 +331,5 @@ def test_real_closed_loop_training_matches_uninterrupted_resume(tmp_path, device
     assert left["episode_id"] == right["episode_id"]
     assert left["sampler_before_reset"] == right["sampler_before_reset"]
     assert left["selected_checkpoint"]["step"] == right["selected_checkpoint"]["step"] == 4
+    assert left["last_actor_metrics"] == right["last_actor_metrics"]
+    assert left["last_actor_metrics"]["actor_loss"] != 0
