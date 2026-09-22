@@ -1,0 +1,88 @@
+{
+  "date": "2026-09-22",
+  "scope": "Offline diagnosis before the matched L2 study; no optimizer steps or environment/evaluation cells",
+  "actor_sha256": "e0483df7c7887e9fd9e670450e223ec1b6f2598224ee23f9efe329cce4a2681e",
+  "checkpoint_sha256": "361d0879eba8eeedafca208d5d50bb4cd02c10a097082a0cbfab3fbc2fb5693d",
+  "runtime": {"torch": "2.1.0+cpu", "numpy": "1.26.0", "threads": 1},
+  "sample": {
+    "retained_states": 2048,
+    "episodes": 237,
+    "seed": 20260921,
+    "selection": "First 2048 of the previously sampled 4096 historical-valid replay starts",
+    "sequence_sha256": "d9239b3f091d25cd00b86f56a35b495a20fc6684e98dea4c67f1c7f1665ed7e8",
+    "gradient_batches": 32,
+    "gradient_batch_size": 64,
+    "parameters_unchanged": true
+  },
+  "steering_and_exploration": {
+    "absolute_steering_ge_0_46_percent": 97.412109375,
+    "nominal_actuator_equivalence": "Official front-wheel joint limits are +/-0.4; motor command saturates at angular error0.06. Within nominal joint limits, targets above+0.46 or below-0.46 request equivalent respective saturated motor commands.",
+    "final_native_noise_std": 0.05,
+    "plateau_exit_probability_bound_from_abs_mean_ge_0_99": 1.49e-26,
+    "target_noise_clip": 0.5,
+    "target_clip_observation": "At abs(mean)>=0.99, even the maximal opposite clipped target perturbation leaves abs(action)>=0.49, above the nominal0.46 threshold.",
+    "interpretation": "Logit saturation, squash-gradient recovery, and physically distinct steering exploration are different properties. Wheel inertia, gas/brake noise, changed observations and saturated-command duration still affect trajectories. No exploration intervention is authorized by this observation alone."
+  },
+  "reward_and_replay": {
+    "retained_transitions": 100000,
+    "reward_exactly_minus_0_4_percent": 73.188,
+    "negative_terminal_tail_percent": 21.715,
+    "inferred_successful_episodes": 6,
+    "successful_episode_transition_percent": 4.293,
+    "n_step_starts_directly_containing_finish": 18,
+    "batch64_chance_of_direct_finish_start_approx": 0.0115,
+    "finish_decision_reward_range": [-0.4, -0.2],
+    "negative_decisions_before_finish_range": [4, 26],
+    "gamma": 0.99,
+    "discount_half_life_seconds": 5.52,
+    "discount_weight_at_500_decisions": 0.00657,
+    "interpretation": "Raw tile credit and step cost have no explicit finish bonus. This is the frozen objective, not incorrect terminal handling. Negative finish-step reward does not prove lower total finish return; preceding states can receive bootstrapped credit. Negative rewards do not necessarily mean physically off-road."
+  },
+  "q_and_gradient_scale": {
+    "critic_preclip_norm_median_approx": 3520,
+    "critic_preclip_norm_p95_approx": 12396,
+    "critic_preclip_norm_max_approx": 15014,
+    "gradient_clip_limit": 10,
+    "critic_clip_multiplier_median_approx": 0.00284,
+    "critic_encoder_squared_gradient_share_percent_approx": 99.02,
+    "critic_loss_mean_approx": 97.83,
+    "actor_q_gradient_norm_median_approx": 5.57,
+    "actor_l2_gradient_norm_median_approx": 1.24,
+    "weighted_l2_loss_mean_approx": 0.1228,
+    "interpretation": "Reconstructed final-checkpoint CPU gradients, not historical gradient logs. Values and losses are finite. Adam normalization prevents equating the clip multiplier to an equivalent parameter-step reduction; there is no measured systematic Q1 optimism justifying a bundled critic change."
+  },
+  "temporal_information": {
+    "four_identical_frames_percent": 0.146484375,
+    "reverse_past_preserve_newest_steering_sign_flip_percent_approx": 6.98,
+    "duplicate_newest_official_gas_mae_approx": 0.1924,
+    "reverse_all_frames_steering_sign_flip_percent_approx": 32.32,
+    "past_frame_steering_logit_input_gradient_energy_percent_approx": 38.9,
+    "interpretation": "History is present and used. Out-of-distribution frame permutations do not establish adequate velocity estimation or justify a temporal rearchitecture. Saturated output can conceal latent sensitivity."
+  },
+  "augmentation": {
+    "random_pad4_vs_unshifted_sign_flip_percent_range_approx": [7.57, 7.76],
+    "two_independent_pad4_views_sign_flip_percent_approx": 8.50,
+    "horizontal_one_pixel_sign_flip_percent_range_approx": [3.52, 3.76],
+    "horizontal_four_pixel_sign_flip_percent_range_approx": [8.74, 11.47],
+    "interpretation": "Material lack of translation invariance persists outside negative terminal tails. Padding/cropping may also remove information or shift HUD elements; offline sensitivity is not evidence of improved driving under a smaller augmentation."
+  },
+  "step_contract": {
+    "raw_frame_hz": 50,
+    "frame_skip": 4,
+    "ordinary_decision_ms": 80,
+    "four_frame_history_span_ms": 240,
+    "three_step_return_span_ms": 240,
+    "duplicate_repeat_or_wrong_discount_bug_found": false
+  },
+  "conditional_second_axis": {
+    "status": "not selected, implemented or launched; decide only after matched L2 results",
+    "candidate": "augmentation padding4 versus1",
+    "necessary_evidence": "L2 restores its intended gradient mechanism but fails replicated completion improvement; standardized same-state post-study probes still show material shift instability.",
+    "control": "If L2 is rejected, coefficient0 in BOTH augmentation arms; no combined repair, no pad sweep, no reward/noise/frame-skip/architecture changes.",
+    "acceptance": "Fresh repeated completion improvement against a matched control, never reduced shift sensitivity alone",
+    "stop": "At most this one additional evidence-backed single-axis trial; stop instead if justification is insufficient. No third trial or new algorithm."
+  },
+  "local_full_report": "/tmp/kilo/drq_offline_sensitivity.json",
+  "local_probe_script": "/tmp/kilo/drq_offline_sensitivity.py",
+  "local_probe_script_sha256": "56e392d33c3a0e77a2a84547f883cc014c18b4e0928a9320bef63b83c82ab177"
+}
