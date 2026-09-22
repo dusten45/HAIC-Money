@@ -76,8 +76,9 @@ batch 64, warmup 10,000, sampler 917, tracks 1--4. Selection at 65,536/131,072.
 
 **Reject augmentation padding=1:** paired finish deltas are **-4 and -7**.
 Both treatment seeds collapsed to 0 finishes across all evaluation cells.
-Standard random-shift padding=4 is essential for representation learning and
-driving generalization in pixel-based DrQ-v2; reducing augmentation severely harms performance.
+Under the current setup, pad=1 performed substantially worse than pad=4.
+While this outcome is consistent with reduced visual regularization or generalization degradation under this configuration,
+the exact causal mechanism remains an interpretive hypothesis rather than direct proof (pad=2, 3 등 다른 강도를 전면 탐색하지 않았으므로 pad=4만이 필수라고 단정하지 않고, 현재 설정에서 pad=1이 pad=4 대비 크게 열등했음을 확인).
 
 - Screen: IDs 101--103/seeds 31001--31008. Confirmation: IDs 311--314/seeds 33101--33108,
   now consumed. Blind IDs 321--323/seeds 33201--33208 remains untouched/reserved.

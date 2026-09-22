@@ -30,7 +30,7 @@
     "training_seeds": 2
   },
   "frozen_candidates_sha256": "b2b6e4abe266435e7e09ad40929919f23dc52e95dcfccadc5114d26b4975be01",
-  "interpretation": "Reject the predeclared fixed padding=1 treatment: zero finishes on both screen and confirmation for both training seeds (finish deltas -4 and -7). Standard augmentation padding=4 is essential for representation learning and generalization in pixel-based DrQ-v2.",
+  "interpretation": "Reject the predeclared fixed padding=1 treatment: zero finishes on both screen and confirmation for both training seeds (finish deltas -4 and -7). Under this configuration pad=1 performed substantially worse than pad=4; while consistent with reduced visual regularization or generalization degradation, this causal explanation is an interpretive hypothesis rather than proof across all augmentation strengths.",
   "limits": [
     "Repeated reloads and obstacle variants are correlated, not independent trials.",
     "Only two training seeds and a 131072-decision budget per run.",

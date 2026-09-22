@@ -1,6 +1,6 @@
 {
   "decision": {
-    "conclusion": "Standard DrQ-v2 augmentation pad=4 is vital for vision-based RL generalization on track geometries. Reducing augmentation destroys feature representation and policy transfer.",
+    "conclusion": "Reducing augmentation pad from 4 to 1 resulted in severe performance collapse (0 finishes vs 4-7 in control). This is consistent with reduced visual regularization or generalization failure under this configuration, though the exact causal mechanism remains an interpretive hypothesis rather than proof across all augmentation strengths.",
     "pad1_accepted": false,
     "reason": "Augmentation pad=1 resulted in zero finishes across both seeds on both screen and confirmation (deltas -4 and -7 vs control). This is the second and final authorized single-axis controlled follow-up.",
     "stop_further_drq_tuning": true
