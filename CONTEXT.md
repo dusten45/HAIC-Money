@@ -60,11 +60,13 @@ nonzero completion across both training seeds; this is not DrQ family rejection.
 
 ## Final Controlled Follow-Up
 
-**Selected, preparation in progress:** augmentation padding **4 versus1**,
+**RUNNING:** augmentation padding **4 versus1**,
 `steering_logit_l2=0` in BOTH arms. No combined repair. This is attempt2 of2.
-Protocol: `experiments/drqv2-augmentation-pad-v1.json`; intended explicit root
-`runs/20260922-drq-augmentation-pad-v1/`. Retrain all four arm/seed combinations
+Protocol: `experiments/drqv2-augmentation-pad-v1.json`; explicit root
+`runs/20260922-drq-augmentation-pad-v1/`, frozen source `a28ef02`. All four arm/seed combinations run
 from scratch with the same131,072 budget and all other settings unchanged.
+Operator state is in `experiments/drqv2-pad-execution.json`. All222 related tests,
+CPU21 preflight, four-job GPU/CPU smoke and idempotent recovery passed before launch.
 
 - Reuse only the consumed development screen101--103/31001--31008.
 - Fresh confirmation311--314/33101--33108; fresh blind321--323/33201--33208,

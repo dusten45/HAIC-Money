@@ -1,0 +1,38 @@
+{
+  "study": "experiments/drqv2-augmentation-pad-v1.json",
+  "protocol_sha256": "4a383ec6b83c501a814b0a18c22a39b851d23b22093d56244aa6540b977f160b",
+  "status": "training; final controlled attempt, no outcome yet",
+  "attempt": 2,
+  "max_attempts": 2,
+  "active_run_root": "runs/20260922-drq-augmentation-pad-v1",
+  "background_process": "bgp_0c7ad50f00019gzFJp0UreJcAg",
+  "source_revision": "a28ef02",
+  "single_variable": "augmentation_pad",
+  "arms": {"control": 4, "augmentation_pad1": 1},
+  "steering_logit_l2_both_arms": 0.0,
+  "training_seeds": [0, 1],
+  "all_four_from_scratch": true,
+  "old_controls_reused": false,
+  "steps_per_run": 131072,
+  "checkpoint_steps": [65536, 131072],
+  "reserved_geometry_seeds": 180,
+  "train_python": "/workspace/HAIC-Money/.venv/bin/python",
+  "eval_python": "/tmp/kilo/haic-cpu21/bin/python",
+  "training_jobs": 4,
+  "cpu_workers_per_evaluation": 2,
+  "prerequisites": {
+    "related_tests_passed": 222,
+    "full_gpu_cpu_runner_smoke": "runs/20260922-drq-pad-runner-smoke/result.json",
+    "idempotent_recovery": "runs/20260922-drq-pad-runner-smoke/result-recovery-001.json",
+    "smoke_outcome": "All four tiny GPU jobs, checkpoint CPU21 selection and diagnostic confirmation completed; zero finishes correctly rejected and blind not run.",
+    "cpu21_protocol_runtime_preflight_passed": true,
+    "legacy_l2_commands_and_recovery_preserved": true,
+    "compound_learning_changes_rejected": true
+  },
+  "decision_rules": {
+    "completion": "Positive paired confirmation finish delta in BOTH training seeds, nonzero treatment screen/confirmation, every CPU gate; same rules as rejected L2 study.",
+    "blind": "Only pre-confirmation screen-fixed pad1 finalist after the complete confirmation gate passes; no control or runner-up fallback.",
+    "failure": "Stop further DrQ tuning. No third controlled axis, padding or L2 sweep, combined repair, reward/frame-skip/architecture change, larger-budget rescue, or new algorithm.",
+    "success": "Evidence for separately predeclared next-stage consideration only, not automatic scale-up or submission release."
+  }
+}
