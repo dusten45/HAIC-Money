@@ -2,12 +2,49 @@
 
 ## Current Objective And Status
 
-Evaluate DrQ-v2 as a submission algorithm replacement for PPO.
-Per user instructions, two evidence-backed, single-variable follow-up studies were
-authorized and conducted (steering-logit L2, augmentation padding 4 vs 1).
-Both failed to improve upon the baseline in fresh confirmation.
-**DrQ-v2 hyperparameter tuning is now STOPPED.** No further axes, sweeps, or
-algorithm changes are being pursued. `PLAN.md` keeps the historical algorithm order.
+Transitioned from frozen DrQ-v2 baseline to Stage 2: **DreamerV3** per `PLAN.md`.
+DrQ-v2 baseline is frozen as benchmark (4~7/32 confirmation finishes).
+Blind partition remains reserved and untouched.
+Implemented native PyTorch DreamerV3 core, sequence replay, recurrent CPU export,
+and executed feasibility gates 1-4 before any 131k matched training decision.
+
+## DreamerV3 Feasibility Gates (Stage 2)
+
+Per user instructions, DreamerV3 was audited through 4 progressive feasibility gates:
+
+1. **Gate 1: Interface, Recurrent Reset/Carry, and CPU 2.1 Export (PASSED)**
+   - Self-contained native PyTorch implementation in `dreamer_v3.py` and `agent.py`.
+   - All 9 unit tests passed in both host and isolated Torch 2.1 CPU environments.
+   - Recurrent inference latency on CPU: **0.69 ms** (far below 5.0 s ceiling).
+   - Peak RSS: **330.1 MiB** (far below 1,024 MiB ceiling).
+   - Packaging smoke passed (`init: 0.445s, act: 2.3ms, reset_matches_first: True`).
+   - Bit-identical action trace determinism verified across independent episode resets.
+
+2. **Gate 2: Short GPU Training Smoke (PASSED)**
+   - 2,000 decisions, 1,501 updates completed on RTX 5070 Ti in 146.9 s (`runs/20260922-dreamerv3-gpu-smoke-2k/`).
+   - Checkpoints saved at 1,000 and 2,000 steps; parity verified.
+   - Both checkpoints exported to CPU actor and evaluated in isolated CPU 2.1 environment.
+
+3. **Gate 3: World Model Learning Diagnosis (PASSED)**
+   - Image reconstruction MSE: **0.0077 (2k) -> 0.0086 (5k)** (sharp visual dynamics).
+   - Continuation / terminal prediction accuracy: **99.22%** (BCE loss 0.044).
+   - Reward prediction: symlog MSE 0.056, MAE 0.135, reward correlation **+0.626**.
+   - Categorical KL divergence: **0.0024** (stable latent transitions, no collapse).
+   - Latent imagination: 15-step horizon rollouts completely finite, bounded, and stable.
+
+4. **Gate 4: Small Pilot Policy Learning (FAILED)**
+   - Pilot run: `runs/20260922-dreamerv3-pilot-10k/`.
+   - Observation: policy progress collapsed from **0.077** (warmup random actions) to **0.019** (policy steps).
+   - Action saturation: policy steering saturation fraction **0.954 (95.4%)**, hard-locked at -0.99999.
+   - Screen evaluation at step 5,000: **0/6 finishes (0.0% finish rate)**, all episodes off-track at step 109.
+   - **Failure Attribution:**
+     - World Model learning: **Functioning properly** (MSE 0.0086, continue 99.2%, reward correlation +0.626).
+     - CPU recurrent state handling: **Functioning properly** (0.69 ms latency, 330 MB RSS, exact determinism).
+     - Algorithmic failure mechanism: Tanh-Gaussian continuous actor optimization collapsed into premature tanh saturation (steering -0.99999) under dynamics backpropagation, squashing action variance to zero. The car immediately leaves the track in 11 steps, filling the sequence replay with 95%+ negative-reward grass driving. Imagination from grass states predicts only negative returns, trapping the policy in a degenerate saturation loop.
+
+**Verdict:** Feasibility gate **FAILED** at Gate 4. Do NOT launch the 131,072-decision matched training.
+The frozen DrQ-v2 control baseline remains the reigning champion benchmark.
+Details: `experiments/dreamerv3-feasibility-gate.json`.
 
 ## Frozen Contract
 
