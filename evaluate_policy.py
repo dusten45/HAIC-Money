@@ -183,13 +183,13 @@ def candidate_metadata(path: Path, run_dir: Path | None = None) -> dict:
     export_metadata = None
     archive_sha256 = sha256_file(path)
     if path.suffix == ".pt":
-        from agent import Agent, DRQ_ACTOR_FORMAT
+        from agent import Agent, DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT
 
         if path.stat().st_size > 500 * 1024 * 1024:
             raise ValueError("evaluate an exported actor, not a full training checkpoint")
         agent = Agent(model_path=path)
-        if agent.format != DRQ_ACTOR_FORMAT:
-            raise ValueError(".pt evaluation requires a DrQ exported actor")
+        if agent.format not in (DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT):
+            raise ValueError(".pt evaluation requires a DrQ or DreamerV3 exported actor")
         export_metadata = agent.export_metadata
         vecnormalize = None
         policy_sha256 = archive_sha256
@@ -241,14 +241,19 @@ def candidate_metadata(path: Path, run_dir: Path | None = None) -> dict:
             or action_representation != normalize_action_representation()
             or recorded_config.get("frame_skip", 4) != 4
         ):
-            raise ValueError("DrQ run config conflicts with its embedded frozen contract")
+            raise ValueError("model run config conflicts with its embedded frozen contract")
     if explicit_run and (
         type(recorded_config.get("max_steps")) is not int or recorded_config["max_steps"] <= 0
         or type(recorded_config.get("frame_skip")) is not int or recorded_config["frame_skip"] <= 0
     ):
         raise ValueError("explicit run config requires max_steps and frame_skip provenance")
+    from agent import DREAMERV3_ACTOR_FORMAT
     return {
-        "algorithm": "drq-v2" if export_metadata is not None else "ppo",
+        "algorithm": (
+            "dreamerv3" if export_metadata and export_metadata.get("format") == DREAMERV3_ACTOR_FORMAT
+            else "drq-v2" if export_metadata is not None
+            else "ppo"
+        ),
         "export_metadata": export_metadata,
         "export_spec_fingerprints": {
             key: hashlib.sha256(json.dumps(
@@ -496,26 +501,26 @@ def evaluate_cell(
 ) -> dict:
     torch.set_num_threads(1)
     load_started = time.perf_counter()
-    is_drq = model_path.suffix == ".pt"
-    if is_drq:
-        from agent import Agent, DRQ_ACTOR_FORMAT
+    is_pt = is_drq = model_path.suffix == ".pt"
+    if is_pt:
+        from agent import Agent, DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT
 
         model, _ = timed_policy_call(Agent, model_path, seconds=MAX_INIT_SECONDS)
-        if model.format != DRQ_ACTOR_FORMAT:
-            raise ValueError("expected a DrQ exported actor")
+        if model.format not in (DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT):
+            raise ValueError("expected a DrQ or DreamerV3 exported actor")
         if frame_skip != model.export_metadata["action_spec"]["frame_skip"]:
-            raise ValueError("DrQ frame_skip does not match exported action spec")
+            raise ValueError(f"{model.format} frame_skip does not match exported action spec")
         if (
             normalize_action_smoothing(action_smoothing) != normalize_action_smoothing()
             or normalize_action_control(action_control) != normalize_action_control()
             or normalize_action_representation(action_representation) != normalize_action_representation()
         ):
-            raise ValueError("DrQ evaluation cannot override the exported action contract")
+            raise ValueError(f"{model.format} evaluation cannot override the exported action contract")
     else:
         model = PPO.load(str(model_path), device="cpu")
     load_seconds = time.perf_counter() - load_started
     init_seconds = time.perf_counter() - (worker_started or load_started)
-    if is_drq and init_seconds > MAX_INIT_SECONDS:
+    if is_pt and init_seconds > MAX_INIT_SECONDS:
         raise TimeoutError("CPU worker import and actor construction exceeded 10 seconds")
     actor_peak_rss = peak_rss_bytes()
     action_smoothing = resolve_action_smoothing(model_path, action_smoothing)

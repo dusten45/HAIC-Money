@@ -212,6 +212,18 @@ class Transition:
         return self.terminated or self.truncated
 
     @property
+    def is_first(self) -> bool:
+        return self.step == 0
+
+    @property
+    def is_last(self) -> bool:
+        return self.terminated or self.truncated
+
+    @property
+    def is_terminal(self) -> bool:
+        return bool(self.terminal)
+
+    @property
     def bootstrap_allowed(self) -> bool:
         return not bool(self.terminal)
 

@@ -10,6 +10,7 @@ MODEL_FILENAME = "model.pt"
 POLICY_MODEL_FILENAME = "policy.pt"
 DYNAMICS_MODEL_FILENAME = "dynamics.pt"
 DRQ_ACTOR_FORMAT = "haic-drq-v2-actor-v1"
+DREAMERV3_ACTOR_FORMAT = "haic-dreamerv3-actor-v1"
 
 # Small single-observation CNN inference is faster and more predictable without
 # the default large CPU thread pool.
@@ -98,6 +99,153 @@ class DrQActor(nn.Module):
         return torch.tanh(self.policy(self.trunk(self.encoder(observation))))
 
 
+class DreamerV3LayerNormGRUCell(nn.Module):
+    def __init__(self, input_dim: int, hidden_dim: int):
+        super().__init__()
+        self.input_dim = int(input_dim)
+        self.hidden_dim = int(hidden_dim)
+        self.fc_x = nn.Linear(input_dim, 3 * hidden_dim, bias=False)
+        self.fc_h = nn.Linear(hidden_dim, 3 * hidden_dim, bias=False)
+        self.ln_x = nn.LayerNorm(3 * hidden_dim)
+        self.ln_h = nn.LayerNorm(3 * hidden_dim)
+
+    def forward(self, x: torch.Tensor, h: torch.Tensor) -> torch.Tensor:
+        gx = self.ln_x(self.fc_x(x))
+        gh = self.ln_h(self.fc_h(h))
+        xr, xu, xh = torch.chunk(gx, 3, dim=-1)
+        hr, hu, hh = torch.chunk(gh, 3, dim=-1)
+        r = torch.sigmoid(xr + hr)
+        u = torch.sigmoid(xu + hu)
+        h_tilde = torch.tanh(xh + r * hh)
+        return (1.0 - u) * h_tilde + u * h
+
+
+class DreamerV3Encoder(nn.Module):
+    def __init__(self, in_channels: int = 4, embed_dim: int = 512):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(in_channels, 32, kernel_size=4, stride=2, padding=1),
+            nn.SiLU(),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
+            nn.SiLU(),
+            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
+            nn.SiLU(),
+            nn.Conv2d(128, 128, kernel_size=4, stride=2, padding=1),
+            nn.SiLU(),
+            nn.Flatten(),
+            nn.Linear(128 * 5 * 5, embed_dim),
+            nn.LayerNorm(embed_dim),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.net(x.float())
+
+
+class DreamerV3RSSM(nn.Module):
+    def __init__(
+        self,
+        action_dim: int = 3,
+        embed_dim: int = 512,
+        hidden_dim: int = 256,
+        num_categoricals: int = 16,
+        num_classes: int = 16,
+        unimix: float = 0.01,
+    ):
+        super().__init__()
+        self.action_dim = int(action_dim)
+        self.embed_dim = int(embed_dim)
+        self.hidden_dim = int(hidden_dim)
+        self.k = int(num_categoricals)
+        self.c = int(num_classes)
+        self.stoch_dim = self.k * self.c
+        self.unimix = float(unimix)
+
+        self.act_embed = nn.Linear(self.stoch_dim + self.action_dim, self.hidden_dim)
+        self.cell = DreamerV3LayerNormGRUCell(self.hidden_dim, self.hidden_dim)
+        self.prior_net = nn.Sequential(
+            nn.Linear(self.hidden_dim, 256),
+            nn.SiLU(),
+            nn.Linear(256, self.stoch_dim),
+        )
+        self.post_net = nn.Sequential(
+            nn.Linear(self.hidden_dim + self.embed_dim, 256),
+            nn.SiLU(),
+            nn.Linear(256, self.stoch_dim),
+        )
+
+    def step_post_deterministic(
+        self,
+        prev_h: torch.Tensor,
+        prev_z: torch.Tensor,
+        prev_a: torch.Tensor,
+        embed: torch.Tensor,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        x = torch.nn.functional.silu(self.act_embed(torch.cat([prev_z, prev_a], dim=-1)))
+        next_h = self.cell(x, prev_h)
+        logits = self.post_net(torch.cat([next_h, embed], dim=-1)).view(-1, self.k, self.c)
+        idx = torch.argmax(logits, dim=-1)
+        next_z = torch.nn.functional.one_hot(idx, num_classes=self.c).float().view(-1, self.stoch_dim)
+        return next_h, next_z
+
+
+class DreamerV3Actor(nn.Module):
+    def __init__(self, in_features: int = 512, action_dim: int = 3):
+        super().__init__()
+        self.trunk = nn.Sequential(
+            nn.Linear(in_features, 256),
+            nn.SiLU(),
+            nn.Linear(256, 256),
+            nn.SiLU(),
+        )
+        self.mean_head = nn.Linear(256, action_dim)
+        self.std_head = nn.Linear(256, action_dim)
+
+    def forward(self, state: torch.Tensor, deterministic: bool = True):
+        features = self.trunk(state)
+        mean = self.mean_head(features)
+        return torch.tanh(mean), mean
+
+
+class DreamerV3ExportedActor(nn.Module):
+    def __init__(self, encoder: DreamerV3Encoder, rssm: DreamerV3RSSM, actor: DreamerV3Actor):
+        super().__init__()
+        self.encoder = encoder
+        self.rssm = rssm
+        self.actor = actor
+        self.hidden_dim = rssm.hidden_dim
+        self.stoch_dim = rssm.stoch_dim
+        self.register_buffer("h", torch.zeros(1, self.hidden_dim))
+        self.register_buffer("z", torch.zeros(1, self.stoch_dim))
+        self.register_buffer("prev_a", torch.zeros(1, 3))
+        self.is_first = True
+
+    def reset_episode(self) -> None:
+        self.h.zero_()
+        self.z.zero_()
+        self.prev_a.zero_()
+        self.is_first = True
+
+    @torch.inference_mode()
+    def act(self, obs: torch.Tensor, deterministic: bool = True) -> np.ndarray:
+        if obs.dim() == 3:
+            obs = obs.unsqueeze(0)
+        e = self.encoder(obs)
+        if self.is_first:
+            self.h.zero_()
+            self.z.zero_()
+            self.prev_a.zero_()
+            self.is_first = False
+
+        next_h, next_z = self.rssm.step_post_deterministic(self.h, self.z, self.prev_a, e)
+        self.h.copy_(next_h)
+        self.z.copy_(next_z)
+
+        state = torch.cat([self.h, self.z], dim=-1)
+        action, _ = self.actor(state, deterministic=deterministic)
+        self.prev_a.copy_(action)
+        return action.squeeze(0).cpu().numpy()
+
+
 class Agent:
     """Load either the root baseline model or the packaged HAIC visual policy."""
 
@@ -168,6 +316,8 @@ class Agent:
                 model_format = payload.get("format") if isinstance(payload, dict) else None
                 if model_format == DRQ_ACTOR_FORMAT:
                     self._init_drq(payload)
+                elif model_format == DREAMERV3_ACTOR_FORMAT:
+                    self._init_dreamerv3(payload)
                 elif model_format is not None:
                     raise ValueError(f"unsupported model format: {model_format}")
                 else:
@@ -257,6 +407,57 @@ class Agent:
         self.model.eval()
         self.format = DRQ_ACTOR_FORMAT
         self._runtime_mode = "drq"
+        self.export_metadata = {
+            key: value for key, value in payload.items() if key != "state_dict"
+        }
+        self.reset(None)
+
+    def _init_dreamerv3(self, payload):
+        config = payload.get("config", {})
+        observation_spec = payload.get("observation_spec", {})
+        action_spec = payload.get("action_spec", {})
+        expected_observation = {
+            "shape": (4, 84, 84), "dtype": "float32", "channel_order": "CHW",
+            "low": 0.0, "high": 1.0, "uint8_scale": 255,
+            "control_plane_fingerprint": None,
+        }
+        expected_action = {
+            "native_low": (-1.0, -1.0, -1.0), "native_high": (1.0, 1.0, 1.0),
+            "official_low": (-1.0, 0.0, 0.0), "official_high": (1.0, 1.0, 1.0),
+            "frame_skip": 4, "order": ("steer", "gas", "brake"),
+            "method": "symmetric-native-to-haic-box",
+        }
+        for name, actual, expected in (
+            ("observation", observation_spec, expected_observation),
+            ("action", action_spec, expected_action),
+        ):
+            if not isinstance(actual, dict):
+                raise ValueError(f"invalid DreamerV3 {name} spec")
+            for key, value in expected.items():
+                recorded = actual.get(key)
+                if isinstance(value, tuple) and isinstance(recorded, (list, tuple)):
+                    recorded = tuple(recorded)
+                if key not in actual or recorded != value:
+                    raise ValueError(f"unsupported DreamerV3 {name} spec: {key}")
+        state_dict = payload.get("state_dict")
+        if not isinstance(state_dict, dict) or not state_dict:
+            raise ValueError("invalid DreamerV3 state_dict")
+
+        encoder = DreamerV3Encoder(in_channels=4, embed_dim=config.get("embed_dim", 512))
+        rssm = DreamerV3RSSM(
+            action_dim=3,
+            embed_dim=config.get("embed_dim", 512),
+            hidden_dim=config.get("hidden_dim", 256),
+            num_categoricals=config.get("num_categoricals", 16),
+            num_classes=config.get("num_classes", 16),
+            unimix=config.get("unimix", 0.01),
+        )
+        actor = DreamerV3Actor(in_features=rssm.stoch_dim + rssm.hidden_dim, action_dim=3)
+        self.model = DreamerV3ExportedActor(encoder, rssm, actor)
+        self.model.load_state_dict(state_dict, strict=True)
+        self.model.eval()
+        self.format = DREAMERV3_ACTOR_FORMAT
+        self._runtime_mode = "dreamerv3"
         self.export_metadata = {
             key: value for key, value in payload.items() if key != "state_dict"
         }
@@ -504,6 +705,9 @@ class Agent:
         if self._runtime_mode == "drq":
             # The deterministic actor is feed-forward.
             return
+        if self._runtime_mode == "dreamerv3":
+            self.model.reset_episode()
+            return
         if self._runtime_mode == "baseline":
             self.smoother.reset(initial_action=self.action_smoothing["initial_action"])
             return
@@ -533,6 +737,25 @@ class Agent:
             action[1:] = (action[1:] + 1.0) * 0.5
             if not np.isfinite(action).all():
                 raise ValueError("DrQ actor produced a non-finite action")
+            return action
+        if self._runtime_mode == "dreamerv3":
+            observation = np.asarray(observation)
+            if (
+                observation.shape != (4, 84, 84)
+                or observation.dtype != np.float32
+                or not np.isfinite(observation).all()
+                or np.any(observation < 0.0)
+                or np.any(observation > 1.0)
+            ):
+                raise ValueError(
+                    "DreamerV3 observation must be float32 CHW (4, 84, 84) in [0, 1]"
+                )
+            tensor_obs = torch.as_tensor(np.ascontiguousarray(observation)).unsqueeze(0)
+            native = self.model.act(tensor_obs, deterministic=True)
+            action = np.clip(native, -1.0, 1.0).astype(np.float32)
+            action[1:] = (action[1:] + 1.0) * 0.5
+            if not np.isfinite(action).all():
+                raise ValueError("DreamerV3 actor produced a non-finite action")
             return action
         if self._runtime_mode == "baseline":
             controlled = self._append_action_control_plane(

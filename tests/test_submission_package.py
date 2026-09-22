@@ -95,6 +95,21 @@ class TestSubmissionPackage(unittest.TestCase):
             with zipfile.ZipFile(record / "submission.zip") as package:
                 self.assertEqual(package.read("model.pt"), actor.read_bytes())
 
+    def test_explicit_dreamerv3_actor_is_packaged_under_declared_model_filename(self):
+        from dreamer_v3 import DreamerV3Agent, DreamerV3Config
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            agent = DreamerV3Agent(DreamerV3Config(device="cpu", embed_dim=64, hidden_dim=64, num_categoricals=8, num_classes=8))
+            actor = agent.export_actor(path / "actor.pt")
+            archive = build_submission(ROOT / "agent.py", actor, path / "submission.zip")
+            with zipfile.ZipFile(archive) as package:
+                self.assertIn("model.pt", package.namelist())
+                self.assertNotIn("actor.pt", package.namelist())
+                self.assertEqual(package.read("model.pt"), actor.read_bytes())
+                self.assertNotIn("dreamer_v3.py", package.namelist())
+                self.assertNotIn("common_adapter.py", package.namelist())
+
     def test_rejects_banned_submission_import(self):
         with tempfile.TemporaryDirectory() as directory:
             agent_path = Path(directory) / "agent.py"

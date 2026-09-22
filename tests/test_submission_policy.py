@@ -18,7 +18,16 @@ from action_smoothing import (
     canonical_action_control,
     canonical_action_smoothing,
 )
-from agent import Agent, Baseline1Actor, DRQ_ACTOR_FORMAT
+from agent import (
+    Agent,
+    Baseline1Actor,
+    DRQ_ACTOR_FORMAT,
+    DREAMERV3_ACTOR_FORMAT,
+    DreamerV3Encoder,
+    DreamerV3RSSM,
+    DreamerV3Actor,
+    DreamerV3ExportedActor,
+)
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
 from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
@@ -35,6 +44,22 @@ class TestSubmissionPolicy(unittest.TestCase):
             "observation_spec": asdict(ObservationSpec()),
             "action_spec": asdict(ActionSpec()),
             "state_dict": actor.state_dict(),
+        }
+
+    def dreamerv3_payload(self):
+        enc = DreamerV3Encoder(4, 64)
+        rssm = DreamerV3RSSM(3, 64, 64, 8, 8, 0.01)
+        act = DreamerV3Actor(64 + 64, 3)
+        model = DreamerV3ExportedActor(enc, rssm, act)
+        return model, {
+            "format": DREAMERV3_ACTOR_FORMAT,
+            "config": {
+                "embed_dim": 64, "hidden_dim": 64,
+                "num_categoricals": 8, "num_classes": 8, "unimix": 0.01,
+            },
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+            "state_dict": model.state_dict(),
         }
 
     def test_predict_action_has_submission_bounds(self):
@@ -213,6 +238,39 @@ import builtins
 original_import = builtins.__import__
 def restricted(name, *args, **kwargs):
     if name.split('.')[0] in {'stable_baselines3', 'drq_v2', 'common_adapter', 'train'}:
+        raise AssertionError('training import: ' + name)
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = restricted
+from agent import Agent
+import numpy as np
+agent = Agent()
+observation = np.zeros((4, 84, 84), dtype=np.float32)
+first = agent.act(observation)
+agent.reset(observation)
+assert np.array_equal(first, agent.act(observation))
+assert first.shape == (3,) and np.isfinite(first).all()
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            for filename in ("agent.py", "action_smoothing.py", "action_representation.py"):
+                shutil.copy2(root / filename, path / filename)
+            torch.save(payload, path / "model.pt")
+            environment = dict(os.environ, CUDA_VISIBLE_DEVICES="", PYTHONDONTWRITEBYTECODE="1")
+            environment.pop("PYTHONPATH", None)
+            result = subprocess.run(
+                [sys.executable, "-B", "-c", code], cwd=path,
+                env=environment, capture_output=True, text=True, timeout=15,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_dreamerv3_root_only_runtime_does_not_import_training_modules(self):
+        _, payload = self.dreamerv3_payload()
+        root = Path(__file__).resolve().parents[1]
+        code = """
+import builtins
+original_import = builtins.__import__
+def restricted(name, *args, **kwargs):
+    if name.split('.')[0] in {'stable_baselines3', 'drq_v2', 'dreamer_v3', 'common_adapter', 'train'}:
         raise AssertionError('training import: ' + name)
     return original_import(name, *args, **kwargs)
 builtins.__import__ = restricted

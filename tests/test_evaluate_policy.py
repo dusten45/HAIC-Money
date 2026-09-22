@@ -17,7 +17,15 @@ import numpy as np
 import torch
 
 import evaluate_policy
-from agent import DRQ_ACTOR_FORMAT, DrQActor
+from agent import (
+    DRQ_ACTOR_FORMAT,
+    DrQActor,
+    DREAMERV3_ACTOR_FORMAT,
+    DreamerV3Encoder,
+    DreamerV3RSSM,
+    DreamerV3Actor,
+    DreamerV3ExportedActor,
+)
 from common_adapter import ActionSpec, ObservationSpec
 from evaluate_policy import (
     MAX_PROCESS_RSS_BYTES,
@@ -57,6 +65,31 @@ class TestEvaluatePolicy(unittest.TestCase):
         }, actor)
         (root / "config.json").write_text(json.dumps({
             "config": {"algorithm": "drq-v2", "max_steps": 2, "frame_skip": 4},
+        }))
+        return actor
+
+    def dreamerv3_candidate(self, root):
+        actor = root / "actor.pt"
+        cfg = {
+            "embed_dim": 64,
+            "hidden_dim": 64,
+            "num_categoricals": 8,
+            "num_classes": 8,
+            "unimix": 0.01,
+        }
+        enc = DreamerV3Encoder(4, 64)
+        rssm = DreamerV3RSSM(3, 64, 64, 8, 8, 0.01)
+        act = DreamerV3Actor(64 + 64, 3)
+        model = DreamerV3ExportedActor(enc, rssm, act)
+        torch.save({
+            "format": DREAMERV3_ACTOR_FORMAT,
+            "config": cfg,
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+            "state_dict": model.state_dict(),
+        }, actor)
+        (root / "config.json").write_text(json.dumps({
+            "config": {"algorithm": "dreamerv3", "max_steps": 2, "frame_skip": 4},
         }))
         return actor
 
@@ -143,6 +176,15 @@ class TestEvaluatePolicy(unittest.TestCase):
         self.assertEqual(len(candidates), 1)
         self.assertEqual(candidates[0]["aliases"], [str(checkpoint), str(alias)])
         self.assertEqual(candidates[0]["vecnormalize_path"], str(normalizer))
+
+    def test_dreamerv3_candidate_metadata_and_evaluation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.dreamerv3_candidate(root)
+            candidates = discover_candidates([actor], run_dir=root)
+            self.assertEqual(len(candidates), 1)
+            self.assertEqual(candidates[0]["algorithm"], "dreamerv3")
+            self.assertEqual(candidates[0]["export_metadata"]["format"], DREAMERV3_ACTOR_FORMAT)
 
     def test_terminal_class_preserves_official_outcomes(self):
         self.assertEqual(terminal_class(True, False, True, {}), "finished")
