@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 import zipfile
+from pathlib import Path
 
 import numpy as np
 
@@ -113,11 +114,12 @@ class TestActionSmoothing(unittest.TestCase):
 
     def test_embedded_checkpoint_config_round_trips(self):
         config = canonical_action_smoothing("ema", 0.35)
-        with tempfile.NamedTemporaryFile(suffix=".zip") as temporary:
-            with zipfile.ZipFile(temporary.name, "w") as archive:
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "checkpoint.zip"
+            with zipfile.ZipFile(archive_path, "w") as archive:
                 archive.writestr("data", "{}")
-            write_embedded_action_smoothing(temporary.name, config)
-            self.assertEqual(read_embedded_action_smoothing(temporary.name), config)
+            write_embedded_action_smoothing(str(archive_path), config)
+            self.assertEqual(read_embedded_action_smoothing(str(archive_path)), config)
 
     def test_invalid_modes_shapes_and_values_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "low"):

@@ -10,3 +10,6 @@ dependencies = [
     "stable-baselines3==2.2.1",
     "torch==2.1.0",
 ]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]

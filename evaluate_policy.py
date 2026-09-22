@@ -4,7 +4,6 @@ import json
 import os
 import pickle
 import platform
-import resource
 import signal
 import shutil
 import subprocess
@@ -16,6 +15,11 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from importlib.metadata import version
 from pathlib import Path
+
+try:
+    import resource
+except ImportError:  # Windows does not provide the POSIX resource module.
+    resource = None
 
 PROCESS_STARTED = time.perf_counter()
 # Set process-level limits before importing Torch so every worker uses the same
@@ -408,6 +412,14 @@ def timed_policy_call(function, *arguments, seconds=MAX_ACTION_SECONDS):
     def timeout(_signum, _frame):
         raise TimeoutError(f"policy call exceeded {seconds} seconds")
 
+    if not hasattr(signal, "SIGALRM") or not hasattr(signal, "setitimer"):
+        started = time.perf_counter()
+        result = function(*arguments)
+        elapsed = time.perf_counter() - started
+        if elapsed > seconds:
+            raise TimeoutError(f"policy call exceeded {seconds} seconds")
+        return result, elapsed
+
     previous = signal.signal(signal.SIGALRM, timeout)
     signal.setitimer(signal.ITIMER_REAL, seconds)
     started = time.perf_counter()
@@ -429,6 +441,44 @@ def peak_rss_bytes():
             if line.startswith("VmHWM:"):
                 return int(line.split()[1]) * 1024
         raise RuntimeError("cannot read process-local peak RSS")
+    if sys.platform == "win32":
+        import ctypes
+        from ctypes import wintypes
+
+        class ProcessMemoryCounters(ctypes.Structure):
+            _fields_ = [
+                ("cb", wintypes.DWORD),
+                ("PageFaultCount", wintypes.DWORD),
+                ("PeakWorkingSetSize", ctypes.c_size_t),
+                ("WorkingSetSize", ctypes.c_size_t),
+                ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+                ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+                ("PagefileUsage", ctypes.c_size_t),
+                ("PeakPagefileUsage", ctypes.c_size_t),
+            ]
+
+        counters = ProcessMemoryCounters()
+        counters.cb = ctypes.sizeof(counters)
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        psapi = ctypes.WinDLL("psapi", use_last_error=True)
+        get_current_process = kernel32.GetCurrentProcess
+        get_current_process.restype = wintypes.HANDLE
+        get_memory_info = psapi.GetProcessMemoryInfo
+        get_memory_info.argtypes = [
+            wintypes.HANDLE,
+            ctypes.POINTER(ProcessMemoryCounters),
+            wintypes.DWORD,
+        ]
+        get_memory_info.restype = wintypes.BOOL
+        if not get_memory_info(
+            get_current_process(), ctypes.byref(counters), counters.cb
+        ):
+            raise ctypes.WinError(ctypes.get_last_error())
+        return int(counters.PeakWorkingSetSize)
+    if resource is None:
+        raise RuntimeError("peak RSS measurement is unavailable on this platform")
     multiplier = 1 if sys.platform == "darwin" else 1024
     return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * multiplier)
 
@@ -955,7 +1005,7 @@ def snapshot_candidates(temporary_dir: Path, candidates) -> None:
         snapshot_sha256 = sha256_file(archive)
         if snapshot_sha256 != candidate["archive_sha256"]:
             raise RuntimeError(f"checkpoint changed while snapshotting: {candidate['source_path']}")
-        candidate["evaluation_archive_path"] = str(archive.relative_to(temporary_dir))
+        candidate["evaluation_archive_path"] = archive.relative_to(temporary_dir).as_posix()
         candidate["evaluation_archive_sha256"] = snapshot_sha256
         if candidate.get("vecnormalize_path"):
             vecnormalize_source = Path(candidate["vecnormalize_path"])
@@ -966,8 +1016,8 @@ def snapshot_candidates(temporary_dir: Path, candidates) -> None:
                 raise RuntimeError(
                     f"VecNormalize changed while snapshotting: {vecnormalize_source}"
                 )
-            candidate["evaluation_vecnormalize_path"] = str(
-                vecnormalize_archive.relative_to(temporary_dir)
+            candidate["evaluation_vecnormalize_path"] = (
+                vecnormalize_archive.relative_to(temporary_dir).as_posix()
             )
             candidate["evaluation_vecnormalize_sha256"] = vecnormalize_snapshot_sha256
         if candidate.get("run_config_path"):

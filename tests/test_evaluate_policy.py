@@ -2,6 +2,7 @@ import hashlib
 import importlib
 import json
 import os
+import sys
 import time
 import tempfile
 import unittest
@@ -170,10 +171,14 @@ class TestEvaluatePolicy(unittest.TestCase):
             directory_path = Path(directory)
             source = directory_path / "source.zip"
             source.write_bytes(b"original")
+            vecnormalize_source = directory_path / "source.vecnormalize.pkl"
+            vecnormalize_source.write_bytes(b"statistics")
             candidate = {
                 "candidate_id": "candidate",
                 "source_path": str(source),
                 "archive_sha256": hashlib.sha256(b"original").hexdigest(),
+                "vecnormalize_path": str(vecnormalize_source),
+                "vecnormalize_sha256": hashlib.sha256(b"statistics").hexdigest(),
             }
             output = directory_path / "output"
             output.mkdir()
@@ -183,6 +188,10 @@ class TestEvaluatePolicy(unittest.TestCase):
 
             self.assertEqual((output / "candidates/candidate.zip").read_bytes(), b"original")
             self.assertEqual(candidate["evaluation_archive_path"], "candidates/candidate.zip")
+            self.assertEqual(
+                candidate["evaluation_vecnormalize_path"],
+                "candidates/candidate.vecnormalize.pkl",
+            )
 
     def test_runtime_snapshot_includes_train_dependencies(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -536,13 +545,18 @@ class TestEvaluatePolicy(unittest.TestCase):
             actor = self.drq_candidate(root)
             candidate, = discover_candidates([actor])
             candidate["_worker_model_path"] = str(actor)
-            args = SimpleNamespace(python="/cpu-venv/bin/python", max_steps=2,
+            explicit_python = (
+                r"C:\cpu-venv\bin\python.exe"
+                if sys.platform == "win32"
+                else "/cpu-venv/bin/python"
+            )
+            args = SimpleNamespace(python=explicit_python, max_steps=2,
                                    frame_skip=4, timeout_seconds=30)
             completed = SimpleNamespace(returncode=0, stdout=json.dumps(self.episode()), stderr="")
             with patch.dict("os.environ", {"PYTHONPATH": "/unsafe/repository"}):
                 with patch("evaluate_policy.subprocess.run", return_value=completed) as run:
                     result = run_isolated_cell(candidate, 1, 0, 0, args, root / "evaluate_policy.py")
-            self.assertEqual(run.call_args.args[0][0], "/cpu-venv/bin/python")
+            self.assertEqual(run.call_args.args[0][0], explicit_python)
             self.assertEqual(run.call_args.kwargs["cwd"], root)
             self.assertNotIn("PYTHONPATH", run.call_args.kwargs["env"])
             self.assertEqual(run.call_args.kwargs["env"]["CUDA_VISIBLE_DEVICES"], "")
