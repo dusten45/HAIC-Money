@@ -130,15 +130,60 @@ project. `PLAN.md` contains the frozen contract and promotion gates.
 1. Keep the failed screen gate and successful diagnostic replication both visible.
    Do not promote using a diagnostic receipt or reuse consumed confirmation as fresh.
    Blind IDs 121--123/seeds 31201--31208 remain untouched.
-2. Only one controlled follow-up is proposed, NOT implemented/launched:
-   `experiments/drqv2-steering-logit-proposal-v1.json`. It adds pre-tanh steering-logit
-   L2 to the actor objective, with a matched current-code control and fixed coefficient.
-   No smoothing, reward/action change, critic overhaul or parameter sweep.
-3. Evidence: steering saturation 88.2% on fresh screen; pre-tanh absolute logit
-   median 9.93 and exactly-zero float32 squash derivative on 55.8% of 4,096 retained
-   states. Q1 is not systematically more optimistic than Q2. **Saturation is not a
-   proven failure cause**: confirmation finishers also saturate (91.9%). Test improved
-   completion, not just reduced saturation, and reject an ineffective repair.
-4. Four-seed 1,048,576-decision matched scale-up remains conditional in the original
-   protocol. It matches PPO's budget, not its historical reward/observation/sampler
-   contract. No DreamerV3/TD-MPC2 implementation or PPO return during this gate.
+2. The user authorized actual controlled follow-ups on 2026-09-22, not an algorithm
+   switch. L2 is implemented and ALL four arms are RUNNING from scratch at
+   `runs/20260922-drq-steering-l2-v1-fast/`, source revision `8e5fa46`.
+   The initial `runs/20260922-drq-steering-l2-v1/` was stopped with every arm last
+   logged at22,000 steps, BEFORE any checkpoint/evaluation. Its sealed
+   `engineering_abort.json` preserves the reason and zero holdout consumption.
+   Frozen protocol (unchanged):
+   `experiments/drqv2-steering-logit-v1.json` (SHA256
+   `348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235`).
+   Control/L2 coefficients 0/0.001, seeds 0/1, 131,072 decisions each, batch64,
+   warmup10,000, replay100,000, sampler917, tracks1--4. Only the actor steering-logit
+   penalty changes. CPU checkpoint selection is at65,536/131,072.
+3. `run_drqv2_matched.py` executes an immutable source snapshot, verifies exact
+   environment/gradient/replay budgets and episode-stream prefixes, freezes selected
+   actors before confirmation, and preserves sealed receipts. Fresh confirmation:
+   IDs211--214/seeds32101--32108; blind221--223/seeds32201--32208. All164 reserved
+   geometry seeds are excluded from new training. L2 must improve confirmation
+   finish count in BOTH seeds, with nonzero treatment screen/confirmation and all
+   CPU gates; only the pre-frozen finalist can enter blind. No progress-only success.
+4. Prerequisites passed: coefficient-zero bitwise CPU/CUDA baseline parity, nonzero
+   L2 gradient despite squash saturation, exact resume, two actual batch64 2k GPU
+   smokes and CPU exports. Four-job64-step full runner smoke and idempotent recovery
+   passed, correctly rejecting zero finishes without running blind. Artifacts:
+   `runs/20260922-drq-l2-control-smoke/`, `runs/20260922-drq-l2-treatment-smoke/`,
+   `runs/20260922-drq-l2-runner-smoke-v2/`. No real-study outcome exists yet.
+   All150 DrQ experiment/deployment tests pass together. Profiling found128 scalar
+   GPU-to-CPU RNG synchronizations per augmentation view. A tested CUDA-only gather
+   preserves the exact scalar draw order/output/RNG and16 successive learner updates
+   per arm; a single batched RNG draw was rejected because it changed CUDA RNG state.
+   Live learning metrics also match all four original prefixes exactly through17,000
+   steps; wall time per1,000 steps fell from about94.5s to31.5s. Operator state and
+   restart evidence are in `experiments/drqv2-l2-execution.json`.
+5. Offline evidence is in `experiments/drqv2-pre-l2-diagnostics.json`; reusable
+   `diagnose_drqv2.py` compares all actors on one fixed replay-state sample under
+   CPU21. History IS used; no new frame-skip/terminal bug was found. Logit saturation,
+   heavy critic clipping, sparse finish-boundary replay and shift sensitivity are
+   measured, not causal proofs. At nominal wheel limits, steering magnitudes above
+   0.46 share saturated motor commands: restoring tanh gradients alone may not
+   improve physical control. The small L2 smoke already demonstrates this distinction.
+6. Wait for the matched outcome before selecting at most ONE additional justified
+   single-axis trial. Padding4 versus1 is only a conditional candidate if L2 restores
+   its mechanism but not completion and standardized shift sensitivity remains.
+   Never combine a rejected L2 repair with that trial, sweep coefficients, weaken
+   gates, or start another algorithm. Stop after1--2 controlled attempts without
+   replicated improvement. Million-step scale-up remains conditional, not launched.
+
+## Concurrent Upstream Work
+
+- Remote `b1ad528` introduced separate visual-policy/planner/site tools while this
+  session began. It was preserved with merge `9649c62`, not overwritten. Its lazy
+  dispatch leaves explicit DrQ inference unchanged; those algorithms are not used
+  or trained in this study. No dependency sync or official-environment edit occurred.
+- Post-merge DrQ suites:91 host passes; CPU21 subset74 run/3 CUDA skips. The full
+  merged suite had355 passes/14 skips and one unrelated
+  `tests/test_submission_layout.py` failure: upstream `training/package_submission.py`
+  uses inherited Linux `ru_maxrss` after CUDA-heavy tests. That test passes alone.
+  This was not changed; the DrQ gate measures process-local `/proc/self/status` RSS.

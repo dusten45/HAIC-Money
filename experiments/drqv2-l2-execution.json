@@ -1,0 +1,49 @@
+{
+  "study": "experiments/drqv2-steering-logit-v1.json",
+  "protocol_sha256": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
+  "status": "training; no completed study outcome yet",
+  "active_run_root": "runs/20260922-drq-steering-l2-v1-fast",
+  "background_process": "bgp_0c7326ca40019ohzuLZLaxrMQl",
+  "source_revision": "8e5fa46",
+  "arms": {"control": 0.0, "steering_l2": 0.001},
+  "training_seeds": [0, 1],
+  "steps_per_run": 131072,
+  "checkpoint_steps": [65536, 131072],
+  "train_python": "/workspace/HAIC-Money/.venv/bin/python",
+  "eval_python": "/tmp/kilo/haic-cpu21/bin/python",
+  "training_jobs": 4,
+  "cpu_workers_per_evaluation": 2,
+  "prerequisites": {
+    "control_gpu_batch64_smoke": "runs/20260922-drq-l2-control-smoke",
+    "treatment_gpu_batch64_smoke": "runs/20260922-drq-l2-treatment-smoke",
+    "full_runner_smoke": "runs/20260922-drq-l2-runner-smoke-v2",
+    "full_runner_recovery": "runs/20260922-drq-l2-runner-smoke-v2/result-recovery-001.json",
+    "smoke_outcome": "Operationally successful tiny-budget test; correctly rejected zero finishes and left blind unused",
+    "learning_export_cpu_restore_gates_passed": true
+  },
+  "engineering_restart": {
+    "aborted_root": "runs/20260922-drq-steering-l2-v1",
+    "receipt": "runs/20260922-drq-steering-l2-v1/engineering_abort.json",
+    "last_logged_step_each_arm": 22000,
+    "completed_checkpoints_or_evaluation_bundles": 0,
+    "protected_cells_consumed": 0,
+    "all_arms_restarted_from_scratch": true,
+    "reason": "Remove augmentation host synchronizations without changing learning data, scalar CUDA RNG calls, hyperparameters or protocol",
+    "implementation": "CUDA-only device-resident sequence of the same2B scalar y/x draws, followed by gather; CPU and unsupported layouts retain the old path",
+    "rejected_alternative": "Single batched random draw changes CUDA RNG consumption and was not adopted",
+    "regression_augmentation_cases": 288,
+    "benchmark_cuda_updates_bit_identical_per_arm": 16,
+    "permanent_cpu_cuda_update_parity_per_arm": 4,
+    "live_prefix_receipt": "runs/20260922-drq-steering-l2-v1-fast/restart_prefix_parity.json",
+    "live_prefix_learning_metrics_exact_all_arms_through_step": 17000,
+    "live_prefix_excludes_only": ["elapsed_seconds", "rss_mib", "rss_peak_mib"],
+    "live_seconds_per_1000_steps_before_range": [94.15, 94.81],
+    "live_seconds_per_1000_steps_after_range": [31.27, 31.76],
+    "interpretation": "Approximately3x measured end-to-end improvement under four-job concurrency; not a second learning hypothesis or an extra completed experiment"
+  },
+  "post_study": {
+    "shared_state_probe": "diagnose_drqv2.py, pinned CPU21, one explicit control replay for all four selected actors",
+    "do_not_weaken": "Both seeds must pass predeclared finish improvement, operational and nonzero screen/confirmation gates before the pre-frozen finalist enters fresh blind",
+    "additional_trials": "At most one more artifact-justified single-axis controlled experiment after L2; otherwise stop. No new algorithm or coefficient sweep."
+  }
+}
