@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-augmentation-pad-v1",
+  "purpose": "matched-single-axis-follow-up",
+  "controlled_attempt": 2,
+  "frame_skip": 4,
+  "max_steps": 2000,
+  "training_track_ids": [1, 2, 3, 4],
+  "selection_order": ["unseen_finish_rate", "progress", "completed_lap_time"],
+  "partitions": {
+    "screen": {
+      "track_ids": [101, 102, 103],
+      "seeds": [31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008],
+      "repeats": 2
+    },
+    "confirmation": {
+      "track_ids": [311, 312, 313, 314],
+      "seeds": [33101, 33102, 33103, 33104, 33105, 33106, 33107, 33108],
+      "repeats": 2
+    },
+    "blind": {
+      "track_ids": [321, 322, 323],
+      "seeds": [33201, 33202, 33203, 33204, 33205, 33206, 33207, 33208],
+      "repeats": 2
+    }
+  },
+  "reserved_training_seeds": [
+    0, 42, 777, 1337, 2024,
+    10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008,
+    11001, 11002, 11003, 11004, 11005, 11006, 11007, 11008,
+    12001, 12002, 12003, 12004, 12005, 12006, 12007, 12008,
+    12101, 12102, 12103, 12104, 12105, 12106, 12107, 12108,
+    13001, 13002, 13003, 13004, 13005, 13006, 13007, 13008,
+    13101, 13102, 13103, 13104, 13105, 13106, 13107, 13108,
+    13201, 13202, 13203, 13204, 13205, 13206, 13207, 13208,
+    13301, 13302, 13303, 13304, 13305, 13306, 13307, 13308,
+    14001, 14002, 14003, 14004, 14005, 14006, 14007, 14008,
+    20001, 20002, 20003, 20004, 20005, 20006, 20007, 20008,
+    20101, 20102, 20103, 20104, 20105, 20106, 20107, 20108,
+    20201, 20202, 20203, 20204, 20205, 20206, 20207, 20208,
+    31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008,
+    31101, 31102, 31103, 31104, 31105, 31106, 31107, 31108,
+    31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208,
+    32101, 32102, 32103, 32104, 32105, 32106, 32107, 32108,
+    32201, 32202, 32203, 32204, 32205, 32206, 32207, 32208,
+    33101, 33102, 33103, 33104, 33105, 33106, 33107, 33108,
+    33201, 33202, 33203, 33204, 33205, 33206, 33207, 33208,
+    485695632, 629740800, 701123253, 771305937, 866461611, 930746250,
+    1021771564, 1169258448, 1396332443, 1519428100, 2072138682,
+    2132501896, 2235448373, 2542246904, 2586088635, 2616220803,
+    2720389735, 2858068423, 3178076043, 3639086550, 3792309471,
+    3921266075, 4281409655
+  ],
+  "training_reservation_contract": {
+    "schema": "reserved_training_seeds is a duplicate-free JSON array of exact uint32 integers, excluding booleans and floats. It is a training exclusion list, never an evaluation grid.",
+    "effective_exclusion": "sorted(set(reserved_training_seeds) union every partitions[*].seeds), rejected across ALL training track IDs. Overlap with partition seeds is intentional; partition seeds remain pairwise disjoint.",
+    "prior_protocol": "experiments/drqv2-steering-logit-v1.json",
+    "prior_protocol_sha256": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
+    "prior_reserved_count": 164,
+    "new_reserved_count": 16,
+    "reserved_count": 180,
+    "construction": "Exactly the prior protocol's 164 geometry reservations plus 33101-33108 and 33201-33208. Keep all historical fixed seeds, named eight-seed blocks, known smoke/sample exclusions and previous partitions.",
+    "launch_gate": "Before any training transition, validate the complete 180-seed union in all four run configs and samplers; preserve indexed episode track/seed logs."
+  },
+  "reservation_audit": {
+    "date": "2026-09-22",
+    "artifact_roots": ["runs", "evaluations", "submissions"],
+    "method": "Read-only recursive audit including hidden, ignored, pending and run-local artifacts. Extract exact integer seed values and integer arrays from JSON/JSONL seed fields, then check the 16 proposed geometry seeds. Also check standalone seed tokens in JSON, JSONL, CSV, Markdown, text and logs, excluding adjacent alphanumeric or decimal-point characters; decimal and hash substrings do not count as seed consumption.",
+    "new_confirmation_geometry_seeds": [33101, 33102, 33103, 33104, 33105, 33106, 33107, 33108],
+    "new_blind_geometry_seeds": [33201, 33202, 33203, 33204, 33205, 33206, 33207, 33208],
+    "known_prior_use_of_new_geometry_seeds": [],
+    "screen_status": "Consumed DEVELOPMENT screen, intentionally reused only for checkpoint/finalist selection; not fresh generalization evidence.",
+    "previous_confirmation_status": "32101-32108 was consumed by the completed L2 study, including the diagnostic-only zero-screen treatment. It remains excluded from training and cannot serve as fresh confirmation.",
+    "previous_blind_status": "32201-32208 was not run because L2 failed; retain it untouched and reserved, not an alternate blind grid. Older 31201-31208 also remains reserved.",
+    "freshness_scope": "No known recorded use of the new geometry seeds at preregistration. Freeze them for the entire four-model confirmation cohort and sole blind finalist; repeated actors or reloads do not create independent fresh cells.",
+    "limitations": "The original pilot's exact historical screen and complete older sampled-training schedules are missing. This proves no documented overlap, not absolute historical non-use. Any subsequently discovered actual overlap invalidates the fresh claim and blocks promotion."
+  },
+  "evidence": {
+    "previous_result_summary": "experiments/drqv2-steering-logit-v1-result.json",
+    "authoritative_previous_result": {
+      "path": "runs/20260922-drq-steering-l2-v1-fast/result.json",
+      "sha256": "4b80a9106ebc825d15377c02ac868ef29d4bb9ab318649709f3a281956beaeb6"
+    },
+    "l2_confirmation": [
+      {"training_seed": 0, "control_finishes": 6, "l2_finishes": 3, "canonical_cells": 32},
+      {"training_seed": 1, "control_finishes": 7, "l2_finishes": 0, "canonical_cells": 32}
+    ],
+    "l2_verdict": "Reject coefficient 0.001: confirmation finishes declined in both seeds and treatment seed 1 also failed screen. All operational gates passed, but no blind, promotion or next stage was authorized. The old controls are evidence, not post-hoc blind candidates.",
+    "shared_state_diagnostics": [
+      {
+        "path": "runs/20260922-drq-steering-l2-v1-fast/diagnostics-control-seed0.json",
+        "sha256": "5de1962409ed13499bfbf9f9c09605a5e88f20540c1977cddd3a4a934baf3c4e",
+        "source_control_training_seed": 0,
+        "sample_size": 2048,
+        "source_episodes": 246
+      },
+      {
+        "path": "runs/20260922-drq-steering-l2-v1-fast/diagnostics-control-seed1.json",
+        "sha256": "47cc0376ed575ea7994e6b6cdce2339bb9b834d50df2b413e644ef6b48705b1a",
+        "source_control_training_seed": 1,
+        "sample_size": 2048,
+        "source_episodes": 222
+      }
+    ],
+    "diagnostic_sample_seed": 20260921,
+    "diagnostic_runtime": "CPU Torch 2.1.0+cpu, one thread; all four screen-selected actors evaluated on the same states and perturbations within each source pool, with no environment steps or optimizer updates.",
+    "l2_mechanism": "L2 reduced exact-zero float32 steering squash derivatives to zero for both treatment actors on both shared source pools, but did not provide useful completion improvement or uniform desaturation. Do not carry this rejected repair into the padding experiment.",
+    "current_control_view_flip_fraction": {
+      "metric": "Steering-sign disagreement between two independent random-shift views of each sampled state; current unregularized controls, both actors on both source pools.",
+      "pad4_range": [0.09033203125, 0.09326171875],
+      "pad1_range": [0.033203125, 0.037109375]
+    },
+    "justification_strength": "Moderate justification for one final bounded pad4-versus-pad1 training ablation, not a predicted winner or a proven cause of driving failures.",
+    "confounds": [
+      "Replay source pools reflect correlated control-training visitation, not independent unseen-track trials or each treatment's on-policy state distribution; many sampled states are correlated within episodes and share the indexed geometry stream.",
+      "Offline pixel shifts/crops can be out of distribution for deployment observations, remove information or move HUD features. Probe sensitivity does not identify the causal effect of changing training augmentation.",
+      "Smaller perturbation magnitude naturally tends to reduce prediction changes; the pad1/pad4 flip difference alone is not evidence that training with pad1 improves driving or generalization.",
+      "L2 seed 0 already reduced some shift sensitivity despite losing confirmation finishes, and its shared encoder also changed gas/brake behavior. Reduced flips, saturation or dead gradients are not acceptance criteria."
+    ]
+  },
+  "hypothesis": {
+    "single_change": "Change only the training random-shift padding radius from 4 to 1 in all existing critic, target and actor augmentation calls. Preserve shared-frame shifts and the existing independent actor view; do not introduce evaluation-time augmentation.",
+    "test": "The smaller fixed training perturbation may preserve useful visual information and improve repeated unseen completion relative to a newly trained pad4 control under the same contract.",
+    "active_parameter": "augmentation_pad",
+    "rejected_repair_disabled": "steering_logit_l2=0.0 in BOTH arms",
+    "parameter_sweep": false,
+    "guaranteed_improvement": false
+  },
+  "matched_training": {
+    "arm_parameter": "augmentation_pad",
+    "arms": {"control": 4, "augmentation_pad1": 1},
+    "seeds": [0, 1],
+    "total_steps": 131072,
+    "eval_freq": 65536,
+    "checkpoint_steps": [65536, 131072],
+    "batch_size": 64,
+    "warmup_steps": 10000,
+    "replay_capacity": 100000,
+    "updates_per_step": 1,
+    "track_sampler_seed": 917,
+    "training_track_mode": "sampled",
+    "training_obstacles": "official",
+    "decision_unit": "One CarEnvironment.step; frame_skip=4 occurs only inside the environment.",
+    "initialization": "ALL FOUR runs start from scratch in the new experiment root. No old control/treatment weights, replay, checkpoints, optimizers or resume state; no relabeling or reuse of the L2 study's controls or receipts.",
+    "episode_stream": "numpy.default_rng(917), current sampled-track implementation, reject the complete 180-seed geometry exclusion union. Same indexed stream across all four runs, not identical consumed state distributions or prefix lengths when episode durations differ.",
+    "reward_contract": {"reward_shaping": false, "norm_reward": false, "collision_penalty": 0.0},
+    "unchanged_drq_config": {
+      "observation_shape": [4, 84, 84],
+      "action_dim": 3,
+      "feature_dim": 256,
+      "hidden_dim": 256,
+      "n_step": 3,
+      "gamma": 0.99,
+      "actor_learning_rate": 0.0001,
+      "critic_learning_rate": 0.0001,
+      "steering_logit_l2": 0.0,
+      "tau": 0.01,
+      "actor_update_frequency": 2,
+      "target_update_frequency": 2,
+      "exploration_initial_std": 0.2,
+      "exploration_final_std": 0.05,
+      "exploration_duration": 100000,
+      "target_policy_noise": 0.2,
+      "target_policy_noise_clip": 0.5,
+      "device": "cuda"
+    },
+    "unchanged_contract": [
+      "Native separate encoders, deterministic negative-Q1 actor objective, critic architectures/losses and gradient clipping",
+      "Existing shared-frame random shifts and independent actor augmentation; only the padding radius differs",
+      "Four grayscale 84x84 CHW float32 frames in [0,1]; no fifth plane, smoothing or observation/reward normalization",
+      "Symmetric native [-1,1]^3 actions; official gas/brake mapped through (u+1)/2 exactly once",
+      "Raw official reward, no shaping or collision penalty; finishes/crashes/off-track are terminal, pure time limits bootstrap",
+      "Replay, n-step returns, exploration/noise schedules, update ratio/frequencies and learning rates",
+      "Corrected RNG-preserving CUDA augmentation implementation, deterministic training, restore and CPU export gates"
+    ]
+  },
+  "execution_contract": {
+    "run_root": "runs/20260922-drq-augmentation-pad-v1",
+    "run_names": ["control-seed0", "control-seed1", "augmentation_pad1-seed0", "augmentation_pad1-seed1"],
+    "runner_entry_point": ".venv/bin/python -B run_drqv2_matched.py --protocol-file experiments/drqv2-augmentation-pad-v1.json --run-root runs/20260922-drq-augmentation-pad-v1 --train-python .venv/bin/python --eval-python /tmp/kilo/haic-cpu21/bin/python --jobs 4 --eval-workers 2 --device cuda",
+    "arm_arguments": "Set --augmentation-pad to the arm's exact integer value and --steering-logit-l2 0.0 for every trainer. Active augmentation_pad must not also appear in unchanged_drq_config.",
+    "source_freeze": "Freeze one byte-identical protocol and executable source snapshot before training; all four runs use the same implementation/runtime and differ only in training seed and the single active padding axis. Verify full configs, exact decision/gradient/replay budgets, episode-stream prefixes, actor/checkpoint identities and CPU receipts.",
+    "artifact_identity": "Explicit new run directories, immutable checkpoint directories, source/environment/protocol/actor/checkpoint SHA256 values and exact commands. Never use runs/_latest or adopt a prior study's selected actor as a new control.",
+    "screen_execution": "Eight new exported actors: two declared checkpoints per arm/seed, each on 24 canonical development cells with two isolated CPU reloads. Select from these screen receipts, not the final checkpoint unconditionally.",
+    "confirmation_execution": "Freeze all four screen-selected actors and the one treatment finalist before the FIRST confirmation. Evaluate each frozen arm/seed separately on the same 32-cell fresh cohort with two reloads and its own immutable screen pointer as --previous-evaluation. No checkpoint or seed selection on confirmation.",
+    "zero_screen_execution": "Zero-screen confirmation is allowed only through the existing explicit --diagnostic-confirmation mode with valid operational/deterministic screen lineage. Retain diagnostic_only=true; positive diagnostic outcomes never rescue a failed screen or authorize blind.",
+    "blind_execution": "Only if the entire strict confirmation comparison passes, evaluate the single pre-confirmation screen-fixed augmentation_pad1 finalist on 24 blind cells with two reloads and its own non-diagnostic confirmation pointer. No alternate checkpoint, runner-up, control fallback or old blind grid."
+  },
+  "frozen_selection": {
+    "within_arm_and_seed": "Select solely from complete operationally eligible, determinism-audited CPU screen receipts. Maximize lexicographically (canonical finish_rate, avg_progress, -avg_lap_time_ms); absent completed-lap time is negative infinity. Exact ties retain the earlier checkpoint, 65536 before 131072.",
+    "finalist_arm": "augmentation_pad1",
+    "finalist_rule": "Compare the two screen-selected treatment seed winners using that same screen tuple; exact ties select lower training seed 0 before 1. Freeze this conditional treatment finalist before any confirmation, even if it is later disqualified. Controls are comparators, never post-hoc blind candidates.",
+    "freeze_before_confirmation": [
+      "All four arm/seed run identities, selected checkpoint steps, actor hashes and screen receipt hashes",
+      "Protocol/source hashes, screen scores, full operational/determinism status and independent training lineage",
+      "One treatment finalist identity/hash chosen only from screen scores and the predeclared tie-breaks"
+    ],
+    "confirmation_and_blind_use": "Pass/fail only; never re-rank, replace the finalist, change padding, choose a seed, extend training or alter thresholds using confirmation/blind results."
+  },
+  "gates": {
+    "operational": {
+      "scope": "All four selected arm/seed models on every screen/confirmation cell and reload; additionally the sole finalist on blind.",
+      "required": ["eligible=true", "determinism_audited=true", "cpu_reload_matches=true", "operational_failures=0", "complete fixed cell matrix", "exact per-cell action traces and outcome agreement"],
+      "runtime": "Linux Python 3.11, Torch 2.1.0+cpu, NumPy 1.26.0, Gymnasium 0.29.1, OpenCV 4.8.1.78; one Torch intra-op/inter-op thread and no CUDA inference",
+      "max_initialization_seconds": 10.0,
+      "max_reset_seconds": 5.0,
+      "max_action_seconds": 5.0,
+      "max_process_rss_bytes": 1073741824,
+      "stability": "No threshold relaxation, missing or failed repeats, nonfinite learning/actions, nondeterministic reload or restore/export mismatch is acceptable. Existing CPU and packaging gates remain mandatory."
+    },
+    "screen": "BOTH augmentation_pad1 training seeds require at least one canonical screen finish, exactly reproduced on the second reload. Operational eligibility or progress alone is insufficient; a zero screen remains a failure after diagnostic confirmation.",
+    "confirmation_comparison": {
+      "count_definition": "F(arm, seed) is the integer count of finished=true over 32 unique (track_id, geometry_seed) cells in repeat 0. Repeat 1 must reproduce every cell's trace and outcome; never count the 64 reload executions as independent cells.",
+      "paired_by": "Same training seed and confirmation grid, each arm using its independently screen-selected frozen checkpoint.",
+      "required_training_seeds": [0, 1],
+      "min_treatment_finishes_each_seed": 1,
+      "min_paired_finish_delta_each_seed": 1,
+      "acceptance": "For EACH training seed 0 and 1, F(augmentation_pad1, seed) >= F(control, seed) + 1, with nonzero treatment screen and confirmation completion and all four selected models operational/deterministic. This is replicated descriptive improvement, not a statistical-significance claim.",
+      "ties": "Equal finish counts fail the improvement criterion, including positive-positive ties. One seed's gain cannot offset a tie/regression in the other. Progress, lap time, damage, shift agreement or saturation cannot convert a count tie into acceptance.",
+      "diagnostic_control": "An operationally valid zero-screen control's diagnostic confirmation count is usable only for the frozen paired scientific comparison. It cannot promote the control or authorize blind. Any zero-screen treatment fails acceptance regardless of its diagnostic count.",
+      "missing_data": "Missing/incomplete cells or training seeds and invalid receipts invalidate the gate; do not drop them, replace them with zero counts or reuse old control results."
+    },
+    "blind": "Open only after the complete replicated confirmation gate passes. The screen-fixed treatment finalist then needs nonzero completion on both exact reload passes plus every CPU gate. A failure blocks the next stage; never try another candidate on this grid.",
+    "promotion": "Preserve all original PLAN.md and drqv2-promotion-v1 completion, lineage, CPU, deterministic reload and package gates. Neither historical diagnostics nor this small study alone authorizes submission, official release or automatic scale-up.",
+    "positive_result": "At most permit consideration of a separately predeclared next stage under the original conditional plan, with new reserved confirmation/blind cells. Do not automatically launch million-step training, recycle these holdouts or release a submission."
+  },
+  "diagnostics": {
+    "record": ["Per-seed canonical finishes and paired per-cell wins/losses", "Progress, damage, completed lap time and retire reasons", "Training update/replay counts and finite actor/critic losses/gradients", "Pre-tanh logits, squash derivatives, action saturation and shared-state shift sensitivity", "Restore/export parity, actual CPU runtime, latency and whole-worker RSS"],
+    "interpretation": "Only replicated fresh completion can accept the axis. Reduced view flips or saturation is secondary mechanistic evidence. Each confirmation grid has eight geometries with correlated obstacle variants; reloads, checkpoints and source-pool samples are not extra independent training seeds or trials."
+  },
+  "stop_rules": {
+    "attempt_number": 2,
+    "max_controlled_attempts_including_rejected_l2": 2,
+    "max_additional_single_axis_trials_after_this": 0,
+    "failure": "If this final padding attempt does not produce the required improvement in BOTH seeds, stop the controlled DrQ follow-up branch. Preserve the result; no third axis, padding/coefficient sweep, hyperparameter search, larger-budget rescue, seed replacement, combined L2 repair or new algorithm is authorized.",
+    "hard_failures": "Stop for seed leakage, nonfinite learning/actions, replay/terminal errors, incomplete training lineage, failed restore/export, nondeterminism or CPU/resource violations. Do not weaken gates or turn a pipeline failure into a family-wide algorithm verdict.",
+    "blind_failure": "Stop next-stage consideration on blind failure. Do not substitute the control, another treatment seed/checkpoint or an older blind partition, and do not use blind outcomes to select another intervention.",
+    "positive_scope": "The two-attempt axis-testing allowance is exhausted even if this study succeeds. A positive result is only evidence for separate next-stage consideration, never automatic training escalation, submission release or permission for another axis/algorithm.",
+    "unrelated_upstream_work": "The presence of other algorithms or tools in the repository does not authorize using, training or implementing them in this experiment."
+  }
+}
