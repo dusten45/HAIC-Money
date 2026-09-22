@@ -140,6 +140,14 @@ def load_protocol_spec(path: Path) -> dict:
         if reserved.intersection(matrix["seeds"]):
             raise ValueError("protocol partition seeds must be disjoint, regardless of track ID")
         reserved.update(matrix["seeds"])
+    training_seeds = spec.get("reserved_training_seeds", [])
+    if (
+        not isinstance(training_seeds, list)
+        or any(type(seed) is not int or not 0 <= seed < 2**32 for seed in training_seeds)
+        or len(set(training_seeds)) != len(training_seeds)
+    ):
+        raise ValueError("reserved_training_seeds must be a list of unique uint32 integers")
+    # Exclusions may overlap partitions; they never extend the evaluation grids.
     return spec
 
 

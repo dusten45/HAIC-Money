@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-steering-logit-v1",
+  "purpose": "matched-single-axis-follow-up",
+  "frame_skip": 4,
+  "max_steps": 2000,
+  "training_track_ids": [1, 2, 3, 4],
+  "selection_order": ["unseen_finish_rate", "progress", "completed_lap_time"],
+  "partitions": {
+    "screen": {
+      "track_ids": [101, 102, 103],
+      "seeds": [31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008],
+      "repeats": 2
+    },
+    "confirmation": {
+      "track_ids": [211, 212, 213, 214],
+      "seeds": [32101, 32102, 32103, 32104, 32105, 32106, 32107, 32108],
+      "repeats": 2
+    },
+    "blind": {
+      "track_ids": [221, 222, 223],
+      "seeds": [32201, 32202, 32203, 32204, 32205, 32206, 32207, 32208],
+      "repeats": 2
+    }
+  },
+  "reserved_training_seeds": [
+    0, 42, 777, 1337, 2024,
+    10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008,
+    11001, 11002, 11003, 11004, 11005, 11006, 11007, 11008,
+    12001, 12002, 12003, 12004, 12005, 12006, 12007, 12008,
+    12101, 12102, 12103, 12104, 12105, 12106, 12107, 12108,
+    13001, 13002, 13003, 13004, 13005, 13006, 13007, 13008,
+    13101, 13102, 13103, 13104, 13105, 13106, 13107, 13108,
+    13201, 13202, 13203, 13204, 13205, 13206, 13207, 13208,
+    13301, 13302, 13303, 13304, 13305, 13306, 13307, 13308,
+    14001, 14002, 14003, 14004, 14005, 14006, 14007, 14008,
+    20001, 20002, 20003, 20004, 20005, 20006, 20007, 20008,
+    20101, 20102, 20103, 20104, 20105, 20106, 20107, 20108,
+    20201, 20202, 20203, 20204, 20205, 20206, 20207, 20208,
+    31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008,
+    31101, 31102, 31103, 31104, 31105, 31106, 31107, 31108,
+    31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208,
+    32101, 32102, 32103, 32104, 32105, 32106, 32107, 32108,
+    32201, 32202, 32203, 32204, 32205, 32206, 32207, 32208,
+    485695632, 629740800, 701123253, 771305937, 866461611, 930746250,
+    1021771564, 1169258448, 1396332443, 1519428100, 2072138682,
+    2132501896, 2235448373, 2542246904, 2586088635, 2616220803,
+    2720389735, 2858068423, 3178076043, 3639086550, 3792309471,
+    3921266075, 4281409655
+  ],
+  "training_reservation_contract": {
+    "schema": "Optional top-level reserved_training_seeds is a JSON array of unique exact integers in [0, 4294967295]; booleans, floats, null, duplicates and out-of-range values are invalid. Absent or empty means no additional exclusions beyond partitions.",
+    "effective_exclusion": "sorted(set(reserved_training_seeds) union every partitions[*].seeds); reject these geometry seeds across ALL training track IDs, not just matching track/seed pairs.",
+    "overlap": "Overlap between reserved_training_seeds and partition seed lists is intentional. Partition seed lists must remain pairwise disjoint independently of this field.",
+    "evaluation": "Only partitions defines evaluation cells. Historical exclusions must never be appended to an evaluation grid or treated as extra confirmation/blind cells.",
+    "launch_gate": "Validate the field and assert the complete effective exclusion set in every run config and sampler before collecting any training transition. Retain indexed episode track/seed logs.",
+    "reserved_count": 164
+  },
+  "reservation_audit": {
+    "date": "2026-09-22",
+    "method": "Read-only inventory of runs, evaluations (including pending artifacts), submissions, existing experiment protocols, CONTEXT.md and PLAN.md. Inspect config seed lists, evaluation manifests, per-cell metrics and recorded training episode seeds; integer-boundary search found no proposed fresh seeds in existing artifact JSON/JSONL/CSV/Markdown.",
+    "historical_evaluation_blocks_inclusive": [
+      [10001, 10008], [11001, 11008], [12001, 12008], [12101, 12108],
+      [13001, 13008], [13101, 13108], [13201, 13208], [13301, 13308],
+      [14001, 14008], [20001, 20008], [20101, 20108], [20201, 20208],
+      [31001, 31008], [31101, 31108], [31201, 31208]
+    ],
+    "legacy_fixed_geometry_seeds": [42, 777, 1337, 2024],
+    "known_smoke_geometry_seeds": [0],
+    "recorded_sampled_geometry_seed_count": 23,
+    "recorded_sampled_geometry_sources": [
+      "runs/20260921-drqv2-selection-gpu-smoke/episodes.jsonl",
+      "runs/20260921-drqv2-selection-gpu-smoke-v2/episodes.jsonl",
+      "runs/20260921-drqv2-selection-gpu-gate/episodes.jsonl",
+      "runs/20260921-drqv2-selection-gpu-resume/episodes.jsonl"
+    ],
+    "other_evidence": [
+      "runs/*/config.json: seeds, seen_eval_seeds, holdout_eval_seeds and protocol partitions",
+      "runs/*/metrics.jsonl and best_model_metrics.json: historical per-cell evaluation seeds",
+      "runs/20260919-132336_ppo-cnn-baseline1-1-fresh-16x1024/broad-evaluation-20260920.json",
+      "evaluations/*/manifest.json and episodes.jsonl",
+      "experiments/drqv2-promotion-v1.json",
+      "experiments/drqv2-promotion-v1-result.json"
+    ],
+    "screen_status": "Consumed development cells, deliberately reused for checkpoint selection; never fresh confirmation evidence.",
+    "previous_confirmation_status": "31101-31108 consumed by the historical non-promoting diagnostic; never fresh again.",
+    "previous_blind_status": "31201-31208 remains reserved and untouched; not an alternate grid for this study.",
+    "confirmation_and_blind_status": "No known prior use of geometry seeds 32101-32108 or 32201-32208, or their new track-ID pools, in the inventoried artifacts. Freeze as one matched cohort before any candidate evaluation; successive models do not create new independent cells.",
+    "limitations": "The original pilot's exact 24-cell screen and complete historical sampled-training schedules were not saved. This audit establishes no known recorded overlap, not absolute non-use. Full uint32 sampler support is not a record that every seed was consumed. Reserve documented seeds without inventing missing history. Any later discovery of actual fresh-grid overlap invalidates the fresh claim and blocks promotion."
+  },
+  "hypothesis": {
+    "proposal": "experiments/drqv2-steering-logit-proposal-v1.json",
+    "evidence": "experiments/drqv2-promotion-v1-result.json",
+    "single_change": "Actor loss = existing negative Q1 mean + steering_logit_l2 * mean(pre_tanh_steering_logit ** 2). Penalize steering only, before tanh; keep official reward and action mapping unchanged.",
+    "rationale": "Historical steering saturation was 88.2% on the consumed screen; retained-state absolute steering-logit median was 9.93 with exactly zero float32 squash derivative on 55.8% of sampled states. Fixed coefficient 0.001 gives penalty 0.1 and direct logit gradient 0.02 at |logit|=10.",
+    "causality_limit": "Saturation is a measured symptom, not an established failure cause: historical confirmation finishers were also highly saturated. Reduced saturation or improved progress alone cannot accept L2.",
+    "coefficient_sweep": false
+  },
+  "matched_training": {
+    "arms": {"control": 0.0, "steering_l2": 0.001},
+    "seeds": [0, 1],
+    "total_steps": 131072,
+    "eval_freq": 65536,
+    "checkpoint_steps": [65536, 131072],
+    "batch_size": 64,
+    "warmup_steps": 10000,
+    "replay_capacity": 100000,
+    "updates_per_step": 1,
+    "track_sampler_seed": 917,
+    "training_track_mode": "sampled",
+    "training_obstacles": "official",
+    "decision_unit": "One CarEnvironment.step; frame_skip=4 occurs only inside the environment.",
+    "initialization": "Four new runs from scratch, no historical pilot warm-start; same source snapshot and runtime for both arms. Only steering_logit_l2 differs within each matched training-seed pair.",
+    "episode_stream": "numpy.default_rng(917), current sampled-track implementation, reject the complete effective reserved seed union. Same indexed episode stream for all arms/seeds, not identical consumed prefix lengths when episode durations differ. This is not the historical pilot or PPO stream.",
+    "reward_contract": {"reward_shaping": false, "norm_reward": false, "collision_penalty": 0.0},
+    "unchanged_drq_config": {
+      "observation_shape": [4, 84, 84],
+      "action_dim": 3,
+      "feature_dim": 256,
+      "hidden_dim": 256,
+      "n_step": 3,
+      "gamma": 0.99,
+      "actor_learning_rate": 0.0001,
+      "critic_learning_rate": 0.0001,
+      "tau": 0.01,
+      "actor_update_frequency": 2,
+      "target_update_frequency": 2,
+      "augmentation_pad": 4,
+      "exploration_initial_std": 0.2,
+      "exploration_final_std": 0.05,
+      "exploration_duration": 100000,
+      "target_policy_noise": 0.2,
+      "target_policy_noise_clip": 0.5,
+      "device": "cuda"
+    },
+    "unchanged_contract": [
+      "Native separate encoders and existing actor/critic architectures and critic losses",
+      "Existing independent actor augmentation, exploration, gradient clipping and update frequencies",
+      "Four grayscale 84x84 CHW float32 frames in [0,1]; no fifth plane or smoothing",
+      "Symmetric native actions [-1,1]^3; gas/brake mapped by (u+1)/2 exactly once",
+      "Raw official reward; finish/crash/off-track terminal, pure time limit bootstraps",
+      "Corrected replay, RNG, deterministic CUDA, checkpoint restore and CPU export behavior"
+    ]
+  },
+  "execution_contract": {
+    "training_entry_point": "train_drqv2.py --protocol-file experiments/drqv2-steering-logit-v1.json",
+    "arm_argument": "--steering-logit-l2 with the exact matched_training.arms value; do not rely on a changed default",
+    "training_python": ".venv/bin/python",
+    "evaluation_python": "/tmp/kilo/haic-cpu21/bin/python",
+    "artifact_identity": "Explicit new run directories, immutable step checkpoint directories, actor SHA256, source checkpoint SHA256, protocol SHA256, command lines, source/environment hashes and CPU receipts. Never infer an actor from runs/_latest.",
+    "screen_execution": "Evaluate each of the two checkpoints for each arm/seed separately with the screen partition: eight actors, 24 canonical cells each, two independent CPU reloads per cell. Use each run's trainer-selected checkpoint, not the final checkpoint unconditionally.",
+    "confirmation_execution": "After freezing all four selected hashes and the single treatment finalist, evaluate each selected arm/seed actor separately on the same fresh confirmation grid: four actors, 32 canonical cells each, two reloads. Supply its own screen pointer using --previous-evaluation. Do not combine models in one confirmation call.",
+    "zero_screen_execution": "A screen-selected actor with zero finishes may receive confirmation only via the existing explicit --diagnostic-confirmation flag, with the unchanged actor/protocol and operational/deterministic screen receipt. Record diagnostic_only=true; this never rescues its failed screen or authorizes blind/promotion.",
+    "blind_execution": "Only after the full L2 study gate passes, evaluate the one pre-confirmation screen-fixed treatment finalist: 24 canonical cells, two reloads, its own non-diagnostic confirmation pointer as --previous-evaluation. No runner-up, control fallback, alternate checkpoint or alternate blind grid."
+  },
+  "frozen_selection": {
+    "within_arm_and_seed": "Use only operationally eligible, determinism-audited CPU screen receipts. Maximize lexicographically (canonical finish_rate, avg_progress, -avg_lap_time_ms); absent completed-lap time is negative infinity. On exact score ties retain the earlier checkpoint, 65536 before 131072, matching the existing trainer.",
+    "finalist_arm": "steering_l2",
+    "finalist_rule": "Among the two frozen treatment seed winners, use the same screen score tuple; an exact tie chooses the lower training seed (0 before 1). This is a conditional treatment finalist, not acceptance of L2. Controls are matched scientific comparators, not fallback blind candidates.",
+    "freeze_before_confirmation": [
+      "All four arm/seed identities, selected checkpoint steps, actor hashes and immutable screen receipt hashes",
+      "Protocol/source hashes, canonical screen scores and operational/determinism status",
+      "The single treatment finalist identity and hash, even if subsequent confirmation disqualifies it"
+    ],
+    "confirmation_and_blind_use": "Pass/fail only. Never re-rank checkpoints, choose a training seed, change a coefficient, replace the finalist or redefine tie-breaks using confirmation/blind outcomes."
+  },
+  "gates": {
+    "operational": {
+      "scope": "All selected models in both arms and both training seeds, every screen/confirmation cell and both reload passes; the blind finalist additionally on blind.",
+      "required": ["eligible=true", "determinism_audited=true", "cpu_reload_matches=true", "operational_failures=0", "complete fixed cell matrix", "exact per-cell action traces and outcome agreement"],
+      "runtime": "Linux Python 3.11, Torch 2.1.0+cpu, NumPy 1.26.0, Gymnasium 0.29.1, OpenCV 4.8.1.78; one Torch intra-op/inter-op thread, no CUDA inference",
+      "max_initialization_seconds": 10.0,
+      "max_reset_seconds": 5.0,
+      "max_action_seconds": 5.0,
+      "max_process_rss_bytes": 1073741824,
+      "stability": "No relaxed resource threshold, missing/failed repeat, nondeterministic reload, nonfinite losses/actions or restore/export mismatch is acceptable. Preserve the existing CPU and packaging gates."
+    },
+    "screen": "Each treatment training seed must have at least one canonical finish with identical outcomes on both reloads. Zero-finish treatment screens remain failures regardless of positive diagnostic confirmation. Operational eligibility alone is not a completion pass.",
+    "confirmation_comparison": {
+      "count_definition": "F(arm, training_seed) is the integer sum of finished=true over the 32 unique (track_id, geometry_seed) cells in repeat 0. Repeat 1 must reproduce the same per-cell traces/outcomes and count; never pool 64 reload executions as independent cells.",
+      "paired_by": "Same training seed and same confirmation cells; each arm uses its independently screen-selected frozen checkpoint.",
+      "required_training_seeds": [0, 1],
+      "min_treatment_finishes_each_seed": 1,
+      "min_paired_finish_delta_each_seed": 1,
+      "acceptance": "For BOTH training seeds, F(steering_l2, seed) > F(control, seed), with nonzero treatment completion on screen and confirmation and every operational/determinism gate satisfied. These are replicated descriptive finish improvements, not a statistical-significance claim.",
+      "ties": "Equal finish counts are not an improvement, including positive-positive and zero-zero ties. Progress, damage, lap time, saturation or logit metrics cannot break a confirmation finish-count tie into acceptance. One seed's gain cannot offset the other seed's tie or regression.",
+      "diagnostic_control": "An operationally valid zero-screen control's diagnostic confirmation count remains usable for the predeclared paired comparison, but the diagnostic receipt itself cannot promote any actor. A zero-screen treatment cannot pass L2 acceptance.",
+      "missing_data": "Incomplete cells, missing training seeds or invalid receipts invalidate the study gate; do not drop them or replace them with zero finishes."
+    },
+    "blind": "Require the entire L2 confirmation comparison to pass before opening blind. The screen-fixed treatment finalist must then have nonzero canonical completion on both identical reload passes and pass all CPU gates. A failure blocks promotion; never try another finalist on this blind partition.",
+    "promotion": "All original PLAN.md and drqv2-promotion-v1 completion, predecessor-receipt, CPU, deterministic reload and submission-package gates remain necessary. Historical failed screens and diagnostic-only results remain non-promoting. This small matched study is not an unconditional million-step scale-up or submission release.",
+    "scale_up": "Only after the strict pilot gates pass may the original separately predeclared four-seed 1048576-decision stage be considered. It requires new confirmation/blind cells and protocol; this study does not authorize automatic scale-up or recycling its consumed holdouts."
+  },
+  "diagnostics": {
+    "record": ["Per-seed canonical finish counts and paired per-cell wins/losses", "Mean progress, damage, completed lap time and retire reasons", "Pre-tanh steering logits, squash derivatives and action saturation", "Actor and critic losses/gradients, replay occupancy, update counts", "Restore/export parity, CPU latency and whole-worker RSS"],
+    "interpretation": "Mechanistic changes are secondary evidence. Geometry seeds are shared across obstacle variants, so 32 cells are not 32 independent geometries. Reload repeats and checkpoint reuse are not additional training seeds or independent trials."
+  },
+  "stop_rules": {
+    "max_single_axis_follow_ups_total_including_this_l2": 2,
+    "max_additional_trials_after_non_improving_l2": 1,
+    "no_improvement": "If the strict replicated finish-improvement gate fails, reject this L2 repair at coefficient 0.001. Do not accept progress-only or saturation-only gains, sweep the coefficient, extend the budget, cherry-pick a seed or rescue a failed screen using diagnostic confirmation.",
+    "conditional_last_trial": "At most one additional single-axis trial is allowed only if recorded artifacts support a specific falsifiable bottleneck and justify that isolated change. Predeclare its matched control, seeds, fixed budget, fresh reserved holdouts, acceptance criteria and stop rule before launch. No additional axis or algorithm is proposed or implemented by this protocol.",
+    "no_grounded_next_trial": "Stop after L2 if no artifact-grounded single-axis justification exists. After one additional trial, stop whether it succeeds or fails; no third follow-up or parameter sweep.",
+    "hard_failures": "Stop for nonfinite learning/actions, replay/terminal/seed-leakage errors, failed restore/export, nondeterminism or CPU/resource failure. Do not reinterpret a broken pipeline as an algorithm-family conclusion or silently change the frozen comparison.",
+    "blind_failure": "Stop promotion and preserve the failed result. Do not use blind outcomes to choose the conditional next axis or retest another candidate on the same blind cells."
+  }
+}

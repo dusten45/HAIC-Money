@@ -244,6 +244,41 @@ class TestEvaluatePolicy(unittest.TestCase):
             path.write_text(json.dumps(spec))
             self.assertEqual(load_protocol_spec(path), spec)
 
+    def test_reserved_training_seeds_are_optional_and_preserve_partition_union(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "protocol.json"
+            for extra in ({}, {"reserved_training_seeds": []},
+                          {"reserved_training_seeds": [42]},
+                          {"reserved_training_seeds": [0, 1, 2, 42, 2**32 - 1]}):
+                with self.subTest(extra=extra):
+                    spec = {**self.protocol_spec(), **extra}
+                    path.write_text(json.dumps(spec))
+                    loaded = load_protocol_spec(path)
+                    self.assertEqual(loaded, spec)
+                    partition_seeds = {
+                        seed for matrix in loaded["partitions"].values() for seed in matrix["seeds"]
+                    }
+                    self.assertEqual(partition_seeds, {0, 1, 2})
+                    self.assertEqual(
+                        partition_seeds | set(loaded.get("reserved_training_seeds", [])),
+                        {0, 1, 2} | set(extra.get("reserved_training_seeds", [])),
+                    )
+            spec["partitions"]["blind"]["seeds"] = [0]
+            path.write_text(json.dumps(spec))
+            with self.assertRaisesRegex(ValueError, "disjoint"):
+                load_protocol_spec(path)
+
+    def test_reserved_training_seeds_reject_invalid_values_and_duplicates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "protocol.json"
+            for values in (None, True, 42, "42", {"seed": 42}, [True], [False],
+                           [0.0], ["42"], [None], [[]], [{}], [-1], [2**32], [42, 42]):
+                with self.subTest(values=values):
+                    spec = {**self.protocol_spec(), "reserved_training_seeds": values}
+                    path.write_text(json.dumps(spec))
+                    with self.assertRaisesRegex(ValueError, "reserved_training_seeds.*unique uint32"):
+                        load_protocol_spec(path)
+
     def test_explicit_run_rejects_missing_config_or_unrelated_actor(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -261,7 +296,8 @@ class TestEvaluatePolicy(unittest.TestCase):
             root = Path(directory)
             actor = self.drq_candidate(root)
             spec_path = root / "protocol.json"
-            spec_path.write_text(json.dumps(self.protocol_spec()))
+            spec = {**self.protocol_spec(), "reserved_training_seeds": [0, 1, 2, 42, 2**32 - 1]}
+            spec_path.write_text(json.dumps(spec))
             args = SimpleNamespace(
                 model=[actor], run_dir=root, legacy_model=None, protocol_file=spec_path,
                 partition="screen", output=root / "pointer.json", max_steps=2,
@@ -279,6 +315,7 @@ class TestEvaluatePolicy(unittest.TestCase):
             pointer = json.loads(args.output.read_text())
             ranked = json.loads((result_dir / "summary.json").read_text())
             self.assertEqual(run.call_count, 2)
+            self.assertEqual([call.args[1:3] for call in run.call_args_list], [(1, 0), (1, 0)])
             self.assertEqual(pointer["ranked"], ranked)
             self.assertEqual(Path(pointer["evaluation_dir"]), result_dir)
             self.assertEqual(pointer["partition"], "screen")
