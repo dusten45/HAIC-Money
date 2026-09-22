@@ -1,12 +1,13 @@
 # Project Context
 
-## Current Objective
+## Current Objective And Status
 
-Develop a submission-capable DrQ-v2 candidate, not a PPO improvement project.
-The current user request permits **one or two evidence-backed, single-variable
-DrQ follow-ups**, beginning with steering-logit L2. No new algorithm proposals or
-implementations, coefficient sweeps, or weakened promotion gates. `PLAN.md` keeps
-the historical algorithm order and frozen comparison contract.
+Evaluate DrQ-v2 as a submission algorithm replacement for PPO.
+Per user instructions, two evidence-backed, single-variable follow-up studies were
+authorized and conducted (steering-logit L2, augmentation padding 4 vs 1).
+Both failed to improve upon the baseline in fresh confirmation.
+**DrQ-v2 hyperparameter tuning is now STOPPED.** No further axes, sweeps, or
+algorithm changes are being pursued. `PLAN.md` keeps the historical algorithm order.
 
 ## Frozen Contract
 
@@ -58,41 +59,51 @@ nonzero completion across both training seeds; this is not DrQ family rejection.
   Mechanics: `experiments/drqv2-steering-logit-v1-diagnostics.json`.
   Operational history: `experiments/drqv2-l2-execution.json`.
 
-## Final Controlled Follow-Up
+## Completed Final Controlled Follow-Up: Padding Study
 
-**RUNNING:** augmentation padding **4 versus1**,
-`steering_logit_l2=0` in BOTH arms. No combined repair. This is attempt2 of2.
-Protocol: `experiments/drqv2-augmentation-pad-v1.json`; explicit root
-`runs/20260922-drq-augmentation-pad-v1/`, frozen source `a28ef02`. All four arm/seed combinations run
-from scratch with the same131,072 budget and all other settings unchanged.
-Operator state is in `experiments/drqv2-pad-execution.json`. All222 related tests,
-CPU21 preflight, four-job GPU/CPU smoke and idempotent recovery passed before launch.
+Protocol: `experiments/drqv2-augmentation-pad-v1.json`. All four runs completed in
+`runs/20260922-drq-augmentation-pad-v1-restart/`, frozen source `a28ef02`:
+control (pad 4) versus treatment (pad 1), `steering_logit_l2=0` in BOTH arms,
+training seeds 0/1, **131,072 decisions and 121,073 updates each**, replay 100,000,
+batch 64, warmup 10,000, sampler 917, tracks 1--4. Selection at 65,536/131,072.
 
-- Reuse only the consumed development screen101--103/31001--31008.
-- Fresh confirmation311--314/33101--33108; fresh blind321--323/33201--33208,
-  two CPU reloads each. Reserve180 seeds including every previous reservation.
-- Keep strict positive confirmation finish gain in BOTH seeds, nonzero treatment
-  screen/confirmation and all CPU gates. Finalist fixed by screen before confirmation.
-- If this final trial does not reproduce improvement, **stop further DrQ tuning**.
-  No third axis, coefficient search, reward/frame-skip/architecture bundle, or new
-  algorithm. Positive evidence permits only a separately declared next stage.
+| Arm / Seed | Screen Finishes | Fresh Confirmation Finishes | Confirmation Progress |
+| --- | --- | --- | --- |
+| control (pad 4) / 0 | 7/24 | 4/32 | 0.633857 |
+| control (pad 4) / 1 | 5/24 | 7/32 | 0.693897 |
+| pad 1 / 0 | 0/24 | 0/32, diagnostic-only | 0.340640 |
+| pad 1 / 1 | 0/24 | 0/32, diagnostic-only | 0.340333 |
 
-Why this one axis: two2,048-state control replay pools, each shared across all four
-actors, show current controls' pad4 view-pair steering sign disagreement at
-9.03--9.33%, versus3.32--3.71% for pad1. L2 removes exactly-zero squash derivatives
-in both seeds, but seed1 becomes MORE saturated and both seeds lose completion.
-The penalty also changes longitudinal policy on identical inputs. History is used;
-no new step/terminal bug was found. These are mechanisms/associations, not causes.
-Smaller test shifts naturally change actions less; **only matched fresh completion
-can accept weaker training augmentation**. L2 seed0 already reduced shift sensitivity
-while losing finishes, so lower sensitivity or saturation alone is not success.
+**Reject augmentation padding=1:** paired finish deltas are **-4 and -7**.
+Both treatment seeds collapsed to 0 finishes across all evaluation cells.
+Standard random-shift padding=4 is essential for representation learning and
+driving generalization in pixel-based DrQ-v2; reducing augmentation severely harms performance.
 
-Additional observations: critic gradients are heavily clipped yet finite, with
-Adam confounding naive scale interpretations; negative-reward tails dominate replay,
-but L2 seed0 had MORE finish support than control0. Finishing policies also oscillate.
-Do not attribute failure simply to insufficient finish data, gas/brake overlap,
-noise decay, or steering sign changes. Pre-study diagnostics are preserved in
-`experiments/drqv2-pre-l2-diagnostics.json`.
+- Screen: IDs 101--103/seeds 31001--31008. Confirmation: IDs 311--314/seeds 33101--33108,
+  now consumed. Blind IDs 321--323/seeds 33201--33208 remains untouched/reserved.
+- Exact paired traces, zero operational failures across all 640 CPU executions;
+  max action 2.855 ms, initialization 1.196 s, whole-worker RSS 361.5 MiB.
+- Full result: `experiments/drqv2-augmentation-pad-v1-result.json`.
+  Diagnostics: `experiments/drqv2-augmentation-pad-v1-diagnostics.json`.
+  Execution history: `experiments/drqv2-pad-execution.json`.
+
+## Stop Rule And Synthesis
+
+Per user instructions ("1~2개의 근거 있는 후속 실험에서도 개선이 재현되지 않으면 DrQ-v2 추가 튜닝을 중단해라")
+and protocol stop rules (attempt 2 of 2):
+
+1. **Both authorized single-variable follow-ups failed to improve completion:**
+   - Attempt 1 (steering-logit L2=0.001): confirmation finish deltas **-3 and -7**.
+   - Attempt 2 (augmentation_pad=1): confirmation finish deltas **-4 and -7**.
+2. **Further DrQ-v2 hyperparameter tuning is STOPPED.** No third controlled axis,
+   coefficient sweep, padding search, reward/frame-skip/architecture bundle, or new algorithm.
+3. **Control baseline reproducibility:** Across four independent control training runs
+   (two in the L2 study, two in the padding study), standard DrQ-v2 (pad=4, raw reward,
+   no L2) consistently achieves 4 to 7 finishes out of 32 on fresh confirmation
+   (12.5% to 21.9% finish rate, mean progress 0.63 to 0.74). The completion signal
+   is real and reproducible across seeds, but narrow modifications (L2, pad 1) consistently
+   harm it.
+4. No blind cells were consumed; no submission was released; no promotion was granted.
 
 ## Runtime And Infrastructure
 

@@ -1,0 +1,500 @@
+{
+  "aggregate_confirmation": {
+    "augmentation_pad1": {
+      "actor_cell_observations": 64,
+      "finish_rate": 0.0,
+      "finishes": 0,
+      "mean_damage": 0.40312500000000007,
+      "mean_progress": 0.34048686569397296
+    },
+    "control": {
+      "actor_cell_observations": 64,
+      "finish_rate": 0.171875,
+      "finishes": 11,
+      "mean_damage": 0.20625000000000002,
+      "mean_progress": 0.6638771245746828
+    }
+  },
+  "blind": {
+    "status": "not_run"
+  },
+  "confirmation_gate_passed": false,
+  "date": "2026-09-22",
+  "evidence_counts": {
+    "canonical_actor_checkpoint_cells": 320,
+    "confirmation_executions": 256,
+    "distinct_geometry_seeds": 16,
+    "distinct_track_geometry_cells": 56,
+    "screen_executions": 384,
+    "training_runs": 4,
+    "training_seeds": 2
+  },
+  "frozen_candidates_sha256": "b2b6e4abe266435e7e09ad40929919f23dc52e95dcfccadc5114d26b4975be01",
+  "interpretation": "Reject the predeclared fixed padding=1 treatment: zero finishes on both screen and confirmation for both training seeds (finish deltas -4 and -7). Standard augmentation padding=4 is essential for representation learning and generalization in pixel-based DrQ-v2.",
+  "limits": [
+    "Repeated reloads and obstacle variants are correlated, not independent trials.",
+    "Only two training seeds and a 131072-decision budget per run.",
+    "No causal algorithm-only comparison with historical PPO.",
+    "No official submission-container execution or release.",
+    "New weights, full replay and detailed runtime/action bundles are retained locally, not committed."
+  ],
+  "name": "drqv2-augmentation-pad-v1-result",
+  "next_stage_permitted": false,
+  "official_submission_authorized": false,
+  "operational_failures": 0,
+  "operational_maxima": {
+    "action_seconds": 0.002855142578482628,
+    "initialization_seconds": 1.1957538602873683,
+    "whole_worker_rss_bytes": 361533440
+  },
+  "paired_comparison": [
+    {
+      "control_finishes": 4,
+      "finish_delta": -4,
+      "paired_losses": 4,
+      "paired_wins": 0,
+      "passed": false,
+      "seed": 0,
+      "treatment_finishes": 0,
+      "treatment_screen_finishes": 0
+    },
+    {
+      "control_finishes": 7,
+      "finish_delta": -7,
+      "paired_losses": 7,
+      "paired_wins": 0,
+      "passed": false,
+      "seed": 1,
+      "treatment_finishes": 0,
+      "treatment_screen_finishes": 0
+    }
+  ],
+  "post_study_diagnostics": {
+    "conclusion": "Reducing augmentation pad from 4 to 1 collapses policy performance to 0 finishes across all evaluation cells.",
+    "report": "experiments/drqv2-augmentation-pad-v1-diagnostics.json",
+    "status": "completed on two shared-state source pools"
+  },
+  "pre_confirmation_finalist": "augmentation_pad1-seed0",
+  "promotion": false,
+  "protocol": "experiments/drqv2-augmentation-pad-v1.json",
+  "protocol_sha256": "4a383ec6b83c501a814b0a18c22a39b851d23b22093d56244aa6540b977f160b",
+  "result_sha256": "1c0fea1a6b98421699cf1dacda54874974ec867aa85a954f32290ef87957a8e9",
+  "run_budget": {
+    "actor_updates": 60536,
+    "environment_decisions": 131072,
+    "gradient_updates": 121073,
+    "replay_entries": 100000
+  },
+  "run_root": "runs/20260922-drq-augmentation-pad-v1-restart",
+  "runs": [
+    {
+      "actor": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "arm": "control",
+      "augmentation_pad": 4,
+      "checkpoint": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "f432a2040ed4d376a70d53cdab50429912a7bd1d178c125b844a5042136fe059",
+          "checkpoint_sha256": "0fa6d6fbc62ca49be6b8dbce17700f25f8bc9256c5feeb4298117b91047f2c6c",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00022608041763305664
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.26666666666666666,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.25445843644662297,
+            "avg_reward": 120.19838858819223,
+            "avg_steering_delta_abs_mean": 0.25287660645941895,
+            "avg_steps": 319.375,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 1,
+              "off_track": 23
+            }
+          }
+        },
+        {
+          "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+          "checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 8.189678192138672e-05
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.25,
+            "avg_lap_time_ms": 47180.0,
+            "avg_progress": 0.7833909765538669,
+            "avg_reward": 552.8600953620739,
+            "avg_steering_delta_abs_mean": 0.3656683328251044,
+            "avg_steps": 560.1666666666666,
+            "best_lap_time_ms": 43640.0,
+            "finish_rate": 0.2916666666666667,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 2,
+              "finished": 7,
+              "off_track": 15
+            }
+          }
+        }
+      ],
+      "confirmation": {
+        "avg_damage": 0.22500000000000003,
+        "avg_lap_time_ms": 48915.0,
+        "avg_progress": 0.6338571900336332,
+        "avg_reward": 426.2054922906224,
+        "avg_steering_delta_abs_mean": 0.31784208212047815,
+        "avg_steps": 502.09375,
+        "best_lap_time_ms": 44440.0,
+        "finish_rate": 0.125,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 1,
+          "finished": 4,
+          "off_track": 27
+        }
+      },
+      "confirmation_diagnostic_only": false,
+      "confirmation_pointer": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/confirmation.json",
+      "confirmation_pointer_sha256": "ae2c2da59dc70b4ddcd27aa4f954ed84f2b383c55c2a484f7be4ca5ce5c83dfb",
+      "confirmatory_actor_change": false,
+      "name": "control-seed0",
+      "screen": {
+        "avg_damage": 0.25,
+        "avg_lap_time_ms": 47180.0,
+        "avg_progress": 0.7833909765538669,
+        "avg_reward": 552.8600953620739,
+        "avg_steering_delta_abs_mean": 0.3656683328251044,
+        "avg_steps": 560.1666666666666,
+        "best_lap_time_ms": 43640.0,
+        "finish_rate": 0.2916666666666667,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 7,
+          "off_track": 15
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 0
+    },
+    {
+      "actor": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "arm": "control",
+      "augmentation_pad": 4,
+      "checkpoint": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "abc39be53c0a4df242f02556185a208dae420f20868677c3207d4bef85f04266",
+          "checkpoint_sha256": "9d1dd97417cd4c8c21be19ec6077338cc7dbb77be6ad9e9aefc6489a320b46e3",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.0015200376510620117
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.3666666666666667,
+            "avg_lap_time_ms": 66360.0,
+            "avg_progress": 0.41223312677619145,
+            "avg_reward": 241.4730789177506,
+            "avg_steering_delta_abs_mean": 0.1818488094334801,
+            "avg_steps": 410.625,
+            "best_lap_time_ms": 66360.0,
+            "finish_rate": 0.041666666666666664,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 3,
+              "finished": 1,
+              "off_track": 20
+            }
+          }
+        },
+        {
+          "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+          "checkpoint_sha256": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00024211406707763672
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.20833333333333334,
+            "avg_lap_time_ms": 42000.0,
+            "avg_progress": 0.7384631537437607,
+            "avg_reward": 536.4489392186375,
+            "avg_steering_delta_abs_mean": 0.2863486496110757,
+            "avg_steps": 488.8333333333333,
+            "best_lap_time_ms": 39260.0,
+            "finish_rate": 0.20833333333333334,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "finished": 5,
+              "off_track": 19
+            }
+          }
+        }
+      ],
+      "confirmation": {
+        "avg_damage": 0.1875,
+        "avg_lap_time_ms": 40608.57142857143,
+        "avg_progress": 0.6938970591157325,
+        "avg_reward": 509.3578613727244,
+        "avg_steering_delta_abs_mean": 0.2966441377066076,
+        "avg_steps": 444.375,
+        "best_lap_time_ms": 37580.0,
+        "finish_rate": 0.21875,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 7,
+          "off_track": 23
+        }
+      },
+      "confirmation_diagnostic_only": false,
+      "confirmation_pointer": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/confirmation.json",
+      "confirmation_pointer_sha256": "930aec180a3b07e18104d6895fbe84b41f7d61c1363097c1db2d83ebda365e91",
+      "confirmatory_actor_change": false,
+      "name": "control-seed1",
+      "screen": {
+        "avg_damage": 0.20833333333333334,
+        "avg_lap_time_ms": 42000.0,
+        "avg_progress": 0.7384631537437607,
+        "avg_reward": 536.4489392186375,
+        "avg_steering_delta_abs_mean": 0.2863486496110757,
+        "avg_steps": 488.8333333333333,
+        "best_lap_time_ms": 39260.0,
+        "finish_rate": 0.20833333333333334,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "finished": 5,
+          "off_track": 19
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 1
+    },
+    {
+      "actor": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed0/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "e69949dbec88ee9af76a67275d77de0b3c13523700e5b213e53e356c27637e96",
+      "arm": "augmentation_pad1",
+      "augmentation_pad": 1,
+      "checkpoint": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed0/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "ee82b988bdaeafa2909ce9196ebdf49edeb6ff83087ee3b1aa23e7213caebac4",
+          "checkpoint_sha256": "25893ba109677279dda3a37d3e2996e75e491506ba5e6905fec96424b972999a",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.0006668567657470703
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.375,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.29167769143231576,
+            "avg_reward": 172.61764357388378,
+            "avg_steering_delta_abs_mean": 0.375215619802475,
+            "avg_steps": 281.375,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 3,
+              "off_track": 21
+            }
+          }
+        },
+        {
+          "actor_sha256": "e69949dbec88ee9af76a67275d77de0b3c13523700e5b213e53e356c27637e96",
+          "checkpoint_sha256": "489a3eb00e906a976b083c68471c304f1363c0e06f607ee1d996d4b0aae131fd",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00015294551849365234
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.35833333333333334,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.3868818280862861,
+            "avg_reward": 294.22178022784857,
+            "avg_steering_delta_abs_mean": 0.4235461850961049,
+            "avg_steps": 215.375,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 4,
+              "off_track": 20
+            }
+          }
+        }
+      ],
+      "confirmation": {
+        "avg_damage": 0.44375000000000003,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.34064024456148156,
+        "avg_reward": 257.92917181848964,
+        "avg_steering_delta_abs_mean": 0.38022591825574636,
+        "avg_steps": 189.6875,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 5,
+          "off_track": 27
+        }
+      },
+      "confirmation_diagnostic_only": true,
+      "confirmation_pointer": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed0/confirmation.json",
+      "confirmation_pointer_sha256": "1eab1672d93f7ce828b10fd81921274b8993cb60c9168c9d514625bf1261f380",
+      "confirmatory_actor_change": false,
+      "name": "augmentation_pad1-seed0",
+      "screen": {
+        "avg_damage": 0.35833333333333334,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.3868818280862861,
+        "avg_reward": 294.22178022784857,
+        "avg_steering_delta_abs_mean": 0.4235461850961049,
+        "avg_steps": 215.375,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 4,
+          "off_track": 20
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 0
+    },
+    {
+      "actor": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "0f67f380b2cf8e29fd17d4adb85233b36595bb44c9e9e74f138bc2ddf214337a",
+      "arm": "augmentation_pad1",
+      "augmentation_pad": 1,
+      "checkpoint": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed1/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoints": [
+        {
+          "actor_sha256": "7f1f5561448f076b8156dfb340b6eea8f342aba4745e20b522f1974b09cd0944",
+          "checkpoint_sha256": "0e48fb180ede971b39cd05b91364ffd488e50d3342f840ed7dbfe4a4c68e824b",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.00013113021850585938
+          },
+          "step": 65536,
+          "summary": {
+            "avg_damage": 0.2916666666666667,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.26837911365691897,
+            "avg_reward": 181.03573246515353,
+            "avg_steering_delta_abs_mean": 0.2272780748705069,
+            "avg_steps": 202.08333333333334,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 3,
+              "off_track": 21
+            }
+          }
+        },
+        {
+          "actor_sha256": "0f67f380b2cf8e29fd17d4adb85233b36595bb44c9e9e74f138bc2ddf214337a",
+          "checkpoint_sha256": "80efbc0b11adb51356ad8e1f539b1dc801a3d3a74196a1e0b115a792882d5d2d",
+          "parity": {
+            "cpu_export_max_abs_error": 0.0,
+            "observations_per_reset": 3,
+            "resets": 2,
+            "restore_max_abs_error": 0.0,
+            "training_device_vs_cpu_max_abs_error": 0.005144038237631321
+          },
+          "step": 131072,
+          "summary": {
+            "avg_damage": 0.39166666666666666,
+            "avg_lap_time_ms": null,
+            "avg_progress": 0.33735377197949123,
+            "avg_reward": 245.76039078772158,
+            "avg_steering_delta_abs_mean": 0.2783491810162862,
+            "avg_steps": 212.70833333333334,
+            "best_lap_time_ms": null,
+            "finish_rate": 0.0,
+            "n_episodes": 24,
+            "termination_reasons": {
+              "crash": 6,
+              "off_track": 18
+            }
+          }
+        }
+      ],
+      "confirmation": {
+        "avg_damage": 0.36250000000000004,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.34033348682646436,
+        "avg_reward": 252.60991408347292,
+        "avg_steering_delta_abs_mean": 0.2523301786277443,
+        "avg_steps": 202.21875,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 5,
+          "off_track": 27
+        }
+      },
+      "confirmation_diagnostic_only": true,
+      "confirmation_pointer": "runs/20260922-drq-augmentation-pad-v1-restart/augmentation_pad1-seed1/confirmation.json",
+      "confirmation_pointer_sha256": "94b886f52691c7877f0cc4dfa3844887f5fe715cc5425f1b8c1b9585564728e1",
+      "confirmatory_actor_change": false,
+      "name": "augmentation_pad1-seed1",
+      "screen": {
+        "avg_damage": 0.39166666666666666,
+        "avg_lap_time_ms": null,
+        "avg_progress": 0.33735377197949123,
+        "avg_reward": 245.76039078772158,
+        "avg_steering_delta_abs_mean": 0.2783491810162862,
+        "avg_steps": 212.70833333333334,
+        "best_lap_time_ms": null,
+        "finish_rate": 0.0,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 6,
+          "off_track": 18
+        }
+      },
+      "selected_step": 131072,
+      "training_seed": 1
+    }
+  ],
+  "single_variable": "augmentation_pad 4 (control) versus 1 (treatment)",
+  "source_revision": "a28ef02",
+  "status": "rejected",
+  "stop_rule_verdict": "Both authorized controlled follow-ups (steering-logit L2 and augmentation_pad=1) failed to improve upon the baseline. Stop further DrQ-v2 hyperparameter tuning per the 1-2 attempt limit."
+}
