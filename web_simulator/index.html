@@ -174,7 +174,13 @@
               <option value="baseline">기본 정책</option>
             </select>
           </label>
-          <label class="checkbox-label"><input id="record-frames" type="checkbox"> 카메라 프레임 기록</label>
+          <label id="agent-picker">실행할 Agent
+            <select id="agent-select" disabled>
+              <option value="repository">Agent 목록을 불러오는 중…</option>
+            </select>
+          </label>
+          <span id="agent-status" class="hint">로컬 실행기 연결 대기 중</span>
+          <label class="checkbox-label"><input id="record-frames" type="checkbox" checked> 카메라 프레임 기록</label>
           <button id="start-agent-run" type="button" class="button primary">자동 주행</button>
           <button id="start-manual-run" type="button" class="button secondary">수동 주행 시작</button>
           <button id="pause-manual-run" type="button" class="button ghost" disabled>일시정지</button>

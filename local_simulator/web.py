@@ -69,6 +69,7 @@ def create_server(
     port: int = 8765,
     project_root: Path | None = None,
     artifact_root: Path | None = None,
+    agents_root: Path | None = None,
 ) -> ThreadingHTTPServer:
     if not _is_loopback_host(host):
         raise ValueError(
@@ -79,6 +80,7 @@ def create_server(
     registry = SimulationRegistry(
         artifact_root=artifact_root,
         project_root=resolved_project_root,
+        agents_root=agents_root,
     )
     handler_class = type(
         "ConfiguredLocalWebHandler",
@@ -106,6 +108,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--project-root", type=Path, default=Path.cwd())
     parser.add_argument("--artifact-root", type=Path, default=default_artifact_root())
+    parser.add_argument(
+        "--agents-root",
+        type=Path,
+        help="directory containing selectable agent folders; defaults to <artifact-root>/agents",
+    )
     return parser
 
 
@@ -116,6 +123,7 @@ def main(argv: list[str] | None = None) -> int:
         port=args.port,
         project_root=args.project_root,
         artifact_root=args.artifact_root,
+        agents_root=args.agents_root,
     )
     print(f"Track Lab: http://{args.host}:{server.server_address[1]}/")
     try:

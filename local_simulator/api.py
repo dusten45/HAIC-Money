@@ -39,9 +39,11 @@ class SimulationRegistry:
         self,
         artifact_root: Path | None = None,
         project_root: Path | None = None,
+        agents_root: Path | None = None,
     ) -> None:
         self.artifact_root = Path(artifact_root or default_artifact_root()).resolve()
         self.project_root = Path(project_root or Path.cwd()).resolve()
+        self.agents_root = Path(agents_root or self.artifact_root / "agents").resolve()
         self.maps_root = self.artifact_root / "maps"
         self.runs_root = self.artifact_root / "runs"
         self.maps_root.mkdir(parents=True, exist_ok=True)
@@ -120,18 +122,25 @@ class SimulationRegistry:
         self,
         document: MapDocument,
         record_frames: bool = False,
+        agent_id: str | None = None,
     ) -> tuple[dict[str, Any], Path]:
-        return self.run_automatic(document, "agent", record_frames=record_frames)
+        return self.run_automatic(
+            document,
+            "agent",
+            record_frames=record_frames,
+            agent_id=agent_id,
+        )
 
     def run_automatic(
         self,
         document: MapDocument,
         policy_kind: str,
         record_frames: bool = False,
+        agent_id: str | None = None,
     ) -> tuple[dict[str, Any], Path]:
         if policy_kind not in {"agent", "baseline"}:
             raise ValueError("automatic policy must be agent or baseline")
-        policy = self._policy(policy_kind)
+        policy = self._policy(policy_kind, agent_id=agent_id)
         session = SimulationSession.start(document, policy, record_frames=record_frames)
         try:
             for _ in range(document.max_steps):
@@ -188,13 +197,64 @@ class SimulationRegistry:
         for item in active:
             item.session.close()
 
-    def _policy(self, policy_kind: str) -> Policy:
+    def list_agents(self) -> list[dict[str, Any]]:
+        """Return selectable local agent roots without exposing arbitrary paths."""
+
+        candidates: list[tuple[str, str, Path]] = [("repository", "Repository agent", self.project_root)]
+        roots: list[Path] = []
+        root_is_agent = self.agents_root.is_dir() and (self.agents_root / "agent.py").is_file()
+        if root_is_agent:
+            candidates.append(("agents-root", self.agents_root.name, self.agents_root))
+        if self.agents_root.is_dir():
+            roots.extend(
+                child for child in sorted(self.agents_root.iterdir(), key=lambda item: item.name.casefold())
+                if child.is_dir() and (child / "agent.py").is_file()
+            )
+        seen: set[Path] = set()
+        for root in roots:
+            resolved = root.resolve()
+            if resolved in seen or resolved == self.project_root:
+                continue
+            seen.add(resolved)
+            agent_id = f"agents/{root.name}"
+            candidates.append((agent_id, root.name, resolved))
+        return [
+            {
+                "id": agent_id,
+                "name": name,
+                "ready": (root / "model.pt").is_file() or (root / "policy.pt").is_file(),
+                "has_model": (root / "model.pt").is_file(),
+                "has_policy": (root / "policy.pt").is_file(),
+            }
+            for agent_id, name, root in candidates
+        ]
+
+    def _agent_root(self, agent_id: str | None) -> Path:
+        selected = agent_id or "repository"
+        if selected == "repository":
+            return self.project_root
+        if selected == "agents-root":
+            return self.agents_root
+        prefix, _, name = selected.partition("/")
+        if prefix != "agents" or not name:
+            raise ValueError("unknown agent selection")
+        candidate = (self.agents_root / name).resolve()
+        try:
+            candidate.relative_to(self.agents_root)
+        except ValueError as error:
+            raise ValueError("agent selection is outside the configured agents directory") from error
+        if not candidate.is_dir() or not (candidate / "agent.py").is_file():
+            raise FileNotFoundError(f"selected agent is not available: {selected}")
+        return candidate
+
+    def _policy(self, policy_kind: str, *, agent_id: str | None = None) -> Policy:
         if policy_kind == "manual":
             return ManualPolicy()
         if policy_kind == "baseline":
             return BaselinePolicy()
         if policy_kind == "agent":
-            return AgentPolicy(self.project_root / "agent.py", self.project_root)
+            root = self._agent_root(agent_id)
+            return AgentPolicy(root / "agent.py", root)
         raise ValueError("policy must be baseline, agent, or manual")
 
     def _save_run(self, result, run_id: str | None = None) -> Path:
@@ -306,6 +366,9 @@ class LocalApiHandler:
         if path == "/api/health":
             self._json_response({"status": "ok", "service": "local-simulator"})
             return
+        if path == "/api/agents":
+            self._json_response({"agents": self.registry.list_agents()})
+            return
         if path.startswith("/api/runs/"):
             run_id = path.rsplit("/", 1)[-1]
             try:
@@ -342,6 +405,7 @@ class LocalApiHandler:
                 response, _path = self.registry.run_agent(
                     document,
                     record_frames=bool(payload.get("record_frames", False)),
+                    agent_id=payload.get("agent_id"),
                 )
                 self._json_response(response)
                 return
@@ -351,6 +415,7 @@ class LocalApiHandler:
                     document,
                     str(payload.get("policy", "baseline")),
                     record_frames=bool(payload.get("record_frames", False)),
+                    agent_id=payload.get("agent_id"),
                 )
                 self._json_response(response)
                 return

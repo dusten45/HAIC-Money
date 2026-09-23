@@ -67,6 +67,19 @@ class TestLocalSimulatorApi(unittest.TestCase):
         self.assertEqual(response["map_kind"], "custom")
         self.assertGreaterEqual(len(response["geometry"]["centerline"]), 12)
 
+    def test_agent_catalog_lists_selectable_agent_roots(self):
+        candidate = Path(self.artifacts.name) / "agents" / "demo-agent"
+        candidate.mkdir(parents=True)
+        (candidate / "agent.py").write_text("class Agent: pass\n", encoding="utf-8")
+        (candidate / "model.pt").write_bytes(b"placeholder")
+
+        response = self.request("GET", "/api/agents")
+
+        selected = next(item for item in response["agents"] if item["id"] == "agents/demo-agent")
+        self.assertEqual(selected["name"], "demo-agent")
+        self.assertTrue(selected["ready"])
+        self.assertTrue(selected["has_model"])
+
     def test_mutating_requests_require_json_and_same_origin_in_browsers(self):
         body = json.dumps({
             "map_kind": "custom",

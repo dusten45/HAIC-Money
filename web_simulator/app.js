@@ -22,6 +22,8 @@
     logs: [],
     runState: null,
     apiAvailable: false,
+    agents: [],
+    selectedAgentId: "repository",
     manualRunId: null,
     manualVehicle: null,
     manualTimer: null,
@@ -56,6 +58,43 @@
     target.textContent = available ? "로컬 실행기 연결됨" : "파일 보기 모드";
     target.classList.toggle("muted", !available);
     if ($("start-agent-run")) setManualControls(Boolean(state.manualRunId));
+    updateAgentPicker();
+  }
+
+  function updateAgentPicker() {
+    const picker = $("agent-select");
+    const status = $("agent-status");
+    const policy = $("run-policy");
+    if (!picker || !status || !policy) return;
+    const agentPolicy = policy.value === "agent";
+    picker.disabled = !state.apiAvailable || !agentPolicy || state.automaticRunActive || Boolean(state.manualRunId);
+    status.textContent = !state.apiAvailable
+      ? "로컬 실행기 연결 대기 중"
+      : state.agents.length
+        ? `${state.agents.length}개 Agent 사용 가능`
+        : "선택 가능한 Agent가 없습니다";
+    status.classList.toggle("error", state.apiAvailable && !state.agents.length);
+  }
+
+  async function loadAgents() {
+    const picker = $("agent-select");
+    if (!picker || !state.apiAvailable) return;
+    const response = await apiRequest("/api/agents", { timeoutMs: 5000 });
+    state.agents = Array.isArray(response.agents) ? response.agents : [];
+    picker.replaceChildren();
+    for (const agent of state.agents) {
+      const option = document.createElement("option");
+      option.value = String(agent.id);
+      option.textContent = `${agent.name}${agent.ready ? "" : " · 모델 없음"}`;
+      option.disabled = !agent.ready;
+      picker.append(option);
+    }
+    if (!state.agents.some((agent) => agent.id === state.selectedAgentId && agent.ready)) {
+      const firstReady = state.agents.find((agent) => agent.ready);
+      state.selectedAgentId = firstReady ? firstReady.id : (state.agents[0]?.id || "repository");
+    }
+    picker.value = state.selectedAgentId;
+    updateAgentPicker();
   }
 
   async function apiRequest(path, options = {}) {
@@ -85,6 +124,7 @@
     try {
       const response = await apiRequest("/api/health", { timeoutMs: 1800 });
       setApiStatus(response.status === "ok");
+      if (state.apiAvailable) await loadAgents();
     } catch (_error) {
       setApiStatus(false);
     }
@@ -1673,6 +1713,7 @@
     $("step-manual-run").disabled = !manual;
     $("finish-manual-run").disabled = !manual;
     $("pause-manual-run").textContent = state.manualPaused ? "재개" : "일시정지";
+    updateAgentPicker();
   }
 
   function currentManualAction() {
@@ -1751,6 +1792,11 @@
     const validation = customMapValidation(map);
     if (validation) throw new Error(validation);
     const recordFrames = $("record-frames").checked;
+    const agentId = policy === "agent" ? $("agent-select").value : null;
+    if (policy === "agent" && !agentId) throw new Error("실행할 Agent를 선택하세요.");
+    if (policy === "agent" && !state.agents.some((agent) => agent.id === agentId && agent.ready)) {
+      throw new Error("선택한 Agent에 model.pt 또는 policy.pt가 없습니다.");
+    }
     if (policy === "manual") {
       const started = await apiRequest("/api/runs/start", {
         method: "POST",
@@ -1777,7 +1823,7 @@
       const path = policy === "agent" ? "/api/runs/agent" : "/api/runs/auto";
       const result = await apiRequest(path, {
         method: "POST",
-        body: JSON.stringify({ map, policy, record_frames: recordFrames }),
+        body: JSON.stringify({ map, policy, agent_id: agentId, record_frames: recordFrames }),
         timeoutMs: 300000
       });
       addRunPayload(result, policy === "agent" ? "Agent 실행" : "기본 정책 실행");
@@ -1927,6 +1973,10 @@
     $("control-point-table").addEventListener("input", editControlPoint);
     $("add-control-point").addEventListener("click", () => { try { addControlPoint(); } catch (error) { setMapValidation(error.message, true); } });
     $("remove-control-point").addEventListener("click", () => { try { removeControlPoint(); } catch (error) { setMapValidation(error.message, true); } });
+    $("run-policy").addEventListener("change", () => updateAgentPicker());
+    $("agent-select").addEventListener("change", (event) => {
+      state.selectedAgentId = event.target.value;
+    });
     $("start-agent-run").addEventListener("click", () => startRun($("run-policy").value).catch((error) => setStatus(error.message, true)));
     $("start-manual-run").addEventListener("click", () => startRun("manual").catch((error) => setStatus(error.message, true)));
     $("pause-manual-run").addEventListener("click", () => pauseManualRun());

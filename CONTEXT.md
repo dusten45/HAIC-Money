@@ -112,6 +112,10 @@ frames enabled. `local_simulator.diagnostic` writes the run log, a standalone
 HTML replay with synchronized camera/action/trajectory telemetry, and optionally
 an annotated MP4. The report's saturation, gas/brake overlap, and collision
 signals are observational flags only; no performance evaluation is performed.
+The Track Lab web server now exposes a local Agent catalog under
+`<artifact-root>/agents`, lets the browser choose a ready model, and passes that
+selection to the automatic run endpoint. Map files, official seeds, and generated
+custom tracks remain selectable in the same UI.
 
 ## Runtime And Infrastructure
 

@@ -822,10 +822,27 @@ python -m http.server 8000 --directory web_simulator
 통합 Track Lab 서버는 브라우저 UI와 로컬 API를 함께 제공해 웹에서 맵 생성, 시뮬레이션, 수동 주행과
 로그 저장을 할 수 있습니다.
 
+여러 Agent를 웹에서 선택하려면 각 Agent를 별도 폴더에 넣습니다. 폴더에는 최소한
+`agent.py`와 추론용 `model.pt` 또는 `policy.pt`가 있어야 합니다.
+
+```powershell
+$agentRoot = ".haic-artifacts\agents\drq-demo"
+New-Item -ItemType Directory -Force -Path $agentRoot | Out-Null
+Copy-Item .\agent.py, .\action_smoothing.py, .\action_representation.py -Destination $agentRoot
+Copy-Item ".\runs\<실험 폴더>\actor.pt" (Join-Path $agentRoot "model.pt")
+```
+
 ```powershell
 python -m local_simulator.web --host 127.0.0.1 --port 8765 `
-  --project-root . --artifact-root .haic-artifacts
+  --project-root . `
+  --artifact-root .haic-artifacts `
+  --agents-root .haic-artifacts\agents
 ```
+
+브라우저의 `실행할 Agent` 목록에서 Agent를 고르고, 공식 track/seed 또는 자체 생성
+트랙을 설정한 뒤 `카메라 프레임 기록`을 켜고 `자동 주행`을 누르면 됩니다. 실행이
+끝나면 같은 화면에서 카메라, 궤적, 행동, 속도, 진행률, damage, 충돌을 재생할 수
+있습니다.
 
 이 로컬 API에는 인증이 없으므로 `--host`는 `127.0.0.1`, `localhost`, `::1` 같은
 loopback 주소만 허용합니다. 변경 요청은 JSON 콘텐츠 타입과 같은 출처도 확인합니다.

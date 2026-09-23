@@ -14,6 +14,7 @@ class TestWebAssets(unittest.TestCase):
 
     def test_site_has_playback_and_metrics_controls(self):
         html = Path("web_simulator/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="record-frames" type="checkbox" checked', html)
         for element_id in (
             "pause-button",
             "step-forward",
@@ -22,6 +23,8 @@ class TestWebAssets(unittest.TestCase):
             "run-table",
             "metric-action",
             "metric-speed",
+            "agent-select",
+            "agent-status",
         ):
             self.assertIn(f'id="{element_id}"', html)
 
@@ -64,6 +67,9 @@ class TestWebAssets(unittest.TestCase):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")
         for token in (
             "/api/health",
+            "/api/agents",
+            "loadAgents",
+            "agent_id",
             "generateCustomMap",
             "startRun",
             "sendManualAction",
