@@ -15,16 +15,23 @@ conflict in favor of the official source before continuing.
 1. Identify one immutable candidate: source commit, run/checkpoint, model hash, and
    intended inference path.
 2. Verify the official environment version and Python 3.11/Linux/CPU compatibility.
-3. Use the relevant existing packager and tests (`package_submission.py` or
-   `training/package_submission.py`) rather than writing a parallel validator.
-4. Check import/init, reset, act, memory, observation/action, relative paths, and
-   repeatability requirements.
+3. Use the relevant existing packager and tests (`package_submission.py` for the
+   active baseline/DrQ/Dreamer path, `training/package_submission.py` only for its
+   separate visual PPO/CEM path) rather than writing a parallel validator.
+4. Account for local-validator coverage explicitly. The root packager validates a
+   narrow root-only `model.pt` package and a combined smoke; it does not prove every
+   per-call limit, RSS, action bound, dependency install, full episode, or official
+   Docker behavior. Run available targeted tests and clean isolated checks for those
+   gaps without representing them as official-server validation.
 5. Check ZIP root structure, required runtime files, dependency pins and installation
    feasibility, forbidden imports/functions/native files, archive/file-count/size/
    compression limits, and exclusion of trainers, caches, `.venv`, replay, and
    unused checkpoints.
 6. Run a clean isolated smoke and record the final ZIP and model hashes.
-7. Add the local package provenance to `docs/competition/submissions.md`.
+7. If the candidate needs `requirements.txt` or arbitrary custom modules, stop: the
+   active root packager cannot produce that officially allowed layout. Extend and
+   test the existing packaging path before seeking upload approval.
+8. Add the local package provenance to `docs/competition/submissions.md`.
 
 Read exact current limits from
 [`docs/competition/restrictions.md`](../competition/restrictions.md), not this

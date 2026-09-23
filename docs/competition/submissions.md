@@ -24,6 +24,20 @@ the competition site. The current root `agent.py` differs from the archived agen
 the archived model matches root `model.pt`. Therefore this record cannot stand in for
 the current source tree or an official candidate.
 
+### Local Root-Packager Boundary
+
+The active root packager checks a root-only layout, recognized source modules,
+forbidden static imports/calls, archive limits, and a clean smoke extraction. Its
+smoke checks construction and a combined small reset/action sequence; it does not
+independently prove every official reset/act timeout, RSS, action bounds, a full
+episode, dependency installation, or official Docker behavior. It also cannot add
+root `requirements.txt` or arbitrary custom modules even though the official format
+permits them. Treat a passing manifest as partial local validation only.
+
+The output directory is unique but not filesystem-immutable. Preserve its hashes and
+do not edit a package after recording it; a future official ledger entry must bind
+the uploaded ZIP hash to the source/checkpoint and site receipt.
+
 ## Current Official Ledger State
 
 No team identity mapping, official submission identifier, team-scoped API receipt,

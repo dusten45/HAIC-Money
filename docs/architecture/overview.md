@@ -46,9 +46,16 @@ entry point, checkpoint, configuration, and source revision.
 - `run_drqv2_matched.py` launches the frozen matched DrQ-v2 study machinery.
 - `training/evaluate_closed_loop.py` evaluates the visual PPO/planner and Track Lab
   paths; it is a separate local evaluation route.
-- `package_submission.py` and `training/package_submission.py` package different
-  inference paths. Reuse the matching existing packager and tests rather than
-  recreating a validator in a workflow.
+- `package_submission.py` is the active root packager for baseline, DrQ-v2, and
+  DreamerV3 `model.pt` exports. It creates a local ZIP/manifest and never uploads.
+  It packages only its recognized inference modules, so it cannot represent every
+  officially permitted dependency/module layout.
+- `training/package_submission.py` is the separate visual PPO/CEM pilot path. It has
+  different runtime checks and output behavior; it is not the active DrQ/Dreamer
+  provenance path.
+
+Reuse the matching existing packager and tests rather than recreating a validator in
+a workflow. Their limits remain local evidence, not official-server validation.
 
 See [`docs/evaluation/protocol.md`](../evaluation/protocol.md) for what can be
 compared and [`docs/workflows/prepare-submission.md`](../workflows/prepare-submission.md)
