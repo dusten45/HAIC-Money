@@ -1,8 +1,15 @@
+> **Historical snapshot, archived 2026-09-23.** This document mixed current state,
+> completed experiment evidence, runtime contracts, and historical caveats. Its
+> current successors are `docs/context/current-state.md`, `docs/experiments/`,
+> `docs/decisions/`, `docs/evaluation/`, and `docs/competition/`.
+
 # Project Context
 
 ## Current Objective And Status
 
-Transitioned from frozen DrQ-v2 baseline to Stage 2: **DreamerV3** per `PLAN.md`.
+Transitioned from frozen DrQ-v2 baseline to Stage 2: **DreamerV3** per the archived
+algorithm roadmap, whose current successor is
+`docs/plans/active/dreamerv3-recovery-strategy.md`.
 DrQ-v2 baseline is frozen as benchmark (4~7/32 confirmation finishes).
 Blind partition remains reserved and untouched.
 Implemented native PyTorch DreamerV3 core, sequence replay, recurrent CPU export,

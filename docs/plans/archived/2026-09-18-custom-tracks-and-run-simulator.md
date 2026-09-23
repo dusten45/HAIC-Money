@@ -1,3 +1,9 @@
+> **Historical plan, relocated 2026-09-23.** The checklist reflects the plan's
+> original execution state and is not a current status source. Use
+> `docs/architecture/overview.md` for implemented boundaries. References below to
+> `haic_service` and `docs/remote-deployment.md` were proposed files that are not
+> present in this repository; they are historical plan text, not current links.
+
 # 자체 트랙 및 실행 로그 생성기 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -8,7 +14,7 @@
 
 **Tech Stack:** Python 3.11, Gymnasium 0.29.1, vendored Box2D/pygame, NumPy 1.26, OpenCV 4.8, Python standard-library http.server, 정적 HTML/CSS/JavaScript, unittest.
 
-**Spec:** docs/superpowers/specs/2026-09-18-custom-tracks-and-run-simulator-design.md
+**Spec:** `../../architecture/history/2026-09-18-custom-tracks-and-run-simulator-design.md`
 
 ## Global Constraints
 

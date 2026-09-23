@@ -1,3 +1,8 @@
+> **Completed historical implementation plan, relocated 2026-09-23.** Its unchecked
+> checklist is preserved as the original planning record, not a current execution
+> queue. Completion here means the implementation work is no longer active; use
+> `docs/architecture/overview.md` and code/tests for current behavior.
+
 # Multi-Corner Custom Track Generator Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -8,7 +13,7 @@
 
 **Tech Stack:** Python standard library, existing Box2D custom environment, browser JavaScript, Node.js client tests, Python `unittest`.
 
-**Spec:** `docs/superpowers/specs/2026-09-20-multi-corner-track-generator-design.md`
+**Spec:** `../../architecture/history/2026-09-20-multi-corner-track-generator-design.md`
 
 ## Global Constraints
 

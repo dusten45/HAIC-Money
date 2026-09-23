@@ -1,5 +1,24 @@
 # DreamerV3 실패 진단 기반 발전 전략
 
+## Active Plan Status
+
+| Field | Current plan |
+|---|---|
+| Status | Active research plan; no recovery implementation or new recovery run has been recorded. |
+| Goal | Repair the identified DreamerV3 fidelity defects, then determine whether a faithful implementation can pass feasibility before matched training. |
+| Rationale | The current formulation failed the small policy-learning gate, while its prior Gate 3 interpretation was withdrawn as insufficient world-model validation. |
+| Evidence | `experiments/dreamerv3-feasibility-gate.json` and the linked run diagnostics; see `docs/experiments/INDEX.md`. |
+| Hypothesis | Correct transition alignment, actor/critic objectives, action distribution, replay/pretraining, and world-model gates can remove implementation-induced collapse. |
+| Scope | Correctness repair and feasibility only. No 131,072-decision matched run, official submission, or confirmation follows automatically. |
+| Steps | Implement and unit-test Phase A correctness repairs, pass Phase B open-loop/counterfactual gates, then run the Phase C small pilot. |
+| Evaluation | Frozen local contract, CPU recurrent/export checks, explicit open-loop and counterfactual diagnostics, then repeated pilot screen completion. |
+| Acceptance | The plan's Phase A/B gates pass and the renewed pilot achieves the declared nonzero repeated screen-completion criterion without operational failure. |
+| Rejection | A faithful repair still fails the renewed pilot or violates CPU/package constraints. Record the result instead of scaling it. |
+| Stop condition | Do not start matched scale-up until all preceding gates pass. Official actions require their separate workflows and explicit user authorization. |
+
+The detailed diagnosis and phased technical work below are retained from the
+pre-migration recovery strategy.
+
 ## 핵심 결론
 
 현재 실패는 **DreamerV3 자체의 실패가 아니라, DreamerV3와 다른 actor/world-model objective를 사용한 구현의 실패**로 보는 것이 정확합니다.

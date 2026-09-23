@@ -1,3 +1,7 @@
+> **Historical/superseded plan, relocated 2026-09-23.** Its remaining checklist is
+> not active work under the current research state. It is retained as evidence for
+> prior visual-PPO and teacher experiments.
+
 # HAIC PPO 페달·조향 학습 수정 계획
 
 **목표:** 사이트 맵 첫 코너에서 PPO 정책의 브레이크가 앞바퀴의 조향 효과를 억제하는 문제를 줄이고, 완주 성능을 여러 학습 시드로 비교한다.

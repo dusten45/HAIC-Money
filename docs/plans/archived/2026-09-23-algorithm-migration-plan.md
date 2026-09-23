@@ -1,3 +1,8 @@
+> **Historical plan, archived 2026-09-23.** It records a strategic roadmap that
+> mixed completed DrQ-v2 work, current DreamerV3 work, and future candidates. Use
+> `docs/plans/active/`, `docs/evaluation/`, and `docs/decisions/` for current
+> authority. The original text is retained as evidence of the prior plan.
+
 # HAIC Algorithm Migration Plan
 
 ## Goal
@@ -319,7 +324,8 @@ Promotion thresholds:
   it blocked with the primary-source evidence and move to the most viable
   earlier algorithm.
 
-Every stage ends with a short artifact summary in `CONTEXT.md`, but temporary
+Every stage ends with a short artifact summary in
+`docs/context/current-state.md`, but temporary
 logs, replay buffers, model files, and evaluation matrices remain in their
 explicit `runs/` and `evaluations/` directories. No commit or push is part of
 this planning step.

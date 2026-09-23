@@ -1,3 +1,7 @@
+> **Historical design specification, relocated 2026-09-23.** It describes intended
+> architecture at the time of design. Current behavior is defined by code/tests and
+> summarized in `docs/architecture/overview.md`.
+
 # HAIC 시각 강화학습 및 행동 탐색 설계
 
 - 작성일: 2026-09-20

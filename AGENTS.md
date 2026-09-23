@@ -1,88 +1,105 @@
-# Project Instructions
+# HAIC-Money Agent Constitution
 
-## Goal
+## Mission
 
-Develop the strongest possible agent for the 2026 HAIC competition.
+Develop the strongest possible agent for the 2026 HAIC competition. The project is
+an experimental research codebase: architecture, training methods, model choices,
+and workflow are provisional unless evidence says otherwise. Do not treat the
+current implementation as a permanent design.
 
-The project is in an early stage and its architecture, training methods, tools, model choices, and workflow may change substantially as experimentation progresses.
+## Source Precedence
 
-Do not treat the current implementation or project structure as permanent. Prefer evidence from experiments and official competition sources over assumptions based on the current codebase.
+### Competition rules, environment, submission, and schedule
 
-## Project References
+Use this order when facts conflict:
 
-Official participant repository:
-https://github.com/2026-HAIC/Participants
+1. Current [competition website](https://ships-duo-ethical-saver.trycloudflare.com/)
+2. Current [official Participants repository](https://github.com/2026-HAIC/Participants)
+3. Local mirrors in `docs/competition/`
+4. Historical experiments, archived documents, and memory
 
-Competition website:
-https://ships-duo-ethical-saver.trycloudflare.com/
+Before an official submission, model confirmation, mock evaluation, final deadline,
+or first official evaluation after a newly released track, recheck the official
+sources. If an official source conflicts with a local document, stop the external
+action, update the local rule/validator, and continue from the official source.
 
-When competition rules, environment behavior, submission requirements, schedules, or other project details are uncertain or may have changed, inspect the relevant official sources directly instead of relying on assumptions or stale information.
+### Local implementation and research facts
 
-## Project Context
+Use executable code and tests for current behavior; use frozen protocol/result/run
+artifacts for a particular experiment; use current documentation as a router and
+summary. Archived Markdown and remembered results are not authoritative evidence.
 
-Read `CONTEXT.md` before substantial work when current project state, recent experiments, active approaches, known issues, or next priorities may matter.
+## Documentation Router
 
-`CONTEXT.md` is a living project-state document and may be updated freely as the project evolves.
+| Need | Read |
+|---|---|
+| Current research state, blocker, next gate | `docs/context/current-state.md` |
+| Architecture or runtime boundary | `docs/architecture/overview.md` |
+| Improve performance | `docs/workflows/improve-performance.md` |
+| Run a new experiment | `docs/workflows/run-experiment.md` |
+| Investigate a regression | `docs/workflows/investigate-regression.md` |
+| Prepare an official submission | `docs/workflows/prepare-submission.md` |
+| Select or confirm a model | `docs/workflows/select-and-confirm-model.md` |
+| Official rules, schedule, package restrictions | `docs/competition/` |
+| Internal evaluation and generalization rules | `docs/evaluation/` |
+| Long-lived experiment evidence | `docs/experiments/INDEX.md` and `experiments/` |
+| Important settled decisions | `docs/decisions/INDEX.md` |
+| Candidate and official-model status | `docs/results/MODEL_STATUS.md` |
+| Current implementation plan | `docs/plans/active/` |
+| Historical plan/design snapshots | `docs/plans/archived/`, `docs/architecture/history/`, and `docs/archive/` |
 
-Keep `CONTEXT.md` concise and current. Replace stale information instead of accumulating obsolete history.
+Do not read the whole documentation tree by default. Start substantial work with
+this file, `docs/context/current-state.md`, and the relevant active plan; then read
+only the workflow, evaluation evidence, decision, or architecture document needed
+for the task.
 
-Do not put temporary implementation details, experiment-specific results, or rapidly changing project state into this file when they belong in `CONTEXT.md` or run artifacts.
+## Research and External-Action Rules
+
+- Preserve the official environment. Do not claim performance from a modified local
+  environment is official HAIC performance.
+- Treat raw CarRacing reward, progress, damage, smoothness, and custom robustness
+  metrics as internal proxies, not official ranking scores.
+- Distinguish a one-seed success from a replicated, matched improvement. Do not
+  describe unmatched cells as a matched comparison.
+- Never relabel consumed confirmation/blind cells as fresh. Do not use reserved
+  blind cells for iterative tuning.
+- Treat official private tracks as a final generalization target, not an available
+  holdout dataset. Do not equate a leaderboard's per-track mixed best with one
+  model's generalization.
+- Separate observations from causal explanations. Mark untested mechanisms as
+  hypotheses.
+- A promising local result is an internal candidate, not an official submission.
+  Official submission and model confirmation are separate external actions and
+  require explicit user authorization immediately before execution.
+- Update only the documents whose source-of-truth status changed. New experiments
+  update the experiment index, plan, and current state; decisions and model status
+  change only when warranted by durable evidence.
 
 ## Parallel Agent Orchestration
 
-For any substantial task, actively exploit parallel agent execution.
+For substantial work, actively exploit parallel agent execution. Launch focused
+background subagents for independent investigation, keep the main agent productive
+while they run, and incorporate their findings explicitly. Prefer several concrete
+objectives over one broad investigation.
 
-Do not perform all independent investigations sequentially in the main agent when they can be delegated concurrently.
-
-Prefer background subagents for independent work so that the main agent continues making progress while delegated agents run.
-
-When multiple independent lines of work exist:
-- Launch multiple background subagents concurrently.
-- Continue useful work in the main agent immediately instead of waiting.
-- Assign each background agent a distinct, concrete objective.
-- Incorporate their results as they arrive.
-- Use additional background agents when new independent investigations become useful.
-
-Do not use Agent Manager or separate top-level worktree sessions merely for delegation. Keep delegated work within the current session unless workspace isolation is specifically necessary.
-
-Do not substitute Agent Manager agents for background task subagents when ordinary in-session parallel delegation is sufficient.
-
-For non-trivial research, debugging, optimization, or design work, parallel delegation should be the default. Do not avoid delegation simply because the main agent could complete the work alone.
-
-For substantial tasks, prefer several focused background task subagents over one broad subagent that attempts to solve the entire problem alone.
-
-Use foreground delegation only when the main agent cannot make useful progress until that specific result is available. Otherwise prefer background execution.
-
-The main agent must remain productive while background agents are running. Do not launch agents and then idle waiting for them if other useful work can proceed.
-
-When background results arrive, explicitly incorporate them into the current reasoning and implementation rather than ignoring or duplicating their work.
+Do not use Agent Manager or separate top-level worktree sessions merely for
+delegation when ordinary in-session background agents suffice. Use foreground
+delegation only when no useful independent work remains. Do not duplicate delegated
+investigations or idle waiting for them.
 
 ## Version Control
 
-Use Git continuously to preserve meaningful progress.
+Use Git continuously to preserve meaningful progress. Create coherent commits for
+substantial implementations, fixes, experiment setup, documentation changes, and
+other validated units of work; do not combine unrelated changes.
 
-For substantial work, create commits at meaningful checkpoints rather than accumulating a large uncommitted working tree until the end.
-
-Split changes into small, coherent commits by task, responsibility, or purpose. Do not combine unrelated work into a single large commit merely because the changes were made during the same session.
-
-Commit and push after completing a coherent implementation, fix, refactor, experiment setup, documentation change, or other unit of work that has been reasonably validated.
-
-Also consider committing before risky or large changes so that a known-good state is easy to recover.
-
-Do not create commits for every trivial edit. Prefer commits that represent a clear and independently understandable unit of progress.
-
-Before committing, inspect the working tree and diff. Do not include unrelated user changes, temporary files, secrets, credentials, large generated artifacts, model files, training outputs, or other files that should not be version-controlled.
-
-Commit messages must contain only a single-line head with no body.
-
-Use the following commit message format:
+Before committing, inspect the working tree and diff. Do not include unrelated user
+changes, temporary files, secrets, credentials, generated artifacts, model files,
+or training outputs. Commit messages contain a single-line head in this form:
 
 `<tag>: <sentence>`
 
-Choose a concise tag that describes the type or role of the change, and write a concise sentence that accurately describes the committed change.
-
-Push completed commits to the current branch's existing upstream remote regularly so that important progress is not stored only on the local machine.
-
-Do not force-push, rewrite published history, change remotes, or modify branch structure unless the task specifically requires it.
-
-If a commit or push fails, diagnose the cause rather than bypassing repository safeguards.
+Push completed commits to the current branch's existing upstream regularly. Do not
+force-push, rewrite published history, change remotes, or modify branch structure
+unless the task specifically requires it. Diagnose a failed commit or push rather
+than bypassing safeguards.

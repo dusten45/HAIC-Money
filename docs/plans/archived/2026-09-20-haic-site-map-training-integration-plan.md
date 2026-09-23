@@ -1,6 +1,11 @@
+> **Historical plan, relocated 2026-09-23.** It records the original site-map
+> integration work and incomplete performance gates; it is not a current active
+> plan. Use `docs/architecture/overview.md` and `docs/evaluation/` for current
+> boundaries.
+
 # HAIC Track Lab 맵 학습·평가 통합 계획
 
-> 상위 설계: `docs/superpowers/specs/2026-09-20-haic-visual-model-based-rl-design.md`
+> 상위 설계: `../../architecture/history/2026-09-20-haic-visual-model-based-rl-design.md`
 
 **목표:** Track Lab에서 만든 schema v2 사용자 맵을 PPO와 잠재 전이 모델 학습, 그리고 폐쇄루프 평가에 직접 사용할 수 있게 한다.
 

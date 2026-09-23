@@ -1,3 +1,7 @@
+> **Historical design specification, relocated 2026-09-23.** It describes intended
+> architecture at the time of design. Current behavior is defined by code/tests and
+> summarized in `docs/architecture/overview.md`.
+
 # 극한 복합 기술형 트랙 생성기 설계 명세
 
 상태: 대화 설계 및 서면 명세 사용자 승인 완료 (2026-09-20)

@@ -1,3 +1,7 @@
+> **Historical design specification, relocated 2026-09-23.** It describes intended
+> architecture at the time of design. Current behavior is defined by code/tests and
+> summarized in `docs/architecture/overview.md`.
+
 # 자체 트랙 및 실행 로그 생성기 설계
 
 ## 1. 목표

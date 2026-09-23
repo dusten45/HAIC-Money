@@ -1,6 +1,10 @@
+> **Completed historical implementation plan, relocated 2026-09-23.** Its completed
+> checklist and dated local results are retained as evidence. It is not the current
+> active research plan; see `docs/context/current-state.md`.
+
 # Implementation Plan: HAIC 시각 PPO와 학습 기반 행동 계획기
 
-> 승인된 설계: docs/superpowers/specs/2026-09-20-haic-visual-model-based-rl-design.md
+> 승인된 설계: `../../architecture/history/2026-09-20-haic-visual-model-based-rl-design.md`
 > 구현 전 계획 검토용 문서입니다. 검토와 실행 방식 선택 전에는 구현을 시작하지 않습니다.
 
 **목표:** 84×84 흑백 프레임 네 장만 받는 에이전트에 PPO 시각 정책을 학습시키고, 학습된 잠재 전이 모델을 사용해 각 행동 호출에서 제한시간 내 CEM 계획을 수행한다. 주행 행동은 학습된 정책과 예측 모델이 정하고, 규칙 코드는 유효성 검사와 실패 시 fallback만 맡는다.

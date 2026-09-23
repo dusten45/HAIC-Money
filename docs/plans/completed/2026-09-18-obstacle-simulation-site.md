@@ -1,3 +1,8 @@
+> **Completed historical implementation plan, relocated 2026-09-23.** Its unchecked
+> checklist reflects the original planning record rather than the resulting code.
+> Completion here means the implementation work is no longer active; use
+> `docs/architecture/overview.md` and code/tests for current behavior.
+
 # 로컬 시뮬레이터 및 로그 재생 사이트 구현 계획
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -8,7 +13,7 @@
 
 **Tech Stack:** Python 3.11, Gymnasium 0.29.1, Box2D, NumPy 1.26, OpenCV 4.8, Python `unittest`, dependency-free HTML/CSS/JavaScript Canvas.
 
-**Spec:** `docs/superpowers/specs/2026-09-18-obstacle-simulation-site-design.md`
+**Spec:** `../../architecture/history/2026-09-18-obstacle-simulation-site-design.md`
 
 ## Global Constraints
 

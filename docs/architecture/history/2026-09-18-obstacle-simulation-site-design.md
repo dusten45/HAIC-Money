@@ -1,3 +1,7 @@
+> **Historical design specification, relocated 2026-09-23.** It describes intended
+> architecture at the time of design. Current behavior is defined by code/tests and
+> summarized in `docs/architecture/overview.md`.
+
 # 장애물 배치 및 주행 시뮬레이션 사이트 설계
 
 ## 1. 목표
