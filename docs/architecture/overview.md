@@ -1,8 +1,10 @@
 # Architecture Overview
 
-This document maps current code boundaries. Executable code and tests remain the
-source of truth for behavior; historical design documents are retained under
-`docs/architecture/history/`.
+This document maps current code boundaries. HAIC-Money is an experimental research
+fork of the official Participants template: the upstream repository defines the
+competition contract, while this repository adds research, evaluation, packaging,
+and local-simulation code. Executable code and tests remain the source of truth for
+behavior; historical design documents are retained under `docs/architecture/history/`.
 
 ## Official-Compatibility Boundary
 
@@ -19,8 +21,12 @@ source of truth for behavior; historical design documents are retained under
 
 ## Inference Implementations
 
-- `agent.py` selects supported inference payloads and keeps imports lazy where a
-  package mode does not need a training stack.
+- `agent.py` dispatches `model.pt` to a raw baseline state dict, a tagged
+  `haic-drq-v2-actor-v1`, or a tagged `haic-dreamerv3-actor-v1` export. It keeps
+  imports lazy where a package mode does not need a training stack.
+- If `model.pt` is absent, `agent.py` can fall back to the historical HAIC
+  `policy.pt` and optional `dynamics.pt` PPO/CEM route. The active root packager does
+  not package that fallback, so it is not the current DrQ/Dreamer submission path.
 - `drq_v2.py` and `train_drqv2.py` provide the native DrQ-v2 training/export path.
 - `dreamer_v3.py` and `train_dreamerv3.py` provide the native recurrent DreamerV3
   path and CPU actor export.
@@ -35,7 +41,8 @@ entry point, checkpoint, configuration, and source revision.
 
 - `train.py` and `export_policy.py` are the earlier Stable-Baselines PPO path.
 - `training/` contains the visual PPO, latent dynamics, Track Lab site-map, closed-
-  loop evaluation, imitation, and package-building paths.
+  loop evaluation, imitation, and package-building paths. These PPO/CEM paths are
+  historical research/implementation evidence, not the current submission route.
 - `local_simulator/` and `web_simulator/` support custom tracks, logs, and local
   replay. Custom-track performance is local generalization evidence only.
 

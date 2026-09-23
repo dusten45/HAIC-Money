@@ -1,9 +1,9 @@
 # HAIC-Money
 
-HAIC-Money is a research repository for building a reliable single-model agent for
-the 2026 HAIC CarRacing AI Challenge. The target is not a collection of per-track
-best records: one immutable candidate must generalize across the conditions that
-matter for final evaluation.
+HAIC-Money is an experimental research fork of the official Participants template
+for building a reliable single-model agent for the 2026 HAIC CarRacing AI Challenge.
+The target is not a collection of per-track best records: one immutable candidate
+must generalize across the conditions that matter for final evaluation.
 
 ## Quick Start
 
