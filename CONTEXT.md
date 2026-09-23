@@ -3,10 +3,10 @@
 ## Current Objective
 
 Develop a submission-capable DrQ-v2 candidate, not a PPO improvement project.
-The current user request permits **one or two evidence-backed, single-variable
-DrQ follow-ups**, beginning with steering-logit L2. No new algorithm proposals or
-implementations, coefficient sweeps, or weakened promotion gates. `PLAN.md` keeps
-the historical algorithm order and frozen comparison contract.
+The current user request authorizes implementation of a separate, permanent
+demonstration replay for DrQ-v2. This implementation-only task must not train a
+candidate or run any performance evaluation; model quality remains the user's
+decision. The running padding study and its frozen artifacts remain untouched.
 
 ## Frozen Contract
 
@@ -93,6 +93,17 @@ but L2 seed0 had MORE finish support than control0. Finishing policies also osci
 Do not attribute failure simply to insufficient finish data, gas/brake overlap,
 noise decay, or steering sign changes. Pre-study diagnostics are preserved in
 `experiments/drqv2-pre-l2-diagnostics.json`.
+
+## Demonstration Replay Implementation
+
+Implemented, not trained or performance-evaluated. A training-only corridor
+teacher artifact stores raw-reward, terminal-safe DrQ transitions with official
+three-dimensional actions converted once to native symmetric coordinates. DrQ
+keeps this artifact in a replay separate from online experience and draws an
+exact fixed number of demonstration rows per learner batch. The demonstration
+replay, sampling RNG and source lineage are checkpointed; exported actors remain
+unchanged and contain no teacher or replay. Correctness coverage uses only fake
+environments and synthetic transitions.
 
 ## Runtime And Infrastructure
 

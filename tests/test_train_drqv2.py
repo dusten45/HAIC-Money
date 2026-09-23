@@ -186,6 +186,74 @@ def test_training_evaluates_after_update_at_each_checkpoint_and_final(tmp_path):
     assert (tmp_path / "explicit/protocol.json").read_bytes() == original_protocol.read_bytes()
 
 
+def test_training_loads_fixed_demonstration_batch_and_records_lineage(tmp_path):
+    from common_adapter import Transition
+    from drq_v2 import Uint8Replay
+    from train import file_sha256
+    from training.drq_demonstrations import save_drq_demonstrations
+
+    demonstration_replay = Uint8Replay(capacity=4, n_step=3, gamma=0.99, seed=11)
+    pixels = np.zeros((4, 84, 84), dtype=np.float32)
+    for episode in range(2):
+        demonstration_replay.add(Transition(
+            observation=pixels,
+            action=np.array([0.0, -1.0, -1.0], dtype=np.float32),
+            reward=1.0,
+            next_observation=pixels,
+            terminated=True,
+            truncated=False,
+            episode_id=episode,
+            step=0,
+        ))
+    demonstrations = save_drq_demonstrations(
+        tmp_path / "demonstrations.pt",
+        demonstration_replay,
+        metadata={"teacher": "test-teacher", "episode_count": 2},
+    )
+
+    class Environment:
+        def get_wrapper_attr(self, name):
+            return np.random.default_rng(917)
+
+        def reset(self, **kwargs):
+            return pixels.copy(), {"track_id": 1, "seed": 7}
+
+        def step(self, action):
+            return pixels.copy(), 1.0, True, False, {"retire_reason": "crash"}
+
+        def close(self):
+            pass
+
+    captured = []
+
+    def checkpoint(agent, observation, run_dir, config, args, best, trainer_state):
+        captured.append(agent)
+        return {"step": agent.environment_steps}
+
+    argv = [
+        "train_drqv2.py", "--name", "demo-test", "--run-dir", str(tmp_path / "run"),
+        "--total-steps", "2", "--warmup-steps", "2", "--batch-size", "2",
+        "--replay-capacity", "4", "--eval-freq", "2",
+        "--demonstrations", str(demonstrations), "--demonstration-batch-size", "1",
+    ]
+    with patch("sys.argv", argv), patch("train_drqv2.build_sampled_env", return_value=Environment()):
+        with patch("train_drqv2.save_and_select", side_effect=checkpoint):
+            with patch("tracking.pip_freeze", return_value=[]), patch(
+                "train_drqv2.check_evaluation_runtime", return_value={}
+            ):
+                main()
+    assert len(captured) == 1
+    assert captured[0].demonstration_batch_size == 1
+    assert captured[0].demonstration_replay_size == 2
+    recorded = json.loads((tmp_path / "run/config.json").read_text())["config"]
+    lineage = recorded["demonstrations"]
+    assert lineage["artifact_sha256"] == file_sha256(demonstrations)
+    assert lineage["batch_size"] == 1
+    assert lineage["replay_size"] == 2
+    assert lineage["stored_action_space"] == "symmetric-native-3d"
+    assert lineage["metadata"]["teacher"] == "test-teacher"
+
+
 def test_training_rejects_duplicate_run_directory_and_nonfrozen_frame_skip(tmp_path):
     args = ["train_drqv2.py", "--name", "test", "--total-steps", "1", "--run-dir", str(tmp_path)]
     with patch("sys.argv", args):

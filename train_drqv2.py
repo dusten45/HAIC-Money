@@ -23,9 +23,13 @@ except ImportError:  # Windows does not provide the POSIX resource module.
 
 import tracking
 from action_smoothing import normalize_action_smoothing
-from common_adapter import CPUActorAdapter, EpisodeCollector
+from common_adapter import ActionSpec, CPUActorAdapter, EpisodeCollector
 from drq_v2 import DrQv2Agent, DrQv2Config, load_exported_actor
 from train import build_sampled_env, file_sha256
+from training.drq_demonstrations import (
+    DRQ_DEMONSTRATION_FORMAT,
+    load_drq_demonstrations,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -56,6 +60,17 @@ def parse_args():
     parser.add_argument("--updates-per-step", type=int, default=1)
     parser.add_argument("--steering-logit-l2", type=float, default=0.0)
     parser.add_argument("--augmentation-pad", type=int, default=4)
+    parser.add_argument(
+        "--demonstrations",
+        type=Path,
+        help="immutable training-only DrQ demonstration artifact",
+    )
+    parser.add_argument(
+        "--demonstration-batch-size",
+        type=int,
+        default=0,
+        help="fixed number of demonstration rows in every learner batch",
+    )
     parser.add_argument("--eval-freq", type=int, default=32768)
     parser.add_argument("--eval-python", default=sys.executable)
     parser.add_argument("--eval-workers", type=int, default=1)
@@ -222,6 +237,7 @@ def save_and_select(agent, observation, run_dir, run_config, args, best, trainer
     sources = [ROOT / name for name in (
         "common_adapter.py", "drq_v2.py", "train_drqv2.py", "train.py", "tracking.py",
         "agent.py", "evaluate_policy.py", "env_wrapper.py", "damage.py", "requirements.txt",
+        "training/drq_demonstrations.py", "training/vision_teacher.py", "haic_agent/corridor_agent.py",
     )] + sorted((ROOT / "core").rglob("*.py"))
     checkpoint = agent.save_checkpoint(
         directory / "checkpoint.pt", source_paths=sources,
@@ -235,6 +251,7 @@ def save_and_select(agent, observation, run_dir, run_config, args, best, trainer
     result = report["ranked"][0]
     record = {
         "step": step, "gradient_steps": agent.gradient_steps, "replay_size": agent.replay.size,
+        "demonstration_replay_size": agent.demonstration_replay_size,
         "checkpoint": str(checkpoint.resolve()),
         "checkpoint_sha256": file_sha256(checkpoint),
         "actor": str(actor_path.resolve()), "actor_sha256": file_sha256(actor_path),
@@ -259,8 +276,8 @@ def restore_collector(collector, sampler_rng, warmup_rng, state, run_config):
         raise ValueError("training resume requires full trainer state; historical checkpoints are evaluation-only")
     for key in ("track_ids", "track_sampler_seed", "max_steps", "frame_skip", "seed",
                 "updates_per_step", "excluded_training_seeds", "protocol", "reward_contract",
-                "runtime", "training_source_sha256"):
-        if state["run_config"][key] != run_config[key]:
+                "runtime", "training_source_sha256", "demonstrations"):
+        if state["run_config"].get(key) != run_config.get(key):
             raise ValueError(f"resume training contract mismatch: {key}")
     sampler_rng.bit_generator.state = copy.deepcopy(state["sampler_before_reset"])
     collector.episode_id = state["episode_id"] - 1
@@ -307,7 +324,13 @@ def main():
         raise ValueError("the first algorithm comparison freezes frame_skip=4")
     if args.augmentation_pad < 0:
         raise ValueError("augmentation-pad must be nonnegative")
-    if any(path and "_latest" in path.parts for path in (args.resume, args.run_dir, args.protocol_file, args.evaluations_dir)):
+    if (args.demonstrations is None) != (args.demonstration_batch_size == 0):
+        raise ValueError("demonstrations and a positive demonstration batch size must be provided together")
+    if args.demonstration_batch_size < 0 or args.demonstration_batch_size >= args.batch_size:
+        raise ValueError("demonstration batch size must be nonnegative and smaller than batch size")
+    if any(path and "_latest" in path.parts for path in (
+        args.resume, args.run_dir, args.protocol_file, args.evaluations_dir, args.demonstrations,
+    )):
         raise ValueError("DrQ training requires explicit paths, not _latest")
     if args.run_dir and args.run_dir.exists():
         raise FileExistsError(args.run_dir)
@@ -330,6 +353,30 @@ def main():
         steering_logit_l2=args.steering_logit_l2,
         augmentation_pad=args.augmentation_pad,
     )
+    demonstration_replay = None
+    demonstration_lineage = None
+    if args.demonstrations is not None:
+        demonstration_path = args.demonstrations.resolve()
+        demonstration_replay, demonstration_metadata = load_drq_demonstrations(
+            demonstration_path,
+            observation_spec=None,
+            action_spec=None,
+        )
+        demonstration_lineage = {
+            "format": DRQ_DEMONSTRATION_FORMAT,
+            "artifact": str(demonstration_path),
+            "artifact_sha256": file_sha256(demonstration_path),
+            "batch_size": args.demonstration_batch_size,
+            "replay_size": demonstration_replay.size,
+            "terminal_safe_samples": len(demonstration_replay.valid_indices()),
+            "observation_fingerprint": demonstration_replay.observation_spec.fingerprint,
+            "action_fingerprint": ActionSpec().fingerprint,
+            "source_action_space": "official-[steer,gas,brake]",
+            "stored_action_space": "symmetric-native-3d",
+            "n_step": demonstration_replay.n_step,
+            "gamma": demonstration_replay.gamma,
+            "metadata": demonstration_metadata,
+        }
     run_config = {
         "algorithm": "drq-v2",
         "total_steps": args.total_steps,
@@ -350,6 +397,7 @@ def main():
         "track_schedule": "independent track and uint32 seed draws; identical episode-index stream across training seeds",
         "reward_contract": {"reward_shaping": False, "norm_reward": False, "collision_penalty": 0.0},
         "action_smoothing": normalize_action_smoothing(), "observation_channels": 4,
+        "demonstrations": demonstration_lineage,
         "runtime": {"torch": torch.__version__, "cuda": torch.version.cuda,
                     "device": torch.cuda.get_device_name() if args.device.startswith("cuda") else "cpu",
                     "torch_threads": torch.get_num_threads(),
@@ -363,6 +411,7 @@ def main():
             str(path.relative_to(ROOT)): file_sha256(path)
             for path in [ROOT / name for name in (
                 "train_drqv2.py", "drq_v2.py", "common_adapter.py", "train.py", "env_wrapper.py", "damage.py",
+                "training/drq_demonstrations.py", "training/vision_teacher.py", "haic_agent/corridor_agent.py",
             )] + sorted((ROOT / "core").rglob("*.py"))
         },
     }
@@ -393,6 +442,12 @@ def main():
         obstacles=True,
     )
     agent = DrQv2Agent(config, seed=args.seed)
+    if demonstration_replay is not None:
+        agent.configure_demonstrations(
+            demonstration_replay,
+            batch_size=args.demonstration_batch_size,
+            lineage=demonstration_lineage,
+        )
     collector = EpisodeCollector(environment, action_adapter=agent.action_adapter, gamma=config.gamma)
     rng = np.random.default_rng(args.seed)
     sampler_rng = environment.get_wrapper_attr("_rng")
@@ -464,6 +519,7 @@ def main():
                               "last_updated_actor_loss": last_actor_metrics.get("actor_loss"),
                               "last_actor_update": last_actor_metrics,
                               "replay_bytes": agent.replay.memory_bytes,
+                              "demonstration_replay_bytes": agent.demonstration_replay_bytes,
                               **training_memory(),
                               "elapsed_seconds": time.perf_counter() - started}
                     tracking.log_metrics(run_dir, record)

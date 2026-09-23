@@ -22,6 +22,7 @@ THREAD_ENV = {name: "1" for name in (
 )}
 TRAIN_SOURCES = (
     "train_drqv2.py", "drq_v2.py", "common_adapter.py", "train.py", "env_wrapper.py", "damage.py",
+    "training/drq_demonstrations.py", "training/vision_teacher.py", "haic_agent/corridor_agent.py",
 )
 SOURCES = (*TRAIN_SOURCES, "run_drqv2_matched.py", "evaluate_policy.py", "agent.py",
            "tracking.py", "action_smoothing.py", "action_representation.py", "requirements.txt")

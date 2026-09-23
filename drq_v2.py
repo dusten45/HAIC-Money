@@ -527,6 +527,9 @@ class DrQv2Agent:
             gamma=self.config.gamma,
             seed=seed,
         )
+        self.demonstration_replay: Uint8Replay | None = None
+        self.demonstration_batch_size = 0
+        self.demonstration_lineage: dict[str, Any] = {}
         self.environment_steps = 0
         self.gradient_steps = 0
         self.last_actor_metrics: dict[str, float] = {}
@@ -547,6 +550,37 @@ class DrQv2Agent:
     def observe(self, transition: Transition) -> None:
         self.replay.add(transition)
         self.environment_steps += 1
+
+    def configure_demonstrations(
+        self,
+        replay: Uint8Replay,
+        *,
+        batch_size: int,
+        lineage: dict[str, Any] | None = None,
+    ) -> None:
+        """Attach a permanent training-only replay with a fixed batch quota."""
+
+        if not 0 < batch_size < self.config.batch_size:
+            raise ValueError("demonstration batch size must be between zero and the full batch size")
+        if replay.observation_spec.fingerprint != self.observation_spec.fingerprint:
+            raise ValueError("demonstration observation contract does not match the agent")
+        if replay.action_dim != self.config.action_dim:
+            raise ValueError("demonstration action dimension does not match the agent")
+        if replay.n_step != self.config.n_step or replay.gamma != self.config.gamma:
+            raise ValueError("demonstration return contract does not match the agent")
+        if len(replay.valid_indices()) < batch_size:
+            raise ValueError("demonstration replay has too few terminal-safe samples")
+        self.demonstration_replay = replay
+        self.demonstration_batch_size = int(batch_size)
+        self.demonstration_lineage = copy.deepcopy(lineage or {})
+
+    @property
+    def demonstration_replay_size(self) -> int:
+        return 0 if self.demonstration_replay is None else self.demonstration_replay.size
+
+    @property
+    def demonstration_replay_bytes(self) -> int:
+        return 0 if self.demonstration_replay is None else self.demonstration_replay.memory_bytes
 
     def exploration_std(self) -> float:
         fraction = min(1.0, self.environment_steps / max(1, self.config.exploration_duration))
@@ -573,6 +607,28 @@ class DrQv2Agent:
             "discount": torch.as_tensor(batch["discount"], dtype=torch.float32, device=self.device),
         }
 
+    def _sample_training_batch(self) -> dict[str, np.ndarray]:
+        demonstration_count = self.demonstration_batch_size
+        online_count = self.config.batch_size - demonstration_count
+        online = self.replay.sample(online_count)
+        if demonstration_count == 0:
+            return {
+                **online,
+                "is_demonstration": np.zeros(online_count, dtype=np.bool_),
+            }
+        if self.demonstration_replay is None:
+            raise RuntimeError("demonstration replay is not configured")
+        demonstrations = self.demonstration_replay.sample(demonstration_count)
+        mixed = {
+            key: np.concatenate((online[key], demonstrations[key]), axis=0)
+            for key in online
+        }
+        mixed["is_demonstration"] = np.concatenate((
+            np.zeros(online_count, dtype=np.bool_),
+            np.ones(demonstration_count, dtype=np.bool_),
+        ))
+        return mixed
+
     def update(self) -> dict[str, float]:
         zero = {
             "critic_loss": 0.0,
@@ -581,6 +637,9 @@ class DrQv2Agent:
             "q2_mean": 0.0,
             "target_mean": 0.0,
             "replay_size": float(self.replay.size),
+            "demonstration_replay_size": float(self.demonstration_replay_size),
+            "online_batch_size": float(self.config.batch_size - self.demonstration_batch_size),
+            "demonstration_batch_size": float(self.demonstration_batch_size),
             "gradient_steps": float(self.gradient_steps),
             "actor_updated": 0.0,
             **self.last_actor_metrics,
@@ -588,7 +647,7 @@ class DrQv2Agent:
         if self.replay.size < max(self.config.batch_size, self.config.warmup_steps):
             return zero
         try:
-            batch = self.replay.sample(self.config.batch_size)
+            batch = self._sample_training_batch()
         except ValueError:
             return zero
         values = self._batch_tensors(batch)
@@ -675,6 +734,9 @@ class DrQv2Agent:
             "q2_mean": float(q2.detach().mean().cpu()),
             "target_mean": float(target.detach().mean().cpu()),
             "replay_size": float(self.replay.size),
+            "demonstration_replay_size": float(self.demonstration_replay_size),
+            "online_batch_size": float(self.config.batch_size - self.demonstration_batch_size),
+            "demonstration_batch_size": float(self.demonstration_batch_size),
             "gradient_steps": float(self.gradient_steps),
             **self.last_actor_metrics,
         }
@@ -696,6 +758,15 @@ class DrQv2Agent:
             "actor_optimizer": self.actor_optimizer.state_dict(),
             "critic_optimizer": self.critic_optimizer.state_dict(),
             "replay": self.replay.state_dict(),
+            "demonstrations": (
+                None
+                if self.demonstration_replay is None
+                else {
+                    "batch_size": self.demonstration_batch_size,
+                    "lineage": copy.deepcopy(self.demonstration_lineage),
+                    "replay": self.demonstration_replay.state_dict(),
+                }
+            ),
             "environment_steps": self.environment_steps,
             "gradient_steps": self.gradient_steps,
             "last_actor_metrics": self.last_actor_metrics.copy(),
@@ -775,6 +846,47 @@ class DrQv2Agent:
             for key in ("schema_version", "algorithm", "observation", "action", "frame_skip"):
                 if manifest.get(key) != expected[key]:
                     raise ValueError(f"checkpoint manifest {key} does not match the saved contract")
+        saved_demonstrations = payload.get("demonstrations")
+        restored_demonstration_replay = None
+        restored_demonstration_batch_size = 0
+        restored_demonstration_lineage: dict[str, Any] = {}
+        if saved_demonstrations is not None:
+            if not isinstance(saved_demonstrations, dict):
+                raise ValueError("checkpoint demonstration state is invalid")
+            demonstration_state = saved_demonstrations.get("replay")
+            if not isinstance(demonstration_state, dict):
+                raise ValueError("checkpoint demonstration replay is missing")
+            restored_demonstration_replay = Uint8Replay(
+                capacity=int(demonstration_state["capacity"]),
+                observation_spec=self.observation_spec,
+                action_dim=int(demonstration_state["action_dim"]),
+                n_step=int(demonstration_state["n_step"]),
+                gamma=float(demonstration_state["gamma"]),
+                seed=0,
+            )
+            restored_demonstration_replay.load_state_dict(demonstration_state)
+            restored_demonstration_batch_size = int(saved_demonstrations.get("batch_size", 0))
+            restored_demonstration_lineage = saved_demonstrations.get("lineage", {})
+            if not isinstance(restored_demonstration_lineage, dict):
+                raise ValueError("checkpoint demonstration lineage is invalid")
+            if not 0 < restored_demonstration_batch_size < self.config.batch_size:
+                raise ValueError("checkpoint demonstration batch size is invalid")
+            if restored_demonstration_replay.observation_spec.fingerprint != self.observation_spec.fingerprint:
+                raise ValueError("checkpoint demonstration observation contract does not match")
+            if (
+                restored_demonstration_replay.action_dim != self.config.action_dim
+                or restored_demonstration_replay.n_step != self.config.n_step
+                or restored_demonstration_replay.gamma != self.config.gamma
+                or len(restored_demonstration_replay.valid_indices()) < restored_demonstration_batch_size
+            ):
+                raise ValueError("checkpoint demonstration replay contract does not match")
+            if self.demonstration_replay is not None and (
+                self.demonstration_batch_size != restored_demonstration_batch_size
+                or self.demonstration_lineage != restored_demonstration_lineage
+            ):
+                raise ValueError("checkpoint demonstration configuration does not match agent")
+        elif self.demonstration_replay is not None:
+            raise ValueError("checkpoint does not contain the configured demonstration replay")
         saved_device = torch.device(saved_config["device"])
         cuda_rng_state = payload.get("torch_cuda_rng_state")
         if saved_device.type == "cuda" and cuda_rng_state is None:
@@ -795,6 +907,9 @@ class DrQv2Agent:
         self.actor_optimizer.load_state_dict(payload["actor_optimizer"])
         self.critic_optimizer.load_state_dict(payload["critic_optimizer"])
         self.replay.load_state_dict(payload["replay"])
+        self.demonstration_replay = restored_demonstration_replay
+        self.demonstration_batch_size = restored_demonstration_batch_size
+        self.demonstration_lineage = copy.deepcopy(restored_demonstration_lineage)
         self.environment_steps = int(payload["environment_steps"])
         self.gradient_steps = int(payload["gradient_steps"])
         self.last_actor_metrics = dict(payload.get("last_actor_metrics", {}))

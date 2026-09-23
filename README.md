@@ -355,6 +355,34 @@ python -m unittest discover -s tests -v
 표시되는 것이 정상입니다. 이 검사는 운영진이 두 저장소를 같은 상위 디렉터리에 둔
 환경에서 실행합니다. 나머지 테스트가 모두 `OK`인지 확인하십시오.
 
+### DrQ-v2 시연 replay
+
+픽셀 corridor 교사의 명시적인 학습용 episode를 DrQ transition artifact로 수집할 수
+있습니다. 교사의 official `[steer, gas, brake]` 행동은 DrQ의 3차원 symmetric native
+행동으로 한 번만 변환되며, 원본 reward와 terminal/truncation 의미는 유지됩니다.
+
+```powershell
+python -m training.drq_demonstrations `
+  --episodes 1:1001,2:1002 `
+  --max-decisions 2000 `
+  --output artifacts/haic/drq-demonstrations.pt
+```
+
+학습 시 artifact와 고정 demonstration batch 크기를 함께 지정합니다. 시연 replay는
+online replay와 분리되어 online 경험에 의해 덮어써지지 않으며, checkpoint에 sampling
+RNG와 함께 저장됩니다. 제출용 actor에는 교사나 replay가 포함되지 않습니다.
+
+```powershell
+python train_drqv2.py `
+  --name drq-with-demonstrations `
+  --total-steps 131072 `
+  --batch-size 64 `
+  --replay-capacity 100000 `
+  --warmup-steps 10000 `
+  --demonstrations artifacts/haic/drq-demonstrations.pt `
+  --demonstration-batch-size 2
+```
+
 ## 11. 문제 확인
 
 환경 설치가 실패하면 다음 정보를 함께 확인하십시오.
