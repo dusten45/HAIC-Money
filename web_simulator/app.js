@@ -576,6 +576,13 @@
     return `${(Number(value) * 100).toFixed(1)}%`;
   }
 
+  function formatAction(action) {
+    if (!Array.isArray(action) || action.length !== 3 || action.some((value) => !Number.isFinite(Number(value)))) {
+      return "—";
+    }
+    return action.map((value) => Number(value).toFixed(2)).join(" / ");
+  }
+
   function logMap(log) {
     return log && log.run && log.run.map && typeof log.run.map === "object" ? log.run.map : null;
   }
@@ -659,6 +666,11 @@
     $("metric-progress").textContent = formatPercent(current ? current.progress : summary.progress);
     $("metric-damage").textContent = formatPercent(current ? current.damage : summary.damage);
     $("metric-collisions").textContent = String(summary.collision_count ?? "—");
+    $("metric-action").textContent = formatAction(current && current.action);
+    const speed = current && Array.isArray(current.velocity)
+      ? Math.hypot(Number(current.velocity[0]), Number(current.velocity[1]))
+      : NaN;
+    $("metric-speed").textContent = Number.isFinite(speed) ? `${speed.toFixed(2)} m/s` : "—";
     $("metric-track").textContent = map.map_kind === "custom"
       ? (map.map_id || log.run.map_ref?.map_id || "custom")
       : `${map.track_id ?? "—"} / ${map.seed ?? "—"}`;
