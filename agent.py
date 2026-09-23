@@ -110,18 +110,26 @@ class _ForwardCorridorController:
     it remains valid in the submission container.
     """
 
+    IMAGE_CENTER = 41.5
     ROAD_LOW = 0.24
     ROAD_HIGH = 0.52
     OBSTACLE_LOW = 0.54
-    MAX_STEER = 0.7
-    MAX_GAS = 0.12
+    # Conservative limits are intentional: this phase prioritizes staying on
+    # the road over lap time.  Curves may use more steering than straights,
+    # but neither mode can jump directly to a large drift-like command.
+    MAX_STEER = 0.48
+    STRAIGHT_MAX_STEER = 0.16
+    STRAIGHT_CENTER_DEADBAND = 1.25
+    STRAIGHT_SWEEP_DEADBAND = 1.5
+    MAX_STEER_STEP = 0.07
+    MAX_GAS = 0.10
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
 
-    def __init__(self, *, cruise_speed: float = 62.0) -> None:
+    def __init__(self, *, cruise_speed: float = 54.0) -> None:
         self.cruise_speed = float(cruise_speed)
         self._obstacle_side = 0.0
         self._obstacle_missing = 0
@@ -129,6 +137,7 @@ class _ForwardCorridorController:
         self._last_steer = 0.0
         self._target_speed = None
         self.road_visible = False
+        self.has_seen_road = False
 
     def reset(self, observation=None) -> None:
         del observation
@@ -138,6 +147,7 @@ class _ForwardCorridorController:
         self._last_steer = 0.0
         self._target_speed = None
         self.road_visible = False
+        self.has_seen_road = False
 
     @staticmethod
     def _frame(observation) -> np.ndarray | None:
@@ -158,7 +168,7 @@ class _ForwardCorridorController:
         asphalt = (frame >= self.ROAD_LOW) & (frame <= self.ROAD_HIGH)
         horizontal = np.arange(frame.shape[1], dtype=np.float32)
         centers: dict[int, float] = {}
-        previous = 42.0
+        previous = self.IMAGE_CENTER
         for row in (54, 50, 46, 42, 38, 34, 30):
             selected = asphalt[row] & (np.abs(horizontal - previous) <= 17.0)
             locations = np.flatnonzero(selected)
@@ -167,10 +177,10 @@ class _ForwardCorridorController:
                 centers[row] = previous
         return centers
 
-    @staticmethod
-    def _center_at(row: float, centers: dict[int, float]) -> float:
+    @classmethod
+    def _center_at(cls, row: float, centers: dict[int, float]) -> float:
         if not centers:
-            return 42.0
+            return cls.IMAGE_CENTER
         known_rows = sorted(centers)
         return float(
             np.interp(
@@ -232,11 +242,14 @@ class _ForwardCorridorController:
         mass = float(frame[top:bottom, left:right].sum())
         return float(np.clip((mass - cls.SPEED_BASELINE) / cls.SPEED_PER_UNIT, 0.0, 80.0))
 
-    @staticmethod
-    def _road_sweep(centers: dict[int, float]) -> float:
+    @classmethod
+    def _road_sweep(cls, centers: dict[int, float]) -> float:
         return max(
             (
-                abs(centers.get(row, 42.0) - centers.get(row + 24, 42.0))
+                abs(
+                    centers.get(row, cls.IMAGE_CENTER)
+                    - centers.get(row + 24, cls.IMAGE_CENTER)
+                )
                 for row in (30, 34, 38, 42)
             ),
             default=0.0,
@@ -256,22 +269,57 @@ class _ForwardCorridorController:
         frame = self._frame(observation)
         if frame is None:
             self.road_visible = False
+            if self.has_seen_road:
+                self._last_steer *= 0.75
+                return np.asarray(
+                    [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
+                    dtype=np.float32,
+                )
             return np.zeros(3, dtype=np.float32)
 
         centers = self._road_centers(frame)
         self.road_visible = len(centers) >= 3
         if not self.road_visible:
+            if self.has_seen_road:
+                # If the corridor temporarily disappears, brake gently and
+                # decay the last steer instead of asking the neural baseline
+                # to make an unconstrained recovery turn.
+                self._last_steer *= 0.75
+                return np.asarray(
+                    [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
+                    dtype=np.float32,
+                )
             return np.zeros(3, dtype=np.float32)
-        far = centers.get(42, 42.0)
-        near = centers.get(54, 42.0)
-        steering = 0.022 * (far - 42.0) + 0.018 * (far - near)
+        self.has_seen_road = True
+        far = centers.get(42, self.IMAGE_CENTER)
+        near = centers.get(54, self.IMAGE_CENTER)
+        road_sweep = self._road_sweep(centers)
+        center_offset = far - self.IMAGE_CENTER
+        straight = (
+            abs(center_offset) <= self.STRAIGHT_CENTER_DEADBAND
+            and abs(far - near) <= self.STRAIGHT_SWEEP_DEADBAND
+            and road_sweep <= self.STRAIGHT_SWEEP_DEADBAND
+        )
+        if straight:
+            # Quantization noise on a straight road should not create a
+            # persistent weave.  A small residual correction remains only
+            # outside the deadband.
+            steering = 0.0
+            steer_limit = self.STRAIGHT_MAX_STEER
+        else:
+            steering = 0.016 * center_offset + 0.012 * (far - near)
+            steer_limit = self.MAX_STEER
         target_speed = float(
-            np.clip(self.cruise_speed - 2.0 * self._road_sweep(centers), 36.0, self.cruise_speed)
+            np.clip(self.cruise_speed - 2.0 * road_sweep, 36.0, self.cruise_speed)
         )
 
         obstacle = self._nearest_obstacle(frame, centers)
         if obstacle is not None:
             obstacle_y, obstacle_x, road_center = obstacle
+            # A straight road normally has a tight steering limit; a detected
+            # obstacle is the explicit exception, but still stays well below
+            # a drift-sized command.
+            steer_limit = min(self.MAX_STEER, 0.32)
             side_offset = obstacle_x - road_center
             candidate_side = 1.0 if side_offset < 0.0 else -1.0
             if self._obstacle_side == 0.0:
@@ -280,7 +328,7 @@ class _ForwardCorridorController:
                 self._obstacle_side = candidate_side
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
-            steering += self._obstacle_side * 0.34 * urgency
+            steering += self._obstacle_side * 0.24 * urgency
             target_speed = min(target_speed, 47.0 if obstacle_y < 44.0 else 40.0)
             self._obstacle_missing = 0
         elif self._obstacle_side != 0.0:
@@ -293,11 +341,20 @@ class _ForwardCorridorController:
         if self._target_speed is not None:
             target_speed = 0.65 * self._target_speed + 0.35 * target_speed
         self._target_speed = target_speed
+        if not straight and abs(steering) > 0.28:
+            target_speed = min(target_speed, 44.0)
         speed = self._estimate_speed(frame)
         gas, brake = self._pedals(speed, target_speed)
 
-        # Rate-limit steering so one noisy frame cannot turn the car around.
-        steering = float(np.clip(0.65 * self._last_steer + 0.35 * steering, -self.MAX_STEER, self.MAX_STEER))
+        # Slow down before a bend and rate-limit steering so one noisy frame
+        # cannot turn the car around or induce a drift-like correction.
+        if not straight and abs(steering) > 0.28:
+            gas = min(gas, self.MAX_GAS * 0.5)
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
+        steering = self._last_steer + float(
+            np.clip(steering - self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+        )
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
         self._last_steer = steering
         return np.asarray([steering, gas, brake], dtype=np.float32)
 
@@ -753,7 +810,10 @@ class Agent:
         if self._runtime_mode == "baseline":
             if self._forward_controller is not None:
                 controlled = self._forward_controller.act(observation)
-                if self._forward_controller.road_visible:
+                if (
+                    self._forward_controller.road_visible
+                    or self._forward_controller.has_seen_road
+                ):
                     return controlled
             controlled = self._append_action_control_plane(
                 observation,

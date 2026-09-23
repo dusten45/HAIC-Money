@@ -135,6 +135,50 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(diagnostics["obstacle_detection_frames"], 1)
         self.assertEqual(diagnostics["gas_frames"], 2)
 
+    def test_forward_controller_holds_a_straight_road_without_weaving(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        actions = [controller.act(_observation()) for _ in range(8)]
+
+        for action in actions:
+            self.assertLess(abs(float(action[0])), 0.02)
+            self.assertGreater(float(action[1]), 0.0)
+            self.assertEqual(float(action[2]), 0.0)
+
+    def test_forward_controller_limits_direction_reversal_and_resets(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        actions = [
+            controller.act(_observation(curve=0.9)),
+            controller.act(_observation(curve=-0.9)),
+            controller.act(_observation(curve=0.9)),
+        ]
+        steers = [float(action[0]) for action in actions]
+        self.assertTrue(all(abs(steer) <= controller.MAX_STEER for steer in steers))
+        self.assertTrue(
+            all(
+                abs(current - previous) <= controller.MAX_STEER_STEP + 1e-6
+                for previous, current in zip(steers, steers[1:])
+            )
+        )
+
+        controller.reset()
+        straight = controller.act(_observation())
+        self.assertLess(abs(float(straight[0])), 0.02)
+
+    def test_forward_controller_brakes_when_the_corridor_disappears_after_tracking(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        controller.act(_observation())
+        recovery = controller.act(np.zeros((4, 84, 84), dtype=np.float32))
+
+        self.assertEqual(float(recovery[1]), 0.0)
+        self.assertGreater(float(recovery[2]), 0.0)
+        self.assertLessEqual(abs(float(recovery[0])), controller.MAX_STEER)
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic

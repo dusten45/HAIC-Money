@@ -121,11 +121,14 @@ custom tracks remain selectable in the same UI.
 
 The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
 controller at inference time. It estimates the visible road centerline, rate-limits
-steering, regulates speed from the HUD, and emits mutually exclusive throttle or
-brake. Compact bright objects inside the road band also trigger a temporary
-avoidance steer and lower target speed. Explicit action-contract payloads, DrQ
-actors, and the HAIC visual-policy runtime keep their recorded model paths; no
-simulation or performance evaluation was run for this repair.
+steering, snaps near-centered straight segments to zero steering, regulates speed
+conservatively from the HUD, and emits mutually exclusive throttle or brake.
+Compact bright objects inside the road band also trigger a bounded avoidance steer
+and lower target speed. After the road has been seen, a temporary visual dropout
+brakes and decays steering instead of falling back to an unconstrained turn.
+Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
+keep their recorded model paths; no simulation or performance evaluation was run
+for this repair.
 
 ## Runtime And Infrastructure
 
