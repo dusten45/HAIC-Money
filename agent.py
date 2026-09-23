@@ -122,14 +122,14 @@ class _ForwardCorridorController:
     STRAIGHT_CENTER_DEADBAND = 1.25
     STRAIGHT_SWEEP_DEADBAND = 1.5
     MAX_STEER_STEP = 0.07
-    MAX_GAS = 0.10
+    MAX_GAS = 0.08
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
 
-    def __init__(self, *, cruise_speed: float = 54.0) -> None:
+    def __init__(self, *, cruise_speed: float = 48.0) -> None:
         self.cruise_speed = float(cruise_speed)
         self._obstacle_side = 0.0
         self._obstacle_missing = 0
@@ -270,7 +270,10 @@ class _ForwardCorridorController:
         if frame is None:
             self.road_visible = False
             if self.has_seen_road:
-                self._last_steer *= 0.75
+                self._last_steer = float(
+                    self._last_steer
+                    + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+                )
                 return np.asarray(
                     [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
                     dtype=np.float32,
@@ -284,7 +287,10 @@ class _ForwardCorridorController:
                 # If the corridor temporarily disappears, brake gently and
                 # decay the last steer instead of asking the neural baseline
                 # to make an unconstrained recovery turn.
-                self._last_steer *= 0.75
+                self._last_steer = float(
+                    self._last_steer
+                    + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+                )
                 return np.asarray(
                     [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
                     dtype=np.float32,
@@ -351,6 +357,14 @@ class _ForwardCorridorController:
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
         steering = float(np.clip(steering, -steer_limit, steer_limit))
+        if (
+            self._last_steer != 0.0
+            and steering * self._last_steer < 0.0
+            and abs(self._last_steer) > self.MAX_STEER_STEP
+        ):
+            # Cross zero before changing sides.  This prevents an S-curve or
+            # one noisy centerline estimate from becoming a snap reversal.
+            steering = 0.0
         steering = self._last_steer + float(
             np.clip(steering - self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
         )

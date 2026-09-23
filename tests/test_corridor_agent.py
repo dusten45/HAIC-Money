@@ -163,6 +163,9 @@ class TestVisionCorridorAgent(unittest.TestCase):
                 for previous, current in zip(steers, steers[1:])
             )
         )
+        self.assertTrue(
+            all(previous * current >= -1e-6 for previous, current in zip(steers, steers[1:]))
+        )
 
         controller.reset()
         straight = controller.act(_observation())
