@@ -117,6 +117,16 @@ The Track Lab web server now exposes a local Agent catalog under
 selection to the automatic run endpoint. Map files, official seeds, and generated
 custom tracks remain selectable in the same UI.
 
+## Forward-Stability Runtime Repair
+
+The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
+controller at inference time. It estimates the visible road centerline, rate-limits
+steering, regulates speed from the HUD, and emits mutually exclusive throttle or
+brake. Compact bright objects inside the road band also trigger a temporary
+avoidance steer and lower target speed. Explicit action-contract payloads, DrQ
+actors, and the HAIC visual-policy runtime keep their recorded model paths; no
+simulation or performance evaluation was run for this repair.
+
 ## Runtime And Infrastructure
 
 - Preserve `.venv` -> `/venv/main`: Python3.11.14, Torch2.11.0+cu128, RTX5070Ti.

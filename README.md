@@ -59,7 +59,11 @@ python local_runner.py --track-id 1 --seed 42
 baseline checkpoint가 없으면 `policy.pt`/선택적 `dynamics.pt` 경로를 사용합니다. HAIC 개발 중
 checkpoint가 없으면 인터페이스 smoke 용도의 초기 actor를 만들 수 있지만, 제출 ZIP은 strict
 loading으로 유효한 학습 checkpoint가 없으면 실행을 거부합니다. Corridor 교사는 train split의
-시연 수집과 학습 전용 벤치마크에서만 쓰며 `Agent` 및 제출 ZIP에는 포함하지 않습니다. CEM은
+시연 수집과 학습 전용 벤치마크에서만 쓰며 별도 teacher 모듈로는 `Agent`에 포함하지 않습니다.
+대신 bare `model.pt`를 사용하는 legacy baseline 실행에서는 제출 루트에 포함되는
+forward-corridor safety controller가 도로 중심선·속도·밝은 장애물 신호를 사용해 급격한
+역주행성 조향을 제한하고 가속과 제동을 상호 배타적으로 선택합니다. 명시적 action-contract
+payload와 DrQ actor는 기록된 모델 계약을 그대로 유지합니다. CEM은
 별도 학습 모델과 평가 결과가 선택한 경우에만 PPO 행동 제안을 보정합니다.
 
 `local_runner.py --track-id N --seed S`에서 고정 공식 트랙을 만들면 해당 트랙에 장애물 6개가
