@@ -781,6 +781,24 @@ python -m local_simulator.map --track-id 1 --seed 99 `
 `local_simulator.run`은 기본 `baseline` 정책 외에 `--policy agent`를 지원합니다. 긴 재생 화면을
 JSON에 포함하려면 `--record-frames`를 추가하세요. 프레임 로그는 용량이 커질 수 있습니다.
 
+카메라 프레임이 포함된 로그는 주행 스텝별 조작·진행도·속도·충돌·종료 상태를 덧씌운 MP4로
+내보낼 수 있습니다. 이 명령은 로그를 다시 실행하지 않고 저장된 프레임만 변환하므로, 영상과
+JSON의 주행 기록이 달라지지 않습니다.
+
+```powershell
+python -m local_simulator.run --map .haic-artifacts/maps/extreme-73.json `
+  --policy agent --project-root . `
+  --record-frames --output .haic-artifacts/runs/extreme-73.json
+
+python -m local_simulator.video `
+  --run .haic-artifacts/runs/extreme-73.json `
+  --output .haic-artifacts/videos/extreme-73.mp4
+```
+
+생성된 MP4의 기본 FPS는 로그의 `control_hz`를 사용합니다. 다른 재생 속도가 필요하면
+`--fps 25`처럼 지정할 수 있습니다. 영상에서 빨간 테두리는 충돌 스텝이며, 상단 HUD에는
+`[steer, gas, brake]`, progress, 속도, damage가 표시됩니다.
+
 ### 브라우저에서 보기
 
 저장된 맵·로그 파일만 열어 재생하려면 정적 서버를 사용할 수 있습니다.
