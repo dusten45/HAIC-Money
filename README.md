@@ -781,6 +781,36 @@ python -m local_simulator.map --track-id 1 --seed 99 `
 `local_simulator.run`은 기본 `baseline` 정책 외에 `--policy agent`를 지원합니다. 긴 재생 화면을
 JSON에 포함하려면 `--record-frames`를 추가하세요. 프레임 로그는 용량이 커질 수 있습니다.
 
+### Agent 진단 리포트와 MP4
+
+현재 `agent.py`를 로컬 맵에서 실행하면서 카메라 프레임, 궤적, 행동, 진행률,
+손상도, 충돌을 함께 기록하려면 다음 명령을 사용합니다. `--project-root`에는
+`agent.py`와 해당 `model.pt`가 있는 폴더를 지정합니다.
+
+```powershell
+python -m local_simulator.diagnostic `
+  --map .haic-artifacts\maps\track-1-seed-42.json `
+  --project-root .haic-artifacts\drq-agent `
+  --agent-path .haic-artifacts\drq-agent\agent.py `
+  --output-dir .haic-artifacts\diagnostics\track-1-seed-42 `
+  --video
+```
+
+이 명령은 `run.json`, 조작·궤적·카메라를 동기화한 `report.html`, 그리고 선택적인
+`replay.mp4`를 생성합니다. HTML에서는 스텝을 이동하거나 재생하면서 현재 카메라,
+조향·가속·제동, 진행률·손상도, 충돌 위치를 함께 확인할 수 있습니다. `--run-log`를
+사용하면 이미 저장된 `run.json`에서 HTML/MP4만 다시 만들 수 있습니다.
+
+```powershell
+python -m local_simulator.diagnostic `
+  --run-log .haic-artifacts\runs\agent-run.json `
+  --output-dir .haic-artifacts\diagnostics\agent-run `
+  --video
+```
+
+리포트의 경고 신호는 성능 점수가 아니라 관찰을 돕기 위한 규칙 기반 표시입니다.
+조향 포화, 가속·제동 동시 출력, 충돌 스텝을 찾아 해당 구간을 먼저 확인하십시오.
+
 ### 브라우저에서 보기
 
 저장된 맵·로그 파일만 열어 재생하려면 정적 서버를 사용할 수 있습니다.

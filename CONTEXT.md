@@ -105,6 +105,14 @@ replay, sampling RNG and source lineage are checkpointed; exported actors remain
 unchanged and contain no teacher or replay. Correctness coverage uses only fake
 environments and synthetic transitions.
 
+## Local Visual Diagnostics
+
+The local simulator can run an `agent.py` against a reproducible map with camera
+frames enabled. `local_simulator.diagnostic` writes the run log, a standalone
+HTML replay with synchronized camera/action/trajectory telemetry, and optionally
+an annotated MP4. The report's saturation, gas/brake overlap, and collision
+signals are observational flags only; no performance evaluation is performed.
+
 ## Runtime And Infrastructure
 
 - Preserve `.venv` -> `/venv/main`: Python3.11.14, Torch2.11.0+cu128, RTX5070Ti.
