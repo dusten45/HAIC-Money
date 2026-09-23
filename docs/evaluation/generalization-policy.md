@@ -26,6 +26,12 @@ Read the protocol/result artifacts before using any listed seed. In particular, 
 geometry seed may be excluded across all training track IDs even when a table shows
 only one evaluation track-ID range.
 
+The legacy `checkpoint-v1` blind receipt at IDs `7-9` and seeds `20201-20208` was
+executed. Therefore, do not describe all internal blind cells as untouched; name the
+specific study partition. The unopened L2/pad blind partitions in the table remain
+reserved for their own studies, while the historical pilot's exact screen schedule is
+incomplete and cannot prove global non-use of every other cell.
+
 ## Track Lab and Custom Maps
 
 `training/maps/site/site_map_split.json` separates local custom maps into train,

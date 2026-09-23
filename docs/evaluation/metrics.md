@@ -22,6 +22,12 @@ For an internally comparable candidate set, use the frozen protocol's declared
 order. Existing DrQ-v2 protocols use completion first, then progress, then completed
 lap time. A protocol may add operational eligibility before ranking.
 
+For current matched DrQ studies, aggregates use canonical `repeat == 0` cells only.
+`finish_rate` is finished canonical cells divided by canonical cells. Progress,
+reward, steps, damage, and steering delta are canonical-cell means; reward and damage
+are diagnostics and never selection tie-breakers. Average and best lap time include
+finishers only and are `null` without a finish.
+
 Do not pool different algorithms, source revisions, seed grids, environment modes,
 or checkpoint-selection rules into one numeric ranking. If those differ, report the
 comparison as non-matched evidence.
