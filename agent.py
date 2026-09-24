@@ -183,6 +183,15 @@ class _ForwardCorridorController:
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
+    # A compact bright component is treated as a dynamic occupancy rather
+    # than as a binary "steer now" cue.  These speed limits are a cheap
+    # camera-only approximation of a time-to-collision envelope: as the
+    # component moves down the image, leave less longitudinal speed for the
+    # lateral escape manoeuvre.  The limits stay non-zero so the controller
+    # keeps making forward progress while it searches for a safe side.
+    OBSTACLE_FAR_SPEED = 47.0
+    OBSTACLE_MID_SPEED = 30.0
+    OBSTACLE_CLOSE_SPEED = 18.0
 
     def __init__(self, *, cruise_speed: float = 64.0) -> None:
         self.cruise_speed = float(cruise_speed)
@@ -466,7 +475,10 @@ class _ForwardCorridorController:
         )
 
     def _nearest_obstacle(
-        self, frame: np.ndarray, centers: dict[int, float]
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
     ) -> tuple[float, float, float] | None:
         """Find a compact bright object inside the visible road band."""
         if len(centers) < 3:
@@ -510,6 +522,36 @@ class _ForwardCorridorController:
                 if abs(center_x - road_center) <= 24.0:
                     candidates.append((center_y, center_x, road_center))
         return max(candidates, key=lambda item: item[0]) if candidates else None
+
+    @classmethod
+    def _obstacle_speed_limit(cls, obstacle_y: float) -> float:
+        """Map image-space obstacle distance to a conservative speed target.
+
+        The forward road projection is monotonic: a larger ``y`` means the
+        object is closer.  Piecewise interpolation is less brittle than a
+        hard near/far switch and gives the longitudinal controller time to
+        brake before the object reaches the vehicle envelope.
+        """
+        y = float(np.clip(obstacle_y, 22.0, 58.0))
+        if y <= 38.0:
+            return cls.OBSTACLE_FAR_SPEED
+        if y <= 44.0:
+            return float(
+                np.interp(
+                    y,
+                    (38.0, 44.0),
+                    (cls.OBSTACLE_FAR_SPEED, cls.OBSTACLE_MID_SPEED),
+                )
+            )
+        if y <= 50.0:
+            return float(
+                np.interp(
+                    y,
+                    (44.0, 50.0),
+                    (cls.OBSTACLE_MID_SPEED, cls.OBSTACLE_CLOSE_SPEED),
+                )
+            )
+        return cls.OBSTACLE_CLOSE_SPEED
 
     @classmethod
     def _estimate_speed(cls, frame: np.ndarray) -> float:
@@ -650,7 +692,7 @@ class _ForwardCorridorController:
             )
         )
 
-        obstacle = self._nearest_obstacle(frame, centers)
+        obstacle = self._nearest_obstacle(frame, centers, spans)
         if obstacle is not None:
             obstacle_y, obstacle_x, road_center = obstacle
             # A straight road normally has a tight steering limit; a detected
@@ -658,7 +700,17 @@ class _ForwardCorridorController:
             # a drift-sized command.
             steer_limit = min(self.MAX_STEER, 0.32)
             side_offset = obstacle_x - road_center
-            candidate_side = 1.0 if side_offset < 0.0 else -1.0
+            # Select the side with the larger visible clearance, rather than
+            # blindly mirroring the obstacle around the estimated centerline.
+            # This is the local-planning equivalent of choosing the wider
+            # free-space corridor in a real autonomous stack.
+            obstacle_span = self._span_at(float(obstacle_y), spans)
+            if obstacle_span is not None:
+                left_clearance = max(0.0, obstacle_x - obstacle_span[0])
+                right_clearance = max(0.0, obstacle_span[1] - obstacle_x)
+                candidate_side = 1.0 if right_clearance >= left_clearance else -1.0
+            else:
+                candidate_side = 1.0 if side_offset < 0.0 else -1.0
             if self._obstacle_side == 0.0:
                 self._obstacle_side = candidate_side
             elif obstacle_y < 52.0:
@@ -666,7 +718,7 @@ class _ForwardCorridorController:
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
             steering += self._obstacle_side * 0.24 * urgency
-            target_speed = min(target_speed, 47.0 if obstacle_y < 44.0 else 40.0)
+            target_speed = min(target_speed, self._obstacle_speed_limit(obstacle_y))
             self._obstacle_missing = 0
         elif self._obstacle_side != 0.0:
             self._obstacle_missing += 1

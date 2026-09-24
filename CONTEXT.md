@@ -150,8 +150,15 @@ the local body has a strong response to small steering inputs, curve steering
 gain is scaled to 0.68 and further reduced to 0.58 of that value while speed is
 above the curve target. No simulation or performance evaluation was run for this
 repair.
-Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
-keep their recorded model paths.
+The runtime priority stack was re-based on the competition contract rather than on
+the earlier ad-hoc curve/green/speed preferences: perception of the traversable
+road comes first, a preview path is selected from the wider free-space side of an
+obstacle, curvature and image-space obstacle distance produce a continuous speed
+target, and the final action is passed through a bounded safety envelope. The
+obstacle distance target uses a TTC-like piecewise limit (47/30/18 speed units
+from far to close) instead of a binary near/far switch. Explicit action-contract
+payloads, DrQ actors, and the HAIC visual-policy runtime keep their recorded model
+paths.
 
 The forward-progress adjustment follows the environment's continuous action and
 finish semantics documented by Gymnasium, while using the practical separation of a

@@ -459,6 +459,31 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(action[1]), 0.0)
         self.assertTrue(np.all(np.isfinite(action)))
 
+    def test_forward_controller_uses_ttc_like_limit_for_a_close_obstacle(self):
+        from agent import _ForwardCorridorController
+
+        # At low speed a close obstacle used to remove gas but could leave no
+        # longitudinal margin for the escape steer.  The distance-aware limit
+        # must request a small brake before the object reaches the envelope.
+        action = _ForwardCorridorController().act(
+            _observation(obstacle_x=40, obstacle_y=52, speed=20.0)
+        )
+
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertTrue(np.all(np.isfinite(action)))
+
+    def test_forward_controller_interpolates_obstacle_speed_limits(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        limits = [controller._obstacle_speed_limit(row) for row in (30, 41, 47, 54)]
+
+        self.assertEqual(limits[0], controller.OBSTACLE_FAR_SPEED)
+        self.assertGreater(limits[1], limits[2])
+        self.assertGreater(limits[2], limits[3])
+        self.assertEqual(limits[3], controller.OBSTACLE_CLOSE_SPEED)
+
     def test_forward_controller_treats_bright_nonroad_intrusion_as_hazard(self):
         from agent import _ForwardCorridorController
 
