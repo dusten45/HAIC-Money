@@ -273,6 +273,20 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(float(recovery[-1][1]), 0.0)
         self.assertEqual(float(recovery[-1][2]), 0.0)
 
+    def test_forward_controller_speed_brake_watchdog_preserves_forward_progress(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        actions = [controller.act(_observation(speed=80.0)) for _ in range(12)]
+
+        # Ordinary speed regulation may brake initially, but a stale/high HUD
+        # reading must not hold the car on the brake forever.
+        self.assertTrue(
+            any(float(action[1]) > 0.0 and float(action[2]) == 0.0 for action in actions[9:]),
+            "speed-control braking must eventually hand back a forward command",
+        )
+        self.assertTrue(all(np.all(np.isfinite(action)) for action in actions))
+
     def test_forward_controller_steers_away_from_green_shoulder(self):
         from agent import _ForwardCorridorController
 

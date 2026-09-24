@@ -137,6 +137,16 @@ class _ForwardCorridorController:
     HAZARD_TARGET_SPEED = 24.0
     HAZARD_BRAKE = 0.16
     RECOVERY_BRAKE = 0.12
+    # Safety braking is a transient speed-management state, not a terminal
+    # action.  Once a few frames have been spent reducing speed, the car
+    # resumes a small forward crawl so a noisy visual hazard cannot leave it
+    # parked indefinitely before the next steering correction.
+    HAZARD_BRAKE_FRAMES = 3
+    HAZARD_CRAWL_GAS = 0.025
+    RECOVERY_BRAKE_FRAMES = 2
+    RECOVERY_GAS = 0.018
+    SPEED_BRAKE_FRAMES = 8
+    SPEED_WATCHDOG_GAS = 0.02
     HAZARD_ROWS = (54, 50, 46, 42, 38)
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
@@ -149,6 +159,9 @@ class _ForwardCorridorController:
         self._last_obstacle_side_offset = None
         self._last_steer = 0.0
         self._target_speed = None
+        self._hazard_frames = 0
+        self._recovery_frames = 0
+        self._brake_frames = 0
         self.road_visible = False
         self.has_seen_road = False
 
@@ -159,6 +172,9 @@ class _ForwardCorridorController:
         self._last_obstacle_side_offset = None
         self._last_steer = 0.0
         self._target_speed = None
+        self._hazard_frames = 0
+        self._recovery_frames = 0
+        self._brake_frames = 0
         self.road_visible = False
         self.has_seen_road = False
 
@@ -400,19 +416,26 @@ class _ForwardCorridorController:
             return self.MAX_GAS * (2.0 / 3.0), 0.0
         return self.MAX_GAS * (5.0 / 12.0), 0.0
 
+    def _lost_road_action(self) -> np.ndarray:
+        """Brake briefly, then crawl forward while the camera recovers."""
+        self._recovery_frames += 1
+        self._brake_frames = 0
+        self._last_steer = float(
+            self._last_steer
+            + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+        )
+        if self._recovery_frames <= self.RECOVERY_BRAKE_FRAMES:
+            gas, brake = 0.0, self.RECOVERY_BRAKE
+        else:
+            gas, brake = self.RECOVERY_GAS, 0.0
+        return np.asarray([self._last_steer, gas, brake], dtype=np.float32)
+
     def act(self, observation) -> np.ndarray:
         frame = self._frame(observation)
         if frame is None:
             self.road_visible = False
             if self.has_seen_road:
-                self._last_steer = float(
-                    self._last_steer
-                    + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
-                )
-                return np.asarray(
-                    [self._last_steer, 0.0, min(self.MAX_BRAKE, self.RECOVERY_BRAKE)],
-                    dtype=np.float32,
-                )
+                return self._lost_road_action()
             return np.zeros(3, dtype=np.float32)
 
         centers, spans = self._road_geometry(frame)
@@ -421,17 +444,12 @@ class _ForwardCorridorController:
             if self.has_seen_road:
                 # If the corridor temporarily disappears, brake gently and
                 # decay the last steer instead of asking the neural baseline
-                # to make an unconstrained recovery turn.
-                self._last_steer = float(
-                    self._last_steer
-                    + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
-                )
-                return np.asarray(
-                    [self._last_steer, 0.0, min(self.MAX_BRAKE, self.RECOVERY_BRAKE)],
-                    dtype=np.float32,
-                )
+                # to make an unconstrained recovery turn.  If the dropout
+                # persists, a crawl action prevents an indefinite stop.
+                return self._lost_road_action()
             return np.zeros(3, dtype=np.float32)
         self.has_seen_road = True
+        self._recovery_frames = 0
         far = centers.get(42, self.IMAGE_CENTER)
         near = centers.get(54, self.IMAGE_CENTER)
         road_sweep = self._road_sweep(centers)
@@ -439,6 +457,10 @@ class _ForwardCorridorController:
         corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
             frame, centers, spans
         )
+        if corridor_hazard:
+            self._hazard_frames += 1
+        else:
+            self._hazard_frames = 0
         straight = (
             abs(center_offset) <= self.STRAIGHT_CENTER_DEADBAND
             and abs(far - near) <= self.STRAIGHT_SWEEP_DEADBAND
@@ -485,8 +507,8 @@ class _ForwardCorridorController:
         if corridor_hazard:
             # Grass and orange obstacles occupy the same bright range after
             # RGB->gray preprocessing.  Apply one conservative response to
-            # both: bias only toward the visible road and never accelerate
-            # while the drivable corridor is uncertain.
+            # both: bias only toward the visible road, brake briefly, then
+            # continue at a crawl while the bounded avoidance steer works.
             steering += 0.18 * corridor_hint
             target_speed = min(target_speed, self.HAZARD_TARGET_SPEED)
 
@@ -498,14 +520,35 @@ class _ForwardCorridorController:
         speed = self._estimate_speed(frame)
         gas, brake = self._pedals(speed, target_speed)
         if corridor_hazard:
-            gas = 0.0
-            brake = max(brake, self.HAZARD_BRAKE)
-        if corridor_blocked:
-            # When the road width itself is unsafe, braking is preferable to
-            # a large recovery turn that could cross grass or an unseen
-            # obstacle.
+            if self._hazard_frames <= self.HAZARD_BRAKE_FRAMES:
+                gas = 0.0
+                brake = max(brake, self.HAZARD_BRAKE)
+            else:
+                # Continue moving at a controlled crawl while the bounded
+                # avoidance steer clears the bright shoulder/obstacle.  This
+                # prevents the safety layer from becoming a permanent stop.
+                gas = max(self.HAZARD_CRAWL_GAS, min(self.MAX_GAS, gas))
+                brake = 0.0
+            self._brake_frames = 0
+        elif gas <= 0.0 and brake > 0.0:
+            self._brake_frames += 1
+            if self._brake_frames > self.SPEED_BRAKE_FRAMES:
+                # A stale speed bar or a long, conservative bend must not
+                # turn ordinary speed regulation into a permanent stop.
+                gas = self.SPEED_WATCHDOG_GAS
+                brake = 0.0
+        else:
+            self._brake_frames = 0
+        if corridor_blocked and self._hazard_frames <= self.HAZARD_BRAKE_FRAMES:
+            # When the road width itself is unsafe, a short braking window is
+            # preferable to a large recovery turn that could cross grass or an
+            # unseen obstacle.  After that window, the hazard branch above
+            # deliberately returns a crawl command instead of stopping.
             gas = 0.0
             brake = max(brake, min(self.MAX_BRAKE, self.HAZARD_BRAKE * 1.25))
+        elif corridor_blocked:
+            gas = max(self.HAZARD_CRAWL_GAS, min(self.MAX_GAS, gas))
+            brake = 0.0
 
         # Slow down before a bend and rate-limit steering so one noisy frame
         # cannot turn the car around or induce a drift-like correction.

@@ -127,15 +127,22 @@ and emits mutually exclusive throttle or brake.
 Because the official RGB input is converted to grayscale, green background and orange
 obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
 near-road spans, small edge clearance, and bright pixels inside the road corridor all
-cut throttle; the controller brakes when the corridor is blocked and biases only
-toward the visible road. Compact bright objects still trigger bounded avoidance, but
-never override the road-width safety gate. After the road has been seen, a temporary
-visual dropout brakes and decays steering instead of falling back to an unconstrained
-turn. Opposite steering must first pass through zero, and a one-step steering change
-is limited to 0.07. No simulation or performance evaluation was run for this repair.
+cut throttle; the controller uses a short bounded brake window and then resumes a
+small forward crawl while biasing only toward the visible road. Compact bright
+objects still trigger bounded avoidance, but never override the road-width safety
+gate. After the road has been seen, a temporary visual dropout similarly brakes for
+only a bounded number of frames before using a low forward recovery throttle rather
+than falling back to an unconstrained turn. Opposite steering must first pass through
+zero, and a one-step steering change is limited to 0.07. No simulation or performance
+evaluation was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
-keep their recorded model paths; no simulation or performance evaluation was run
-for this repair.
+keep their recorded model paths.
+
+The forward-progress adjustment follows the environment's continuous action and
+finish semantics documented by Gymnasium, while using the practical separation of a
+nominal road follower and a safety filter described by vision-based driving and
+control-barrier-function work. It is a heuristic runtime guard, not a formal safety
+guarantee.
 
 ## Runtime And Infrastructure
 
