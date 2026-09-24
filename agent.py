@@ -129,7 +129,7 @@ class _ForwardCorridorController:
     # The previous 0.08 cap made clear-road progress unnecessarily slow.  A
     # modest increase is safe because the bend, hazard, and speed watchdog
     # branches below still reduce gas independently.
-    MAX_GAS = 0.12
+    MAX_GAS = 0.14
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
     # A road rendered by the official environment is dark gray (~0.40 after
@@ -184,7 +184,7 @@ class _ForwardCorridorController:
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
 
-    def __init__(self, *, cruise_speed: float = 58.0) -> None:
+    def __init__(self, *, cruise_speed: float = 64.0) -> None:
         self.cruise_speed = float(cruise_speed)
         self._obstacle_side = 0.0
         self._obstacle_missing = 0
@@ -736,6 +736,14 @@ class _ForwardCorridorController:
         elif corridor_blocked:
             gas = max(self.HAZARD_CRAWL_GAS, min(self.MAX_GAS, gas))
             brake = 0.0
+
+        # A detected compact object is a collision risk even when it is still
+        # far enough away that the corridor-wide bright-pixel gate has not
+        # fired.  Remove forward throttle immediately so the selected escape
+        # side has room to clear it; close objects already carry a brake from
+        # the corridor safety branch above.
+        if obstacle is not None:
+            gas = 0.0
 
         # Slow down before a bend and rate-limit steering so one noisy frame
         # cannot turn the car around or induce a drift-like correction.

@@ -122,7 +122,7 @@ custom tracks remain selectable in the same UI.
 The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
 controller at inference time. It estimates the visible road centerline and asphalt
 spans, rate-limits steering, snaps near-centered straight segments to zero steering,
-regulates speed conservatively from the HUD (cruise target 58, throttle cap 0.12),
+regulates speed from the HUD (clear-road cruise target 64, throttle cap 0.14),
 and emits mutually exclusive throttle or brake.
 Because the official RGB input is converted to grayscale, green background and orange
 obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
@@ -140,7 +140,8 @@ is lost, and steers toward the remembered/look-ahead road instead of decaying to
 straight indefinitely. Opposite steering must first pass through zero, and a
 one-step steering change is limited to 0.07. The heading contribution is ignored
 when it would oppose a meaningful look-ahead center error, while clear-road gas is
-raised to 0.12 and speed-target recovery is faster after a hazard. Curve handling
+raised to 0.14 on a confirmed clear road and speed-target recovery is faster after a hazard.
+Even a distant compact obstacle cuts gas immediately. Curve handling
 now measures the centerline over a longer preview, applies an entry-speed penalty
 before the near edge turns, and scales throttle down continuously with preview
 curvature. Strong curves use a 28-unit target-speed floor, 0.40 steering cap,

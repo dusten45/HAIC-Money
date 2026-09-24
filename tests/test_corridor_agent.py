@@ -446,6 +446,19 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
         self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
 
+    def test_forward_controller_cuts_throttle_for_a_distant_obstacle(self):
+        from agent import _ForwardCorridorController
+
+        action = _ForwardCorridorController().act(
+            _observation(obstacle_x=40, obstacle_y=30, speed=20.0)
+        )
+
+        # A distant object may not yet narrow the near corridor, but it is
+        # still a collision risk.  Remove gas immediately to buy time for the
+        # already bounded escape steering.
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertTrue(np.all(np.isfinite(action)))
+
     def test_forward_controller_treats_bright_nonroad_intrusion_as_hazard(self):
         from agent import _ForwardCorridorController
 
