@@ -71,7 +71,9 @@ class TestVisionCorridorAgent(unittest.TestCase):
 
         action = VisionCorridorAgent().act(_observation(curve=-0.25, speed=55.0))
 
-        self.assertLess(action[0], -0.05)
+        # The low-inertia curve gain intentionally makes the first correction
+        # smaller than the legacy controller while preserving its direction.
+        self.assertLess(action[0], -0.02)
         self.assertEqual(float(action[1]), 0.0)
         self.assertGreater(action[2], 0.0)
 

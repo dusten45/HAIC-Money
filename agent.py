@@ -121,9 +121,10 @@ class _ForwardCorridorController:
     STRAIGHT_MAX_STEER = 0.16
     STRAIGHT_CENTER_DEADBAND = 1.25
     # Pixel quantization can make a genuinely straight approach look like a
-    # one-to-two pixel sweep.  Keep that small apparent bend in the straight
-    # regime so it cannot seed a counter-steer immediately before a turn.
-    STRAIGHT_SWEEP_DEADBAND = 2.25
+    # small multi-pixel sweep.  Keep that weak apparent bend in the straight
+    # steering regime so it cannot seed a counter-steer; the preview speed
+    # planner still sees it and can begin braking early.
+    STRAIGHT_SWEEP_DEADBAND = 3.25
     MAX_STEER_STEP = 0.07
     # The previous 0.08 cap made clear-road progress unnecessarily slow.  A
     # modest increase is safe because the bend, hazard, and speed watchdog
@@ -174,6 +175,7 @@ class _ForwardCorridorController:
     RECOVERY_SEARCH_STEER = 0.16
     RECOVERY_SEARCH_PERIOD = 4
     HAZARD_ROWS = (54, 50, 46, 42, 38)
+    ROAD_ROWS = (54, 50, 46, 42, 38, 34, 30, 26, 22)
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
@@ -246,7 +248,7 @@ class _ForwardCorridorController:
         centers: dict[int, float] = {}
         spans: dict[int, tuple[float, float]] = {}
         previous = self.IMAGE_CENTER
-        for row in (54, 50, 46, 42, 38, 34, 30):
+        for row in self.ROAD_ROWS:
             selected = asphalt[row] & (np.abs(horizontal - previous) <= 17.0)
             locations = np.flatnonzero(selected)
             if len(locations) >= 4:
@@ -270,7 +272,7 @@ class _ForwardCorridorController:
         centers: dict[int, float] = {}
         spans: dict[int, tuple[float, float]] = {}
         previous = float(self._last_road_center)
-        for row in (54, 50, 46, 42, 38, 34, 30):
+        for row in self.ROAD_ROWS:
             locations = np.flatnonzero(asphalt[row])
             if len(locations) < 4:
                 continue
@@ -516,13 +518,11 @@ class _ForwardCorridorController:
         """Estimate the largest centerline displacement over a preview span."""
         if len(centers) < 2:
             return 0.0
+        near = cls._center_at(54.0, centers)
         return max(
             (
-                abs(
-                    cls._center_at(float(row), centers)
-                    - cls._center_at(float(row + 24), centers)
-                )
-                for row in (30, 34, 38, 42)
+                abs(cls._center_at(float(row), centers) - near)
+                for row in (22, 26, 30, 34, 38, 42)
             ),
             default=0.0,
         )
@@ -597,7 +597,7 @@ class _ForwardCorridorController:
         # Compare the farthest visible preview with the mid-preview as well
         # as the near edge.  This catches a bend while it is still several
         # camera rows ahead, before a large steering command is necessary.
-        preview_far = self._center_at(30.0, centers)
+        preview_far = self._center_at(22.0, centers)
         preview_mid = self._center_at(42.0, centers)
         curve_entry_sweep = abs(preview_far - preview_mid)
         curve_strength = max(road_sweep, curve_entry_sweep)
