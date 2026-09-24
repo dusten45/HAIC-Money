@@ -122,7 +122,7 @@ custom tracks remain selectable in the same UI.
 The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
 controller at inference time. It estimates the visible road centerline and asphalt
 spans, rate-limits steering, snaps near-centered straight segments to zero steering,
-regulates speed conservatively from the HUD (cruise target 48, throttle cap 0.08),
+regulates speed conservatively from the HUD (cruise target 58, throttle cap 0.12),
 and emits mutually exclusive throttle or brake.
 Because the official RGB input is converted to grayscale, green background and orange
 obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
@@ -136,8 +136,10 @@ than falling back to an unconstrained turn. Recovery stores the last near/far
 centerline and heading error, searches the full image when the local corridor window
 is lost, and steers toward the remembered/look-ahead road instead of decaying to
 straight indefinitely. Opposite steering must first pass through zero, and a
-one-step steering change is limited to 0.07. No simulation or performance evaluation
-was run for this repair.
+one-step steering change is limited to 0.07. The heading contribution is ignored
+when it would oppose a meaningful look-ahead center error, while clear-road gas is
+raised to 0.12 and speed-target recovery is faster after a hazard. No simulation
+or performance evaluation was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
 keep their recorded model paths.
 

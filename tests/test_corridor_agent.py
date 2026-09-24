@@ -225,6 +225,28 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertTrue(np.all(np.isfinite(approach)))
         self.assertTrue(np.all(np.isfinite(right_turn)))
 
+    def test_forward_controller_does_not_let_noisy_near_edge_flip_turn_direction(self):
+        from agent import _ForwardCorridorController
+
+        # The distant road points slightly right of the image center, while a
+        # noisy near edge is rendered farther right.  The old heading term
+        # dominated this view and commanded a left counter-steer.  The
+        # look-ahead center should remain the authoritative direction.
+        frame = np.full((84, 84), 0.1, dtype=np.float32)
+        for row in range(20, 63):
+            center = 50.0 if row >= 50 else 42.0
+            left = int(round(center - 11.0))
+            right = int(round(center + 11.0))
+            frame[row, left:right] = 0.4
+        frame[77:83, 10:13] = 0.27 / 18.0
+
+        action = _ForwardCorridorController().act(
+            np.tile(frame[None, :, :], (4, 1, 1))
+        )
+
+        self.assertGreaterEqual(float(action[0]), 0.0)
+        self.assertTrue(np.all(np.isfinite(action)))
+
     def test_forward_controller_brakes_when_the_corridor_disappears_after_tracking(self):
         from agent import _ForwardCorridorController
 

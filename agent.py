@@ -120,9 +120,15 @@ class _ForwardCorridorController:
     MAX_STEER = 0.48
     STRAIGHT_MAX_STEER = 0.16
     STRAIGHT_CENTER_DEADBAND = 1.25
-    STRAIGHT_SWEEP_DEADBAND = 1.5
+    # Pixel quantization can make a genuinely straight approach look like a
+    # one-to-two pixel sweep.  Keep that small apparent bend in the straight
+    # regime so it cannot seed a counter-steer immediately before a turn.
+    STRAIGHT_SWEEP_DEADBAND = 2.25
     MAX_STEER_STEP = 0.07
-    MAX_GAS = 0.08
+    # The previous 0.08 cap made clear-road progress unnecessarily slow.  A
+    # modest increase is safe because the bend, hazard, and speed watchdog
+    # branches below still reduce gas independently.
+    MAX_GAS = 0.12
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
     # A road rendered by the official environment is dark gray (~0.40 after
@@ -142,11 +148,11 @@ class _ForwardCorridorController:
     # resumes a small forward crawl so a noisy visual hazard cannot leave it
     # parked indefinitely before the next steering correction.
     HAZARD_BRAKE_FRAMES = 3
-    HAZARD_CRAWL_GAS = 0.025
+    HAZARD_CRAWL_GAS = 0.035
     RECOVERY_BRAKE_FRAMES = 2
-    RECOVERY_GAS = 0.018
+    RECOVERY_GAS = 0.028
     SPEED_BRAKE_FRAMES = 8
-    SPEED_WATCHDOG_GAS = 0.02
+    SPEED_WATCHDOG_GAS = 0.03
     RECOVERY_MAX_STEER = 0.30
     RECOVERY_STEER_GAIN = 0.020
     RECOVERY_HEADING_GAIN = 0.014
@@ -157,7 +163,7 @@ class _ForwardCorridorController:
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
 
-    def __init__(self, *, cruise_speed: float = 48.0) -> None:
+    def __init__(self, *, cruise_speed: float = 58.0) -> None:
         self.cruise_speed = float(cruise_speed)
         self._obstacle_side = 0.0
         self._obstacle_missing = 0
@@ -520,11 +526,10 @@ class _ForwardCorridorController:
         self._recovery_frames += 1
         self._brake_frames = 0
         desired = self._recovery_steer(centers)
-        if (
-            self._last_steer != 0.0
-            and desired * self._last_steer < 0.0
-            and abs(self._last_steer) > self.MAX_STEER_STEP
-        ):
+        if self._last_steer != 0.0 and desired * self._last_steer < 0.0:
+            # Recovery is allowed to change sides, but only through a neutral
+            # command.  This keeps the bounded search from injecting its own
+            # counter-steer when the remembered road direction changes.
             desired = 0.0
         self._last_steer = float(
             self._last_steer
@@ -591,7 +596,19 @@ class _ForwardCorridorController:
             steering = 0.0
             steer_limit = self.STRAIGHT_MAX_STEER
         else:
-            steering = 0.016 * center_offset + 0.012 * (far - near)
+            # The look-ahead center is the primary turn cue.  A raw heading
+            # derivative can briefly point the other way when the near edge
+            # is noisy (or while the car is still recovering from the prior
+            # bend); adding it without a sign check creates the observed
+            # counter-steer and lets the car drift before the real turn.
+            heading_error = far - near
+            heading_term = 0.012 * heading_error
+            if (
+                abs(center_offset) > self.STRAIGHT_CENTER_DEADBAND
+                and center_offset * heading_term < 0.0
+            ):
+                heading_term = 0.0
+            steering = 0.016 * center_offset + heading_term
             steer_limit = self.MAX_STEER
         target_speed = float(
             np.clip(self.cruise_speed - 2.0 * road_sweep, 36.0, self.cruise_speed)
@@ -631,7 +648,12 @@ class _ForwardCorridorController:
             target_speed = min(target_speed, self.HAZARD_TARGET_SPEED)
 
         if self._target_speed is not None:
-            target_speed = 0.65 * self._target_speed + 0.35 * target_speed
+            # Retain a slower target while entering a bend, but let a clear
+            # road recover speed promptly after a hazard or a completed turn.
+            # The asymmetric blend avoids the sluggish multi-second return to
+            # cruise caused by the old all-purpose 0.65 memory.
+            blend = 0.65 if target_speed < self._target_speed else 0.45
+            target_speed = blend * self._target_speed + (1.0 - blend) * target_speed
         self._target_speed = target_speed
         if not straight and abs(steering) > 0.28:
             target_speed = min(target_speed, 44.0)
@@ -673,13 +695,11 @@ class _ForwardCorridorController:
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
         steering = float(np.clip(steering, -steer_limit, steer_limit))
-        if (
-            self._last_steer != 0.0
-            and steering * self._last_steer < 0.0
-            and abs(self._last_steer) > self.MAX_STEER_STEP
-        ):
-            # Cross zero before changing sides.  This prevents an S-curve or
-            # one noisy centerline estimate from becoming a snap reversal.
+        if self._last_steer != 0.0 and steering * self._last_steer < 0.0:
+            # Even a small command must cross zero before changing sides.  A
+            # rate limit alone still allows a tiny positive steer to become a
+            # negative command in one frame, which is enough to start the
+            # counter-steer/drift seen in visual replays.
             steering = 0.0
         steering = self._last_steer + float(
             np.clip(steering - self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
