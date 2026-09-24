@@ -157,9 +157,15 @@ class _ForwardCorridorController:
     # speed controller time to settle before the near road starts turning;
     # the gas scale then reduces longitudinal force continuously with the
     # observed bend instead of waiting for a large steering command.
-    CURVE_ENTRY_SPEED_PENALTY = 0.40
-    CURVE_GAS_REDUCTION = 0.025
-    CURVE_MIN_GAS_SCALE = 0.58
+    CURVE_TRIGGER_SWEEP = 3.0
+    CURVE_ENTRY_SPEED_PENALTY = 0.80
+    CURVE_SPEED_PENALTY = 2.80
+    CURVE_SPEED_FLOOR = 28.0
+    CURVE_GAS_REDUCTION = 0.035
+    CURVE_MIN_GAS_SCALE = 0.40
+    CURVE_MAX_STEER = 0.40
+    CURVE_STEER_STEP = 0.055
+    CURVE_TARGET_FALL_BLEND = 0.35
     RECOVERY_MAX_STEER = 0.30
     RECOVERY_STEER_GAIN = 0.020
     RECOVERY_HEADING_GAIN = 0.014
@@ -592,6 +598,8 @@ class _ForwardCorridorController:
         preview_far = self._center_at(30.0, centers)
         preview_mid = self._center_at(42.0, centers)
         curve_entry_sweep = abs(preview_far - preview_mid)
+        curve_strength = max(road_sweep, curve_entry_sweep)
+        curve_mode = curve_strength >= self.CURVE_TRIGGER_SWEEP
         center_offset = far - self.IMAGE_CENTER
         corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
             frame, centers, spans
@@ -629,9 +637,9 @@ class _ForwardCorridorController:
         target_speed = float(
             np.clip(
                 self.cruise_speed
-                - 2.0 * road_sweep
+                - self.CURVE_SPEED_PENALTY * road_sweep
                 - self.CURVE_ENTRY_SPEED_PENALTY * curve_entry_sweep,
-                36.0,
+                self.CURVE_SPEED_FLOOR,
                 self.cruise_speed,
             )
         )
@@ -674,11 +682,16 @@ class _ForwardCorridorController:
             # road recover speed promptly after a hazard or a completed turn.
             # The asymmetric blend avoids the sluggish multi-second return to
             # cruise caused by the old all-purpose 0.65 memory.
-            blend = 0.65 if target_speed < self._target_speed else 0.45
+            if target_speed < self._target_speed:
+                blend = self.CURVE_TARGET_FALL_BLEND if curve_mode else 0.65
+            else:
+                blend = 0.45
             target_speed = blend * self._target_speed + (1.0 - blend) * target_speed
-        self._target_speed = target_speed
         if not straight and abs(steering) > 0.28:
             target_speed = min(target_speed, 44.0)
+        # Store the post-curve-limit target so the next frame does not briefly
+        # recover toward an obsolete, faster target during the same bend.
+        self._target_speed = target_speed
         speed = self._estimate_speed(frame)
         gas, brake = self._pedals(speed, target_speed)
         if corridor_hazard:
@@ -714,7 +727,7 @@ class _ForwardCorridorController:
 
         # Slow down before a bend and rate-limit steering so one noisy frame
         # cannot turn the car around or induce a drift-like correction.
-        if not straight and not corridor_hazard and brake <= 0.0:
+        if curve_mode and not corridor_hazard and brake <= 0.0:
             curve_gas_scale = float(
                 np.clip(
                     1.0 - self.CURVE_GAS_REDUCTION * road_sweep,
@@ -723,6 +736,8 @@ class _ForwardCorridorController:
                 )
             )
             gas = min(gas, self.MAX_GAS * curve_gas_scale)
+        if curve_mode and obstacle is None:
+            steer_limit = min(steer_limit, self.CURVE_MAX_STEER)
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
         steering = float(np.clip(steering, -steer_limit, steer_limit))
@@ -732,8 +747,13 @@ class _ForwardCorridorController:
             # negative command in one frame, which is enough to start the
             # counter-steer/drift seen in visual replays.
             steering = 0.0
+        steer_step = (
+            self.CURVE_STEER_STEP
+            if curve_mode and obstacle is None
+            else self.MAX_STEER_STEP
+        )
         steering = self._last_steer + float(
-            np.clip(steering - self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+            np.clip(steering - self._last_steer, -steer_step, steer_step)
         )
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         self._last_steer = steering

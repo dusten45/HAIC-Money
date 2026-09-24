@@ -141,7 +141,9 @@ when it would oppose a meaningful look-ahead center error, while clear-road gas 
 raised to 0.12 and speed-target recovery is faster after a hazard. Curve handling
 now measures the centerline over a longer preview, applies an entry-speed penalty
 before the near edge turns, and scales throttle down continuously with preview
-curvature. No simulation or performance evaluation was run for this repair.
+curvature. Strong curves use a 28-unit target-speed floor, 0.40 steering cap,
+0.055 per-step steering slew, and a 0.40 minimum clear-road gas scale. No
+simulation or performance evaluation was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
 keep their recorded model paths.
 

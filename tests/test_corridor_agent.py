@@ -470,6 +470,20 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(curve[1]) * float(curve[2]), 0.0)
         self.assertTrue(np.all(np.isfinite(curve)))
 
+    def test_forward_controller_enters_a_strong_curve_with_a_bounded_lateral_command(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        action = controller.act(_observation(curve=0.5, speed=52.0))
+
+        # A strong previewed bend must shed speed before lateral force grows;
+        # the curve mode also keeps the first steering command well below the
+        # general maximum so the car remains inside the visible road band.
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.CURVE_MAX_STEER)
+        self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic
