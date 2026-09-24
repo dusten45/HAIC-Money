@@ -36,6 +36,18 @@ def _green_shoulder_observation(*, side="both", near_width=6, speed=48.0):
     return np.tile(frame[None, :, :], (4, 1, 1))
 
 
+def _near_corridor_dropout_observation(*, far_center=53.0, speed=24.0):
+    """Render only the distant road, leaving the near camera view green."""
+    frame = _observation(speed=speed)[-1].copy()
+    frame[48:63, :] = 0.1
+    for row in range(20, 48):
+        center = int(round(far_center))
+        left = max(0, center - 11)
+        right = min(frame.shape[1], center + 12)
+        frame[row, left:right] = 0.4
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
 class TestVisionCorridorAgent(unittest.TestCase):
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent
@@ -199,6 +211,28 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(recovery[1]), 0.0)
         self.assertGreater(float(recovery[2]), 0.0)
         self.assertLessEqual(abs(float(recovery[0])), controller.MAX_STEER)
+
+    def test_forward_controller_uses_distant_road_to_recover_near_dropout(self):
+        from agent import _ForwardCorridorController
+
+        # The close road samples can be occluded by the green shoulder while
+        # the distant track is still visible.  The recovery must follow that
+        # remaining centerline instead of declaring a straight road and
+        # driving onward in the previous direction.
+        for far_center, expected_sign in ((53.0, 1.0), (30.0, -1.0)):
+            controller = _ForwardCorridorController()
+            action = controller.act(
+                _near_corridor_dropout_observation(far_center=far_center)
+            )
+
+            self.assertTrue(controller.road_visible)
+            self.assertGreater(
+                expected_sign * float(action[0]),
+                0.0,
+                msg=f"far road at x={far_center} must guide recovery steering",
+            )
+            self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+            self.assertTrue(np.all(np.isfinite(action)))
 
     def test_forward_controller_recovers_forward_crawl_after_persistent_dropout(self):
         from agent import _ForwardCorridorController
