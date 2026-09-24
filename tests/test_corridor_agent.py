@@ -234,6 +234,22 @@ class TestVisionCorridorAgent(unittest.TestCase):
             self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
             self.assertTrue(np.all(np.isfinite(action)))
 
+    def test_forward_controller_wide_search_recovers_a_road_outside_local_window(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        controller.act(_observation())
+        frame = np.full((84, 84), 0.1, dtype=np.float32)
+        frame[20:63, 70:84] = 0.4
+        frame[77:83, 10:13] = 0.27 / 18.0
+        shifted = np.tile(frame[None, :, :], (4, 1, 1))
+
+        action = controller.act(shifted)
+
+        self.assertGreater(float(action[0]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.RECOVERY_MAX_STEER)
+        self.assertTrue(np.all(np.isfinite(action)))
+
     def test_forward_controller_recovers_forward_crawl_after_persistent_dropout(self):
         from agent import _ForwardCorridorController
 

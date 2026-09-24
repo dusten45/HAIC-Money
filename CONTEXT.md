@@ -132,9 +132,12 @@ small forward crawl while biasing only toward the visible road. Compact bright
 objects still trigger bounded avoidance, but never override the road-width safety
 gate. After the road has been seen, a temporary visual dropout similarly brakes for
 only a bounded number of frames before using a low forward recovery throttle rather
-than falling back to an unconstrained turn. Opposite steering must first pass through
-zero, and a one-step steering change is limited to 0.07. No simulation or performance
-evaluation was run for this repair.
+than falling back to an unconstrained turn. Recovery stores the last near/far
+centerline and heading error, searches the full image when the local corridor window
+is lost, and steers toward the remembered/look-ahead road instead of decaying to
+straight indefinitely. Opposite steering must first pass through zero, and a
+one-step steering change is limited to 0.07. No simulation or performance evaluation
+was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
 keep their recorded model paths.
 

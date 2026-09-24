@@ -147,6 +147,11 @@ class _ForwardCorridorController:
     RECOVERY_GAS = 0.018
     SPEED_BRAKE_FRAMES = 8
     SPEED_WATCHDOG_GAS = 0.02
+    RECOVERY_MAX_STEER = 0.30
+    RECOVERY_STEER_GAIN = 0.020
+    RECOVERY_HEADING_GAIN = 0.014
+    RECOVERY_SEARCH_STEER = 0.16
+    RECOVERY_SEARCH_PERIOD = 4
     HAZARD_ROWS = (54, 50, 46, 42, 38)
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
@@ -162,6 +167,10 @@ class _ForwardCorridorController:
         self._hazard_frames = 0
         self._recovery_frames = 0
         self._brake_frames = 0
+        self._last_road_center = self.IMAGE_CENTER
+        self._last_road_heading = 0.0
+        self._last_recovery_hint = 0.0
+        self._search_sign = 1.0
         self.road_visible = False
         self.has_seen_road = False
 
@@ -175,6 +184,10 @@ class _ForwardCorridorController:
         self._hazard_frames = 0
         self._recovery_frames = 0
         self._brake_frames = 0
+        self._last_road_center = self.IMAGE_CENTER
+        self._last_road_heading = 0.0
+        self._last_recovery_hint = 0.0
+        self._search_sign = 1.0
         self.road_visible = False
         self.has_seen_road = False
 
@@ -220,6 +233,90 @@ class _ForwardCorridorController:
                 centers[row] = previous
                 spans[row] = (float(locations[0]), float(locations[-1]))
         return centers, spans
+
+    def _wide_road_geometry(
+        self, frame: np.ndarray
+    ) -> tuple[dict[int, float], dict[int, tuple[float, float]]]:
+        """Search the complete image for a road after the local view is lost.
+
+        Normal tracking intentionally searches near the previous centerline to
+        reject HUD/background texture.  During recovery that restriction can
+        hide the road precisely when the car has moved far to one side, so use
+        contiguous asphalt runs across the full width and follow the run
+        closest to the last remembered center.
+        """
+        asphalt = (frame >= self.ROAD_LOW) & (frame <= self.ROAD_HIGH)
+        centers: dict[int, float] = {}
+        spans: dict[int, tuple[float, float]] = {}
+        previous = float(self._last_road_center)
+        for row in (54, 50, 46, 42, 38, 34, 30):
+            locations = np.flatnonzero(asphalt[row])
+            if len(locations) < 4:
+                continue
+            breaks = np.flatnonzero(np.diff(locations) > 1) + 1
+            runs = np.split(locations, breaks)
+            runs = [run for run in runs if len(run) >= 4]
+            if not runs:
+                continue
+            run = min(
+                runs,
+                key=lambda candidate: (
+                    abs(float(candidate.mean()) - previous),
+                    -len(candidate),
+                ),
+            )
+            previous = float(run.mean())
+            centers[row] = previous
+            spans[row] = (float(run[0]), float(run[-1]))
+        return centers, spans
+
+    def _remember_road(self, centers: dict[int, float]) -> None:
+        """Store a short look-ahead road estimate for recovery steering."""
+        if not centers:
+            return
+        near = self._center_at(54.0, centers)
+        far = self._center_at(34.0, centers)
+        self._last_road_center = float(0.35 * near + 0.65 * far)
+        self._last_road_heading = float(far - near)
+        error = self._last_road_center - self.IMAGE_CENTER
+        if abs(error) > self.STRAIGHT_CENTER_DEADBAND:
+            self._last_recovery_hint = float(np.sign(error))
+        elif abs(self._last_steer) > self.MAX_STEER_STEP:
+            self._last_recovery_hint = float(np.sign(self._last_steer))
+        elif abs(self._last_road_heading) <= self.STRAIGHT_SWEEP_DEADBAND:
+            self._last_recovery_hint = 0.0
+
+    def _recovery_steer(self, centers: dict[int, float] | None) -> float:
+        """Produce a bounded look-ahead correction while road visibility heals."""
+        if centers:
+            near = self._center_at(54.0, centers)
+            far = self._center_at(34.0, centers)
+            projected = 0.35 * near + 0.65 * far
+            desired = (
+                self.RECOVERY_STEER_GAIN * (projected - self.IMAGE_CENTER)
+                + self.RECOVERY_HEADING_GAIN * (far - near)
+            )
+            if abs(desired) < 0.04 and self._last_recovery_hint != 0.0:
+                desired = 0.12 * self._last_recovery_hint
+        else:
+            if (
+                self._recovery_frames > self.RECOVERY_BRAKE_FRAMES
+                and (self._recovery_frames - self.RECOVERY_BRAKE_FRAMES)
+                % self.RECOVERY_SEARCH_PERIOD
+                == 0
+            ):
+                self._search_sign *= -1.0
+            heading_term = float(
+                np.clip(
+                    self.RECOVERY_HEADING_GAIN * self._last_road_heading,
+                    -0.08,
+                    0.08,
+                )
+            )
+            desired = self._search_sign * self.RECOVERY_SEARCH_STEER + heading_term
+            if self._last_recovery_hint != 0.0:
+                desired = 0.65 * self._last_recovery_hint + 0.35 * desired
+        return float(np.clip(desired, -self.RECOVERY_MAX_STEER, self.RECOVERY_MAX_STEER))
 
     @classmethod
     def _span_at(
@@ -416,13 +513,29 @@ class _ForwardCorridorController:
             return self.MAX_GAS * (2.0 / 3.0), 0.0
         return self.MAX_GAS * (5.0 / 12.0), 0.0
 
-    def _lost_road_action(self) -> np.ndarray:
-        """Brake briefly, then crawl forward while the camera recovers."""
+    def _lost_road_action(
+        self, centers: dict[int, float] | None = None
+    ) -> np.ndarray:
+        """Brake briefly, then steer toward the remembered road and crawl."""
         self._recovery_frames += 1
         self._brake_frames = 0
+        desired = self._recovery_steer(centers)
+        if (
+            self._last_steer != 0.0
+            and desired * self._last_steer < 0.0
+            and abs(self._last_steer) > self.MAX_STEER_STEP
+        ):
+            desired = 0.0
         self._last_steer = float(
             self._last_steer
-            + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+            + np.clip(
+                desired - self._last_steer,
+                -self.MAX_STEER_STEP,
+                self.MAX_STEER_STEP,
+            )
+        )
+        self._last_steer = float(
+            np.clip(self._last_steer, -self.RECOVERY_MAX_STEER, self.RECOVERY_MAX_STEER)
         )
         if self._recovery_frames <= self.RECOVERY_BRAKE_FRAMES:
             gas, brake = 0.0, self.RECOVERY_BRAKE
@@ -442,14 +555,19 @@ class _ForwardCorridorController:
         self.road_visible = len(centers) >= 3
         if not self.road_visible:
             if self.has_seen_road:
-                # If the corridor temporarily disappears, brake gently and
-                # decay the last steer instead of asking the neural baseline
-                # to make an unconstrained recovery turn.  If the dropout
-                # persists, a crawl action prevents an indefinite stop.
+                # First search the full image: the car may have moved far
+                # enough that the local centerline window no longer contains
+                # the road.  If even that fails, use the remembered
+                # look-ahead direction and a bounded alternating search.
+                recovery_centers, _recovery_spans = self._wide_road_geometry(frame)
+                if len(recovery_centers) >= 2:
+                    self._remember_road(recovery_centers)
+                    return self._lost_road_action(recovery_centers)
                 return self._lost_road_action()
             return np.zeros(3, dtype=np.float32)
         self.has_seen_road = True
         self._recovery_frames = 0
+        self._remember_road(centers)
         far = centers.get(42, self.IMAGE_CENTER)
         near = centers.get(54, self.IMAGE_CENTER)
         road_sweep = self._road_sweep(centers)
