@@ -18,6 +18,24 @@ def _observation(
     return np.tile(frame[None, :, :], (4, 1, 1))
 
 
+def _green_shoulder_observation(*, side="both", near_width=6, speed=48.0):
+    """Render a road whose near edge is visibly touching the green shoulder."""
+    frame = _observation(speed=speed)[-1].copy()
+    left = int(round(42.0 - near_width / 2.0))
+    right = left + int(near_width)
+    for row in range(48, 63):
+        if side == "both":
+            frame[row, :] = 0.1
+            frame[row, left:right] = 0.4
+        elif side == "right":
+            frame[row, right:] = 0.1
+        elif side == "left":
+            frame[row, :left] = 0.1
+        else:
+            raise ValueError(f"unsupported shoulder side: {side}")
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
 class TestVisionCorridorAgent(unittest.TestCase):
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent
@@ -181,6 +199,52 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(recovery[1]), 0.0)
         self.assertGreater(float(recovery[2]), 0.0)
         self.assertLessEqual(abs(float(recovery[0])), controller.MAX_STEER)
+
+    def test_forward_controller_brakes_when_green_shoulder_touches_both_sides(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        action = controller.act(_green_shoulder_observation(near_width=6))
+
+        # A centered car can still be unsafe when the road has narrowed to the
+        # point that green is visible immediately beside it.  Treat that view
+        # as a hazard, rather than accelerating through the narrow corridor.
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertTrue(np.all(np.isfinite(action)))
+
+    def test_forward_controller_steers_away_from_green_shoulder(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        right_shoulder = controller.act(
+            _green_shoulder_observation(side="right", near_width=12)
+        )
+        controller.reset()
+        left_shoulder = controller.act(
+            _green_shoulder_observation(side="left", near_width=12)
+        )
+
+        # Positive steering moves away from a left-side shoulder and negative
+        # steering moves away from a right-side shoulder in the track frame.
+        self.assertLess(float(right_shoulder[0]), 0.0)
+        self.assertGreater(float(left_shoulder[0]), 0.0)
+        for action in (right_shoulder, left_shoulder):
+            self.assertEqual(float(action[1]), 0.0)
+            self.assertGreater(float(action[2]), 0.0)
+            self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+
+    def test_forward_controller_brakes_before_a_center_obstacle(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        action = controller.act(_observation(obstacle_x=40, speed=48.0))
+
+        self.assertGreater(float(action[0]), 0.0)
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+        self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
 
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
