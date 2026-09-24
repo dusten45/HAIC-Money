@@ -201,6 +201,30 @@ class TestVisionCorridorAgent(unittest.TestCase):
         straight = controller.act(_observation())
         self.assertLess(abs(float(straight[0])), 0.02)
 
+    def test_forward_controller_does_not_countersteer_before_a_low_curvature_turn(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        # A small, noisy left-looking bend immediately before a clear right
+        # bend must not create a visible countersteer.  That pre-turn wiggle
+        # is what starts the drift observed in visual replays; the controller
+        # should hold the corridor until the intended turn is unambiguous.
+        approach = controller.act(_observation(curve=-0.08, speed=20.0))
+        right_turn = controller.act(_observation(curve=0.65, speed=20.0))
+
+        self.assertGreaterEqual(
+            float(approach[0]),
+            -0.01,
+            "a small opposite-looking pre-turn correction must not induce drift",
+        )
+        self.assertGreater(
+            float(right_turn[0]),
+            float(approach[0]),
+            "the intended turn should begin in the requested direction",
+        )
+        self.assertTrue(np.all(np.isfinite(approach)))
+        self.assertTrue(np.all(np.isfinite(right_turn)))
+
     def test_forward_controller_brakes_when_the_corridor_disappears_after_tracking(self):
         from agent import _ForwardCorridorController
 
@@ -383,6 +407,29 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(action[1]), 0.0)
         self.assertGreater(float(action[2]), 0.0)
         self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+
+    def test_forward_controller_raises_safe_forward_speed_but_brakes_for_hazards(self):
+        from agent import _ForwardCorridorController
+
+        straight = _ForwardCorridorController().act(_observation(speed=20.0))
+        low_curvature = _ForwardCorridorController().act(
+            _observation(curve=0.05, speed=20.0)
+        )
+        hazard = _ForwardCorridorController().act(
+            _observation(curve=0.05, obstacle_x=40, speed=20.0)
+        )
+
+        # The previous legacy cap was 0.08 gas, which made clear-road
+        # progress unnecessarily slow.  The safe speed increase applies only
+        # when the corridor is clear; a visible obstacle still takes priority
+        # and receives mutually-exclusive braking.
+        self.assertGreater(float(straight[1]), 0.08)
+        self.assertGreater(float(low_curvature[1]), 0.08)
+        self.assertEqual(float(straight[2]), 0.0)
+        self.assertEqual(float(low_curvature[2]), 0.0)
+        self.assertEqual(float(hazard[1]), 0.0)
+        self.assertGreater(float(hazard[2]), 0.0)
+        self.assertTrue(all(np.all(np.isfinite(action)) for action in (straight, low_curvature, hazard)))
 
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
