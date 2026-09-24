@@ -53,6 +53,22 @@ this file, `docs/context/current-state.md`, and the relevant active plan; then r
 only the workflow, evaluation evidence, decision, or architecture document needed
 for the task.
 
+## Repository Layout
+
+- Put new reusable project code in `haic/`, with algorithm-specific reusable code
+  in `haic/algorithms/<algorithm>/`.
+- Put new one-off analysis, diagnosis, and experiment operator CLIs in `scripts/`.
+  Run CLIs that import project modules from the repository root with `python -m`.
+- Keep generated and frozen evidence in the existing `experiments/`, `runs/`,
+  `evaluations/`, and `submissions/` directories; do not consolidate their paths.
+- Do not create new research Python files at the repository root. Root exceptions
+  are official/runtime entry points, project-level configuration, compatibility-
+  critical files, and existing protected or shared files.
+- Preserve teammate-owned subsystems in their existing locations. Files written or
+  modified by another teammate respect that teammate's subsystem structure; a
+  general repository layout rule never automatically justifies moving them. Check
+  Git authorship and protected callers before relocating even an unowned file.
+
 ## Research and External-Action Rules
 
 - Preserve the official environment. Do not claim performance from a modified local

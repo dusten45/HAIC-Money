@@ -40,6 +40,15 @@ entry point, checkpoint, configuration, and source revision.
 ## Training and Local Research
 
 - `train.py` and `export_policy.py` are the earlier Stable-Baselines PPO path.
+- `haic/` is the home for new reusable research code; the existing root common
+  helpers, DrQ-v2 implementation, and DreamerV3 model/trainer remain at their
+  compatibility-critical paths. In particular, protected agent/evaluator/DrQ
+  trainer imports and fixed source snapshots require the existing root helpers;
+  the DreamerV3 trainer also uses root-relative evaluator and source paths.
+- `scripts/analyze/dreamerv3_pilot.py` and `scripts/diagnose/dreamerv3.py` are
+  standalone DreamerV3 tools. From the repository root, run them with
+  `python -m scripts.analyze.dreamerv3_pilot RUN_DIR` or
+  `python -m scripts.diagnose.dreamerv3 --checkpoint CHECKPOINT`.
 - `training/` contains the visual PPO, latent dynamics, Track Lab site-map, closed-
   loop evaluation, imitation, and package-building paths. These PPO/CEM paths are
   historical research/implementation evidence, not the current submission route.
