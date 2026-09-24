@@ -200,6 +200,25 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(float(recovery[2]), 0.0)
         self.assertLessEqual(abs(float(recovery[0])), controller.MAX_STEER)
 
+    def test_forward_controller_recovers_forward_crawl_after_persistent_dropout(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        controller.act(_observation(speed=32.0))
+        dropout = np.zeros((4, 84, 84), dtype=np.float32)
+        actions = [controller.act(dropout) for _ in range(6)]
+
+        # Losing the visual corridor warrants a short recovery brake, but a
+        # persistent camera dropout must still produce a nonzero forward
+        # crawl rather than parking the car for the rest of the episode.
+        self.assertTrue(
+            any(float(action[1]) > 0.0 and float(action[2]) == 0.0 for action in actions[2:]),
+            "persistent visual dropout must recover to forward crawl",
+        )
+        self.assertGreater(float(actions[-1][1]), 0.0)
+        self.assertEqual(float(actions[-1][2]), 0.0)
+        self.assertTrue(all(np.all(np.isfinite(action)) for action in actions))
+
     def test_forward_controller_brakes_when_green_shoulder_touches_both_sides(self):
         from agent import _ForwardCorridorController
 
@@ -212,6 +231,47 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(action[1]), 0.0)
         self.assertGreater(float(action[2]), 0.0)
         self.assertTrue(np.all(np.isfinite(action)))
+
+    def test_forward_controller_releases_a_shoulder_brake_after_a_bounded_hold(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        actions = [
+            controller.act(_green_shoulder_observation(side="right", near_width=12))
+            for _ in range(10)
+        ]
+
+        # A visible one-sided shoulder is a warning to steer back toward the
+        # asphalt, not a reason to hold the car on the brake forever.  The
+        # first frames may brake while the controller makes that correction,
+        # but a bounded hold must eventually leave a small forward command.
+        self.assertTrue(
+            any(float(action[1]) > 0.0 and float(action[2]) == 0.0 for action in actions[3:]),
+            "persistent visible corridor hazard must recover to forward motion",
+        )
+        self.assertTrue(all(np.all(np.isfinite(action)) for action in actions))
+
+    def test_forward_controller_recovers_throttle_after_a_transient_hazard(self):
+        from agent import _ForwardCorridorController
+
+        controller = _ForwardCorridorController()
+        hazard = controller.act(_green_shoulder_observation(near_width=6))
+        self.assertEqual(float(hazard[1]), 0.0)
+        self.assertGreater(float(hazard[2]), 0.0)
+
+        # Once the road is visible again, the hazard response must not leave
+        # a stale low target speed braking the car indefinitely.  This keeps
+        # the recovery bounded without prescribing an episode-level score.
+        recovery = [
+            controller.act(_observation(speed=48.0))
+            for _ in range(12)
+        ]
+        self.assertTrue(
+            any(float(action[1]) > 0.0 and float(action[2]) == 0.0 for action in recovery),
+            "clear corridor must regain mutually-exclusive forward throttle",
+        )
+        self.assertGreater(float(recovery[-1][1]), 0.0)
+        self.assertEqual(float(recovery[-1][2]), 0.0)
 
     def test_forward_controller_steers_away_from_green_shoulder(self):
         from agent import _ForwardCorridorController
