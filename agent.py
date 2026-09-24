@@ -138,9 +138,12 @@ class _ForwardCorridorController:
     # bright intrusion into that corridor as a hazard.  This deliberately
     # does not try to distinguish grass from an obstacle after RGB->gray
     # conversion: both are unsafe for the car.
-    MIN_ROAD_WIDTH = 10.0
-    MIN_SAFE_WIDTH = 18.0
-    MIN_EDGE_CLEARANCE = 4.0
+    MIN_ROAD_WIDTH = 14.0
+    # Treat the camera center as the vehicle envelope, not a point.  A road
+    # can still contain the center pixel while the body is already touching
+    # green; require a larger near-edge margin before allowing throttle.
+    MIN_SAFE_WIDTH = 20.0
+    MIN_EDGE_CLEARANCE = 7.0
     HAZARD_TARGET_SPEED = 24.0
     HAZARD_BRAKE = 0.16
     RECOVERY_BRAKE = 0.12
@@ -149,6 +152,7 @@ class _ForwardCorridorController:
     # resumes a small forward crawl so a noisy visual hazard cannot leave it
     # parked indefinitely before the next steering correction.
     HAZARD_BRAKE_FRAMES = 3
+    GREEN_BRAKE_FRAMES = 5
     HAZARD_CRAWL_GAS = 0.035
     RECOVERY_BRAKE_FRAMES = 2
     RECOVERY_GAS = 0.028
@@ -678,6 +682,12 @@ class _ForwardCorridorController:
             # continue at a crawl while the bounded avoidance steer works.
             steering += 0.18 * corridor_hint
             target_speed = min(target_speed, self.HAZARD_TARGET_SPEED)
+            if corridor_blocked:
+                # Green/off-road contact has priority over curve following or
+                # obstacle avoidance.  Discard competing steering and use
+                # only the side that returns toward the observed asphalt.
+                steering = 0.24 * corridor_hint
+                steer_limit = min(steer_limit, 0.28)
 
         if self._target_speed is not None:
             # Retain a slower target while entering a bend, but let a clear
@@ -716,7 +726,7 @@ class _ForwardCorridorController:
                 brake = 0.0
         else:
             self._brake_frames = 0
-        if corridor_blocked and self._hazard_frames <= self.HAZARD_BRAKE_FRAMES:
+        if corridor_blocked and self._hazard_frames <= self.GREEN_BRAKE_FRAMES:
             # When the road width itself is unsafe, a short braking window is
             # preferable to a large recovery turn that could cross grass or an
             # unseen obstacle.  After that window, the hazard branch above

@@ -330,6 +330,34 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(float(action[2]), 0.0)
         self.assertTrue(np.all(np.isfinite(action)))
 
+    def test_forward_controller_brakes_before_the_vehicle_envelope_reaches_green(self):
+        from agent import _ForwardCorridorController
+
+        frame = _observation(speed=48.0)[-1].copy()
+        # Keep the distant road centered, but move the near asphalt edge close
+        # to the camera center.  The center pixel is still on asphalt; the
+        # enlarged safety margin must nevertheless classify this as green
+        # contact risk before throttle is allowed.
+        frame[48:63, :] = 0.1
+        frame[48:63, 37:59] = 0.4
+        action = _ForwardCorridorController().act(
+            np.tile(frame[None, :, :], (4, 1, 1))
+        )
+
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+
+    def test_forward_controller_keeps_green_contact_braking_priority_for_five_frames(self):
+        from agent import _ForwardCorridorController
+
+        frame = _green_shoulder_observation(side="right", near_width=12)
+        controller = _ForwardCorridorController()
+        actions = [controller.act(frame) for _ in range(7)]
+
+        self.assertTrue(all(float(action[1]) == 0.0 for action in actions[:5]))
+        self.assertTrue(all(float(action[2]) > 0.0 for action in actions[:5]))
+        self.assertTrue(any(float(action[1]) > 0.0 for action in actions[5:]))
+
     def test_forward_controller_releases_a_shoulder_brake_after_a_bounded_hold(self):
         from agent import _ForwardCorridorController
 
