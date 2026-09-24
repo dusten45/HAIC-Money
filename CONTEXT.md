@@ -138,8 +138,10 @@ is lost, and steers toward the remembered/look-ahead road instead of decaying to
 straight indefinitely. Opposite steering must first pass through zero, and a
 one-step steering change is limited to 0.07. The heading contribution is ignored
 when it would oppose a meaningful look-ahead center error, while clear-road gas is
-raised to 0.12 and speed-target recovery is faster after a hazard. No simulation
-or performance evaluation was run for this repair.
+raised to 0.12 and speed-target recovery is faster after a hazard. Curve handling
+now measures the centerline over a longer preview, applies an entry-speed penalty
+before the near edge turns, and scales throttle down continuously with preview
+curvature. No simulation or performance evaluation was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
 keep their recorded model paths.
 

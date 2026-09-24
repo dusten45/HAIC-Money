@@ -153,6 +153,13 @@ class _ForwardCorridorController:
     RECOVERY_GAS = 0.028
     SPEED_BRAKE_FRAMES = 8
     SPEED_WATCHDOG_GAS = 0.03
+    # Preview-based curve management.  The long look-ahead rows give the
+    # speed controller time to settle before the near road starts turning;
+    # the gas scale then reduces longitudinal force continuously with the
+    # observed bend instead of waiting for a large steering command.
+    CURVE_ENTRY_SPEED_PENALTY = 0.40
+    CURVE_GAS_REDUCTION = 0.025
+    CURVE_MIN_GAS_SCALE = 0.58
     RECOVERY_MAX_STEER = 0.30
     RECOVERY_STEER_GAIN = 0.020
     RECOVERY_HEADING_GAIN = 0.014
@@ -498,11 +505,14 @@ class _ForwardCorridorController:
 
     @classmethod
     def _road_sweep(cls, centers: dict[int, float]) -> float:
+        """Estimate the largest centerline displacement over a preview span."""
+        if len(centers) < 2:
+            return 0.0
         return max(
             (
                 abs(
-                    centers.get(row, cls.IMAGE_CENTER)
-                    - centers.get(row + 24, cls.IMAGE_CENTER)
+                    cls._center_at(float(row), centers)
+                    - cls._center_at(float(row + 24), centers)
                 )
                 for row in (30, 34, 38, 42)
             ),
@@ -576,6 +586,12 @@ class _ForwardCorridorController:
         far = centers.get(42, self.IMAGE_CENTER)
         near = centers.get(54, self.IMAGE_CENTER)
         road_sweep = self._road_sweep(centers)
+        # Compare the farthest visible preview with the mid-preview as well
+        # as the near edge.  This catches a bend while it is still several
+        # camera rows ahead, before a large steering command is necessary.
+        preview_far = self._center_at(30.0, centers)
+        preview_mid = self._center_at(42.0, centers)
+        curve_entry_sweep = abs(preview_far - preview_mid)
         center_offset = far - self.IMAGE_CENTER
         corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
             frame, centers, spans
@@ -611,7 +627,13 @@ class _ForwardCorridorController:
             steering = 0.016 * center_offset + heading_term
             steer_limit = self.MAX_STEER
         target_speed = float(
-            np.clip(self.cruise_speed - 2.0 * road_sweep, 36.0, self.cruise_speed)
+            np.clip(
+                self.cruise_speed
+                - 2.0 * road_sweep
+                - self.CURVE_ENTRY_SPEED_PENALTY * curve_entry_sweep,
+                36.0,
+                self.cruise_speed,
+            )
         )
 
         obstacle = self._nearest_obstacle(frame, centers)
@@ -692,6 +714,15 @@ class _ForwardCorridorController:
 
         # Slow down before a bend and rate-limit steering so one noisy frame
         # cannot turn the car around or induce a drift-like correction.
+        if not straight and not corridor_hazard and brake <= 0.0:
+            curve_gas_scale = float(
+                np.clip(
+                    1.0 - self.CURVE_GAS_REDUCTION * road_sweep,
+                    self.CURVE_MIN_GAS_SCALE,
+                    1.0,
+                )
+            )
+            gas = min(gas, self.MAX_GAS * curve_gas_scale)
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
         steering = float(np.clip(steering, -steer_limit, steer_limit))

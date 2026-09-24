@@ -453,6 +453,23 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(float(hazard[2]), 0.0)
         self.assertTrue(all(np.all(np.isfinite(action)) for action in (straight, low_curvature, hazard)))
 
+    def test_forward_controller_reduces_speed_before_a_previewed_curve(self):
+        from agent import _ForwardCorridorController
+
+        straight_controller = _ForwardCorridorController()
+        straight = straight_controller.act(_observation(speed=52.0))
+
+        curve_controller = _ForwardCorridorController()
+        curve = curve_controller.act(_observation(curve=0.25, speed=52.0))
+
+        # The curve is visible in the look-ahead rows before the near edge
+        # becomes unsafe.  Speed planning should therefore lower its target
+        # and relinquish throttle before the steering command becomes large.
+        self.assertLess(curve_controller._target_speed, straight_controller._target_speed)
+        self.assertLessEqual(float(curve[1]), float(straight[1]))
+        self.assertEqual(float(curve[1]) * float(curve[2]), 0.0)
+        self.assertTrue(np.all(np.isfinite(curve)))
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic
