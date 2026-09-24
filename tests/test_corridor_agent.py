@@ -475,6 +475,12 @@ class TestVisionCorridorAgent(unittest.TestCase):
 
         controller = _ForwardCorridorController()
         action = controller.act(_observation(curve=0.5, speed=52.0))
+        high_speed_moderate_curve = _ForwardCorridorController().act(
+            _observation(curve=0.25, speed=52.0)
+        )
+        low_speed_moderate_curve = _ForwardCorridorController().act(
+            _observation(curve=0.25, speed=20.0)
+        )
 
         # A strong previewed bend must shed speed before lateral force grows;
         # the curve mode also keeps the first steering command well below the
@@ -482,6 +488,10 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertEqual(float(action[1]), 0.0)
         self.assertGreater(float(action[2]), 0.0)
         self.assertLessEqual(abs(float(action[0])), controller.CURVE_MAX_STEER)
+        self.assertLess(
+            abs(float(high_speed_moderate_curve[0])),
+            abs(float(low_speed_moderate_curve[0])),
+        )
         self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
 
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):

@@ -165,6 +165,8 @@ class _ForwardCorridorController:
     CURVE_MIN_GAS_SCALE = 0.40
     CURVE_MAX_STEER = 0.40
     CURVE_STEER_STEP = 0.055
+    CURVE_STEER_GAIN_SCALE = 0.68
+    CURVE_HIGH_SPEED_STEER_FLOOR = 0.58
     CURVE_TARGET_FALL_BLEND = 0.35
     RECOVERY_MAX_STEER = 0.30
     RECOVERY_STEER_GAIN = 0.020
@@ -740,6 +742,21 @@ class _ForwardCorridorController:
             steer_limit = min(steer_limit, self.CURVE_MAX_STEER)
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
+        if curve_mode and obstacle is None:
+            # This vehicle has little rotational inertia: the same steering
+            # value produces a much sharper yaw response than a conventional
+            # car.  Attenuate the curve gain, and attenuate it further while
+            # the measured speed is still above the curve target.  Once the
+            # brake has brought speed down, the full bounded correction can
+            # return without a large lateral impulse.
+            speed_ratio = float(
+                np.clip(
+                    target_speed / max(speed, target_speed, 1.0),
+                    self.CURVE_HIGH_SPEED_STEER_FLOOR,
+                    1.0,
+                )
+            )
+            steering *= self.CURVE_STEER_GAIN_SCALE * speed_ratio
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         if self._last_steer != 0.0 and steering * self._last_steer < 0.0:
             # Even a small command must cross zero before changing sides.  A
