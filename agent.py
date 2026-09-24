@@ -125,6 +125,19 @@ class _ForwardCorridorController:
     MAX_GAS = 0.08
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
+    # A road rendered by the official environment is dark gray (~0.40 after
+    # preprocessing); grass/background and orange obstacles are both bright
+    # (~0.63--0.70).  Keep a minimum visible road corridor and treat any
+    # bright intrusion into that corridor as a hazard.  This deliberately
+    # does not try to distinguish grass from an obstacle after RGB->gray
+    # conversion: both are unsafe for the car.
+    MIN_ROAD_WIDTH = 10.0
+    MIN_SAFE_WIDTH = 18.0
+    MIN_EDGE_CLEARANCE = 4.0
+    HAZARD_TARGET_SPEED = 24.0
+    HAZARD_BRAKE = 0.16
+    RECOVERY_BRAKE = 0.12
+    HAZARD_ROWS = (54, 50, 46, 42, 38)
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
@@ -165,9 +178,23 @@ class _ForwardCorridorController:
         return frame
 
     def _road_centers(self, frame: np.ndarray) -> dict[int, float]:
+        centers, _spans = self._road_geometry(frame)
+        return centers
+
+    def _road_geometry(
+        self, frame: np.ndarray
+    ) -> tuple[dict[int, float], dict[int, tuple[float, float]]]:
+        """Return centerline samples and their visible asphalt spans.
+
+        The span is intentionally derived from the same local search used for
+        the centerline.  It gives the safety layer a direct measure of how
+        much road remains under the car instead of assuming that a center
+        estimate alone means the whole corridor is safe.
+        """
         asphalt = (frame >= self.ROAD_LOW) & (frame <= self.ROAD_HIGH)
         horizontal = np.arange(frame.shape[1], dtype=np.float32)
         centers: dict[int, float] = {}
+        spans: dict[int, tuple[float, float]] = {}
         previous = self.IMAGE_CENTER
         for row in (54, 50, 46, 42, 38, 34, 30):
             selected = asphalt[row] & (np.abs(horizontal - previous) <= 17.0)
@@ -175,7 +202,115 @@ class _ForwardCorridorController:
             if len(locations) >= 4:
                 previous = float(locations.mean())
                 centers[row] = previous
-        return centers
+                spans[row] = (float(locations[0]), float(locations[-1]))
+        return centers, spans
+
+    @classmethod
+    def _span_at(
+        cls, row: float, spans: dict[int, tuple[float, float]]
+    ) -> tuple[float, float] | None:
+        if not spans:
+            return None
+        known_rows = sorted(spans)
+        left = float(
+            np.interp(
+                row,
+                np.asarray(known_rows, dtype=np.float32),
+                np.asarray([spans[y][0] for y in known_rows], dtype=np.float32),
+            )
+        )
+        right = float(
+            np.interp(
+                row,
+                np.asarray(known_rows, dtype=np.float32),
+                np.asarray([spans[y][1] for y in known_rows], dtype=np.float32),
+            )
+        )
+        return left, right
+
+    @classmethod
+    def _corridor_hazard(
+        cls,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]],
+    ) -> tuple[bool, bool, float]:
+        """Assess green/off-road intrusion without relying on RGB colors.
+
+        Returns ``(hazard, blocked, steer_hint)``.  ``steer_hint`` is positive
+        when the safer side is to the right, negative for the left, and zero
+        when both sides are equally unsafe.  A very narrow or discontinuous
+        visible corridor is considered blocked: braking is safer than adding
+        steering that could put the car onto grass or into an obstacle.
+        """
+        if len(centers) < 3 or not spans:
+            return True, True, 0.0
+
+        # Prefer an actually observed near row.  Interpolating over a missing
+        # near sample would make a disappearing road look safe.
+        near_span = spans.get(54) or spans.get(50)
+        far_span = spans.get(34) or spans.get(38) or spans.get(42)
+        near_width = (
+            near_span[1] - near_span[0] + 1.0 if near_span is not None else 0.0
+        )
+        far_width = (
+            far_span[1] - far_span[0] + 1.0 if far_span is not None else 0.0
+        )
+        blocked = near_span is None or near_width < cls.MIN_ROAD_WIDTH
+        # Near the camera the projected road should not be narrower than its
+        # farther samples.  A sudden collapse is the visual signature of the
+        # car reaching a green shoulder or of a large bright obstruction.
+        if far_width >= cls.MIN_SAFE_WIDTH and near_width + 3.0 < 0.72 * far_width:
+            blocked = True
+        near_center = cls._center_at(54.0, centers)
+        if abs(near_center - cls.IMAGE_CENTER) > 15.0:
+            blocked = True
+        if near_span is not None and not (
+            near_span[0] + cls.MIN_EDGE_CLEARANCE <= cls.IMAGE_CENTER <=
+            near_span[1] - cls.MIN_EDGE_CLEARANCE
+        ):
+            blocked = True
+
+        bright = frame >= cls.OBSTACLE_LOW
+        danger_x: list[float] = []
+        safe_left = safe_right = 0.0
+        for row in cls.HAZARD_ROWS:
+            span = cls._span_at(float(row), spans)
+            if span is None:
+                continue
+            left, right = span
+            center = (left + right) * 0.5
+            row_index = int(np.clip(row, 0, frame.shape[0] - 1))
+            locations = np.flatnonzero(bright[row_index])
+            inside = locations[(locations >= left) & (locations <= right)]
+            if len(inside):
+                danger_x.extend(float(value) for value in inside)
+            # Penalize a side whose visible asphalt clearance is already too
+            # small.  Dark/bright grass outside the span is not itself a
+            # detection; the shrinking asphalt span is the evidence that it
+            # has entered the drivable corridor.
+            safe_left += max(0.0, center - left)
+            safe_right += max(0.0, right - center)
+
+        intrusion = len(danger_x) >= 2
+        hazard = blocked or intrusion or near_width < cls.MIN_SAFE_WIDTH
+        if not hazard:
+            return False, False, 0.0
+        if danger_x:
+            danger_center = float(np.mean(danger_x))
+            reference = cls._center_at(46.0, centers)
+            steer_hint = 1.0 if danger_center < reference else -1.0
+        elif near_center > cls.IMAGE_CENTER + 1.0:
+            steer_hint = 1.0
+        elif near_center < cls.IMAGE_CENTER - 1.0:
+            steer_hint = -1.0
+        elif safe_right > safe_left + 1.0:
+            steer_hint = 1.0
+        elif safe_left > safe_right + 1.0:
+            steer_hint = -1.0
+        else:
+            steer_hint = 0.0
+        return True, blocked, steer_hint
 
     @classmethod
     def _center_at(cls, row: float, centers: dict[int, float]) -> float:
@@ -275,12 +410,12 @@ class _ForwardCorridorController:
                     + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
                 )
                 return np.asarray(
-                    [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
+                    [self._last_steer, 0.0, min(self.MAX_BRAKE, self.RECOVERY_BRAKE)],
                     dtype=np.float32,
                 )
             return np.zeros(3, dtype=np.float32)
 
-        centers = self._road_centers(frame)
+        centers, spans = self._road_geometry(frame)
         self.road_visible = len(centers) >= 3
         if not self.road_visible:
             if self.has_seen_road:
@@ -292,7 +427,7 @@ class _ForwardCorridorController:
                     + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
                 )
                 return np.asarray(
-                    [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
+                    [self._last_steer, 0.0, min(self.MAX_BRAKE, self.RECOVERY_BRAKE)],
                     dtype=np.float32,
                 )
             return np.zeros(3, dtype=np.float32)
@@ -301,6 +436,9 @@ class _ForwardCorridorController:
         near = centers.get(54, self.IMAGE_CENTER)
         road_sweep = self._road_sweep(centers)
         center_offset = far - self.IMAGE_CENTER
+        corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
+            frame, centers, spans
+        )
         straight = (
             abs(center_offset) <= self.STRAIGHT_CENTER_DEADBAND
             and abs(far - near) <= self.STRAIGHT_SWEEP_DEADBAND
@@ -344,6 +482,14 @@ class _ForwardCorridorController:
                 self._obstacle_missing = 0
                 self._last_obstacle_side_offset = None
 
+        if corridor_hazard:
+            # Grass and orange obstacles occupy the same bright range after
+            # RGB->gray preprocessing.  Apply one conservative response to
+            # both: bias only toward the visible road and never accelerate
+            # while the drivable corridor is uncertain.
+            steering += 0.18 * corridor_hint
+            target_speed = min(target_speed, self.HAZARD_TARGET_SPEED)
+
         if self._target_speed is not None:
             target_speed = 0.65 * self._target_speed + 0.35 * target_speed
         self._target_speed = target_speed
@@ -351,6 +497,15 @@ class _ForwardCorridorController:
             target_speed = min(target_speed, 44.0)
         speed = self._estimate_speed(frame)
         gas, brake = self._pedals(speed, target_speed)
+        if corridor_hazard:
+            gas = 0.0
+            brake = max(brake, self.HAZARD_BRAKE)
+        if corridor_blocked:
+            # When the road width itself is unsafe, braking is preferable to
+            # a large recovery turn that could cross grass or an unseen
+            # obstacle.
+            gas = 0.0
+            brake = max(brake, min(self.MAX_BRAKE, self.HAZARD_BRAKE * 1.25))
 
         # Slow down before a bend and rate-limit steering so one noisy frame
         # cannot turn the car around or induce a drift-like correction.
@@ -370,6 +525,13 @@ class _ForwardCorridorController:
         )
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         self._last_steer = steering
+        # Keep the float32 wire value strictly within the declared action
+        # bound; rounding 0.28 to float32 can otherwise compare just above
+        # MAX_BRAKE in downstream validators.
+        brake = min(
+            brake,
+            float(np.nextafter(np.float32(self.MAX_BRAKE), np.float32(0.0))),
+        )
         return np.asarray([steering, gas, brake], dtype=np.float32)
 
 

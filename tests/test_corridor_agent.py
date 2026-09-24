@@ -246,6 +246,20 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
         self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
 
+    def test_forward_controller_treats_bright_nonroad_intrusion_as_hazard(self):
+        from agent import _ForwardCorridorController
+
+        frame = _observation(speed=48.0)[-1].copy()
+        # Grayscale preprocessing makes green shoulder and orange obstacles
+        # bright; put that same signal inside the visible asphalt corridor.
+        frame[48:58, 39:46] = 0.66
+        controller = _ForwardCorridorController()
+        action = controller.act(np.tile(frame[None, :, :], (4, 1, 1)))
+
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic

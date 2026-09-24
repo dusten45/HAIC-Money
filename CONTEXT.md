@@ -120,15 +120,19 @@ custom tracks remain selectable in the same UI.
 ## Forward-Stability Runtime Repair
 
 The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
-controller at inference time. It estimates the visible road centerline, rate-limits
-steering, snaps near-centered straight segments to zero steering, regulates speed
-conservatively from the HUD (cruise target 48, throttle cap 0.08), and emits
-mutually exclusive throttle or brake.
-Compact bright objects inside the road band also trigger a bounded avoidance steer
-and lower target speed. After the road has been seen, a temporary visual dropout
-brakes and decays steering instead of falling back to an unconstrained turn.
-Opposite steering must first pass through zero, and a one-step steering change is
-limited to 0.07.
+controller at inference time. It estimates the visible road centerline and asphalt
+spans, rate-limits steering, snaps near-centered straight segments to zero steering,
+regulates speed conservatively from the HUD (cruise target 48, throttle cap 0.08),
+and emits mutually exclusive throttle or brake.
+Because the official RGB input is converted to grayscale, green background and orange
+obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
+near-road spans, small edge clearance, and bright pixels inside the road corridor all
+cut throttle; the controller brakes when the corridor is blocked and biases only
+toward the visible road. Compact bright objects still trigger bounded avoidance, but
+never override the road-width safety gate. After the road has been seen, a temporary
+visual dropout brakes and decays steering instead of falling back to an unconstrained
+turn. Opposite steering must first pass through zero, and a one-step steering change
+is limited to 0.07. No simulation or performance evaluation was run for this repair.
 Explicit action-contract payloads, DrQ actors, and the HAIC visual-policy runtime
 keep their recorded model paths; no simulation or performance evaluation was run
 for this repair.
