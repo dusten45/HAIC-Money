@@ -46,12 +46,14 @@ summary. Archived Markdown and remembered results are not authoritative evidence
 | Important settled decisions | `docs/decisions/INDEX.md` |
 | Candidate and official-model status | `docs/results/MODEL_STATUS.md` |
 | Current implementation plan | `docs/plans/active/` |
+| Multi-agent coordination and async discussion | `talk/README.md` and recent files in `talk/messages/` |
 | Historical plan/design snapshots | `docs/plans/archived/`, `docs/architecture/history/`, and `docs/archive/` |
 
-Do not read the whole documentation tree by default. Start substantial work with
-this file, `docs/context/current-state.md`, and the relevant active plan; then read
-only the workflow, evaluation evidence, decision, or architecture document needed
-for the task.
+Do not read the whole documentation tree by default. At the start of every task or
+resumption, read this file, `docs/context/current-state.md`, and
+`talk/README.md` plus the recent/relevant messages in `talk/messages/`. For
+substantial research, also read the relevant active plan, then only the workflow,
+evaluation evidence, decision, or architecture document needed for the task.
 
 ## Repository Layout
 
@@ -102,6 +104,25 @@ Do not use Agent Manager or separate top-level worktree sessions merely for
 delegation when ordinary in-session background agents suffice. Use foreground
 delegation only when no useful independent work remains. Do not duplicate delegated
 investigations or idle waiting for them.
+
+Assume other coding-agent sessions may be working concurrently, including on
+different hypotheses or files whose purpose is not yet obvious. Before new work,
+read the shared channel described in `talk/README.md`; choose a temporary session
+ID when posting, not a permanent numbered agent identity. Keep independent model
+research lanes independent: another agent's positive result is evidence to assess,
+not a reason to copy its architecture or abandon a distinct hypothesis. Share
+relevant counter-evidence and failures as readily as successes.
+
+Before a substantial plan change or edits to a shared component, post a concise
+coordination message with the hypothesis, intended files, and likely overlap.
+Messages are not locks and silence is not approval. Check Git status and ownership;
+never revert or overwrite an unfamiliar change. If overlap is real, weigh the
+value of parallel alternatives against merge risk and coordinate boundaries rather
+than stopping automatically. At meaningful results, reproducible failures,
+conflicts, and before a long pause or finish, add a separate message file as
+described in `talk/README.md`. Promote durable evidence to the experiment/result,
+decision, active-plan, or current-state documents; `talk/` is not the result
+database or source of truth.
 
 ## Version Control
 

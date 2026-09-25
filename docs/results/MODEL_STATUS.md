@@ -20,9 +20,12 @@ result.
 
 | Field | Value |
 |---|---|
-| Candidate | No formally designated best single-model candidate |
-| Why | The stored evidence identifies two reproducible DrQ-v2 controls, including one actor with 7/32 on two internal confirmation cohorts, but no single immutable package has a recorded official public-track result or confirmation state. The repository must not infer one from local results or a mixed leaderboard. |
-| Next requirement | One checkpoint/package evaluated under the current declared local scope and, when authorized, recorded official public-track scope. |
+| Candidate | Internal pixel RLPD long-horizon follow-up v1, training seed 11, 131,072 student decisions; actor SHA-256 `f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1` |
+| Provenance | `runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/actor.pt`; protocol [`pixel-rlpd-long-horizon-followup-v1`](../../experiments/pixel-rlpd-long-horizon-followup-v1.json), result [`follow-up v1`](../../experiments/pixel-rlpd-long-horizon-followup-v1-result.json) |
+| Internal evidence | On the same 24-cell screen, seed 11 reached 12/24 finishes versus 3/24 for its online-only SAC control; on fresh 32-cell confirmation, 12/32 versus 7/32; on the protocol-selected 24-cell blind, the RLPD actor finished 9/24 with 0.679 mean progress. All screen/confirmation/blind CPU reload, repeat determinism, and operational checks passed. These are internal CarRacing proxies, not official HAIC scores. |
+| Limitations | Two learner seeds, three screen/confirmation/blind track IDs each, eight geometry seeds per partition, and one final blind-tested actor. V2 failed its pilot gate and remains separate. The larger prior-data cap and student horizon were changed together in follow-up v1, so the result does not isolate a cause. Entropy-target ablations V1, V2 and V3 stopped at zero-interaction preflight; all allocations were retired. A coherent V4 fresh one-factor entropy-target protocol is frozen; no pilot/follow-up/preflight data, checkpoints, or evaluation cells are reused. |
+| Status | Best current internal candidate only; not an official submitted or competition-confirmed model. No package release, server confirmation, or official score is recorded. |
+| Next requirement | Execute V4's fresh-data entropy-target ablation and its paired confirmation/blind gates. Official public-track evaluation/model confirmation/submission requires a separate explicit user authorization immediately before the external action. |
 
 ## Official Submitted Candidates
 

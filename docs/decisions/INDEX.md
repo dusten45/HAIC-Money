@@ -64,14 +64,22 @@ explicit user-authorized plan, not a third follow-up sweep.
 
 ## Do Not Scale the Current DreamerV3 Formulation
 
-**Context:** Native DreamerV3 passed packaging/recurrent and short training gates.
+**Context:** Pre-repair native DreamerV3 passed packaging/recurrent and short training
+gates.
 
-**Evidence:** The pilot policy saturated steering and achieved no screen finishes;
-the current diagnostics do not prove a faithful world model suitable for control.
+**Evidence:** The pre-repair pilot policy saturated steering and achieved no screen
+finishes; its diagnostics did not establish a world model suitable for control.
 See [`dreamerv3-feasibility-gate.json`](../../experiments/dreamerv3-feasibility-gate.json).
+A1-A3 repairs and B1 tooling were subsequently implemented, but all nine
+source-pinned random-data world-model studies v1-v9 failed their frozen B1 gates
+in both learner seeds. See the
+[`v1-v9 summary`](../../experiments/dreamerv3-b1-iteration-summary-v1-v9.json)
+and [`B1 diagnosis`](../../experiments/dreamerv3-b1-failure-diagnosis-v1.json).
+No post-repair policy was trained in those studies.
 
-**Decision:** Do not launch the 131k matched run for this formulation. Pursue the
-fidelity-recovery plan first; this is not a family-wide rejection of DreamerV3.
+**Decision:** Do not launch the 131k matched run for the pre-repair formulation
+or the B1-failed repaired studies. Keep policy training blocked under the active
+recovery plan; this is not a family-wide rejection of DreamerV3.
 
 **Revisit condition:** The active plan's correctness, open-loop, counterfactual,
 and renewed pilot gates pass.
@@ -96,8 +104,9 @@ refresh.
 and DreamerV3.
 
 **Evidence:** No current artifact establishes a feasible CPU/package path or a
-matched improvement for either family. The current DreamerV3 recovery work is itself
-not yet implemented.
+matched improvement for either family. DreamerV3 A1-A3 repairs and B1 tooling
+are implemented, but all nine two-seed v1-v9 B1-only studies failed; no
+post-repair actor performance is known.
 
 **Decision:** Keep those families as strategic possibilities in the archived roadmap
 ([`2026-09-23-algorithm-migration-plan.md`](../plans/archived/2026-09-23-algorithm-migration-plan.md)),

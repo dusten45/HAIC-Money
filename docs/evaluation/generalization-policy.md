@@ -13,14 +13,50 @@
 
 ## Recorded Internal Partition History
 
-The following describes evidence records, not a universal reusable grid. Exact seed
-lists and training exclusions remain in their protocol JSON files.
+This table is a selective routing aid, **not an exhaustive seed registry or a
+reusable grid**. Before allocating any new cell, search every relevant frozen
+protocol, run receipt, source training ledger, and retired allocation across all
+research lanes. Exact cells and cross-track exclusions remain in those artifacts;
+absence from this table is not evidence that a seed is fresh.
 
 | Study | Screen | Confirmation | Blind status |
 |---|---|---|---|
 | DrQ-v2 promotion v1 | `101-103` x `31001-31008`, consumed | `111-114` x `31101-31108`, consumed as diagnostic-only | `121-123` x `31201-31208`, reserved and not run |
 | DrQ-v2 steering-logit L2 | Reused development screen `101-103` x `31001-31008` | `211-214` x `32101-32108`, consumed | `221-223` x `32201-32208`, reserved and not run |
 | DrQ-v2 pad 4 vs 1 | Reused development screen `101-103` x `31001-31008` | `311-314` x `33101-33108`, consumed | `321-323` x `33201-33208`, reserved and not run |
+| [DrQ-v2 teacher replay r3](../../experiments/drqv2-teacher-replay-v1-r3.json) | Teacher training collection consumed; A3 stopped before screen | Reserved, not opened | Reserved, not opened; r1/r2 allocations were also retired |
+| [Pixel RLPD off-policy pilot v1](../../experiments/pixel-rlpd-offpolicy-pilot-v1.json) | Protocol allocation retired before any environment interaction; 0 decisions | Proposed allocation retired, not recycled | Proposed allocation retired, not recycled |
+| Pixel RLPD off-policy pilot v2 | `101-103` x `4000006001-4000006004`, consumed | `311-314` x `4000006011-4000006018`, reserved and not run | `321-323` x `4000006021-4000006028`, reserved and not run; conditional full-stage screen/confirmation/blind allocations `4000006031-6058` also remain unopened |
+| Pixel RLPD long-horizon follow-up v1 | `201-203` x `4000013001-4000013008`, consumed | `211-214` x `4000013011-4000013018`, consumed | `221-223` x `4000013021-4000013028`, consumed |
+| Pixel RLPD entropy-target ablation v1 | `261-263` x `4000023001-4000023008`, allocation retired before interaction | `271-274` x `4000023011-4000023018`, allocation retired before interaction | `281-283` x `4000023021-4000023028`, allocation retired before interaction |
+| Pixel RLPD entropy-target ablation v2 | `261-263` x `4000025001-4000025008`, allocation retired before interaction | `271-274` x `4000025011-4000025018`, allocation retired before interaction | `281-283` x `4000025021-4000025028`, allocation retired before interaction |
+| Pixel RLPD entropy-target ablation v3 | `291-293` x `4000027001-4000027008`, allocation retired before interaction | `301-304` x `4000027011-4000027018`, allocation retired before interaction | `311-313` x `4000027021-4000027028`, allocation retired before interaction |
+| [Pixel RLPD entropy-target ablation v4](../../experiments/pixel-rlpd-entropy-target-ablation-v4.json) | `291-293` x `4000029001-4000029008`, allocated for the running study; check receipts before use | `301-304` x `4000029011-4000029018`, conditional reserve | `311-313` x `4000029021-4000029028`, conditional reserve |
+
+The RLPD v1 pilot was retired after a runtime preflight abort with no environment
+interaction; those proposed numbers are not represented as consumed outcomes.
+Nevertheless, its allocation was not recycled. The v2 and long-horizon
+training/data pools `4000004001-4000004032` and `4000012001-4000012064`
+were used by teacher collection and/or student training and are consumed training
+geometry, not validation. V2's
+separately reserved teacher pool `4000005001-4000005064` and full evaluation cells
+were not opened but remain excluded from new experiments. Entropy-target v1
+aborted during zero-interaction metadata preflight; its
+`4000022001-4000022064` teacher pool and `4000023xxx` evaluation allocations were not
+used and have been retired, not recycled. Exact prior allocation and cross-track
+exclusions live in each protocol JSON. The following entropy-target protocol also
+aborted before environment interaction because its internal study name remained v1
+while the protocol filename/run paths said v2. Its `4000024001-4000024064` teacher
+pool and `4000025xxx` evaluation allocation were also retired, not recycled.
+Entropy-target v3 froze `4000026001-4000026064` teacher cells and the `4000027xxx`
+partitions, but its learner-seed validator/source hashes were inconsistent; it too
+aborted before environment interaction. Retire, do not reuse, those allocations.
+Entropy-target v4 uses `4000028001-4000028064` teacher geometry and the
+`4000029xxx` evaluation partitions; its exact consumption status is in its running
+execution receipts, not this static table. Dreamer B1 development geometries,
+[DrQ training-only geometry catalogs](../experiments/drqv2-geometry-augmentation-v1.md),
+and residual-options development cells also need protocol/receipt audits even
+though their exact ranges are not reproduced here.
 
 Read the protocol/result artifacts before using any listed seed. In particular, a
 geometry seed may be excluded across all training track IDs even when a table shows

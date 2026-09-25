@@ -8,10 +8,15 @@ submit or confirm a model on the competition site.
 
 1. `AGENTS.md`
 2. `docs/context/current-state.md`
-3. The active plan in `docs/plans/active/`
-4. `docs/evaluation/protocol.md` and `docs/evaluation/metrics.md`
-5. Only the relevant entries in `docs/experiments/INDEX.md` and
+3. `talk/README.md` and the latest relevant messages in `talk/messages/`
+4. The active plan in `docs/plans/active/`
+5. `docs/evaluation/protocol.md` and `docs/evaluation/metrics.md`
+6. Only the relevant entries in `docs/experiments/INDEX.md` and
    `docs/decisions/INDEX.md`
+
+Keep an independent hypothesis and research lane. Before a substantial change,
+share intended files if another agent may be touching the same model component;
+use `talk/` to exchange evidence and counterarguments, not to force convergence.
 
 ## Execution Loop
 

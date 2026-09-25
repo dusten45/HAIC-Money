@@ -9,13 +9,24 @@ Participants repository override it whenever they differ.
 |---|---|---|---|
 | Technical contract | [Participants README at `1c11db8`](https://github.com/2026-HAIC/Participants/blob/1c11db8afc2fbfcfb610672b7ee0ecd122c97741/README.md) | 2026-09-23T06:30:22Z | Official `main` commit `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`; README blob `4fd6bc02ddf6064bd09d3bbaaa8fa57253ab65be` |
 | Operating schedule, quota, model-selection policy | [competition website](https://ships-duo-ethical-saver.trycloudflare.com/) and loaded [official bundle](https://ships-duo-ethical-saver.trycloudflare.com/assets/index-YpEsg9KV.js) | 2026-09-23T06:30:22Z | SPA shell plus loaded bundle; the site provides no deployment commit |
-| Current public-track snapshot | [`/api/tracks`](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks) and per-track [`/api/ranking`](https://ships-duo-ethical-saver.trycloudflare.com/api/ranking?trackId=1) | 2026-09-23T06:30:22Z | Tracks 1 and 2 were exposed as public at verification time |
+| Historical public-track snapshot | [`/api/tracks`](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks) and per-track [`/api/ranking`](https://ships-duo-ethical-saver.trycloudflare.com/api/ranking?trackId=1) | 2026-09-23T06:30:22Z | Tracks 1 and 2 were exposed as public at verification time; this is not a current track count |
+
+## Latest Site Availability Check
+
+On 2026-09-25 at 09:24-09:26Z, the competition-site hostname failed DNS
+resolution (`curl` could not resolve it; Google DNS returned status 3/NXDOMAIN).
+The site root, previously loaded bundle, and `/api/tracks` could not be fetched.
+The [official Participants repository](https://github.com/2026-HAIC/Participants)
+was reachable and its `main` commit was still `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`,
+but its README does not publish the event schedule. The site schedule and public
+track count therefore **could not be reverified today**. Obtain a working official
+site URL and check it before relying on the dates below for any external action.
 
 Refresh these sources before official submission, model confirmation, a mock event,
 the final deadline, or first official evaluation after another public track is
 released.
 
-## Verified Operating Schedule
+## Last Site-Verified Operating Schedule (2026-09-23)
 
 All site times below are KST (`+09:00`), with UTC shown for auditability.
 
@@ -27,9 +38,10 @@ All site times below are KST (`+09:00`), with UTC shown for auditability.
 | Submission deadline | 2026-10-06 23:59:59 | 2026-10-06 14:59:59Z |
 | Final event | 2026-10-08 18:00 | 2026-10-08 09:00Z |
 
-The closest verified gate at this document refresh is the first mock competition.
-This table is the only schedule copy; `docs/context/current-state.md` may link to it
-but must not duplicate it.
+The first mock in this historical site snapshot has passed. Its next listed event
+is the second mock, but the live schedule is unverified while the official site is
+unreachable. This table is the only schedule copy; `docs/context/current-state.md`
+may link to it but must not duplicate it.
 
 ### Unverified Information Carried Forward
 

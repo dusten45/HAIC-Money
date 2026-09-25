@@ -54,6 +54,8 @@ official package acceptance or competition performance.
   [`docs/decisions/INDEX.md`](docs/decisions/INDEX.md)
 - Candidate, submission, and confirmation status:
   [`docs/results/MODEL_STATUS.md`](docs/results/MODEL_STATUS.md)
+- Multi-agent collaboration and asynchronous research discussion:
+  [`talk/README.md`](talk/README.md)
 
 `AGENTS.md` is the stable router and operating constitution for coding/research
 agents. It defines which documents to read for a task and separates internal
