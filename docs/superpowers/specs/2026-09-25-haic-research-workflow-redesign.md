@@ -1,170 +1,222 @@
 # HAIC Research Workflow Redesign
 
-- 상태: 사용자 검토용 설계 초안
+- 상태: 사용자 수정사항 반영, 구현 계획 검토 전
 - 날짜: 2026-09-25
 - 범위: HAIC 저장소의 연구·실험·실행 운영 구조 재설계
+- 기준 문서: 사용자가 제공한 「이식 가능한 에이전트 하네스 운영 문서」
 
-## 1. 의도
+## 1. 의도와 경계
 
-이 저장소에 여러 프로젝트에서 재사용할 포터블 에이전트나 범용 하네스를 만드는 것이 목적이 아니다. 제공된 「이식 가능한 에이전트 하네스 운영 문서」에서 유효한 운영 원칙만 참고해, HAIC 프로젝트에 맞는 새 연구·실행 방식을 설계한다.
+이 저장소에 여러 프로젝트에서 재사용할 포터블 에이전트 제품을 만드는 것이 목적은 아니다. 제공된 하네스 문서를 HAIC에 적용할 운영 기준으로 삼아, 문서 책임·작업 절차·보고 형식·기록 구조를 가능한 한 충실히 적용한 HAIC 전용 연구·실행 체계를 만든다. 규칙, 명령, split, 지표는 HAIC의 공식 계약과 사용자 목표에 맞게 채운다.
 
-기존 실행 흐름을 장기 지원하거나 새 흐름과 병행하는 것이 목표도 아니다. 먼저 HAIC의 현재 동작과 기록 구조를 문서화하고, 승인된 설계를 바탕으로 단일한 새 운영 경로와 필요한 실행 코드를 만든다. 기존 결과 데이터는 보존하되 과거 오케스트레이터를 새 구조의 기반이나 필수 의존성으로 삼지 않는다.
+기존 연구 오케스트레이션 방식을 장기 지원하거나 새 방식과 병행하지 않는다. HAIC의 현재 실행·기록 구조를 문서화한 뒤 새 운영 코드와 필요한 실행 경로를 만든다. `research_ops`와 `training/improvement_loop.py`는 새 체계의 기반이나 필수 의존성이 아니며, 전환이 확인되면 기존 오케스트레이션·색인·자동 SOTA 동기화 역할을 퇴역시킨다. HAIC 학습·평가·패키지 기능은 개별적으로 검토해 재사용하거나 재작성한다.
 
-## 2. 참고 문서에서 가져올 원칙
+### 연구 목표 우선순위
 
-참고 문서는 특정 코드나 대회 전략을 복사하라는 문서가 아니라, 프로젝트별 운영 문서를 구성하는 기준서다. HAIC에 적용할 원칙은 다음과 같다.
+제출 자격을 충족한 후보 사이의 내부 연구 선택에서 **완주율이 최우선 성과 지표**다. 같은 사전 등록 평가 집합과 동일 조건에서 완주율이 높은 후보를 우선한다. 완주율이 같을 때만 완주 랩타임 중앙값, 미완주 진행도, P90 랩타임, 충돌·손상, 추론 비용 순으로 비교한다. 규칙 준수는 성과 순위와 별개의 필수 게이트다.
 
-- 공식 규칙과 사용자 목표에 가설·실험·판정을 연결한다.
-- 탐색 방향을 나누고, 같은 파라미터의 미세 조정만 반복하지 않도록 정체 기준을 둔다.
-- 설계, 구현, 실행, 평가를 승인과 증거로 구분한다.
-- 규칙 준수, 의도한 메커니즘의 작동, 실제 성과를 별도로 판정한다.
-- 실패와 무효 실행도 근거와 함께 보존하고, 원자료를 성급히 합치거나 덮어쓰지 않는다.
+이 우선순위는 사용자의 연구 목표이며 공식 리더보드 점수 공식을 대신하지 않는다. 보고서에는 공식 규칙상 점수와 내부 완주율 우선 비교를 구분한다. Teacher·smoke·단일 seed 기록은 PPO 제출 후보의 완주율로 합산하지 않는다.
 
-반대로 범용 core/adapter 제품, 다른 프로젝트를 위한 설치 절차, 모든 저장소에 공통인 CLI를 만들지는 않는다. 문서의 폴더 구성을 그대로 복사하지 않고, HAIC에서 실제로 필요한 문서만 남긴다.
+## 2. 제공된 하네스 문서를 HAIC에 적용하는 정도
 
-## 3. 현재 저장소에서 확인된 구조
+제공 문서의 구조를 최대한 따른다. 프로젝트별 값을 채우되, 공통 운영 아이디어와 요구 산출물은 임의로 생략하지 않는다.
 
-현재 문서와 코드에는 다음 운영 경로가 함께 존재한다.
+- 중앙 오케스트레이터가 전체 상태·우선순위·탐색 배치를 관리한다.
+- 독립 에이전트는 서로 다른 탐색 축을 맡고 공유 문서를 동시에 수정하지 않는다.
+- 모든 가설은 공식 규칙 또는 관측 근거, 성공 endpoint와 실패 조건에 연결한다.
+- 문서에 지정된 상태 머신과 설계·구현·실행 승인 게이트를 사용한다.
+- 배치당 독립 방향 4개 이상, 전체 후보 8개 이하, 방향별 후보 2개 이하를 기본으로 한다.
+- 메커니즘이 실제 행동이나 상태를 바꾸기 전에는 threshold·가중치 미세 탐색을 하지 않는다.
+- 비교 가능한 유효 주기 3회 연속 비개선이면 pivot한다. 인프라 실패와 무효 실행은 횟수에 포함하지 않는다.
+- 에이전트 보고에서 `fact`, `inference`, `unknown`, `recommendation`을 구분하고 근거 경로를 붙인다.
+- `run_manifest.json`, `events.jsonl`, `integration_report.json`과 세 판정 게이트를 구현한다.
+- blind·confirmation 자료를 보호하고 과거 원자료를 복사하거나 덮어쓰지 않는다.
+
+여기서 “최대한 따른다”는 문서에 있는 항목을 HAIC 구조에서 구현·운영한다는 뜻이다. 교차 프로젝트용 설치 절차나 범용 core/adapter 제품을 만든다는 뜻은 아니다. 실제로 적용할 수 없는 항목이 생기면 validator/설계 문서에서 이유와 대체 방식을 명시한다.
+
+## 3. 현재 HAIC 구조와 바꿀 이유
 
 | 영역 | 현재 역할과 관찰 |
 |---|---|
-| `README.md` | 환경 설치, 에이전트 계약, 제출 패키지뿐 아니라 PPO/CEM/teacher 학습과 과거 실험 설명까지 포함한다. 시작 안내와 연구 기록의 경계가 넓다. |
-| `COMPETITION_INFO.md` | 관측·행동 계약, 시간·메모리 제한, 종료·점수, ZIP 구성을 요약한다. 공식 원문 자체가 아니라 검증이 필요한 로컬 요약이다. |
-| `RESTRICTIONS.md` | 제출 계약, 정보 누수 방지, 데이터 분할과 기록 제한을 설명한다. |
-| `RULES.md` | `research_ops.cli improve`를 단일 실행 절차로 선언하고, 결과 색인·문서 감사·전략 비교·SOTA 동기화와 선택적 로컬 명령 실행을 연결한다. |
-| `research_ops/` | 결과 파일 검색·정규화, 비교·승격 판단, 계획 생성, 결과 문서 동기화와 CLI를 제공한다. |
-| `training/improvement_loop.py` | 결과·산출물 색인, 문서 및 패키지 감사, 다음 실험 제안, `RESULTS.md`/`SOTA.md` 기록, 선택적 명령 실행을 별도로 구현한다. |
-| `RESULTS.md` | 실험별 설명과 JSON에서 생성한 정규화 표를 함께 담는다. 생성 구역은 `research_ops.cli sync-results`에 연결돼 있다. |
-| `SOTA.md` | 현재 문서상 held-out completion 0.75의 PPO actor-only 기록을 로컬 최고 후보로 가리킨다. 공식 순위나 공식 제출 성과와 동일한 의미는 아니다. |
-| `docs/` | 실험 설계와 계획이 `docs/superpowers/specs/`, `docs/superpowers/plans/`에 있다. 현재 저장소 루트에는 공통 작업 흐름의 단일 소유자인 `AGENTS.md`가 없다. |
+| `README.md` | 실행 환경·에이전트 계약·패키지와 PPO/CEM/teacher 실험 설명을 함께 담는다. 시작 안내와 연구 기록이 길게 섞여 있다. |
+| `COMPETITION_INFO.md` | 관측·행동 계약, 제한, 종료·점수, ZIP 구성을 요약한다. 공식 원문이 아닌 로컬 요약이다. |
+| `RESTRICTIONS.md` | 제출 계약, 누수 방지, data split과 기록 제한을 담는다. |
+| `RULES.md` | `research_ops.cli improve`를 단일 실행 흐름으로 지정하고 DB 색인·비교·SOTA 갱신 및 선택적 명령 실행을 연결한다. |
+| `research_ops/` | artifact 검색·정규화, 비교·승격, 계획 생성, 결과 동기화 및 CLI를 구현한다. |
+| `training/improvement_loop.py` | 별도로 결과 검색·감사·다음 실험 제안·RESULTS/SOTA 작성·선택적 명령 실행을 구현한다. |
+| `RESULTS.md` | 사람이 쓴 요약과 `research_ops`가 생성한 과거 JSON 색인 구역이 함께 있다. |
+| `SOTA.md` | 현재 문서상 held-out 완주율 0.75, 중앙 랩타임 19.32초의 PPO actor-only 로컬 기록을 가리킨다. 공식 순위와 동일하지 않다. |
+| `docs/` | 현재 HAIC 설계·실험 계획은 `docs/superpowers/specs/`, `docs/superpowers/plans/`에 있다. 저장소 루트에 단일 운영 규약인 `AGENTS.md`는 없다. |
 
-따라서 문제는 연구 자료가 부족한 것이 아니라, 실행·색인·판정 책임이 `RULES.md`, `research_ops`, `training/improvement_loop.py`, 생성된 결과 문서에 중복되어 있다는 점이다. 새 구조에서는 이 책임을 HAIC 전용 한 흐름으로 모은다.
+중복된 오케스트레이션과 자동 결과 재생성을 걷어내고, 운영 규칙·실험 기록·실행 코드의 단일 책임자를 둔다. 기존 문서는 제공 문서의 책임표에 맞춰 정리하되, 동일 목적 문서를 여러 개 만들지 않고 유일한 역사 정보는 보존한다.
 
-## 4. 결정할 새 운영 방향
+## 4. HAIC에 적용할 파일·폴더 구조
 
-### 4.1 HAIC 전용 구조
-
-새 운영 코드는 HAIC 실험과 제출 제약을 직접 다루는 프로젝트 전용 구성으로 만든다. 포터블 프레임워크나 미래 프로젝트용 어댑터 계층은 설계 범위에서 제외한다.
-
-예상 코드 경계는 다음과 같다. 이름은 구현 계획에서 조정할 수 있다.
+사용자 제공 문서의 구조를 기본으로 적용한다.
 
 ```text
-haic_research/
-  workflow/       # 상태 전이, 승인, 다음 단계
-  experiments/    # 가설, control, 계획, 판정
-  execution/      # 등록된 HAIC 학습·평가 작업 실행
-  records/        # run manifest, 사건 로그, 보고서
-  cli.py          # HAIC 연구 작업 진입점
+project-root/
+├─ AGENTS.md
+├─ PROJECT_INFO.md
+├─ RESTRICTIONS.md
+├─ RESULTS.md
+├─ SOTA.md
+├─ harness.config.json
+├─ docs/
+│  ├─ experiments/INDEX.md
+│  ├─ handoffs/
+│  ├─ sources/
+│  ├─ strategy-history.md
+│  └─ report.md
+├─ runs/
+├─ artifacts/
+├─ output/pdf/
+└─ scripts/harness/validate.ps1
 ```
 
-이 구조는 예시이며, 사용하지 않을 계층을 형식적으로 만들 필요는 없다. 핵심은 책임을 HAIC 업무에 맞춰 분리하고 한 개의 권위 있는 실행 경로를 두는 것이다.
+`harness.config.json`와 `scripts/harness/validate.ps1`는 HAIC 전용 설정·검증기다. 공용 패키지나 다른 프로젝트를 위한 adapter framework로 만들지 않는다. `README.md`는 빠른 시작과 위 문서들의 경로 안내를 맡는다.
 
-### 4.2 기존 운영 흐름의 지위
+### 문서별 책임
 
-- `research_ops.cli improve`와 `training.improvement_loop`는 새 기본 경로의 일부가 되지 않는다.
-- 새 코드는 이 모듈들을 import하거나 자동 호출하지 않는다.
-- 기존 실행 흐름을 계속 지원하기 위한 호환 계층이나 이중 운영 절차를 요구하지 않는다.
-- 새 흐름의 검증이 끝나면 기존 오케스트레이션·색인·SOTA 동기화 코드는 사용 중단 또는 제거 대상으로 다룬다. 실제 제거 범위와 시점은 구현 계획에서 파일 참조를 확인해 정한다.
-- 모델, 환경, 평가기, 패키저 등 HAIC 작업에 필요한 기능은 별도로 검토한다. 도움이 되는 구현은 새 인터페이스 아래 재사용하거나 재작성할 수 있지만, 옛 오케스트레이터와의 호환성은 보장하지 않는다.
-
-이는 현재 변경 단계에서 이 코드들을 삭제하라는 뜻이 아니다. 지금은 운영 책임과 목표를 명확히 하고, 이후 승인된 구현 계획에서 안전한 전환 순서를 정한다.
-
-## 5. 과거 데이터와 새 실행 산출물
-
-과거 데이터는 현재 경로에 그대로 둔다. 이 설계 단계에서는 복사·이동·이름 변경·삭제·자동 색인을 하지 않는다.
-
-| 자료 | 기존 위치 | 처리 |
-|---|---|---|
-| 과거 실행 기록 | `runs/` | 그대로 보존하고 새 실행에서 자동 탐색하지 않음 |
-| HAIC 체크포인트·평가 자료 | `artifacts/haic/` | 그대로 보존하고 새 DB에 자동 편입하지 않음 |
-| 과거 제출물 | `submissions/` 및 기존 artifact 하위 경로 | 그대로 보존하고 새 CLI에서 제출하지 않음 |
-| 기존 결과·계획·연구 메모 | `RESULTS.md`, `SOTA.md`, `research/`, `docs/` | 원문과 근거 경로를 보존하고, 확인된 의미만 새 문서에 참조 |
-
-새 실행 결과는 과거 결과와 섞이지 않는 별도 공간을 사용한다. 초안 경로는 `runs/haic-research-v2/<run-id>/`와 `artifacts/haic/research-v2/<run-id>/`이다. 정확한 경로는 구현 계획 전에 확인한다. 과거 위치와 새 개념의 대응은 작은 읽기 전용 경로표로 설명하며, 과거 파일의 경로 문자열이나 manifest는 고치지 않는다.
-
-기존 `RESULTS.md`의 생성 표는 이번 전환 과정에서 다시 생성하지 않는다. 신규 결과를 어떻게 기록할지는 새 run 기록을 검토한 뒤 구현 계획에서 정한다. `SOTA.md`도 새 근거와 게이트를 통과하기 전까지 자동 갱신하지 않는다.
-
-## 6. HAIC 문서 책임 정리안
-
-동일 목적의 문서를 여러 개 두지 않는다. 먼저 기존 문서의 유효한 내용을 보존하고 책임을 재배치한다.
-
-| 문서 | 새 책임 |
+| 문서 | HAIC에서 맡을 책임 |
 |---|---|
-| `AGENTS.md` | 누락된 단일 작업 규약. 공식 출처 우선순위, 상태 흐름, 승인·실행 경계, 보고 형식, 역할 분담을 둔다. |
-| `README.md` | 사용자용 빠른 시작, 실행 환경, 핵심 파일 지도. 상세한 과거 연구 서술은 별도 기록으로 옮긴다. |
-| `COMPETITION_INFO.md` | HAIC의 현재 계약·공식 출처·확인일. `PROJECT_INFO.md`를 중복 생성하지 않는다. |
-| `RESTRICTIONS.md` | 제출 제한, 데이터 분할, 누수 방지, 금지 행동. 공식 원문과 요약을 구분한다. |
-| `RULES.md` | 별도 실행 오케스트레이터로 남기지 않는다. 유효한 정책은 `AGENTS.md` 또는 제한 문서로 옮긴 뒤 호환 안내로 축소하거나 제거한다. |
-| `RESULTS.md` | 과거 결과를 보존한다. 새 시스템이 과거 JSON을 찾아 전체 문서를 재생성하는 방식은 종료한다. |
-| `SOTA.md` | 독립 검증을 통과한 현 후보만 가리킨다. 과거 최고 기록을 자동 승격하지 않는다. |
-| `docs/experiments/` | 새 실험의 질문, 가설, control, split, 비용, 판정과 원자료 위치를 기록한다. |
-| `docs/sources/` | 공식 규칙과 중요한 외부 근거의 URL·버전·확인일을 기록한다. 실제 사용하는 출처만 둔다. |
-| `docs/handoffs/` | 병렬 조사 때만 사용한다. fact/inference/unknown/recommendation과 경로를 나눠 중앙 판정에 전달한다. |
+| `AGENTS.md` | 단일 운영 규약: 출처 우선순위, 상태 머신, 중앙 오케스트레이터·에이전트 역할, 승인 게이트, 검색 규칙, 보고 형식 |
+| `PROJECT_INFO.md` | HAIC 목적, 공식 출처, 성공 endpoint, 완주율 우선순위, 허용된 실행·평가 진입점 |
+| `RESTRICTIONS.md` | 제출·runtime·보안·정보 누수·split·외부 실행 제한 |
+| `RESULTS.md` | append-only 결과 원장. 과거 생성 표와 설명은 역사 자료로 보존하고 새 기록은 추가 |
+| `SOTA.md` | 독립 평가와 필수 게이트를 통과한 제출 가능 후보. 완주율을 먼저 비교 |
+| `harness.config.json` | HAIC 전용 경로, 정책, split ID, 예산, 명령 profile, pivot 기준. 비밀값 금지 |
+| `docs/experiments/` | 가설, control, 실험 조건, 성공 endpoint, 반증 조건, 비용, 판정, 원자료 경로 |
+| `docs/handoffs/` | 독립 에이전트의 범위·결과·불확실성·추천을 중앙 오케스트레이터에 전달 |
+| `docs/sources/` | 공식 규칙·사양·외부 근거의 URL, 버전/확인일, 적용 사실 |
+| `docs/strategy-history.md` | 채택·폐기 전략과 근거의 append-only 이력 |
+| `docs/report.md` | 검증 성과, 제한, 실패 원인, 다음 우선순위의 최신 종합 |
+| `runs/` | 신규 실행 manifest, events와 실행별 원자료 위치 |
+| `artifacts/` | 신규 checkpoint, package, 비교 산출물과 hash |
+| `output/pdf/` | 신규 보고서 PDF. 기존 `report.pdf`는 이동하거나 덮어쓰지 않음 |
+| `scripts/harness/validate.ps1` | 필수 문서·설정·경로·정책 간 구조 검증. 공식 평가기를 복제하지 않음 |
 
-`COMPETITION_INFO.md`에 적힌 로컬 설명이 공식 규칙과 일치하는지는 전환 시점에 공식 사이트와 Participants 저장소를 다시 확인한다. 현재 문서의 존재만으로 최신성이 보장된다고 간주하지 않는다.
+현재 `COMPETITION_INFO.md`의 고유 사실은 `PROJECT_INFO.md`/`RESTRICTIONS.md` 책임에 따라 옮기고, 기존 경로 참조가 필요하면 호환 안내만 둔다. `RULES.md`의 유효 정책은 `AGENTS.md`로 옮기고 활성 실행 절차로는 남기지 않는다. 기존 `RESULTS.md` generated 구역은 동결한다. 이동 전 전체 링크·참조를 확인하며 고유한 내용은 보존한다.
 
-## 7. 작업 단계와 탐색 규칙
+## 5. 권위와 출처
+
+- 작업 범위와 승인 권한은 최신 사용자 지시를 따른다.
+- HAIC 대회 규칙·제출·일정 사실은 최신 공식 대회 사이트, 공식 Participants 저장소, 로컬 요약, 역사 자료 순으로 확인한다.
+- 공식 자료가 로컬 문서와 충돌하면 외부 제출·모델 확인을 중단하고 공식 자료에 맞게 로컬 기준을 정리한다.
+- 결과 문서·오래된 계획·과거 SOTA는 특정 실행의 근거일 뿐 현재 규칙이나 새 실행의 기본값이 아니다.
+- 모든 `docs/sources/` 기록에 URL, 버전/게시일 또는 확인일, 사용한 주장을 남긴다.
+
+## 6. 중앙 조정과 에이전트 계약
+
+HAIC 중앙 오케스트레이터는 전체 연구 주기를 관리한다.
+
+- 현재 상태, 활성 주기, 우선순위와 실행 예산을 관리한다.
+- 에이전트별로 서로 겹치지 않는 조사 축을 배정한다.
+- 중복 가설, 상충 근거, 규칙 위반과 권한 문제를 확인한다.
+- 실행 전에 control·split·완주 지표·실패 조건·예산 승인을 확인한다.
+- 개별 보고를 통합해 다음 방향과 SOTA 승격 여부를 결정한다.
+
+에이전트는 지정된 조사 범위와 산출물을 지키고 공유 문서를 동시에 수정하지 않는다. 보고는 다음 형식을 사용한다.
+
+```text
+fact:
+inference:
+unknown:
+recommendation:
+source_paths:
+```
+
+코드가 존재하거나 점수가 높다는 사실만으로 전략 활성화나 인과를 확정하지 않는다. handoff는 중앙 판정을 대체하지 않는다.
+
+## 7. 가설, 상태 머신과 탐색 정책
+
+신규 가설은 아래 필드를 갖는다.
+
+```text
+hypothesis_id:
+source_ref:
+rule_or_requirement:
+observable_information:
+allowed_action_or_state_change:
+expected_success_endpoint:
+eligible_state:
+control:
+falsifier:
+smallest_decisive_experiment:
+resource_and_risk_gate:
+```
+
+인과 설명은 `공식 규칙/요구사항 → 에이전트가 볼 수 있는 정보 → 허용된 행동/상태 변화 → 성공 endpoint`를 이어야 한다.
+
+모든 작업은 다음 상태를 따른다.
 
 ```text
 STOPPED
-  -> DISCOVER
-  -> HYPOTHESIZE
-  -> DESIGN_PENDING_APPROVAL
-  -> IMPLEMENT_PENDING_APPROVAL
-  -> EXECUTE_PENDING_APPROVAL
-  -> EVALUATE
-  -> ADVANCE | REJECT | REVISE | PIVOT
-  -> RELEASE_IF_GATE_PASS
-  -> STOPPED
+→ DISCOVER
+→ HYPOTHESIZE
+→ DESIGN_PENDING_APPROVAL
+→ IMPLEMENT_PENDING_APPROVAL
+→ EXECUTE_PENDING_APPROVAL
+→ EVALUATE
+→ ADVANCE / REJECT / REVISE / PIVOT
+→ RELEASE_IF_GATE_PASS
+→ STOPPED
 ```
 
-- 기본 상태는 `STOPPED`이며, 계획·문서 점검만으로 학습·평가 명령을 시작하지 않는다.
-- 가설에는 공식 요구사항 또는 관찰 근거, 메커니즘, control, 측정 지표, 반증 조건, 최소 판별 실험과 비용을 적는다.
-- 설계·구현·실행 승인은 각각 해당 버전의 계획에 연결해 기록한다.
-- 탐색 배치는 최소 4개의 독립 메커니즘 방향, 최대 8개 후보, 방향별 최대 2개 후보로 제한한다.
-- 행동이나 상태를 바꾸는 메커니즘이 확인되기 전에는 threshold·가중치 이웃 탐색을 하지 않는다.
-- 비교 가능한 유효 주기 3회 연속 비개선 시 방향을 전환한다. 인프라 오류·무효 실행은 비개선 횟수에 넣지 않는다.
-- train, tune, held-out, confirmation, blind 자료를 구분한다. 사용한 confirmation/blind를 새 자료로 다시 부르거나 blind를 조정에 쓰지 않는다.
-- 중앙 판정은 여러 독립 조사 결과를 통합할 수 있지만, 이를 위해 범용 에이전트 실행기를 만들 필요는 없다.
+- `STOPPED`가 기본이다. 문서 조사만으로 학습·평가·제출 실행 상태에 들어가지 않는다.
+- 설계, 구현, 실행 승인은 서로 분리하고 승인한 계획 revision/hash를 기록한다.
+- 배치에는 최소 4개 독립 메커니즘 방향, 전체 최대 8개 후보, 방향별 최대 2개 후보를 둔다.
+- 메커니즘이 실제 행동이나 상태를 바꾸기 전에는 threshold·가중치 작은 값 비교를 하지 않는다.
+- 같은 split·control·프로토콜로 비교 가능한 유효 주기 3회 연속 비개선 시 pivot한다. infra invalid는 세지 않는다.
+- train/tune/held-out/confirmation/blind를 분리한다. 사용된 confirmation/blind는 새 자료가 아니며 blind를 튜닝하지 않는다.
+- 외부 브랜치·논문·결과는 가설과 반례를 찾는 데만 쓴다. 이름·순위·빈도로 활성 동작이나 인과를 추정하지 않는다.
 
-## 8. 결과 판정과 기록
+## 8. 완주율 우선 성과 판정
 
-각 실행은 최소한 아래 기록을 남긴다.
+완주율은 제출 자격이 있는 후보 사이의 **primary outcome**이다.
 
-- `run_manifest.json`: run ID, 가설·승인 계획 식별자, 소스 revision, 명령 프로필, 입력·split, 출력 위치, 실행 상태
-- `events.jsonl`: 상태 변경, 승인, 작업 시작·종료, 오류를 추가 기록 방식으로 남김
-- `integration_report.json`: 판정과 근거 경로
+1. `rule_compliance`가 `PASS`가 아니면 승격할 수 없다.
+2. 사전 고정한 같은 map/seed 집합과 평가 조건에서 candidate와 control을 비교하고, 완주 수/전체 수와 완주율을 가장 먼저 본다.
+3. 완주율이 더 낮은 후보는 더 빠른 완주 랩타임만으로 우선할 수 없다.
+4. 완주율이 같을 때 완주 랩타임 중앙값, 미완주 진행도, P90 랩타임, 충돌·손상, 추론 비용 순으로 비교한다.
+5. 단일 seed나 불일치 split은 replicated matched improvement가 아니다. 표본 수·seed·map geometry·split을 함께 기록한다.
+6. 공식 score와 완주율 우선 내부 선택 순위를 보고서에서 구분한다.
 
-세 판정은 독립적으로 기록한다.
+Teacher, smoke, fixed-actor 진단은 제출 후보의 완주율과 별도로 기록한다. `SOTA.md`의 기존 0.75 PPO 결과는 새 체계로 다시 검증되기 전까지 historical local reference이며 새 SOTA로 자동 승격하지 않는다.
 
-1. `rule_compliance`: HAIC 규칙·제출 제한·데이터 경계를 지켰는가?
-2. `mechanism_activation`: 의도한 학습·제어 메커니즘이 실제 행동이나 상태를 바꿨는가?
-3. `competitive_or_product_outcome`: 등록된 비교에서 결과가 개선됐는가?
+## 9. 실행 기록과 판정 게이트
 
-각 판정 값은 `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`이다. `UNKNOWN`은 통과가 아니다. 높은 속도, 단일 시드, smoke 실행, teacher 진단을 PPO 제출 성과나 공식 순위로 바꾸어 말하지 않는다. 관찰·추론·미확인을 구분하고, 각 주장에 근거 경로를 붙인다.
+각 신규 실행은 다음을 남긴다.
 
-## 9. 실행과 외부 행동의 경계
+- `run_manifest.json`: run ID, 목적, 가설·승인 hash, candidate/control revision·package hash, tool/runtime version, data/map/split ID, 자원·권한, 결과 파일과 원자료 경로·hash
+- `events.jsonl`: 상태 변화, 승인, 실행 시작·종료, 오류·충돌·timeout, 자원 사용, 메커니즘 활성 신호와 성공 endpoint
+- `integration_report.json`: 근거 경로를 포함한 세 독립 gate 판정
 
-- 새 HAIC 명령은 계획 확인이 기본이며, 실행은 승인된 계획과 미리 정의한 HAIC 작업 종류를 요구한다.
-- 임의의 셸 문자열을 받아 자동 실행하는 인터페이스는 두지 않는다. 학습·평가·패키징은 각각 목적, 인자, 입력, 출력이 명시된 작업으로 기록한다.
-- 공식 제출, 모델 확인, 대회 사이트 업로드는 새 연구 CLI의 자동 작업에 포함하지 않는다. 별도 요청과 실행 직전의 명시적 승인을 필요로 한다.
-- 검증은 문서·설정·상태 전이·dry-run 및 과거 경로 비변경 확인으로 제한한다. 하네스 전환만으로 학습·시뮬레이션·평가를 시작하지 않는다.
+세 gate는 `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE` 중 하나다.
 
-## 10. 전환 순서
+- `rule_compliance`
+- `mechanism_activation`
+- `competitive_or_product_outcome`
 
-1. 이 HAIC 전용 설계를 검토하고 범위·기록 경로를 확정한다.
-2. 현재 문서와 실행 진입점을 표로 매핑하고, 중복·폐기 예정 기능을 확인한다.
-3. 기존 문서의 유효한 사실과 연구 기록을 보존하면서 `AGENTS.md` 중심의 단일 문서 구조를 만든다.
-4. HAIC 전용 실행 흐름과 기록 형식을 구현한다. 기존 학습·평가 코드의 재사용은 파일별로 근거를 확인해 결정한다.
-5. 새 경로에서 dry-run과 무쓰기 검증을 수행한다. 과거 결과 자동 스캔이나 데이터 복사는 하지 않는다.
-6. 새 흐름이 검증되면 기존 `research_ops` 및 `training/improvement_loop.py` 오케스트레이션을 기본 경로에서 퇴역시킨다. 삭제 여부는 참조 관계와 문서 보존을 확인한 뒤 구현 계획에서 정한다.
+`UNKNOWN`은 통과가 아니다. 점수만 바뀌고 등록 메커니즘이 작동하지 않았으면 개선으로 인정하지 않는다. 원자료 전체를 매번 복사하지 않고 선택 필드·hash·원자료 위치를 남긴다. 정정은 기존 event를 덮지 않고 참조하는 새 event로 추가한다.
 
-이 설계는 과거 데이터 이전, 학습 실행, 공식 제출 또는 모델 확인을 승인하지 않는다.
+새 실행은 과거 산출물과 충돌하지 않는 경로를 쓴다. 초안은 `runs/haic-research-v2/<run-id>/`와 `artifacts/haic-research-v2/<run-id>/`를 제안하며, 최종값은 `harness.config.json`에서 한 번만 정의한다.
 
-## 11. 아직 구현 계획에서 확정할 항목
+## 10. 실행·보안 경계
 
-- 새 HAIC 전용 모듈과 CLI의 이름
-- 과거와 충돌하지 않는 최종 신규 실행 경로
-- 학습·평가·패키지 기능 중 재사용·재작성할 코드 경계
-- 기존 JSON 결과를 향후 사람이 선택해 참고할 때의 절차
-- cycle 비교 가능성과 각 지표의 개선 기준을 어떻게 고정할지
+- 기본은 plan-only이며, 등록된 HAIC operation과 승인된 계획 hash가 있을 때만 학습·평가·package 작업을 실행한다.
+- command profile은 명령 종류, typed arguments, timeout, read/write 경로를 구조화한다. 임의 shell 문자열 실행은 허용하지 않는다.
+- secret은 config, manifest, log, report에 저장하지 않는다.
+- 공식 제출, 모델 확인, 대회 사이트 업로드는 CLI operation이 아니다. 실행 직전 별도 명시 승인이 필요하다.
+- `validate.ps1`는 필수 문서, 설정 schema, 경로, 완주율 우선순위, split 보호, command profiles와 plan-only 기본값을 검사한다. 공식 package/runtime/evaluator 검사를 중복 구현하지 않는다.
+
+## 11. 데이터 보존과 전환 순서
+
+- 기존 `runs/`, `artifacts/haic/`, `submissions/`, raw JSON·checkpoint·ZIP·PDF는 현재 경로에 둔다. 추가 복사본 약 1.8 GiB를 만들지 않는다.
+- 새 시스템은 과거 경로를 자동 스캔하거나 결과 DB로 가져오지 않는다.
+- 읽기 전용 legacy path map만 두며, 과거 자료를 연구에 참고하려면 사람이 선택한다. 과거 기록을 신규 실행 결과인 것처럼 사용하지 않는다.
+- 과거 JSON 내부 경로, manifest, checksum, `RESULTS.md`의 generated 구역을 다시 쓰지 않는다.
+- 문서 구조와 validator를 먼저 만들고, HAIC workflow·기록·명령 profile을 그 contract대로 구현한다.
+- 새 흐름을 계획 기반으로 확인한 뒤 기본 경로로 전환하고 구형 orchestration/index/promotion entry point를 퇴역시킨다. 불필요한 옛 오케스트레이션 코드는 계획에 따라 제거한다. 과거 실험 데이터는 보존한다.
+
+이 설계는 데이터 복사·이동·삭제, 학습·평가 실행, 공식 제출·모델 확인을 승인하지 않는다. 각 실행은 해당 계획의 별도 게이트를 따른다.
