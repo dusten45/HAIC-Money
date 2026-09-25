@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-residual-options-pilot-v2",
+  "purpose": "one-feedback-driven-development-only-option-controller-iteration",
+  "status": "bounded second attempt; same consumed development screen; not confirmation or promotion",
+  "derived_from": {
+    "protocol": "experiments/drqv2-residual-options-pilot-v1.json",
+    "development_result": "evaluations/drqv2-residual-options-pilot-iteration-1.json",
+    "feedback": "The v1 option policy matched the frozen driver's 5/32 finishes but had 4 paired wins, 24 ties, 4 losses, lower mean progress (0.570 vs 0.685), and a 0.742 mean intervention fraction. Keep the five-option action set and duration unchanged; gate interventions using one Q-margin parameter calibrated from v1 training replay only."
+  },
+  "environment": {
+    "track_ids": [1, 2, 3, 4],
+    "obstacles": true,
+    "frame_skip": 4,
+    "max_decisions_per_episode": 2000,
+    "observation": "official four-frame float32 grayscale CHW 84x84 in [0,1]",
+    "reward": "raw CarEnvironment reward; no shaping, normalization, or collision penalty",
+    "action": "native symmetric [-1,1]^3; ActionAdapter maps to official [steer,gas,brake] exactly once"
+  },
+  "base_driver": {
+    "path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt",
+    "training_seed": 1,
+    "sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "use": "same frozen inference-only driver as v1; inherited training cost is not a matched new training comparison"
+  },
+  "exclusion_protocols": [
+    "experiments/drqv2-promotion-v1.json",
+    "experiments/drqv2-steering-logit-v1.json",
+    "experiments/drqv2-augmentation-pad-v1.json",
+    "experiments/drqv2-residual-options-pilot-v1.json"
+  ],
+  "reused_development_geometry_seeds": [4000000001, 4000000002, 4000000003, 4000000004, 4000000005, 4000000006, 4000000007, 4000000008],
+  "training": {
+    "maximum_iterations": 1,
+    "environment_decisions_per_iteration": 16382,
+    "previously_used_for_feedback": "v1 option Q checkpoint and its replay; v2 Q head initializes from scratch, no v1 weights or optimizer are reused",
+    "initial_iteration_seed": 24092403,
+    "environment_sampler_seed": 24092404,
+    "device": "cuda-if-available",
+    "options": ["KEEP", "STEER_MINUS", "STEER_PLUS", "COAST", "BRAKE"],
+    "option_duration_decisions": 2,
+    "steering_delta_native": 0.15,
+    "brake_floor_official": 0.25,
+    "intervention_margin_q_minus_keep": 3.4834041595458984,
+    "intervention_margin_calibration": {
+      "source": "v1 training option-replay states only",
+      "statistic": "75th percentile of max(Q(non-KEEP))-Q(KEEP)",
+      "observations": 8192,
+      "value": 3.4834041595458984,
+      "purpose": "reduce intervention frequency; this is a declared development feedback response, not an optimal threshold"
+    },
+    "uniform_option_coverage_decisions": 2048,
+    "epsilon_after_coverage": 0.2,
+    "q_head": {"feature_dim": 256, "hidden_dim": 128, "learning_rate": 0.0003},
+    "double_q": {"gamma_per_decision": 0.99, "target_tau": 0.01, "gradient_clip_norm": 10.0},
+    "replay": {"capacity": 8192, "batch_size": 64, "minimum_size_before_update": 256},
+    "checkpoint": "save after the fixed decision budget; discard an incomplete final option transition"
+  },
+  "development_screen": {
+    "track_ids": [1, 2, 3, 4],
+    "geometry_seeds": [4000000001, 4000000002, 4000000003, 4000000004, 4000000005, 4000000006, 4000000007, 4000000008],
+    "cells": 32,
+    "repeats": 1,
+    "role": "same previously consumed development/tuning cells as v1; explicitly not fresh; no confirmation, blind, official, or generalization claim",
+    "prior_usage_audit": "Intentionally reused only for iterative development feedback. The v1 protocol and evaluation result record their prior use.",
+    "comparison": "same frozen DrQ driver and v2 option policy on identical cells; also retain v1 result as a development reference, not an independent arm",
+    "primary_metric": "integer finish count; per-cell paired changes versus the frozen driver",
+    "diagnostics": ["progress", "raw reward", "retire reason", "damage", "intervention frequency", "decision count"],
+    "selection_rule": "Development feedback only. A nonzero candidate finish and no fewer finishes than the base are a pilot continuation signal, not confirmation or promotion.",
+    "maximum_episodes": 64,
+    "maximum_environment_decisions": 128000
+  },
+  "total_budget_accounting": {
+    "failed_implementation_smoke_decisions": 2,
+    "v1_successful_training_decisions": 16384,
+    "v2_training_decision_cap": 16382,
+    "maximum_total_training_and_smoke_decisions": 32768,
+    "development_screen_maximum_decisions_per_iteration": 128000,
+    "development_cells_are_consumed": true
+  },
+  "prohibitions": [
+    "Do not use any reserved blind cell.",
+    "Do not call the reused development cells fresh.",
+    "Do not claim official HAIC score, model confirmation, or model promotion.",
+    "This is the single allowed feedback-driven second training attempt; do not start a third attempt from these results.",
+    "Do not modify DreamerV3 files or protected environment, native DrQ trainer, submission agent, evaluator, or packager files for this experiment.",
+    "Do not run an unbounded training/evaluation loop."
+  ]
+}

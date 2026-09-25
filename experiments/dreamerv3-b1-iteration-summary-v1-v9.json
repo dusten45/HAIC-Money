@@ -1,0 +1,88 @@
+{
+  "format": "haic-dreamerv3-iteration-summary-v1",
+  "purpose": "audit trail for bounded Dreamer B1-only research iterations",
+  "scope": "local world-model feasibility only; no policy screen, confirmation, blind, or official evaluation was run",
+  "dataset_type": "random-action episodes on training-excluded development geometry",
+  "iterations": [
+    {
+      "id": "v1",
+      "protocol": "experiments/dreamerv3-b1-world-model-local-v1.json",
+      "training": "2 learner seeds; 1,024 uniform-random decisions; 100 replay-only updates",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-world-model-local-v1/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-world-model-local-v1/pretrain-seed-1/open-loop.json"],
+      "observations": "Training replay terminal prevalence was 0.00098 and 0.00195; terminal recall was zero, prior image prediction lost to repeat-last-frame, and 5-step reward rank was poor."
+    },
+    {
+      "id": "v2",
+      "protocol": "experiments/dreamerv3-b1-world-model-local-v2.json",
+      "treatment": "Increase uniform random data to 12,288 decisions and replay-only updates to 500; other losses and B1 thresholds unchanged.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-world-model-local-v2/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-world-model-local-v2/pretrain-seed-1/open-loop.json"],
+      "observations": "Training terminal prevalence rose to approximately 0.0029, but terminal recall remained zero, image predictions still lost to the shifted-repeat baseline, and reward ranking was weak. More uniform data alone was insufficient."
+    },
+    {
+      "id": "v3",
+      "protocol": "experiments/dreamerv3-b1-terminal-balanced-local-v3.json",
+      "treatment": "Anchor half of sampled windows on a true terminal transition; retain half uniform windows.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-terminal-balanced-local-v3/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-terminal-balanced-local-v3/pretrain-seed-1/open-loop.json"],
+      "observations": "Constant-prevalence BCE improved, but terminal ranking/recall and image baseline gates still failed."
+    },
+    {
+      "id": "v4",
+      "protocol": "experiments/dreamerv3-b1-observation-scale-local-v4.json",
+      "treatment": "Multiply newest/full observation reconstruction loss by 256; retain terminal-anchored sampling.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-observation-scale-local-v4/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-observation-scale-local-v4/pretrain-seed-1/open-loop.json"],
+      "observations": "The larger training loss scale did not make sampled prior predictions beat trivial image baselines or resolve terminal ranking."
+    },
+    {
+      "id": "v5",
+      "protocol": "experiments/dreamerv3-b1-prior-kl-local-v5.json",
+      "treatment": "Lower one-step KL free-nats from 1.0 to 0.1; retain prior treatments.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-prior-kl-local-v5/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-prior-kl-local-v5/pretrain-seed-1/open-loop.json"],
+      "observations": "Raw prior/posterior KL remained low and close; terminal ranking/recall and reward ranking remained inadequate."
+    },
+    {
+      "id": "v6",
+      "protocol": "experiments/dreamerv3-b1-overshooting-local-v6.json",
+      "treatment": "Add 2-5 step prior-to-future-posterior overshooting KL with a 0.1 free floor.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-overshooting-local-v6/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-overshooting-local-v6/pretrain-seed-1/open-loop.json"],
+      "observations": "The overshooting metric stayed at the 0.1 free floor across updates, showing that this treatment had no gradient on the observed replay."
+    },
+    {
+      "id": "v7",
+      "protocol": "experiments/dreamerv3-b1-overshooting-floor-local-v7.json",
+      "treatment": "Remove the free floor from overshooting KL only; keep one-step KL free-nats at 0.1.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-overshooting-floor-local-v7/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-overshooting-floor-local-v7/pretrain-seed-1/open-loop.json"],
+      "observations": "Overshooting loss became nonzero (roughly 1e-4 to 4e-4), but did not materially improve the frozen B1 metrics."
+    },
+    {
+      "id": "v8",
+      "protocol": "experiments/dreamerv3-b1-residual-frame-local-v8.json",
+      "treatment": "Replace four-frame absolute reconstruction with a newest-frame residual decoder initialized at zero.",
+      "b1": "fail both seeds; image baseline conditions passed",
+      "evidence": ["runs/20260924-dreamerv3-b1-residual-frame-local-v8/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-residual-frame-local-v8/pretrain-seed-1/open-loop.json"],
+      "observations": "Both seeds beat shifted-repeat latest/full-stack image MSE by a very small margin; terminal recall remained zero and terminal/reward-ranking criteria failed."
+    },
+    {
+      "id": "v9",
+      "protocol": "experiments/dreamerv3-b1-terminal-positive-weight-local-v9.json",
+      "treatment": "Apply a fixed positive-class weight of 56 to continue BCE; all prior v8 settings retained.",
+      "b1": "fail both seeds",
+      "evidence": ["runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-0/open-loop.json", "runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-1/open-loop.json"],
+      "observations": "Positive weighting worsened terminal BCE versus the natural-prevalence constant baseline, and recall stayed zero."
+    }
+  ],
+  "model_status": "No policy was trained or selected. These runs contain replay-only world-model pretraining; all B1 gates failed, so no policy screen, confirmation, or blind partition was opened.",
+  "interpretation_limits": [
+    "All values are local simulator/internal-proxy evidence, not official HAIC scores.",
+    "A lower training loss is not evidence of better control or private-track generalization.",
+    "The v8 image-gate result is small and does not compensate for terminal/reward prediction failures.",
+    "Protocols v1-v8 are frozen historical records and fail current source-hash checks after code evolution."
+  ],
+  "next_gate": "The current candidate remains blocked before policy training by B1. Any further iteration must use a new frozen source/protocol and training-excluded cells; do not repurpose confirmation or blind cells."
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-entropy-target-ablation-v2",
+  "protocol_path": "experiments/pixel-rlpd-entropy-target-ablation-v2.json",
+  "protocol_sha256": "313bbff2164ff8f0a8efac7db2ad818628e00ee818237c09fd4fad3461e0ec98",
+  "status": "aborted_before_environment_interaction",
+  "preflight_failure": {
+    "stage": "entropy-protocol name/source-path consistency",
+    "error_type": "ValueError",
+    "error": "unsupported entropy-ablation protocol name",
+    "cause": "The output filename and execution/run paths were V2, but the protocol's internal study name and the validator's fixed study name still used V1.",
+    "protocol_internal_name": "pixel-rlpd-entropy-target-ablation-v1",
+    "validator_expected": "pixel-rlpd-entropy-target-ablation-v1"
+  },
+  "source_snapshot": "runs/20260925-pixel-rlpd-entropy-target-ablation-v2-preflight/source",
+  "source_count": 47,
+  "source_hashes_match_at_abort": true,
+  "environment_interactions": 0,
+  "teacher_decisions": 0,
+  "student_decisions": 0,
+  "screen_cells": 0,
+  "confirmation_or_blind_opened": false,
+  "cell_allocation_consumed": false,
+  "action": "Preserve the frozen-but-not-run protocol/source snapshot and retire its entire allocation; use a new coherent V3 study name, result/run paths, seed split, and independent audit before interaction.",
+  "secondary_runtime_check": {
+    "status": "an auxiliary check was invoked by the main CUDA interpreter instead of the CPU21 interpreter and correctly rejected its runtime; this did not create a worker or environment interaction",
+    "required_interpreter": "/tmp/kilo/haic-cpu21/bin/python"
+  },
+  "official_performance_claim": false
+}

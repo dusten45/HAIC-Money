@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-entropy-target-ablation-v3",
+  "protocol_path": "experiments/pixel-rlpd-entropy-target-ablation-v3.json",
+  "protocol_sha256": "541b86c8726efdb4c5c9c4c445ec6c0313e3f7ee6e32e5a5f53a2d7920a02f8f",
+  "status": "aborted_before_environment_interaction",
+  "preflight_failure": {
+    "stage": "read_entropy_protocol source/budget validation",
+    "error_type": "ValueError",
+    "error": "entropy ablation learner budget/mixing differs from its frozen design",
+    "cause": "the frozen protocol declared learner seeds 30/31 while the then-current validator required 20/21; the freeze/common/test source files also drifted after protocol creation",
+    "mismatched_sources": {
+      "scripts/freeze_rlpd_entropy_ablation.py": {"protocol_source_sha256": "44e1dd86f6fafcb66cd1ccb4b30eec583cf31fdfe760073f7deedbb10b06d8b3", "later_current_sha256": "d42d37454ab3ba95223f3bd664be441ac2f10f79471b822cddba7bac03c72d1b"},
+      "scripts/rlpd_entropy_common.py": {"protocol_source_sha256": "b969476d3720f6f573e12ba319c6574302a41ac72d163456ae4813d4640c0c7d", "later_current_sha256": "d0414a278f3e461974dc9ef25e997bc25ec7ef6bc7189f37ddbc5aedfa71275d"},
+      "tests/test_rlpd_entropy_ablation.py": {"protocol_source_sha256": "18ae7dd70fc82b3dd7765cb526d87626e6bb749e8c29db9ff5e70804cc29d510", "later_current_sha256": "457ab3715ec6b1e04cadcf6c00d55c2ad2f13def58890808758044605fdfef76"}
+    }
+  },
+  "retired_allocation": {
+    "teacher_training_seeds": "4000026001-4000026064",
+    "screen_seeds": "4000027001-4000027008",
+    "confirmation_seeds": "4000027011-4000027018",
+    "blind_seeds": "4000027021-4000027028"
+  },
+  "environment_interactions": 0,
+  "teacher_decisions": 0,
+  "student_decisions": 0,
+  "screen_cells": 0,
+  "confirmation_or_blind_opened": false,
+  "cell_allocation_consumed": false,
+  "action": "Keep the V3 protocol and source hashes as a preflight record; retire every V3 candidate cell. V4 must use a coherent name, learner-seed validator, new source hashes and a new independently audited cell allocation.",
+  "official_performance_claim": false
+}

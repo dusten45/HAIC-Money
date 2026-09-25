@@ -1,0 +1,132 @@
+{
+  "format": "haic-dreamerv3-study-protocol-v1",
+  "name": "dreamerv3-b1-overshooting-floor-local-v7",
+  "purpose": "seventh bounded B1 iteration; remove free floor only from overshooting KL so its observed term can train",
+  "authority": "internal local simulator evidence only; not HAIC score evidence",
+  "frame_skip": 4,
+  "max_steps": 2000,
+  "training_track_ids": [1, 2, 3, 4],
+  "learner_seeds": [0, 1],
+  "reserved_training_seeds": [
+    3806100001, 3806100002, 3806100003, 3806100004,
+    3806100005, 3806100006, 3806100007, 3806100008,
+    3806100009, 3806100010, 3806100011, 3806100012,
+    3806100013, 3806100014, 3806100015, 3806100016,
+    3806100017, 3806100018, 3806100019, 3806100020,
+    3806100021, 3806100022, 3806100023, 3806100024,
+    3806100025, 3806100026, 3806100027, 3806100028,
+    3806100029, 3806100030, 3806100031, 3806100032,
+    3806200001, 3806200002, 3806200003, 3806200004,
+    3806300001, 3806300002, 3806300003, 3806300004,
+    3806400001, 3806400002, 3806400003, 3806400004
+  ],
+  "training_budget": {
+    "total_environment_decisions": 12288,
+    "random_prefill_decisions": 12288,
+    "replay_pretrain_updates": 500,
+    "policy_start_step": 12289,
+    "online_updates_per_decision": 1,
+    "sequence_length": 32,
+    "burnin_steps": 8,
+    "terminal_window_fraction": 0.5,
+    "observation_loss_scale": 256.0,
+    "kl_free_nats": 0.1,
+    "overshoot_horizon": 5,
+    "overshoot_kl_weight": 1.0,
+    "overshoot_free_nats": 0.0,
+    "batch_size": 4,
+    "replay_capacity": 16384,
+    "track_sampler_seed": 917,
+    "device": "cuda"
+  },
+  "training_development": {
+    "purpose": "B1 open-loop development only; never used for learner updates or model selection",
+    "collector": "uniform_native_random",
+    "collector_seed": 7921,
+    "track_ids": [1, 2, 3, 4],
+    "seeds": [
+      3806100001, 3806100002, 3806100003, 3806100004,
+      3806100005, 3806100006, 3806100007, 3806100008,
+      3806100009, 3806100010, 3806100011, 3806100012,
+      3806100013, 3806100014, 3806100015, 3806100016,
+      3806100017, 3806100018, 3806100019, 3806100020,
+      3806100021, 3806100022, 3806100023, 3806100024,
+      3806100025, 3806100026, 3806100027, 3806100028,
+      3806100029, 3806100030, 3806100031, 3806100032
+    ],
+    "cells": [
+      {"track_id": 1, "seed": 3806100001}, {"track_id": 2, "seed": 3806100002},
+      {"track_id": 3, "seed": 3806100003}, {"track_id": 4, "seed": 3806100004},
+      {"track_id": 1, "seed": 3806100005}, {"track_id": 2, "seed": 3806100006},
+      {"track_id": 3, "seed": 3806100007}, {"track_id": 4, "seed": 3806100008},
+      {"track_id": 1, "seed": 3806100009}, {"track_id": 2, "seed": 3806100010},
+      {"track_id": 3, "seed": 3806100011}, {"track_id": 4, "seed": 3806100012},
+      {"track_id": 1, "seed": 3806100013}, {"track_id": 2, "seed": 3806100014},
+      {"track_id": 3, "seed": 3806100015}, {"track_id": 4, "seed": 3806100016},
+      {"track_id": 1, "seed": 3806100017}, {"track_id": 2, "seed": 3806100018},
+      {"track_id": 3, "seed": 3806100019}, {"track_id": 4, "seed": 3806100020},
+      {"track_id": 1, "seed": 3806100021}, {"track_id": 2, "seed": 3806100022},
+      {"track_id": 3, "seed": 3806100023}, {"track_id": 4, "seed": 3806100024},
+      {"track_id": 1, "seed": 3806100025}, {"track_id": 2, "seed": 3806100026},
+      {"track_id": 3, "seed": 3806100027}, {"track_id": 4, "seed": 3806100028},
+      {"track_id": 1, "seed": 3806100029}, {"track_id": 2, "seed": 3806100030},
+      {"track_id": 3, "seed": 3806100031}, {"track_id": 4, "seed": 3806100032}
+    ]
+  },
+  "partitions": {
+    "screen": {
+      "track_ids": [1, 2, 3],
+      "seeds": [3806200001, 3806200002, 3806200003, 3806200004],
+      "repeats": 2
+    },
+    "confirmation": {
+      "track_ids": [1, 2, 3],
+      "seeds": [3806300001, 3806300002, 3806300003, 3806300004],
+      "repeats": 2
+    },
+    "blind": {
+      "track_ids": [1, 2, 3],
+      "seeds": [3806400001, 3806400002, 3806400003, 3806400004],
+      "repeats": 2
+    }
+  },
+  "world_model_gate": {
+    "context_lengths": [5, 10],
+    "horizons": [1, 3, 5, 10, 15],
+    "latent_draws": 4,
+    "anchor_stride": 5,
+    "rng_seed": 8161,
+    "terminal_probability_threshold": 0.5,
+    "min_positive_episodes": 20,
+    "min_negative_episodes": 20,
+    "reward_spearman_min": 0.5,
+    "terminal_recall_min": 0.8,
+    "terminal_balanced_accuracy_min": 0.8,
+    "pr_auc_multiple": 5.0,
+    "bce_relative_improvement_min": 0.1,
+    "image_baseline": "shifted_repeat_last_frame",
+    "image_acceptance": "episode_cluster_bootstrap_ci95_upper_below_zero_for_latest_and_full_stack_mse_delta"
+  },
+  "source_sha256": {
+    "dreamer_v3.py": "657395cdae50be1da7fa460071f6c7937cbc1eb2496bfea210c8b7db6bef750f",
+    "train_dreamerv3.py": "604b350ecb84f457c5dcb3c74b4ccab212c8b8dfe91167bb25ddc7545475a361",
+    "scripts/diagnose/dreamerv3.py": "9e207e4bf0d0e85849665c327f3212989000e035489a32d0a83259b8aa4946cb",
+    "scripts/diagnose/collect_dreamerv3_development.py": "fbbe3b4739e18c670bd0f4a8770b2c7e7582cc8b618a5293984f5b9d457a492f",
+    "scripts/diagnose/dreamerv3_open_loop.py": "8da44d450746cacd9cb878ba4c6089bf9484198072d22036c993d1afd07dd499",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+    "requirements.txt": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+    "pyproject.toml": "d60cd839c77f4458f7ff33dabcc157c48dccc4b38e691f755a33e30de522be76",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

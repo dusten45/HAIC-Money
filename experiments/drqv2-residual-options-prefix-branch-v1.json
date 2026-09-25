@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-residual-options-prefix-branch-v1",
+  "purpose": "training-only-deterministic-prefix-and-single-intervention-mechanism-diagnostic",
+  "status": "frozen-design-before-prefix-branch-environment-runs",
+  "prohibitions": [
+    "Do not use any screen, confirmation, blind, official-public, or previously consumed evaluation geometry seed.",
+    "Do not use a branch outcome to tune an option, margin, action magnitude, branch point, or checkpoint.",
+    "Do not describe these training-only paired branches as a policy screen, generalization result, official score, or proof of full-policy benefit.",
+    "If exact prefix parity fails for any planned context, do not execute or report that context's branch as a counterfactual.",
+    "Do not modify core/, env_wrapper.py, damage.py, train.py, train_drqv2.py, drq_v2.py, agent.py, evaluate_policy.py, package_submission.py, or DreamerV3-owned files."
+  ],
+  "base_driver": {
+    "run": "runs/20260924-drqv2-residual-options-pilot/iteration-1-retry",
+    "actor_path": "runs/20260924-drqv2-residual-options-pilot/iteration-1-retry/frozen_actor.pt",
+    "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954"
+  },
+  "option_heads": {
+    "v1": {
+      "checkpoint_path": "runs/20260924-drqv2-residual-options-pilot/iteration-1-retry/option_q.pt",
+      "checkpoint_sha256": "d9d842bae529f37e8e4bfd3f1d51563cb5da9cbd90b0f4043c1935292dda2a23",
+      "margin_q_minus_keep": 0.0,
+      "duration_decisions": 2,
+      "steering_delta_native": 0.15,
+      "brake_floor_official": 0.25
+    },
+    "v2": {
+      "checkpoint_path": "runs/20260924-drqv2-residual-options-pilot/iteration-2/option_q.pt",
+      "checkpoint_sha256": "d47942f61fea5e94ab080f292f0629021a28fb8e08aa4faa728c6862fff1b79c",
+      "margin_q_minus_keep": 3.4834041595458984,
+      "duration_decisions": 2,
+      "steering_delta_native": 0.15,
+      "brake_floor_official": 0.25
+    }
+  },
+  "environment": {
+    "track_ids": [1, 2, 3, 4],
+    "geometry_seeds": [4200000001, 4200000002, 4200000003, 4200000004],
+    "partition": "training-only causal mechanism diagnostic; disjoint from every enumerated historical DrQ evaluation/reserved seed; not a performance holdout",
+    "obstacles": true,
+    "frame_skip": 4,
+    "max_decisions_per_episode": 2000,
+    "action_adapter_fingerprint": "51cf16d2850eeca7031eb0c155bf04239b9207085d9a139e5de8c2d718bfecf4",
+    "reset_contract": "same local official mirror, including seeded track/obstacles, CarEnvironment reset warmup, damage reset, and four-frame observation stack",
+    "action_replay_contract": "store and replay the exact official float32 [steer,gas,brake] action supplied to HaicTrack.step; do not round-trip through native coordinates during prefix replay",
+    "official_mirror_files": [
+      "core/vendor/car_racing.py",
+      "core/track_variables.py",
+      "env_wrapper.py",
+      "damage.py",
+      "train.py"
+    ]
+  },
+  "seed_audit": {
+    "enumerate_existing_protocols": "drqv2*.json",
+    "seed_fields_to_exclude": "all integer values under JSON keys containing 'seed', across reserved-training, screen, confirmation, blind, development and historical protocol/result records",
+    "repository_exact_token_search": "4200000001-4200000004 under repository text/JSON/JSONL artifacts before this protocol was created",
+    "limitation": "Historical pilot schedules are incomplete. Exact-token search and current JSON protocol enumeration cannot prove global non-use; seeds are therefore only designated as this study's training-only diagnostic data, never as fresh confirmation cells."
+  },
+  "procedure": {
+    "baseline": "For each (track_id, geometry_seed), run the frozen DrQ actor from reset until terminal/truncation or 2000 decisions. Record the exact official action prefix and decision signatures.",
+    "predeclared_branch_points_after_decisions": [64, 128],
+    "prefix_gate": "Before any intervention branch, replay each available baseline prefix in an independent, identically configured environment. Require exact initial observation/reset metadata, per-decision observation bytes, official action, raw reward, terminated/truncated flags, selected deterministic info fields, and accessible vehicle/damage/progress state. If any planned prefix mismatches, globally stop before all option branches and mark the diagnostic gate failed.",
+    "option_choice": "At each valid prefix, independently query the frozen v1 and v2 head once. Each head selects its option with its frozen margin; option choice is not changed after viewing any branch result.",
+    "branch": "For each selected non-KEEP option, replay its verified prefix in a new environment, recheck parity, hold that option for at most two environment decisions while recomputing the base DrQ action each decision, then use the frozen base DrQ policy for the rest of the episode. Compare to the original same-cell baseline rollout. A selected KEEP is recorded without a redundant branch run. A selected residual is run even if its first action clips to the base action because the second base action may differ.",
+    "deduplication": "If v1 and v2 select the identical option/spec at the identical cell and branch point, reuse the same deterministic branch result and mark the shared branch key.",
+    "primary_outcomes": ["paired_finish_delta", "retire_reason", "branch_prefix_parity"],
+    "secondary_outcomes": ["progress_delta", "raw_reward_delta", "damage_delta", "actual_action_change_decisions", "selected_option", "decision_count"],
+    "analysis_unit": "branch context nested within geometry seed and track ID; aggregate/uncertainty must cluster by the four geometry seeds; do not treat branch contexts as independent roads"
+  },
+  "hard_budgets": {
+    "baseline_source_episodes_max": 16,
+    "global_prefix_gate_episodes_max": 16,
+    "option_branch_episodes_max": 64,
+    "total_environment_episodes_max": 96,
+    "total_environment_decisions_max": 162048,
+    "max_branch_decision_contexts": 32,
+    "max_unique_option_branches_after_dedup": 64
+  },
+  "no_promotion": "This is a local paired-intervention mechanism diagnostic on four training geometry seeds, not a candidate screen, confirmation, blind test, or authorization to train another option model."
+}

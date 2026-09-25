@@ -1,0 +1,178 @@
+{
+  "format": "haic-dreamerv3-b1-failure-diagnosis-v1",
+  "as_of_utc": "2026-09-25T00:25:00Z",
+  "scope": "Read-only diagnosis of nine frozen local B1 studies; no new learner or actor training, policy screen, confirmation, blind, or official evaluation",
+  "primary_sources": [
+    "experiments/dreamerv3-b1-iteration-summary-v1-v9.json",
+    "experiments/dreamerv3-b1-residual-frame-local-v8.json",
+    "experiments/dreamerv3-b1-terminal-positive-weight-local-v9.json",
+    "runs/20260924-dreamerv3-b1-residual-frame-local-v8/pretrain-seed-0/open-loop.json",
+    "runs/20260924-dreamerv3-b1-residual-frame-local-v8/pretrain-seed-1/open-loop.json",
+    "runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-0/open-loop.json",
+    "runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-1/open-loop.json",
+    "experiments/dreamerv3-b1-context-audit-v9-seed0.json",
+    "experiments/dreamerv3-b1-context-audit-v9-seed1.json"
+  ],
+  "provenance": {
+    "studies": 9,
+    "learner_seeds_per_study": 2,
+    "source_hash_check": "Current dreamer_v3.py SHA-256 015189e90c50c233cffe77f9c0c52e2f02c9b2e2a946c1da7b94d7254045aa42 equals v9's frozen source only; v8 is a2304dc315c232b59b2e98cd2c01f1b7472252aed30e1a081acfa4794915fdf3.",
+    "verified_receipts": "For all 18 pretraining runs, open-loop protocol SHA equals the corresponding frozen protocol, open-loop checkpoint SHA equals the pretraining receipt, and the reported dataset SHA equals the frozen development NPZ; all say fail and no screen by design.",
+    "geometry_partition": "Each study has 32 development cells and 12 reserved screen/confirmation/blind seeds. All 44 seeds/study are within reserved_training_seeds; the nine study seed sets are pairwise disjoint. No screen/confirmation/blind was used.",
+    "comparison_limit": "v8 and v9 use distinct development geometry and collector RNG. Their per-seed replay sequence_id/action/reward/is_first/is_last/is_terminal serialized hashes match, but different development results must not be called a matched evaluation treatment effect."
+  },
+  "A_confirmed_facts": [
+    {
+      "finding": "All v1-v9 static-random-data B1 studies failed for both seeds. No policy was trained in these studies.",
+      "evidence": "experiments/dreamerv3-b1-iteration-summary-v1-v9.json; each corresponding pretraining-result.json and open-loop.json"
+    },
+    {
+      "finding": "The v9 `continue_positive_weight=56` scales the abundant continue=1 BCE target, NOT rare terminal=0. This is a confirmed mismatch to its terminal-positive intent; the frozen v9 outcome itself is unchanged.",
+      "evidence": "dreamer_v3.py:92-98,1043-1047; experiments/dreamerv3-b1-terminal-positive-weight-local-v9.json:4,37; at zero logits for [continue,terminal], PyTorch gradients are [-14.0,+0.25] (56:1 against terminal)."
+    },
+    {
+      "finding": "Half terminal-anchored replay SEQUENCES does not imply half terminal labels: each scored sequence contains 32 transitions and the anchored component contributes about 0.5/32=1.5625% terminal labels plus occasional uniform endpoints.",
+      "evidence": "dreamer_v3.py:541-569,619-649,1015-1047; estimated v9 training loss positive fraction 1.5675%/1.5677% for seeds 0/1, not measured per minibatch."
+    },
+    {
+      "finding": "The existing B1 code deliberately adds one terminal anchor per episode. Its BCE comparator uses natural TRAIN replay terminal prevalence rather than the enriched evaluation-window prevalence. Episode-averaged 5-step reward Spearman ranks about 32 episodes, not alternative actions at a fixed state.",
+      "evidence": "scripts/diagnose/dreamerv3_open_loop.py:202-208,230-234,327-329,356-378,429-456"
+    },
+    {
+      "finding": "A four-decision real local environment trace shows observation, clipped executed action, resulting reward, successor observation, and done flags aligned through replay sampling and loss-target state; no off-by-one was found in that tested case.",
+      "evidence": "build_env(track=1,seed=7,max_steps=2000,frame_skip=4), common_adapter.py:285-320, dreamer_v3.py:463-498,623-651,1011-1047; trace observation stack SHA256 prefixes reset=8795e83b, successors=330e7fab/f05d3fe0/a6b8830f/463e5f44; each step reward -0.4 across four raw -0.1 steps, raw frame counters 51-66."
+    }
+  ],
+  "actual_four_decision_trace": {
+    "environment": "build_env(track_id=1, seed=7, max_steps=2000, frame_skip=4, reward_shaping=False, obstacles=True), SDL dummy display; existing training-only geometry, no new evaluation cohort",
+    "reset_observation_sha256_prefix": "8795e83b",
+    "rows": [
+      {"decision": 0, "observation_sha256_prefix": "8795e83b", "proposed_native_action": [0.0, 1.0, -1.0], "executed_native_action": [0.0, 1.0, -1.0], "applied_official_action": [0.0, 1.0, 0.0], "result_reward": -0.4, "successor_sha256_prefix": "330e7fab", "raw_frame_counter_after_step": 54, "terminated": false, "truncated": false, "collector_terminal": false},
+      {"decision": 1, "observation_sha256_prefix": "330e7fab", "proposed_native_action": [1.2, -1.4, 0.25], "executed_native_action": [1.0, -1.0, 0.25], "applied_official_action": [1.0, 0.0, 0.625], "result_reward": -0.4, "successor_sha256_prefix": "f05d3fe0", "raw_frame_counter_after_step": 58, "terminated": false, "truncated": false, "collector_terminal": false},
+      {"decision": 2, "observation_sha256_prefix": "f05d3fe0", "proposed_native_action": [-0.35, 0.4, -0.5], "executed_native_action": [-0.35, 0.4, -0.5], "applied_official_action": [-0.35, 0.7, 0.25], "result_reward": -0.4, "successor_sha256_prefix": "a6b8830f", "raw_frame_counter_after_step": 62, "terminated": false, "truncated": false, "collector_terminal": false},
+      {"decision": 3, "observation_sha256_prefix": "a6b8830f", "proposed_native_action": [0.0, 1.0, -1.0], "executed_native_action": [0.0, 1.0, -1.0], "applied_official_action": [0.0, 1.0, 0.0], "result_reward": -0.4, "successor_sha256_prefix": "463e5f44", "raw_frame_counter_after_step": 66, "terminated": false, "truncated": false, "collector_terminal": false}
+    ],
+    "replay_to_loss_check": "Replay burnin=1 + seq_len=2 samples obs0/obs1/obs2/obs3 with actions0/1/2. The supervised post-burnin result states s2/s3 score reward and continuation from actions1/2 respectively; observation/newest-frame delta targets are o2-o1 and o3-o2. Pixel hashes match stored successor observations; no offset or episode mixing was found in this trace.",
+    "scope_limit": "The nonterminal fourth row has no valid sampled successor until a fifth transition is added. This trace does not cover a real crash/timeout event, so boundary handling rests on separate code and synthetic tests."
+  },
+  "reward_termination_and_coverage": {
+    "v9_training_by_seed": [
+      {
+        "seed": 0,
+        "transitions": 12288,
+        "completed_failure_episodes": 35,
+        "censored_last_episode": 1,
+        "unique_geometry_seeds": 36,
+        "per_geometry_decisions_min_median_max": [185, 315.5, 676],
+        "track_decisions_1_2_3_4": [2416, 3187, 2889, 3796],
+        "track_unique_geometries_1_2_3_4": [7, 10, 8, 11],
+        "track_positive_reward_fraction_1_2_3_4": [0.063328, 0.060559, 0.063344, 0.063488],
+        "positive_reward_count_per_geometry_min_median_max": [16, 19, 47],
+        "positive_reward_fraction_per_geometry_min_median_p90_max": [0.054487, 0.061557, 0.068267, 0.086486],
+        "geometry_with_no_positive_reward": 0,
+        "negative_reward": 11518,
+        "zero_reward": 0,
+        "positive_reward": 770,
+        "terminal": 35,
+        "reward_quantiles_min_p1_p5_p25_p50_p75_p95_p99_max": [-0.400000006, -0.400000006, -0.400000006, -0.400000006, -0.400000006, -0.400000006, 2.805128098, 3.210108280, 3.521568537],
+        "final_progress_median_max": [0.0735785953, 0.1707317073],
+        "completed_progress_at_least_20pct": 0
+      },
+      {
+        "seed": 1,
+        "transitions": 12288,
+        "completed_failure_episodes": 36,
+        "censored_last_episode": 1,
+        "unique_geometry_seeds": 37,
+        "per_geometry_decisions_min_median_max": [207, 321.0, 555],
+        "track_decisions_1_2_3_4": [2611, 3399, 2565, 3713],
+        "track_unique_geometries_1_2_3_4": [8, 10, 8, 11],
+        "track_positive_reward_fraction_1_2_3_4": [0.067024, 0.062371, 0.065497, 0.064638],
+        "positive_reward_count_per_geometry_min_median_max": [17, 19, 43],
+        "positive_reward_fraction_per_geometry_min_median_p90_max": [0.055901, 0.061889, 0.07334, 0.096618],
+        "geometry_with_no_positive_reward": 0,
+        "negative_reward": 11493,
+        "zero_reward": 0,
+        "positive_reward": 795,
+        "terminal": 36,
+        "reward_quantiles_min_p1_p5_p25_p50_p75_p95_p99_max": [-0.400000006, -0.400000006, -0.400000006, -0.400000006, -0.400000006, -0.400000006, 2.846753359, 3.210108280, 6.496551514],
+        "final_progress_median_max": [0.0727905133, 0.1607142857],
+        "completed_progress_at_least_20pct": 0
+      }
+    ],
+    "reward_contract": "All v9 terminal transition rewards are -0.4, identical to the 93.53-93.73% nonpositive transitions. Positive rewards occur at 770/12288 and 795/12288; there are no exact or near-zero rewards (tolerance 1e-6). Every logged geometry has positive reward on 5.45-9.66% of its decisions, so lack of reward positives on a particular track is not the primary coverage gap; success/high-progress/terminal distinction is. Mean reward error does not measure terminal discrimination.",
+    "development_v9": "32 unique geometry episodes, 11232 transitions, 32/32 off_track terminals, zero successful finishes and zero truncations; final progress min/median/max 0.06102/0.07321/0.15638; 0/32 at least 20% progress; one episode has nonzero final damage.",
+    "development_v8": "32 distinct-geometry episodes and 11049 transitions, all off_track terminal, zero finishes; different geometry and collector RNG from v9.",
+    "simulator_state_limit": "Development NPZ stores images, native/official actions, rewards and done/terminal flags but no per-transition progress/damage/off-track or vehicle state. Episode logs/NPZ metadata contain final progress and damage only. Per-track replay aggregation is an independently checked chronological join of episodes.jsonl to replay rows, not a replay-native ID. Distinct geometry seed IDs are counted; map-centerline fingerprint diversity and structural independence of roads were not checked.",
+    "terminal_contract": "Local env off_track/crash sets terminated=True; finish may set truncated=True with finished=True and is treated as terminal by collector; pure time-limit truncation without finish/retire_reason has is_last=True but terminal=False/continue=1. Four v8/v9 training runs logged 142 completed episodes (seed0 35 off_track per study; seed1 35 off_track+1 crash per study), zero truncated and zero finishes, plus four reset-only right-censored partial episodes. Timeout semantics have zero observed influence on those outcomes."
+  },
+  "representation_and_gate_metrics": {
+    "shifted_repeat_stack": "[f_(t-2),f_(t-1),f_t,f_t] from previous four-frame stack [f_(t-3),f_(t-2),f_(t-1),f_t]; stored NPZ channels 1..3 equal successor channels 0..2 at every episode step. It is a strong baseline because 3/4 stack channels are exact copies and random driving changes pixels slowly.",
+    "v9_linear_probe_method": "Exact-source v9 seed0/1, frozen encoder/RSSM CPU; full episode posterior history, one-step prior from executed native action; 1420 transitions/seed, episode-disjoint 4 folds (8 episodes/track-balanced fold), train-fold-only zscore, ridge alpha100, fixed RNG 7310+seed; near-terminal label is nonterminal step with actual termination within 1-10 future decisions, oversampled 320/1420; no Dreamer weights updated.",
+    "v9_probe": {
+      "preterminal_10step_prior_auc_ap_seed0_seed1": [[0.49270, 0.21576], [0.46599, 0.20912]],
+      "preterminal_10step_posterior_auc_ap_seed0_seed1": [[0.49956, 0.22172], [0.46468, 0.20399]],
+      "preterminal_probe_prevalence": 0.22535,
+      "raw_elapsed_step_index_auc_ap": [0.88261, 0.56571],
+      "reward_gt1_prior_auc_ap_seed0_seed1": [[0.56478, 0.08205], [0.47561, 0.04939]],
+      "reward_gt1_posterior_auc_ap_seed0_seed1": [[0.56384, 0.07020], [0.47990, 0.05271]],
+      "reward_gt1_probe_prevalence": 0.05493,
+      "limit": "Posteriors used future result observation for feature-readability only; ridge linear probe and one sampled latent do not exclude nonlinear information or prove reward prediction impossibility. Raw elapsed-step index uses no future episode length. No success/failure or progress/damage time-series probe is possible with these NPZ fields."
+    },
+    "stratified_v9_one_step_latest_mse_seed0_seed1": [
+      {"stratum": "ordinary_more_than_10_decisions_before_terminal", "n": 1068, "repeat": 0.00078936, "prior": [0.00066339, 0.00066962]},
+      {"stratum": "preterminal_1_to_10", "n": 320, "repeat": 0.00069919, "prior": [0.00056931, 0.00057224]},
+      {"stratum": "terminal_step", "n": 32, "repeat": 0.00063469, "prior": [0.00052189, 0.00052822]},
+      {"stratum": "reward_gt1_overlapping", "n": 78, "repeat": 0.00090530, "prior": [0.00075168, 0.00077090]}
+    ],
+    "v8_b1_example": "Context 5/horizon 5 newest-frame model-minus-repeat MSE -0.00000347/-0.00000474, seed0/1; terminal recall=0, reward Spearman across episode means -0.012/+0.014; small image win does not establish action usefulness.",
+    "b1_bce_comparator_audit": [
+      {"study": "v8", "seed": 0, "sampled_terminal": "32/2325", "sample_prevalence": 0.013763, "model_bce": 0.072729, "reported_train_prevalence_constant_bce": 0.083481, "matched_sample_prevalence_constant_entropy": 0.072655, "pr_auc": 0.020811, "recall_half": 0.0},
+      {"study": "v8", "seed": 1, "sampled_terminal": "32/2325", "sample_prevalence": 0.013763, "model_bce": 0.072818, "reported_train_prevalence_constant_bce": 0.083174, "matched_sample_prevalence_constant_entropy": 0.072655, "pr_auc": 0.013979, "recall_half": 0.0},
+      {"study": "v9", "seed": 0, "sampled_terminal": "32/2348", "sample_prevalence": 0.013629, "model_bce": 0.110591, "reported_train_prevalence_constant_bce": 0.082691, "matched_sample_prevalence_constant_entropy": 0.072078, "pr_auc": 0.018037, "recall_half": 0.0},
+      {"study": "v9", "seed": 1, "sampled_terminal": "32/2348", "sample_prevalence": 0.013629, "model_bce": 0.111011, "reported_train_prevalence_constant_bce": 0.082388, "matched_sample_prevalence_constant_entropy": 0.072078, "pr_auc": 0.020903, "recall_half": 0.0}
+    ],
+    "matched_context_diagnostic": "On the SAME 32 v9 episodes and 4 anchors/episode, deterministic latent-mode short 5/8/10 and full-history contexts showed seed0/1 full-history horizon1 terminal risk mean about 0.000249/0.000245, terminal/nonterminal risks nearly identical, AP .23962/.23477 versus deliberately enriched prevalence .25, recall 0; short-context AP about .29-.32, all recall 0. Full history did not rescue terminal discrimination. Horizons and latent sampling differ from the frozen stochastic B1 gate; see separate exact hashes/results."
+  },
+  "fidelity_and_gate": {
+    "substantially_matched": "Categorical straight-through latent with unimix=.01, detached dynamics/representation KL directions and per-path free floor, symexp-spaced 255-bin raw reward/value two-hot, executed native actions within [-1,1] for the random-data B1 runs.",
+    "potentially_material_differences": "Local encoder takes uint8 /255 in [0,1], pinned official uses /255-0.5; local h256/16x16 LN-GRU versus official default h8192/32x64 or 12m h2048/32x16 block GRU; local zero-initialized latest-frame residual mean(MSE)*128 versus official summed full-frame likelihood. These could weaken task-relevant representation but were not causally isolated by v1-v9.",
+    "lower_priority_differences": "Official nonterminal continuation target is scaled by (1-1/333), local hard 0/1, and local imagination gamma=.99; this does not alone explain absent terminal ranking in replay-only studies. Official per-step action normalization and local executed-action clamp agree numerically on bounded random actions.",
+    "b1_stronger_than_official": "Official Dreamer couples data collection, world-model updates and imagination-policy learning; v1-v9 test a static random policy dataset and 100/500 model-only updates. B1=fail is an internal stop per active plan, not proof that any online Dreamer actor would fail.",
+    "b1_reward_rank_mismatch": "Current five-step Spearman ranks episode-averaged logged-action returns over about 32 episodes; it neither tests fixed-state alternative actions nor demonstrates necessary actor action ordering. A weak correlation can coexist with local action discrimination, a strong one can reflect geometry.",
+    "b1_short_context_mismatch": "Frozen B1 cold-resets after 5/10-step context at mid-episode anchors; local learner uses 8-step burn-in. Exact-source v9 matched deterministic full-history context test did not restore terminal discrimination, so cold-reset alone is unlikely to explain v9 failure, though stochastic 5/15-step B1 remains a different test.",
+    "b1_image_warning": "Three of four stack channels are exactly shifted from the last observation; a residual-copy decoder can narrowly beat this trivial video baseline without useful latent task signals. Demand decision-relevant tests, not full/last image MSE in isolation."
+  },
+  "B_ranked_cause_candidates": [
+    {"rank": 1, "candidate": "Sparse and narrow task-relevant experience together with a latent not linearly encoding imminent failure", "classification": "data and representation limitation, strong observational support; mechanism not proven", "for": "Only 35/36 terminals and 770/795 positive-reward transitions per 12,288 train steps, every completed episode fails at <=17.1% final progress, dev 0 finishes; full-history posterior/prior ridge near chance while small image gains replicate.", "against": "Positive rewards appear in every observed training geometry at broadly similar fractions, so their total absence is not the issue. A single linear ridge setting and one latent sample cannot exclude nonlinear features; off-track detection could in principle be learned from visual clues even without successful trajectories."},
+    {"rank": 2, "candidate": "v9 BCE majority-class weighting in the opposite direction to intended rare-terminal weighting", "classification": "confirmed implementation/configuration error specific to v9; cannot explain v1-v8", "for": "Target=continue=1-is_terminal and pos_weight=56 magnifies continue gradient 56:1 at logit0. Under 1.57% sampled terminal labels, a weighted constant optimum predicts terminal about 0.028%, close to v9 deterministic checkpoint risk about 0.025%; v9 B1 BCE 0.111, AP near chance and recall0.", "against": "v8 also had recall0 with unweighted continuation; v8/v9 development cells differ and v9 deterioration is not a matched causal comparison."},
+    {"rank": 3, "candidate": "B1 gate measurement and prerequisite design are not validated for policy learning", "classification": "confirmed diagnostic-comparator/metric defects plus untested gate-necessity hypothesis", "for": "Terminal-anchor enrichment and training-prevalence BCE comparator differ; v8 sampled-prevalence constant entropy slightly beats reported model BCE; reward-rank is across episodes not actions; static random-only pretraining is not a necessary upstream Dreamer stage.", "against": "PR-AUC near prevalence, no terminal recall, little reward ranking and linear probe near chance remain real warnings even after comparator correction."},
+    {"rank": 4, "candidate": "Scaled residual pixel loss and smaller nonofficial RSSM may underfit action-relevant factors", "classification": "implementation-fidelity/representation hypothesis, unisolated", "for": "Pinned official full-image summed loss and much larger/block GRU RSSM differ; local decoder can shortcut shifted-frame video without modeling risk.", "against": "No matched capacity or full-image ablation on identical development geometry; v8 achieves small image gain, so difference alone is not evidence of causal defect."},
+    {"rank": 5, "candidate": "Off-by-one transition, cross-episode leakage, or timeout treated as terminal", "classification": "not supported by current checked evidence; finite trace cannot prove all cases", "for": "Would have been capable of corrupting targets if present.", "against": "Actual four-decision trace matches reward/result state, replay and loss; synthetic boundary tests block crossing and preserve truncated successor; v8/v9 end logs have zero truncations/finishes. Future policy handoff after model weight update still needs a separate carry audit."}
+  ],
+  "E_small_discriminating_checks": [
+    {"order": 1, "experiment": "Already performed: same frozen v9 checkpoint/development cells/anchors, deterministic posterior context lengths 5/8/10/full, horizon 1 and 5; compare matched image/reward/terminal risk and correctly matched sampled-window prevalence. No retraining.", "result": "Full history did not restore terminal risk separation/recall in either seed; result files experiments/dreamerv3-b1-context-audit-v9-seed0.json and -seed1.json. This weakens cold-reset-only explanation but does not substitute for stochastic frozen B1."},
+    {"order": 2, "experiment": "On existing v9 TRAIN-only replay with frozen weights, measure terminal-vs-continue actual BCE gradients and image/reward/continue/KL gradient scales; use matched dev anchors with recorded versus shuffled native action, and posterior versus prior heads without changing source/protocol or training.", "success_or_failure_information": "A logged-action advantage over shuffle despite failed episode-rank weakens B1 reward-rank necessity; no action effect and no separable posterior cue supports representation/data failure. Treat near-term one-step versus time-to-terminal labels separately."},
+    {"order": 3, "experiment": "Only after 2 if ambiguity remains: fit a small prespecified terminal head on frozen v9 TRAIN replay, evaluate only on existing development geometry (no actor, no new environment steps), with negative-class weighting or terminal-target positive BCE correctly defined, and compare to constant/elapsed-time baselines.", "success_or_failure_information": "If head-only separation appears, training/weighting rather than missing frozen representation is implicated; if both prior and posterior remain near chance, prefer richer data/representation audit. This is a diagnostic fit, not confirmation or model promotion."}
+  ],
+  "F_decisions": [
+    "If a matched action-shuffle and head-only audit expose strong action/risk signal on existing v9 data, reconsider B1 thresholds with a newly frozen protocol before any train-only actor diagnostic; do not retroactively reclassify v1-v9.",
+    "If the frozen posterior, prior, and matched-action diagnostics remain uninformative, prioritize task-relevant data collection/representation design under entirely fresh training-only cells, not another scalar hyperparameter sweep or longer blind/official evaluation.",
+    "If the gate metrics are shown unnecessary but actor viability remains unknown, a tiny two-seed train-only actor pilot is a separately preregistered future question; no screen, confirmation, blind, or candidate promotion is authorized by this diagnosis."
+  ],
+  "G_conclusion": "Continue DreamerV3 only as bounded, hypothesis-specific research: there is not enough evidence to declare the algorithm family impossible, but the current frozen v9 model is not a justified performance candidate. Pause actor/policy work under the existing active B1 rule; repair the diagnostic interpretation and test action/event information before reconsidering the gate. No official-score claims.",
+  "reproduce": {
+    "wrong_class_gradient": "python -c 'import torch; from dreamer_v3 import continue_prediction_loss; x=torch.zeros(2,requires_grad=True); continue_prediction_loss(x,torch.tensor([1.,0.]),56.).backward(); print(x.grad.tolist())'  # returns [-14.0,0.25]",
+    "matched_sample_constant_bce": "For each frozen open-loop.json row with prevalence p, calculate -p*log(p)-(1-p)*log(1-p); v8 c5h1 gives 0.072655 versus logged 0.072729/0.072818. This is post-hoc diagnostic calibration, not a new threshold.",
+    "matched_context_seed0": "PYTHONDONTWRITEBYTECODE=1 python -m scripts.diagnose.dreamerv3_b1_context_audit --checkpoint runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-0/pretraining-checkpoint.pt --dataset runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/development/development.npz --protocol experiments/dreamerv3-b1-terminal-positive-weight-local-v9.json --output /tmp/kilo/dreamerv3-b1-context-repro-seed0.json",
+    "matched_context_seed1": "PYTHONDONTWRITEBYTECODE=1 python -m scripts.diagnose.dreamerv3_b1_context_audit --checkpoint runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/pretrain-seed-1/pretraining-checkpoint.pt --dataset runs/20260924-dreamerv3-b1-terminal-positive-weight-local-v9/development/development.npz --protocol experiments/dreamerv3-b1-terminal-positive-weight-local-v9.json --output /tmp/kilo/dreamerv3-b1-context-repro-seed1.json",
+    "seed0_reproduction_sha256": "Re-running seed0 into /tmp/kilo gave byte-identical JSON with both SHA256=eae0c8726dd06ed2486029ddf66491940f067c9c2ce11888eb4330aa7b714556."
+  },
+  "limitations": [
+    "The probe's near-terminal labels use eventual failure hindsight and intentionally event-enriched samples; no per-step privileged progress/damage is stored, and no successful episode exists in the development data.",
+    "The matched-context audit uses deterministic categorical mode and selected anchors, while frozen B1 uses stochastic latent draws and a different anchor distribution. It is a separate diagnostic, not a rescoring of consumed B1 cells.",
+    "Current code matches only v9 source; no new v8 latent inference was presented as frozen v8 evidence. v8/v9 development cohorts are not matched even where training replay bytes match.",
+    "A four-decision physical trace and synthetic replay tests do not mathematically prove all future policy-on-data action/online-carry paths; only tested B1 random-data conditions are addressed.",
+    "Training replay lacks native per-transition geometry/state IDs. Per-track stats derive from a validated chronological join with episodes.jsonl; human-simulator success, damage dynamics, and high-progress representation remain untested."
+  ]
+}

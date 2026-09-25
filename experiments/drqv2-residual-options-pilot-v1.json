@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-residual-options-pilot-v1",
+  "purpose": "bounded-development-only-option-feasibility-pilot",
+  "status": "proposal-frozen-before-local-option-training; not confirmation or promotion",
+  "environment": {
+    "track_ids": [1, 2, 3, 4],
+    "obstacles": true,
+    "frame_skip": 4,
+    "max_decisions_per_episode": 2000,
+    "observation": "official four-frame float32 grayscale CHW 84x84 in [0,1]",
+    "reward": "raw CarEnvironment reward; no shaping, normalization, or collision penalty",
+    "action": "native symmetric [-1,1]^3; ActionAdapter maps to official [steer,gas,brake] exactly once"
+  },
+  "base_driver": {
+    "path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt",
+    "training_seed": 1,
+    "sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "use": "frozen inference-only driver; inherited training cost is not counted as a matched new training comparison"
+  },
+  "exclusion_protocols": [
+    "experiments/drqv2-promotion-v1.json",
+    "experiments/drqv2-steering-logit-v1.json",
+    "experiments/drqv2-augmentation-pad-v1.json"
+  ],
+  "training": {
+    "maximum_iterations": 2,
+    "environment_decisions_per_iteration": 16384,
+    "maximum_additional_environment_decisions": 32768,
+    "initial_iteration_seed": 24092401,
+    "environment_sampler_seed": 24092402,
+    "device": "cuda-if-available",
+    "options": ["KEEP", "STEER_MINUS", "STEER_PLUS", "COAST", "BRAKE"],
+    "option_duration_decisions": 2,
+    "steering_delta_native": 0.15,
+    "brake_floor_official": 0.25,
+    "uniform_option_coverage_decisions": 2048,
+    "epsilon_after_coverage": 0.2,
+    "q_head": {"feature_dim": 256, "hidden_dim": 128, "learning_rate": 0.0003},
+    "double_q": {"gamma_per_decision": 0.99, "target_tau": 0.01, "gradient_clip_norm": 10.0},
+    "replay": {"capacity": 8192, "batch_size": 64, "minimum_size_before_update": 256},
+    "checkpoint": "save after the fixed decision budget; discard an incomplete final option transition"
+  },
+  "development_screen": {
+    "track_ids": [1, 2, 3, 4],
+    "geometry_seeds": [4000000001, 4000000002, 4000000003, 4000000004, 4000000005, 4000000006, 4000000007, 4000000008],
+    "cells": 32,
+    "repeats": 1,
+    "role": "consumable tuning/development only; no confirmation, blind, official, or fresh-generalization claim",
+    "prior_usage_audit": "No exact seed token was found in the current text/JSON/JSONL evidence under runs/, evaluations/, submissions/, or repository documentation. Historical pilot schedules are incomplete, so global non-use is not proven.",
+    "comparison": "frozen driver and option composite on identical (track_id, geometry_seed) cells",
+    "primary_metric": "integer finish count; per-cell paired changes",
+    "diagnostics": ["progress", "raw reward", "retire reason", "damage", "intervention frequency", "decision count"],
+    "selection_rule": "Development feedback only. A nonzero candidate finish and no fewer finishes than the base are a pilot continuation signal, not confirmation or promotion. Do not tune repeatedly on a claim of independent evidence from these same cells.",
+    "maximum_episodes": 64,
+    "maximum_environment_decisions": 128000
+  },
+  "iteration_boundary": "At most one feedback-driven second training attempt may use this same consumed development screen. Any such result remains development evidence only; a later generalization claim needs a separately audited new protocol and cells.",
+  "prohibitions": [
+    "Do not use any listed or other reserved blind cell.",
+    "Do not claim official HAIC score, model confirmation, or model promotion.",
+    "Do not modify core/, env_wrapper.py, damage.py, train.py, train_drqv2.py, drq_v2.py, agent.py, evaluate_policy.py, or package_submission.py in this pilot integration.",
+    "Do not run an unbounded training/evaluation loop."
+  ]
+}

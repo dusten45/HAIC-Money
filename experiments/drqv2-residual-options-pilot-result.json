@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-residual-options-pilot",
+  "status": "stopped-after-predeclared-second-development-iteration",
+  "protocols": [
+    "experiments/drqv2-residual-options-pilot-v1.json",
+    "experiments/drqv2-residual-options-pilot-v2.json"
+  ],
+  "interpretation": "Exploratory one-frozen-driver feasibility work only. Neither iteration improved the reused development screen sufficiently; this is not multi-seed evidence, fresh confirmation, blind evaluation, model confirmation, or an official result.",
+  "base_driver": {
+    "path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt",
+    "sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954"
+  },
+  "development_partition": {
+    "track_ids": [1, 2, 3, 4],
+    "geometry_seeds": [4000000001, 4000000002, 4000000003, 4000000004, 4000000005, 4000000006, 4000000007, 4000000008],
+    "cell_count": 32,
+    "distinct_geometry_count": 8,
+    "usage": "Both option policies and the unchanged driver were evaluated on the same development cells. The grid is consumed tuning evidence, intentionally reused in v2, and not a fresh holdout. Historical pilot schedules are incomplete; the textual seed audit cannot prove global non-use."
+  },
+  "iterations": [
+    {
+      "protocol": "experiments/drqv2-residual-options-pilot-v1.json",
+      "run": "runs/20260924-drqv2-residual-options-pilot/iteration-1-retry/",
+      "evaluation": "evaluations/drqv2-residual-options-pilot-iteration-1.json",
+      "training_environment_decisions": 16384,
+      "training_episodes": 38,
+      "training_finishes": 5,
+      "base_finish_count": 5,
+      "option_finish_count": 5,
+      "paired_finish_cells": {"wins": 4, "ties": 24, "losses": 4},
+      "base_mean_progress": 0.68456339558608,
+      "option_mean_progress": 0.5700875912364861,
+      "base_mean_raw_reward": 501.55666091379476,
+      "option_mean_raw_reward": 409.81210656420456,
+      "option_mean_damage": 0.10000000000000002,
+      "mean_intervention_fraction": 0.7415113898254729,
+      "decision_counter_correction": "The original result field reports 16385 due to a duplicate counter increment. Episode totals (16374 completed + 10 interrupted) and per-option action counts both verify 16384 actual collector steps; see the run's counter-audit.json."
+    },
+    {
+      "protocol": "experiments/drqv2-residual-options-pilot-v2.json",
+      "run": "runs/20260924-drqv2-residual-options-pilot/iteration-2/",
+      "evaluation": "evaluations/drqv2-residual-options-pilot-iteration-2.json",
+      "feedback_change": "Require max(Q(non-KEEP))-Q(KEEP) to exceed a 3.4834041595458984 margin, calibrated as the 75th percentile on v1 training replay only.",
+      "training_environment_decisions": 16382,
+      "training_episodes": 39,
+      "training_finishes": 5,
+      "base_finish_count": 5,
+      "option_finish_count": 3,
+      "paired_finish_cells": {"wins": 2, "ties": 26, "losses": 4},
+      "base_mean_progress": 0.68456339558608,
+      "option_mean_progress": 0.5806870781774871,
+      "base_mean_raw_reward": 501.55666091379476,
+      "option_mean_raw_reward": 410.16784350520504,
+      "option_mean_damage": 0.13125,
+      "mean_intervention_fraction": 0.13822351054699303
+    }
+  ],
+  "execution_accounting": {
+    "failed_implementation_smoke": "runs/20260924-drqv2-residual-options-pilot/iteration-1/failure.json records a transition-accumulation integration error after two environment decisions and zero Q updates.",
+    "total_training_and_smoke_decisions": 32768,
+    "maximum_preregistered_training_and_smoke_decisions": 32768,
+    "evaluation_is_separate": true,
+    "training_runtime": "Local CUDA training used Torch 2.11.0+cu128 on an RTX 5070 Ti. CPU development evaluation used local Torch 2.11.0+cu128, not the competition's pinned runtime."
+  },
+  "verdict": {
+    "improved": false,
+    "reason": "The first option policy tied the base finish count, with balanced paired wins/losses and lower progress. The margin-gated second policy reduced intervention frequency but lost two net finishes versus the same base on the development screen.",
+    "action": "Stop this pilot. Do not run a third training attempt or reinterpret these consumed development cells as confirmation. Any future study requires a separately frozen protocol and independently audited new screen/confirmation cells.",
+    "deployment": "Not integrated into agent.py or the submission/evaluator pipeline; not eligible or confirmed."
+  },
+  "validation": {
+    "command": "python -m unittest tests.test_drq_residual_options tests.test_drqv2_residual_options_runner tests.test_drqv2",
+    "passed_tests": 56
+  }
+}

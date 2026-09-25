@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-entropy-target-ablation-v1",
+  "protocol_path": "experiments/pixel-rlpd-entropy-target-ablation-v1.json",
+  "protocol_sha256": "cbbe3039d8bec0564d3673f3e920540348c1e6bf5ae9a419a2c641e0b3a160a9",
+  "status": "aborted_before_environment_interaction",
+  "preflight_failure": {
+    "stage": "read_entropy_protocol",
+    "error_type": "ValueError",
+    "error": "fresh-data/target baseline contract is invalid",
+    "cause": "The new validator compared the full teacher_data_budget object for exact equality and rejected accounting fields partial_episode/source_repeats; budget values themselves matched the 16,384/4 gate.",
+    "protocol_budget": {"decisions": 16384, "minimum_distinct_finishes": 4}
+  },
+  "secondary_runtime_check": {
+    "status": "invoked_under_wrong_interpreter_before_runtime_check",
+    "attempted_interpreter": "/venv/main/bin/python (Torch 2.11 CUDA build)",
+    "required_cpu_interpreter": "/tmp/kilo/haic-cpu21/bin/python (Torch 2.1.0+cpu)",
+    "environment_interactions": 0
+  },
+  "source_snapshot": "runs/20260925-pixel-rlpd-entropy-target-ablation-v1-preflight/source",
+  "source_count": 47,
+  "original_generalization_policy_sha256": "89a2b3ab30ecda650c5ed4f7f51662b130b8db2f4bf18c06a1cc9ac607c7df7f",
+  "environment_interactions": 0,
+  "teacher_decisions": 0,
+  "student_decisions": 0,
+  "screen_cells": 0,
+  "confirmation_or_blind_opened": false,
+  "cell_allocation_consumed": false,
+  "action": "Preserve V4 protocol/snapshot and all unconsumed allocations as a preflight abort; relax only the metadata equality validator, document/retire the V4 allocation, then freeze a new V5 protocol with new independently audited geometry before any environment interaction.",
+  "official_performance_claim": false
+}

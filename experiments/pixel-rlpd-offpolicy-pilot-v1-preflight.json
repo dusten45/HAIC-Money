@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-offpolicy-pilot-v1",
+  "protocol_path": "experiments/pixel-rlpd-offpolicy-pilot-v1.json",
+  "protocol_sha256": "ae5d7dfd7b94bac3205927da28dd7f8144c6c612f6f1e67630576cccf25c7641",
+  "status": "aborted_before_environment_interaction",
+  "run_root": "runs/20260924-pixel-rlpd-pilot-v1",
+  "failure_gate": "effective dependency inventory equality",
+  "expected_distribution_sha256": "fe87d59d54119e980fa19f8fc29a236bf2c4b95c2c877b9888a014a184ba7425",
+  "actual_distribution_sha256_after_collector_imports": "3a02bc3edb3e96292eb88bb59be1db8440a98dfa9db66efa2eed26899044055e",
+  "cause": "protocol freezer inventoried installed distributions before train.py and drq_v2.py imports; importing train.py exposes additional installed distribution metadata entries.",
+  "environment_interactions": 0,
+  "teacher_decisions": 0,
+  "student_decisions": 0,
+  "screen_cells": 0,
+  "confirmation_or_blind_opened": false,
+  "cell_allocation_consumed": false,
+  "action": "Preserve the frozen protocol and failed preflight record; freeze a new protocol after identical train/teacher imports and assign new geometry cells before any environment interaction.",
+  "official_performance_claim": false
+}

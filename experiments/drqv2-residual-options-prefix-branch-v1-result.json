@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "name": "drqv2-residual-options-prefix-branch-v1",
+  "status": "training-only-mechanism-diagnostic-completed; no model promotion",
+  "protocol": "experiments/drqv2-residual-options-prefix-branch-v1.json",
+  "detailed_result": "evaluations/drqv2-residual-options-prefix-branch-v1.json",
+  "run_artifacts": "runs/20260924-drqv2-residual-options-prefix-branch-v1/",
+  "frozen_models": {
+    "base_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "v1_option_q_sha256": "d9d842bae529f37e8e4bfd3f1d51563cb5da9cbd90b0f4043c1935292dda2a23",
+    "v2_option_q_sha256": "d47942f61fea5e94ab080f292f0629021a28fb8e08aa4faa728c6862fff1b79c"
+  },
+  "partition_and_scope": {
+    "track_ids": [1, 2, 3, 4],
+    "geometry_seeds": [4200000001, 4200000002, 4200000003, 4200000004],
+    "geometry_clusters": 4,
+    "track_geometry_source_episodes": 16,
+    "environment_role": "training-only branch mechanism diagnostic; no tuning on outcomes",
+    "reserved_seed_audit": {
+      "enumerated_drq_protocol_json_count": 16,
+      "seed_values_found": 206,
+      "overlap_with_proposed_training_seeds": 0,
+      "exact_token_search_pre_protocol_creation": "No matches for 4200000001-4200000004 in repository text/JSON/JSONL artifacts.",
+      "global_non_use_proven": false,
+      "caveat": "Historical pilot schedules are incomplete. These are reserved only as this diagnostic's training-only data, never claimed fresh for evaluation."
+    }
+  },
+  "prefix_replay_gate": {
+    "passed": true,
+    "baseline_source_episodes": 16,
+    "independent_prefix_gate_episodes": 16,
+    "branch_points_after_decisions": [64, 128],
+    "maximum_prefix_length_checked_per_episode": 128,
+    "exact_prefix_decisions_compared": 2048,
+    "branch_contexts_available": 32,
+    "branch_prefixes_rechecked": 64,
+    "all_replay_checks_passed": true,
+    "fields_compared": [
+      "initial and per-step 4x84x84 observation SHA-256",
+      "exact official float32 action vectors",
+      "per-decision raw reward",
+      "terminated and truncated flags",
+      "collision, damage, progress, finish, and retirement info",
+      "accessible Box2D position/velocity/angle/angular velocity, damage state/effects, off-track counter, visited tiles, and simulator time"
+    ],
+    "limitation": "This is exact repeat parity for the compared visible and exposed simulator state in the same local runtime, not a formal proof that all hidden solver state is equal."
+  },
+  "environment_accounting": {
+    "episodes_used": 60,
+    "episode_cap": 96,
+    "environment_decisions_used": 21728,
+    "decision_cap": 162048,
+    "base_source_decisions": 7142,
+    "prefix_gate_decisions": 2048,
+    "option_branch_decisions": 12538,
+    "unique_option_branch_episodes": 28,
+    "all_limits_respected": true,
+    "device": "cpu",
+    "python_version": "3.11.14",
+    "torch_version": "2.11.0+cu128"
+  },
+  "base_source_outcomes": {
+    "cells": 16,
+    "finishes": 4,
+    "interpretation": "These are controls for exact local branch comparisons, not a model screen or estimate of generalization."
+  },
+  "branch_results": {
+    "v1": {
+      "option_choices_at_32_contexts": {
+        "KEEP": 7,
+        "COAST": 11,
+        "STEER_MINUS": 6,
+        "STEER_PLUS": 8,
+        "BRAKE": 0
+      },
+      "non_KEEP_branch_contexts": 25,
+      "contexts_with_any_actual_action_change": 24,
+      "paired_finish_wins": 3,
+      "paired_finish_ties": 28,
+      "paired_finish_losses": 1,
+      "local_observations": [
+        "COAST at track 1 / geometry 4200000001 / decision 64 changed two baseline nonfinishes into finishes.",
+        "COAST at track 1 / geometry 4200000003 / decision 128 changed a baseline nonfinish into a finish.",
+        "COAST at track 2 / geometry 4200000004 / decision 64 changed a baseline finish into a nonfinish.",
+        "One selected STEER_MINUS branch had no actual native action change on either option decision due to clipping; it was retained as a no-op branch check."
+      ],
+      "mean_progress_delta_over_non_KEEP_contexts": 0.01554872531526692
+    },
+    "v2": {
+      "option_choices_at_32_contexts": {
+        "KEEP": 29,
+        "COAST": 0,
+        "STEER_MINUS": 1,
+        "STEER_PLUS": 0,
+        "BRAKE": 2
+      },
+      "non_KEEP_branch_contexts": 3,
+      "paired_finish_wins": 0,
+      "paired_finish_ties": 32,
+      "paired_finish_losses": 0,
+      "local_observations": [
+        "Both selected BRAKE branches reduced final progress (0.6360 to 0.1544 and 0.5037 to 0.1544) without changing finish status.",
+        "The selected STEER_MINUS branch also did not change finish status."
+      ],
+      "mean_progress_delta_over_non_KEEP_contexts": -0.27696078431372545
+    }
+  },
+  "interpretation": {
+    "supported": "Exact local prefix replay works for the 16 tested track/geometry cells in this runtime. For these fixed branch contexts, v1 COAST sometimes rescued a base nonfinish and also once derailed a base finish; the same learned option is not uniformly beneficial. V2's sparse selected branches included two Brake cases with sharply lower progress.",
+    "not_supported": "No conclusion that v1 or v2 improves a full episode policy, that either intervention has a general causal effect across road geometry, or that local mirror performance predicts an official result.",
+    "dependence": "32 branch contexts are nested within 16 track/geometry cells and only four road-geometry seeds. The v1/v2 branches at the same base state share a control trajectory; branch contexts are not independent samples.",
+    "decision": "Do not retrain or tune from this diagnostic alone. A future study would need a separately frozen training-only branch sample, per-step outcome logging, and geometry-clustered replication; no existing consumed development or reserved blind cell is promoted or reused."
+  },
+  "validation": {
+    "command": "python -m unittest tests.test_drqv2_residual_option_prefix_branches tests.test_drqv2_residual_option_audit tests.test_drq_residual_options tests.test_drqv2_residual_options_runner tests.test_drqv2",
+    "passed_tests": 64
+  }
+}

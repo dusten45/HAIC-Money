@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-offpolicy-pilot-v2",
+  "protocol_path": "experiments/pixel-rlpd-offpolicy-pilot-v2.json",
+  "protocol_sha256": "ba2375426de3d1d690ea598dd14835523290791b0e91d0c889fae4799460bed0",
+  "status": "stop_hold_failure",
+  "official_performance_claim": false,
+  "training": {
+    "learner_seeds": [0, 1],
+    "environment_steps_per_run": 16384,
+    "gradient_steps_per_run": 15384,
+    "offline_dataset_sha256": "a4e5dccc96bb14f06658ae39a3f69df3a9b15168619766bc99f8f529f3dacd3f",
+    "offline_stored_transitions": 8170,
+    "offline_batch_size": 32,
+    "online_batch_size": 32,
+    "training_episode_counts": {
+      "rlpd-seed0": {"episodes": 62, "finishes": 1},
+      "rlpd-seed1": {"episodes": 60, "finishes": 1},
+      "sac-seed0": {"episodes": 77, "finishes": 0},
+      "sac-seed1": {"episodes": 82, "finishes": 0}
+    },
+    "final_alpha": {
+      "rlpd-seed0": 0.1188977584,
+      "rlpd-seed1": 0.1213052049,
+      "sac-seed0": 0.1377800852,
+      "sac-seed1": 0.1006946489
+    },
+    "final_action_execution_mismatch_fraction": 0.0,
+    "interpretation": "Training-only finishes are not held-out performance. Alpha, losses and episode counts are descriptive diagnostics, not causal evidence."
+  },
+  "screen": {
+    "evaluation_dir": "evaluations/20260924T184536689584Z_pixel-rlpd-offpolicy-pilot-v2-screen",
+    "evaluation_pointer": "runs/20260924-pixel-rlpd-offpolicy-pilot-v2/screen-evaluation-retry.json",
+    "evaluation_pointer_sha256": "7d6a16c1b3c3d8dcd18cb6a7a5d600694f6b648815fa9189b2c5278337170903",
+    "manifest_sha256": "6c48578fa46a57c747f45f6f73166c411560ab953231c4b1006a193d2a11b2b4",
+    "summary_sha256": "0529d5dab81eb0c39978995063ec5678213b65828bd187875e46ce849ce03095",
+    "determinism_sha256": "009a6ad84d49c68ab83c83c36b4524c819a77e2ff41427d596643f322a278e6d",
+    "episodes_sha256": "b4306aac2b72724d7f67e80305da6ad01249024b191560c21eb6ee26b42896ef",
+    "candidate_count": 8,
+    "screen_cells_per_candidate": 12,
+    "repeats_per_cell": 2,
+    "evaluation_results": 192,
+    "canonical_episodes": 96,
+    "canonical_finishes": 1,
+    "determinism_audited_all_candidates": true,
+    "cpu_reload_matches_all_candidates": true,
+    "operational_failures": 0,
+    "resource_max_peak_rss_bytes": 361873408,
+    "resource_max_action_seconds": 0.0023405849933624268,
+    "cpu_runtime": {
+      "python": "3.11.14",
+      "torch": "2.1.0+cpu",
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "opencv": "4.8.1.78"
+    },
+    "candidate_results": [
+      {
+        "arm": "rlpd", "seed": 0, "steps": 8192,
+        "actor_sha256": "010e61ae976f014db2d6f02546ebe98b9ea9d974b898b0122898221c7459f73a",
+        "learner_checkpoint_sha256": "13533dead5d20545bcdb714dce92aef11f3998556ff126722f0e9619c744ab98",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.33132109064617266,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "rlpd", "seed": 0, "steps": 16384,
+        "actor_sha256": "f79e9a731e2df8c03d003d0e6fde9b7cad91441e31601dc69f539ea3a90e3812",
+        "learner_checkpoint_sha256": "7cc5fc823c0685788dc2959526e74635f0edbf2cb00915749447553867f57bf8",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.3238633168258684,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "rlpd", "seed": 1, "steps": 8192,
+        "actor_sha256": "2644a49b0bbaa182f28a272a1a53c0310179ca5d5593d44364261baf59c095dd",
+        "learner_checkpoint_sha256": "5c43b92613e70df166b69f67b481a87105c6e0948830c1913305318ba3a5a55d",
+        "finishes": 1, "finish_rate": 0.08333333333333333, "avg_progress": 0.48009562323536725,
+        "avg_lap_time_ms": 40680.0, "eligible": true
+      },
+      {
+        "arm": "rlpd", "seed": 1, "steps": 16384,
+        "actor_sha256": "57c847dd5998a90b402e1a6e07804649c6d406c5f9a853d412a971d97d99fa62",
+        "learner_checkpoint_sha256": "ea0c686bd727416d63a3a7e01cce0e564b9497465fe08de97208f1871c020016",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.4014361472575796,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "sac", "seed": 0, "steps": 8192,
+        "actor_sha256": "0e5e658fe0091d7838e60d834e5034cc7614277884b06f5957150fd90ea55bed",
+        "learner_checkpoint_sha256": "c32f88be3d52ae6a1ac12160e75cb58723a2c2933203fdea8a107467ec299eb5",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.18181126569204423,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "sac", "seed": 0, "steps": 16384,
+        "actor_sha256": "d0f9e69ff3b70a83f82276c29064aaffda159b6eaeee91342ca2cdcf9f9b41c4",
+        "learner_checkpoint_sha256": "265bff1ebe4dbe2f7800e6f0047363e60316790bf294d738c6135978407c615a",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.3539664055320461,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "sac", "seed": 1, "steps": 8192,
+        "actor_sha256": "bb15bfdaa77d5b51e9f15bd436202dc08aa93bd1bb5b5e97d13612e91cecdf7e",
+        "learner_checkpoint_sha256": "cd813630582c8b0d52cc0193a7226d914895d9d7ee930755c1f7bebceb319998",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.10215437705916919,
+        "avg_lap_time_ms": null, "eligible": true
+      },
+      {
+        "arm": "sac", "seed": 1, "steps": 16384,
+        "actor_sha256": "a20e8403195f127c819aaf3e17398053c6b350166b1562cf0f250763dd2ec781",
+        "learner_checkpoint_sha256": "423ca2397a6c4fd442fb777e54d32cb14e018ffb050e0b1dc45a7ae400da15da",
+        "finishes": 0, "finish_rate": 0.0, "avg_progress": 0.28000554235347425,
+        "avg_lap_time_ms": null, "eligible": true
+      }
+    ],
+    "seed_gates": {
+      "0": {"rlpd_finishes": 0, "sac_finishes": 0, "rlpd_minimum_finish_pass": false, "not_lower_than_sac_pass": true, "overall_pass": false},
+      "1": {"rlpd_finishes": 1, "sac_finishes": 0, "rlpd_minimum_finish_pass": true, "not_lower_than_sac_pass": true, "overall_pass": true}
+    },
+    "gate": "fail_stop_hold",
+    "selection_scope": "development screen only; no model promotion",
+    "confirmation_opened": false,
+    "blind_opened": false
+  },
+  "provenance_and_failure_notes": {
+    "first_screen_attempt": "candidate discovery failed on generated group config before any cell; zero cells were used",
+    "retry": "same protocol and grid after run-root provenance envelope repair; all 192 episodes completed",
+    "harness_bug": "the unused runner selection helper assumed candidate.environment_steps, but evaluator exports it inside candidate.export_metadata; this was detected in local result derivation after screen completion and did not affect evaluator metrics",
+    "gate_recomputed": "using immutable per-run candidate index, evaluator candidate archive_sha256, and the predeclared finish/progress/lap/tie order",
+    "next_action": "do not run v2 full, confirmation, or blind cells. A new independently frozen protocol with fresh data and screen seeds is required for any follow-up study."
+  }
+}
