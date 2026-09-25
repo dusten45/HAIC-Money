@@ -15,6 +15,7 @@ Participants repository override it whenever they differ.
 
 On 2026-09-25 at 09:24-09:26Z, the competition-site hostname failed DNS
 resolution (`curl` could not resolve it; Google DNS returned status 3/NXDOMAIN).
+The same DNS and site failures persisted in a 09:42Z recheck.
 The site root, previously loaded bundle, and `/api/tracks` could not be fetched.
 The [official Participants repository](https://github.com/2026-HAIC/Participants)
 was reachable and its `main` commit was still `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`,
