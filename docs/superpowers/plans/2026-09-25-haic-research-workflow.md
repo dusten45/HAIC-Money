@@ -1,0 +1,583 @@
+# HAIC Research Workflow Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** HAIC 전용 연구 운영 체계를 제공된 하네스 문서에 맞춰 구현하고, 규칙을 통과한 후보의 완주율을 최우선으로 비교하며, 구형 오케스트레이션을 검증 후 퇴역시킨다.
+
+**Architecture:** `AGENTS.md`와 HAIC 전용 `harness.config.json`이 정책의 단일 기준이 된다. `haic_research/`는 상태·가설·완주율 정책·기록·허용 명령을 담당하고, 중앙 오케스트레이터는 독립 에이전트의 보고와 승인 게이트를 관리한다. 과거 데이터는 자동 검색하지 않고, 새 실행은 별도 경로에만 쓴다.
+
+**Tech Stack:** Python `>=3.11,<3.12`, Python 표준 라이브러리(JSON, dataclasses, subprocess, unittest), Windows PowerShell validator shim.
+
+**Spec:** `docs/superpowers/specs/2026-09-25-haic-research-workflow-redesign.md`
+
+## Global Constraints
+
+- HAIC 전용으로 구현하며 다른 프로젝트용 portable package, generic core/adapter, arbitrary project CLI는 만들지 않는다.
+- 제공 문서의 파일 역할, 상태 머신, 가설 형식, 중앙 조정, 보고 구분, 4/8/2 탐색 한도, 3회 pivot 기준, 세 판정 게이트를 반영한다.
+- `rule_compliance` PASS는 승격의 필수조건이며, 제출 가능한 후보는 같은 registered split에서 **완주율을 가장 먼저** 비교한다.
+- 완주율이 같을 때만 중앙 완주 시간, 미완주 진행도, P90, 충돌·손상, 추론 비용 순으로 비교한다. 공식 score와 내부 우선순위를 분리한다.
+- 설계·구현·실행은 각각 승인 기록을 요구하고, CLI의 기본 동작은 plan-only다.
+- 기존 `runs/`, `artifacts/haic/`, `submissions/`의 데이터·manifest·hash는 복사·이동·수정·자동 색인하지 않는다.
+- 새 run은 `runs/haic-research-v2/<run-id>/`, 새 artifact는 `artifacts/haic-research-v2/<run-id>/` 아래에 둔다.
+- `research_ops`와 `training/improvement_loop.py`는 새 코드의 의존성이나 지원 진입점으로 남기지 않는다. 퇴역은 새 경로 검증 후 수행한다.
+- 외부 제출·모델 확인·대회 사이트 업로드는 CLI에서 실행하지 않는다.
+- 현재 체크아웃에는 사전 변경과 미추적 파일이 많다. 커밋은 계획에 적힌 파일만 stage하고 `git add -A`는 사용하지 않는다. 브랜치가 원격보다 93개 커밋 뒤이므로 별도 조정 전에는 push하지 않는다.
+- 학습·시뮬레이션·대회 평가는 구조 전환의 검증에 사용하지 않는다.
+
+## Review Focus
+
+- completion rate가 더 낮은 빠른 후보가 이기지 않음 — Task 4의 순위·승격 테스트.
+- 평가 split, map/seed, denominator가 다른 결과는 matched 비교로 취급하지 않음 — Task 4의 비교 호환성 테스트.
+- `UNKNOWN`/`FAIL` 규칙 준수 또는 메커니즘 게이트가 SOTA 승격으로 이어지지 않음 — Task 4와 7의 판정 테스트.
+- infra invalid cycle은 3회 pivot 연속 실패 횟수에서 제외됨 — Task 4의 pivot 테스트.
+- 경로 이탈, legacy 경로 쓰기, 미승인 명령 또는 임의 shell이 차단됨 — Task 2, 5, 6의 경로·실행 테스트.
+
+---
+
+## File Structure
+
+| File | Responsibility |
+|---|---|
+| `AGENTS.md` | source precedence, state machine, central coordinator, agent report, approval/search rules |
+| `PROJECT_INFO.md` | HAIC goals, official source pointers, success endpoint, completion-rate objective, operation entry points |
+| `RESTRICTIONS.md` | competition/runtime, privacy/leakage, split, execution and submission limits |
+| `harness.config.json` | HAIC-only path, metric, split, search, budget, and command-profile settings |
+| `haic_research/config.py` | load and validate the single HAIC configuration |
+| `haic_research/models.py` | hypothesis, approval, result, gate, manifest, event and report schemas |
+| `haic_research/state.py` | legal workflow transitions and approval checks |
+| `haic_research/policy.py` | comparable-result checks, completion-first ranking, promotion and pivot rules |
+| `haic_research/coordinator.py` | batch validation, non-overlapping assignments, report consolidation |
+| `haic_research/records.py` | new-run directory, manifest/event/report persistence |
+| `haic_research/commands.py` | registered argv profiles and approval-gated subprocess execution |
+| `haic_research/results.py` | append-only experiment entries and gated SOTA promotion |
+| `haic_research/validation.py` | structural/document/config validation |
+| `haic_research/cli.py` | HAIC-only validate, plan, approval, status, execute and report entry points |
+| `scripts/harness/validate.ps1` | PowerShell wrapper around the Python validator |
+| `docs/experiments/`, `docs/handoffs/`, `docs/sources/` | experiment records, agent handoffs and cited source ledger |
+| `docs/strategy-history.md`, `docs/report.md` | strategy decision history and current evidence summary |
+| `tests/test_haic_research_*.py` | isolated tests for config, workflow, policy, records, commands, and reporting |
+| `.gitignore` | ignore generated v2 run/artifact and PDF outputs while retaining the directory marker |
+| `output/pdf/.gitkeep` | preserve the requested report-output directory without tracking generated PDFs |
+
+Existing `COMPETITION_INFO.md` remains a detailed local competition summary and is linked from `PROJECT_INFO.md`; it is not a second project-purpose document. Existing `RESULTS.md` generated rows are frozen historical data. `RULES.md` is migrated into `AGENTS.md` before removal. Existing training/evaluation modules are reviewed per command profile and may be reused behind the new interface; old orchestration is not.
+
+### Test conventions
+
+Named test builders (`make_config`, `messages`, `result`, `approval`, `config`, `config_with_run_root`, `valid_args`, `FakeRunner`, `write_fixture`, `experiment_file`, and `project_fixture`) are defined in the test module that uses them; they are not production APIs. Filesystem tests use `tempfile.TemporaryDirectory`. Command tests use an injected `FakeRunner` that records argv, cwd, timeout, and shell settings, and never starts a real process.
+
+## Task 1: Establish the HAIC document system
+
+**Files:**
+- Create: `AGENTS.md`
+- Create: `PROJECT_INFO.md`
+- Create: `harness.config.json`
+- Create: `docs/experiments/INDEX.md`
+- Create: `docs/handoffs/REPORT_TEMPLATE.md`
+- Create: `docs/sources/INDEX.md`
+- Create: `docs/sources/legacy-path-map.md`
+- Create: `docs/strategy-history.md`
+- Create: `docs/report.md`
+- Modify: `README.md`
+- Modify: `COMPETITION_INFO.md`
+- Modify: `RESTRICTIONS.md`
+- Modify: `RESULTS.md`
+- Modify: `SOTA.md`
+- Modify: `.gitignore`
+- Create: `output/pdf/.gitkeep`
+
+**Interfaces:**
+- Produces: canonical operating documents and a HAIC config with keys `schema_version`, `project`, `paths`, `official_sources`, `workflow`, `search`, `metrics`, `splits`, and `commands`.
+
+- [ ] **Step 1: Inventory existing doc links and unique content**
+
+Run:
+```powershell
+rg -n "COMPETITION_INFO|RESTRICTIONS|RULES|RESULTS|SOTA|research_ops|improvement_loop|artifacts/haic|runs/" README.md COMPETITION_INFO.md RESTRICTIONS.md RULES.md RESULTS.md SOTA.md docs research_ops training/improvement_loop.py
+```
+Expected: every current operational entry point and generated-results reference is listed before moving document content.
+
+- [ ] **Step 2: Write `AGENTS.md` with the provided operating contract**
+
+Include source precedence, the exact STOPPED-to-RELEASE state machine, central coordinator duties, independent agent scope, `fact/inference/unknown/recommendation/source_paths` report fields, 4/8/2 search limits, no threshold sweep before activation, and three-valid-cycle pivot.
+
+- [ ] **Step 3: Write `PROJECT_INFO.md` and `harness.config.json`**
+
+Set `metrics.primary` to `completion_rate`; set tie-breakers to `median_finished_lap_ms`, `mean_incomplete_progress`, `p90_finished_lap_ms`, `collisions`, `damage`, and `act_latency_p95_ms`. Record official source precedence (current competition site, Participants repository, local source mirror, historical evidence), legacy data map, new run/artifact/PDF roots, protected split identifiers, pivot count 3, search limits, plan-only default, and only allowlisted local operations. Do not add credentials.
+
+- [ ] **Step 4: Reassign current document responsibilities without deleting evidence**
+
+Reduce `README.md` to quick start and document map. Keep competition facts in `COMPETITION_INFO.md` and point to it from `PROJECT_INFO.md`. Move hard restrictions into `RESTRICTIONS.md`. Freeze the existing generated `RESULTS.md` section and append a dated migration note above it. Preserve the current `SOTA.md` record as a historical local reference until a new candidate passes the new gates. Copy no run/artifact files.
+
+- [ ] **Step 5: Configure generated-output ignores and create the requested output directory**
+
+Add `runs/haic-research-v2/`, `artifacts/haic-research-v2/`, and `output/pdf/*.pdf` to `.gitignore`, then add `!output/pdf/.gitkeep`. Create `output/pdf/.gitkeep`; do not move the existing root `report.pdf`.
+
+- [ ] **Step 6: Add source, experiment, handoff, strategy and report templates**
+
+`docs/experiments/INDEX.md` lists only new experiment records; `docs/handoffs/REPORT_TEMPLATE.md` has the five report fields; `docs/sources/INDEX.md` records URL, version/check date and supported claim; `legacy-path-map.md` maps old paths without reading their contents; `strategy-history.md` is append-only; `report.md` separates verified facts from inference and unknowns.
+
+- [ ] **Step 7: Review and commit only the document-system files**
+
+Run `git diff --check`, review `git diff -- README.md COMPETITION_INFO.md RESTRICTIONS.md RESULTS.md SOTA.md AGENTS.md PROJECT_INFO.md harness.config.json .gitignore docs output/pdf`, stage exact intended hunks only (the README already contains user changes), and commit with:
+```powershell
+git add -p README.md
+git add AGENTS.md PROJECT_INFO.md harness.config.json COMPETITION_INFO.md RESTRICTIONS.md RESULTS.md SOTA.md .gitignore output/pdf/.gitkeep docs/experiments docs/handoffs docs/sources docs/strategy-history.md docs/report.md
+git commit -m "docs: establish HAIC research operating contract"
+```
+Before staging README, inspect its diff and select only the new quick-start/document-map hunks; leave pre-existing user hunks unstaged. Expected: historical experiment files and run data are absent from the staged path list.
+
+## Task 2: Implement the HAIC config loader and structural config checks
+
+**Files:**
+- Create: `haic_research/__init__.py`
+- Create: `haic_research/config.py`
+- Create: `tests/test_haic_research_config.py`
+- Modify: `harness.config.json`
+
+**Interfaces:**
+- Produces: `load_config(root: Path) -> HarnessConfig`; `validate_config(config: HarnessConfig) -> list[ConfigIssue]`.
+- `HarnessConfig` exposes `repo_root` plus resolved `run_root`, `artifact_root`, `legacy_paths`, `primary_metric`, `tie_breakers`, `search_limits`, `pivot_after`, `split_ids`, and `command_profiles`.
+
+- [ ] **Step 1: Write config validation tests**
+
+```python
+class ConfigTests(unittest.TestCase):
+    def test_completion_rate_is_required_primary_metric(self):
+        config = make_config(primary_metric="lap_time")
+        self.assertIn("metrics.primary must be completion_rate", messages(validate_config(config)))
+
+    def test_new_roots_are_project_relative_and_distinct(self):
+        config = make_config(run_root="../../outside", artifact_root="artifacts/haic")
+        self.assertTrue(validate_config(config))
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_config -v`
+Expected: FAIL because the config model and validator do not exist.
+
+- [ ] **Step 3: Implement `HarnessConfig`, `ConfigIssue`, `load_config`, and `validate_config`**
+
+Parse JSON with the standard library. Reject absent required keys, unsupported schema version, unknown metric names, incorrect 4/8/2 or pivot values, path escapes, output roots equal to or inside `artifacts/haic/` or `submissions/`, unregistered commands, and secret-like config keys. Resolve relative paths from repository root.
+
+- [ ] **Step 4: Run the focused test to verify it passes**
+
+Run: `python -m unittest tests.test_haic_research_config -v`
+Expected: PASS, including malformed JSON, missing path, primary metric and forbidden-root cases.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add haic_research/__init__.py haic_research/config.py harness.config.json tests/test_haic_research_config.py
+git commit -m "feat: validate HAIC research configuration"
+```
+
+## Task 3: Add schemas and approval-gated workflow state
+
+**Files:**
+- Create: `haic_research/models.py`
+- Create: `haic_research/state.py`
+- Create: `tests/test_haic_research_state.py`
+
+**Interfaces:**
+- `WorkflowState` enum contains every state in `AGENTS.md`.
+- `Approval` has `stage`, `plan_hash`, `approved_at`, and `source_ref`.
+- `Hypothesis` has all eleven fields from the spec, with `source_paths: tuple[str, ...]` for cited evidence.
+- `GateResult` contains gate name, one of `PASS/FAIL/UNKNOWN/NOT_APPLICABLE`, rationale, and evidence paths. `RunManifest` contains run ID, purpose, hypothesis/approval hashes, candidate/control revisions and package hashes, tool/runtime versions, data/map/split IDs, resource/permission limits, output paths and source hashes. `RunEvent` contains UTC timestamp, event kind, workflow state, approval reference, execution status/error, resource usage, mechanism signal, endpoint, and correction reference.
+- `IntegrationReport` contains each gate result and cited evidence paths. `AgentReport` contains exactly `fact`, `inference`, `unknown`, `recommendation`, and `source_paths`. `CycleSummary` carries validity, protocol-match, improvement, and infra-invalid status. `WorkAssignment` carries direction, hypothesis IDs, owner, allowed read/write scope, and handoff path. These are immutable records in `models.py`.
+- `transition(current: WorkflowState, requested: WorkflowState, *, plan_hash: str, approvals: Sequence[Approval], gates: Sequence[GateResult]) -> WorkflowState`.
+
+- [ ] **Step 1: Write transition and schema tests**
+
+```python
+class WorkflowTests(unittest.TestCase):
+    def test_cannot_execute_without_matching_execution_approval(self):
+        with self.assertRaises(ApprovalError):
+            transition(WorkflowState.EXECUTE_PENDING_APPROVAL, WorkflowState.EVALUATE,
+                       plan_hash="new", approvals=[], gates=[])
+
+    def test_cannot_release_with_unknown_gate(self):
+        with self.assertRaises(GateError):
+            transition(WorkflowState.ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
+                       plan_hash="p1", approvals=[], gates=[GateResult("rule_compliance", "UNKNOWN")])
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_state -v`
+Expected: FAIL because the state and schema modules do not exist.
+
+- [ ] **Step 3: Implement typed schemas and explicit transition map**
+
+Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec, including the `ADVANCE`, `REJECT`, `REVISE`, and `PIVOT` branches. Reject illegal transitions, stage/hash mismatch, and `RELEASE_IF_GATE_PASS` unless `rule_compliance`, `mechanism_activation`, and `competitive_or_product_outcome` are all `PASS` (or the config explicitly marks a non-rule gate not applicable). `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
+
+- [ ] **Step 4: Run the focused test to verify it passes**
+
+Run: `python -m unittest tests.test_haic_research_state -v`
+Expected: PASS for every valid transition and rejection case.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add haic_research/models.py haic_research/state.py tests/test_haic_research_state.py
+git commit -m "feat: model HAIC workflow states and approvals"
+```
+
+## Task 4: Implement hypothesis batches, central coordination and completion-first policy
+
+**Files:**
+- Create: `haic_research/policy.py`
+- Create: `haic_research/coordinator.py`
+- Create: `tests/test_haic_research_policy.py`
+- Create: `tests/test_haic_research_coordinator.py`
+- Modify: `haic_research/models.py`
+
+**Interfaces:**
+- `ExperimentResult` carries `candidate_id`, `comparison_id`, `split_id`, `map_ids`, `seed_ids`, `completion_count`, `episode_count`, `median_finished_lap_ms`, `mean_incomplete_progress`, `p90_finished_lap_ms`, `collisions`, `damage`, `act_latency_p95_ms`, `rule_compliance`, and `mechanism_activation`.
+- `ExperimentResult` also carries `official_score` as a separate reporting field and an eligibility label so teacher/smoke/diagnostic rows cannot enter submission-candidate ranking.
+- `rank_candidates(records: Sequence[ExperimentResult]) -> list[ExperimentResult]` accepts one matched comparison group only and returns eligible rows only; ineligible observations remain in the experiment ledger.
+- `promotion_decision(candidate: ExperimentResult, control: ExperimentResult) -> PromotionDecision`.
+- `validate_batch(hypotheses: Sequence[Hypothesis]) -> None`; `should_pivot(cycles: Sequence[CycleSummary], limit: int = 3) -> bool`.
+- `CycleSummary` and `WorkAssignment` are immutable `models.py` records. `assign_work(batch_id: str, hypotheses: Sequence[Hypothesis]) -> list[WorkAssignment]` gives each direction one owner and non-overlapping scope; it records assignments but does not spawn external agents itself.
+- `integrate_reports(assignments: Sequence[WorkAssignment], reports: Sequence[AgentReport]) -> IntegrationReport` verifies complete scope ownership and the `fact`, `inference`, `unknown`, `recommendation`, and `source_paths` fields before central synthesis. `AgentReport` is an immutable `models.py` record.
+
+- [ ] **Step 1: Write completion-priority and gate tests**
+
+```python
+class CompletionPriorityTests(unittest.TestCase):
+    def test_higher_completion_rate_beats_faster_lap(self):
+        reliable = result("reliable", completion_count=8, episode_count=10, median_finished_lap_ms=24000)
+        fast = result("fast", completion_count=6, episode_count=10, median_finished_lap_ms=18000)
+        self.assertEqual([r.candidate_id for r in rank_candidates([fast, reliable])],
+                         ["reliable", "fast"])
+
+    def test_unknown_rule_gate_cannot_promote(self):
+        self.assertFalse(promotion_decision(result(rule_compliance="UNKNOWN"), result()).eligible)
+```
+
+Also test mismatched `comparison_id`, split/map/seed sets and episode denominator, invalid cycles, 3/8/2 batch boundaries, missing handoff fields, duplicate or overlapping assignment ownership, and rejection of teacher/smoke rows from candidate ranking.
+Require compliance and mechanism activation statuses to each reject both `UNKNOWN` and `FAIL`.
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_policy tests.test_haic_research_coordinator -v`
+Expected: FAIL because ranking, batch validation and coordination do not exist.
+
+- [ ] **Step 3: Implement candidate ordering and promotion decisions**
+
+Compute completion rate as `completion_count / episode_count`. Require identical comparison/split/map/seed protocol and episode denominator before comparing; raise `ComparisonMismatchError` for unmatched data. `rank_candidates` filters ineligible results and ranks eligible ones only, while the ledger retains every observation. Require both compliance and activation `PASS` for promotion, and promote only if the eligible candidate outranks the eligible control under the full completion-first ordering. Sort by descending completion rate, then ascending median finish time, descending incomplete progress, ascending p90, collisions, damage and latency. Keep official score as a separately reported field.
+
+- [ ] **Step 4: Implement batch validation, pivot counter and work assignments**
+
+Reject fewer than four independent directions, more than eight total hypotheses, or more than two per direction. `should_pivot` counts only valid comparable non-improving cycles; `infra_invalid` entries are ignored and do not increment the streak. Assignments contain direction, hypothesis IDs, owner label, allowed read/write scope and required handoff path. `integrate_reports` rejects missing/duplicate reports, out-of-scope edits, or reports missing any required field, then emits an integration report with all three gate results and evidence paths.
+
+- [ ] **Step 5: Run the focused test to verify it passes**
+
+Run: `python -m unittest tests.test_haic_research_policy tests.test_haic_research_coordinator -v`
+Expected: PASS, including cases where a faster but less reliable candidate loses.
+
+- [ ] **Step 6: Commit**
+
+```powershell
+git add haic_research/models.py haic_research/policy.py haic_research/coordinator.py tests/test_haic_research_policy.py tests/test_haic_research_coordinator.py
+git commit -m "feat: prioritize completion in HAIC research policy"
+```
+
+## Task 5: Add isolated run records and immutable event history
+
+**Files:**
+- Create: `haic_research/records.py`
+- Create: `tests/test_haic_research_records.py`
+
+**Interfaces:**
+- `create_run(config: HarnessConfig, manifest: RunManifest) -> Path` creates one directory only under configured `run_root`.
+- `append_event(run_dir: Path, event: RunEvent) -> None` appends one JSON line.
+- `write_integration_report(run_dir: Path, report: IntegrationReport) -> None` writes the report once; corrections become new `events.jsonl` entries.
+
+- [ ] **Step 1: Write path and append-only tests**
+
+```python
+class RunRecordTests(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp_dir.cleanup)
+        self.config = config_in_temp_root(Path(self.temp_dir.name))
+        self.run_dir = create_run(self.config, manifest("run-001"))
+
+    def test_run_directory_stays_under_configured_root(self):
+        path = self.run_dir
+        self.assertEqual(path.parent.name, "haic-research-v2")
+
+    def test_events_append_without_replacing_prior_lines(self):
+        append_event(self.run_dir, event("DISCOVER"))
+        append_event(self.run_dir, event("HYPOTHESIZE"))
+        self.assertEqual(len((self.run_dir / "events.jsonl").read_text().splitlines()), 2)
+
+    def test_legacy_and_outside_paths_are_refused(self):
+        with self.assertRaises(PathSafetyError):
+            create_run(config_with_run_root(Path(self.temp_dir.name) / ".." / "artifacts" / "haic"), manifest("bad"))
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_records -v`
+Expected: FAIL because the record store does not exist.
+
+- [ ] **Step 3: Implement confined run creation and append-only event writes**
+
+Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize stable JSON with UTC timestamps. Do not glob or read old run/artifact directories.
+
+- [ ] **Step 4: Run the focused test to verify it passes**
+
+Run: `python -m unittest tests.test_haic_research_records -v`
+Expected: PASS; tests use temporary directories and do not touch project data.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add haic_research/records.py tests/test_haic_research_records.py
+git commit -m "feat: add isolated HAIC run records"
+```
+
+## Task 6: Add typed command profiles and plan-only CLI execution
+
+**Files:**
+- Create: `haic_research/commands.py`
+- Create: `haic_research/cli.py`
+- Create: `tests/test_haic_research_commands.py`
+- Create: `tests/test_haic_research_cli.py`
+- Modify: `harness.config.json`
+
+**Interfaces:**
+- `CommandProfile` contains `profile_id`, `module`, `allowed_args`, `required_args`, `timeout_seconds`, and `output_root`.
+- `build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]`.
+- `execute_approved(config, plan_hash: str, profile_id: str, arguments: Mapping[str, object], *, approvals: Sequence[Approval], runner=subprocess.run) -> CommandResult`.
+
+- [ ] **Step 1: Write profile and plan-only tests**
+
+```python
+class CommandProfileTests(unittest.TestCase):
+    def test_unknown_profile_is_rejected(self):
+        with self.assertRaises(UnknownProfileError):
+            build_argv(config(), "arbitrary", {})
+
+    def test_execution_requires_exact_plan_hash_and_uses_argv(self):
+        runner = FakeRunner()
+        with self.assertRaises(ApprovalError):
+            execute_approved(config(), "p1", "train_policy", valid_args(),
+                             approvals=[approval("p2", "execution")], runner=runner)
+        self.assertEqual(runner.calls, [])
+
+    def test_valid_execution_uses_argv_runner_and_timeout(self):
+        runner = FakeRunner()
+        execute_approved(config(), "p1", "train_policy", valid_args(),
+                         approvals=[approval("p1", "execution")], runner=runner)
+        call = runner.calls[0]
+        self.assertEqual(call["shell"], False)
+        self.assertEqual(call["cwd"], config().repo_root)
+        self.assertGreater(call["timeout"], 0)
+        self.assertEqual(call["argv"][0:2], [sys.executable, "-m"])
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_commands tests.test_haic_research_cli -v`
+Expected: FAIL because command profiles and CLI do not exist.
+
+- [ ] **Step 3: Register only HAIC local operations**
+
+Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
+
+- [ ] **Step 4: Implement argv construction and execution approval checks**
+
+Reject unknown profile IDs, unknown arguments, malformed path values, `--` or shell operators embedded in values, plan-hash mismatch, missing `EXECUTE_PENDING_APPROVAL` approval, and output paths outside the new roots. The `FakeRunner` captures argv/cwd/timeout/shell. Call the injected runner with `shell=False`, a timeout and repository-root `cwd`. Plan-only output prints the normalized profile and arguments but makes no subprocess call.
+
+- [ ] **Step 5: Implement CLI commands**
+
+Add `validate`, `plan`, `approve`, `status`, `run`, and `report` subcommands. `run` defaults to dry planning; actual invocation requires an explicit approval event referencing the exact plan hash. Keep external submission actions absent from parser choices.
+
+- [ ] **Step 6: Run the focused tests to verify they pass**
+
+Run: `python -m unittest tests.test_haic_research_commands tests.test_haic_research_cli -v`
+Expected: PASS using a fake runner; no training/evaluation command is invoked.
+
+- [ ] **Step 7: Commit**
+
+```powershell
+git add haic_research/commands.py haic_research/cli.py harness.config.json tests/test_haic_research_commands.py tests/test_haic_research_cli.py
+git commit -m "feat: gate HAIC operations through approved profiles"
+```
+
+## Task 7: Add result, experiment and SOTA reporting
+
+**Files:**
+- Create: `haic_research/results.py`
+- Create: `tests/test_haic_research_results.py`
+- Modify: `RESULTS.md`
+- Modify: `SOTA.md`
+- Modify: `docs/experiments/INDEX.md`
+- Modify: `docs/report.md`
+
+**Interfaces:**
+- `append_experiment_summary(results_path: Path, experiment_path: Path, result: ExperimentResult) -> None` adds a dated record before the frozen generated block and links its full experiment file.
+- `promote_sota(sota_path: Path, candidate: ExperimentResult, control: ExperimentResult, report_path: Path) -> PromotionDecision` updates only after all gates pass and completion-first comparison selects the candidate.
+
+- [ ] **Step 1: Write append-only and completion-promotion tests**
+
+```python
+class ResultReportingTests(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp_dir.cleanup)
+        self.path = Path(self.temp_dir.name) / "SOTA.md"
+        self.path.write_text("# SOTA\n", encoding="utf-8")
+        self.report = Path(self.temp_dir.name) / "integration_report.json"
+
+    def test_append_preserves_frozen_generated_section(self):
+        before = "# Results\n\n<!-- BEGIN GENERATED RESULTS -->\nold rows\n<!-- END GENERATED RESULTS -->\n"
+        path = write_fixture(before)
+        append_experiment_summary(path, experiment_file(), result("r1"))
+        after = path.read_text()
+        marker = "<!-- BEGIN GENERATED RESULTS -->"
+        self.assertEqual(after[after.index(marker):], before[before.index(marker):])
+
+    def test_sota_does_not_promote_lower_completion_candidate(self):
+        decision = promote_sota(self.path, result("fast", completion_count=6, episode_count=10), result("control", completion_count=8, episode_count=10), self.report)
+        self.assertFalse(decision.promoted)
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_results -v`
+Expected: FAIL because new-only result reporting is not implemented.
+
+- [ ] **Step 3: Implement append-only records and SOTA gate**
+
+Write full experiment detail to `docs/experiments/<run-id>.md` with manifest/report paths. Append a short row to the human-managed section of `RESULTS.md` without regenerating or rewriting the frozen JSON block. Update `SOTA.md` only for rule-compliant, mechanism-activated, matched candidates selected first by completion rate.
+
+- [ ] **Step 4: Verify historical section preservation and run focused tests**
+
+Run: `python -m unittest tests.test_haic_research_results -v`
+Expected: PASS with byte-identical generated section and no data-directory reads.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add haic_research/results.py tests/test_haic_research_results.py RESULTS.md SOTA.md docs/experiments/INDEX.md docs/report.md
+git commit -m "feat: record HAIC results with completion-first promotion"
+```
+
+## Task 8: Implement the harness-aligned structural validator
+
+**Files:**
+- Create: `haic_research/validation.py`
+- Create: `scripts/harness/validate.ps1`
+- Create: `tests/test_haic_research_validation.py`
+- Modify: `haic_research/cli.py`
+
+**Interfaces:**
+- `validate_project(root: Path) -> list[ValidationIssue]`.
+- `python -m haic_research.cli validate --root <repo-root>` returns exit code 0 only when all required documents/config entries and invariants pass.
+
+- [ ] **Step 1: Write validator tests**
+
+```python
+class ProjectValidationTests(unittest.TestCase):
+    def test_missing_required_handoff_template_is_reported(self):
+        issues = validate_project(project_fixture(without="docs/handoffs/REPORT_TEMPLATE.md"))
+        self.assertIn("docs/handoffs/REPORT_TEMPLATE.md", [issue.path for issue in issues])
+
+    def test_plan_only_and_completion_priority_are_required(self):
+        issues = validate_project(project_fixture(plan_only=False, primary_metric="lap_time"))
+        self.assertGreaterEqual(len(issues), 2)
+```
+
+- [ ] **Step 2: Run the focused test to verify it fails**
+
+Run: `python -m unittest tests.test_haic_research_validation -v`
+Expected: FAIL because project validation is not implemented.
+
+- [ ] **Step 3: Implement document/config invariants and PowerShell wrapper**
+
+Validate required paths from the reference tree, config schema, official-source references, completion-first metric order, search/pivot limits, split list, allowed profile IDs, no secrets, and plan-only default. `scripts/harness/validate.ps1` must contain `$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path`, run `python -m haic_research.cli validate --root $RepoRoot`, then `exit $LASTEXITCODE`. Do not inspect `runs/`, `artifacts/haic/`, or `submissions/` contents.
+
+- [ ] **Step 4: Run the validator and focused test**
+
+Run:
+```powershell
+python -m unittest tests.test_haic_research_validation -v
+.\scripts\harness\validate.ps1
+```
+Expected: tests pass and validator exits 0 on the completed document/config structure.
+
+- [ ] **Step 5: Commit**
+
+```powershell
+git add haic_research/validation.py haic_research/cli.py scripts/harness/validate.ps1 tests/test_haic_research_validation.py
+git commit -m "feat: validate HAIC harness operating structure"
+```
+
+## Task 9: Cut over and retire the former orchestration path
+
+**Files:**
+- Modify: `README.md`
+- Modify: `COMPETITION_INFO.md`
+- Modify: `AGENTS.md`
+- Remove after unique rules are migrated: `RULES.md`
+- Remove after new-flow verification: `research_ops/__init__.py`, `research_ops/index.py`, `research_ops/policy.py`, `research_ops/orchestrator.py`, `research_ops/cli.py`, `research_ops/build_report.py`
+- Remove after new-flow verification: `training/improvement_loop.py`
+- Remove obsolete tests after replacement coverage passes: `tests/test_research_ops.py`, `tests/test_research_ops_cli.py`
+
+**Interfaces:**
+- New supported entry point: `python -m haic_research.cli`.
+- The former `python -m research_ops.cli improve` and `python -m training.improvement_loop` paths have no compatibility shim.
+
+- [ ] **Step 1: Enumerate all references to the retired orchestration APIs**
+
+Run:
+```powershell
+rg -n "research_ops|training\.improvement_loop|sync-results|improve .*--execute|--command" --glob '!docs/superpowers/plans/**' --glob '!docs/superpowers/specs/**' .
+```
+Expected: references are classified as active links to update or historical provenance to retain.
+
+- [ ] **Step 2: Move unique operating rules and command details into canonical docs**
+
+Transfer still-valid content from `RULES.md` to `AGENTS.md`/`PROJECT_INFO.md`; keep old generated-results provenance in the frozen `RESULTS.md` block. Replace active README commands with `python -m haic_research.cli` examples and link from `COMPETITION_INFO.md` to canonical policy docs.
+
+- [ ] **Step 3: Delete the old orchestrators and their obsolete tests**
+
+Remove the listed source modules and tests only after Task 2–8 tests pass. Do not delete or regenerate JSON runs, checkpoints, submission ZIPs, source notes or result history.
+
+- [ ] **Step 4: Run new unit suite and structural validator**
+
+Run:
+```powershell
+python -m unittest tests.test_haic_research_config tests.test_haic_research_state tests.test_haic_research_policy tests.test_haic_research_coordinator tests.test_haic_research_records tests.test_haic_research_commands tests.test_haic_research_cli tests.test_haic_research_results tests.test_haic_research_validation -v
+.\scripts\harness\validate.ps1
+```
+Expected: all harness unit tests pass; validator exits 0; no train/evaluate/package/submit profile runs.
+
+- [ ] **Step 5: Confirm source-tree boundary and commit the cutover**
+
+Run:
+```powershell
+rg -n "research_ops\.cli|training\.improvement_loop|sync-results" README.md AGENTS.md PROJECT_INFO.md RESTRICTIONS.md haic_research
+ git status --short
+```
+Expected: no active reference remains; historical citations are confined to `RESULTS.md`, `docs/strategy-history.md`, and `docs/sources/legacy-path-map.md`; the data roots were not staged.
+
+Commit with:
+```powershell
+git add -p README.md
+git add -u COMPETITION_INFO.md AGENTS.md
+git commit -m "refactor: retire legacy HAIC research orchestration"
+```
+
+`research_ops/`, `training/improvement_loop.py`, their tests, and `RULES.md` are currently untracked in the selected checkout. After replacement coverage passes and unique rules are migrated, remove those files from the working tree as authorized by the cutover, but do not add their removals to the commit as tracked removals. Before staging README hunks, inspect the diff and retain only intended command/document-map changes; leave pre-existing user edits unstaged.
+
+## Execution Notes
+
+- Execute tasks in order; each task is a reviewable commit.
+- During implementation use `superpowers:executing-plans` for native execution or `superpowers:subagent-driven-development` if the user selects delegated execution.
+- Completion rate is the promotion objective; official rule compliance remains a hard gate.
+- The plan authorizes local harness unit tests and document validation because the user asked to check compliance. It does not authorize training, simulation, official evaluation, package generation, submission, or model confirmation.
