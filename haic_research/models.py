@@ -20,6 +20,14 @@ def _freeze(value: object) -> object:
     return value
 
 
+def _freeze_tuple_fields(record: object, names: tuple[str, ...]) -> None:
+    for name in names:
+        value = getattr(record, name)
+        if not isinstance(value, (tuple, list)):
+            raise TypeError(f"{name} must be a tuple or list")
+        object.__setattr__(record, name, _freeze(value))
+
+
 class WorkflowState(str, Enum):
     STOPPED = "STOPPED"
     DISCOVER = "DISCOVER"
@@ -73,6 +81,9 @@ class Hypothesis:
     resource_and_risk_gate: str
     source_paths: tuple[str, ...] = ()
 
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("source_paths",))
+
 
 @dataclass(frozen=True)
 class GateResult:
@@ -83,6 +94,7 @@ class GateResult:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "status", GateStatus(self.status))
+        _freeze_tuple_fields(self, ("evidence_paths",))
 
 
 @dataclass(frozen=True)
@@ -109,6 +121,7 @@ class RunManifest:
         for name in ("tool_versions", "runtime_versions", "resource_limits",
                      "permission_limits", "source_hashes"):
             object.__setattr__(self, name, _freeze(getattr(self, name)))
+        _freeze_tuple_fields(self, ("data_ids", "map_ids", "split_ids", "output_paths"))
 
 
 @dataclass(frozen=True)
@@ -135,6 +148,9 @@ class IntegrationReport:
     gate_results: tuple[GateResult, ...]
     evidence_paths: tuple[str, ...]
 
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("gate_results", "evidence_paths"))
+
 
 @dataclass(frozen=True)
 class AgentReport:
@@ -143,6 +159,9 @@ class AgentReport:
     unknown: str
     recommendation: str
     source_paths: tuple[str, ...]
+
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("source_paths",))
 
 
 @dataclass(frozen=True)
@@ -161,3 +180,6 @@ class WorkAssignment:
     allowed_read_paths: tuple[str, ...]
     allowed_write_paths: tuple[str, ...]
     handoff_path: str
+
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("hypothesis_ids", "allowed_read_paths", "allowed_write_paths"))

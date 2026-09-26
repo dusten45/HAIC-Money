@@ -1,7 +1,7 @@
 """Focused contract checks for immutable records and approval-gated states."""
 
 import unittest
-from dataclasses import FrozenInstanceError, fields
+from dataclasses import FrozenInstanceError, fields, replace
 from datetime import datetime, timezone
 
 from haic_research.models import (
@@ -90,6 +90,31 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual(event.resource_usage["cpu"]["seconds"], 10)
         with self.assertRaises(TypeError):
             event.resource_usage["cpu"]["seconds"] = 30
+
+    def test_tuple_fields_detach_from_caller_owned_lists(self):
+        gate = GateResult("rule_compliance", GateStatus.PASS)
+        samples = (
+            (Hypothesis(*("entry",) * 11), ("source_paths",)),
+            (gate, ("evidence_paths",)),
+            (RunManifest("run", "purpose", "hypothesis", "approval", "candidate", "control",
+                         "candidate-package", "control-package", {}, {}, (), (), (), {}, {}, (), {}),
+             ("data_ids", "map_ids", "split_ids", "output_paths")),
+            (IntegrationReport((), ()), ("gate_results", "evidence_paths")),
+            (AgentReport("fact", "inference", "unknown", "recommendation", ()),
+             ("source_paths",)),
+            (WorkAssignment("direction", (), "owner", (), (), "handoff"),
+             ("hypothesis_ids", "allowed_read_paths", "allowed_write_paths")),
+        )
+        for prototype, names in samples:
+            for name in names:
+                with self.subTest(record=type(prototype).__name__, field=name):
+                    first = gate if name == "gate_results" else "first"
+                    second = gate if name == "gate_results" else "second"
+                    supplied = [first]
+                    record = replace(prototype, **{name: supplied})
+                    supplied.append(second)
+                    self.assertEqual(getattr(record, name), (first,))
+                    self.assertIsInstance(getattr(record, name), tuple)
 
 
 class WorkflowTests(unittest.TestCase):
