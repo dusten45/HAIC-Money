@@ -68,6 +68,18 @@ Read the protocol/result artifacts before using any listed seed. In particular, 
 geometry seed may be excluded across all training track IDs even when a table shows
 only one evaluation track-ID range.
 
+For new TRAIN-only work, an unrelated lane's new protocol or changed ledger is not
+itself a seed collision. Compare the proposed geometry seed (including all track
+variants) with declared allocations, actual TRAIN resets, prior-data collection,
+active shared claims, exposure and the new study's exclusion rules; retain hashes
+of the specific evidence. A candidate-related unknown identity remains blocked.
+The shared `experiments/train-seed-claims/` registry is an allocation claim, not
+an evaluation result or proof that interaction occurred. Its reservations are
+conservative and immutable; no automatic release exists. An unopened TRAIN claim
+would need independently documented zero interaction and zero exposure before a
+future explicit release/re-audit could be considered. Historical retired pools
+in the table remain excluded; this does not recycle confirmation or blind cells.
+
 The legacy `checkpoint-v1` blind receipt at IDs `7-9` and seeds `20201-20208` was
 executed. Therefore, do not describe all internal blind cells as untouched; name the
 specific study partition. The unopened L2/pad blind partitions in the table remain

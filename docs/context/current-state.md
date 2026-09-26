@@ -198,6 +198,17 @@ of these observations proves recovery data, value shaping, or memory is the
 causal fix. The r5 seed-audit
 erratum is narrow and does not retroactively attest the malformed receipt.
 
+The prospective G1 v2 seed auditor checks candidate-specific TRAIN collisions,
+consumption, reservations and exclusions; unrelated DrQ/Dreamer JSON or ledger
+changes are provenance warnings, not collisions. The read-only consumed-G0
+control `--seed-start 4272000001` remains `BLOCKED` with 12 actual consumed-road
+intersections, not a proposed G1 batch. Current r5 TRAIN ledger, abort,
+supersession, metrics and trace bytes are independently checked without
+validating the malformed historical receipt SHA or changing the G0 v1 audit.
+The shared TRAIN claim registry re-audits under a lock if a future batch is
+separately selected; legacy/other-lane allocation races remain a limitation.
+No G1 seed batch, claim, frozen protocol or environment reset has been allocated.
+
 ## Competition Schedule And Access
 
 The first mock in the current site-verified schedule has passed; the next event

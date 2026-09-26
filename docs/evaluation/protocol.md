@@ -68,6 +68,54 @@ and repeat 1 does not double the number of independent tracks, geometry seeds, o
 training runs. Obstacle variants sharing geometry are correlated and must not be
 reported as independent training seeds.
 
+A TRAIN cell (one TRAIN road identified by `track_id`, `geometry_seed`, and relevant
+obstacle/reset conditions) is fresh for a *particular* study only if its declared
+exclusions and prior-use requirement are met: inspect frozen allocations, active
+reservations, actual environment interaction (including partial/aborted resets),
+prior-data/episode ledgers, and any earlier exposure of its geometry or outcomes.
+Check geometry-seed exclusions across track IDs where the study requires them;
+multiple obstacle variants are not independent geometries. An independently
+changing DrQ/Dreamer/RLPD protocol or unrelated file is not by itself a TRAIN
+freshness violation. Hash the specific evidence inspected for provenance, but
+report repository-wide inventory changes separately as warnings, not as a reason
+to label an unrelated candidate `BLOCKED`. Unknown records relevant to the
+candidate must still block until resolved. Where fresh TRAIN-DIAGNOSTIC is an
+explicit study requirement, previously used diagnostic roads remain excluded.
+
+A declared TRAIN reservation prevents another lane from claiming the same road
+even before any driving. Retiring an unobserved TRAIN reservation does not itself
+prove reuse is safe: verify zero interaction and zero outcome/geometry exposure,
+record an explicit release decision, then re-audit before any reallocation. Old
+retired allocations are not silently recycled. Audit again immediately before
+reservation/protocol freeze and before the first reset; a read-only audit is not an
+atomic claim. Neither this TRAIN-only rule nor a release decision makes a consumed
+screen, confirmation, or blind cell fresh, allows tuning on confirmation/blind,
+or relaxes their predeclared gates. Official submission and model confirmation
+still require separate authorization.
+
+For a prospective RLPD G1 study,
+`python -B -m scripts.audit_rlpd_g1_coverage_seeds --seed-start N` emits the
+**v2 read-only** candidate inventory (no protocol or
+permission to reset). Its `collisions`/`blockers` determine `BLOCKED`; global
+experiment/source inventory changes and unrelated incomplete histories appear
+under `provenance_warnings`, with source-specific SHA and the limited claim
+`no_known_recorded_overlap`. Only after separately predeclaring a candidate
+batch, review the warnings and run the same CLI with `--reserve --study-id ID`
+to re-audit within the shared TRAIN claim lock and write immutable per-seed
+claims. Its output retains `locked_audit` (the exact per-source hash inventory
+examined under the lock), `locked_claim_audit`, and `train_claims_sha256`.
+Freeze a new source-pinned `haic-rlpd-g1-coverage-protocol-v1` protocol with
+the exact 24 TRAIN `cells`, `study_id`, and `train_claims_sha256` from the claim
+output. Before the first reset, re-audit with the same `--seed-start N` plus
+`--self-study-id ID`, `--self-protocol-path experiments/FILE.json`, and
+`--self-protocol-sha256 SHA`; only exact own claims and the frozen protocol
+SHA/digest are waived. Foreign claims or new interaction still block. A normal
+read-only re-audit *without* self mode intentionally blocks the claimed batch.
+The registry is cooperative: an independent lane bypassing it
+can still race; check talk, namespace allocation and live ledgers. The historic
+G0 v1 auditor and per-reset whole-catalog checks remain byte-for-byte frozen
+with that completed run; its v1 receipt is not a G1 certificate.
+
 ## CPU and Package Gates
 
 Current matched DrQ studies use a pinned local Linux/Python 3.11, CPU-only Torch

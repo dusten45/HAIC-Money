@@ -7,12 +7,23 @@
 2. Locate the active plan and relevant prior experiment records.
 3. State the hypothesis, control, treatment, scope, expected failure signal, and
    acceptance/rejection/stop criteria.
-4. Freeze the source revision, command, dependency/runtime, environment contract,
-   training exclusions, budget, and evaluation partitions in a protocol artifact.
+4. Predeclare source revision, command, dependency/runtime, environment contract,
+   training exclusions, budget, and evaluation partitions for the protocol.
 5. Consult `docs/evaluation/generalization-policy.md`, then audit **all relevant**
    frozen protocols, run receipts, source training ledgers, and retired allocations
    across research lanes before declaring any training or evaluation cell unused.
-   Its selective history table alone cannot establish freshness.
+   Its selective history table alone cannot establish freshness. For fresh
+   TRAIN-only roads, decide from candidate-specific use, active reservations,
+   exposure, and partition exclusions, not unrelated repository file changes;
+   preserve source-specific hashes and candidate-relevant unknowns as blockers.
+   Reserve audited TRAIN roads under the shared claim lock and coordinate disjoint
+   seed namespaces with parallel lanes. An audit receipt alone is not a claim.
+6. Freeze the protocol with the claimed cells, claim digest, source/runtime hashes,
+   exclusions, and fixed gates. Recheck with an authenticated self-claim mode
+   immediately before the first reset; without one, a prior claim correctly
+   appears as an ordinary collision. Preserve
+   partial-run ledgers; do not silently recycle retired allocations. Confirmation/
+   blind rules remain stricter and unchanged.
 
 ## During Execution
 

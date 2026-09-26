@@ -81,6 +81,14 @@ evaluation evidence, decision, or architecture document needed for the task.
   describe unmatched cells as a matched comparison.
 - Never relabel consumed confirmation/blind cells as fresh. Do not use reserved
   blind cells for iterative tuning.
+- For TRAIN-only research, independent lanes' unrelated protocol or file changes
+  are not themselves freshness violations. Audit the proposed TRAIN cell (track
+  ID, geometry seed, and relevant conditions) against prior interaction, declared
+  allocations, active reservations, exposure, and protocol exclusions across
+  lanes. Preserve partial-run evidence and fail closed on candidate-relevant
+  ambiguous records; do not use a repository-wide file hash as a collision test.
+  Recheck and claim cells before a protocol freeze or reset to limit concurrent
+  allocation races. Confirmation/blind isolation remains stricter and unchanged.
 - Treat official private tracks as a final generalization target, not an available
   holdout dataset. Do not equate a leaderboard's per-track mixed best with one
   model's generalization.

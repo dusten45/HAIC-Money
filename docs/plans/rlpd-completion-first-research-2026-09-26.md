@@ -56,6 +56,22 @@ road coverage under a separate frozen protocol, then an RLPD-specific complete
 state/prefix parity and harmed-finish branch. The contacted comparison is not
 matched by actor or road; the G1 intervention remains unselected.
 
+**Prospective audit rule revision, not a G1 release:** The old G0 v1 audit and
+its exact whole-directory SHA pin remain frozen historical evidence; it cannot
+be reinterpreted as a G1 receipt. New `audit_rlpd_g1_coverage_seeds.py` v2
+separates candidate road overlap/ambiguous consumption from unrelated file
+evolution, retains the SHA of each inspected source and reports repository
+drift as a warning. Shared `experiments/train-seed-claims/` per-geometry-seed
+claims stop cooperating lanes from claiming the same TRAIN road on different
+track variants; a future G1 batch needs a fresh candidate audit, locked
+`--reserve --study-id ID`, a separately frozen protocol and another audit just
+before the first reset. The old r5 malformed receipt is not repaired or used
+as an independent G1 attestation: currently hashed TRAIN ledger, abort,
+supersession, metrics and trace supply only recorded seed exclusions. The
+existing consumed-G0 collision control remains `BLOCKED`; no G1 candidate
+seeds, claim or driving were opened. Unrelated warnings do not certify global
+freshness or waive any proposed G1 coverage, parity, harm or protected-cell gate.
+
 ## 1. Recommendation
 
 **Keep RLPD as the data-efficient learning backbone, but first establish WHERE
