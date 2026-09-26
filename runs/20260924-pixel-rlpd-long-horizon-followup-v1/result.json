@@ -1,0 +1,320 @@
+{
+  "blind": {
+    "actor_sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+    "canonical_episodes": 24,
+    "canonical_finishes": 9,
+    "eligible": true,
+    "evaluation_dir": "evaluations/20260925T030439692341Z_pixel-rlpd-long-horizon-followup-v1-blind",
+    "manifest_sha256": "95ad4a1599060007606362ce69e802d7458cca7d418f3f9af1787cb046272bc6",
+    "pointer": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/blind-finalist.json",
+    "pointer_sha256": "c5655ccdb49af07b9599dfe2ac29d9c3991162a0b529615ddab708fa04752dcc",
+    "summary": {
+      "avg_damage": 0.18333333333333335,
+      "avg_lap_time_ms": 42831.11111111111,
+      "avg_progress": 0.6790198726779343,
+      "avg_reward": 491.83185672279006,
+      "avg_steering_delta_abs_mean": 0.29627429818113643,
+      "avg_steps": 450.6666666666667,
+      "best_lap_time_ms": 38340.0,
+      "finish_rate": 0.375,
+      "n_episodes": 24,
+      "termination_reasons": {
+        "crash": 1,
+        "finished": 9,
+        "off_track": 14
+      }
+    }
+  },
+  "blind_finalist": {
+    "actor_sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+    "arm": "rlpd",
+    "environment_steps": 131072,
+    "training_seed": 11
+  },
+  "blind_opened": true,
+  "confirmation": {
+    "rlpd-seed10": {
+      "actor_sha256": "ed4500119bffd058b9afc26c96010e864c6d76060829a755995cfbdcf540c9bf",
+      "canonical_episodes": 32,
+      "canonical_finishes": 3,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "diagnostic_only": false,
+      "eligible": true,
+      "evaluation_dir": "evaluations/20260925T025158881289Z_pixel-rlpd-long-horizon-followup-v1-confirmation",
+      "manifest_sha256": "a96e300f4a9125f4b2cfa7f8e7a066e85ef41c59dd8e415f38c5808602c74af8",
+      "operational_failures": 0,
+      "partition": "confirmation",
+      "pointer": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/confirmation-rlpd-seed10.json",
+      "pointer_sha256": "f80104368d1f20c7b321f17dfb3978e00cf81aa66f0db0c98df7c58e5dd120e7",
+      "status": "complete",
+      "summary": {
+        "avg_damage": 0.2875,
+        "avg_lap_time_ms": 38360.0,
+        "avg_progress": 0.448334153772329,
+        "avg_reward": 309.85579813316997,
+        "avg_steering_delta_abs_mean": 0.2556100639048964,
+        "avg_steps": 329.0625,
+        "best_lap_time_ms": 36300.0,
+        "finish_rate": 0.09375,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 3,
+          "off_track": 27
+        }
+      }
+    },
+    "rlpd-seed11": {
+      "actor_sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+      "canonical_episodes": 32,
+      "canonical_finishes": 12,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "diagnostic_only": false,
+      "eligible": true,
+      "evaluation_dir": "evaluations/20260925T025455593182Z_pixel-rlpd-long-horizon-followup-v1-confirmation",
+      "manifest_sha256": "08b1e860c6342b1778a7daa4bb4ffb5bf627b18531b32b44999dd51a311d3114",
+      "operational_failures": 0,
+      "partition": "confirmation",
+      "pointer": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/confirmation-rlpd-seed11.json",
+      "pointer_sha256": "364150ef99e45b85ba7fb0c607b53483cb3da4c3bd41865b039a1881febae1d1",
+      "status": "complete",
+      "summary": {
+        "avg_damage": 0.21875,
+        "avg_lap_time_ms": 43411.666666666664,
+        "avg_progress": 0.7576962607052552,
+        "avg_reward": 551.3116550660791,
+        "avg_steering_delta_abs_mean": 0.29775336757302284,
+        "avg_steps": 498.84375,
+        "best_lap_time_ms": 38040.0,
+        "finish_rate": 0.375,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 3,
+          "finished": 12,
+          "off_track": 17
+        }
+      }
+    },
+    "sac-seed10": {
+      "actor_sha256": "fd06d1110ca2e5b769550288292dc56dbe20c7bae7b8249876470284d2d91ee3",
+      "canonical_episodes": 32,
+      "canonical_finishes": 2,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "diagnostic_only": false,
+      "eligible": true,
+      "evaluation_dir": "evaluations/20260925T025850459044Z_pixel-rlpd-long-horizon-followup-v1-confirmation",
+      "manifest_sha256": "beabff7c9f76aded73cfc5b529f3f417203de4967ba2e3aac496a5fbfd4d8e3e",
+      "operational_failures": 0,
+      "partition": "confirmation",
+      "pointer": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/confirmation-sac-seed10.json",
+      "pointer_sha256": "095c7c4837140b5ccf806270865c9dc932140b5be062558bb7bc84561783a68f",
+      "status": "complete",
+      "summary": {
+        "avg_damage": 0.08124999999999999,
+        "avg_lap_time_ms": 33310.0,
+        "avg_progress": 0.5493193767353223,
+        "avg_reward": 405.35977109615624,
+        "avg_steering_delta_abs_mean": 0.2924886231776327,
+        "avg_steps": 342.71875,
+        "best_lap_time_ms": 33040.0,
+        "finish_rate": 0.0625,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 1,
+          "finished": 2,
+          "off_track": 29
+        }
+      }
+    },
+    "sac-seed11": {
+      "actor_sha256": "68ae6b06fcc280503bf013e8a7fd23ce787374c9b5a01d7b33d520c81e437262",
+      "canonical_episodes": 32,
+      "canonical_finishes": 7,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "diagnostic_only": false,
+      "eligible": true,
+      "evaluation_dir": "evaluations/20260925T030142060474Z_pixel-rlpd-long-horizon-followup-v1-confirmation",
+      "manifest_sha256": "93abb7f25fbc7f43de837c1448b81c5d028a990f1e1fe50ae3a35f730b562c69",
+      "operational_failures": 0,
+      "partition": "confirmation",
+      "pointer": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/confirmation-sac-seed11.json",
+      "pointer_sha256": "293382787dcaaf11ee8f81ab78da11d684ae193986248db399348c08542eb2d1",
+      "status": "complete",
+      "summary": {
+        "avg_damage": 0.2625,
+        "avg_lap_time_ms": 35017.142857142855,
+        "avg_progress": 0.653393631123103,
+        "avg_reward": 503.7465254839353,
+        "avg_steering_delta_abs_mean": 0.26790433446876705,
+        "avg_steps": 357.0,
+        "best_lap_time_ms": 30440.0,
+        "finish_rate": 0.21875,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 3,
+          "finished": 7,
+          "off_track": 22
+        }
+      }
+    }
+  },
+  "confirmation_gate": "pass",
+  "confirmation_opened": true,
+  "confirmation_recovery_path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/confirmation-recovery-execution.json",
+  "confirmation_seed_gates": {
+    "10": {
+      "pass": true,
+      "rlpd_finishes": 3,
+      "sac_finishes": 2
+    },
+    "11": {
+      "pass": true,
+      "rlpd_finishes": 12,
+      "sac_finishes": 7
+    }
+  },
+  "derivation_note": "The native custom evaluator requires one candidate in each preceding-partition receipt. V3 screen evaluated eight actors in one immutable receipt; selected summary rows and exact archived actors are projected into labeled one-actor lineage bundles from those existing rows, with parent pointer/summary/manifest hashes. No screen observations were rerun or modified.",
+  "format": "haic-rlpd-long-horizon-followup-result-v1",
+  "official_performance_claim": false,
+  "prior_dataset_sha256": "5f3aea92e76fad772b15be5c601d57e4f3248278bda24e1e094f7aac5d9f27a3",
+  "protocol_sha256": "2960b561f24f6dc23a42dd0d49fd1ef7a5a0864e0e3f7543cb6920bc465a4329",
+  "recovery_script_sha256": "0d1a1c3d28af69a0a32476b8ddf6f9122aea66a2bc758c6373a0d1df37633580",
+  "screen_gate": "pass",
+  "screen_results": {
+    "rlpd-seed10": {
+      "actor_sha256": "ed4500119bffd058b9afc26c96010e864c6d76060829a755995cfbdcf540c9bf",
+      "arm": "rlpd",
+      "avg_lap_time_ms": 43348.57142857143,
+      "avg_progress": 0.5684644384976818,
+      "candidate_id": "ed4500119bffd058-be3de013-4bfab496-288223b0",
+      "canonical_finishes": 7,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "eligible": true,
+      "environment_steps": 65536,
+      "learner_checkpoint_sha256": "a11fc0ecd579693df039fe43975fcfb56ea83bb88137922daf1f088b2a2524b7",
+      "operational_failures": 0,
+      "source_path": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed10/checkpoints/step-000065536/actor.pt",
+      "summary": {
+        "avg_damage": 0.225,
+        "avg_lap_time_ms": 43348.57142857143,
+        "avg_progress": 0.5684644384976818,
+        "avg_reward": 401.9878460853516,
+        "avg_steering_delta_abs_mean": 0.2750905938446522,
+        "avg_steps": 399.75,
+        "best_lap_time_ms": 39840.0,
+        "finish_rate": 0.2916666666666667,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 1,
+          "finished": 7,
+          "off_track": 16
+        }
+      },
+      "training_seed": 10
+    },
+    "rlpd-seed11": {
+      "actor_sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+      "arm": "rlpd",
+      "avg_lap_time_ms": 46895.0,
+      "avg_progress": 0.7644057509863234,
+      "candidate_id": "f5c048d9cff71170-be3de013-4bfab496-288223b0",
+      "canonical_finishes": 12,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "eligible": true,
+      "environment_steps": 131072,
+      "learner_checkpoint_sha256": "b68ef5ad755b5b8504d9d9391bb96894572e8886bb1a3baa442ef1f4f783311a",
+      "operational_failures": 0,
+      "source_path": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/actor.pt",
+      "summary": {
+        "avg_damage": 0.09999999999999999,
+        "avg_lap_time_ms": 46895.0,
+        "avg_progress": 0.7644057509863234,
+        "avg_reward": 552.1208252406501,
+        "avg_steering_delta_abs_mean": 0.2978279509892066,
+        "avg_steps": 514.4166666666666,
+        "best_lap_time_ms": 42760.0,
+        "finish_rate": 0.5,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 1,
+          "finished": 12,
+          "off_track": 11
+        }
+      },
+      "training_seed": 11
+    },
+    "sac-seed10": {
+      "actor_sha256": "fd06d1110ca2e5b769550288292dc56dbe20c7bae7b8249876470284d2d91ee3",
+      "arm": "sac",
+      "avg_lap_time_ms": 35853.333333333336,
+      "avg_progress": 0.4958769560325524,
+      "candidate_id": "fd06d1110ca2e5b7-be3de013-4bfab496-288223b0",
+      "canonical_finishes": 3,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "eligible": true,
+      "environment_steps": 131072,
+      "learner_checkpoint_sha256": "d2b625ba65e1ea4583f720ceb6bd5c12081d9bc175868e4b95ecbcdcc542a7b0",
+      "operational_failures": 0,
+      "source_path": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/sac-seed10/checkpoints/step-000131072/actor.pt",
+      "summary": {
+        "avg_damage": 0.11666666666666665,
+        "avg_lap_time_ms": 35853.333333333336,
+        "avg_progress": 0.4958769560325524,
+        "avg_reward": 364.67536362022526,
+        "avg_steering_delta_abs_mean": 0.2779467726747195,
+        "avg_steps": 311.5,
+        "best_lap_time_ms": 34440.0,
+        "finish_rate": 0.125,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 2,
+          "finished": 3,
+          "off_track": 19
+        }
+      },
+      "training_seed": 10
+    },
+    "sac-seed11": {
+      "actor_sha256": "68ae6b06fcc280503bf013e8a7fd23ce787374c9b5a01d7b33d520c81e437262",
+      "arm": "sac",
+      "avg_lap_time_ms": 30960.0,
+      "avg_progress": 0.5303965788179529,
+      "candidate_id": "68ae6b06fcc28050-be3de013-4bfab496-288223b0",
+      "canonical_finishes": 3,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "eligible": true,
+      "environment_steps": 131072,
+      "learner_checkpoint_sha256": "4365d7597964eea3add5282713d57c5836c9f8a6c9836bc2a7255099b4d2a6c2",
+      "operational_failures": 0,
+      "source_path": "/workspace/HAIC-Money/runs/20260924-pixel-rlpd-long-horizon-followup-v1/sac-seed11/checkpoints/step-000131072/actor.pt",
+      "summary": {
+        "avg_damage": 0.3416666666666666,
+        "avg_lap_time_ms": 30960.0,
+        "avg_progress": 0.5303965788179529,
+        "avg_reward": 397.66165307229016,
+        "avg_steering_delta_abs_mean": 0.2641794824351867,
+        "avg_steps": 315.3333333333333,
+        "best_lap_time_ms": 29740.0,
+        "finish_rate": 0.125,
+        "n_episodes": 24,
+        "termination_reasons": {
+          "crash": 4,
+          "finished": 3,
+          "off_track": 17
+        }
+      },
+      "training_seed": 11
+    }
+  },
+  "screen_selection_path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/screen-selection-projections.json",
+  "screen_selection_sha256": "556525c095ee8337f544c528367a407c24249e56a574c0063c598c1c5fee7b48",
+  "study_id": "pixel-rlpd-long-horizon-followup-v1"
+}
