@@ -29,10 +29,11 @@ _EDGES: dict[WorkflowState, frozenset[WorkflowState]] = {
     WorkflowState.EVALUATE: frozenset({
         WorkflowState.ADVANCE, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT,
     }),
-    WorkflowState.ADVANCE: frozenset({WorkflowState.RELEASE_IF_GATE_PASS}),
-    WorkflowState.REJECT: frozenset({WorkflowState.STOPPED}),
-    WorkflowState.REVISE: frozenset({WorkflowState.STOPPED}),
-    WorkflowState.PIVOT: frozenset({WorkflowState.STOPPED}),
+    WorkflowState.ADVANCE: frozenset({WorkflowState.GATE_REVIEW}),
+    WorkflowState.REJECT: frozenset({WorkflowState.GATE_REVIEW}),
+    WorkflowState.REVISE: frozenset({WorkflowState.GATE_REVIEW}),
+    WorkflowState.PIVOT: frozenset({WorkflowState.GATE_REVIEW}),
+    WorkflowState.GATE_REVIEW: frozenset({WorkflowState.RELEASE_IF_GATE_PASS, WorkflowState.STOPPED}),
     WorkflowState.RELEASE_IF_GATE_PASS: frozenset({WorkflowState.STOPPED}),
 }
 
@@ -54,6 +55,7 @@ def transition(
     plan_hash: str,
     approvals: Sequence[Approval],
     gates: Sequence[GateResult],
+    evaluation_outcome: WorkflowState | None = None,
 ) -> WorkflowState:
     """Accept only a legal edge with its recorded approval and release gates."""
     if not isinstance(current, WorkflowState) or not isinstance(requested, WorkflowState):
@@ -67,10 +69,14 @@ def transition(
     ):
         raise ApprovalError(f"{required_stage} approval for exact plan hash is required")
 
-    if requested is WorkflowState.RELEASE_IF_GATE_PASS:
+    if requested is WorkflowState.GATE_REVIEW or current is WorkflowState.GATE_REVIEW:
         names = [result.name for result in gates]
         if len(names) != len(_REQUIRED_GATES) or set(names) != _REQUIRED_GATES:
-            raise GateError("release requires exactly the three registered gates")
+            raise GateError("gate review requires exactly the three registered gates")
+
+    if requested is WorkflowState.RELEASE_IF_GATE_PASS:
+        if evaluation_outcome is not WorkflowState.ADVANCE:
+            raise GateError("release requires an ADVANCE evaluation outcome")
         if any(result.status is not GateStatus.PASS for result in gates):
             # No validated configuration exemption is accepted by this interface.
             raise GateError("each release gate must PASS")

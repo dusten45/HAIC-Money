@@ -40,6 +40,7 @@ class WorkflowState(str, Enum):
     REJECT = "REJECT"
     REVISE = "REVISE"
     PIVOT = "PIVOT"
+    GATE_REVIEW = "GATE_REVIEW"
     RELEASE_IF_GATE_PASS = "RELEASE_IF_GATE_PASS"
 
 
