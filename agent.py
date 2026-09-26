@@ -126,10 +126,11 @@ class _ForwardCorridorController:
     # planner still sees it and can begin braking early.
     STRAIGHT_SWEEP_DEADBAND = 3.25
     MAX_STEER_STEP = 0.07
-    # The previous 0.08 cap made clear-road progress unnecessarily slow.  A
-    # modest increase is safe because the bend, hazard, and speed watchdog
-    # branches below still reduce gas independently.
-    MAX_GAS = 0.14
+    # F1-style pace comes from carrying speed only on a confirmed straight;
+    # the curve, hazard, and speed watchdog branches below still reduce gas
+    # independently.  Keep this cap modest because the camera controller has
+    # no wheel-speed or tyre-temperature telemetry.
+    MAX_GAS = 0.16
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
     # A road rendered by the official environment is dark gray (~0.40 after
@@ -183,6 +184,7 @@ class _ForwardCorridorController:
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
+    STRAIGHT_CRUISE_SPEED = 68.0
     # A compact bright component is treated as a dynamic occupancy rather
     # than as a binary "steer now" cue.  These speed limits are a cheap
     # camera-only approximation of a time-to-collision envelope: as the
@@ -193,7 +195,7 @@ class _ForwardCorridorController:
     OBSTACLE_MID_SPEED = 30.0
     OBSTACLE_CLOSE_SPEED = 18.0
 
-    def __init__(self, *, cruise_speed: float = 64.0) -> None:
+    def __init__(self, *, cruise_speed: float = STRAIGHT_CRUISE_SPEED) -> None:
         self.cruise_speed = float(cruise_speed)
         self._obstacle_side = 0.0
         self._obstacle_missing = 0
@@ -306,12 +308,70 @@ class _ForwardCorridorController:
             spans[row] = (float(run[0]), float(run[-1]))
         return centers, spans
 
-    def _remember_road(self, centers: dict[int, float]) -> None:
+    @classmethod
+    def _safe_center_at(
+        cls,
+        row: float,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None,
+    ) -> float:
+        """Return a preview center clipped to the vehicle-safe road envelope."""
+        center = cls._center_at(row, centers)
+        if not spans:
+            return center
+        span = cls._span_at(row, spans)
+        if span is None:
+            return center
+        left = span[0] + cls.MIN_EDGE_CLEARANCE
+        right = span[1] - cls.MIN_EDGE_CLEARANCE
+        if left > right:
+            return (span[0] + span[1]) * 0.5
+        return float(np.clip(center, left, right))
+
+    @classmethod
+    def _track_bound_steering(
+        cls,
+        steering: float,
+        spans: dict[int, tuple[float, float]],
+    ) -> float:
+        """Prevent a command from pointing outside the near-car envelope.
+
+        The camera centre is the projected vehicle centre.  If the visible
+        asphalt envelope is already to one side, an outward steering command
+        cannot be a valid racing line: it would move the body farther over the
+        track edge.  Bias toward the widest safe interval and suppress only
+        the outward component, leaving the normal rate limiter to smooth the
+        transition.
+        """
+        if not spans:
+            return float(steering)
+        near_span = spans.get(54) or spans.get(50)
+        if near_span is None:
+            return float(steering)
+        left = near_span[0] + cls.MIN_EDGE_CLEARANCE
+        right = near_span[1] - cls.MIN_EDGE_CLEARANCE
+        if left > right:
+            target = (near_span[0] + near_span[1]) * 0.5
+        else:
+            target = float(np.clip(cls.IMAGE_CENTER, left, right))
+        envelope_error = target - cls.IMAGE_CENTER
+        if abs(envelope_error) <= 0.25:
+            return float(steering)
+        correction = float(np.clip(0.035 * envelope_error, -0.24, 0.24))
+        if steering * envelope_error < 0.0:
+            steering = 0.0
+        return float(0.55 * steering + 0.45 * correction)
+
+    def _remember_road(
+        self,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
+    ) -> None:
         """Store a short look-ahead road estimate for recovery steering."""
         if not centers:
             return
-        near = self._center_at(54.0, centers)
-        far = self._center_at(34.0, centers)
+        near = self._safe_center_at(54.0, centers, spans)
+        far = self._safe_center_at(34.0, centers, spans)
         self._last_road_center = float(0.35 * near + 0.65 * far)
         self._last_road_heading = float(far - near)
         error = self._last_road_center - self.IMAGE_CENTER
@@ -630,21 +690,24 @@ class _ForwardCorridorController:
                 # look-ahead direction and a bounded alternating search.
                 recovery_centers, _recovery_spans = self._wide_road_geometry(frame)
                 if len(recovery_centers) >= 2:
-                    self._remember_road(recovery_centers)
+                    self._remember_road(recovery_centers, _recovery_spans)
                     return self._lost_road_action(recovery_centers)
                 return self._lost_road_action()
             return np.zeros(3, dtype=np.float32)
         self.has_seen_road = True
         self._recovery_frames = 0
-        self._remember_road(centers)
-        far = centers.get(42, self.IMAGE_CENTER)
-        near = centers.get(54, self.IMAGE_CENTER)
+        self._remember_road(centers, spans)
+        # Use the far preview for turn anticipation, but clip both preview
+        # points to the visible vehicle-safe envelope.  This prevents a noisy
+        # centre estimate from asking the car's centre to cross the track edge.
+        far = self._safe_center_at(42.0, centers, spans)
+        near = self._safe_center_at(54.0, centers, spans)
         road_sweep = self._road_sweep(centers)
         # Compare the farthest visible preview with the mid-preview as well
         # as the near edge.  This catches a bend while it is still several
         # camera rows ahead, before a large steering command is necessary.
-        preview_far = self._center_at(22.0, centers)
-        preview_mid = self._center_at(42.0, centers)
+        preview_far = self._safe_center_at(22.0, centers, spans)
+        preview_mid = self._safe_center_at(42.0, centers, spans)
         curve_entry_sweep = abs(preview_far - preview_mid)
         curve_strength = max(road_sweep, curve_entry_sweep)
         curve_mode = curve_strength >= self.CURVE_TRIGGER_SWEEP
@@ -740,6 +803,12 @@ class _ForwardCorridorController:
                 # only the side that returns toward the observed asphalt.
                 steering = 0.24 * corridor_hint
                 steer_limit = min(steer_limit, 0.28)
+
+        # F1 track-limit discipline: the near vehicle envelope is a hard
+        # geometric constraint.  Apply it after obstacle/curve proposals so
+        # a fast racing-line cue can never point farther toward the green
+        # shoulder or an unseen edge.
+        steering = self._track_bound_steering(steering, spans)
 
         if self._target_speed is not None:
             # Retain a slower target while entering a bend, but let a clear

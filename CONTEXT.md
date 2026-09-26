@@ -122,7 +122,7 @@ custom tracks remain selectable in the same UI.
 The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
 controller at inference time. It estimates the visible road centerline and asphalt
 spans, rate-limits steering, snaps near-centered straight segments to zero steering,
-regulates speed from the HUD (clear-road cruise target 64, throttle cap 0.14),
+regulates speed from the HUD (clear-road cruise target 68, throttle cap 0.16),
 and emits mutually exclusive throttle or brake.
 Because the official RGB input is converted to grayscale, green background and orange
 obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
@@ -140,7 +140,7 @@ is lost, and steers toward the remembered/look-ahead road instead of decaying to
 straight indefinitely. Opposite steering must first pass through zero, and a
 one-step steering change is limited to 0.07. The heading contribution is ignored
 when it would oppose a meaningful look-ahead center error, while clear-road gas is
-raised to 0.14 on a confirmed clear road and speed-target recovery is faster after a hazard.
+raised to 0.16 on a confirmed clear road and speed-target recovery is faster after a hazard.
 Even a distant compact obstacle cuts gas immediately. Curve handling
 now measures the centerline over a longer preview, applies an entry-speed penalty
 before the near edge turns, and scales throttle down continuously with preview
@@ -159,6 +159,15 @@ obstacle distance target uses a TTC-like piecewise limit (47/30/18 speed units
 from far to close) instead of a binary near/far switch. Explicit action-contract
 payloads, DrQ actors, and the HAIC visual-policy runtime keep their recorded model
 paths.
+
+The F1-inspired update adds an explicit near-row vehicle envelope: each preview
+centre is clipped to the visible asphalt span minus the edge-clearance margin,
+and the final steering proposal suppresses any component pointing outward from
+that envelope. This treats the car centre as a geometric state that must remain
+on track, while still allowing higher straight-line cruise and re-acceleration
+after a corner. The entry speed planner keeps braking before the turn and leaves
+the bounded steering rate in place through the apex; no simulator performance
+evaluation was run for this update.
 
 The forward-progress adjustment follows the environment's continuous action and
 finish semantics documented by Gymnasium, while using the practical separation of a

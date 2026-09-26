@@ -203,6 +203,22 @@ class TestVisionCorridorAgent(unittest.TestCase):
         straight = controller.act(_observation())
         self.assertLess(abs(float(straight[0])), 0.02)
 
+    def test_forward_controller_clips_preview_to_vehicle_safe_track_envelope(self):
+        from agent import _ForwardCorridorController
+
+        spans = {54: (50.0, 72.0), 42: (48.0, 70.0)}
+        centers = {54: 50.0, 42: 49.0}
+
+        safe_near = _ForwardCorridorController._safe_center_at(54.0, centers, spans)
+        outward_left = _ForwardCorridorController._track_bound_steering(-0.2, spans)
+        outward_right = _ForwardCorridorController._track_bound_steering(
+            0.2, {54: (10.0, 32.0), 50: (10.0, 32.0)}
+        )
+
+        self.assertAlmostEqual(safe_near, 57.0, places=5)
+        self.assertGreater(outward_left, 0.0)
+        self.assertLess(outward_right, 0.0)
+
     def test_forward_controller_does_not_countersteer_before_a_low_curvature_turn(self):
         from agent import _ForwardCorridorController
 
