@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "project": {
+    "id": "haic-money",
+    "name": "2026 HAIC CarRacing research",
+    "scope": "haic-only"
+  },
+  "paths": {
+    "run_root": "runs/haic-research-v2",
+    "artifact_root": "artifacts/haic-research-v2",
+    "pdf_root": "output/pdf",
+    "legacy_paths": ["runs", "artifacts/haic", "submissions", "report.pdf"]
+  },
+  "official_sources": [
+    {"precedence": 1, "id": "competition_site", "url": "https://ships-duo-ethical-saver.trycloudflare.com/"},
+    {"precedence": 2, "id": "participants_repository", "url": "https://github.com/2026-HAIC/Participants"},
+    {"precedence": 3, "id": "local_source_mirror", "path": "COMPETITION_INFO.md"},
+    {"precedence": 4, "id": "historical_evidence", "path": "RESULTS.md"}
+  ],
+  "workflow": {
+    "default_mode": "plan-only",
+    "states": ["STOPPED", "DISCOVER", "HYPOTHESIZE", "DESIGN_PENDING_APPROVAL", "IMPLEMENT_PENDING_APPROVAL", "EXECUTE_PENDING_APPROVAL", "EVALUATE", "ADVANCE", "REJECT", "REVISE", "PIVOT", "RELEASE_IF_GATE_PASS"],
+    "separate_approval_stages": ["design", "implementation", "execution"],
+    "pivot_after_valid_non_improving_cycles": 3,
+    "gates": ["rule_compliance", "mechanism_activation", "competitive_or_product_outcome"]
+  },
+  "search": {
+    "min_independent_directions": 4,
+    "max_candidates_per_batch": 8,
+    "max_candidates_per_direction": 2,
+    "threshold_sweep_requires_mechanism_activation": true
+  },
+  "metrics": {
+    "primary": "completion_rate",
+    "tie_breakers": ["median_finished_lap_ms", "mean_incomplete_progress", "p90_finished_lap_ms", "collisions", "damage", "act_latency_p95_ms"],
+    "official_score_is_separate": true
+  },
+  "splits": {
+    "ids": ["train", "tune", "held_out", "confirmation", "blind", "official"],
+    "protected_ids": ["confirmation", "blind"],
+    "blind_tuning_allowed": false,
+    "consumed_confirmation_reusable_as_fresh": false
+  },
+  "commands": {
+    "default_mode": "plan-only",
+    "allow_shell": false,
+    "profiles": {
+      "train_policy": {"module": "training.train_policy", "operation": "local_training", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
+      "evaluate_closed_loop": {"module": "training.evaluate_closed_loop", "operation": "local_evaluation", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
+      "package_submission": {"module": "training.package_submission", "operation": "local_packaging", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
+      "benchmark_corridor_diagnostic": {"module": "training.benchmark_corridor", "operation": "local_diagnostic", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution", "sota_eligible": false}
+    }
+  }
+}

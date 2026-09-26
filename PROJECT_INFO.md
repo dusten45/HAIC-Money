@@ -1,0 +1,9 @@
+# HAIC project information
+
+The project develops an agent for the 2026 HAIC CarRacing challenge. The research endpoint is a rule-compliant, independently evaluated submission candidate that completes the registered tracks reliably. The internal selection objective is completion rate on a matched, preregistered evaluation set. When completion rates tie, compare median finished lap time, mean incomplete progress, P90 finished lap time, collisions, damage, and p95 action latency, in that order. This internal ordering is separate from official scoring.
+
+For current competition facts, follow the source precedence in [AGENTS.md](AGENTS.md) and check the [competition website](https://ships-duo-ethical-saver.trycloudflare.com/) and [official Participants repository](https://github.com/2026-HAIC/Participants) before external actions. [COMPETITION_INFO.md](COMPETITION_INFO.md) is the detailed local summary, not an official substitute. [RESTRICTIONS.md](RESTRICTIONS.md) contains hard boundaries. Log source checks and claims in [docs/sources/INDEX.md](docs/sources/INDEX.md).
+
+The supported workflow is plan-only by default. `harness.config.json` registers local HAIC profiles for training, closed-loop evaluation, submission packaging, and a diagnostic corridor benchmark. Each execution needs its own approved plan hash and an explicit execution approval. Official submission, model confirmation, and upload remain separate user-authorized actions. The v2 workflow writes runs to `runs/haic-research-v2/<run-id>/`, artifacts to `artifacts/haic-research-v2/<run-id>/`, and new report PDFs to `output/pdf/`.
+
+Existing legacy results remain historical references. New experiments go in [docs/experiments/INDEX.md](docs/experiments/INDEX.md), agent reports use [docs/handoffs/REPORT_TEMPLATE.md](docs/handoffs/REPORT_TEMPLATE.md), and the current evidence summary is [docs/report.md](docs/report.md). A local candidate is not an official submission.
