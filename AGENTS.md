@@ -23,7 +23,7 @@ STOPPED
 
 `STOPPED` is the default. Design, implementation, and execution each require a separate approval record tied to the exact plan revision/hash. Reading documents does not authorize training, evaluation, packaging, or submission. The CLI defaults to plan-only. Only registered local HAIC command profiles may execute after their approval gate. Official submission, model confirmation, and competition-site upload are separate external actions requiring explicit user authorization immediately before execution; they are not CLI operations.
 
-After `EVALUATE`, only `ADVANCE` may enter `RELEASE_IF_GATE_PASS`; that transition requires all three gates to pass and then returns to `STOPPED`. `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. A revised or pivoted effort begins a new cycle at `DISCOVER` with a new plan hash and fresh approvals. `PIVOT` preserves the prior checkpoint.
+After `EVALUATE`, only `ADVANCE` may enter `RELEASE_IF_GATE_PASS`; that transition requires all three gates to pass and then returns to `STOPPED`. The current config defines no `NOT_APPLICABLE` release exemptions, so `NOT_APPLICABLE` never passes a release gate. Any future exemption requires an explicit validated config value and transition support; rule compliance cannot be exempted. `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. A revised or pivoted effort begins a new cycle at `DISCOVER` with a new plan hash and fresh approvals. `PIVOT` preserves the prior checkpoint.
 
 ## Central coordination
 

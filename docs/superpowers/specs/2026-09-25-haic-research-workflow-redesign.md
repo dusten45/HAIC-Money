@@ -196,6 +196,8 @@ Teacher, smoke, fixed-actor 진단은 제출 후보의 완주율과 별도로 �
 
 세 gate는 `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE` 중 하나다.
 
+현재 설정에는 `NOT_APPLICABLE` 릴리스 면제 항목이 없으므로 릴리스는 세 gate 모두 `PASS`일 때만 가능하다. 미래에 면제가 필요하면 명시적 설정 검증과 transition API 지원을 함께 추가해야 하며, 규칙 준수 gate는 면제할 수 없다.
+
 - `rule_compliance`
 - `mechanism_activation`
 - `competitive_or_product_outcome`
