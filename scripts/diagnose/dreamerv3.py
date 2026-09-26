@@ -6,7 +6,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from dreamer_v3 import DreamerV3Agent, DreamerV3Config, symexp, symlog
+from dreamer_v3 import DreamerV3Agent, DreamerV3Config, symlog
 
 
 def diagnose_world_model(checkpoint_path: Path, output_path: Path | None = None) -> dict:
@@ -26,83 +26,87 @@ def diagnose_world_model(checkpoint_path: Path, output_path: Path | None = None)
     agent.actor.eval()
     agent.critic.eval()
 
-    if agent.replay.size < agent.config.seq_len + 1:
-        raise ValueError(f"replay has only {agent.replay.size} steps, need at least {agent.config.seq_len + 1}")
+    transition_count = (
+        1 if agent.config.short_episode_fraction else
+        agent.config.seq_len if agent.config.reset_start_fraction
+        else agent.config.burnin_steps + agent.config.seq_len
+    )
+    if agent.replay.size < transition_count:
+        raise ValueError(f"replay has only {agent.replay.size} steps, need at least {transition_count}")
 
-    # Sample batch of sequences
-    batch = agent.replay.sample_sequence(batch_size=16, seq_len=agent.config.seq_len)
+    # Sample a same-episode context prefix followed by scored transitions.
+    batch = agent.replay.sample_sequence(
+        batch_size=16,
+        seq_len=agent.config.seq_len,
+        burnin=agent.config.burnin_steps,
+        reset_start_fraction=agent.config.reset_start_fraction,
+        short_episode_fraction=agent.config.short_episode_fraction,
+    )
     obs = batch["observations"].to(device)
     actions = batch["actions"].to(device)
     rewards = batch["rewards"].to(device)
     is_first = batch["is_first"].to(device)
     is_terminal = batch["is_terminal"].to(device)
 
-    B, T = obs.shape[:2]
+    B, observation_count = obs.shape[:2]
+    sampled_transition_count = actions.shape[1]
+    burnin = batch["effective_burnin"]
+    T = batch["effective_seq_len"]
+    if sampled_transition_count != burnin + T or observation_count != sampled_transition_count + 1:
+        raise ValueError("replay must provide one successor observation per transition sequence")
 
     with torch.no_grad():
-        # 1. Observation encoding
-        embeds = agent.encoder(obs.view(B * T, 4, 84, 84)).view(B, T, -1)
+        # 1. Observation encoding, including the last transition result.
+        embeds = agent.encoder(
+            obs.view(B * observation_count, 4, 84, 84)
+        ).view(B, observation_count, -1)
 
-        # 2. RSSM Sequence Rollout
-        h = torch.zeros(B, agent.rssm.hidden_dim, device=device)
-        z = torch.zeros(B, agent.rssm.stoch_dim, device=device)
-        prev_a = torch.zeros(B, 3, device=device)
+        # State t is posterior-conditioned on obs_t; action/reward labels target t+1.
+        states, pr_logits_stack, po_logits_stack = agent.rssm.observe_sequence(
+            embeds, actions, is_first, burnin=burnin
+        )
+        learning_states = states[:, burnin:burnin + T + 1]
+        learning_observations = obs[:, burnin:burnin + T + 1]
+        learning_rewards = rewards[:, burnin:]
+        learning_terminals = is_terminal[:, burnin:]
+        learning_prior_logits = pr_logits_stack[:, burnin:burnin + T + 1]
+        learning_posterior_logits = po_logits_stack[:, burnin:burnin + T + 1]
 
-        h_seq, z_seq = [], []
-        pr_logits_seq, po_logits_seq = [], []
-
-        for t in range(T):
-            first_mask = is_first[:, t].unsqueeze(-1).float()
-            h = h * (1.0 - first_mask)
-            z = z * (1.0 - first_mask)
-            prev_a = prev_a * (1.0 - first_mask)
-
-            prior_h, prior_z, pr_logits, pr_probs = agent.rssm.step_prior(h, z, prev_a)
-            post_h, post_z, po_logits, po_probs = agent.rssm.step_post(h, z, prev_a, embeds[:, t])
-
-            h, z = post_h, post_z
-            prev_a = actions[:, t]
-
-            h_seq.append(h)
-            z_seq.append(z)
-            pr_logits_seq.append(pr_logits)
-            po_logits_seq.append(po_logits)
-
-        h_stack = torch.stack(h_seq, dim=1)
-        z_stack = torch.stack(z_seq, dim=1)
-        states = torch.cat([h_stack, z_stack], dim=-1)
-
-        # 3. Observation reconstruction quality
-        rec_obs = agent.decoder(states.view(B * T, -1)).view(B, T, 4, 84, 84)
-        obs_mse = F.mse_loss(rec_obs, obs).item()
+        # 3. Predict the newest-frame change; stack shifting is deterministic.
+        result_states = learning_states[:, 1:]
+        predicted_delta = agent.decoder(
+            result_states.reshape(B * T, -1)
+        ).view(B, T, 1, 84, 84)
+        previous_frame = learning_observations[:, :-1, -1:]
+        target_frame = learning_observations[:, 1:, -1:]
+        predicted_frame = (previous_frame + predicted_delta).clamp(0.0, 1.0)
+        obs_mse = F.mse_loss(predicted_frame, target_frame).item()
 
         # 4. Reward prediction quality
-        pred_reward_sym = agent.reward_head(states).squeeze(-1)
-        pred_reward = symexp(pred_reward_sym)
-        target_reward_sym = symlog(rewards)
+        pred_reward = agent.reward_head.pred(result_states)
+        pred_reward_sym = symlog(pred_reward)
+        target_reward_sym = symlog(learning_rewards)
         reward_sym_mse = F.mse_loss(pred_reward_sym, target_reward_sym).item()
-        reward_mae = F.l1_loss(pred_reward, rewards).item()
+        reward_mae = F.l1_loss(pred_reward, learning_rewards).item()
 
         # Correlation between predicted and true rewards
         pred_flat = pred_reward.view(-1).cpu().numpy()
-        true_flat = rewards.view(-1).cpu().numpy()
+        true_flat = learning_rewards.reshape(-1).cpu().numpy()
         if np.std(pred_flat) > 1e-6 and np.std(true_flat) > 1e-6:
             reward_corr = float(np.corrcoef(pred_flat, true_flat)[0, 1])
         else:
             reward_corr = 0.0
 
         # 5. Continuation / Terminal prediction
-        pred_cont_logits = agent.continue_head(states).squeeze(-1)
+        pred_cont_logits = agent.continue_head(result_states).squeeze(-1)
         pred_cont_prob = torch.sigmoid(pred_cont_logits)
-        cont_targets = (1.0 - is_terminal.float())
+        cont_targets = (1.0 - learning_terminals.float())
         cont_bce = F.binary_cross_entropy_with_logits(pred_cont_logits, cont_targets).item()
         cont_acc = ((pred_cont_prob >= 0.5) == (cont_targets >= 0.5)).float().mean().item()
 
         # 6. KL divergence between prior and posterior
-        pr_logits_stack = torch.stack(pr_logits_seq, dim=1)
-        po_logits_stack = torch.stack(po_logits_seq, dim=1)
-        _, pr_probs = agent.rssm.get_dist(pr_logits_stack)
-        _, po_probs = agent.rssm.get_dist(po_logits_stack)
+        _, pr_probs = agent.rssm.get_dist(learning_prior_logits)
+        _, po_probs = agent.rssm.get_dist(learning_posterior_logits)
         eps = 1e-7
         po_p = po_probs.clamp(min=eps)
         pr_p = pr_probs.clamp(min=eps)
@@ -110,7 +114,7 @@ def diagnose_world_model(checkpoint_path: Path, output_path: Path | None = None)
         mean_kl = kl.mean().item()
 
         # 7. Latent imagination stability
-        flat_states = states.view(B * T, -1)
+        flat_states = learning_states[:, :-1].reshape(B * T, -1)
         sample_size = min(B * T, 64)
         perm = torch.randperm(B * T, device=device)[:sample_size]
         init_s = flat_states[perm]
@@ -127,8 +131,8 @@ def diagnose_world_model(checkpoint_path: Path, output_path: Path | None = None)
             im_h, im_z, _, _ = agent.rssm.step_prior(im_h, im_z, act)
             next_s = torch.cat([im_h, im_z], dim=-1)
 
-            r = symexp(agent.reward_head(next_s).squeeze(-1))
-            v = symexp(agent.critic(next_s).squeeze(-1))
+            r = agent.reward_head.pred(next_s)
+            v = agent.critic.pred(next_s)
 
             im_states.append(next_s)
             im_rewards.append(r)
@@ -147,6 +151,11 @@ def diagnose_world_model(checkpoint_path: Path, output_path: Path | None = None)
             "environment_steps": agent.environment_steps,
             "gradient_steps": agent.gradient_steps,
             "world_model": {
+                "effective_burnin": burnin,
+                "effective_seq_len": T,
+                "reset_start_anchored": batch["reset_start_anchored"],
+                "short_episode_anchored": batch["short_episode_anchored"],
+                "terminal_label_count": int(is_terminal[:, burnin:].sum().item()),
                 "obs_reconstruction_mse": float(obs_mse),
                 "reward_symlog_mse": float(reward_sym_mse),
                 "reward_mae": float(reward_mae),
