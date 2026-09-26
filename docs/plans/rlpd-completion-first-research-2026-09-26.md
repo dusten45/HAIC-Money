@@ -44,10 +44,17 @@ verified on all 10,049 correlated decisions. Labels occupy four failed episodes
 on only three geometries, and continuous scores overlap finished controls. The
 [recorded gate decision](../../experiments/rlpd-g0-pixel-motion-v1-decision.json)
 therefore rejects a single scalar intervention threshold. A source-hashed,
-geometry-grouped offline visual representation-feasibility probe, with explicit
-positive-cluster coverage failure, is the next small research step before any
-RLPD-specific parity branch. The contacted comparison is not matched by actor
-or road; even a successful probe would not be a rescue result.
+geometry-grouped [frozen-encoder diagnostic probe](../../experiments/rlpd-visual-representation-probe-v2-result.json)
+has now completed one CPU head-only training iteration with j<20 burn-in and
+unchanged actor parameters. It reported 188/190 retrospective diagnostic
+low-speed decisions at the fixed cutoff, but ALL 188 true positives came from
+the two actor episodes on one geometry; no diagnostic geometry has a finished
+parent. The visual HUD displays true speed, so this probe does not establish
+optical-flow decoding, contact causation, useful trigger safety or rescue.
+First require independently supported positive and successful-parent diagnostic
+road coverage under a separate frozen protocol, then an RLPD-specific complete
+state/prefix parity and harmed-finish branch. The contacted comparison is not
+matched by actor or road; the G1 intervention remains unselected.
 
 ## 1. Recommendation
 
