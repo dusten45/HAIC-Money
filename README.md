@@ -867,6 +867,20 @@ python -m local_simulator.web --host 127.0.0.1 --port 8765 `
   --agents-root .haic-artifacts\agents
 ```
 
+Windows에서 `.venv\Scripts\python.exe`가 애플리케이션 제어 정책으로 차단되면
+프로젝트 루트의 우회 실행 스크립트를 사용하십시오. 이 스크립트는 먼저 정상적인
+프로젝트 가상환경을 시도하고, 차단된 경우 허용된 Python 3.11과 기존 `.venv`의
+패키지 디렉터리를 자동으로 연결합니다.
+
+```powershell
+.\start_local_simulator.ps1
+# 실행 정책까지 제한된 경우
+powershell -ExecutionPolicy Bypass -File .\start_local_simulator.ps1
+```
+
+다른 포트를 사용하려면 `-Port 8766`을 추가하고, 서버가 실행되는 동안에는 이
+터미널을 닫지 마십시오. 종료는 `Ctrl+C`입니다.
+
 브라우저의 `실행할 Agent` 목록에서 Agent를 고르고, 공식 track/seed 또는 자체 생성
 트랙을 설정한 뒤 `카메라 프레임 기록`을 켜고 `자동 주행`을 누르면 됩니다. 실행이
 끝나면 같은 화면에서 카메라, 궤적, 행동, 속도, 진행률, damage, 충돌을 재생할 수
