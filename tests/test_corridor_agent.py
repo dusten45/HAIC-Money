@@ -107,6 +107,25 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertIsNotNone(diagnostics["obstacle_y"])
         self.assertEqual(controller.diagnostics()["obstacle_encounters"], 1)
 
+    def test_forward_controller_detects_a_wider_projected_obstacle_shape(self):
+        from agent import _RacingLineController
+
+        frame = _observation(speed=48.0)[-1].copy()
+        # A near obstacle can occupy substantially more pixels than the
+        # smallest sprite.  It remains inside the road band but is deliberately
+        # wider/taller than the old component filter accepted.
+        frame[34:48, 35:50] = 0.68
+        observation = np.tile(frame[None, :, :], (4, 1, 1))
+        controller = _RacingLineController()
+        centers, spans = controller._road_geometry(frame)
+
+        obstacle = controller._nearest_obstacle(frame, centers, spans)
+        action = controller.act(observation)
+
+        self.assertIsNotNone(obstacle)
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+
     def test_obstacle_side_is_rechecked_while_distant_then_latched_nearby(self):
         from haic_agent.corridor_agent import VisionCorridorAgent
 

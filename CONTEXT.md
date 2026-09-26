@@ -177,6 +177,9 @@ the lateral move before urgency rises, while a sharp preview raises the entry
 brake demand, lowers the curve floor to 24 speed units, tightens the steering
 limit/slew, and reduces throttle. A final outward-sign gate runs after slew
 limiting so the last action cannot point across the visible track boundary.
+Obstacle components now accept a wider range of projected sizes and aspect ratios
+while rejecting the connected bright shoulder/background; the road-corridor gate
+still handles components that merge into the visible edge.
 
 The forward-progress adjustment follows the environment's continuous action and
 finish semantics documented by Gymnasium, while using the practical separation of a

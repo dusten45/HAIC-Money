@@ -574,12 +574,27 @@ class _ForwardCorridorController:
                                 stack.append((neighbor_x, neighbor_y))
                 box_width = max_x - min_x + 1
                 box_height = max_y - min_y + 1
-                if not (4 <= area <= 80 and 2 <= box_width <= 9 and 2 <= box_height <= 10):
+                # The official obstacle generator is deterministic per
+                # (track_id, seed), but its rendered projection changes with
+                # distance and curvature.  Do not assume one tiny sprite
+                # size: retain compact-to-wide components while rejecting the
+                # connected bright background/shoulder itself.
+                if not (
+                    4 <= area <= 360
+                    and 2 <= box_width <= 24
+                    and 2 <= box_height <= 28
+                ):
                     continue
                 center_x = sum_x / area
                 center_y = sum_y / area
                 road_center = self._center_at(center_y, centers)
-                if abs(center_x - road_center) <= 24.0:
+                visible_span = self._span_at(center_y, spans)
+                in_visible_corridor = visible_span is None or (
+                    visible_span[0] - 3.0
+                    <= center_x
+                    <= visible_span[1] + 3.0
+                )
+                if in_visible_corridor and abs(center_x - road_center) <= 28.0:
                     candidates.append((center_y, center_x, road_center))
         return max(candidates, key=lambda item: item[0]) if candidates else None
 
