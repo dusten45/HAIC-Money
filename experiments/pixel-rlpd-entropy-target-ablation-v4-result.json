@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "study_id": "pixel-rlpd-entropy-target-ablation-v4",
+  "protocol_path": "experiments/pixel-rlpd-entropy-target-ablation-v4.json",
+  "protocol_sha256": "86f525d4ac8ae1fb0af623e7824ed4970d30540cb74b1ca0423bc180cc9109d3",
+  "status": "aborted_before_screen_source_hash_gate",
+  "failure": {
+    "stage": "post-training source recheck before screen",
+    "type": "ValueError",
+    "message": "study source changed after freeze: docs/evaluation/generalization-policy.md",
+    "expected_generalization_policy_sha256": "89a2b3ab30ecda650c5ed4f7f51662b130b8db2f4bf18c06a1cc9ac607c7df7f",
+    "actual_generalization_policy_sha256": "60aae4be14a6906f59032d21fcc67e7fc99ef5854af2e566045fd79a37bc588d",
+    "cause": "the policy history was updated after V4 protocol freeze to record the retired V3 entropy allocation; the runner correctly rejected its changed source before invoking the screen evaluator"
+  },
+  "teacher_data": {
+    "manifest_path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data/manifest.json",
+    "sha256": "4a38ac414067037c3856b3bfb133a60d81aef283225097665bda9d4eee51ab95",
+    "decisions_spent": 16384,
+    "stored_decisions": 16265,
+    "complete_episodes": 37,
+    "distinct_geometry_finishes": 6,
+    "finish_geometry_seeds": [4000028003, 4000028004, 4000028008, 4000028009, 4000028012, 4000028031]
+  },
+  "student_training": {
+    "environment_steps_per_run": 131072,
+    "gradient_steps_per_run": 130072,
+    "runs": {
+      "rlpd-author-target-seed40": {
+        "episodes": 363,
+        "training_finishes": 19,
+        "target_entropy": -1.5,
+        "initial_logged_alpha": 0.0816874132,
+        "final_alpha": 0.1103599668,
+        "final_entropy": -1.1806719303,
+        "candidate_actor_sha256": [
+          "eb5c5b176a295a8224b908587b017b1799e50080417ae8d0f774d06605be5b92",
+          "f48d2202629a70cc23f7a9230360cea546db9d6e64f6e18ddb438e1c72d254cd"
+        ]
+      },
+      "rlpd-author-target-seed41": {
+        "episodes": 350,
+        "training_finishes": 32,
+        "target_entropy": -1.5,
+        "initial_logged_alpha": 0.0836513489,
+        "final_alpha": 0.1042342186,
+        "final_entropy": -1.9698736668,
+        "candidate_actor_sha256": [
+          "db61376a74b8a141e8745ecb696900e414fe4ecd31b3f26f4ee0cb4262b0df77",
+          "0015efa8d104b9b2be341ae4a549b179a5cc3889c2fc1513b09e99787059886e"
+        ]
+      },
+      "rlpd-positive-target-seed40": {
+        "episodes": 254,
+        "training_finishes": 3,
+        "target_entropy": 1.5,
+        "initial_logged_alpha": 0.1327152699,
+        "final_alpha": 0.7485398650,
+        "final_entropy": 1.6257615089,
+        "candidate_actor_sha256": [
+          "466249f096641199cc4fc825b4df181a041226e40d3f7d8beb85140e67dcd1df",
+          "3b0ca8c4c88cef33995b0348c454e2f6e94c93736b4fbea9cad138bacc0d17e4"
+        ]
+      },
+      "rlpd-positive-target-seed41": {
+        "episodes": 269,
+        "training_finishes": 2,
+        "target_entropy": 1.5,
+        "initial_logged_alpha": 0.1374364197,
+        "final_alpha": 0.7748195529,
+        "final_entropy": 1.2001465559,
+        "candidate_actor_sha256": [
+          "bc2675c33b061f53529bba960aa14526f8d3058c1a7ea959b047f0ef37996451",
+          "cbbafba90d6b96355f7c6bef07a67f2b6392b66cff1569d22b04b244ce65d80c"
+        ]
+      }
+    },
+    "interpretation": "These are in-sample diagnostics only. The positive target produced substantially higher final alpha and entropy and fewer training finishes in these four runs, but no held-out actor evaluation ran; neither target is selected."
+  },
+  "evaluation": {
+    "screen_cells_started": 0,
+    "screen_cells_reserved_not_consumed": true,
+    "confirmation_cells_started": 0,
+    "blind_cells_started": 0,
+    "conditioned_full_metrics_exist": false,
+    "official_performance_claim": false
+  },
+  "allocation_disposition": {
+    "teacher_training_seeds": "4000028001-4000028064",
+    "screen_seeds": "4000029001-4000029008",
+    "confirmation_seeds": "4000029011-4000029018",
+    "blind_seeds": "4000029021-4000029028",
+    "teacher_and_student_data_consumed": true,
+    "evaluation_partitions": "retired unopened; never relabel as fresh",
+    "future_experiment_reuse": "exclude the entire V4 teacher/student training geometry pool and all reserved V4 evaluation seeds"
+  },
+  "protocol_and_run_evidence": {
+    "v4_run_root": "runs/20260925-pixel-rlpd-entropy-target-ablation-v4",
+    "execution_record": "runs/20260925-pixel-rlpd-entropy-target-ablation-v4/execution.json",
+    "source_snapshots": "runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data/source and each arm/seed run source/"
+  }
+}

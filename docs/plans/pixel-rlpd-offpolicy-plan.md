@@ -2,10 +2,11 @@
 
 > Historical proposal (2026-09-24). The v2 pilot stopped at its two-seed gate;
 > a separately frozen long-horizon follow-up produced an internal candidate, and
-> a fresh entropy-target v4 ablation is running. The proposed budgets and
-> authorization below describe that dated plan, not a current protocol or
-> permission for an official action. See `docs/experiments/INDEX.md` and
-> `docs/context/current-state.md` for current outcomes and restrictions.
+> entropy-target v4 stopped before evaluation and the separately frozen v5
+> completed its internal blind. The proposed budgets and authorization below
+> describe that dated plan, not a current protocol or permission for an official
+> action. See `docs/experiments/INDEX.md` and `docs/context/current-state.md`
+> for current outcomes and restrictions.
 
 ## 상태와 판단 범위
 
@@ -99,7 +100,7 @@ theta_target <- (1-tau)*theta_target + tau*theta_Q   # encoder 및 10개 head �
 
 1. **첫 실제 수집/학습 전에** pilot 연구의 수정 완료 소스·의존성·환경 contract/해시, 교사 actor/data 수집 계획, 알고리즘 버전, 두 arm/seed와 고정 RNG, CPU runtime, 정확한 training 제외 집합, screen/confirmation/blind 전체 grid, 제외·중단·선택 규칙을 `experiments/`의 **불변 study JSON**에 동결한다. 아직 존재하지 않는 학생 actor hash는 넣지 않고 첫 export 후 영수증에 기록한다. full은 파일럿 screen을 재활용하지 않고 다른 source/config hash와 fresh 분할을 가진 **새 protocol**을 첫 full 수집 전 별도 동결한다. 학습용 사전 자료 재사용 여부/중복 제한도 full protocol에서 미리 결정한다.
    학습 재현성은 Git HEAD만으로 대체하지 않는다. `haic/algorithms/rlpd/`, `scripts/`의 해당 collector/trainer, `common_adapter.py`, 환경 `core/`/wrapper, `agent.py`, `evaluate_policy.py`, `package_submission.py` 및 잠금 의존성의 실제 사용 bytes/hash를 protocol/run snapshot에 남긴다. dirty worktree면 source별 해시와 해당 소스 사본을 봉인하고 비관련 변경을 학습 코드에 섞지 않는다. Offline dataset은 episode manifest와 content SHA, 교사 actor/export SHA, 수집 source/geometry 목록이 일치해야 소비한다. `runs/`의 checkpoint/export/episode 영수증, `evaluations/`의 runtime/actor snapshot, `experiments/`의 JSON 및 결과 영수증을 각자 자기 경로에 보관한다.
-2. `evaluate_policy.py`의 **custom `--protocol-file`**로 학생 CPU export를 모델별 screen에 평가한다. 현재 `.pt` 형식은 DrQ/Dreamer만 인식하고 `.pt`면 기본적으로 `drq-v2`라고 표기하며, 숫자형 CPU latency/RSS 적격성 검사는 `drq-v2`에서만 켜진다. RLPD 태그와 알고리즘 구별, 정책·source hash, CPU whole-worker gate(`init <=10 s`, `reset <=5 s`, `act <=5 s`, `VmHWM <=1,024 MiB`), 평가 런타임 snapshot/의존성 검사를 먼저 늘리고 관련 테스트를 통과시킨다. `.pt` 평가에 legacy `checkpoint-v1-*` 사용 금지. 두 reload는 결정성 감사이지 독립 road 2개가 아니며 `repeat == 0`만 집계한다.
+ 2. `evaluate_policy.py`의 **custom `--protocol-file`**로 학생 CPU export를 모델별 screen에 평가한다. 이 계획 작성 당시 `.pt` 평가기는 DrQ/Dreamer만 구별하고 수치형 CPU latency/RSS 검사는 DrQ에만 적용됐다. 현재는 RLPD 태그·알고리즘 provenance와 모든 태그된 native actor의 CPU 적격성 검사가 구현·테스트됐다. 새 protocol마다 정책·source hash, CPU whole-worker gate(`init <=10 s`, `reset <=5 s`, `act <=5 s`, `VmHWM <=1,024 MiB`), 평가 런타임 snapshot/의존성을 재확인한다. `.pt` 평가에 legacy `checkpoint-v1-*` 사용 금지. 두 reload는 결정성 감사이지 독립 road 2개가 아니며 `repeat == 0`만 집계한다.
 3. 각 arm/seed의 두 시점 중 eligible + 두 reload 일치 + operational fail 0인 checkpoint를 **screen 완주율 -> 진행률 -> 완주 lap time이 낮음 -> 완전 동률은 이전 checkpoint** 순서로 미리 정해 고른다. 모든 4개 student run과 screen이 끝나기 전에는 treatment finalist를 확정하지 않는다. 순수 RLPD finalist **한 actor**도 screen 정보만으로 사전 선택한다. 선정 모델의 CPU actor SHA, learner checkpoint SHA, 학습/source/protocol/environment SHA, 화면 영수증을 confirmation 전에 봉인한다. confirmation은 후보 재선택, 추가 학습 또는 threshold 수정 단계가 아니다.
 4. Full screen에서 RLPD 두 seed 모두 진짜 완주와 자원 게이트를 만족할 때만 frozen 두 seed의 RLPD와 짝지은 online-only SAC를 **같은 새로운 confirmation cell**에 평가한다. 현행 `evaluate_policy.previous_evaluation_metadata()`는 screen 완주 0 actor의 보통 confirmation을 거절한다. SAC/DrQ comparator가 screen 완주 0이면 현행 `--diagnostic-confirmation`으로만 해당 고정 모델의 confirmation 자료를 수집하고 그것은 **비승격 comparator 영수증**으로 명시한다. 그런 대조군 결과로 그 모델의 blind를 열 수 없으며 treatment의 normal confirmation 영수증과 섞어 재표기하지 않는다. frozen DrQ actor도 동일 protocol/새 셀로 모델별 screen 영수증을 만든 후, 필요 시 같은 규칙으로 confirmation을 실행한다. 현행 evaluator는 confirmation에 모델 **1개**와 그 모델의 single-candidate screen receipt를 요구하므로 각 모델 영수증을 따로 연결한다.
 5. **제안 promotion gate**: 각 독립 학생 seed에서 RLPD의 confirmation canonical 완주 수가 짝 SAC보다 **엄격히 많고** 적어도 1회 완주, 모든 arm 자원·결정성 검사 통과, screen에서 봉인한 finalist에 대한 선택 편향이 없을 때만 '동일 SAC에서 prior-data가 도움된 내부 후보'로 기록한다. 차이·불확실성은 `track_id, geometry_seed`별 paired 결과와 seed별 분포로 제시한다. 2 seed만으로 광범위한 효과의 확정적 통계 증거라고 주장하지 않는다. 비교 우위가 한 seed에만 있거나 0 finish이면 실패/판정 불충분으로 정지한다. 사전 확인 gate 통과 후 **같은 단일 finalist**에 대해서만 예약한 그 연구의 blind를 1회 열고 사전 동결 기준으로 최종 내부 일반화 판단; blind로 모델을 바꾸거나 재훈련하지 않는다. DrQ 대비 차이는 별도 보고하며 교사/학습예산 confound를 명시한다.
@@ -113,7 +114,7 @@ theta_target <- (1-tau)*theta_target + tau*theta_Q   # encoder 및 10개 head �
 | `scripts/collect_rlpd_prior.py`, `scripts/train_rlpd.py`, 필요 시 `scripts/run_rlpd_matched.py` | frozen 교사만 학습용 cell에 호출, 두 arm 별 protocol/예산 검증, run config/selection/재시작 영수증 작성; repo root에서 `python -m scripts.collect_rlpd_prior`, `python -m scripts.train_rlpd` 등으로 호출한다. 학생 훈련용 새 root Python 파일을 만들지 않는다. |
 | `agent.py` | 작은 **추론 전용** `haic-rlpd-pixel-actor-v1` 태그의 `(4,84,84) -> tanh(mu) -> [steer,gas,brake]` 분기, `torch.load(..., map_location="cpu", weights_only=True)`, 태그·spec·config·state shape/finite 확인, 무상태 `reset`. 기존 baseline/DrQ/Dreamer dispatch 보존; 허용 inference-only 구현만 패키지에 들어간다. |
 | `evaluate_policy.py`, `tests/test_evaluate_policy.py` | RLPD 태그/알고리즘 provenance 지원, custom protocol 요구, `.pt` 공통 전역 적격성/isolated CPU reload, 반복 행동 trace와 자원 수치·hash 검사. 0-screen comparator는 기존 진단 확인 규칙을 보존하고 blind/promotion에 쓰지 않는다. Snapshot에 새 inference module이 꼭 필요하다면 source 포함·hash 감사와 패키저 지원을 선행한다. |
-| `package_submission.py`, `tests/test_submission_package.py` | 현행 packager는 root의 `agent.py`, `model.pt`와 인지된 `action_smoothing.py`, `action_representation.py`만 포함하고 추가 trainer module/임의 requirements는 자동으로 싣지 않는다. RLPD actor-only export가 이 root-only 경로를 통과하는지 시험하고 tag/export provenance, 금지 API·용량·CPU ZIP smoke의 빠진 개별 한계를 보강한다. 새 inference module이 필요하면 기존 packager에 명시적 허용/정적 검사 추가 후 시험하며 원본 JAX 의존성은 넣지 않는다. |
+| `package_submission.py`, `tests/test_submission_package.py` | 현재 packager는 root의 `agent.py`, `MODEL_FILENAME`으로 지정한 단일 모델(`model.pt` 기본값), 허용된 inference dependency module만 포함한다. RLPD actor-only export의 패키징·합성 CPU ZIP smoke는 테스트됐지만 공식 서버 적격성의 증명은 아니다. 임의 trainer module/requirements는 자동으로 싣지 않으며, 새 inference module은 기존 packager에 명시적 허용/정적 검사 추가 후 시험한다. 원본 JAX 의존성은 넣지 않는다. |
 | `tests/test_rlpd.py`, `tests/test_train_rlpd.py`, `tests/test_agent_inference.py` | 다음 합성 수학·버퍼·RNG/CPU export 테스트와 기존 inference 회귀. frozen protocol/result는 각각 `experiments/`, `runs/`, `evaluations/`의 기존 자리에; 기록이 생기기 전에는 문서 상태나 모델 장부를 바꾸지 않는다. |
 
 ## 검증 게이트 (실행 전 작성할 테스트 명세)
@@ -222,15 +223,37 @@ theta_target <- (1-tau)*theta_target + tau*theta_Q   # encoder 및 10개 head �
   에서 거절됐다. Training `4000026001-4000026064`, screen `4000027001-7008`,
   confirmation `4000027011-7018`, blind `4000027021-7028` 모두 0 interaction으로
   retired; record는 `experiments/pixel-rlpd-entropy-target-ablation-v3-preflight.json`.
-- 다음 coherent entropy protocol v4는 correction된 validator, 새 study name/source
-  hash와 새 candidate geometry를 독립 freshness audit 후에만 동결한다.
+- Entropy protocol v4 (`experiments/pixel-rlpd-entropy-target-ablation-v4.json`) collected
+  16,384 fresh teacher decisions/16,265 transitions/6 distinct-geometry finishes and
+  completed all four matched 131,072-decision runs (two targets × two learner seeds).
+  A source recheck before the first screen found `docs/evaluation/generalization-policy.md`
+  no longer matched its source lock. **No V4 screen/confirmation/blind cell ran.** The
+  pre-screen failure is recorded at
+  `experiments/pixel-rlpd-entropy-target-ablation-v4-result.json`. V4 teacher/student
+  transitions and checkpoints are consumed; V4 evaluation cells were unexecuted but
+  retired, not fresh.
+- The next coherent entropy protocol v5 must freeze the final geometry/source/evaluation
+  ledger and make no source-document edits after freeze; it needs a new study name,
+  source hash and independent geometry allocation.
   One-factor design은 동일한 새로운 teacher dataset, learner initialization,
   architecture, offline/online mix, update budget 및 replay/augmentation RNG stream
   아래 RLPD target `-1.5`와 `+1.5`를 비교한다. `+1.5`는 실험할 higher
   differential-entropy target이지 저자의 부호 오류라는 가정이나 V3 결과에서
-  유도한 causal fix가 아니다. Entropy v1/v2/v3 retired allocations, V1/V2 pixel-
+  유도한 causal fix가 아니다. Entropy v1/v2/v3/v4 retired allocations, V1/V2 pixel-
   pilot geometry, v3 follow-up data/actors/cells를 모두 training/evaluation
   exclusion에 포함하고, blind는 confirmation rule에 따른 한 actor에게만 허용한다.
+
+### Subsequent outcome: entropy-target v5 (2026-09-25)
+
+The preceding v5 requirements describe the pre-execution design, not an open
+next step. The separately frozen [v5 protocol](../../experiments/pixel-rlpd-entropy-target-ablation-v5.json)
+and [result](../../experiments/pixel-rlpd-entropy-target-ablation-v5-result.json)
+record completed fresh training, screen, four strict confirmations, and one
+internal blind. The author `-1.5` target exceeded the `+1.5` target on both
+matched confirmation seeds (17/32 vs 6/32; 7/32 vs 6/32); its selected seed-50
+actor finished 7/24 blind cells. Those consumed cells cannot be reused for
+tuning. This is internal CarRacing evidence, not an official result or a new
+best-model designation; see the current state and model-status ledger.
 
 ## 참고 및 실증 경계
 

@@ -23,13 +23,17 @@ study, the frozen JSON protocol and its result/run artifacts are authoritative.
    training exclusion set, and every non-active treatment variable stay fixed.
 3. Run development/screen cells only for checkpoint selection. CPU-exported actors
    and their local CPU results are authoritative for the existing DrQ-v2 machinery.
-4. Freeze the selected checkpoint, actor hash, source/protocol hashes, and screen
-   receipt before confirmation.
-5. Run confirmation on its predeclared fresh internal cells. Do not re-rank,
-   replace a seed/checkpoint, alter a parameter, or extend training after seeing it.
+4. Freeze each screen-selected checkpoint and actor hash, source/protocol hashes,
+   screen receipts, and any rule for choosing a blind finalist before confirmation.
+5. Run confirmation on its predeclared fresh internal cells. Do not re-rank or
+   replace a seed/checkpoint, alter a parameter, or extend training after seeing it,
+   except for a one-time finalist choice among already screen-selected actors if
+   the frozen protocol explicitly predeclares confirmation-based selection.
 6. Open a reserved internal blind partition only when its protocol's confirmation
-   gate passes. Blind is a terminal test for that decision, not an iterative tuning
-   loop.
+   gate passes. Blind is a terminal test for the predeclared decision, not an
+   iterative tuning loop. The [RLPD entropy v5 protocol](../../experiments/pixel-rlpd-entropy-target-ablation-v5.json)
+   predeclared a winning-target and within-target finalist choice after confirmation;
+   it did not reselect checkpoints or retrain actors.
 
 The evaluator records source/environment/protocol/checkpoint hashes, action traces,
 reload agreement, latency, RSS, and termination details. A diagnostic confirmation

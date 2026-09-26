@@ -16,10 +16,12 @@ conflict in favor of the official source before continuing.
    intended inference path.
 2. Verify the official environment version and Python 3.11/Linux/CPU compatibility.
 3. Use the relevant existing packager and tests (`package_submission.py` for the
-   active baseline/DrQ/Dreamer path, `training/package_submission.py` only for its
-   separate visual PPO/CEM path) rather than writing a parallel validator.
+   active baseline/DrQ/Dreamer/pixel-RLPD actor-only paths,
+   `training/package_submission.py` only for its separate visual PPO/CEM path)
+   rather than writing a parallel validator.
 4. Account for local-validator coverage explicitly. The root packager validates a
-   narrow root-only `model.pt` package and a combined smoke; it does not prove every
+   narrow root-only `agent.py` package with one `MODEL_FILENAME`-declared model
+   and supported dependency modules, plus a combined smoke; it does not prove every
    per-call limit, RSS, action bound, dependency install, full episode, or official
    Docker behavior. Run available targeted tests and clean isolated checks for those
    gaps without representing them as official-server validation.

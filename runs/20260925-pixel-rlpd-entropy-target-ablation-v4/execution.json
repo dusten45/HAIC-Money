@@ -1,0 +1,117 @@
+{
+  "blind_opened": false,
+  "commands": [
+    [
+      "/venv/main/bin/python",
+      "-m",
+      "scripts.train_rlpd_entropy_ablation",
+      "--protocol",
+      "/workspace/HAIC-Money/experiments/pixel-rlpd-entropy-target-ablation-v4.json",
+      "--offline-dataset",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data",
+      "--run-dir",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/rlpd-author-target-seed40",
+      "--arm",
+      "rlpd-author-target",
+      "--seed",
+      "40",
+      "--device",
+      "cuda"
+    ],
+    [
+      "/venv/main/bin/python",
+      "-m",
+      "scripts.train_rlpd_entropy_ablation",
+      "--protocol",
+      "/workspace/HAIC-Money/experiments/pixel-rlpd-entropy-target-ablation-v4.json",
+      "--offline-dataset",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data",
+      "--run-dir",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/rlpd-author-target-seed41",
+      "--arm",
+      "rlpd-author-target",
+      "--seed",
+      "41",
+      "--device",
+      "cuda"
+    ],
+    [
+      "/venv/main/bin/python",
+      "-m",
+      "scripts.train_rlpd_entropy_ablation",
+      "--protocol",
+      "/workspace/HAIC-Money/experiments/pixel-rlpd-entropy-target-ablation-v4.json",
+      "--offline-dataset",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data",
+      "--run-dir",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/rlpd-positive-target-seed40",
+      "--arm",
+      "rlpd-positive-target",
+      "--seed",
+      "40",
+      "--device",
+      "cuda"
+    ],
+    [
+      "/venv/main/bin/python",
+      "-m",
+      "scripts.train_rlpd_entropy_ablation",
+      "--protocol",
+      "/workspace/HAIC-Money/experiments/pixel-rlpd-entropy-target-ablation-v4.json",
+      "--offline-dataset",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data",
+      "--run-dir",
+      "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/rlpd-positive-target-seed41",
+      "--arm",
+      "rlpd-positive-target",
+      "--seed",
+      "41",
+      "--device",
+      "cuda"
+    ]
+  ],
+  "confirmation_opened": false,
+  "failed_at_utc": "2026-09-25T09:37:58.848285+00:00",
+  "failure": {
+    "message": "study source changed after freeze: docs/evaluation/generalization-policy.md",
+    "type": "ValueError"
+  },
+  "format": "haic-rlpd-entropy-ablation-execution-v1",
+  "protocol_sha256": "86f525d4ac8ae1fb0af623e7824ed4970d30540cb74b1ca0423bc180cc9109d3",
+  "stages": [
+    {
+      "name": "teacher_collection",
+      "result": {
+        "complete_episodes": 37,
+        "dataset_dir": "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v4/prior-data",
+        "dataset_sha256": "4a38ac414067037c3856b3bfb133a60d81aef283225097665bda9d4eee51ab95",
+        "decisions_spent": 16384,
+        "discarded_decisions": 119,
+        "distinct_finish_geometries": 6,
+        "eligible": true,
+        "minimum_distinct_finishes": 4,
+        "stored_decisions": 16265,
+        "study_id": "pixel-rlpd-entropy-target-ablation-v4"
+      }
+    },
+    {
+      "candidate_actor_hashes": [
+        "0015efa8d104b9b2be341ae4a549b179a5cc3889c2fc1513b09e99787059886e",
+        "3b0ca8c4c88cef33995b0348c454e2f6e94c93736b4fbea9cad138bacc0d17e4",
+        "466249f096641199cc4fc825b4df181a041226e40d3f7d8beb85140e67dcd1df",
+        "bc2675c33b061f53529bba960aa14526f8d3058c1a7ea959b047f0ef37996451",
+        "cbbafba90d6b96355f7c6bef07a67f2b6392b66cff1569d22b04b244ce65d80c",
+        "db61376a74b8a141e8745ecb696900e414fe4ecd31b3f26f4ee0cb4262b0df77",
+        "eb5c5b176a295a8224b908587b017b1799e50080417ae8d0f774d06605be5b92",
+        "f48d2202629a70cc23f7a9230360cea546db9d6e64f6e18ddb438e1c72d254cd"
+      ],
+      "name": "matched_entropy_training",
+      "wall_seconds": 14071.617960494012
+    }
+  ],
+  "started_at_utc": "2026-09-25T05:39:58.006952+00:00",
+  "status": "failed_entropy_ablation_stage",
+  "study_id": "pixel-rlpd-entropy-target-ablation-v4",
+  "teacher_dataset_sha256": "4a38ac414067037c3856b3bfb133a60d81aef283225097665bda9d4eee51ab95",
+  "workers": 2
+}

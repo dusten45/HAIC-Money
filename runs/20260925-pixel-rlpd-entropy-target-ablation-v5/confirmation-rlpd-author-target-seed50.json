@@ -1,0 +1,304 @@
+{
+  "diagnostic_only": false,
+  "evaluation_dir": "/workspace/HAIC-Money/evaluations/20260925T191038725317Z_pixel-rlpd-entropy-target-ablation-v5-confirmation",
+  "partition": "confirmation",
+  "protocol_name": "pixel-rlpd-entropy-target-ablation-v5-confirmation",
+  "protocol_sha256": "2e7df4152e2282bcd34a6d2a160737cc13c6f1a03d769bd69832e1fc51326546",
+  "ranked": [
+    {
+      "action_control": {
+        "input_channels": 4,
+        "method": "none",
+        "schema_version": 1
+      },
+      "action_control_fingerprint": "4bfab49639a57a6f3c8ea5a8a13f734c4309fd634532a3d7ba70b6bbb34c0b99",
+      "action_control_present": true,
+      "action_representation": {
+        "action_shape": [
+          3
+        ],
+        "method": "continuous_box",
+        "schema_version": 1
+      },
+      "action_representation_fingerprint": "288223b059c6fecca22e605e4e833ca3ee08748ec91aed738289b170b0024426",
+      "action_representation_present": true,
+      "action_smoothing": {
+        "alpha": 1.0,
+        "clip_order": "before_and_after",
+        "high": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "initial_action": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "low": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "max_delta": null,
+        "method": "none",
+        "schema_version": 1,
+        "update_unit": "policy_action"
+      },
+      "action_smoothing_fingerprint": "be3de0136a18ad729ca9ecbcf807365f01f3727878faeb8dac76972e70fdcdfb",
+      "action_smoothing_present": true,
+      "algorithm": "rlpd",
+      "aliases": [
+        "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt"
+      ],
+      "archive_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "by_track": {
+        "361": {
+          "avg_damage": 0.0,
+          "avg_lap_time_ms": 35580.0,
+          "avg_progress": 0.7495886580917469,
+          "avg_reward": 584.6296545042076,
+          "avg_steering_delta_abs_mean": 0.32753152772784233,
+          "avg_steps": 395.0,
+          "best_lap_time_ms": 34220.0,
+          "finish_rate": 0.5,
+          "n_episodes": 8,
+          "termination_reasons": {
+            "finished": 4,
+            "off_track": 4
+          }
+        },
+        "362": {
+          "avg_damage": 0.325,
+          "avg_lap_time_ms": 35576.0,
+          "avg_progress": 0.8567370804905706,
+          "avg_reward": 693.7155769030298,
+          "avg_steering_delta_abs_mean": 0.3444782830774784,
+          "avg_steps": 390.375,
+          "best_lap_time_ms": 33540.0,
+          "finish_rate": 0.625,
+          "n_episodes": 8,
+          "termination_reasons": {
+            "crash": 2,
+            "finished": 5,
+            "off_track": 1
+          }
+        },
+        "363": {
+          "avg_damage": 0.175,
+          "avg_lap_time_ms": 37120.0,
+          "avg_progress": 0.7117024804074585,
+          "avg_reward": 547.9059768199211,
+          "avg_steering_delta_abs_mean": 0.33035479485988617,
+          "avg_steps": 392.125,
+          "best_lap_time_ms": 30860.0,
+          "finish_rate": 0.375,
+          "n_episodes": 8,
+          "termination_reasons": {
+            "crash": 1,
+            "finished": 3,
+            "off_track": 4
+          }
+        },
+        "364": {
+          "avg_damage": 0.07500000000000001,
+          "avg_lap_time_ms": 34904.0,
+          "avg_progress": 0.826603852987936,
+          "avg_reward": 654.1198494003963,
+          "avg_steering_delta_abs_mean": 0.3505336195230484,
+          "avg_steps": 413.875,
+          "best_lap_time_ms": 27160.0,
+          "finish_rate": 0.625,
+          "n_episodes": 8,
+          "termination_reasons": {
+            "finished": 5,
+            "off_track": 3
+          }
+        }
+      },
+      "candidate_id": "ba56dca388a204a9-be3de013-4bfab496-288223b0",
+      "canonical_episodes": 32,
+      "cpu_reload_matches": true,
+      "determinism_audited": true,
+      "diagnostic_only": false,
+      "eligible": true,
+      "evaluation_archive_path": "candidates/ba56dca388a204a9-be3de013-4bfab496-288223b0.pt",
+      "evaluation_archive_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "evaluation_run_config_path": "candidates/ba56dca388a204a9-be3de013-4bfab496-288223b0.config.json",
+      "expected_cells": 32,
+      "expected_results": 64,
+      "export_metadata": {
+        "action_spec": {
+          "frame_skip": 4,
+          "method": "symmetric-native-to-haic-box",
+          "native_high": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "native_low": [
+            -1.0,
+            -1.0,
+            -1.0
+          ],
+          "official_high": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "official_low": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "order": [
+            "steer",
+            "gas",
+            "brake"
+          ]
+        },
+        "config": {
+          "latent_dim": 50
+        },
+        "environment_contract": {
+          "action_control": null,
+          "action_smoothing": null,
+          "arm": "rlpd-author-target",
+          "frame_skip": 4,
+          "obstacles": true,
+          "offline_dataset_sha256": "815563d490c2aa9903f29baee34fc7c8217a1f762e42324b121a0a11a523d77c",
+          "reward_shaping": false,
+          "training_geometry_seeds": [
+            4000032001,
+            4000032002,
+            4000032003,
+            4000032004,
+            4000032005,
+            4000032006,
+            4000032007,
+            4000032008,
+            4000032009,
+            4000032010,
+            4000032011,
+            4000032012,
+            4000032013,
+            4000032014,
+            4000032015,
+            4000032016,
+            4000032017,
+            4000032018,
+            4000032019,
+            4000032020,
+            4000032021,
+            4000032022,
+            4000032023,
+            4000032024,
+            4000032025,
+            4000032026,
+            4000032027,
+            4000032028,
+            4000032029,
+            4000032030,
+            4000032031,
+            4000032032,
+            4000032033,
+            4000032034,
+            4000032035,
+            4000032036,
+            4000032037,
+            4000032038,
+            4000032039,
+            4000032040,
+            4000032041,
+            4000032042,
+            4000032043,
+            4000032044,
+            4000032045,
+            4000032046,
+            4000032047,
+            4000032048,
+            4000032049,
+            4000032050,
+            4000032051,
+            4000032052,
+            4000032053,
+            4000032054,
+            4000032055,
+            4000032056,
+            4000032057,
+            4000032058,
+            4000032059,
+            4000032060,
+            4000032061,
+            4000032062,
+            4000032063,
+            4000032064
+          ],
+          "training_seed": 50,
+          "training_track_ids": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        "environment_steps": 131072,
+        "format": "haic-rlpd-pixel-actor-v1",
+        "gradient_steps": 130072,
+        "observation_spec": {
+          "channel_order": "CHW",
+          "control_plane_fingerprint": null,
+          "dtype": "float32",
+          "high": 1.0,
+          "low": 0.0,
+          "shape": [
+            4,
+            84,
+            84
+          ],
+          "uint8_scale": 255
+        },
+        "protocol_sha256": "2e7df4152e2282bcd34a6d2a160737cc13c6f1a03d769bd69832e1fc51326546",
+        "source_sha256": "65c5417493d467b956604314ef9b06c01163a3d59a00d043dd11c2fce4a4cada",
+        "training_seed": 50
+      },
+      "export_spec_fingerprints": {
+        "action_spec": "51cf16d2850eeca7031eb0c155bf04239b9207085d9a139e5de8c2d718bfecf4",
+        "observation_spec": "e51233d7c43372af7c560d529b0cbb84dad5b7a9e0e6637514cf010ea8adee39"
+      },
+      "is_comparator": false,
+      "norm_obs": false,
+      "operational_failures": 0,
+      "policy_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "resources": {
+        "agent_reset_seconds": 1.5133991837501526e-06,
+        "max_action_seconds": 0.0019867653027176857,
+        "peak_rss_bytes": 361889792,
+        "process_initialization_seconds": 0.8746193898841739
+      },
+      "run_config_path": "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v5/config.json",
+      "run_config_sha256": "daba744f4c6fda6216c4042222cc1f1497e4a652216972fb7ef33603ec8f7a41",
+      "run_frame_skip": 4,
+      "run_max_steps": 2000,
+      "source_path": "/workspace/HAIC-Money/runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt",
+      "summary": {
+        "avg_damage": 0.14375,
+        "avg_lap_time_ms": 35651.76470588235,
+        "avg_progress": 0.7861580179944281,
+        "avg_reward": 620.0927644068887,
+        "avg_steering_delta_abs_mean": 0.3382245562970638,
+        "avg_steps": 397.84375,
+        "best_lap_time_ms": 27160.0,
+        "finish_rate": 0.53125,
+        "n_episodes": 32,
+        "termination_reasons": {
+          "crash": 3,
+          "finished": 17,
+          "off_track": 12
+        }
+      },
+      "vecnormalize_path": null,
+      "vecnormalize_sha256": null
+    }
+  ]
+}

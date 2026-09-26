@@ -1,12 +1,12 @@
 # Generalization Policy
 
-## Separate Four Things
+## Separate Evidence Scopes
 
 | Scope | Meaning | Allowed use |
 |---|---|---|
 | Training | Episodes and maps used to optimize a candidate | Never describe as validation or fresh generalization. |
 | Screen/development | Fixed internal cells used for checkpoint/candidate selection | Consumed development evidence; not fresh confirmation. |
-| Confirmation | Predeclared internal cells evaluated after candidate freeze | One decision-stage test; do not select on it. |
+| Confirmation | Predeclared internal cells evaluated after screen-selected actors are frozen | Pass/fail, or a one-time finalist choice only if its rule was frozen in the study protocol; no ad hoc tuning. |
 | Reserved internal blind | Internal cells protected until a confirmation gate passes | One terminal test, never iterative tuning. |
 | Official public tracks | Competition-server evidence for submitted models | External evidence, distinct from local cells. |
 | Official private tracks | Unavailable final-evaluation target | Never treat as an internal holdout dataset. |
@@ -31,7 +31,8 @@ absence from this table is not evidence that a seed is fresh.
 | Pixel RLPD entropy-target ablation v1 | `261-263` x `4000023001-4000023008`, allocation retired before interaction | `271-274` x `4000023011-4000023018`, allocation retired before interaction | `281-283` x `4000023021-4000023028`, allocation retired before interaction |
 | Pixel RLPD entropy-target ablation v2 | `261-263` x `4000025001-4000025008`, allocation retired before interaction | `271-274` x `4000025011-4000025018`, allocation retired before interaction | `281-283` x `4000025021-4000025028`, allocation retired before interaction |
 | Pixel RLPD entropy-target ablation v3 | `291-293` x `4000027001-4000027008`, allocation retired before interaction | `301-304` x `4000027011-4000027018`, allocation retired before interaction | `311-313` x `4000027021-4000027028`, allocation retired before interaction |
-| [Pixel RLPD entropy-target ablation v4](../../experiments/pixel-rlpd-entropy-target-ablation-v4.json) | `291-293` x `4000029001-4000029008`, allocated for the running study; check receipts before use | `301-304` x `4000029011-4000029018`, conditional reserve | `311-313` x `4000029021-4000029028`, conditional reserve |
+| [Pixel RLPD entropy-target ablation v4](../../experiments/pixel-rlpd-entropy-target-ablation-v4.json) | `291-293` x `4000029001-4000029008`, retired unopened after the pre-screen source-hash stop | `301-304` x `4000029011-4000029018`, retired unopened | `311-313` x `4000029021-4000029028`, retired unopened |
+| [Pixel RLPD entropy-target ablation v5](../../experiments/pixel-rlpd-entropy-target-ablation-v5.json) | `351-353` x `4000033001-4000033008`, consumed | `361-364` x `4000033011-4000033018`, consumed for four frozen screen-selected actors | `371-373` x `4000033021-4000033028`, consumed once for the predeclared winning-target finalist |
 
 The RLPD v1 pilot was retired after a runtime preflight abort with no environment
 interaction; those proposed numbers are not represented as consumed outcomes.
@@ -51,9 +52,14 @@ pool and `4000025xxx` evaluation allocation were also retired, not recycled.
 Entropy-target v3 froze `4000026001-4000026064` teacher cells and the `4000027xxx`
 partitions, but its learner-seed validator/source hashes were inconsistent; it too
 aborted before environment interaction. Retire, do not reuse, those allocations.
-Entropy-target v4 uses `4000028001-4000028064` teacher geometry and the
-`4000029xxx` evaluation partitions; its exact consumption status is in its running
-execution receipts, not this static table. Dreamer B1 development geometries,
+V4 then consumed teacher/student training experience from `4000028001-4000028064`
+but stopped on a source-hash mismatch before screen candidate evaluation. Its
+`4000029001-9008`, `4000029011-9018`, and `4000029021-9028` screen/confirmation/blind
+allocations were never opened and are retired rather than repurposed. V5 used a
+new `4000032001-4000032064` teacher/student TRAIN pool; that pool and its
+`4000033xxx` evaluation partitions are consumed, not available for reuse. Any
+continuation requires a new protocol, fresh audited data, and disjoint cells.
+Dreamer B1 development geometries,
 [DrQ training-only geometry catalogs](../experiments/drqv2-geometry-augmentation-v1.md),
 and residual-options development cells also need protocol/receipt audits even
 though their exact ranges are not reproduced here.
