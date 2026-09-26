@@ -1,0 +1,109 @@
+{
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "checkpoint_loading": "CPU21 torch.load(mmap=True) for pinned model states only; no replay, optimizer or RNG restore",
+  "diagnostic_manifest_sha256": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+  "diagnostic_script_sha256": "f0d61c56bc7ed9e55a64f3c3c8fb134b6ec2403fa72a9987a4e0032c90acaf80",
+  "format": "drq-r6-source-state-attribution-v1",
+  "local_q_probe": "native steering +/-0.1 clipped, decisions 1, 25, final-20",
+  "observation_sampling": "decisions 1..20, every 25th, and last 20; on the same source-action replay",
+  "protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "runtime_source_sha256": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "drq_v2.py": "023407d773c22df679164d3b593e9ac7c1ba56c67e5b32caed1fb42a912f1e36",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "haic/algorithms/drq_v2/__init__.py": "aaf66e533ea68d1c8e0ce51f2c6fc4ed77dbb37ed684d59950d935fa36551b0d",
+    "haic/algorithms/drq_v2/geometry_features.py": "cf867affcaa46882184dc39930f960b75682c6c61aa2d1fcf21205f588389c8c",
+    "haic/algorithms/drq_v2/geometry_sampler.py": "665d102a75650840bec9b69089588d4e396262655f1a2e88b440f4c4e41e531c",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "haic/algorithms/drq_v2/teacher_study.py": "433f5b7ae9121cca6b62519939f1910d0296c3e61ccaf124cd4154e7ca059ed4",
+    "requirements.txt": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+    "scripts/annotate_drq_training_geometry.py": "fff730df0e56ea0cd3c01a337422567ed4cd27318a28198c9ff4cd6d87e14c50",
+    "scripts/diagnose_drq_geometry_mix.py": "8243ca4215ebd57dd50fdb92067024ea5fb83b21bac621b6d3a2d802fe40c6a3",
+    "scripts/probe_drq_training_finish.py": "2f14233a636bda132236d8b1fa6291f1824b48daa58655d4f15386ba8cb67d5f",
+    "scripts/summarize_drq_training_geometry.py": "f474c2af9f2ac7f44c51e3ea00a2998979770a0278e61f8cc44956c0cc449d83",
+    "scripts/train_drq_geometry_mix.py": "2f7838d5132f5515c5568407c88ba7707221a0d1abd32337ac3922981e43fc5e",
+    "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  },
+  "scope": "exact action-replay on 11 already-consumed TRAIN-DIAGNOSTIC source-success episodes; no alternate-policy rollout, training, or new evaluation",
+  "selected": [
+    {
+      "geometry_seed": 3910800148,
+      "recorded_steps": 541,
+      "source_seed": 0,
+      "source_trace_sha256": "680b8a905fe1cf1cd70bd2cb8836c1b8ba441351a69b5912e8a7703ce279106d"
+    },
+    {
+      "geometry_seed": 3910800153,
+      "recorded_steps": 518,
+      "source_seed": 0,
+      "source_trace_sha256": "4a7d7a61a4dab3a90d244d4a331a3f74e2aa6ae8bac1af4e0294eb1a5c4fe05c"
+    },
+    {
+      "geometry_seed": 3910800160,
+      "recorded_steps": 627,
+      "source_seed": 0,
+      "source_trace_sha256": "daba24bf9c405529b910d7a10a3a5808dd5871dd5929020ad5084a32ec2c1003"
+    },
+    {
+      "geometry_seed": 3910800163,
+      "recorded_steps": 580,
+      "source_seed": 0,
+      "source_trace_sha256": "ad25c4b0848d5f663bbc111736f6db2c9ef963a3281dd3f10b872e8812adfab1"
+    },
+    {
+      "geometry_seed": 3910800172,
+      "recorded_steps": 637,
+      "source_seed": 0,
+      "source_trace_sha256": "aebf263b35efb17a7d29c1babbaf04c199e796b04636a20f78057415fc091386"
+    },
+    {
+      "geometry_seed": 3910800182,
+      "recorded_steps": 627,
+      "source_seed": 0,
+      "source_trace_sha256": "218854391b152c6bf8f99b0535f540f663b40a574b4328991a7ab82994ed9624"
+    },
+    {
+      "geometry_seed": 3910800124,
+      "recorded_steps": 450,
+      "source_seed": 1,
+      "source_trace_sha256": "439109dd5d3e6846f8c44c77125c239022944d451f7711274bc963c9dd523c67"
+    },
+    {
+      "geometry_seed": 3910800134,
+      "recorded_steps": 457,
+      "source_seed": 1,
+      "source_trace_sha256": "5157768a82e69dccfa076c4587ee0feadd51bbf43e0fd1573759df14c772ab83"
+    },
+    {
+      "geometry_seed": 3910800163,
+      "recorded_steps": 474,
+      "source_seed": 1,
+      "source_trace_sha256": "e2fab043027f25b103cfa06500d24db68d7ae1dec92834ba33152aa7f013e098"
+    },
+    {
+      "geometry_seed": 3910800169,
+      "recorded_steps": 553,
+      "source_seed": 1,
+      "source_trace_sha256": "7351cdf54ce08bfd9da2a564c3324a973398f9055cdbbbb264b278242f789a02"
+    },
+    {
+      "geometry_seed": 3910800182,
+      "recorded_steps": 534,
+      "source_seed": 1,
+      "source_trace_sha256": "fc47178d9886864f290733c783da46e669fd0abe5ed9eab651fb902e62207a19"
+    }
+  ],
+  "total_max_decisions": 5998
+}

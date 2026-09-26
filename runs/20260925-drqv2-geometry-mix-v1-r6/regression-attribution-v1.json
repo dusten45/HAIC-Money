@@ -1,0 +1,1643 @@
+{
+  "definitions": {
+    "actor_encoder_shift_marker": "lost and >=10/20 source states with feature cosine <.90; descriptive only",
+    "caveat": "labels nonexclusive; threshold fixed before Q/encoder numeric inspection; serially correlated states and reused roads",
+    "critic_q1_reversal_marker": "lost and >=10/20 source states with source Q1 preferring source AND r6 Q1 preferring r6",
+    "early_policy_drift_marker": "lost and same-initial-observation native action Linf >=.10",
+    "finish_or_late_stage_marker": "lost with observed max visited-tile progress >=.90; may still be pre-finish",
+    "insufficient_source_state_retention": "not identifiable per TRAIN-DIAGNOSTIC cell: TRAIN road pool disjoint and replay has no images",
+    "other_or_indeterminate": "lost with none of the four positive markers; absence of markers is not absence of mechanisms",
+    "source_also_failed_adaptation_not_established": "both_failed, not an observed regression of a source success"
+  },
+  "input_sha256": {
+    "paired": "29b6688413738f5a0ae7faaa950d202c53c73c1c14735f9e205d3ec01ed2cdd7",
+    "replay": "2fbfcef1cb7c19bc9ae6aa334df75f0e6c57d490485cfc8576ce99ded4f25135",
+    "source_state": "2c1e1a3ce21137c00bc2042d069a9a410b77f92eb76bac3334c2c548888c07cc"
+  },
+  "pairs": [
+    {
+      "candidate_max_progress": 0.6993464052287581,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6209150326797386,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.5588235294117647,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6209150326797386,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.7091503267973857,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6209150326797386,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.916,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800124,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.508,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.976,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800124,
+      "labels": [],
+      "source_max_progress": 0.508,
+      "source_seed": 0,
+      "transition": "gained",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.312,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800124,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.508,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.1482889733840304,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800134,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.12167300380228137,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.1482889733840304,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800134,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.12167300380228137,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.12547528517110265,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800134,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.12167300380228137,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.934931506849315,
+      "candidate_steps": 629,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.6439694851636887,
+      "first20_median_encoder_cosine": 0.7277742326259613,
+      "first20_median_source_q1_change_for_same_source_action": 11.419942855834961,
+      "first20_median_source_q2_change_for_same_source_action": 12.119424819946289,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 3,
+      "first20_twin_min_reversal": 4,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800148,
+      "initial_same_state_native_action_linf": 1.331981897354126,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker",
+        "finish_or_late_stage_marker"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 0,
+      "source_steps": 541,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.702054794520548,
+      "candidate_steps": 613,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 1.043577578663826,
+      "first20_median_encoder_cosine": 0.7564380764961243,
+      "first20_median_source_q1_change_for_same_source_action": 10.262645721435547,
+      "first20_median_source_q2_change_for_same_source_action": 10.634441375732422,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 9,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800148,
+      "initial_same_state_native_action_linf": 0.6096992492675781,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 0,
+      "source_steps": 541,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.3287671232876712,
+      "candidate_steps": 351,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.40091472268104555,
+      "first20_median_encoder_cosine": 0.7223729193210602,
+      "first20_median_source_q1_change_for_same_source_action": 13.605928421020508,
+      "first20_median_source_q2_change_for_same_source_action": 14.132833480834961,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 4,
+      "first20_twin_min_reversal": 6,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800148,
+      "initial_same_state_native_action_linf": 1.3810495138168335,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 0,
+      "source_steps": 541,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.45588235294117646,
+      "candidate_steps": 385,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.3508772015571594,
+      "first20_median_encoder_cosine": 0.7558703422546387,
+      "first20_median_source_q1_change_for_same_source_action": 12.62449836730957,
+      "first20_median_source_q2_change_for_same_source_action": 12.636434555053711,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 2,
+      "first20_twin_min_reversal": 1,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800153,
+      "initial_same_state_native_action_linf": 1.102976679801941,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522058823529411,
+      "source_seed": 0,
+      "source_steps": 518,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.3382352941176471,
+      "candidate_steps": 295,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.527029137313366,
+      "first20_median_encoder_cosine": 0.76729416847229,
+      "first20_median_source_q1_change_for_same_source_action": 10.41236686706543,
+      "first20_median_source_q2_change_for_same_source_action": 10.652505874633789,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800153,
+      "initial_same_state_native_action_linf": 0.8343878984451294,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522058823529411,
+      "source_seed": 0,
+      "source_steps": 518,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.6066176470588235,
+      "candidate_steps": 392,
+      "family": "opening-short-entry-left-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.39223085939884184,
+      "first20_median_encoder_cosine": 0.7217167615890503,
+      "first20_median_source_q1_change_for_same_source_action": 9.584222793579102,
+      "first20_median_source_q2_change_for_same_source_action": 8.52552604675293,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 6,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800153,
+      "initial_same_state_native_action_linf": 1.149450659751892,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522058823529411,
+      "source_seed": 0,
+      "source_steps": 518,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.18152866242038215,
+      "candidate_steps": 222,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.42114417999982834,
+      "first20_median_encoder_cosine": 0.7236646115779877,
+      "first20_median_source_q1_change_for_same_source_action": 11.635457992553711,
+      "first20_median_source_q2_change_for_same_source_action": 10.840280532836914,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 5,
+      "first20_twin_min_reversal": 2,
+      "first_sustained_action_decision": 6,
+      "geometry_seed": 3910800160,
+      "initial_same_state_native_action_linf": 2.980232238769531e-07,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522292993630573,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.5859872611464968,
+      "candidate_steps": 507,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.6557046115398407,
+      "first20_median_encoder_cosine": 0.7429580390453339,
+      "first20_median_source_q1_change_for_same_source_action": 7.18394660949707,
+      "first20_median_source_q2_change_for_same_source_action": 8.461700439453125,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 7,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800160,
+      "initial_same_state_native_action_linf": 1.9304704666137695,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522292993630573,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.1337579617834395,
+      "candidate_steps": 189,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.2792529486119747,
+      "first20_median_encoder_cosine": 0.7328893542289734,
+      "first20_median_source_q1_change_for_same_source_action": 12.133874893188477,
+      "first20_median_source_q2_change_for_same_source_action": 12.950336456298828,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 6,
+      "first20_twin_min_reversal": 5,
+      "first_sustained_action_decision": 8,
+      "geometry_seed": 3910800160,
+      "initial_same_state_native_action_linf": 0.0007610917091369629,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9522292993630573,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.20689655172413793,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6931034482758621,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.3586206896551724,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6931034482758621,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.21724137931034482,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6931034482758621,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.2730496453900709,
+      "candidate_steps": 232,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.3562951136380434,
+      "first20_median_encoder_cosine": 0.7236730456352234,
+      "first20_median_source_q1_change_for_same_source_action": 12.070381164550781,
+      "first20_median_source_q2_change_for_same_source_action": 12.760297775268555,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 5,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 1.8343229293823242,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9609929078014184,
+      "source_seed": 0,
+      "source_steps": 580,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.5141843971631206,
+      "candidate_steps": 279,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.7473118174821138,
+      "first20_median_encoder_cosine": 0.7570667564868927,
+      "first20_median_source_q1_change_for_same_source_action": 9.743324279785156,
+      "first20_median_source_q2_change_for_same_source_action": 10.15471076965332,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 9,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 2,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 0.013651728630065918,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9609929078014184,
+      "source_seed": 0,
+      "source_steps": 580,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.14893617021276595,
+      "candidate_steps": 196,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.42309567183256147,
+      "first20_median_encoder_cosine": 0.7047117948532104,
+      "first20_median_source_q1_change_for_same_source_action": 15.81951904296875,
+      "first20_median_source_q2_change_for_same_source_action": 14.75855827331543,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 4,
+      "first20_twin_min_reversal": 5,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 1.5404548645019531,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9609929078014184,
+      "source_seed": 0,
+      "source_steps": 580,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.6334661354581673,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7768924302788844,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.5737051792828686,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7768924302788844,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.2868525896414343,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7768924302788844,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.3104575163398693,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800169,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7320261437908496,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.4150326797385621,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800169,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7320261437908496,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9803921568627451,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800169,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.7320261437908496,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.9705882352941176,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [],
+      "source_max_progress": 0.5882352941176471,
+      "source_seed": 0,
+      "transition": "gained",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.9816176470588235,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [],
+      "source_max_progress": 0.5882352941176471,
+      "source_seed": 0,
+      "transition": "gained",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.17279411764705882,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.5882352941176471,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.9393939393939394,
+      "candidate_steps": 714,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.4177348405122757,
+      "first20_median_encoder_cosine": 0.7415095567703247,
+      "first20_median_source_q1_change_for_same_source_action": 10.437358856201172,
+      "first20_median_source_q2_change_for_same_source_action": 11.617860794067383,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 3,
+      "first20_twin_min_reversal": 2,
+      "first_sustained_action_decision": 5,
+      "geometry_seed": 3910800172,
+      "initial_same_state_native_action_linf": 0.45571428537368774,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker",
+        "finish_or_late_stage_marker"
+      ],
+      "source_max_progress": 0.9848484848484849,
+      "source_seed": 0,
+      "source_steps": 637,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.9666666666666667,
+      "candidate_steps": 743,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.7861256122589111,
+      "first20_median_encoder_cosine": 0.7667005956172943,
+      "first20_median_source_q1_change_for_same_source_action": 9.052846908569336,
+      "first20_median_source_q2_change_for_same_source_action": 9.928720474243164,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 10,
+      "first20_twin_min_reversal": 6,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800172,
+      "initial_same_state_native_action_linf": 1.5296847820281982,
+      "labels": [],
+      "source_max_progress": 0.9848484848484849,
+      "source_seed": 0,
+      "source_steps": 637,
+      "transition": "both_finished",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.4727272727272727,
+      "candidate_steps": 424,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.40197904258966444,
+      "first20_median_encoder_cosine": 0.7385395169258118,
+      "first20_median_source_q1_change_for_same_source_action": 13.688770294189453,
+      "first20_median_source_q2_change_for_same_source_action": 12.737565994262695,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 6,
+      "first20_twin_min_reversal": 5,
+      "first_sustained_action_decision": 5,
+      "geometry_seed": 3910800172,
+      "initial_same_state_native_action_linf": 0.46808212995529175,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9848484848484849,
+      "source_seed": 0,
+      "source_steps": 637,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.5636942675159236,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.4012738853503185,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.4299363057324841,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.4012738853503185,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.31210191082802546,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.4012738853503185,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.6242038216560509,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.321656050955414,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.9904458598726115,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [],
+      "source_max_progress": 0.321656050955414,
+      "source_seed": 0,
+      "transition": "gained",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.5095541401273885,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.321656050955414,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.31666666666666665,
+      "candidate_steps": 280,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.3357578217051923,
+      "first20_median_encoder_cosine": 0.7243103086948395,
+      "first20_median_source_q1_change_for_same_source_action": 12.206274032592773,
+      "first20_median_source_q2_change_for_same_source_action": 12.656257629394531,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 4,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 1.7315762042999268,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9966666666666667,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.2866666666666667,
+      "candidate_steps": 315,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.734537286311388,
+      "first20_median_encoder_cosine": 0.7609079480171204,
+      "first20_median_source_q1_change_for_same_source_action": 9.816932678222656,
+      "first20_median_source_q2_change_for_same_source_action": 10.356544494628906,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 5,
+      "first20_twin_min_reversal": 6,
+      "first_sustained_action_decision": 2,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 0.015980184078216553,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9966666666666667,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.16,
+      "candidate_steps": 87,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.4182103186845779,
+      "first20_median_encoder_cosine": 0.7069540619850159,
+      "first20_median_source_q1_change_for_same_source_action": 15.620933532714844,
+      "first20_median_source_q2_change_for_same_source_action": 14.270111083984375,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 4,
+      "first20_twin_min_reversal": 4,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 1.514580488204956,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9966666666666667,
+      "source_seed": 0,
+      "source_steps": 627,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.461038961038961,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.2305194805194805,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.3051948051948052,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.2305194805194805,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.29545454545454547,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.2305194805194805,
+      "source_seed": 0,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.16993464052287582,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9444444444444444,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.803921568627451,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9444444444444444,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9117647058823529,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800045,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9444444444444444,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.456,
+      "candidate_steps": 313,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.2531276598572731,
+      "first20_median_encoder_cosine": 0.8462538421154022,
+      "first20_median_source_q1_change_for_same_source_action": 2.7981300354003906,
+      "first20_median_source_q2_change_for_same_source_action": 1.2457923889160156,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 5,
+      "first_sustained_action_decision": 7,
+      "geometry_seed": 3910800124,
+      "initial_same_state_native_action_linf": 0.012678027153015137,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 450,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.812,
+      "candidate_steps": 332,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.2791971180588007,
+      "first20_median_encoder_cosine": 0.8270291984081268,
+      "first20_median_source_q1_change_for_same_source_action": 3.724365234375,
+      "first20_median_source_q2_change_for_same_source_action": 2.2887115478515625,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 10,
+      "first20_twin_min_reversal": 6,
+      "first_sustained_action_decision": 5,
+      "geometry_seed": 3910800124,
+      "initial_same_state_native_action_linf": 0.001160740852355957,
+      "labels": [
+        "critic_q1_reversal_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 450,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.912,
+      "candidate_steps": 571,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.32654636427760125,
+      "first20_median_encoder_cosine": 0.8112032413482666,
+      "first20_median_source_q1_change_for_same_source_action": -1.1494789123535156,
+      "first20_median_source_q2_change_for_same_source_action": -0.6713180541992188,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 10,
+      "first20_twin_min_reversal": 9,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800124,
+      "initial_same_state_native_action_linf": 2.7894973754882812e-05,
+      "labels": [
+        "critic_q1_reversal_marker",
+        "actor_encoder_shift_marker",
+        "finish_or_late_stage_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 450,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.13688212927756654,
+      "candidate_steps": 169,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.5776904229074716,
+      "first20_median_encoder_cosine": 0.8219442963600159,
+      "first20_median_source_q1_change_for_same_source_action": 4.285594940185547,
+      "first20_median_source_q2_change_for_same_source_action": 2.5929489135742188,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 7,
+      "first_sustained_action_decision": 3,
+      "geometry_seed": 3910800134,
+      "initial_same_state_native_action_linf": 0.08278661966323853,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9619771863117871,
+      "source_seed": 1,
+      "source_steps": 457,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.5095057034220533,
+      "candidate_steps": 357,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.250544142909348,
+      "first20_median_encoder_cosine": 0.8182933628559113,
+      "first20_median_source_q1_change_for_same_source_action": 3.1118202209472656,
+      "first20_median_source_q2_change_for_same_source_action": 1.0675048828125,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 3,
+      "first20_twin_min_reversal": 4,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800134,
+      "initial_same_state_native_action_linf": 0.1375579833984375,
+      "labels": [
+        "early_policy_drift_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9619771863117871,
+      "source_seed": 1,
+      "source_steps": 457,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9163498098859315,
+      "candidate_steps": 612,
+      "family": "opening-delayed-high-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.40700442120432856,
+      "first20_median_encoder_cosine": 0.8004809319972992,
+      "first20_median_source_q1_change_for_same_source_action": 1.0634384155273438,
+      "first20_median_source_q2_change_for_same_source_action": -0.3875885009765625,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 9,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 3,
+      "geometry_seed": 3910800134,
+      "initial_same_state_native_action_linf": 0.03229635953903198,
+      "labels": [
+        "actor_encoder_shift_marker",
+        "finish_or_late_stage_marker"
+      ],
+      "source_max_progress": 0.9619771863117871,
+      "source_seed": 1,
+      "source_steps": 457,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.1780821917808219,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800148,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.6883561643835616,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800148,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.8767123287671232,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800148,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9623287671232876,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.29044117647058826,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800153,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1948529411764706,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.21691176470588236,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800153,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1948529411764706,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9301470588235294,
+      "family": "opening-short-entry-left-turn",
+      "geometry_seed": 3910800153,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1948529411764706,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.18471337579617833,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800160,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3630573248407643,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.1178343949044586,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800160,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3630573248407643,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.18471337579617833,
+      "family": "opening-delayed-high-turn",
+      "geometry_seed": 3910800160,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3630573248407643,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.5,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9413793103448276,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.496551724137931,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9413793103448276,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9896551724137931,
+      "family": "mid-road-sustained-or-same-turn",
+      "geometry_seed": 3910800162,
+      "labels": [],
+      "source_max_progress": 0.9413793103448276,
+      "source_seed": 1,
+      "transition": "gained",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.8297872340425532,
+      "candidate_steps": 522,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.22979272603988649,
+      "first20_median_encoder_cosine": 0.8185619413852692,
+      "first20_median_source_q1_change_for_same_source_action": 10.39163589477539,
+      "first20_median_source_q2_change_for_same_source_action": 10.038753509521484,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 9,
+      "first20_twin_min_reversal": 10,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 0.000594794750213623,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 474,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.2730496453900709,
+      "candidate_steps": 227,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.47965778708457946,
+      "first20_median_encoder_cosine": 0.7962373495101929,
+      "first20_median_source_q1_change_for_same_source_action": 2.5335922241210938,
+      "first20_median_source_q2_change_for_same_source_action": 1.4554061889648438,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 11,
+      "first20_twin_min_reversal": 12,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 0.0011342763900756836,
+      "labels": [
+        "critic_q1_reversal_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 474,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.5815602836879432,
+      "candidate_steps": 304,
+      "family": "easy-curvature-anchor",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.5624244347214699,
+      "first20_median_encoder_cosine": 0.7590542733669281,
+      "first20_median_source_q1_change_for_same_source_action": 7.233482360839844,
+      "first20_median_source_q2_change_for_same_source_action": 6.995887756347656,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 10,
+      "first20_twin_min_reversal": 10,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800163,
+      "initial_same_state_native_action_linf": 0.11412537097930908,
+      "labels": [
+        "early_policy_drift_marker",
+        "critic_q1_reversal_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 1.0,
+      "source_seed": 1,
+      "source_steps": 474,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.8884462151394422,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9402390438247012,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.8764940239043825,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9402390438247012,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.900398406374502,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800164,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.9402390438247012,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.30718954248366015,
+      "candidate_steps": 325,
+      "family": "mid-road-sustained-or-same-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.18694990426301955,
+      "first20_median_encoder_cosine": 0.8202267587184906,
+      "first20_median_source_q1_change_for_same_source_action": 9.056526184082031,
+      "first20_median_source_q2_change_for_same_source_action": 9.320182800292969,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800169,
+      "initial_same_state_native_action_linf": 0.0011118650436401367,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9705882352941176,
+      "source_seed": 1,
+      "source_steps": 553,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.38562091503267976,
+      "candidate_steps": 319,
+      "family": "mid-road-sustained-or-same-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.39671114161610604,
+      "first20_median_encoder_cosine": 0.7967615723609924,
+      "first20_median_source_q1_change_for_same_source_action": 2.316009521484375,
+      "first20_median_source_q2_change_for_same_source_action": 1.3099708557128906,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 9,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800169,
+      "initial_same_state_native_action_linf": 0.0017411112785339355,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9705882352941176,
+      "source_seed": 1,
+      "source_steps": 553,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9934640522875817,
+      "candidate_steps": 559,
+      "family": "mid-road-sustained-or-same-turn",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.46024037301540377,
+      "first20_median_encoder_cosine": 0.7643241286277771,
+      "first20_median_source_q1_change_for_same_source_action": 7.676826477050781,
+      "first20_median_source_q2_change_for_same_source_action": 7.933330535888672,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 9,
+      "first20_twin_min_reversal": 8,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800169,
+      "initial_same_state_native_action_linf": 0.3743257522583008,
+      "labels": [],
+      "source_max_progress": 0.9705882352941176,
+      "source_seed": 1,
+      "source_steps": 553,
+      "transition": "both_finished",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.11764705882352941,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.15073529411764705,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.41911764705882354,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.15073529411764705,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9926470588235294,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800171,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.15073529411764705,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.08181818181818182,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800172,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6242424242424243,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.9545454545454546,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800172,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.6242424242424243,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9575757575757575,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800172,
+      "labels": [],
+      "source_max_progress": 0.6242424242424243,
+      "source_seed": 1,
+      "transition": "gained",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.9363057324840764,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1178343949044586,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.945859872611465,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1178343949044586,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9394904458598726,
+      "family": "finish-approach-turn",
+      "geometry_seed": 3910800174,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.1178343949044586,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.5318471337579618,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3853503184713376,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.9968152866242038,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3853503184713376,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.9426751592356688,
+      "family": "mid-road-left-right-reversal",
+      "geometry_seed": 3910800175,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.3853503184713376,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.31666666666666665,
+      "candidate_steps": 270,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.2681659907102585,
+      "first20_median_encoder_cosine": 0.80467289686203,
+      "first20_median_source_q1_change_for_same_source_action": 9.659950256347656,
+      "first20_median_source_q2_change_for_same_source_action": 9.23471450805664,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 8,
+      "first20_twin_min_reversal": 7,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 0.0005249977111816406,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9866666666666667,
+      "source_seed": 1,
+      "source_steps": 534,
+      "transition": "lost",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.4033333333333333,
+      "candidate_steps": 288,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.434165695309639,
+      "first20_median_encoder_cosine": 0.785268634557724,
+      "first20_median_source_q1_change_for_same_source_action": 2.6560325622558594,
+      "first20_median_source_q2_change_for_same_source_action": 1.87628173828125,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 9,
+      "first20_twin_min_reversal": 10,
+      "first_sustained_action_decision": 4,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 0.001410067081451416,
+      "labels": [
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9866666666666667,
+      "source_seed": 1,
+      "source_steps": 534,
+      "transition": "lost",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.8,
+      "candidate_steps": 500,
+      "family": "mid-road-left-right-reversal",
+      "first20_actor_encoder_cosine_below_0_90": 20,
+      "first20_mean_action_linf": 0.7026364862918854,
+      "first20_median_encoder_cosine": 0.7573359906673431,
+      "first20_median_source_q1_change_for_same_source_action": 6.142436981201172,
+      "first20_median_source_q2_change_for_same_source_action": 6.2159881591796875,
+      "first20_source_critic_q1_prefers_source_r6_critic_q1_prefers_r6": 14,
+      "first20_twin_min_reversal": 15,
+      "first_sustained_action_decision": 1,
+      "geometry_seed": 3910800182,
+      "initial_same_state_native_action_linf": 0.19706612825393677,
+      "labels": [
+        "early_policy_drift_marker",
+        "critic_q1_reversal_marker",
+        "actor_encoder_shift_marker"
+      ],
+      "source_max_progress": 0.9866666666666667,
+      "source_seed": 1,
+      "source_steps": 534,
+      "transition": "lost",
+      "variant": "easy_retention"
+    },
+    {
+      "candidate_max_progress": 0.2012987012987013,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.18506493506493507,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "uniform"
+    },
+    {
+      "candidate_max_progress": 0.32792207792207795,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.18506493506493507,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "failure_weighted"
+    },
+    {
+      "candidate_max_progress": 0.5422077922077922,
+      "family": "easy-curvature-anchor",
+      "geometry_seed": 3910800187,
+      "labels": [
+        "source_also_failed_adaptation_not_established"
+      ],
+      "source_max_progress": 0.18506493506493507,
+      "source_seed": 1,
+      "transition": "both_failed",
+      "variant": "easy_retention"
+    }
+  ],
+  "scope": "source-success regression markers on reused TRAIN-DIAGNOSTIC; NOT causal attribution or fresh/generalization evidence",
+  "variants": {
+    "easy_retention": {
+      "both_failed_source_also_failed_count": 19,
+      "first20_Q1_reversal_by_road": {
+        "seed0-road3910800148": 4,
+        "seed0-road3910800153": 8,
+        "seed0-road3910800160": 6,
+        "seed0-road3910800163": 4,
+        "seed0-road3910800172": 6,
+        "seed0-road3910800182": 4,
+        "seed1-road3910800124": 10,
+        "seed1-road3910800134": 9,
+        "seed1-road3910800163": 10,
+        "seed1-road3910800169": 9,
+        "seed1-road3910800182": 14
+      },
+      "lost_marker_counts": {
+        "actor_encoder_shift_marker": 10,
+        "critic_q1_reversal_marker": 3,
+        "early_policy_drift_marker": 7,
+        "finish_or_late_stage_marker": 2
+      },
+      "lost_source_success_road_count": 10,
+      "retained_source_success_road_count": 1,
+      "source_success_state_actor_action_linf_median": 0.19042643904685974,
+      "source_success_state_actor_encoder_cosine_median": 0.7671166658401489,
+      "source_success_state_records": 666,
+      "transitions": {
+        "both_failed": 19,
+        "both_finished": 1,
+        "gained": 2,
+        "lost": 10
+      }
+    },
+    "failure_weighted": {
+      "both_failed_source_also_failed_count": 18,
+      "first20_Q1_reversal_by_road": {
+        "seed0-road3910800148": 8,
+        "seed0-road3910800153": 8,
+        "seed0-road3910800160": 7,
+        "seed0-road3910800163": 9,
+        "seed0-road3910800172": 10,
+        "seed0-road3910800182": 5,
+        "seed1-road3910800124": 10,
+        "seed1-road3910800134": 3,
+        "seed1-road3910800163": 11,
+        "seed1-road3910800169": 8,
+        "seed1-road3910800182": 9
+      },
+      "lost_marker_counts": {
+        "actor_encoder_shift_marker": 10,
+        "critic_q1_reversal_marker": 2,
+        "early_policy_drift_marker": 4
+      },
+      "lost_source_success_road_count": 10,
+      "retained_source_success_road_count": 1,
+      "source_success_state_actor_action_linf_median": 0.3308747708797455,
+      "source_success_state_actor_encoder_cosine_median": 0.7828702926635742,
+      "source_success_state_records": 666,
+      "transitions": {
+        "both_failed": 18,
+        "both_finished": 1,
+        "gained": 3,
+        "lost": 10
+      }
+    },
+    "uniform": {
+      "both_failed_source_also_failed_count": 20,
+      "first20_Q1_reversal_by_road": {
+        "seed0-road3910800148": 3,
+        "seed0-road3910800153": 2,
+        "seed0-road3910800160": 5,
+        "seed0-road3910800163": 5,
+        "seed0-road3910800172": 3,
+        "seed0-road3910800182": 4,
+        "seed1-road3910800124": 8,
+        "seed1-road3910800134": 8,
+        "seed1-road3910800163": 9,
+        "seed1-road3910800169": 8,
+        "seed1-road3910800182": 8
+      },
+      "lost_marker_counts": {
+        "actor_encoder_shift_marker": 11,
+        "early_policy_drift_marker": 5,
+        "finish_or_late_stage_marker": 2
+      },
+      "lost_source_success_road_count": 11,
+      "retained_source_success_road_count": 0,
+      "source_success_state_actor_action_linf_median": 0.22258055210113525,
+      "source_success_state_actor_encoder_cosine_median": 0.7942447364330292,
+      "source_success_state_records": 666,
+      "transitions": {
+        "both_failed": 20,
+        "both_finished": 0,
+        "gained": 1,
+        "lost": 11
+      }
+    }
+  }
+}
