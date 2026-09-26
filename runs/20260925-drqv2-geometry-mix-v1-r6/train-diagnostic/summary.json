@@ -1,0 +1,2681 @@
+{
+  "canonical_repeat": 0,
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "episodes_jsonl": "episodes.jsonl",
+  "expected_episode_count": 256,
+  "family_arm_seed": [
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.20572827777145675,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.7301874724316973,
+          "min": -1.0,
+          "std": 0.5365170478548709
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.16992503851438356,
+          "min": -1.0,
+          "std": 0.9506417742895535
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8065333838442306,
+          "min": -0.9961200952529907,
+          "std": 0.5891239315058112
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.13490626378415133,
+          "min": 0.0,
+          "std": 0.26825852392743543
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.16992503851438356,
+          "min": -1.0,
+          "std": 0.9506417742895535
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9032666919221153,
+          "min": 0.0019399523735046387,
+          "std": 0.2945619657529056
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.7054717115730883,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.8885059356689453,
+          "mean": -0.5613885935589119,
+          "min": -1.0,
+          "std": 0.39940958315021446
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.06818254148760051,
+          "min": -1.0,
+          "std": 0.8888440832466222
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8546517407011103,
+          "min": -0.9951756000518799,
+          "std": 0.49983066208134513
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9442529678344727,
+          "mean": 0.21930570322054405,
+          "min": 0.0,
+          "std": 0.19970479157510723
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.06818254148760051,
+          "min": -1.0,
+          "std": 0.8888440832466222
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9273258703505551,
+          "min": 0.0024121999740600586,
+          "std": 0.24991533104067257
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.6003322831389165,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.5516493093446573,
+          "min": -1.0,
+          "std": 0.5881704148244207
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07013380001295244,
+          "min": -1.0,
+          "std": 0.9420484797583689
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8313419517169585,
+          "min": -0.9999244809150696,
+          "std": 0.5354398052574353
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.22417534532767136,
+          "min": 0.0,
+          "std": 0.29408520741221034
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07013380001295244,
+          "min": -1.0,
+          "std": 0.9420484797583689
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9156709758584792,
+          "min": 3.775954246520996e-05,
+          "std": 0.26771990262871764
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "crash": 1,
+        "finished": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.34002979012365747,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9923654794692993,
+          "mean": -0.3667810643745574,
+          "min": -1.0,
+          "std": 0.7368076948710383
+        },
+        "steer": {
+          "max": 0.9999994039535522,
+          "mean": -0.2598194987143063,
+          "min": -1.0,
+          "std": 0.7991078082568926
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7516764790017084,
+          "min": -0.9995137453079224,
+          "std": 0.6576484380005143
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9961827397346497,
+          "mean": 0.3166094678127213,
+          "min": 0.0,
+          "std": 0.3684038474355191
+        },
+        "steer": {
+          "max": 0.9999994039535522,
+          "mean": -0.2598194987143063,
+          "min": -1.0,
+          "std": 0.7991078082568926
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8758382395008542,
+          "min": 0.00024312734603881836,
+          "std": 0.3288242190002572
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.5932492274795154,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.3598603379755321,
+          "min": -1.0,
+          "std": 0.8190999243634937
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.13305082583269925,
+          "min": -1.0,
+          "std": 0.9677108333100164
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.678357166683086,
+          "min": -1.0,
+          "std": 0.7318176350184963
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.32006983101223396,
+          "min": 0.0,
+          "std": 0.40954996218174683
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.13305082583269925,
+          "min": -1.0,
+          "std": 0.9677108333100164
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.839178583341543,
+          "min": 0.0,
+          "std": 0.36590881750924814
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.4452667430608607,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9967732429504395,
+          "mean": -0.49441458565651336,
+          "min": -1.0,
+          "std": 0.6144488073602488
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.23733773720383408,
+          "min": -1.0,
+          "std": 0.8786617894911877
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.769800876950942,
+          "min": -0.9999999403953552,
+          "std": 0.635127203295256
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9983866214752197,
+          "mean": 0.2527927071717433,
+          "min": 0.0,
+          "std": 0.3072244036801244
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.23733773720383408,
+          "min": -1.0,
+          "std": 0.8786617894911877
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8849004384754711,
+          "min": 2.9802322387695312e-08,
+          "std": 0.31756360164762787
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.5682256139077165,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999995231628418,
+          "mean": -0.7015796518464652,
+          "min": -1.0,
+          "std": 0.5406247586392146
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.09569228177513624,
+          "min": -1.0,
+          "std": 0.9684033542018109
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.6387255143206846,
+          "min": -1.0,
+          "std": 0.7528049219240104
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999997615814209,
+          "mean": 0.1492101740767674,
+          "min": 0.0,
+          "std": 0.2703123793196073
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.09569228177513624,
+          "min": -1.0,
+          "std": 0.9684033542018109
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8193627571603422,
+          "min": 0.0,
+          "std": 0.37640246096200514
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "easy-curvature-anchor",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.38291099805492795,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999991655349731,
+          "mean": -0.2560643382035889,
+          "min": -1.0,
+          "std": 0.7812100141504537
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.024865399871869698,
+          "min": -1.0,
+          "std": 0.8848248283315412
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.4452666008328817,
+          "min": -1.0,
+          "std": 0.8891498078927583
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999995827674866,
+          "mean": 0.3719678308982055,
+          "min": 0.0,
+          "std": 0.39060500707522683
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.024865399871869698,
+          "min": -1.0,
+          "std": 0.8848248283315412
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7226333004164408,
+          "min": 0.0,
+          "std": 0.44457490394637916
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.2994772502347299,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999996423721313,
+          "mean": -0.28232669241634417,
+          "min": -1.0,
+          "std": 0.8623491201624416
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07019473255620899,
+          "min": -1.0,
+          "std": 0.9608726545961486
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9719271840545539,
+          "min": -0.9983789920806885,
+          "std": 0.18691432733614294
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999998211860657,
+          "mean": 0.35883665379182794,
+          "min": 0.0,
+          "std": 0.4311745600812208
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07019473255620899,
+          "min": -1.0,
+          "std": 0.9608726545961486
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.985963592027277,
+          "min": 0.0008105039596557617,
+          "std": 0.09345716366807147
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.9199444261171873,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9811486005783081,
+          "mean": -0.38874285343365794,
+          "min": -1.0,
+          "std": 0.5826197799850514
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.20896104024723172,
+          "min": -1.0,
+          "std": 0.8092303987558382
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7348399336251737,
+          "min": -0.9987917542457581,
+          "std": 0.6745663499867228
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.990574300289154,
+          "mean": 0.30562857328317106,
+          "min": 0.0,
+          "std": 0.2913098899925257
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.20896104024723172,
+          "min": -1.0,
+          "std": 0.8092303987558382
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8674199668125869,
+          "min": 0.0006041228771209717,
+          "std": 0.33728317499336147
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5018207425076764,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.5010194645116204,
+          "min": -1.0,
+          "std": 0.724812136172613
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.04142937917066248,
+          "min": -1.0,
+          "std": 0.9725370185011316
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.4865121679347858,
+          "min": -1.0,
+          "std": 0.8547844729090284
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.2494902677441898,
+          "min": 0.0,
+          "std": 0.3624060680863065
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.04142937917066248,
+          "min": -1.0,
+          "std": 0.9725370185011316
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.743256083967393,
+          "min": 0.0,
+          "std": 0.42739223645451413
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.9111769482579237,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.51359256683213,
+          "min": -1.0,
+          "std": 0.6120169960856534
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.2899727364976705,
+          "min": -1.0,
+          "std": 0.8184374977535176
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8122473869773332,
+          "min": -0.9999997615814209,
+          "std": 0.5818937017664719
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.243203716583935,
+          "min": 0.0,
+          "std": 0.3060084980428267
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.2899727364976705,
+          "min": -1.0,
+          "std": 0.8184374977535176
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9061236934886666,
+          "min": 1.1920928955078125e-07,
+          "std": 0.29094685088323596
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5890831578146014,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.6850349413084468,
+          "min": -1.0,
+          "std": 0.5439212645947983
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.1546443423773709,
+          "min": -1.0,
+          "std": 0.9228871809743749
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8125353611861287,
+          "min": -0.9999999403953552,
+          "std": 0.5796855020482461
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.5,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.15748252934577664,
+          "min": 0.0,
+          "std": 0.27196063229739914
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.1546443423773709,
+          "min": -1.0,
+          "std": 0.9228871809743749
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9062676805930643,
+          "min": 2.9802322387695312e-08,
+          "std": 0.28984275102412305
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.52903671936458,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9990851879119873,
+          "mean": -0.2664384632151526,
+          "min": -1.0,
+          "std": 0.7530988841149959
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.011625811229466603,
+          "min": -1.0,
+          "std": 0.934612755924353
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9545156618897325,
+          "min": -0.9224622845649719,
+          "std": 0.14913546929597807
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9995425939559937,
+          "mean": 0.3667807683924237,
+          "min": 0.0,
+          "std": 0.37654944205749796
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.011625811229466603,
+          "min": -1.0,
+          "std": 0.934612755924353
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9772578309448663,
+          "min": 0.03876885771751404,
+          "std": 0.07456773464798903
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5985802014870454,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999961853027344,
+          "mean": -0.31056096107600123,
+          "min": -1.0,
+          "std": 0.847286904902123
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17056325693698027,
+          "min": -1.0,
+          "std": 0.9042309959500906
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7595649873744176,
+          "min": -1.0,
+          "std": 0.638117806683843
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999980926513672,
+          "mean": 0.3447195194619994,
+          "min": 0.0,
+          "std": 0.4236434524510615
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17056325693698027,
+          "min": -1.0,
+          "std": 0.9042309959500906
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8797824936872088,
+          "min": 0.0,
+          "std": 0.3190589033419215
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "finish-approach-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.9123759738117594,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9891035556793213,
+          "mean": -0.42020192276442414,
+          "min": -1.0,
+          "std": 0.6770771794944637
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.07894620066386643,
+          "min": -1.0,
+          "std": 0.8304533670938242
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.6903276473674191,
+          "min": -1.0,
+          "std": 0.7109551870576383
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9945517778396606,
+          "mean": 0.28989903861778793,
+          "min": 0.0,
+          "std": 0.33853858974723183
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.07894620066386643,
+          "min": -1.0,
+          "std": 0.8304533670938242
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8451638236837096,
+          "min": 0.0,
+          "std": 0.35547759352881914
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.38076047095155374,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999984502792358,
+          "mean": -0.7227097579055196,
+          "min": -1.0,
+          "std": 0.5437657118247107
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.10303986719113657,
+          "min": -1.0,
+          "std": 0.9736255260748309
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9978247580109719,
+          "min": -0.9824641346931458,
+          "std": 0.06408788968223333
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999992251396179,
+          "mean": 0.1386451210472402,
+          "min": 0.0,
+          "std": 0.27188285591235534
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.10303986719113657,
+          "min": -1.0,
+          "std": 0.9736255260748309
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9989123790054859,
+          "min": 0.008767932653427124,
+          "std": 0.032043944841116674
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.9000836389371422,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9857029914855957,
+          "mean": -0.5505223854354793,
+          "min": -1.0,
+          "std": 0.3971419421072863
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.27380333892993336,
+          "min": -1.0,
+          "std": 0.8327200695166589
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7982027314362987,
+          "min": -0.9998269081115723,
+          "std": 0.6001416466366992
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9928514957427979,
+          "mean": 0.22473880728226034,
+          "min": 0.0,
+          "std": 0.19857097105364313
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.27380333892993336,
+          "min": -1.0,
+          "std": 0.8327200695166589
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8991013657181494,
+          "min": 8.654594421386719e-05,
+          "std": 0.3000708233183496
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 2,
+      "finish_fraction": 0.6666666666666666,
+      "mean_max_progress": 0.747926397735315,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999998807907104,
+          "mean": -0.4754843304920467,
+          "min": -1.0,
+          "std": 0.6696706742843076
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.0323553585224434,
+          "min": -1.0,
+          "std": 0.9292201470235777
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9804308354010325,
+          "min": -0.9999989867210388,
+          "std": 0.18341574817325637
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999999403953552,
+          "mean": 0.2622578347539767,
+          "min": 0.0,
+          "std": 0.3348353371421538
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.0323553585224434,
+          "min": -1.0,
+          "std": 0.9292201470235777
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9902154177005162,
+          "min": 5.066394805908203e-07,
+          "std": 0.09170787408662819
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 2,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.7848980248343306,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999971389770508,
+          "mean": -0.4966803072725685,
+          "min": -1.0,
+          "std": 0.6369343193603201
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.3084300822005713,
+          "min": -1.0,
+          "std": 0.8352899674590449
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8724326124083263,
+          "min": -1.0,
+          "std": 0.4876933859524659
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999985694885254,
+          "mean": 0.25165984636371574,
+          "min": 0.0,
+          "std": 0.31846715968016004
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.3084300822005713,
+          "min": -1.0,
+          "std": 0.8352899674590449
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9362163062041632,
+          "min": 0.0,
+          "std": 0.24384669297623293
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 2,
+      "finish_fraction": 0.6666666666666666,
+      "mean_max_progress": 0.7677237341568551,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.6616780586332528,
+          "min": -1.0,
+          "std": 0.589873736774924
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.04204453796900499,
+          "min": -1.0,
+          "std": 0.9678552276724987
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8681803468452637,
+          "min": -0.9999979138374329,
+          "std": 0.4865097160148807
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.1691609706833736,
+          "min": 0.0,
+          "std": 0.294936868387462
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.04204453796900499,
+          "min": -1.0,
+          "std": 0.9678552276724987
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9340901734226319,
+          "min": 1.043081283569336e-06,
+          "std": 0.24325485800744034
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 2,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.6654198031268095,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9974455833435059,
+          "mean": -0.49538325592181526,
+          "min": -1.0,
+          "std": 0.621988364038801
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.14874566040513604,
+          "min": -1.0,
+          "std": 0.8641288996757133
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8276572981494448,
+          "min": -0.99972003698349,
+          "std": 0.5591560093739473
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9987227916717529,
+          "mean": 0.2523083720390924,
+          "min": 0.0,
+          "std": 0.3109941820194005
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.14874566040513604,
+          "min": -1.0,
+          "std": 0.8641288996757133
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9138286490747224,
+          "min": 0.00013998150825500488,
+          "std": 0.27957800468697364
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "crash": 1,
+        "finished": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.6267548092388856,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999967813491821,
+          "mean": -0.5417448193511275,
+          "min": -1.0,
+          "std": 0.6910110513841964
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.10670953932328918,
+          "min": -1.0,
+          "std": 0.9428845676678529
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8619220667830774,
+          "min": -1.0,
+          "std": 0.5016924207335612
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999983906745911,
+          "mean": 0.22912759032443622,
+          "min": 0.0,
+          "std": 0.34550552569209825
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.10670953932328918,
+          "min": -1.0,
+          "std": 0.9428845676678529
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9309610333915387,
+          "min": 0.0,
+          "std": 0.2508462103667806
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "mid-road-left-right-reversal",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.3101106607476034,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999637603759766,
+          "mean": -0.08764708421176806,
+          "min": -1.0,
+          "std": 0.8079138091065783
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.34275486801544547,
+          "min": -1.0,
+          "std": 0.8166555980350342
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.5182426629072413,
+          "min": -1.0,
+          "std": 0.8492906820786971
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999818801879883,
+          "mean": 0.456176457894116,
+          "min": 0.0,
+          "std": 0.40395690455328914
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.34275486801544547,
+          "min": -1.0,
+          "std": 0.8166555980350342
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7591213314536206,
+          "min": 0.0,
+          "std": 0.42464534103934853
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5988167680865449,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.6676197482981666,
+          "min": -1.0,
+          "std": 0.6092581714445997
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.09548486168151377,
+          "min": -1.0,
+          "std": 0.9682171790057913
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9907039882057043,
+          "min": -0.9959343671798706,
+          "std": 0.10555739140211684
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.16619012585091672,
+          "min": 0.0,
+          "std": 0.3046290857222998
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.09548486168151377,
+          "min": -1.0,
+          "std": 0.9682171790057913
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9953519941028521,
+          "min": 0.0020328164100646973,
+          "std": 0.05277869570105842
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 2,
+      "finish_fraction": 1.0,
+      "mean_max_progress": 0.9915596123506873,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.6795117855072021,
+          "mean": -0.6020711071486843,
+          "min": -1.0,
+          "std": 0.3665182724339826
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17673008158332923,
+          "min": -1.0,
+          "std": 0.8746249267560371
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9959246947866525,
+          "min": -0.9985537528991699,
+          "std": 0.07282392181595988
+        }
+      },
+      "off_track_count": 0,
+      "off_track_fraction": 0.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.8397558927536011,
+          "mean": 0.19896444642565786,
+          "min": 0.0,
+          "std": 0.1832591362169913
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17673008158332923,
+          "min": -1.0,
+          "std": 0.8746249267560371
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9979623473933262,
+          "min": 0.0007231235504150391,
+          "std": 0.03641196090797994
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "finished": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.38682668469686726,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999287128448486,
+          "mean": -0.3182199166689305,
+          "min": -1.0,
+          "std": 0.7786478265985888
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.11611409828798964,
+          "min": -1.0,
+          "std": 0.951965961100048
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9825163819541821,
+          "min": -0.9992997050285339,
+          "std": 0.1637894262372064
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.5,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999643564224243,
+          "mean": 0.34089004166553477,
+          "min": 0.0,
+          "std": 0.3893239132992944
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.11611409828798964,
+          "min": -1.0,
+          "std": 0.951965961100048
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.991258190977091,
+          "min": 0.0003501474857330322,
+          "std": 0.08189471311860322
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.4410863195853054,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.999997615814209,
+          "mean": -0.14304344250309853,
+          "min": -1.0,
+          "std": 0.8530344191908285
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.326601177625989,
+          "min": -1.0,
+          "std": 0.794192752706972
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.3682141771239619,
+          "min": -1.0,
+          "std": 0.9283331564724191
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999988079071045,
+          "mean": 0.42847827874845074,
+          "min": 0.0,
+          "std": 0.4265172095954142
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.326601177625989,
+          "min": -1.0,
+          "std": 0.794192752706972
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.684107088561981,
+          "min": 0.0,
+          "std": 0.46416657823620955
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.7125647960333559,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.328424801347182,
+          "min": -1.0,
+          "std": 0.8200836478817556
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.06660144005172415,
+          "min": -1.0,
+          "std": 0.9578153171738568
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.931725736684406,
+          "min": -0.8001388311386108,
+          "std": 0.21063885140955954
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.335787599326409,
+          "min": 0.0,
+          "std": 0.4100418239408778
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.06660144005172415,
+          "min": -1.0,
+          "std": 0.9578153171738568
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9658628683422029,
+          "min": 0.09993058443069458,
+          "std": 0.10531942570477977
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 1,
+      "finish_fraction": 0.5,
+      "mean_max_progress": 0.9559837728194727,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9975824356079102,
+          "mean": -0.4811962731409529,
+          "min": -1.0,
+          "std": 0.6180795440262532
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.018073653052313766,
+          "min": -1.0,
+          "std": 0.8652958512144223
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8107580779634215,
+          "min": -0.9999693036079407,
+          "std": 0.5793077183169371
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.5,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9987912178039551,
+          "mean": 0.25940186342952354,
+          "min": 0.0,
+          "std": 0.3090397720131266
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.018073653052313766,
+          "min": -1.0,
+          "std": 0.8652958512144223
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9053790389817108,
+          "min": 1.5348196029663086e-05,
+          "std": 0.28965385915846853
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.2586770340320036,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.999484658241272,
+          "mean": -0.7551821694901241,
+          "min": -1.0,
+          "std": 0.5123029346626415
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.09137197563438747,
+          "min": -1.0,
+          "std": 0.8829285502528376
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.6609232836033232,
+          "min": -0.9523251056671143,
+          "std": 0.6308895562235725
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.5,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.999742329120636,
+          "mean": 0.12240891525493794,
+          "min": 0.0,
+          "std": 0.25615146733132077
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.09137197563438747,
+          "min": -1.0,
+          "std": 0.8829285502528376
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8304616418016616,
+          "min": 0.02383744716644287,
+          "std": 0.31544477811178623
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 2,
+      "family": "mid-road-sustained-or-same-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.4035947712418301,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.999800443649292,
+          "mean": -0.20217931084069893,
+          "min": -1.0,
+          "std": 0.8146647470864351
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.016521476687410393,
+          "min": -1.0,
+          "std": 0.881224929218619
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.4401348475711274,
+          "min": -1.0,
+          "std": 0.8954408996258308
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.999900221824646,
+          "mean": 0.3989103445796505,
+          "min": 0.0,
+          "std": 0.4073323735432176
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.016521476687410393,
+          "min": -1.0,
+          "std": 0.881224929218619
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7200674237855638,
+          "min": 0.0,
+          "std": 0.4477204498129154
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.1904110823181807,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.1630648069709312,
+          "min": -1.0,
+          "std": 0.9276573371319681
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.0644244885754608,
+          "min": -1.0,
+          "std": 0.9750411371862185
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9747542584215412,
+          "min": -0.9991000890731812,
+          "std": 0.20652176245803672
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.4184675965145344,
+          "min": 0.0,
+          "std": 0.46382866856598404
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.0644244885754608,
+          "min": -1.0,
+          "std": 0.9750411371862185
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9873771292107706,
+          "min": 0.00044995546340942383,
+          "std": 0.10326088122901836
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.6710210618940367,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9996776580810547,
+          "mean": -0.3600228061596442,
+          "min": -1.0,
+          "std": 0.6488620036510484
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.13104736327432662,
+          "min": -1.0,
+          "std": 0.8270646573950144
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8028680394936006,
+          "min": -0.9782122373580933,
+          "std": 0.5727670511047788
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9998388290405273,
+          "mean": 0.3199885969201779,
+          "min": 0.0,
+          "std": 0.3244310018255242
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.13104736327432662,
+          "min": -1.0,
+          "std": 0.8270646573950144
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9014340197468003,
+          "min": 0.01089388132095337,
+          "std": 0.2863835255523894
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.5700920781768425,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.3570606575039589,
+          "min": -1.0,
+          "std": 0.7479673634825661
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.016827895964432425,
+          "min": -1.0,
+          "std": 0.9701958303287834
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8331875988848392,
+          "min": -0.9999904036521912,
+          "std": 0.516435735270866
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.32146967124802056,
+          "min": 0.0,
+          "std": 0.37398368174128305
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.016827895964432425,
+          "min": -1.0,
+          "std": 0.9701958303287834
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9165937994424196,
+          "min": 4.798173904418945e-06,
+          "std": 0.258217867635433
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.47978003277550396,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9908210039138794,
+          "mean": -0.49163010670696833,
+          "min": -1.0,
+          "std": 0.660201794432605
+        },
+        "steer": {
+          "max": 0.9999980330467224,
+          "mean": -0.2735718151218002,
+          "min": -1.0,
+          "std": 0.782174771635387
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7620587179342718,
+          "min": -1.0,
+          "std": 0.6460460192028196
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9954105019569397,
+          "mean": 0.25418494664651586,
+          "min": 0.0,
+          "std": 0.3301008972163025
+        },
+        "steer": {
+          "max": 0.9999980330467224,
+          "mean": -0.2735718151218002,
+          "min": -1.0,
+          "std": 0.782174771635387
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8810293589671359,
+          "min": 0.0,
+          "std": 0.32302300960140984
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "crash": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 1,
+      "finish_fraction": 0.3333333333333333,
+      "mean_max_progress": 0.5273007677217796,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.5375141922982863,
+          "min": -1.0,
+          "std": 0.7147583159124667
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.05320758162525165,
+          "min": -1.0,
+          "std": 0.9743385611995471
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.724961605045256,
+          "min": -0.9999668598175049,
+          "std": 0.6366353153368204
+        }
+      },
+      "off_track_count": 2,
+      "off_track_fraction": 0.6666666666666666,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.23124290385085683,
+          "min": 0.0,
+          "std": 0.3573791579562334
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.05320758162525165,
+          "min": -1.0,
+          "std": 0.9743385611995471
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.862480802522628,
+          "min": 1.6570091247558594e-05,
+          "std": 0.3183176576684102
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 1,
+        "off_track": 2
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 2,
+      "finish_fraction": 0.6666666666666666,
+      "mean_max_progress": 0.7750115037175171,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9996151924133301,
+          "mean": -0.6520421828952956,
+          "min": -1.0,
+          "std": 0.460225942210549
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.061088409178407244,
+          "min": -1.0,
+          "std": 0.9000122095574237
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9891131585623206,
+          "min": -0.9997667074203491,
+          "std": 0.1372675021160817
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.999807596206665,
+          "mean": 0.17397890855235223,
+          "min": 0.0,
+          "std": 0.2301129711052745
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.061088409178407244,
+          "min": -1.0,
+          "std": 0.9000122095574237
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9945565792811603,
+          "min": 0.00011664628982543945,
+          "std": 0.06863375105804086
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "finished": 2,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.41527254526813756,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999692440032959,
+          "mean": -0.683090404523622,
+          "min": -1.0,
+          "std": 0.5767305547197544
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.18097970270372313,
+          "min": -1.0,
+          "std": 0.9585860503626923
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8528155586041442,
+          "min": -0.9999998807907104,
+          "std": 0.5183763629663581
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.999984622001648,
+          "mean": 0.158454797738189,
+          "min": 0.0,
+          "std": 0.2883652773598772
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.18097970270372313,
+          "min": -1.0,
+          "std": 0.9585860503626923
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9264077793020721,
+          "min": 5.960464477539063e-08,
+          "std": 0.25918818148317907
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-delayed-high-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.2591985016912483,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999343156814575,
+          "mean": 0.0009361401286428374,
+          "min": -1.0,
+          "std": 0.8589736926471971
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.127577709125939,
+          "min": -1.0,
+          "std": 0.8905048613636505
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.1833341499801316,
+          "min": -1.0,
+          "std": 0.9817859650677742
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999671578407288,
+          "mean": 0.5004680700643214,
+          "min": 0.0,
+          "std": 0.42948684632359857
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.127577709125939,
+          "min": -1.0,
+          "std": 0.8905048613636505
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.5916670749900658,
+          "min": 0.0,
+          "std": 0.4908929825338871
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5481783657146267,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999990463256836,
+          "mean": -0.7249338791934316,
+          "min": -1.0,
+          "std": 0.5517113279022026
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07225460997482198,
+          "min": -1.0,
+          "std": 0.9760907384100332
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9773334019822989,
+          "min": -0.9999436140060425,
+          "std": 0.19309476743928228
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999995231628418,
+          "mean": 0.1375330604032842,
+          "min": 0.0,
+          "std": 0.27585566395110134
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.07225460997482198,
+          "min": -1.0,
+          "std": 0.9760907384100332
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9886667009911494,
+          "min": 2.8192996978759766e-05,
+          "std": 0.09654738371964114
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "easy_retention",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.9062080311576685,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9927027225494385,
+          "mean": -0.4817745251159832,
+          "min": -1.0,
+          "std": 0.47523999139311796
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.19079834208693974,
+          "min": -1.0,
+          "std": 0.8346826954361418
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.753000603323964,
+          "min": -0.999995768070221,
+          "std": 0.6448552773357494
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9963513612747192,
+          "mean": 0.2591127374420084,
+          "min": 0.0,
+          "std": 0.23761999569655898
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.19079834208693974,
+          "min": -1.0,
+          "std": 0.8346826954361418
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.876500301661982,
+          "min": 2.115964889526367e-06,
+          "std": 0.3224276386678747
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5330378726833199,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.516991863146225,
+          "min": -1.0,
+          "std": 0.6843364154920871
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.13619101206968534,
+          "min": -1.0,
+          "std": 0.9197603040217199
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7408678035236574,
+          "min": -1.0,
+          "std": 0.6622913917994027
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.24150406842688749,
+          "min": 0.0,
+          "std": 0.34216820774604356
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.13619101206968534,
+          "min": -1.0,
+          "std": 0.9197603040217199
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8704339017618287,
+          "min": 0.0,
+          "std": 0.3311456958997013
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "failure_weighted",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.5697298325722984,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9902130365371704,
+          "mean": -0.42316420134477795,
+          "min": -1.0,
+          "std": 0.6201534870121174
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.18118701738973275,
+          "min": -1.0,
+          "std": 0.8392139090165815
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.4978764578092131,
+          "min": -1.0,
+          "std": 0.8516450717642619
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9951065182685852,
+          "mean": 0.288417899327611,
+          "min": 0.0,
+          "std": 0.3100767435060587
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.18118701738973275,
+          "min": -1.0,
+          "std": 0.8392139090165815
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7489382289046065,
+          "min": 0.0,
+          "std": 0.4258225358821309
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 2,
+      "finish_fraction": 0.6666666666666666,
+      "mean_max_progress": 0.845149894051989,
+      "native_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": -0.5391064250283668,
+          "min": -1.0,
+          "std": 0.6936172258214336
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.027979418608793643,
+          "min": -1.0,
+          "std": 0.9737034511981957
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8666623535091311,
+          "min": -0.9999975562095642,
+          "std": 0.493990048656716
+        }
+      },
+      "off_track_count": 1,
+      "off_track_fraction": 0.3333333333333333,
+      "official_action_axes": {
+        "brake": {
+          "max": 1.0,
+          "mean": 0.2304467874858166,
+          "min": 0.0,
+          "std": 0.3468086129107168
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.027979418608793643,
+          "min": -1.0,
+          "std": 0.9737034511981957
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.9333311767545656,
+          "min": 1.2218952178955078e-06,
+          "std": 0.246995024328358
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "finished": 2,
+        "off_track": 1
+      }
+    },
+    {
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.7005420509147342,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.999556303024292,
+          "mean": -0.3981817327179275,
+          "min": -1.0,
+          "std": 0.7066862349430793
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.19921600865818873,
+          "min": -1.0,
+          "std": 0.8773938755925075
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7264269751685483,
+          "min": -0.9989793300628662,
+          "std": 0.6709561111549981
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.999778151512146,
+          "mean": 0.3009091336410362,
+          "min": 0.0,
+          "std": 0.3533431174715396
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.19921600865818873,
+          "min": -1.0,
+          "std": 0.8773938755925075
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8632134875842742,
+          "min": 0.0005103349685668945,
+          "std": 0.335478055577499
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.6967200883397499,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999997615814209,
+          "mean": -0.6071852294123097,
+          "min": -1.0,
+          "std": 0.5765579437036787
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17768779045722008,
+          "min": -1.0,
+          "std": 0.9432980998948569
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.7827902274526608,
+          "min": -1.0,
+          "std": 0.5767318385524569
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999998807907104,
+          "mean": 0.19640738529384516,
+          "min": 0.0,
+          "std": 0.28827897185183937
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": -0.17768779045722008,
+          "min": -1.0,
+          "std": 0.9432980998948569
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.8913951137263304,
+          "min": 0.0,
+          "std": 0.28836591927622846
+        }
+      },
+      "source_learner_seed": 0,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    },
+    {
+      "arm": "uniform",
+      "canonical_repeat": 0,
+      "episode_count": 3,
+      "family": "opening-short-entry-left-turn",
+      "finish_count": 0,
+      "finish_fraction": 0.0,
+      "mean_max_progress": 0.21281933625809532,
+      "native_action_axes": {
+        "brake": {
+          "max": 0.9999961853027344,
+          "mean": 0.09879598035812379,
+          "min": -1.0,
+          "std": 0.8708165160437662
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.08653414848670364,
+          "min": -1.0,
+          "std": 0.8940698062786748
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.09132367725372315,
+          "min": -1.0,
+          "std": 0.9941623264610359
+        }
+      },
+      "off_track_count": 3,
+      "off_track_fraction": 1.0,
+      "official_action_axes": {
+        "brake": {
+          "max": 0.9999980926513672,
+          "mean": 0.5493979901790619,
+          "min": 0.0,
+          "std": 0.4354082580218831
+        },
+        "steer": {
+          "max": 1.0,
+          "mean": 0.08653414848670364,
+          "min": -1.0,
+          "std": 0.8940698062786748
+        },
+        "throttle": {
+          "max": 1.0,
+          "mean": 0.5456618386268616,
+          "min": 0.0,
+          "std": 0.49708116323051793
+        }
+      },
+      "source_learner_seed": 1,
+      "termination_class_counts": {
+        "off_track": 3
+      }
+    }
+  ],
+  "format": "haic-drq-geometry-mix-training-diagnostic-v1",
+  "geometry_count": 16,
+  "observed_episode_count": 256,
+  "performance_scope": "internal raw-reward TRAIN-DIAGNOSTIC only; not screen, confirmation, blind, fresh generalization, or official HAIC performance",
+  "protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "ranked": false,
+  "repeat_count": 2,
+  "role": "TRAIN-DIAGNOSTIC",
+  "role_count": 8,
+  "sample_interpretation": "one fixed training-only geometry run across two source actors and six final distribution candidates; repeat 0 is canonical and repeat 1 checks replay determinism; descriptive only, no significance test",
+  "score_selection": false,
+  "trace_directory": "traces/"
+}

@@ -18,10 +18,12 @@ completed two development iterations: option/base finishes were 5/5 then 3/5
 on the same consumed 32-cell development grid. It stopped without the proposed
 two-driver promotion gate, fresh confirmation, blind evaluation, or model promotion.
 The subsequent [training-only prefix-branch diagnostic](../../experiments/drqv2-residual-options-prefix-branch-v1-result.json)
-completed without promoting a full-episode policy. B's training-road **reset
-reweighting** remains a separate, untested proposal; the completed
-[training-only road-shape diagnostic](../experiments/drqv2-geometry-augmentation-v1.md)
-does not test B. The design below predates these outcomes and does not authorize
+completed without promoting a full-episode policy. B's particular high-turn-bin
+**reset reweighting** remains untested. The later
+[geometry-mix r6 study](active/drqv2-geometry-mix-plan.md) compared different
+family mixtures on a designated TRAIN catalog; its reused TRAIN-DIAGNOSTIC
+outcomes do not test this proposal's bin definition or fresh confirmation gate.
+The design below predates these outcomes and does not authorize
 training, opening blind cells, official submission, or model confirmation. A new
 study would require separate authorization, a frozen protocol, and fresh audited
 partitions; see [`run-experiment`](../workflows/run-experiment.md).

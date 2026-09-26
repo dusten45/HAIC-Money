@@ -1,0 +1,99 @@
+{
+  "additional_online_steps": 32768,
+  "candidates": [
+    {
+      "actor_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000016384/actor.pt",
+      "actor_sha256": "e1a1dea6e73b04edca0d9601d860ab7c30060147d603fb7e53bd7c75dbf7e9b4",
+      "checkpoint_at_episode_boundary": false,
+      "checkpoint_manifest_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000016384/checkpoint.manifest.json",
+      "checkpoint_manifest_sha256": "83baa25357c0e1de24de40ac537a60cf1e391347bb2a92b46af356f67106f427",
+      "checkpoint_online_step": 16384,
+      "checkpoint_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000016384/checkpoint.pt",
+      "checkpoint_sha256": "5940e477499192f36a6f5fcc36b41d58164175561c7fcdee1197c0b6740ba46b",
+      "resume_allowed": false,
+      "sample_trace_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/replay-sample-trace-step-000016384.npz",
+      "sample_trace_rows": 6384,
+      "sample_trace_sha256": "bde8fdbb9deff74084e576bf6a4380727e7cba15cd4c104e0ba5a17f3e0b6749",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "source_seed": 0,
+      "study_gradient_steps": 6384,
+      "study_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+      "variant": "failure_weighted"
+    },
+    {
+      "actor_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000032768/actor.pt",
+      "actor_sha256": "05857b5ed7032ad1f3c6f1afddd4bc0861d37c566356121320944b4ddcc6e6af",
+      "checkpoint_at_episode_boundary": false,
+      "checkpoint_manifest_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000032768/checkpoint.manifest.json",
+      "checkpoint_manifest_sha256": "c877f6a51b30f53f2217742fafef290f787d793f88a573023a3e13ca71587e0b",
+      "checkpoint_online_step": 32768,
+      "checkpoint_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/checkpoints/step-000032768/checkpoint.pt",
+      "checkpoint_sha256": "4545024b867937cedd1864a2b4085fec6b90f7ba49ef67e843c54a51eb30202b",
+      "resume_allowed": false,
+      "sample_trace_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/replay-sample-trace-step-000032768.npz",
+      "sample_trace_rows": 22768,
+      "sample_trace_sha256": "ca9ea5f6e428105174c92b0d26e60a3751083e244330bb3fc765421b7aa6d085",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "source_seed": 0,
+      "study_gradient_steps": 22768,
+      "study_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+      "variant": "failure_weighted"
+    }
+  ],
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "checkpoint_catalog_path": "checkpoint-catalog.json",
+  "completed": true,
+  "elapsed_seconds": 875.9637184813619,
+  "expected_gradient_steps": 22768,
+  "family_tiers": {
+    "easy-curvature-anchor": "easy",
+    "finish-approach-turn": "boundary",
+    "mid-road-left-right-reversal": "difficult",
+    "mid-road-sustained-or-same-turn": "boundary",
+    "opening-delayed-high-turn": "difficult",
+    "opening-short-entry-left-turn": "difficult"
+  },
+  "final_environment_steps": 163840,
+  "format": "haic-drq-geometry-mix-run-result-v1",
+  "incomplete_budget_episode": {
+    "budget_interrupted": true,
+    "episode_id": 74,
+    "geometry_family": "easy-curvature-anchor",
+    "geometry_seed": 3910800041,
+    "native_action_mean": [
+      -0.01049928367137909,
+      0.9826531410217285,
+      -0.44755271077156067
+    ],
+    "native_saturation_fraction": [
+      0.4329896907216495,
+      0.6030927835051546,
+      0.20618556701030927
+    ],
+    "reward": 171.49747292418994,
+    "steering_abs_ge_0_46_fraction": 0.9123711340206185,
+    "steps": 194,
+    "track_id": 2
+  },
+  "online_replay_only": true,
+  "sample_trace_path": "runs/20260925-drqv2-geometry-mix-v1-r6/learner-0-failure_weighted/replay-sample-trace-step-000032768.npz",
+  "sample_trace_rows": 22768,
+  "sample_trace_sha256": "ca9ea5f6e428105174c92b0d26e60a3751083e244330bb3fc765421b7aa6d085",
+  "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+  "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+  "source_environment_steps_inherited": 131072,
+  "source_revision": "3ea51d6",
+  "source_seed": 0,
+  "study_gradient_steps": 22768,
+  "study_id": "drqv2-geometry-mix-v1-r6",
+  "study_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "teacher_data_loaded": false,
+  "tier_weights": {
+    "boundary": 0.25,
+    "difficult": 0.55,
+    "easy": 0.2
+  },
+  "variant": "failure_weighted"
+}
