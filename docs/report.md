@@ -25,10 +25,12 @@
 | [strategy-history.md](strategy-history.md) | 기존 전략과 판단의 역사 |
 | [handoffs/REPORT_TEMPLATE.md](handoffs/REPORT_TEMPLATE.md) | 에이전트 보고 양식 |
 | [experiments/INDEX.md](experiments/INDEX.md) | 새 실험 기록 위치 |
+| [handoffs/completion-first-discovery-20260926/INDEX.md](handoffs/completion-first-discovery-20260926/INDEX.md) | 이번 네 방향 가설 통합과 인계 |
+| [handoffs/completion-first-discovery-20260926/battlecode-style-tournament-draft.md](handoffs/completion-first-discovery-20260926/battlecode-style-tournament-draft.md) | 네 후보를 공통 대조군과 고정 map/seed로 겨루는 미승인 설계 초안 |
 
 ## 이번에 재개된 하네스 단계
 
-여러 에이전트가 제출한 네 독립 방향의 가설을 중앙 담당자가 [인계 묶음](handoffs/completion-first-discovery-20260926/INDEX.md)에서 통합·배치 검증해 탐색·가설 통합을 완료했다. corridor 전용 아이디어는 제출 적격성이 확인되지 않아 후보 배치에서 제외했다. 현재는 control과 제한을 정할 배치 설계를 작성·수정한다. 이 인계 묶음은 승인된 실험 설계가 아니며, plan revision/hash·split·seed·denominator·자원 예산·설계 승인은 아직 확정하지 않았다. 실험 구현과 실행 전 설계·구현·실행 승인 게이트를 거친다.
+여러 에이전트가 제출한 네 독립 방향의 가설을 중앙 담당자가 [인계 묶음](handoffs/completion-first-discovery-20260926/INDEX.md)에서 통합·배치 검증해 탐색·가설 통합을 완료했다. Battlecode식 경쟁 흐름을 반영해 네 후보가 같은 control과 같은 map/seed 셀에서 겨루는 [토너먼트 설계 초안](handoffs/completion-first-discovery-20260926/battlecode-style-tournament-draft.md)을 작성했다. corridor 전용 아이디어는 제출 적격성이 확인되지 않아 후보 배치에서 제외했다. 현재는 control과 제한을 정할 배치 설계를 작성·수정한다. 이 인계 묶음은 승인된 실험 설계가 아니며, plan revision/hash·split·seed·denominator·자원 예산·설계 승인은 아직 확정하지 않았다. 실험 구현과 실행 전 설계·구현·실행 승인 게이트를 거친다.
 
 ## 기존 방식과 전환 상태
 
@@ -51,3 +53,7 @@
 2026-09-26에 지정된 config/state/policy/coordinator/records/commands/CLI/results/validation 전체 단위 suite **148개 중 147개 통과, 1개 건너뜀, 실패 0개**를 확인했다. 건너뛴 항목은 Windows 파일 symlink 권한에 관한 항목이다. `scripts/harness/validate.ps1`은 exit 0, `valid=true`, issue 0개였다. 단위 검증은 임시 fixture와 FakeRunner를 사용했으며 실제 학습·주행 평가·패키징·제출 작업을 실행하지 않았다. 구조 검증은 문서/설정 구조만 확인하며 공식 규칙의 최신성, 측정된 주행 성능, 입력 지표의 진실성을 보증하지 않는다.
 
 문서의 실제 v2 명령·입력 계약과 기존 정책 이관을 완료했다. 삭제 대상으로 지정된 정확한 파일 10개 모두 저장소 내부의 regular/untracked 경로임을 확인했다. 그러나 보호 검증을 포함한 묶음 삭제와 RULES 단일 파일의 literal 삭제가 자동 승인 검토에서 "blocked by policy" 사유로 거부됐다. 추가 이유는 제공되지 않았다. 두 번째 거부 후 삭제 시도를 중단했으며 기존 진입점·정책·전용 테스트 파일 10개는 모두 남아 있다. 데이터·보고서·checkpoint·ZIP·map·연구 자료와 디렉터리는 삭제하지 않았다. 실제 source 퇴역은 이 차단이 해소된 뒤 정확히 지정된 파일만 제거하는 별도 남은 단계다.
+
+승인 입력의 바이트 동일성을 보강한 `050982a`는 실행 계획 스키마를 v2로 올리고, 등록된 모든 `input_file` 인수와 split이 실제 사용하는 map 파일의 SHA-256을 계획에 포함한다. 실행 claim 전에 이 해시를 다시 확인하며, split·map·resume checkpoint가 달라지면 새 계획과 승인이 필요하다. v1 계획은 자동 변환하지 않고 실행 거부한다. 전용 회귀 검증은 계획 버전과 split·map·checkpoint 변경 사례를 다뤘다.
+
+이후 전체 하네스 suite **152개 중 151개 통과, 1개 건너뜀, 실패 0개**를 확인했다. `scripts/harness/validate.ps1`은 exit 0, `valid=true`, issue 0개였다. 이번에도 실제 학습·주행 평가·패키징·제출은 실행하지 않았다. 해시 재검증 뒤 하위 프로세스가 파일을 읽기 전까지 동시에 파일을 바꾸는 상황은 snapshot/lock으로 차단하지 않는다.
