@@ -1,4 +1,6 @@
 import json
+import os
+import subprocess
 import tempfile
 import unittest
 from dataclasses import replace
@@ -37,6 +39,45 @@ class ConfigTests(unittest.TestCase):
             with self.subTest(path=path):
                 config = replace(self.config, artifact_root=ROOT / path)
                 self.assertTrue(validate_config(config))
+
+    def test_loader_rejects_forbidden_output_root(self):
+        data = json.loads((ROOT / "harness.config.json").read_text(encoding="utf-8"))
+        data["paths"]["artifact_root"] = "artifacts/haic/child"
+        for profile in data["commands"]["profiles"].values():
+            profile["output_root"] = data["paths"]["artifact_root"]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "harness.config.json").write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(ConfigError, "legacy output root"):
+                load_config(root)
+
+    def test_loader_rejects_symlinked_legacy_output_root(self):
+        data = json.loads((ROOT / "harness.config.json").read_text(encoding="utf-8"))
+        data["paths"]["artifact_root"] = "artifacts/haic/child"
+        for profile in data["commands"]["profiles"].values():
+            profile["output_root"] = data["paths"]["artifact_root"]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "artifacts").mkdir()
+            redirected = root / "redirected"
+            redirected.mkdir()
+            try:
+                (root / "artifacts/haic").symlink_to(redirected, target_is_directory=True)
+            except OSError as exc:
+                if os.name != "nt":
+                    self.skipTest(f"directory symlink unavailable: {exc}")
+                try:
+                    junction = subprocess.run(
+                        ["cmd", "/c", "mklink", "/J", str(root / "artifacts/haic"), str(redirected)],
+                        capture_output=True, text=True, check=False,
+                    )
+                except OSError:
+                    self.skipTest(f"directory symlink unavailable: {exc}")
+                if junction.returncode != 0:
+                    self.skipTest(f"directory symlink unavailable: {exc}")
+            (root / "harness.config.json").write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(ConfigError, "legacy output root"):
+                load_config(root)
 
     def test_roots_cannot_be_equal_or_nested(self):
         for path in (self.config.run_root, self.config.run_root / "child"):

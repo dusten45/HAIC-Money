@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -146,11 +147,19 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
 
     roots = {"paths.run_root": config.run_root, "paths.artifact_root": config.artifact_root}
     forbidden = (root / "artifacts/haic", root / "submissions")
+    raw_paths = config.raw.get("paths", {})
     for name, path in roots.items():
         resolved = path.resolve()
+        raw_value = raw_paths.get(name.removeprefix("paths.")) if isinstance(raw_paths, dict) else None
+        lexical = None
+        if isinstance(raw_value, str) and not Path(raw_value).is_absolute():
+            lexical = Path(os.path.abspath(root / raw_value))
         if not _inside(resolved, root) or resolved == root:
             add(name, f"{name} must stay inside the project")
-        if any(_inside(resolved, old) for old in forbidden):
+        if any(
+            _inside(resolved, old.resolve()) or (lexical is not None and _inside(lexical, old))
+            for old in forbidden
+        ):
             add(name, f"{name} must not use a legacy output root")
     if _inside(config.run_root.resolve(), config.artifact_root.resolve()) or _inside(config.artifact_root.resolve(), config.run_root.resolve()):
         add("paths", "run_root and artifact_root must be distinct and non-nested")
@@ -162,7 +171,6 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
         if not isinstance(value, str) or not value or Path(value).is_absolute() or not _inside((root / value).resolve(), root):
             add(name, f"{name} must be a project-relative path inside the project")
 
-    raw_paths = config.raw.get("paths", {})
     if isinstance(raw_paths, dict):
         check_relative(raw_paths.get("pdf_root"), "paths.pdf_root")
     sources = config.raw.get("official_sources", [])
