@@ -77,8 +77,8 @@ def _resolve_path(root: Path, value: Any, name: str) -> Path:
     return (root / value).resolve()
 
 
-def load_config(root: Path) -> HarnessConfig:
-    """Read harness.config.json from *root* and reject invalid settings."""
+def load_config(root: Path, *, validate: bool = True) -> HarnessConfig:
+    """Load config, rejecting invalid settings unless collecting validation issues."""
     root = Path(root).resolve()
     try:
         raw = json.loads((root / "harness.config.json").read_text(encoding="utf-8"))
@@ -119,7 +119,7 @@ def load_config(root: Path) -> HarnessConfig:
         command_profiles=profiles,
         raw=raw,
     )
-    issues = validate_config(config)
+    issues = validate_config(config) if validate else []
     if issues:
         raise ConfigError("; ".join(issue.message for issue in issues))
     return config
@@ -141,6 +141,10 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
         add("schema_version", "schema_version must be 1")
     if config.primary_metric != "completion_rate":
         add("metrics.primary", "metrics.primary must be completion_rate")
+    expected_ties = ("median_finished_lap_ms", "mean_incomplete_progress", "p90_finished_lap_ms",
+                     "collisions", "damage", "act_latency_p95_ms")
+    if config.tie_breakers != expected_ties:
+        add("metrics.tie_breakers", "metrics.tie_breakers must use the exact completion-first tie-breaker order")
     for metric in config.tie_breakers:
         if not isinstance(metric, str) or metric not in METRICS or metric == "completion_rate":
             add("metrics.tie_breakers", f"unknown tie-breaker metric: {metric}")
@@ -290,6 +294,45 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
     workflow = config.raw.get("workflow", {})
     if not isinstance(workflow, Mapping) or workflow.get("states") != [state.value for state in WorkflowState]:
         add("workflow.states", "workflow states must include every registered state in order")
+    required_values = {
+        "project": {"id": "haic-money", "scope": "haic-only"},
+        "workflow": {
+            "default_mode": "plan-only",
+            "separate_approval_stages": ["design", "implementation", "execution"],
+            "gates": ["rule_compliance", "mechanism_activation", "competitive_or_product_outcome"],
+        },
+        "search": {"threshold_sweep_requires_mechanism_activation": True},
+        "metrics": {"official_score_is_separate": True},
+        "splits": {"protected_ids": ["confirmation", "blind"], "blind_tuning_allowed": False,
+                   "consumed_confirmation_reusable_as_fresh": False},
+    }
+    for section, fields in required_values.items():
+        values = config.raw.get(section, {})
+        for key, expected in fields.items():
+            actual = values.get(key) if isinstance(values, Mapping) else None
+            if actual != expected or (type(expected) is bool and actual is not expected):
+                add(f"{section}.{key}", f"{section}.{key} must be {expected!r}")
+    project = config.raw.get("project", {})
+    name = project.get("name") if isinstance(project, Mapping) else None
+    if not isinstance(name, str) or not name.strip() or name.strip().lower() in {"unknown", "default", "todo", "tbd"}:
+        add("project.name", "project.name must identify the HAIC project")
+    expected_sources = (
+        {"precedence": 1, "id": "competition_site", "url": "https://ships-duo-ethical-saver.trycloudflare.com/"},
+        {"precedence": 2, "id": "participants_repository", "url": "https://github.com/2026-HAIC/Participants"},
+        {"precedence": 3, "id": "local_source_mirror", "path": "docs/sources/official-participants/README.md",
+         "license_path": "docs/sources/official-participants/LICENSE",
+         "source_commit": "1c11db8afc2fbfcfb610672b7ee0ecd122c97741"},
+        {"precedence": 4, "id": "historical_evidence", "path": "COMPETITION_INFO.md", "related_paths": ["RESULTS.md"]},
+    )
+    if not isinstance(sources, list) or len(sources) != len(expected_sources):
+        add("official_sources", "official_sources must register exactly the four source-precedence entries")
+    else:
+        for index, expected in enumerate(expected_sources):
+            actual = sources[index]
+            for key, value in expected.items():
+                if (not isinstance(actual, Mapping) or actual.get(key) != value
+                        or (key == "precedence" and type(actual.get(key)) is not int)):
+                    add(f"official_sources[{index}].{key}", f"official_sources[{index}].{key} must be {value!r}")
 
     def inspect_keys(value: Any, location: str = "") -> None:
         if isinstance(value, dict):

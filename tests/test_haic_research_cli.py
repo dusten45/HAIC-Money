@@ -3,6 +3,7 @@
 import io
 import json
 import unittest
+from unittest.mock import patch
 
 from haic_research.cli import main
 from tests.test_haic_research_commands import CommandFixture, GATES, metadata, research
@@ -45,11 +46,18 @@ class CliTests(CommandFixture):
         self.assertEqual(self.runner.calls, [])
         self.assertNotEqual(self.invoke('run', 'run-001', '--execute')[0], 0)
 
-    def test_unavailable_validation_fails_clearly(self):
+    def test_validation_reports_missing_structure_and_unavailable_validator(self):
         code, text, error = self.invoke('validate')
-        self.assertNotEqual(code, 0)
+        self.assertEqual((code, error), (1, ''))
+        response = json.loads(text)
+        self.assertFalse(response['valid'])
+        self.assertIn('AGENTS.md', [issue['path'] for issue in response['issues']])
+        with patch('haic_research.cli.importlib.import_module', side_effect=ImportError('unavailable fixture')):
+            code, text, error = self.invoke('validate')
+        self.assertEqual(code, 2)
         self.assertIn('unavailable', error.lower())
         self.assertEqual(text, '')
+        self.assertEqual(self.runner.calls, [])
 
     def test_external_operations_and_path_traversal_absent(self):
         for command in ('submit', 'upload', 'confirm-model'):

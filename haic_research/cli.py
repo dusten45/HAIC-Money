@@ -29,7 +29,9 @@ def parser() -> argparse.ArgumentParser:
     result = _Parser(description=__doc__)
     result.add_argument("--root", type=Path, default=Path.cwd(), help="repository containing harness.config.json")
     commands = result.add_subparsers(dest="command", required=True)
-    commands.add_parser("validate", help="run the Task 8 repository validator when available")
+    validation = commands.add_parser("validate", help="validate document/config structure without running profiles")
+    validation.add_argument("--root", type=Path, default=argparse.SUPPRESS,
+                            help="repository containing harness.config.json")
     plan = commands.add_parser("plan", help="register one immutable command plan; no subprocess")
     plan.add_argument("--manifest", type=Path, required=True, help="explicit complete manifest metadata JSON")
     plan.add_argument("--research", type=Path, required=True, help="complete Hypothesis JSON")
@@ -82,17 +84,17 @@ def main(argv=None, *, runner=subprocess.run, stdout=None, stderr=None) -> int:
     stderr = stderr or sys.stderr
     try:
         args = parser().parse_args(argv)
-        config = load_config(args.root)
         if args.command == "validate":
             try:
-                module = importlib.import_module("haic_research.validation")
-                validator = getattr(module, "validate_project")
+                validator = getattr(importlib.import_module("haic_research.validation"), "validate_project")
             except (ImportError, AttributeError) as exc:
-                raise CommandError("Task 8 repository validator is unavailable") from exc
-            issues = validator(config.repo_root)
+                raise CommandError("repository structural validator is unavailable") from exc
+            issues = validator(args.root)
             output = {"valid": not issues, "issues": _json_value(issues)}
-            exit_code = 0 if not issues else 1
-        elif args.command == "plan":
+            print(json.dumps(output, sort_keys=True, ensure_ascii=False, allow_nan=False), file=stdout)
+            return 0 if not issues else 1
+        config = load_config(args.root)
+        if args.command == "plan":
             path = register_plan(config, _input_json(config, args.manifest), args.profile,
                                  _input_json(config, args.arguments), research=_input_json(config, args.research),
                                  previous_run_dir=_run_dir(config, args.previous_run) if args.previous_run else None)
