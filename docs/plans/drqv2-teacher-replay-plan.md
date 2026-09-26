@@ -413,6 +413,6 @@ limits include compressed `<=500 MB`, uncompressed `<=2 GB`, at most 1,000
 files and inference weights entirely in the archive; see
 [restrictions](../competition/restrictions.md). Recheck the actual
 [Participants source](https://github.com/2026-HAIC/Participants) and
-[competition website](https://ships-duo-ethical-saver.trycloudflare.com/)
+[competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/)
 immediately before any separately authorized official action. A local
 package or candidate designation is not official confirmation.
