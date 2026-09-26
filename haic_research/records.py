@@ -305,7 +305,8 @@ def _events(path: Path, manifest: RunManifest, config: HarnessConfig) -> tuple[R
     if text and not text.endswith("\n"):
         raise RecordError("incomplete event history line")
     result = []
-    for row in text.splitlines():
+    # Unicode line separators are valid JSON string data, not JSONL delimiters.
+    for row in text.split("\n")[:-1]:
         item = _typed(RunEvent, _decode(row))
         _validate_event(item, result, manifest, path, config)
         result.append(item)

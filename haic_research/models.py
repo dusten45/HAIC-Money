@@ -28,6 +28,14 @@ def _freeze_tuple_fields(record: object, names: tuple[str, ...]) -> None:
         object.__setattr__(record, name, _freeze(value))
 
 
+def _freeze_mapping_fields(record: object, names: tuple[str, ...]) -> None:
+    for name in names:
+        if not isinstance(getattr(record, name), Mapping):
+            raise TypeError(f"{name} must be a mapping")
+    for name in names:
+        object.__setattr__(record, name, _freeze(getattr(record, name)))
+
+
 class WorkflowState(str, Enum):
     STOPPED = "STOPPED"
     DISCOVER = "DISCOVER"
@@ -141,9 +149,8 @@ class RunManifest:
             raise ValueError("manifest requires run, cycle, and plan identifiers")
         if self.checkpoint_ref is not None and not isinstance(self.checkpoint_ref, CheckpointRef):
             raise TypeError("checkpoint_ref must be a CheckpointRef")
-        for name in ("tool_versions", "runtime_versions", "resource_limits",
-                     "permission_limits", "source_hashes"):
-            object.__setattr__(self, name, _freeze(getattr(self, name)))
+        _freeze_mapping_fields(self, ("tool_versions", "runtime_versions", "resource_limits",
+                                     "permission_limits", "source_hashes"))
         _freeze_tuple_fields(self, ("data_ids", "map_ids", "split_ids", "output_paths"))
 
 
@@ -179,7 +186,7 @@ class RunEvent:
             raise ValueError("structured approval fields belong to APPROVAL events")
         if self.checkpoint_ref is not None and not isinstance(self.checkpoint_ref, CheckpointRef):
             raise TypeError("checkpoint_ref must be a CheckpointRef")
-        object.__setattr__(self, "resource_usage", _freeze(self.resource_usage))
+        _freeze_mapping_fields(self, ("resource_usage",))
 
 
 @dataclass(frozen=True)

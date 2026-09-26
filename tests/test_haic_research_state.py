@@ -95,6 +95,12 @@ class SchemaTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             event.resource_usage["cpu"]["seconds"] = 30
 
+    def test_event_resource_usage_requires_mapping_before_freezing(self):
+        for value in ([], (), None, "not a mapping"):
+            with self.subTest(value=value), self.assertRaises(TypeError):
+                RunEvent(datetime(2026, 9, 26, tzinfo=timezone.utc), "RESOURCE",
+                         WorkflowState.EVALUATE, "resource-1", resource_usage=value)
+
     def test_tuple_fields_detach_from_caller_owned_lists(self):
         gate = GateResult("rule_compliance", GateStatus.PASS)
         samples = (

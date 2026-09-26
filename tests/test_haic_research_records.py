@@ -93,6 +93,37 @@ class RunRecordTests(unittest.TestCase):
         self.assertEqual(read_events(self.run_dir, config=self.config)[0].resource_usage["samples"], (1, 2))
         self.assertEqual(read_events(self.run_dir, config=self.config)[0].timestamp, NOW)
 
+    def test_unicode_line_separator_strings_round_trip_and_allow_later_appends(self):
+        for index, separator in enumerate(("\u2028", "\u2029", "\u0085")):
+            with self.subTest(separator=repr(separator)):
+                message = f"before{separator}after"
+                self.append(event(f"unicode-{index}", error=message,
+                                  resource_usage={"nested": {"message": message}}))
+                stored = read_events(self.run_dir, config=self.config)[-1]
+                self.assertEqual(stored.error, message)
+                self.assertEqual(stored.resource_usage["nested"]["message"], message)
+        self.append(event("later"))
+        self.assertEqual(len(read_events(self.run_dir, config=self.config)), 4)
+        self.assertEqual((self.run_dir / "events.jsonl").read_bytes().count(b"\n"), 4)
+
+    def test_invalid_event_mapping_refusal_preserves_existing_history(self):
+        self.append(event())
+        path = self.run_dir / "events.jsonl"
+        before = path.read_bytes()
+        for value in ([], (), None, "not a mapping"):
+            with self.subTest(value=value), self.assertRaises(TypeError):
+                self.append(event("invalid", resource_usage=value))
+            self.assertEqual(path.read_bytes(), before)
+        self.assertEqual([row.event_id for row in read_events(self.run_dir, config=self.config)], ["e1"])
+
+    def test_invalid_manifest_mappings_create_no_run_directory(self):
+        for field in ("tool_versions", "runtime_versions", "resource_limits",
+                      "permission_limits", "source_hashes"):
+            for value in ([], (), None, "not a mapping"):
+                with self.subTest(field=field, value=value), self.assertRaises(TypeError):
+                    create_run(self.config, manifest("invalid", **{field: value}))
+                self.assertFalse((self.config.run_root / "invalid").exists())
+
     def test_required_config_for_all_existing_run_apis(self):
         for call, args in ((read_manifest, (self.run_dir,)), (read_events, (self.run_dir,)),
                            (append_event, (self.run_dir, event())),
