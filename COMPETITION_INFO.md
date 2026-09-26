@@ -30,6 +30,8 @@
 
 ## 로컬 실행과 패키지
 
+연구 실행과 승인은 [README의 지원 CLI](README.md#supported-local-cli), [PROJECT_INFO.md](PROJECT_INFO.md), [AGENTS.md](AGENTS.md)의 v2 계약을 따른다. 아래 직접 runner 명령은 과거 로컬 사용 예이며 새 하네스의 승인 흐름을 대신하지 않는다. 패키지 생성은 등록된 로컬 작업이고 공식 업로드·모델 확인은 실행 직전 별도 사용자 승인이 필요하다.
+
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1

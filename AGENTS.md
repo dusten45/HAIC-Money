@@ -43,3 +43,10 @@ Every hypothesis records `hypothesis_id`, `source_ref`, `rule_or_requirement`, `
 - Among eligible candidates on the same registered evaluation set, compare **completion rate first**. Only on a tie compare median finished lap time, mean incomplete progress, P90 finished lap time, collisions, damage, then p95 act latency. Report official scoring separately. Teacher, smoke, and fixed-actor diagnostic runs do not enter submission-candidate completion rates.
 
 Each new run writes an immutable `run_manifest.json`, append-only `events.jsonl`, and `integration_report.json` under the configured v2 roots. Corrections are new events referencing the old event. Keep source paths and hashes without copying raw data. Preserve old `runs/`, `artifacts/haic/`, and `submissions/` in place; do not automatically scan, import, or rewrite them. The read-only map is [docs/sources/legacy-path-map.md](docs/sources/legacy-path-map.md).
+
+## Agent startup and evidence discipline
+
+- Each agent reads AGENTS.md, PROJECT_INFO.md and RESTRICTIONS.md before starting. Do not send external messages without explicit user authorization.
+- Do not automatically merge external project code. Adopting a branch or external strategy requires a registered hypothesis, control, checkpoint and failure conditions.
+- Literature supports hypotheses; measured driving evidence determines performance. Evidence from one branch or dataset must be flagged as possible overfitting; it does not establish generalization.
+- Record completion/lap distributions, incomplete progress, collisions/damage, action latency p50/p95/max and invalid actions, import/reset time, RSS, rollout/update/evaluation duration, and checkpoint/package references as applicable to the registered experiment.

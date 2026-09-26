@@ -32,14 +32,22 @@
 
 ## 기존 방식과 전환 상태
 
-기존 research_ops와 training/improvement_loop.py는 결과 탐색·색인, 비교, RESULTS/SOTA 갱신, 선택적 실행을 맡았다. 새 하네스는 명시적으로 등록한 실행과 근거를 중심으로 기록하고 판단하도록 책임을 나눈다. Task 7 결과 기록 코드는 커밋됐으며, 기존 오케스트레이터 퇴역과 최종 전환은 남아 있는 Task 9에서 다룬다.
+지원 진입점은 `python -m haic_research.cli`다. `plan`은 manifest·가설·등록 profile·typed arguments를 고정하고, `approve`는 설계·구현·실행 승인을 순서대로 기록한다. `status`는 해당 실행의 상태를 조회하며, `run`은 기본 계획 미리보기이고 `--execute`가 있어야 승인된 로컬 작업을 한 번 실행한다. `report`는 평가 결과와 세 gate, 선택적으로 등록된 후보/control 비교를 기록한다. `validate`는 정해진 문서와 설정 구조만 검사한다. [README의 실제 문법](../README.md#supported-local-cli)과 [프로젝트 입력 계약](../PROJECT_INFO.md#v2-interfaces-and-operation-inputs)을 따른다.
+
+기존 방식의 자동 탐색·RESULTS/SOTA 재생성·latest 포인터·임의 명령 실행은 퇴역 대상이며 [과거 경로 지도](sources/legacy-path-map.md)에 기록한다. 기존 결과와 연구 자료는 원래 위치에 보존한다. 논문은 가설의 근거이고 주행 측정이 성능의 근거라는 원칙, 측정 항목, 시작 문서·외부 연락·외부 전략 도입·단일 branch/dataset 과적합 주의 규약은 AGENTS/RESTRICTIONS에 보존한다.
 
 ## 실제 완료 상태와 한계
 
 - 설정·상태·비교·기록·승인 실행 코드는 로컬 커밋으로 남아 있다. Task 7 결과 기록과 completion-first SOTA 승격 구현은 `02be453`에 커밋됐다.
 - Task 7 인계 보고서에 기록된 focused 검증은 총 **131개: 130개 통과, 1개 건너뜀, 실패 0개**다. Windows 파일 symlink 권한을 사용할 수 없어 1개를 건너뛰었다. 임시 fixture와 FakeRunner를 사용했으며 실제 학습·주행 평가를 수행한 결과가 아니다.
-- **Task 8 구조 검증기와 Task 9 기존 오케스트레이터 퇴역은 아직 남아 있다.** 하네스 전체 전환이 완료됐다고 판단하지 않는다.
+- Task 8 구조 검증기는 `d44f1fb`에 커밋됐다. Task 9 문서 전환과 전체 새 하네스 검증은 완료했으며 기존 파일의 실제 삭제는 자동 정책 차단으로 남아 있다. 하네스 source 전환 전체가 완료됐다고 판단하지 않는다.
 - 새 결과 기록은 이름이 정해진 v2 실행의 지표·비교 증거를 gate report 전에 고정한다. SOTA 승격은 사전 등록된 비교 ID·맵·split·seed·denominator·모델 식별자, 독립 반복 평가, 세 PASS gate, 실제 ADVANCE 릴리스 이력을 확인한다. 입력된 집계 지표가 실제 주행을 정확히 반영하는지는 별도 측정·검토 근거가 필요하다.
 - 기존 사용자 변경과 과거 데이터는 그대로 보존한다. 기존 RESULTS 생성 구간과 SOTA의 역사적 내용도 보존됐다.
 - Task 7 구현과 현재 가설 탐색에서는 실제 학습·주행 평가·패키징·공식 제출을 하지 않았다. 따라서 **새로운 완주율 개선이나 공식 성과, 새 SOTA 승격은 없다.**
 - SOTA 문서의 완주율 0.75, 중앙 랩타임 19.32초는 기존 문서에 남아 있는 역사적 로컬 기록이다. 이번에 원자료를 다시 검증한 결과가 아니다.
+
+## Task 9 전환 검증 기록
+
+2026-09-26에 지정된 config/state/policy/coordinator/records/commands/CLI/results/validation 전체 단위 suite **148개 중 147개 통과, 1개 건너뜀, 실패 0개**를 확인했다. 건너뛴 항목은 Windows 파일 symlink 권한에 관한 항목이다. `scripts/harness/validate.ps1`은 exit 0, `valid=true`, issue 0개였다. 단위 검증은 임시 fixture와 FakeRunner를 사용했으며 실제 학습·주행 평가·패키징·제출 작업을 실행하지 않았다. 구조 검증은 문서/설정 구조만 확인하며 공식 규칙의 최신성, 측정된 주행 성능, 입력 지표의 진실성을 보증하지 않는다.
+
+문서의 실제 v2 명령·입력 계약과 기존 정책 이관을 완료했다. 삭제 대상으로 지정된 정확한 파일 10개 모두 저장소 내부의 regular/untracked 경로임을 확인했다. 그러나 보호 검증을 포함한 묶음 삭제와 RULES 단일 파일의 literal 삭제가 자동 승인 검토에서 "blocked by policy" 사유로 거부됐다. 추가 이유는 제공되지 않았다. 두 번째 거부 후 삭제 시도를 중단했으며 기존 진입점·정책·전용 테스트 파일 10개는 모두 남아 있다. 데이터·보고서·checkpoint·ZIP·map·연구 자료와 디렉터리는 삭제하지 않았다. 실제 source 퇴역은 이 차단이 해소된 뒤 정확히 지정된 파일만 제거하는 별도 남은 단계다.
