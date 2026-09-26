@@ -117,13 +117,15 @@ The Track Lab web server now exposes a local Agent catalog under
 selection to the automatic run endpoint. Map files, official seeds, and generated
 custom tracks remain selectable in the same UI.
 
-## Forward-Stability Runtime Repair
+## Reinitialized Racing-Line Runtime
 
-The legacy bare `model.pt` baseline now uses an inline forward-corridor safety
+The bare `model.pt` baseline was reinitialized around a fresh racing-line
 controller at inference time. It estimates the visible road centerline and asphalt
 spans, rate-limits steering, snaps near-centered straight segments to zero steering,
-regulates speed from the HUD (clear-road cruise target 68, throttle cap 0.16),
-and emits mutually exclusive throttle or brake.
+regulates speed from the HUD (clear-road cruise target 72, throttle cap 0.18),
+and emits mutually exclusive throttle or brake. The older forward-corridor class
+remains only as a compatibility/test primitive; Agent now instantiates the fresh
+racing-line controller for the bare checkpoint.
 Because the official RGB input is converted to grayscale, green background and orange
 obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
 near-road spans, small edge clearance, and bright pixels inside the road corridor all
@@ -140,16 +142,16 @@ is lost, and steers toward the remembered/look-ahead road instead of decaying to
 straight indefinitely. Opposite steering must first pass through zero, and a
 one-step steering change is limited to 0.07. The heading contribution is ignored
 when it would oppose a meaningful look-ahead center error, while clear-road gas is
-raised to 0.16 on a confirmed clear road and speed-target recovery is faster after a hazard.
+raised to 0.18 on a confirmed clear road and speed-target recovery is faster after a hazard.
 Even a distant compact obstacle cuts gas immediately. Curve handling
 now measures the centerline over a longer preview, applies an entry-speed penalty
 before the near edge turns, and scales throttle down continuously with preview
-curvature. Strong curves use a 28-unit target-speed floor, 0.40 steering cap,
-0.055 per-step steering slew, and a 0.40 minimum clear-road gas scale. Because
-the local body has a strong response to small steering inputs, curve steering
-gain is scaled to 0.68 and further reduced to 0.58 of that value while speed is
-above the curve target. No simulation or performance evaluation was run for this
-repair.
+curvature. The fresh racing-line controller uses a 30-unit target-speed floor,
+0.36 curve steering cap, 0.05 per-step steering slew, and a 0.48 minimum
+clear-road gas scale. Because the local body has a strong response to small
+steering inputs, its curve preview gain is scaled to 0.78 while the bounded
+steering envelope remains active. No simulation or performance evaluation was
+run for this repair.
 The runtime priority stack was re-based on the competition contract rather than on
 the earlier ad-hoc curve/green/speed preferences: perception of the traversable
 road comes first, a preview path is selected from the wider free-space side of an

@@ -923,6 +923,183 @@ class _ForwardCorridorController:
         return np.asarray([steering, gas, brake], dtype=np.float32)
 
 
+class _RacingLineController(_ForwardCorridorController):
+    """Fresh F1-inspired controller for the bare baseline checkpoint.
+
+    This controller intentionally does not accumulate the old collection of
+    curve-specific steering branches.  Each frame follows the same pipeline:
+    perceive the asphalt envelope, select a preview point, plan a speed from
+    curvature/obstacle distance, then apply one geometric safety envelope.
+    The parent class supplies only camera parsing, road geometry, obstacle
+    components, and bounded recovery primitives; its former ``act`` policy is
+    not used by the Agent runtime.
+    """
+
+    MAX_GAS = 0.18
+    STRAIGHT_CRUISE_SPEED = 72.0
+    MAX_STEER = 0.44
+    CURVE_MAX_STEER = 0.36
+    MAX_STEER_STEP = 0.06
+    CURVE_STEER_STEP = 0.05
+    CURVE_SPEED_FLOOR = 30.0
+    CURVE_SPEED_PENALTY = 2.25
+    CURVE_ENTRY_SPEED_PENALTY = 0.75
+    CURVE_GAS_MIN = 0.48
+    HAZARD_TARGET_SPEED = 22.0
+    HAZARD_BRAKE_FRAMES = 2
+    HAZARD_CRAWL_GAS = 0.04
+    SPEED_WATCHDOG_GAS = 0.04
+    SPEED_BRAKE_FRAMES = 7
+
+    def __init__(self, *, cruise_speed: float = STRAIGHT_CRUISE_SPEED) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+
+    def act(self, observation) -> np.ndarray:
+        frame = self._frame(observation)
+        if frame is None:
+            self.road_visible = False
+            if self.has_seen_road:
+                return self._lost_road_action()
+            return np.zeros(3, dtype=np.float32)
+
+        centers, spans = self._road_geometry(frame)
+        self.road_visible = len(centers) >= 3
+        if not self.road_visible:
+            if not self.has_seen_road:
+                return np.zeros(3, dtype=np.float32)
+            recovery_centers, recovery_spans = self._wide_road_geometry(frame)
+            if len(recovery_centers) >= 2:
+                self._remember_road(recovery_centers, recovery_spans)
+                return self._lost_road_action(recovery_centers)
+            return self._lost_road_action()
+
+        self.has_seen_road = True
+        self._recovery_frames = 0
+        self._remember_road(centers, spans)
+
+        # Racing-line preview: use a mid point for turn-in and a farther point
+        # for heading anticipation, both clipped to the visible body-safe road.
+        near = self._safe_center_at(54.0, centers, spans)
+        mid = self._safe_center_at(38.0, centers, spans)
+        far = self._safe_center_at(22.0, centers, spans)
+        heading = far - near
+        preview_error = 0.58 * (mid - self.IMAGE_CENTER) + 0.42 * (
+            far - self.IMAGE_CENTER
+        )
+        road_sweep = self._road_sweep(centers)
+        entry_sweep = abs(far - mid)
+        curve_strength = max(road_sweep, entry_sweep)
+        curve_mode = curve_strength >= self.CURVE_TRIGGER_SWEEP
+
+        corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
+            frame, centers, spans
+        )
+        if corridor_hazard:
+            self._hazard_frames += 1
+        else:
+            self._hazard_frames = 0
+
+        # One preview-based path tracker.  The geometric envelope below is
+        # applied after obstacle and shoulder proposals, so no racing-line
+        # shortcut can point outside the asphalt.
+        steering = 0.017 * preview_error + 0.010 * heading
+        if curve_mode:
+            steering *= 0.78
+        steer_limit = self.CURVE_MAX_STEER if curve_mode else self.MAX_STEER
+
+        target_speed = self.cruise_speed
+        target_speed -= self.CURVE_SPEED_PENALTY * road_sweep
+        target_speed -= self.CURVE_ENTRY_SPEED_PENALTY * entry_sweep
+        target_speed = float(
+            np.clip(target_speed, self.CURVE_SPEED_FLOOR, self.cruise_speed)
+        )
+
+        obstacle = self._nearest_obstacle(frame, centers, spans)
+        if obstacle is not None:
+            obstacle_y, obstacle_x, road_center = obstacle
+            obstacle_span = self._span_at(float(obstacle_y), spans)
+            if obstacle_span is not None:
+                left_clearance = max(0.0, obstacle_x - obstacle_span[0])
+                right_clearance = max(0.0, obstacle_span[1] - obstacle_x)
+                candidate_side = 1.0 if right_clearance >= left_clearance else -1.0
+            else:
+                candidate_side = 1.0 if obstacle_x < road_center else -1.0
+            if self._obstacle_side == 0.0 or obstacle_y < 48.0:
+                self._obstacle_side = candidate_side
+            self._obstacle_missing = 0
+            urgency = float(np.clip((obstacle_y - 22.0) / 24.0, 0.0, 1.0))
+            steering += self._obstacle_side * 0.22 * urgency
+            target_speed = min(target_speed, self._obstacle_speed_limit(obstacle_y))
+        elif self._obstacle_side != 0.0:
+            self._obstacle_missing += 1
+            if self._obstacle_missing > self.OBSTACLE_MISS_LIMIT:
+                self._obstacle_side = 0.0
+                self._obstacle_missing = 0
+
+        if corridor_hazard:
+            steering += 0.16 * corridor_hint
+            target_speed = min(target_speed, self.HAZARD_TARGET_SPEED)
+            if corridor_blocked:
+                steering = 0.20 * corridor_hint
+                steer_limit = min(steer_limit, 0.25)
+
+        steering = self._track_bound_steering(steering, spans)
+        if self._target_speed is not None:
+            # Brake promptly for a corner, but restore straight-line speed
+            # quickly once curvature has fallen instead of carrying stale
+            # conservative targets around the whole lap.
+            blend = 0.35 if target_speed < self._target_speed else 0.20
+            target_speed = blend * self._target_speed + (1.0 - blend) * target_speed
+        self._target_speed = target_speed
+
+        speed = self._estimate_speed(frame)
+        gas, brake = self._pedals(speed, target_speed)
+        if corridor_hazard:
+            if self._hazard_frames <= self.HAZARD_BRAKE_FRAMES:
+                gas = 0.0
+                brake = max(brake, self.HAZARD_BRAKE)
+            else:
+                gas = max(self.HAZARD_CRAWL_GAS, min(self.MAX_GAS, gas))
+                brake = 0.0
+        elif gas <= 0.0 and brake > 0.0:
+            self._brake_frames += 1
+            if self._brake_frames > self.SPEED_BRAKE_FRAMES:
+                gas, brake = self.SPEED_WATCHDOG_GAS, 0.0
+        else:
+            self._brake_frames = 0
+
+        if corridor_blocked and self._hazard_frames <= self.HAZARD_BRAKE_FRAMES:
+            gas = 0.0
+            brake = max(brake, self.HAZARD_BRAKE)
+        if obstacle is not None:
+            # Reserve longitudinal margin for the selected escape side.
+            gas = 0.0
+        if curve_mode and not corridor_hazard and obstacle is None and brake <= 0.0:
+            curve_gas_scale = float(
+                np.clip(
+                    1.0 - 0.045 * curve_strength,
+                    self.CURVE_GAS_MIN,
+                    1.0,
+                )
+            )
+            gas = min(gas, self.MAX_GAS * curve_gas_scale)
+
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
+        if self._last_steer != 0.0 and steering * self._last_steer < 0.0:
+            steering = 0.0
+        step = self.CURVE_STEER_STEP if curve_mode else self.MAX_STEER_STEP
+        steering = self._last_steer + float(
+            np.clip(steering - self._last_steer, -step, step)
+        )
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
+        self._last_steer = steering
+        brake = min(
+            brake,
+            float(np.nextafter(np.float32(self.MAX_BRAKE), np.float32(0.0))),
+        )
+        return np.asarray([steering, gas, brake], dtype=np.float32)
+
+
 class Agent:
     """Load either the root baseline model or the packaged HAIC visual policy."""
 
@@ -1166,7 +1343,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _ForwardCorridorController() if use_forward_controller else None
+            _RacingLineController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None

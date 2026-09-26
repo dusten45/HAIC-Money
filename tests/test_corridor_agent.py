@@ -578,6 +578,30 @@ class TestVisionCorridorAgent(unittest.TestCase):
         )
         self.assertLessEqual(float(action[2]), controller.MAX_BRAKE)
 
+    def test_reset_racing_line_controller_is_fast_on_clear_straights(self):
+        from agent import _RacingLineController
+
+        controller = _RacingLineController()
+        action = controller.act(_observation(speed=20.0))
+
+        self.assertGreater(float(action[1]), 0.14)
+        self.assertEqual(float(action[2]), 0.0)
+        self.assertLess(abs(float(action[0])), 0.02)
+        self.assertEqual(controller._target_speed, controller.cruise_speed)
+
+    def test_reset_racing_line_controller_brakes_for_close_obstacles(self):
+        from agent import _RacingLineController
+
+        controller = _RacingLineController()
+        action = controller.act(_observation(obstacle_x=40, obstacle_y=52, speed=48.0))
+
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.MAX_STEER)
+        controller.reset()
+        self.assertIsNone(controller._target_speed)
+        self.assertEqual(controller._last_steer, 0.0)
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic
