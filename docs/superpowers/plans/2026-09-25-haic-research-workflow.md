@@ -182,12 +182,12 @@ git commit -m "feat: validate HAIC research configuration"
 - Create: `tests/test_haic_research_state.py`
 
 **Interfaces:**
-- `WorkflowState` enum contains every state in `AGENTS.md`.
+- `WorkflowState` enum contains every state in `AGENTS.md`, including `GATE_REVIEW`.
 - `Approval` has `stage`, `plan_hash`, `approved_at`, and `source_ref`.
 - `Hypothesis` has all eleven fields from the spec, with `source_paths: tuple[str, ...]` for cited evidence.
 - `GateResult` contains gate name, one of `PASS/FAIL/UNKNOWN/NOT_APPLICABLE`, rationale, and evidence paths. `RunManifest` contains run ID, purpose, hypothesis/approval hashes, candidate/control revisions and package hashes, tool/runtime versions, data/map/split IDs, resource/permission limits, output paths and source hashes. `RunEvent` contains UTC timestamp, event kind, workflow state, approval reference, execution status/error, resource usage, mechanism signal, endpoint, and correction reference.
 - `IntegrationReport` contains each gate result and cited evidence paths. `AgentReport` contains exactly `fact`, `inference`, `unknown`, `recommendation`, and `source_paths`. `CycleSummary` carries validity, protocol-match, improvement, and infra-invalid status. `WorkAssignment` carries direction, hypothesis IDs, owner, allowed read/write scope, and handoff path. These are immutable records in `models.py`.
-- `transition(current: WorkflowState, requested: WorkflowState, *, plan_hash: str, approvals: Sequence[Approval], gates: Sequence[GateResult]) -> WorkflowState`.
+- `transition(current: WorkflowState, requested: WorkflowState, *, plan_hash: str, approvals: Sequence[Approval], gates: Sequence[GateResult], evaluation_outcome: WorkflowState | None = None) -> WorkflowState`.
 
 - [ ] **Step 1: Write transition and schema tests**
 
@@ -198,10 +198,22 @@ class WorkflowTests(unittest.TestCase):
             transition(WorkflowState.EXECUTE_PENDING_APPROVAL, WorkflowState.EVALUATE,
                        plan_hash="new", approvals=[], gates=[])
 
-    def test_cannot_release_with_unknown_gate(self):
+    def test_every_evaluation_outcome_enters_gate_review(self):
+        for outcome in (WorkflowState.ADVANCE, WorkflowState.REJECT,
+                        WorkflowState.REVISE, WorkflowState.PIVOT):
+            self.assertEqual(transition(outcome, WorkflowState.GATE_REVIEW,
+                                        plan_hash="p1", approvals=[], gates=all_gates()),
+                             WorkflowState.GATE_REVIEW)
+
+    def test_only_advance_with_all_pass_gates_can_release(self):
         with self.assertRaises(GateError):
-            transition(WorkflowState.ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
-                       plan_hash="p1", approvals=[], gates=[GateResult("rule_compliance", "UNKNOWN")])
+            transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
+                       plan_hash="p1", approvals=[], gates=unknown_gates(),
+                       evaluation_outcome=WorkflowState.ADVANCE)
+        with self.assertRaises(GateError):
+            transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
+                       plan_hash="p1", approvals=[], gates=passing_gates(),
+                       evaluation_outcome=WorkflowState.PIVOT)
 ```
 
 - [ ] **Step 2: Run the focused test to verify it fails**
@@ -211,7 +223,7 @@ Expected: FAIL because the state and schema modules do not exist.
 
 - [ ] **Step 3: Implement typed schemas and explicit transition map**
 
-Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec. `ADVANCE` alone may transition to `RELEASE_IF_GATE_PASS`, which returns to `STOPPED` only when `rule_compliance`, `mechanism_activation`, and `competitive_or_product_outcome` are `PASS`. The current config defines no `NOT_APPLICABLE` exemptions; any future exemption requires an explicit validated config value and transition API support, and can never exempt rule compliance. `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. A revised or pivoted effort starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; pivot preserves the prior checkpoint. Reject illegal transitions and stage/hash mismatch. `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
+Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec. All four evaluation outcomes enter `GATE_REVIEW` and record exactly the three gates. Only `GATE_REVIEW` with `evaluation_outcome=ADVANCE` and all three statuses `PASS` may enter `RELEASE_IF_GATE_PASS`; every other outcome stops without release. The current config defines no `NOT_APPLICABLE` exemptions; any future exemption requires an explicit validated config value and transition API support, and can never exempt rule compliance. A revised or pivoted effort starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; pivot preserves the prior checkpoint. Reject illegal transitions and stage/hash mismatch. `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 
@@ -291,11 +303,14 @@ git commit -m "feat: prioritize completion in HAIC research policy"
 **Files:**
 - Create: `haic_research/records.py`
 - Create: `tests/test_haic_research_records.py`
+- Modify: `haic_research/models.py`
+- Modify: `tests/test_haic_research_state.py`
 
 **Interfaces:**
-- `create_run(config: HarnessConfig, manifest: RunManifest) -> Path` creates one directory only under configured `run_root`.
+- `create_run(config: HarnessConfig, manifest: RunManifest, *, previous_run_dir: Path | None = None) -> Path` creates one directory only under configured `run_root`; a continuation may read only the explicitly named predecessor inside the new v2 run root.
 - `append_event(run_dir: Path, event: RunEvent) -> None` appends one JSON line.
 - `write_integration_report(run_dir: Path, report: IntegrationReport) -> None` writes the report once; corrections become new `events.jsonl` entries.
+- Extend `RunManifest` with `plan_hash`, `cycle_id`, optional `checkpoint_ref`, `predecessor_run_id`, and `predecessor_decision_ref`; extend `RunEvent` with a stable `event_id`, structured approval fields, and optional `checkpoint_ref`. Add an immutable `CheckpointRef(path, sha256)` record. Approval events belong to exactly one run and identify the stage and approved plan hash.
 
 - [ ] **Step 1: Write path and append-only tests**
 
@@ -305,7 +320,8 @@ class RunRecordTests(unittest.TestCase):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp_dir.cleanup)
         self.config = config_in_temp_root(Path(self.temp_dir.name))
-        self.run_dir = create_run(self.config, manifest("run-001"))
+        self.manifest = manifest("run-001", cycle_id="cycle-001")
+        self.run_dir = create_run(self.config, self.manifest)
 
     def test_run_directory_stays_under_configured_root(self):
         path = self.run_dir
@@ -319,6 +335,38 @@ class RunRecordTests(unittest.TestCase):
     def test_legacy_and_outside_paths_are_refused(self):
         with self.assertRaises(PathSafetyError):
             create_run(config_with_run_root(Path(self.temp_dir.name) / ".." / "artifacts" / "haic"), manifest("bad"))
+
+    def test_new_cycle_requires_distinct_plan_and_parent_decision_event(self):
+        decision = event("CYCLE_DECISION", state=WorkflowState.REVISE)
+        append_event(self.run_dir, decision)
+        append_event(self.run_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW))
+        write_integration_report(self.run_dir, passing_report())
+        append_event(self.run_dir, event("STATE", state=WorkflowState.STOPPED))
+        revised = linked_manifest("run-002", parent=self.manifest,
+                                  decision_ref=decision.event_id, outcome=WorkflowState.REVISE)
+        create_run(self.config, revised, previous_run_dir=self.run_dir)
+
+    def test_pivot_carries_forward_the_exact_checkpoint_hash(self):
+        checkpoint = CheckpointRef("artifacts/haic-research-v2/run-001/checkpoint.pt", "sha256:abc")
+        prior = manifest("run-001", checkpoint_ref=checkpoint)
+        prior_dir = create_run(self.config, prior)
+        decision = event("CYCLE_DECISION", state=WorkflowState.PIVOT, checkpoint_ref=checkpoint)
+        append_event(prior_dir, decision)
+        append_event(prior_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW))
+        write_integration_report(prior_dir, passing_report())
+        append_event(prior_dir, event("STATE", state=WorkflowState.STOPPED))
+        pivot = linked_manifest("run-002", parent=prior, decision_ref=decision.event_id,
+                                outcome=WorkflowState.PIVOT, checkpoint_ref=checkpoint)
+        create_run(self.config, pivot, previous_run_dir=prior_dir)
+
+    def test_record_serializer_handles_frozen_mappings(self):
+        write_json_record(self.run_dir / "fixture.json", self.manifest)
+        self.assertEqual(json.loads((self.run_dir / "fixture.json").read_text())["tool_versions"], {})
+
+    def test_record_serializer_handles_nested_frozen_event_data(self):
+        append_event(self.run_dir, event("RESOURCE", resource_usage={"cpu": {"seconds": 3}}))
+        row = json.loads((self.run_dir / "events.jsonl").read_text().splitlines()[0])
+        self.assertEqual(row["resource_usage"]["cpu"]["seconds"], 3)
 ```
 
 - [ ] **Step 2: Run the focused test to verify it fails**
@@ -328,7 +376,7 @@ Expected: FAIL because the record store does not exist.
 
 - [ ] **Step 3: Implement confined run creation and append-only event writes**
 
-Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize stable JSON with UTC timestamps. Do not glob or read old run/artifact directories.
+Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize dataclasses, enums, UTC timestamps, frozen mappings and tuples explicitly to stable JSON; do not use `dataclasses.asdict()` on `MappingProxyType` values. For a continuation, read only the exact predecessor named by the caller and verify it is a direct child of the configured v2 run root. Require matching predecessor run ID, a referenced `CYCLE_DECISION` event with outcome `REVISE` or `PIVOT`, a later `GATE_REVIEW` event and integration report, and a later `STOPPED` event. Require distinct run ID, cycle ID, and plan hash. A `PIVOT` must carry the same non-empty checkpoint reference and hash as the predecessor. Do not enumerate, import, or inspect legacy `runs/`, `artifacts/haic/`, or `submissions/`. Task 6 must source approvals only from the current run's events and require the exact current plan hash.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 
@@ -354,7 +402,7 @@ git commit -m "feat: add isolated HAIC run records"
 **Interfaces:**
 - `CommandProfile` contains `profile_id`, `module`, `allowed_args`, `required_args`, `timeout_seconds`, and `output_root`.
 - `build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]`.
-- `execute_approved(config, plan_hash: str, profile_id: str, arguments: Mapping[str, object], *, approvals: Sequence[Approval], runner=subprocess.run) -> CommandResult`.
+- `execute_approved(config, run_dir: Path, plan_hash: str, profile_id: str, arguments: Mapping[str, object], *, runner=subprocess.run) -> CommandResult`; approvals are reconstructed only from approval events in that run's append-only log.
 
 - [ ] **Step 1: Write profile and plan-only tests**
 
@@ -367,14 +415,13 @@ class CommandProfileTests(unittest.TestCase):
     def test_execution_requires_exact_plan_hash_and_uses_argv(self):
         runner = FakeRunner()
         with self.assertRaises(ApprovalError):
-            execute_approved(config(), "p1", "train_policy", valid_args(),
-                             approvals=[approval("p2", "execution")], runner=runner)
+            execute_approved(config(), run_dir(), "p1", "train_policy", valid_args(), runner=runner)
         self.assertEqual(runner.calls, [])
 
     def test_valid_execution_uses_argv_runner_and_timeout(self):
         runner = FakeRunner()
-        execute_approved(config(), "p1", "train_policy", valid_args(),
-                         approvals=[approval("p1", "execution")], runner=runner)
+        execute_approved(config(), run_dir_with_approval("p1", "execution"), "p1",
+                         "train_policy", valid_args(), runner=runner)
         call = runner.calls[0]
         self.assertEqual(call["shell"], False)
         self.assertEqual(call["cwd"], config().repo_root)
@@ -393,7 +440,7 @@ Register typed profiles for `training.train_policy`, `training.evaluate_closed_l
 
 - [ ] **Step 4: Implement argv construction and execution approval checks**
 
-Reject unknown profile IDs, unknown arguments, malformed path values, `--` or shell operators embedded in values, plan-hash mismatch, missing `EXECUTE_PENDING_APPROVAL` approval, and output paths outside the new roots. The `FakeRunner` captures argv/cwd/timeout/shell. Call the injected runner with `shell=False`, a timeout and repository-root `cwd`. Plan-only output prints the normalized profile and arguments but makes no subprocess call.
+Reject unknown profile IDs, unknown arguments, malformed path values, `--` or shell operators embedded in values, plan-hash mismatch, missing `EXECUTE_PENDING_APPROVAL` approval, approvals whose event IDs are absent from the current run, and output paths outside the new roots. The `approve` subcommand appends an approval event to that run; `run` reads the current run manifest/events and never accepts an approval list supplied by the caller. The `FakeRunner` captures argv/cwd/timeout/shell. Call the injected runner with `shell=False`, a timeout and repository-root `cwd`. Plan-only output prints the normalized profile and arguments but makes no subprocess call.
 
 - [ ] **Step 5: Implement CLI commands**
 
