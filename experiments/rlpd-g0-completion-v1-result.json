@@ -1,0 +1,65 @@
+{
+  "format": "haic-rlpd-g0-result-v1",
+  "role": "TRAIN-only-observational-diagnostic",
+  "status": "complete-observation-intervention-not-selected",
+  "protocol_path": "experiments/rlpd-g0-completion-v1.json",
+  "protocol_sha256": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b",
+  "seed_audit_path": "experiments/rlpd-g0-completion-v1-seed-audit.json",
+  "seed_audit_sha256": "5187bf7457ebdf08c8458be2c714c83ccb92feb3ec07e97b4a82d47d4ea3d93f",
+  "manifest_path": "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+  "manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+  "cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+  "cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+  "integrity": {
+    "traces_hash_verified": 24,
+    "paired_road_hashes_verified": 12,
+    "abort_receipts": 0,
+    "actor_source_preflight": "both frozen exports passed CPU reload and native-to-official action parity before reset"
+  },
+  "budget": {
+    "geometry_clusters": 12,
+    "diagnostic_episodes": 24,
+    "driven_decisions": 10049,
+    "maximum_driven_decisions": 48000,
+    "driven_raw_frames": 40188,
+    "reset_initial_raw_frames": 24,
+    "reset_noop_raw_frames": 1200,
+    "learner_updates": 0,
+    "interventions": 0
+  },
+  "actors": {
+    "long-horizon-seed11": {
+      "geometry_episodes": 12,
+      "finished": 3,
+      "off_track": 8,
+      "crash": 1,
+      "first_observed_contact": 5,
+      "first_centerline_far": 5,
+      "first_low_directed_motion": 2,
+      "first_event_none": 0,
+      "missing_diagnostic_decisions": 14,
+      "qualified_nonfinish": 1
+    },
+    "entropy-v5-author-seed50": {
+      "geometry_episodes": 12,
+      "finished": 3,
+      "off_track": 8,
+      "crash": 1,
+      "first_observed_contact": 5,
+      "first_centerline_far": 3,
+      "first_low_directed_motion": 1,
+      "first_event_none": 3,
+      "missing_diagnostic_decisions": 4,
+      "qualified_nonfinish": 2
+    }
+  },
+  "limits": [
+    "One TRAIN obstacle variant and only 12 independent road geometries; counts are descriptive, not a confidence claim about unseen tracks.",
+    "The two actors had distinct training histories, so their outcomes are not a matched intervention comparison.",
+    "The first observed contact/centerline/motion event may also occur on successful controls and does not establish a causal failure mechanism.",
+    "off_track means 101 consecutive negative summed decision rewards, not verified grass departure; centerline distance is a geometric proxy.",
+    "Prior historical scheduling is incomplete; the seed audit establishes no known recorded overlap, not global non-use. The r5 erratum does not retroactively attest its original ledger bytes.",
+    "Privileged diagnostic telemetry was never supplied to actor inference. No held-out, blind, official score, model confirmation or submission evidence was produced."
+  ],
+  "decision": "Do not choose recovery, completion-value, or memory treatment from prevalence alone; compare frozen per-step traces to successful controls before freezing one G1 falsification."
+}

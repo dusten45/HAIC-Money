@@ -1,0 +1,29 @@
+{
+  "diagnostic_label": {
+    "definition": "speed_m_s <= 2 AND at least 5 consecutive new_tiles == 0 decisions including current AND contact in prior 20 decisions of same episode (current excluded)",
+    "no_new_tiles_min_consecutive": 5,
+    "prior_contact_decisions": 20,
+    "role": "retrospective-telemetry-only-not-a-score-or-policy-input",
+    "speed_m_s_max": 2
+  },
+  "format": "haic-rlpd-pixel-motion-rule-v1",
+  "mode": "TRAIN-only-retrospective-diagnostic",
+  "score": {
+    "definition": "sum(abs(frame[k+1]-frame[k]) for k=0..2, all 84x84 pixels)/(3*84*84)",
+    "input": "four float32 [0,1] CHW 84x84 frames, or the exact uint8 stack divided by 255",
+    "learned_threshold": null
+  },
+  "source": {
+    "cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+    "cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+    "manifest_path": "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+    "manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+    "protocol_path": "experiments/rlpd-g0-completion-v1.json",
+    "protocol_sha256": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b"
+  },
+  "source_hashes": {
+    "haic/algorithms/rlpd/visual_motion.py": "7ddbf457ea9858caadd2b1b3d35f2487f8d7ffb5638044fa34048cba0d3bb572",
+    "scripts/analyze_rlpd_pixel_motion.py": "499c4207d60fa2866c40619658cb98d8f620acd770f02bca1b6a1ca1ae935605"
+  },
+  "status": "frozen"
+}

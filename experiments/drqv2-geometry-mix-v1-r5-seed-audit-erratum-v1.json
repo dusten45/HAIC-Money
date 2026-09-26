@@ -1,0 +1,30 @@
+{
+  "format": "haic-rlpd-g0-r5-receipt-erratum-v1",
+  "candidate_seeds": [4272000001, 4272000002, 4272000003, 4272000004, 4272000005, 4272000006, 4272000007, 4272000008, 4272000009, 4272000010, 4272000011, 4272000012],
+  "candidate_seeds_sha256": "27f759ae668a29036bdee676af72384a1514ddf46116dcc3f87c61e6c157c8fc",
+  "track_id": 1,
+  "r5": {
+    "attempt_receipt_path": "runs/20260925-drqv2-geometry-mix-v1-r5/learner-0-uniform/precheckpoint-abort.json",
+    "attempt_receipt_sha256": "da17593a7853e30c19f37ee53c87de2300198309ceb1b046742bc5f56fe994d3",
+    "supersession_path": "runs/20260925-drqv2-geometry-mix-v1-r5/protocol-superseded-after-partial.json",
+    "supersession_sha256": "dfc5bcb050090278e3213af101d44e413ac0f70fce5727204bcb8424e0f3ca60",
+    "ledger_path": "runs/20260925-drqv2-geometry-mix-v1-r5/learner-0-uniform/episodes.jsonl",
+    "ledger_sha256": "8d192a9cc87ee3777e3647b2e49eeec7eb66b84eb12099a0ea7c569230889014",
+    "protocol_path": "experiments/drqv2-geometry-mix-v1-r5.json",
+    "protocol_sha256": "531ca7838c0e911eec70cf729073753367df97ddcb6aedea1fe92091c8327000",
+    "step_metrics_path": "runs/20260925-drqv2-geometry-mix-v1-r5/learner-0-uniform/step-metrics.jsonl",
+    "step_metrics_sha256": "47d381deae01fe77a9272f74869a3061941d11716d44c4052db665f4ee1a55f4",
+    "trace_path": "runs/20260925-drqv2-geometry-mix-v1-r5/learner-0-uniform/replay-sample-trace-step-000016384.npz",
+    "trace_sha256": "6d01e0e45eb6d0365c448f2d1b302961a8715dfd74a46b38f7569b25705f3e96",
+    "invalid_receipt_episodes_sha256": "8d192a9cc87ee3777e364f2d49e49ecc7eb66b84eb12099a0ea7c569230889014",
+    "ordered_reset_count": 36,
+    "end_count": 35,
+    "online_decisions": 16384,
+    "learner_updates": 6384,
+    "last_episode_id": 35,
+    "last_episode_step": 412,
+    "last_geometry_seed": 3910800035
+  },
+  "original_ledger_bytes_attested": false,
+  "epistemic_limit": "The malformed r5 abort-receipt episodes_sha256 does not attest the actual episodes.jsonl bytes. This erratum independently checks the listed current ledger and recorded seed IDs; it does not repair the frozen receipt."
+}

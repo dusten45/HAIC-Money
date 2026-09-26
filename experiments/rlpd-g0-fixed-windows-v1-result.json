@@ -1,0 +1,31 @@
+{
+  "format": "haic-rlpd-g0-fixed-windows-result-v1",
+  "role": "offline-exploratory-TRAIN-diagnostic",
+  "status": "extracted-unreviewed",
+  "freeze_path": "experiments/rlpd-g0-fixed-windows-v1.json",
+  "freeze_sha256": "0e9c2c953c928376cea3cc7915d1d8f95a02415eace95eba5354e995c1bdb285",
+  "analysis_source_sha256": "7ba5b4d457219ca3e4954f8c1d7eaf6493072cd8ac8805b5e1c101692e2908b1",
+  "manifest_path": "runs/20260926-rlpd-g0-fixed-windows-v1/manifest.json",
+  "manifest_sha256": "6ba85d71a47b19853e4595a76b5cf16373a792351e90a3485279669c2d73a994",
+  "windows_path": "runs/20260926-rlpd-g0-fixed-windows-v1/windows.jsonl",
+  "windows_sha256": "90456099a50e4813e930a20b97fb5c067d88e190afabfcce8ba3fdca958ddd80",
+  "original_g0_manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+  "source_trace_hashes_verified": 24,
+  "tile_hashes_verified": 101,
+  "geometry_clusters": 12,
+  "episode_rows": 24,
+  "finished_parent_controls": 6,
+  "predeclared_anchor_slots": 144,
+  "anchored_windows": 101,
+  "missing_anchors_with_reasons": 43,
+  "window_radius_decisions": 20,
+  "contact_sheet_stride_decisions": 5,
+  "labels_assigned": false,
+  "causal_claim": null,
+  "limits": [
+    "All windows reuse the already consumed G0 TRAIN roads; this is neither a fresh test nor a matched intervention.",
+    "The six fixed anchors are applied to every episode, including all six successful-parent controls; missing anchors are explicit, not silently discarded.",
+    "Diagnostic-only telemetry and visual previews do not change policy inputs or supply a successful counterfactual action.",
+    "No causal or manual rubric labels have been assigned; any later visual interpretation remains exploratory and must include unknown/mixed cases."
+  ]
+}

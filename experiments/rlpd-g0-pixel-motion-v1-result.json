@@ -1,0 +1,31 @@
+{
+  "format": "haic-rlpd-pixel-motion-result-summary-v1",
+  "role": "offline-pixel-only-feasibility-proxy",
+  "status": "complete-score-interpretation-pending",
+  "frozen_rule_path": "experiments/rlpd-g0-pixel-motion-v1.json",
+  "frozen_rule_sha256": "84af642927e5e029f140602cd66e2c2fd419ac4dc841ad566f4aff61a7e24e0b",
+  "per_decision_result_path": "runs/20260926-rlpd-g0-pixel-motion-v1.json",
+  "per_decision_result_sha256": "b87a8ce059e9079b5f2a2009c36778bd200d1c9de92961e1c88b4c16b9ba8390",
+  "source_g0_manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+  "source_sha256": {
+    "haic/algorithms/rlpd/visual_motion.py": "7ddbf457ea9858caadd2b1b3d35f2487f8d7ffb5638044fa34048cba0d3bb572",
+    "scripts/analyze_rlpd_pixel_motion.py": "499c4207d60fa2866c40619658cb98d8f620acd770f02bca1b6a1ca1ae935605"
+  },
+  "geometry_clusters": 12,
+  "episodes": 24,
+  "finished_parent_controls": 6,
+  "decisions_scored": 10049,
+  "diagnostic_contact_stall_labelled_decisions": 74,
+  "finished_control_decisions": 2828,
+  "selected_threshold": null,
+  "learner_updates": 0,
+  "updated_policy": false,
+  "causal_claim": null,
+  "limits": [
+    "All 24 episodes reuse 12 already consumed TRAIN geometry clusters; individual decisions are strongly correlated and not independent roads.",
+    "The score uses only the four-frame visual policy input. Contact, car speed and tile visitation are retrospective diagnostic labels, never policy inputs.",
+    "Camera-centered grayscale frame change is neither direct vehicle speed nor proof of a collision-caused stop.",
+    "No score threshold or decision rule was selected from the same G0 cells; this result does not validate a controller, learner treatment or generalization."
+  ],
+  "next_gate": "Compare geometry-level score overlap with all six successful controls before deciding if a pixel-only trigger is supportable; otherwise use a separate representation-feasibility protocol."
+}

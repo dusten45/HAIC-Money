@@ -1,0 +1,46 @@
+{
+  "format": "haic-rlpd-g0-pixel-motion-gate-decision-v1",
+  "role": "internal-retrospective-research-gate",
+  "status": "single-scalar-trigger-not-validated",
+  "frozen_rule_sha256": "84af642927e5e029f140602cd66e2c2fd419ac4dc841ad566f4aff61a7e24e0b",
+  "full_score_result_sha256": "b87a8ce059e9079b5f2a2009c36778bd200d1c9de92961e1c88b4c16b9ba8390",
+  "source_g0_manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+  "source_fixed_windows_manifest_sha256": "6ba85d71a47b19853e4595a76b5cf16373a792351e90a3485279669c2d73a994",
+  "observations": {
+    "geometry_clusters": 12,
+    "episodes": 24,
+    "decisions": 10049,
+    "finished_control_episodes": 6,
+    "finished_control_decisions": 2828,
+    "contact_stall_labelled_decisions": 74,
+    "labelled_episodes": 4,
+    "labelled_geometry_clusters": 3,
+    "labelled_decisions_below_control_descriptive_fifth_percentile": 67,
+    "control_descriptive_fifth_percentile": 0.009846772201718198,
+    "labelled_score_median": 0.0015991582285503885,
+    "finished_control_score_median": 0.018872549274299422,
+    "labelled_score_range": [0.00008744238973039083, 0.0515680366374321],
+    "finished_control_score_range": [0.0, 0.07879930030440493]
+  },
+  "conclusion": "The same reused TRAIN cohort shows a low-motion association, but score ranges overlap; a global cutoff is not a validated contact-stall trigger or rescue result.",
+  "alignment_limit": "The score is calculated from the pre-action four-frame observation, while diagnostic speed, new tiles and contact for the same decision are measured after its environment step.",
+  "forbidden_inference": [
+    "Do not select a threshold from these consumed cells and claim a pixel-realizable G1 controller.",
+    "Do not count 74 adjacent decisions as 74 independent roads or positive recoveries.",
+    "Do not label an early visual road bend as a provable wrong-way cause from sparse contact sheets.",
+    "Do not open held-out, reserved blind, official evaluation, model confirmation or submission actions from this internal proxy."
+  ],
+  "next_gate": {
+    "name": "geometry-grouped offline representation-feasibility probe",
+    "reuse": "the existing 12 consumed G0 TRAIN geometries only, explicitly exploratory",
+    "requirements_before_execution": [
+      "Freeze one source-hashed visual-input-only feature/encoder choice, retrospective target, geometry grouping, deterministic split, model/optimizer, bounded updates, class-balance rule and stop criteria.",
+      "Fail closed if the split lacks positive episodes on at least two training geometries and one separate diagnostic geometry; do not repair coverage by moving cells after scores are seen.",
+      "Report successful-parent false positives and geometry-level counts, not a per-decision generalization claim.",
+      "No policy update or new environment interaction; only if later feasible, separately freeze an RLPD-specific exact-prefix intervention and harm-control protocol."
+    ]
+  },
+  "selected_threshold": null,
+  "updated_policy": false,
+  "causal_claim": null
+}

@@ -1,0 +1,162 @@
+{
+  "actor_attribution": "two frozen local exports diagnosed on the same roads; no matched training intervention claim",
+  "actors": [
+    {
+      "action_mode": "exported_tanh_mean",
+      "candidate_path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/candidate.json",
+      "candidate_sha256": "05a0542df1f71784528fdd8d65743a89934800ed28d95b4384425bf8f84e31e3",
+      "checkpoint_path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoint_sha256": "b68ef5ad755b5b8504d9d9391bb96894572e8886bb1a3baa442ef1f4f783311a",
+      "environment_steps": 131072,
+      "export_protocol_sha256": "2960b561f24f6dc23a42dd0d49fd1ef7a5a0864e0e3f7543cb6920bc465a4329",
+      "id": "long-horizon-seed11",
+      "path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/actor.pt",
+      "sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+      "source_sha256": "cf92e27db8e40eae3ca2c629f7db3c5bf833cb0b5d83a9621d1885b482b324e3",
+      "source_study_protocol_path": "experiments/pixel-rlpd-long-horizon-followup-v1.json",
+      "training_seed": 11
+    },
+    {
+      "action_mode": "exported_tanh_mean",
+      "candidate_path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/candidate.json",
+      "candidate_sha256": "b4ee86097bf3ad045254a855fff2817cc93e82e5c145a77b41ca79ea2c24f4c5",
+      "checkpoint_path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoint_sha256": "2564f28eeb894d1db9d2b38f367f97f6d63b3c41cba5059243925ce351a5e0e2",
+      "environment_steps": 131072,
+      "export_protocol_sha256": "2e7df4152e2282bcd34a6d2a160737cc13c6f1a03d769bd69832e1fc51326546",
+      "id": "entropy-v5-author-seed50",
+      "path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt",
+      "sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "source_sha256": "65c5417493d467b956604314ef9b06c01163a3d59a00d043dd11c2fce4a4cada",
+      "source_study_protocol_path": "experiments/pixel-rlpd-entropy-target-ablation-v5.json",
+      "training_seed": 50
+    }
+  ],
+  "cells": [
+    {
+      "geometry_seed": 4272000001,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000002,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000003,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000004,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000005,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000006,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000007,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000008,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000009,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000010,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000011,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000012,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    }
+  ],
+  "censoring": "2,000-decision task timeout is separate from a prematurely stopped collection",
+  "centerline_far_definition": "nearest track center point distance > 9.0 m is a proxy, not physical grass occupancy",
+  "centerline_far_threshold_m": 9.0,
+  "collision_penalty": 0.0,
+  "decision_cap": 48000,
+  "event_rules": {
+    "directed_delta_epsilon": 0.0001,
+    "max_decisions": 2000,
+    "negative_reward_limit": 100,
+    "stall_window": 20,
+    "tile_window": 30
+  },
+  "execution_order": "cells in audited order, each with both actors in listed order",
+  "format": "haic-rlpd-g0-diagnostic-v1",
+  "frame_skip": 4,
+  "geometry_audit_path": "experiments/rlpd-g0-completion-v1-seed-audit.json",
+  "geometry_audit_sha256": "5187bf7457ebdf08c8458be2c714c83ccb92feb3ec07e97b4a82d47d4ea3d93f",
+  "interventions": false,
+  "learner_updates": 0,
+  "max_steps": 2000,
+  "partition": "TRAIN",
+  "purpose": "first-loss-and-completion-diagnostic-not-ranking",
+  "r5_erratum_path": "experiments/drqv2-geometry-mix-v1-r5-seed-audit-erratum-v1.json",
+  "r5_erratum_sha256": "065dac4782ff820e9a95387c21a20daea6a02c24e0122971971bfa34391d0773",
+  "reward_shaping": false,
+  "source_hashes": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "haic/__init__.py": "83308c227e0b3fb28104d947b2758833edb9fdb010d7b75c69ffe3a3f7c95670",
+    "haic/algorithms/__init__.py": "a89e2d259085e8f75c9547960bc51157b4e6b876efdba96a1b7c82c26aba338a",
+    "haic/algorithms/rlpd/g0_diagnostic.py": "7573bf577481c752dda68f1ff99e20915cd87ca18a9a092d7f0e629b8c3a899a",
+    "haic/algorithms/rlpd/model.py": "5a6e6693bf97cc43ded65d1f3c19a348b7e6719044490e10fb7a160e7908e79e",
+    "requirements.txt": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+    "scripts/__init__.py": "c5d8359e421222eabceeba933289459a1e3f136ce6ef9d393e8a90b14b1ccfda",
+    "scripts/audit_rlpd_g0_seeds.py": "f0cb3e3c195da6ff3d50e7ea54406c91cbd25b96738e6c811d3adc474509fdab",
+    "scripts/diagnose_rlpd_g0.py": "76a124d125e7ef31bf51626ad3c0b3f5976b4cba115f45bf64861d225e63c65f",
+    "scripts/prepare_rlpd_g0_protocol.py": "bb5d4c29ab019d3e0d59c4f726a978f986385d6708c106368f2a702c9c34f29e",
+    "scripts/summarize_rlpd_g0.py": "dfaacef9780fc91902f396b75c1bfd8aaa50376eb4b329faf689475b94918ef8",
+    "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  },
+  "status": "frozen"
+}

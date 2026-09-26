@@ -1,0 +1,48 @@
+{
+  "analysis_source_sha256": "7ba5b4d457219ca3e4954f8c1d7eaf6493072cd8ac8805b5e1c101692e2908b1",
+  "anchor_definitions": {
+    "after_last_new_tile": "decision immediately after final new_tiles > 0, or missing if no such decision",
+    "first_centerline_far": "first decision with centerline_distance_m > frozen protocol threshold",
+    "first_contact": "first decision with contact=true",
+    "first_observed": "frozen ledger summary.first_observed_step",
+    "first_qualified": "first decision with finish_qualified=true",
+    "terminal": "last terminated or truncated driven decision"
+  },
+  "causal_claim": null,
+  "contact_sheet_sampling": "every fifth decision from clipped window start, plus anchor and inclusive end",
+  "contact_sheet_stride_decisions": 5,
+  "finished_controls": 6,
+  "format": "haic-rlpd-g0-fixed-windows-result-v1",
+  "freeze_path": "experiments/rlpd-g0-fixed-windows-v1.json",
+  "freeze_sha256": "0e9c2c953c928376cea3cc7915d1d8f95a02415eace95eba5354e995c1bdb285",
+  "geometry_clusters": 12,
+  "input_boundary": "pixel stack was the only policy input; action/telemetry columns are diagnostic output only",
+  "labels_assigned": false,
+  "manual_rubric": {
+    "allow_overlaps": true,
+    "categories": [
+      "road_near_reverse",
+      "post_contact_stall",
+      "centerline_far_departure_proxy",
+      "clean_continuation",
+      "unknown"
+    ],
+    "status": "unreviewed"
+  },
+  "missing_anchor_count": 43,
+  "pixel_contract": "decision_steps are zero-based; each tile pair is [observation_frame,next_frame]; observation_stack_at_start is the full 4-frame policy input at window_start; every original per-decision trace column is sliced without reindexing",
+  "role": "TRAIN-only-observational-diagnostic",
+  "row_count": 24,
+  "source": {
+    "cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+    "cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+    "manifest_path": "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+    "manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+    "protocol_path": "experiments/rlpd-g0-completion-v1.json",
+    "protocol_sha256": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b"
+  },
+  "window_count": 144,
+  "window_radius_decisions": 20,
+  "windows_path": "windows.jsonl",
+  "windows_sha256": "90456099a50e4813e930a20b97fb5c067d88e190afabfcce8ba3fdca958ddd80"
+}

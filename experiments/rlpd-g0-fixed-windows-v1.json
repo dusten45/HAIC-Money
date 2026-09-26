@@ -1,0 +1,43 @@
+{
+  "analysis_source_sha256": "7ba5b4d457219ca3e4954f8c1d7eaf6493072cd8ac8805b5e1c101692e2908b1",
+  "anchor_definitions": {
+    "after_last_new_tile": "decision immediately after final new_tiles > 0, or missing if no such decision",
+    "first_centerline_far": "first decision with centerline_distance_m > frozen protocol threshold",
+    "first_contact": "first decision with contact=true",
+    "first_observed": "frozen ledger summary.first_observed_step",
+    "first_qualified": "first decision with finish_qualified=true",
+    "terminal": "last terminated or truncated driven decision"
+  },
+  "anchors": [
+    "first_observed",
+    "first_contact",
+    "first_centerline_far",
+    "after_last_new_tile",
+    "first_qualified",
+    "terminal"
+  ],
+  "contact_sheet_sampling": "every fifth decision from clipped window start, plus anchor and inclusive end",
+  "contact_sheet_stride_decisions": 5,
+  "format": "haic-rlpd-g0-fixed-windows-freeze-v1",
+  "manual_rubric": {
+    "allow_overlaps": true,
+    "categories": [
+      "road_near_reverse",
+      "post_contact_stall",
+      "centerline_far_departure_proxy",
+      "clean_continuation",
+      "unknown"
+    ],
+    "status": "unreviewed"
+  },
+  "source": {
+    "cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+    "cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+    "manifest_path": "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+    "manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+    "protocol_path": "experiments/rlpd-g0-completion-v1.json",
+    "protocol_sha256": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b"
+  },
+  "status": "frozen",
+  "window_radius_decisions": 20
+}
