@@ -59,7 +59,7 @@
 | `.gitignore` | ignore generated v2 run/artifact and PDF outputs while retaining the directory marker |
 | `output/pdf/.gitkeep` | preserve the requested report-output directory without tracking generated PDFs |
 
-Existing `COMPETITION_INFO.md` remains a detailed local competition summary and is linked from `PROJECT_INFO.md`; it is not a second project-purpose document. Existing `RESULTS.md` generated rows are frozen historical data. `RULES.md` is migrated into `AGENTS.md` before removal. Existing training/evaluation modules are reviewed per command profile and may be reused behind the new interface; old orchestration is not.
+`docs/sources/official-participants/README.md` and `LICENSE` are a pinned, verbatim local mirror of the official Participants repository documentation and license; `docs/sources/INDEX.md` records the exact commit and check date. `COMPETITION_INFO.md` remains a local historical summary, never the source mirror or current authority. Existing `RESULTS.md` generated rows are frozen historical data. `RULES.md` is migrated into `AGENTS.md` before removal. Existing training/evaluation modules are reviewed per command profile and may be reused behind the new interface; old orchestration is not.
 
 ### Test conventions
 
@@ -75,6 +75,8 @@ Named test builders (`make_config`, `messages`, `result`, `approval`, `config`, 
 - Create: `docs/handoffs/REPORT_TEMPLATE.md`
 - Create: `docs/sources/INDEX.md`
 - Create: `docs/sources/legacy-path-map.md`
+- Create: `docs/sources/official-participants/README.md`
+- Create: `docs/sources/official-participants/LICENSE`
 - Create: `docs/strategy-history.md`
 - Create: `docs/report.md`
 - Modify: `README.md`
@@ -98,15 +100,15 @@ Expected: every current operational entry point and generated-results reference 
 
 - [ ] **Step 2: Write `AGENTS.md` with the provided operating contract**
 
-Include source precedence, the exact STOPPED-to-RELEASE state machine, central coordinator duties, independent agent scope, `fact/inference/unknown/recommendation/source_paths` report fields, 4/8/2 search limits, no threshold sweep before activation, and three-valid-cycle pivot.
+Include source precedence (official website, Participants repository, pinned local README/license mirror, then historical evidence), the exact STOPPED-to-RELEASE state machine, central coordinator duties, independent agent scope, `fact/inference/unknown/recommendation/source_paths` report fields, 4/8/2 search limits, no threshold sweep before activation, and three-valid-cycle pivot.
 
 - [ ] **Step 3: Write `PROJECT_INFO.md` and `harness.config.json`**
 
-Set `metrics.primary` to `completion_rate`; set tie-breakers to `median_finished_lap_ms`, `mean_incomplete_progress`, `p90_finished_lap_ms`, `collisions`, `damage`, and `act_latency_p95_ms`. Record official source precedence (current competition site, Participants repository, local source mirror, historical evidence), legacy data map, new run/artifact/PDF roots, protected split identifiers, pivot count 3, search limits, plan-only default, and only allowlisted local operations. Do not add credentials.
+Set `metrics.primary` to `completion_rate`; set tie-breakers to `median_finished_lap_ms`, `mean_incomplete_progress`, `p90_finished_lap_ms`, `collisions`, `damage`, and `act_latency_p95_ms`. Record official source precedence (current competition site, Participants repository, `docs/sources/official-participants/README.md` pinned mirror, historical local summary/evidence), legacy data map, new run/artifact/PDF roots, protected split identifiers, pivot count 3, search limits, plan-only default, and only allowlisted local operations. Do not add credentials.
 
 - [ ] **Step 4: Reassign current document responsibilities without deleting evidence**
 
-Reduce `README.md` to quick start and document map. Keep competition facts in `COMPETITION_INFO.md` and point to it from `PROJECT_INFO.md`. Move hard restrictions into `RESTRICTIONS.md`. Freeze the existing generated `RESULTS.md` section and append a dated migration note above it. Preserve the current `SOTA.md` record as a historical local reference until a new candidate passes the new gates. Copy no run/artifact files.
+Reduce `README.md` to quick start and document map. Preserve its official template content in a verbatim, pinned Participants README snapshot under `docs/sources/official-participants/`; move the existing user-authored corridor benchmark narrative, including every condition/result/caveat, to a pre-v2 historical entry in `docs/strategy-history.md` and do not present it as a registered submission result. Keep competition facts in `COMPETITION_INFO.md` as a historical local summary and point to it from `PROJECT_INFO.md`. Move hard restrictions into `RESTRICTIONS.md`; move provisional S1/S2/S3 strategy choices from restrictions into historical strategy records. Freeze the existing generated `RESULTS.md` section and append a dated migration note above it. Preserve the current `SOTA.md` record as a historical local reference until a new candidate passes the new gates. Copy no run/artifact data.
 
 - [ ] **Step 5: Configure generated-output ignores and create the requested output directory**
 
@@ -114,7 +116,7 @@ Add `runs/haic-research-v2/`, `artifacts/haic-research-v2/`, and `output/pdf/*.p
 
 - [ ] **Step 6: Add source, experiment, handoff, strategy and report templates**
 
-`docs/experiments/INDEX.md` lists only new experiment records; `docs/handoffs/REPORT_TEMPLATE.md` has the five report fields; `docs/sources/INDEX.md` records URL, version/check date and supported claim; `legacy-path-map.md` maps old paths without reading their contents; `strategy-history.md` is append-only; `report.md` separates verified facts from inference and unknowns.
+`docs/experiments/INDEX.md` lists only new v2 experiment records; `docs/handoffs/REPORT_TEMPLATE.md` has the five report fields; `docs/sources/INDEX.md` records URL, version/check date, pinned commit, official-source status, and supported claim. Preserve the official Participants README and LICENSE verbatim under `docs/sources/official-participants/` at commit `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`; note that the competition website was inaccessible on 2026-09-26 and must be rechecked before external action. `legacy-path-map.md` maps old paths without reading their contents; `strategy-history.md` is append-only and receives the moved pre-v2 benchmark with unregistered/ineligible status; `report.md` separates verified facts from inference and unknowns.
 
 - [ ] **Step 7: Review and commit only the document-system files**
 
@@ -124,7 +126,7 @@ git add -p README.md
 git add AGENTS.md PROJECT_INFO.md harness.config.json COMPETITION_INFO.md RESTRICTIONS.md RESULTS.md SOTA.md .gitignore output/pdf/.gitkeep docs/experiments docs/handoffs docs/sources docs/strategy-history.md docs/report.md
 git commit -m "docs: establish HAIC research operating contract"
 ```
-Before staging README, inspect its diff and select only the new quick-start/document-map hunks; leave pre-existing user hunks unstaged. Expected: historical experiment files and run data are absent from the staged path list.
+Before staging, inspect the original README diff and preserve the user's benchmark content in `docs/strategy-history.md`; the root README should contain only the quick-start/document map. Expected: unrelated user source-code changes, historical experiment data, and run data are absent from the staged path list.
 
 ## Task 2: Implement the HAIC config loader and structural config checks
 
@@ -499,7 +501,7 @@ Expected: FAIL because project validation is not implemented.
 
 - [ ] **Step 3: Implement document/config invariants and PowerShell wrapper**
 
-Validate required paths from the reference tree, config schema, official-source references, completion-first metric order, search/pivot limits, split list, allowed profile IDs, no secrets, and plan-only default. `scripts/harness/validate.ps1` must contain `$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path`, run `python -m haic_research.cli validate --root $RepoRoot`, then `exit $LASTEXITCODE`. Do not inspect `runs/`, `artifacts/haic/`, or `submissions/` contents.
+Validate required paths from the reference tree, including the pinned local Participants README/LICENSE mirror; config schema and mirror path; official-source references; completion-first metric order; search/pivot limits; split list; allowed profile IDs; no secrets; and plan-only default. `scripts/harness/validate.ps1` must contain `$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path`, run `python -m haic_research.cli validate --root $RepoRoot`, then `exit $LASTEXITCODE`. Do not inspect `runs/`, `artifacts/haic/`, or `submissions/` contents.
 
 - [ ] **Step 4: Run the validator and focused test**
 
