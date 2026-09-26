@@ -602,6 +602,43 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertIsNone(controller._target_speed)
         self.assertEqual(controller._last_steer, 0.0)
 
+    def test_racing_line_controller_prepositions_to_a_safe_edge_for_a_distant_obstacle(self):
+        from agent import _RacingLineController
+
+        action = _RacingLineController().act(
+            _observation(obstacle_x=35, obstacle_y=30, speed=20.0)
+        )
+
+        # The obstacle is still distant, but the first command should already
+        # move toward the wider right-side envelope rather than waiting for a
+        # close, high-urgency avoidance turn.
+        self.assertGreater(float(action[0]), 0.04)
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertEqual(float(action[2]), 0.0)
+
+    def test_racing_line_controller_uses_an_early_brake_for_a_sharp_curve(self):
+        from agent import _RacingLineController
+
+        controller = _RacingLineController()
+        action = controller.act(_observation(curve=0.75, speed=60.0))
+
+        self.assertGreater(float(action[2]), 0.0)
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertLessEqual(abs(float(action[0])), controller.SHARP_CURVE_STEER_LIMIT)
+
+    def test_racing_line_controller_suppresses_final_outward_edge_command(self):
+        from agent import _RacingLineController
+
+        outward_left = _RacingLineController._suppress_outward_steering(
+            -0.1, {54: (50.0, 72.0)}
+        )
+        outward_right = _RacingLineController._suppress_outward_steering(
+            0.1, {54: (10.0, 32.0)}
+        )
+
+        self.assertEqual(outward_left, 0.0)
+        self.assertEqual(outward_right, 0.0)
+
     def test_missing_checkpoint_uses_visual_actor_in_development_without_corridor_fallback(self):
         from agent import Agent
         from haic_agent.networks import VisualActorCritic

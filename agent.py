@@ -945,6 +945,16 @@ class _RacingLineController(_ForwardCorridorController):
     CURVE_SPEED_PENALTY = 2.25
     CURVE_ENTRY_SPEED_PENALTY = 0.75
     CURVE_GAS_MIN = 0.48
+    SHARP_CURVE_SWEEP = 8.0
+    SHARP_CURVE_SPEED_FLOOR = 24.0
+    SHARP_CURVE_STEER_GAIN = 0.64
+    SHARP_CURVE_STEER_LIMIT = 0.32
+    SHARP_CURVE_STEER_STEP = 0.04
+    SHARP_CURVE_GAS_MIN = 0.32
+    # Move toward the wider edge before a straight-road obstacle becomes
+    # urgent, but stop short of the asphalt boundary by the vehicle margin.
+    OBSTACLE_EDGE_FRACTION = 0.78
+    OBSTACLE_EDGE_GAIN = 0.025
     HAZARD_TARGET_SPEED = 22.0
     HAZARD_BRAKE_FRAMES = 2
     HAZARD_CRAWL_GAS = 0.04
@@ -953,6 +963,54 @@ class _RacingLineController(_ForwardCorridorController):
 
     def __init__(self, *, cruise_speed: float = STRAIGHT_CRUISE_SPEED) -> None:
         super().__init__(cruise_speed=cruise_speed)
+
+    @classmethod
+    def _suppress_outward_steering(
+        cls,
+        steering: float,
+        spans: dict[int, tuple[float, float]],
+    ) -> float:
+        """Remove the final command component that points beyond the track."""
+        if not spans:
+            return float(steering)
+        near_span = spans.get(54) or spans.get(50)
+        if near_span is None:
+            return float(steering)
+        left = near_span[0] + cls.MIN_EDGE_CLEARANCE
+        right = near_span[1] - cls.MIN_EDGE_CLEARANCE
+        target = float(np.clip(cls.IMAGE_CENTER, left, right))
+        envelope_error = target - cls.IMAGE_CENTER
+        if envelope_error > 0.25 and steering < 0.0:
+            return 0.0
+        if envelope_error < -0.25 and steering > 0.0:
+            return 0.0
+        return float(steering)
+
+    @classmethod
+    def _straight_obstacle_edge_bias(
+        cls,
+        obstacle: tuple[float, float, float],
+        spans: dict[int, tuple[float, float]],
+        side: float,
+    ) -> float:
+        """Aim toward the wider safe edge before a straight-road obstacle."""
+        if not spans or side == 0.0:
+            return 0.0
+        near_span = spans.get(54) or spans.get(50)
+        if near_span is None:
+            return 0.0
+        left = near_span[0] + cls.MIN_EDGE_CLEARANCE
+        right = near_span[1] - cls.MIN_EDGE_CLEARANCE
+        if left >= right:
+            return 0.0
+        safe_width = right - left
+        target = (
+            left + cls.OBSTACLE_EDGE_FRACTION * safe_width
+            if side > 0.0
+            else right - cls.OBSTACLE_EDGE_FRACTION * safe_width
+        )
+        del obstacle
+        return float(cls.OBSTACLE_EDGE_GAIN * (target - cls.IMAGE_CENTER))
 
     def act(self, observation) -> np.ndarray:
         frame = self._frame(observation)
@@ -990,6 +1048,7 @@ class _RacingLineController(_ForwardCorridorController):
         entry_sweep = abs(far - mid)
         curve_strength = max(road_sweep, entry_sweep)
         curve_mode = curve_strength >= self.CURVE_TRIGGER_SWEEP
+        sharp_curve = curve_strength >= self.SHARP_CURVE_SWEEP
 
         corridor_hazard, corridor_blocked, corridor_hint = self._corridor_hazard(
             frame, centers, spans
@@ -1004,14 +1063,21 @@ class _RacingLineController(_ForwardCorridorController):
         # shortcut can point outside the asphalt.
         steering = 0.017 * preview_error + 0.010 * heading
         if curve_mode:
-            steering *= 0.78
+            steering *= self.SHARP_CURVE_STEER_GAIN if sharp_curve else 0.78
         steer_limit = self.CURVE_MAX_STEER if curve_mode else self.MAX_STEER
+        if sharp_curve:
+            steer_limit = min(steer_limit, self.SHARP_CURVE_STEER_LIMIT)
 
         target_speed = self.cruise_speed
-        target_speed -= self.CURVE_SPEED_PENALTY * road_sweep
+        target_speed -= (
+            self.CURVE_SPEED_PENALTY * (1.15 if sharp_curve else 1.0) * road_sweep
+        )
         target_speed -= self.CURVE_ENTRY_SPEED_PENALTY * entry_sweep
+        speed_floor = (
+            self.SHARP_CURVE_SPEED_FLOOR if sharp_curve else self.CURVE_SPEED_FLOOR
+        )
         target_speed = float(
-            np.clip(target_speed, self.CURVE_SPEED_FLOOR, self.cruise_speed)
+            np.clip(target_speed, speed_floor, self.cruise_speed)
         )
 
         obstacle = self._nearest_obstacle(frame, centers, spans)
@@ -1029,6 +1095,17 @@ class _RacingLineController(_ForwardCorridorController):
             self._obstacle_missing = 0
             urgency = float(np.clip((obstacle_y - 22.0) / 24.0, 0.0, 1.0))
             steering += self._obstacle_side * 0.22 * urgency
+            straight_context = (
+                abs(heading) <= self.STRAIGHT_SWEEP_DEADBAND
+                and road_sweep <= self.STRAIGHT_SWEEP_DEADBAND
+                and abs(mid - near) <= self.STRAIGHT_SWEEP_DEADBAND
+            )
+            if straight_context:
+                # Start the lateral move while the obstacle is still distant;
+                # the target is a safe inner-edge point, not the green pixels.
+                steering += self._straight_obstacle_edge_bias(
+                    obstacle, spans, self._obstacle_side
+                )
             target_speed = min(target_speed, self._obstacle_speed_limit(obstacle_y))
         elif self._obstacle_side != 0.0:
             self._obstacle_missing += 1
@@ -1078,7 +1155,7 @@ class _RacingLineController(_ForwardCorridorController):
             curve_gas_scale = float(
                 np.clip(
                     1.0 - 0.045 * curve_strength,
-                    self.CURVE_GAS_MIN,
+                    self.SHARP_CURVE_GAS_MIN if sharp_curve else self.CURVE_GAS_MIN,
                     1.0,
                 )
             )
@@ -1087,11 +1164,15 @@ class _RacingLineController(_ForwardCorridorController):
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         if self._last_steer != 0.0 and steering * self._last_steer < 0.0:
             steering = 0.0
-        step = self.CURVE_STEER_STEP if curve_mode else self.MAX_STEER_STEP
+        if sharp_curve:
+            step = self.SHARP_CURVE_STEER_STEP
+        else:
+            step = self.CURVE_STEER_STEP if curve_mode else self.MAX_STEER_STEP
         steering = self._last_steer + float(
             np.clip(steering - self._last_steer, -step, step)
         )
         steering = float(np.clip(steering, -steer_limit, steer_limit))
+        steering = self._suppress_outward_steering(steering, spans)
         self._last_steer = steering
         brake = min(
             brake,

@@ -171,6 +171,13 @@ after a corner. The entry speed planner keeps braking before the turn and leaves
 the bounded steering rate in place through the apex; no simulator performance
 evaluation was run for this update.
 
+The follow-up obstacle/curve repair keeps the reset controller on that same
+envelope: a distant obstacle on a straight selects the wider safe edge and starts
+the lateral move before urgency rises, while a sharp preview raises the entry
+brake demand, lowers the curve floor to 24 speed units, tightens the steering
+limit/slew, and reduces throttle. A final outward-sign gate runs after slew
+limiting so the last action cannot point across the visible track boundary.
+
 The forward-progress adjustment follows the environment's continuous action and
 finish semantics documented by Gymnasium, while using the practical separation of a
 nominal road follower and a safety filter described by vision-based driving and
