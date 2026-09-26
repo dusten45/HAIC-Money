@@ -250,6 +250,25 @@ class CommandLifecycleTests(CommandFixture):
                 self.plan()
             self.assertTrue(all(call.args[0] not in {safe_name, forbidden} for call in reader.call_args_list))
 
+    def test_split_backslashes_are_refused_before_target_stat_on_all_hosts(self):
+        split = self.root / 'split.json'
+        target = self.root / 'training/maps/train-map.json'
+        split.write_text(json.dumps({'schema_version': 1,
+                                     'train': [{'map': 'training\\maps\\train-map.json', 'seeds': [1]}]}), encoding='utf-8')
+        inspected = []
+        original_stat = Path.stat
+        def observe_stat(path, *args, **kwargs):
+            inspected.append(path)
+            return original_stat(path, *args, **kwargs)
+        with patch.object(Path, 'stat', observe_stat):
+            with self.assertRaises(CommandError):
+                register_plan(self.config, metadata('backslash-split'), 'train_policy',
+                              dict(self.args, **{'train-only-site-map-split': str(split)}), research=research())
+        self.assertNotIn(target, inspected)
+        self.assertNotIn(self.root / 'training\\maps\\train-map.json', inspected)
+        self.assertFalse(self.config.run_root.exists())
+        self.assertEqual(self.runner.calls, [])
+
     def test_normal_split_loaders_check_all_groups_and_train_only_ignores_unloaded_groups(self):
         split = self.root / 'split.json'
         split.write_text(json.dumps({'schema_version': 1,

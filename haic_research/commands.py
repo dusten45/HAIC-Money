@@ -289,7 +289,9 @@ def _validate_split_references(config: HarnessConfig, split: Path, *, train_only
             raw = entry.get("map") if isinstance(entry, dict) else None
             if not isinstance(raw, str) or not raw:
                 raise CommandError(f"split {group} map requires a relative file path")
-            parsed = Path(raw.replace("\\", "/"))
+            if "\\" in raw:
+                raise CommandError("split map references must use forward slashes")
+            parsed = Path(raw)
             if parsed.is_absolute() or ".." in parsed.parts:
                 raise CommandError("split map must remain inside its manifest directory")
             # _path rejects historical roots lexically before any lstat/open.
