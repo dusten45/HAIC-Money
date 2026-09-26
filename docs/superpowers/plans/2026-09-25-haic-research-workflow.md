@@ -436,7 +436,7 @@ Expected: FAIL because command profiles and CLI do not exist.
 
 - [ ] **Step 3: Register only HAIC local operations**
 
-Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
+Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Add `GATE_REVIEW` to the configured workflow state list. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
 
 - [ ] **Step 4: Implement argv construction and execution approval checks**
 
