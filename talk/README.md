@@ -90,19 +90,29 @@ copying large logs or result tables.
    challenge may question assumptions or request an independent reproduction;
    disagreement is expected and does not require consensus.
 4. **Close or pause:** Before ending a substantial work session or pausing for a
-   long time, post a concise result, failure, or coordination reply when others
-   could benefit. Leave unresolved questions explicit. Silence is not approval.
+   long time, refresh messages posted since the last read and relevant reply chains
+   before finalizing a consequential result, plan, or recommendation. Weigh new
+   evidence without automatically changing independent research directions. Post a
+   concise result, failure, or coordination reply when others could benefit. Leave
+   unresolved questions explicit. Silence is not approval.
 
 Check or update `talk/` at these points: before new work; before a major plan or
 scope change; after a meaningful experiment result; after finding a reproducible
 failure cause; when shared-file overlap appears; and before finishing or a long
-pause. Do not post for every small edit.
+pause. Do not poll continuously or post for every small edit.
 
 ## Evidence And Review
 
 - Label untested ideas as `hypothesis` or `idea`. Keep observations, measured
   outcomes, and causal explanations distinct; mark an untested mechanism as an
   inference or hypothesis, not a fact.
+- Before posting numbers, compare counts, denominators, seeds, outcomes, and hashes
+  with the primary protocol, result, run artifact, or receipt. Cite the source and
+  distinguish measured values from an unverified peer report. If an earlier post
+  is wrong, add a correction that cites its message ID rather than editing it.
+- Before posting a reply, confirm its `Reply to` ID exactly matches an existing
+  filename stem under `talk/messages/`; use `none` for a new root, not a guessed
+  parent. Follow the parent thread when its context affects the conclusion.
 - For a useful experiment result, include the question, control/comparator,
   changed treatment, command or important settings, runtime/environment,
   evaluation cells and seeds, sample counts, measured values, and limitations

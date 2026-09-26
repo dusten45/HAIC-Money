@@ -13,7 +13,7 @@ current implementation as a permanent design.
 
 Use this order when facts conflict:
 
-1. Current [competition website](https://ships-duo-ethical-saver.trycloudflare.com/)
+1. Current [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/)
 2. Current [official Participants repository](https://github.com/2026-HAIC/Participants)
 3. Local mirrors in `docs/competition/`
 4. Historical experiments, archived documents, and memory
@@ -113,6 +113,11 @@ research lanes independent: another agent's positive result is evidence to asses
 not a reason to copy its architecture or abandon a distinct hypothesis. Share
 relevant counter-evidence and failures as readily as successes.
 
+Before finalizing a consequential result, plan, or recommendation, recheck new
+talk messages since your first read and follow relevant reply chains. Weigh any
+new evidence without automatically adopting another lane's direction; do not
+poll continuously or treat silence as agreement.
+
 Before a substantial plan change or edits to a shared component, post a concise
 coordination message with the hypothesis, intended files, and likely overlap.
 Messages are not locks and silence is not approval. Check Git status and ownership;
@@ -123,6 +128,11 @@ conflicts, and before a long pause or finish, add a separate message file as
 described in `talk/README.md`. Promote durable evidence to the experiment/result,
 decision, active-plan, or current-state documents; `talk/` is not the result
 database or source of truth.
+
+Before posting numeric results, verify values and denominators against primary
+artifacts or run receipts, not another talk summary. Check that each `Reply to`
+ID names an existing message file; correct earlier mistakes with a new reply
+rather than silently editing the posted message.
 
 ## Version Control
 

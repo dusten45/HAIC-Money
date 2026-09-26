@@ -10,7 +10,7 @@ renamed or reported as an official HAIC score.
 |---|---|---|
 | Completion / finish | A run reached the local mirror's finish condition | Primary internal outcome when the protocol and environment are fixed; compare on the same cells. |
 | Completed lap time | Time for a completed local run | Tie-break evidence after completion, subject to the same protocol. |
-| Progress | Local mirror progress for an unfinished run | Secondary proxy only; cannot promote a candidate with no required completion. |
+| Progress | Local mirror visited-tile fraction (reported as a mean over all canonical runs, including finishers) | Secondary proxy only; cannot promote a candidate with no required completion. |
 | Damage, collision, retire reason | Reliability diagnostics | Explain failure modes and safety tradeoffs. |
 | Action trace, latency, RSS, package size | Operational evidence | Required runtime/package gates, not driving quality. |
 | Raw CarRacing reward, training reward, loss | Optimization diagnostics | Never an official rank metric and not a promotion substitute. |

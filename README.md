@@ -63,7 +63,7 @@ research from official external actions.
 
 ## Official Sources
 
-- [Competition website](https://ships-duo-ethical-saver.trycloudflare.com/)
+- [Competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/)
 - [Official Participants repository](https://github.com/2026-HAIC/Participants)
 
 The official sources override this repository's local mirrors whenever rules,

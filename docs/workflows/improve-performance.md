@@ -37,7 +37,7 @@ use `talk/` to exchange evidence and counterarguments, not to force convergence.
    compare against the baseline on the same declared conditions.
 8. Classify the outcome as accepted, rejected, or inconclusive. Record durable
    evidence and a decision when it changes future search space.
-9. Update `docs/context/current-state.md`; update `MODEL_STATUS.md` only when an
+9. Update `docs/context/current-state.md`; update `docs/results/MODEL_STATUS.md` only when an
    actual candidate status changes; set the next highest-value active plan.
 
 ## External Boundary

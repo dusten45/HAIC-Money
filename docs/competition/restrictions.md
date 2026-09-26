@@ -1,8 +1,9 @@
 # Official Runtime and Package Restrictions
 
 This local transcription was verified against the pinned official README listed in
-[`info.md`](info.md) at 2026-09-23T06:30:22Z. It is a convenience mirror only; the
-current official source wins on every conflict.
+[`info.md`](info.md) at 2026-09-23T06:30:22Z and rechecked unchanged on
+2026-09-26. It is a convenience mirror only; the current official source wins
+on every conflict.
 
 ## Runtime and Environment
 

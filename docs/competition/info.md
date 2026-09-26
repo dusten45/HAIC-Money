@@ -7,42 +7,55 @@ Participants repository override it whenever they differ.
 
 | Scope | Source | Last verified | Version / note |
 |---|---|---|---|
-| Technical contract | [Participants README at `1c11db8`](https://github.com/2026-HAIC/Participants/blob/1c11db8afc2fbfcfb610672b7ee0ecd122c97741/README.md) | 2026-09-23T06:30:22Z | Official `main` commit `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`; README blob `4fd6bc02ddf6064bd09d3bbaaa8fa57253ab65be` |
-| Operating schedule, quota, model-selection policy | [competition website](https://ships-duo-ethical-saver.trycloudflare.com/) and loaded [official bundle](https://ships-duo-ethical-saver.trycloudflare.com/assets/index-YpEsg9KV.js) | 2026-09-23T06:30:22Z | SPA shell plus loaded bundle; the site provides no deployment commit |
+| Technical contract | [Participants README at `1c11db8`](https://github.com/2026-HAIC/Participants/blob/1c11db8afc2fbfcfb610672b7ee0ecd122c97741/README.md) | 2026-09-26 (rechecked) | Official `main` commit `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`; README blob `4fd6bc02ddf6064bd09d3bbaaa8fa57253ab65be` |
+| Current site and operating schedule | [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/) and loaded [official bundle](https://scholarships-hardwood-headers-influenced.trycloudflare.com/assets/index-DpQFAxcW.js) | 2026-09-26 (rechecked) | Replacement site is reachable; displayed schedule matches the prior snapshot, but fixed upload text still says three submissions per day |
+| Reported submission quota | User-provided competition update | 2026-09-26 (reported) | Owner reports five per team per KST day; public site text still says three; effective authenticated limit unverified |
+| Historical operating schedule, former quota, model-selection policy | [previous website](https://ships-duo-ethical-saver.trycloudflare.com/) and [previous bundle](https://ships-duo-ethical-saver.trycloudflare.com/assets/index-YpEsg9KV.js) | 2026-09-23T06:30:22Z | Prior site snapshot, not current quota; the site supplied no deployment commit |
 | Historical public-track snapshot | [`/api/tracks`](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks) and per-track [`/api/ranking`](https://ships-duo-ethical-saver.trycloudflare.com/api/ranking?trackId=1) | 2026-09-23T06:30:22Z | Tracks 1 and 2 were exposed as public at verification time; this is not a current track count |
 
 ## Latest Site Availability Check
 
-On 2026-09-25 at 09:24-09:26Z, the competition-site hostname failed DNS
-resolution (`curl` could not resolve it; Google DNS returned status 3/NXDOMAIN).
-The same DNS and site failures persisted in a 09:42Z recheck.
-The site root, previously loaded bundle, and `/api/tracks` could not be fetched.
-The [official Participants repository](https://github.com/2026-HAIC/Participants)
-was reachable and its `main` commit was still `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`,
-but its README does not publish the event schedule. The site schedule and public
-track count therefore **could not be reverified today**. Obtain a working official
-site URL and check it before relying on the dates below for any external action.
+On 2026-09-26, the replacement [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/)
+and its [public `/api/tracks`](https://scholarships-hardwood-headers-influenced.trycloudflare.com/api/tracks)
+were reachable. The API exposed public tracks 1, 2, and 3 at this check; this is
+not a guarantee of the track set at any later official action.
+
+The loaded bundle still displays three submissions per day in fixed upload copy,
+but its admin UI reads a configurable `dailySubmissionLimit` from the server.
+Unauthenticated requests to `/api/admin/settings` and `/api/teams/me` returned
+401 on 2026-09-26, so the public endpoints do not expose the effective setting
+or remaining team quota. The user reports an increase to five; the publicly
+fetched sources cannot verify it. Check the authenticated remaining quota
+before any approved official upload.
+
+On 2026-09-25 at 09:24-09:26Z, the *previous* hostname failed DNS resolution
+(`curl` could not resolve it; Google DNS returned status 3/NXDOMAIN). The same
+DNS and site failures persisted at 09:42Z, when its root, bundle, and
+`/api/tracks` could not be fetched. That outage does not describe the current
+replacement site. The [official Participants repository](https://github.com/2026-HAIC/Participants)
+was reachable then and its `main` commit was still `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`,
+but its README does not publish the event schedule.
 
 Refresh these sources before official submission, model confirmation, a mock event,
 the final deadline, or first official evaluation after another public track is
 released.
 
-## Last Site-Verified Operating Schedule (2026-09-23)
+## Site-Verified Operating Schedule (2026-09-26)
 
 All site times below are KST (`+09:00`), with UTC shown for auditability.
 
 | Event | KST | UTC |
 |---|---|---|
 | Submission window opens | 2026-09-18 09:00 | 2026-09-18 00:00Z |
-| First mock competition | 2026-09-24 18:00 | 2026-09-24 09:00Z |
-| Second mock competition | 2026-09-30 18:00 | 2026-09-30 09:00Z |
+| First mock evaluation | 2026-09-24 18:00 | 2026-09-24 09:00Z |
+| Second mock evaluation | 2026-09-30 18:00 | 2026-09-30 09:00Z |
 | Submission deadline | 2026-10-06 23:59:59 | 2026-10-06 14:59:59Z |
 | Final event | 2026-10-08 18:00 | 2026-10-08 09:00Z |
 
-The first mock in this historical site snapshot has passed. Its next listed event
-is the second mock, but the live schedule is unverified while the official site is
-unreachable. This table is the only schedule copy; `docs/context/current-state.md`
-may link to it but must not duplicate it.
+The replacement site's loaded bundle still publishes these dates. The first mock
+has passed and the next listed event is the second mock. This table is the only
+schedule copy; `docs/context/current-state.md` may link to it but must not
+duplicate it. Recheck the site before relying on these dates for an external action.
 
 ### Unverified Information Carried Forward
 
@@ -60,8 +73,10 @@ ordering below. Do not invent one from local scores.
 
 ## Submission Resource and Model Selection
 
-- Each team has three official submissions per KST day; the quota resets at 00:00
-  KST.
+- The user reports five official submissions per team per KST day; the site's
+  fixed text still says three, while the effective limit is server-configurable
+  and unauthenticated requests cannot verify it. Check the logged-in quota
+  before uploading. The displayed reset time is 00:00 KST.
 - A submission consumes quota when server validation begins, including a package that
   later fails validation. Local/browser-only checks that do not start server
   validation are not official submissions; verify the site behavior if unclear.
