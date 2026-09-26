@@ -183,3 +183,56 @@ class WorkAssignment:
 
     def __post_init__(self) -> None:
         _freeze_tuple_fields(self, ("hypothesis_ids", "allowed_read_paths", "allowed_write_paths"))
+
+
+@dataclass(frozen=True)
+class ExperimentResult:
+    candidate_id: str
+    comparison_id: str
+    split_id: str
+    map_ids: tuple[str, ...]
+    seed_ids: tuple[str, ...]
+    completion_count: int
+    episode_count: int
+    median_finished_lap_ms: float | None
+    mean_incomplete_progress: float
+    p90_finished_lap_ms: float | None
+    collisions: float
+    damage: float
+    act_latency_p95_ms: float
+    rule_compliance: GateStatus
+    mechanism_activation: GateStatus
+    official_score: float | None = None
+    eligibility: str = "candidate"
+
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("map_ids", "seed_ids"))
+        object.__setattr__(self, "rule_compliance", GateStatus(self.rule_compliance))
+        object.__setattr__(self, "mechanism_activation", GateStatus(self.mechanism_activation))
+        if not all((self.candidate_id, self.comparison_id, self.split_id, self.map_ids, self.seed_ids)):
+            raise ValueError("experiment result requires candidate and comparison protocol identifiers")
+        if len(set(self.map_ids)) != len(self.map_ids) or len(set(self.seed_ids)) != len(self.seed_ids):
+            raise ValueError("map and seed identifiers must be unique")
+        if self.episode_count <= 0 or not 0 <= self.completion_count <= self.episode_count:
+            raise ValueError("completion count must fit a positive episode denominator")
+        if self.eligibility not in {"candidate", "teacher", "smoke", "diagnostic"}:
+            raise ValueError("unknown experiment eligibility label")
+
+
+@dataclass(frozen=True)
+class PromotionDecision:
+    eligible: bool
+    reason: str
+
+
+@dataclass(frozen=True)
+class AgentReportEnvelope:
+    handoff_path: str
+    owner: str
+    edited_paths: tuple[str, ...]
+    report: AgentReport
+
+    def __post_init__(self) -> None:
+        _freeze_tuple_fields(self, ("edited_paths",))
+        if not isinstance(self.report, AgentReport):
+            raise TypeError("report must be an AgentReport")
