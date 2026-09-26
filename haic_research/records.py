@@ -34,7 +34,8 @@ class RecordLockError(RecordError):
     """Another writer or a stale lock prevents access."""
 
 
-_FILES = ("run_manifest.json", "events.jsonl", "integration_report.json", ".records.lock")
+_FILES = ("run_manifest.json", "events.jsonl", "integration_report.json", ".records.lock",
+          "execution_plan.json", ".execution.claim")
 _GATES = frozenset({"rule_compliance", "mechanism_activation", "competitive_or_product_outcome"})
 _RESERVED = {"con", "prn", "aux", "nul", "clock$", "conin$", "conout$"} | {
     f"{prefix}{number}" for prefix in ("com", "lpt") for number in range(1, 10)
@@ -344,6 +345,112 @@ def write_integration_report(run_dir: Path, report: IntegrationReport, *, config
         encoded = _encode(report)
         with _open(path / "integration_report.json", "x") as stream:
             stream.write(encoded)
+
+
+def read_integration_report(run_dir: Path, *, config: HarnessConfig) -> IntegrationReport:
+    path = _run_path(run_dir, config)
+    with _lock(path):
+        _manifest(path, config)
+        return _report(path)
+
+
+def write_execution_plan(run_dir: Path, plan: Mapping[str, object], *, config: HarnessConfig) -> None:
+    """Write one immutable plan through the existing confinement and lock boundary."""
+    with run_transaction(run_dir, config=config) as run:
+        run.write_plan(plan)
+
+
+def read_execution_plan(run_dir: Path, *, config: HarnessConfig) -> dict[str, object]:
+    with run_transaction(run_dir, config=config) as run:
+        if run.plan is None:
+            raise RecordError("execution plan is missing")
+        return run.plan
+
+
+_TRANSACTION_KEY = object()
+
+
+class RunTransaction:
+    """Current-run snapshot and confined mutations while its records lock is held.
+
+    Obtain only through run_transaction; callers must finish the context before
+    invoking a runner. A claim remains immutable even after failure or a crash.
+    """
+
+    def __init__(self, path: Path, config: HarnessConfig, *, _key=None):
+        if _key is not _TRANSACTION_KEY:
+            raise RecordLockError("use run_transaction to acquire the records lock")
+        self._active = True
+        self._path = _run_path(path, config)
+        self._config = config
+        self.manifest = _manifest(self._path, config)
+        self.events = _events(self._path, self.manifest, config)
+        self.plan = _read_json(path / "execution_plan.json") if (path / "execution_plan.json").exists() else None
+        if self.plan is not None and not isinstance(self.plan, dict):
+            raise RecordError("execution plan must be an object")
+        self.report = _report(path) if (path / "integration_report.json").exists() else None
+        self.execution_reserved = (path / ".execution.claim").exists()
+        self.execution_claim = _read_json(path / ".execution.claim") if self.execution_reserved else None
+
+    def _active_path(self) -> Path:
+        if not self._active:
+            raise RecordLockError("run transaction has ended")
+        return _run_path(self._path, self._config)
+
+    def append(self, event: RunEvent) -> None:
+        path = self._active_path()
+        _validate_event(event, list(self.events), self.manifest, path, self._config)
+        with _open(path / "events.jsonl", "a") as stream:
+            stream.write(_encode(event))
+        self.events += (event,)
+
+    def write_plan(self, plan: Mapping[str, object]) -> None:
+        path = self._active_path()
+        if not isinstance(plan, Mapping):
+            raise RecordError("execution plan must be an object")
+        with _open(path / "execution_plan.json", "x") as stream:
+            stream.write(_encode(plan))
+        self.plan = _json_value(plan)
+
+    def write_report(self, report: IntegrationReport) -> None:
+        path = self._active_path()
+        _validate_report(report)
+        with _open(path / "integration_report.json", "x") as stream:
+            stream.write(_encode(report))
+        self.report = report
+
+    def reserve_execution(self, event: RunEvent) -> None:
+        path = self._active_path()
+        if self.execution_reserved or any(item.kind == "EXECUTION_STARTED" for item in self.events):
+            raise RecordError("execution was already reserved; retry requires a new run")
+        if event.kind != "EXECUTION_STARTED":
+            raise RecordError("execution reservation requires EXECUTION_STARTED")
+        _validate_event(event, list(self.events), self.manifest, path, self._config)
+        # The same lock covers the claim and start append. A partial write leaves
+        # a permanent claim and therefore cannot authorize another invocation.
+        claim = {"event_id": event.event_id, "plan_hash": self.manifest.plan_hash}
+        with _open(path / ".execution.claim", "x") as stream:
+            stream.write(_encode(claim))
+        self.execution_reserved = True
+        self.execution_claim = claim
+        self.append(event)
+        _, _, artifact_root = _config_roots(self._config)
+        destination = artifact_root / self.manifest.run_id
+        _canonical(destination)
+        destination.mkdir(parents=True, exist_ok=True)
+        _canonical(destination)
+
+
+@contextmanager
+def run_transaction(run_dir: Path, *, config: HarnessConfig):
+    """Atomically inspect and update only the explicitly named confined v2 run."""
+    path = _run_path(run_dir, config)
+    with _lock(path):
+        run = RunTransaction(path, config, _key=_TRANSACTION_KEY)
+        try:
+            yield run
+        finally:
+            run._active = False
 
 
 def _continuation(manifest: RunManifest, previous_run_dir: Path, config: HarnessConfig) -> None:

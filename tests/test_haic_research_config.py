@@ -17,6 +17,40 @@ def messages(issues):
 
 
 class ConfigTests(unittest.TestCase):
+    def test_real_argument_types_path_roles_and_repetition_cannot_drift(self):
+        source = json.loads((ROOT / "harness.config.json").read_text(encoding="utf-8"))
+        edits = (
+            ("evaluate_closed_loop", "policy-checkpoint", {"type": "int", "path_role": None}),
+            ("train_policy", "output", {"path_role": "output_file"}),
+            ("train_policy", "total-steps", {"repeated": True}),
+            ("train_policy", "defer-tune", {"choices": [False]}),
+            ("benchmark_corridor_diagnostic", "site-group", {"choices": ["unsupported"]}),
+            ("train_policy", "total-steps", {"minimum": -1}),
+            ("train_policy", "total-steps", {"type": {"unexpected": "object"}}),
+        )
+        for profile, name, changes in edits:
+            with self.subTest(profile=profile, name=name):
+                data = json.loads(json.dumps(source))
+                data["commands"]["profiles"][profile]["arguments"][name].update(changes)
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / "harness.config.json").write_text(json.dumps(data), encoding="utf-8")
+                    with self.assertRaises(ConfigError):
+                        load_config(root)
+
+    def test_command_schema_and_positive_timeout_are_required(self):
+        source = json.loads((ROOT / "harness.config.json").read_text(encoding="utf-8"))
+        for field, value in (("timeout_seconds", 0), ("timeout_seconds", True),
+                             ("arguments", {}), ("arguments", {"bogus": {"flag": "--bogus", "type": "object", "required": False}})):
+            with self.subTest(field=field, value=value):
+                data = json.loads(json.dumps(source))
+                data["commands"]["profiles"]["train_policy"][field] = value
+                with tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    (root / "harness.config.json").write_text(json.dumps(data), encoding="utf-8")
+                    with self.assertRaises(ConfigError):
+                        load_config(root)
+
     def setUp(self):
         self.config = load_config(ROOT)
 

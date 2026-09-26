@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
+
+from .models import WorkflowState
 
 
 METRICS = frozenset({
@@ -19,6 +22,12 @@ PROFILE_MODULES = {
     "evaluate_closed_loop": "training.evaluate_closed_loop",
     "package_submission": "training.package_submission",
     "benchmark_corridor_diagnostic": "training.benchmark_corridor",
+}
+PROFILE_ARGUMENTS = {
+    "train_policy": {"output", "train-only-site-map-split", "defer-tune", "total-steps", "updates", "seed", "max-decisions", "learning-rate", "resume"},
+    "evaluate_closed_loop": {"output", "policy-checkpoint", "dynamics-checkpoint", "site-map-split", "plan-budget", "max-decisions"},
+    "package_submission": {"output", "policy-checkpoint", "dynamics-checkpoint", "source-root", "evaluation-summary", "smoke-test"},
+    "benchmark_corridor_diagnostic": {"output", "track", "site-map", "profile", "site-map-split", "site-group", "site-limit", "max-decisions"},
 }
 REQUIRED_SPLITS = frozenset({"train", "tune", "held_out", "confirmation", "blind", "official"})
 SECRET_KEY = re.compile(r"(?:secret|password|passwd|token|credential|api[_-]?key|private[_-]?key)", re.I)
@@ -194,6 +203,78 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
         if profile_id not in PROFILE_MODULES or not isinstance(profile, dict) or profile.get("module") != PROFILE_MODULES.get(profile_id):
             add(f"commands.profiles.{profile_id}", f"unregistered command: {profile_id}")
             continue
+        location = f"commands.profiles.{profile_id}"
+        timeout = profile.get("timeout_seconds")
+        if type(timeout) not in {int, float} or not math.isfinite(timeout) or timeout <= 0:
+            add(location, "command timeout_seconds must be finite and positive")
+        schema = profile.get("arguments")
+        if not isinstance(schema, dict) or not schema or "output" not in schema:
+            add(location, "command arguments must contain a typed output schema")
+            schema = {}
+        for name, spec in schema.items():
+            if name not in PROFILE_ARGUMENTS[profile_id] or not isinstance(spec, dict):
+                add(location, f"unsupported command argument: {name}")
+                continue
+            kind = spec.get("type")
+            if not isinstance(kind, str):
+                add(location, f"invalid typed argument schema: {name}")
+                continue
+            if (spec.get("flag") != "--" + name or kind not in {"int", "float", "bool", "str", "path", "track"}
+                    or type(spec.get("required")) is not bool or type(spec.get("repeated", False)) is not bool):
+                add(location, f"invalid typed argument schema: {name}")
+            if set(spec) - {"flag", "type", "required", "repeated", "choices", "minimum", "maximum", "path_role"}:
+                add(location, f"unknown argument schema fields: {name}")
+            role = spec.get("path_role")
+            if role is not None and not isinstance(role, str):
+                add(location, f"invalid path role: {name}")
+                continue
+            if (kind == "path" and role not in {"input_file", "input_directory", "output_file", "output_directory"}) or (kind != "path" and role is not None):
+                add(location, f"invalid path role: {name}")
+            if (name == "output" and role not in {"output_file", "output_directory"}) or (name != "output" and role in {"output_file", "output_directory"}):
+                add(location, "only --output may declare an output path")
+            path_inputs = {"train-only-site-map-split", "resume", "policy-checkpoint", "dynamics-checkpoint", "site-map-split", "site-map", "evaluation-summary", "source-root", "output"}
+            expected_type = ("path" if name in path_inputs else "bool" if name in {"defer-tune", "smoke-test"}
+                             else "float" if name in {"learning-rate", "plan-budget"}
+                             else "str" if name in {"profile", "site-group"} else "track" if name == "track" else "int")
+            expected_role = ("output_file" if profile_id in {"package_submission", "benchmark_corridor_diagnostic"} else "output_directory") if name == "output" else "input_directory" if name == "source-root" else "input_file" if name in path_inputs else None
+            repeated = profile_id == "benchmark_corridor_diagnostic" and name in {"track", "site-map", "profile"}
+            if kind != expected_type or role != expected_role or spec.get("repeated", False) != repeated:
+                add(location, f"schema differs from the real argparse contract: {name}")
+            if name == "defer-tune" and spec.get("choices") != [True]:
+                add(location, "TRAIN-only profile requires --defer-tune=true")
+            choices = spec.get("choices")
+            if choices is not None and (not isinstance(choices, list) or not choices):
+                add(location, f"choices must be a nonempty list: {name}")
+            permitted = {"site-group": {"train", "tune", "held_out"},
+                         "profile": {"safe", "fast", "fast_plus", "sprint_guarded", "race", "slow_obstacle", "strong_avoid"}}
+            if name in permitted and (not isinstance(choices, list) or not choices
+                                      or any(not isinstance(item, str) or item not in permitted[name] for item in choices)):
+                add(location, f"choices differ from real argparse values: {name}")
+            if kind in {"int", "float"}:
+                floor = 0 if name == "seed" else 1 if kind == "int" else 1e-12
+                minimum = spec.get("minimum")
+                if type(minimum) not in {int, float} or not math.isfinite(minimum) or minimum < floor:
+                    add(location, f"argument requires an explicit valid lower bound: {name}")
+            for bound in ("minimum", "maximum"):
+                value = spec.get(bound)
+                if bound in spec and (kind not in {"int", "float"} or type(value) not in {int, float} or not math.isfinite(value)):
+                    add(location, f"invalid numeric {bound}: {name}")
+            if (type(spec.get("minimum")) in {int, float} and type(spec.get("maximum")) in {int, float}
+                    and spec["minimum"] > spec["maximum"]):
+                add(location, f"minimum exceeds maximum: {name}")
+        required_inputs = {"policy-checkpoint", "dynamics-checkpoint"} if profile_id in {"evaluate_closed_loop", "package_submission"} else set()
+        if profile_id == "train_policy":
+            required_inputs = {"train-only-site-map-split", "defer-tune", "total-steps"}
+        if any(not isinstance(schema.get(name), dict) or schema[name].get("required") is not True for name in required_inputs):
+            add(location, "command is missing required explicit input arguments")
+        output_name = profile.get("output_name")
+        if (not isinstance(output_name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", output_name)
+                or output_name.endswith('.')):
+            add(location, "output_name must be a safe single path component")
+        if profile.get("requires_approval") != "execution":
+            add(location, "command must require execution approval")
+        if profile_id == "benchmark_corridor_diagnostic" and profile.get("sota_eligible") is not False:
+            add(location, "benchmark diagnostics must be ineligible for SOTA")
         output = profile.get("output_root")
         if not isinstance(output, str) or not output or Path(output).is_absolute():
             add(f"commands.profiles.{profile_id}.output_root", "command output_root must be project-relative")
@@ -206,6 +287,9 @@ def validate_config(config: HarnessConfig) -> list[ConfigIssue]:
     commands = config.raw.get("commands", {})
     if isinstance(commands, dict) and (commands.get("default_mode") != "plan-only" or commands.get("allow_shell") is not False):
         add("commands", "commands must default to plan-only with shell disabled")
+    workflow = config.raw.get("workflow", {})
+    if not isinstance(workflow, Mapping) or workflow.get("states") != [state.value for state in WorkflowState]:
+        add("workflow.states", "workflow states must include every registered state in order")
 
     def inspect_keys(value: Any, location: str = "") -> None:
         if isinstance(value, dict):

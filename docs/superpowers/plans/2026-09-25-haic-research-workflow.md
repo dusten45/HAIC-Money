@@ -394,71 +394,28 @@ git commit -m "feat: add isolated HAIC run records"
 
 ## Task 6: Add typed command profiles and plan-only CLI execution
 
-**Files:**
-- Create: `haic_research/commands.py`
-- Create: `haic_research/cli.py`
-- Create: `tests/test_haic_research_commands.py`
-- Create: `tests/test_haic_research_cli.py`
-- Modify: `harness.config.json`
+**Scoped files:** `haic_research/commands.py`, `haic_research/cli.py`, `haic_research/config.py`, `haic_research/records.py`, `harness.config.json`, `tests/test_haic_research_commands.py`, `tests/test_haic_research_cli.py`, `tests/test_haic_research_config.py`, and this Task 6 section.
 
-**Interfaces:**
-- `CommandProfile` contains `profile_id`, `module`, `allowed_args`, `required_args`, `timeout_seconds`, and `output_root`.
-- `build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]`.
-- `execute_approved(config, run_dir: Path, plan_hash: str, profile_id: str, arguments: Mapping[str, object], *, runner=subprocess.run) -> CommandResult`; approvals are reconstructed only from approval events in that run's append-only log.
+**Execution sequence:** Write focused lifecycle/schema/CLI tests, observe the missing implementation failure, implement the contract below, run only focused fake-runner tests, inspect the exact scoped diff, and commit a coherent unit. Task 6's original illustrative snippets are superseded by this authorization contract. No real local operations, network, historical data inspection, or external submission actions are part of implementation verification.
 
-- [ ] **Step 1: Write profile and plan-only tests**
+### Task 6 authorization and lifecycle contract
 
-```python
-class CommandProfileTests(unittest.TestCase):
-    def test_unknown_profile_is_rejected(self):
-        with self.assertRaises(UnknownProfileError):
-            build_argv(config(), "arbitrary", {})
 
-    def test_execution_requires_exact_plan_hash_and_uses_argv(self):
-        runner = FakeRunner()
-        with self.assertRaises(ApprovalError):
-            execute_approved(config(), run_dir(), "p1", "train_policy", valid_args(), runner=runner)
-        self.assertEqual(runner.calls, [])
+This controller ruling supplements Task 6 after the independent approval audit. Preserve the user-approved HAIC-only scope, plan-only default, three separate approval stages, completion-first decisions and historical-data boundary.
 
-    def test_valid_execution_uses_argv_runner_and_timeout(self):
-        runner = FakeRunner()
-        execute_approved(config(), run_dir_with_approval("p1", "execution"), "p1",
-                         "train_policy", valid_args(), runner=runner)
-        call = runner.calls[0]
-        self.assertEqual(call["shell"], False)
-        self.assertEqual(call["cwd"], config().repo_root)
-        self.assertGreater(call["timeout"], 0)
-        self.assertEqual(call["argv"][0:2], [sys.executable, "-m"])
-```
+1. One registered operation per new run. `plan` accepts explicit manifest metadata plus a profile and arguments, validates and normalizes them, writes a run through Task 5 and an immutable `execution_plan.json`, and prints its hash. No subprocess. The plan payload contains run/cycle IDs, all relevant manifest metadata (excluding plan_hash and approval_hash), profile ID, normalized arguments, profile/module/argument-schema/timeout fingerprint, source revisions, and the run-specific artifact destination. SHA-256 over canonical JSON is the plan_hash stored in the manifest and approved at every stage. Initial approval_hash may be empty; that means no approval exists, never implicit authorization. Actual approvals are recorded in events.
+2. Execution reloads only that direct child of configured v2 run_root, validates manifest and complete event log, recomputes the canonical plan hash, checks the manifest metadata and current command-profile fingerprint, and uses only the persisted command. If the existing execute_approved signature retains profile/arguments/hash, they must exactly match the persisted normalized plan. Changed arguments, profile, source revisions or output path require a new plan/run and approvals.
+3. Specify structured Task 5 approval fields explicitly: event_id, approval_stage, approved_plan_hash, timestamp and workflow_state. Approval.source_ref is the unique current-run event_id. Reject malformed JSON lines, duplicate event IDs, wrong stages/hashes, invalid UTC or decreasing timestamps, references absent from this exact log, or a referenced event that is not an APPROVAL. Never load approval lists from another run.
+4. Replay workflow history through the state transition primitive. Plan registration creates STOPPED/DISCOVER/HYPOTHESIZE/DESIGN_PENDING_APPROVAL events from the supplied complete research metadata. `approve design` is legal only at DESIGN_PENDING_APPROVAL and advances to IMPLEMENT_PENDING_APPROVAL; implementation approval advances to EXECUTE_PENDING_APPROVAL; execution approval is legal only there and stays pending until run. All approve commands use the persisted current hash and require a source reference explaining the user's authorization. Reject bypassed or reordered stages and duplicate stage approvals.
+5. Execution is at most once per run/approval: atomically reserve execution and append EXECUTION_STARTED before invoking the runner, then append finish/failure. A second or concurrent invocation is refused, including after failure/timeout. Retry requires a new run and approvals. Keep tests entirely on FakeRunner.
+6. Add concrete typed argument schemas to config profiles: flag name, type, required status, permitted values/ranges where needed, and input/output path role. Validate schema/positive timeout in config.py and focused config tests (added to Task 6 file scope). Inspect real HAIC argparse definitions without executing modules. Force all output paths under artifact_root/run_id, and validate input paths explicitly rather than treating shell metacharacter rejection as the main boundary.
+7. CLI plan/approve/status/run/report must be usable together; run defaults to preview and explicit --execute is required. report records the selected evaluation outcome and three gate results, uses matching gate-review substates, and only ADVANCE plus all PASS enters release. It never submits or confirms a competition model. Validation implementation arrives in Task 8; an unavailable validator must fail clearly instead of claiming success.
 
-- [ ] **Step 2: Run the focused test to verify it fails**
+Tests must cover a complete valid lifecycle plus stale/cross-run approval, changed args with the same hash, profile drift, malformed/duplicate/out-of-order events, skipped approval stages, wrong output roots, repeated/concurrent execution, failed execution, default preview, and non-ADVANCE non-release. Use temporary directories and a fake runner; no historical data reads or actual training/evaluation/packaging.
 
-Run: `python -m unittest tests.test_haic_research_commands tests.test_haic_research_cli -v`
-Expected: FAIL because command profiles and CLI do not exist.
+Source inspection notes: train_policy and evaluate_closed_loop --output are directories; package_submission --output is a ZIP file; benchmark_corridor --output is a JSON file. Evaluation and packaging require both policy-checkpoint and dynamics-checkpoint. Benchmark repeated flags are --track, --site-map and --profile; do not invent unsupported flags. Training has --train-only-site-map-split and --defer-tune for a deliberately TRAIN-only operation. Register a useful explicit subset of actual arguments, not every historical research flag. Keep required read paths explicit; never discover old checkpoints automatically. Expose a reusable current-run history replay helper so Task 7 reporting can require an actual ADVANCE release path instead of promoting a REVISE/PIVOT report whose gates happen to PASS.
 
-- [ ] **Step 3: Register only HAIC local operations**
-
-Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Keep all four `GATE_REVIEW_<OUTCOME>` substates in the configured workflow state list. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
-
-- [ ] **Step 4: Implement argv construction and execution approval checks**
-
-Reject unknown profile IDs, unknown arguments, malformed path values, `--` or shell operators embedded in values, plan-hash mismatch, missing `EXECUTE_PENDING_APPROVAL` approval, approvals whose event IDs are absent from the current run, and output paths outside the new roots. The `approve` subcommand appends an approval event to that run; `run` reads the current run manifest/events and never accepts an approval list supplied by the caller. The `FakeRunner` captures argv/cwd/timeout/shell. Call the injected runner with `shell=False`, a timeout and repository-root `cwd`. Plan-only output prints the normalized profile and arguments but makes no subprocess call.
-
-- [ ] **Step 5: Implement CLI commands**
-
-Add `validate`, `plan`, `approve`, `status`, `run`, and `report` subcommands. `run` defaults to dry planning; actual invocation requires an explicit approval event referencing the exact plan hash. Keep external submission actions absent from parser choices.
-
-- [ ] **Step 6: Run the focused tests to verify they pass**
-
-Run: `python -m unittest tests.test_haic_research_commands tests.test_haic_research_cli -v`
-Expected: PASS using a fake runner; no training/evaluation command is invoked.
-
-- [ ] **Step 7: Commit**
-
-```powershell
-git add haic_research/commands.py haic_research/cli.py harness.config.json tests/test_haic_research_commands.py tests/test_haic_research_cli.py
-git commit -m "feat: gate HAIC operations through approved profiles"
-```
+Task6 scope may extend records.py with confined immutable execution-plan read/write, read_integration_report, and execution-reservation helpers, reusing the same path/lock boundary. Do not introduce unguarded arbitrary file writes for plan/claim files. Plan source/hypothesis/resource metadata must remain reviewable in the hashed payload; if actual Hypothesis input is accepted validate its required fields. Synchronize Task6 plan text with this lifecycle before implementation. Do not redesign already-reviewed persistence or state beyond necessary integration helpers.
 
 ## Task 7: Add result, experiment and SOTA reporting
 

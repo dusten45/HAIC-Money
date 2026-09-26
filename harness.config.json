@@ -9,20 +9,71 @@
     "run_root": "runs/haic-research-v2",
     "artifact_root": "artifacts/haic-research-v2",
     "pdf_root": "output/pdf",
-    "legacy_paths": ["runs", "artifacts/haic", "submissions", "report.pdf"]
+    "legacy_paths": [
+      "runs",
+      "artifacts/haic",
+      "submissions",
+      "report.pdf"
+    ]
   },
   "official_sources": [
-    {"precedence": 1, "id": "competition_site", "url": "https://ships-duo-ethical-saver.trycloudflare.com/"},
-    {"precedence": 2, "id": "participants_repository", "url": "https://github.com/2026-HAIC/Participants"},
-    {"precedence": 3, "id": "local_source_mirror", "path": "docs/sources/official-participants/README.md", "license_path": "docs/sources/official-participants/LICENSE", "source_commit": "1c11db8afc2fbfcfb610672b7ee0ecd122c97741"},
-    {"precedence": 4, "id": "historical_evidence", "path": "COMPETITION_INFO.md", "related_paths": ["RESULTS.md"]}
+    {
+      "precedence": 1,
+      "id": "competition_site",
+      "url": "https://ships-duo-ethical-saver.trycloudflare.com/"
+    },
+    {
+      "precedence": 2,
+      "id": "participants_repository",
+      "url": "https://github.com/2026-HAIC/Participants"
+    },
+    {
+      "precedence": 3,
+      "id": "local_source_mirror",
+      "path": "docs/sources/official-participants/README.md",
+      "license_path": "docs/sources/official-participants/LICENSE",
+      "source_commit": "1c11db8afc2fbfcfb610672b7ee0ecd122c97741"
+    },
+    {
+      "precedence": 4,
+      "id": "historical_evidence",
+      "path": "COMPETITION_INFO.md",
+      "related_paths": [
+        "RESULTS.md"
+      ]
+    }
   ],
   "workflow": {
     "default_mode": "plan-only",
-    "states": ["STOPPED", "DISCOVER", "HYPOTHESIZE", "DESIGN_PENDING_APPROVAL", "IMPLEMENT_PENDING_APPROVAL", "EXECUTE_PENDING_APPROVAL", "EVALUATE", "ADVANCE", "REJECT", "REVISE", "PIVOT", "GATE_REVIEW_ADVANCE", "GATE_REVIEW_REJECT", "GATE_REVIEW_REVISE", "GATE_REVIEW_PIVOT", "RELEASE_IF_GATE_PASS"],
-    "separate_approval_stages": ["design", "implementation", "execution"],
+    "states": [
+      "STOPPED",
+      "DISCOVER",
+      "HYPOTHESIZE",
+      "DESIGN_PENDING_APPROVAL",
+      "IMPLEMENT_PENDING_APPROVAL",
+      "EXECUTE_PENDING_APPROVAL",
+      "EVALUATE",
+      "ADVANCE",
+      "REJECT",
+      "REVISE",
+      "PIVOT",
+      "GATE_REVIEW_ADVANCE",
+      "GATE_REVIEW_REJECT",
+      "GATE_REVIEW_REVISE",
+      "GATE_REVIEW_PIVOT",
+      "RELEASE_IF_GATE_PASS"
+    ],
+    "separate_approval_stages": [
+      "design",
+      "implementation",
+      "execution"
+    ],
     "pivot_after_valid_non_improving_cycles": 3,
-    "gates": ["rule_compliance", "mechanism_activation", "competitive_or_product_outcome"]
+    "gates": [
+      "rule_compliance",
+      "mechanism_activation",
+      "competitive_or_product_outcome"
+    ]
   },
   "search": {
     "min_independent_directions": 4,
@@ -32,12 +83,29 @@
   },
   "metrics": {
     "primary": "completion_rate",
-    "tie_breakers": ["median_finished_lap_ms", "mean_incomplete_progress", "p90_finished_lap_ms", "collisions", "damage", "act_latency_p95_ms"],
+    "tie_breakers": [
+      "median_finished_lap_ms",
+      "mean_incomplete_progress",
+      "p90_finished_lap_ms",
+      "collisions",
+      "damage",
+      "act_latency_p95_ms"
+    ],
     "official_score_is_separate": true
   },
   "splits": {
-    "ids": ["train", "tune", "held_out", "confirmation", "blind", "official"],
-    "protected_ids": ["confirmation", "blind"],
+    "ids": [
+      "train",
+      "tune",
+      "held_out",
+      "confirmation",
+      "blind",
+      "official"
+    ],
+    "protected_ids": [
+      "confirmation",
+      "blind"
+    ],
     "blind_tuning_allowed": false,
     "consumed_confirmation_reusable_as_fresh": false
   },
@@ -45,10 +113,239 @@
     "default_mode": "plan-only",
     "allow_shell": false,
     "profiles": {
-      "train_policy": {"module": "training.train_policy", "operation": "local_training", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
-      "evaluate_closed_loop": {"module": "training.evaluate_closed_loop", "operation": "local_evaluation", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
-      "package_submission": {"module": "training.package_submission", "operation": "local_packaging", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution"},
-      "benchmark_corridor_diagnostic": {"module": "training.benchmark_corridor", "operation": "local_diagnostic", "output_root": "artifacts/haic-research-v2", "requires_approval": "execution", "sota_eligible": false}
+      "train_policy": {
+        "module": "training.train_policy",
+        "operation": "local_training",
+        "output_root": "artifacts/haic-research-v2",
+        "requires_approval": "execution",
+        "timeout_seconds": 3600,
+        "output_name": "training",
+        "arguments": {
+          "output": {
+            "flag": "--output",
+            "type": "path",
+            "required": false,
+            "path_role": "output_directory"
+          },
+          "train-only-site-map-split": {
+            "flag": "--train-only-site-map-split",
+            "type": "path",
+            "required": true,
+            "path_role": "input_file"
+          },
+          "defer-tune": {
+            "flag": "--defer-tune",
+            "type": "bool",
+            "required": true,
+            "choices": [
+              true
+            ]
+          },
+          "total-steps": {
+            "flag": "--total-steps",
+            "type": "int",
+            "required": true,
+            "minimum": 1
+          },
+          "updates": {
+            "flag": "--updates",
+            "type": "int",
+            "required": false,
+            "minimum": 1
+          },
+          "seed": {
+            "flag": "--seed",
+            "type": "int",
+            "required": false,
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "max-decisions": {
+            "flag": "--max-decisions",
+            "type": "int",
+            "required": false,
+            "minimum": 1
+          },
+          "learning-rate": {
+            "flag": "--learning-rate",
+            "type": "float",
+            "required": false,
+            "minimum": 1e-12,
+            "maximum": 1.0
+          },
+          "resume": {
+            "flag": "--resume",
+            "type": "path",
+            "required": false,
+            "path_role": "input_file"
+          }
+        }
+      },
+      "evaluate_closed_loop": {
+        "module": "training.evaluate_closed_loop",
+        "operation": "local_evaluation",
+        "output_root": "artifacts/haic-research-v2",
+        "requires_approval": "execution",
+        "timeout_seconds": 1800,
+        "output_name": "evaluation",
+        "arguments": {
+          "output": {
+            "flag": "--output",
+            "type": "path",
+            "required": false,
+            "path_role": "output_directory"
+          },
+          "policy-checkpoint": {
+            "flag": "--policy-checkpoint",
+            "type": "path",
+            "required": true,
+            "path_role": "input_file"
+          },
+          "dynamics-checkpoint": {
+            "flag": "--dynamics-checkpoint",
+            "type": "path",
+            "required": true,
+            "path_role": "input_file"
+          },
+          "site-map-split": {
+            "flag": "--site-map-split",
+            "type": "path",
+            "required": false,
+            "path_role": "input_file"
+          },
+          "plan-budget": {
+            "flag": "--plan-budget",
+            "type": "float",
+            "required": false,
+            "minimum": 1e-06,
+            "maximum": 60
+          },
+          "max-decisions": {
+            "flag": "--max-decisions",
+            "type": "int",
+            "required": false,
+            "minimum": 1
+          }
+        }
+      },
+      "package_submission": {
+        "module": "training.package_submission",
+        "operation": "local_packaging",
+        "output_root": "artifacts/haic-research-v2",
+        "requires_approval": "execution",
+        "timeout_seconds": 600,
+        "output_name": "submission.zip",
+        "arguments": {
+          "output": {
+            "flag": "--output",
+            "type": "path",
+            "required": false,
+            "path_role": "output_file"
+          },
+          "policy-checkpoint": {
+            "flag": "--policy-checkpoint",
+            "type": "path",
+            "required": true,
+            "path_role": "input_file"
+          },
+          "dynamics-checkpoint": {
+            "flag": "--dynamics-checkpoint",
+            "type": "path",
+            "required": true,
+            "path_role": "input_file"
+          },
+          "source-root": {
+            "flag": "--source-root",
+            "type": "path",
+            "required": false,
+            "path_role": "input_directory"
+          },
+          "evaluation-summary": {
+            "flag": "--evaluation-summary",
+            "type": "path",
+            "required": false,
+            "path_role": "input_file"
+          },
+          "smoke-test": {
+            "flag": "--smoke-test",
+            "type": "bool",
+            "required": false
+          }
+        }
+      },
+      "benchmark_corridor_diagnostic": {
+        "module": "training.benchmark_corridor",
+        "operation": "local_diagnostic",
+        "output_root": "artifacts/haic-research-v2",
+        "requires_approval": "execution",
+        "sota_eligible": false,
+        "timeout_seconds": 1800,
+        "output_name": "report.json",
+        "arguments": {
+          "output": {
+            "flag": "--output",
+            "type": "path",
+            "required": false,
+            "path_role": "output_file"
+          },
+          "track": {
+            "flag": "--track",
+            "type": "track",
+            "required": false,
+            "repeated": true
+          },
+          "site-map": {
+            "flag": "--site-map",
+            "type": "path",
+            "required": false,
+            "path_role": "input_file",
+            "repeated": true
+          },
+          "profile": {
+            "flag": "--profile",
+            "type": "str",
+            "required": false,
+            "repeated": true,
+            "choices": [
+              "safe",
+              "fast",
+              "fast_plus",
+              "sprint_guarded",
+              "race",
+              "slow_obstacle",
+              "strong_avoid"
+            ]
+          },
+          "site-map-split": {
+            "flag": "--site-map-split",
+            "type": "path",
+            "required": false,
+            "path_role": "input_file"
+          },
+          "site-group": {
+            "flag": "--site-group",
+            "type": "str",
+            "required": false,
+            "choices": [
+              "train",
+              "tune",
+              "held_out"
+            ]
+          },
+          "site-limit": {
+            "flag": "--site-limit",
+            "type": "int",
+            "required": false,
+            "minimum": 1
+          },
+          "max-decisions": {
+            "flag": "--max-decisions",
+            "type": "int",
+            "required": false,
+            "minimum": 1
+          }
+        }
+      }
     }
   }
 }

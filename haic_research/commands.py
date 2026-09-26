@@ -1,0 +1,511 @@
+"""Typed local HAIC commands bound to immutable plans and current-run approvals."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import re
+import subprocess
+import sys
+import uuid
+from dataclasses import dataclass, fields
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Mapping
+
+from .config import HarnessConfig, validate_config
+from .models import Approval, GateStatus, Hypothesis, IntegrationReport, RunEvent, RunManifest, WorkflowState
+from .records import (
+    RecordError, RunTransaction, _canonical, _identifier, _json_value, _typed,
+    create_run, run_transaction,
+)
+from .state import ApprovalError, TransitionError, transition
+
+
+class CommandError(ValueError):
+    """A command, plan, or run lifecycle is unsafe or inconsistent."""
+
+
+class UnknownProfileError(CommandError):
+    """Only the configured registered local operations may be used."""
+
+
+@dataclass(frozen=True)
+class CommandProfile:
+    profile_id: str
+    module: str
+    allowed_args: Mapping[str, Mapping[str, object]]
+    required_args: tuple[str, ...]
+    timeout_seconds: float
+    output_root: Path
+
+
+@dataclass(frozen=True)
+class CommandResult:
+    returncode: int | None
+    succeeded: bool
+    stdout: str = ""
+    stderr: str = ""
+    error: str | None = None
+
+
+@dataclass(frozen=True)
+class RunHistory:
+    state: WorkflowState
+    approvals: tuple[Approval, ...]
+    execution_started: bool
+    execution_finished: bool
+    execution_succeeded: bool
+    outcome: WorkflowState | None
+    released: bool
+
+
+_STAGES = {
+    "design": (WorkflowState.DESIGN_PENDING_APPROVAL, WorkflowState.IMPLEMENT_PENDING_APPROVAL),
+    "implementation": (WorkflowState.IMPLEMENT_PENDING_APPROVAL, WorkflowState.EXECUTE_PENDING_APPROVAL),
+    "execution": (WorkflowState.EXECUTE_PENDING_APPROVAL, WorkflowState.EVALUATE),
+}
+_INITIAL = (WorkflowState.STOPPED, WorkflowState.DISCOVER, WorkflowState.HYPOTHESIZE,
+            WorkflowState.DESIGN_PENDING_APPROVAL)
+_OUTCOMES = frozenset({WorkflowState.ADVANCE, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT})
+
+
+def _canonical_json(value: object) -> str:
+    try:
+        return json.dumps(_json_value(value), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+    except (TypeError, ValueError) as exc:
+        raise CommandError(f"invalid plan JSON: {exc}") from exc
+
+
+def _hash(value: object) -> str:
+    return hashlib.sha256(_canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def _profile(config: HarnessConfig, profile_id: str) -> CommandProfile:
+    if not isinstance(profile_id, str) or profile_id not in config.command_profiles:
+        raise UnknownProfileError(f"unknown command profile: {profile_id}")
+    issues = validate_config(config)
+    if issues:
+        raise CommandError("invalid command configuration: " + "; ".join(issue.message for issue in issues))
+    profile = config.command_profiles[profile_id]
+    schema = profile["arguments"]
+    return CommandProfile(profile_id, profile["module"], schema,
+                          tuple(name for name, spec in schema.items() if spec["required"]),
+                          profile["timeout_seconds"], config.artifact_root)
+
+
+def _safe_text(value: str) -> None:
+    if (not value or "--" in value or any(character in value for character in ";|&<>`$\r\n\x00")
+            or any(ord(character) < 32 for character in value)):
+        raise CommandError("argument contains empty, control, option, or shell-operator text")
+
+
+def _path(config: HarnessConfig, value: object, role: str, *, run_id: str | None = None) -> str:
+    if not isinstance(value, (str, Path)):
+        raise CommandError("path argument must be a string or Path")
+    raw = str(value).replace("\\", "/")
+    _safe_text(raw)
+    parsed = Path(raw)
+    if ".." in parsed.parts or any(part.endswith((".", " ")) for part in parsed.parts):
+        raise CommandError("path traversal or ambiguous path component")
+    candidate = parsed if parsed.is_absolute() else config.repo_root / parsed
+    # Reject legacy paths lexically before any filesystem inspection.
+    if candidate != config.repo_root and config.repo_root not in candidate.parents:
+        raise CommandError("input/output path must remain inside the repository")
+    for legacy in config.legacy_paths:
+        if candidate == legacy or legacy in candidate.parents:
+            if not (config.run_root == candidate or config.run_root in candidate.parents):
+                raise CommandError("historical data paths are outside this command boundary")
+    try:
+        path = _canonical(candidate)
+    except RecordError as exc:
+        raise CommandError(str(exc)) from exc
+    if role.startswith("output"):
+        root = config.artifact_root / run_id if run_id else config.artifact_root
+        if root not in path.parents:
+            raise CommandError("output path must be under the run-specific artifact root")
+        if run_id is None:
+            relative = path.relative_to(root)
+            if len(relative.parts) < 2:
+                raise CommandError("output path must include a run identifier")
+            try:
+                _identifier(relative.parts[0])
+            except RecordError as exc:
+                raise CommandError(str(exc)) from exc
+        if path.exists() and (path.is_dir() != (role == "output_directory")):
+            raise CommandError("output path type does not match its schema")
+    elif role == "input_file":
+        if not path.is_file():
+            raise CommandError("explicit input file does not exist")
+    elif role == "input_directory":
+        if not path.is_dir():
+            raise CommandError("explicit input directory does not exist")
+    return str(path)
+
+
+def _value(config: HarnessConfig, spec: Mapping[str, object], value: object, *, run_id: str | None = None) -> object:
+    kind = spec["type"]
+    if kind == "path":
+        normalized = _path(config, value, spec["path_role"], run_id=run_id)
+    elif kind == "bool":
+        if type(value) is not bool:
+            raise CommandError("boolean argument requires a JSON boolean")
+        normalized = value
+    elif kind in {"int", "float"}:
+        if type(value) not in ({int} if kind == "int" else {int, float}) or not math.isfinite(value):
+            raise CommandError(f"{kind} argument requires a finite typed number")
+        normalized = int(value) if kind == "int" else float(value)
+        if "minimum" in spec and normalized < spec["minimum"] or "maximum" in spec and normalized > spec["maximum"]:
+            raise CommandError("numeric argument is outside the permitted range")
+    else:
+        if not isinstance(value, str):
+            raise CommandError("string argument requires a string")
+        _safe_text(value)
+        normalized = value
+        if kind == "track":
+            match = re.fullmatch(r"([1-9][0-9]*):([0-9]+)", value)
+            if not match or int(match[2]) > 0xFFFFFFFF:
+                raise CommandError("track must be TRACK_ID:UINT32_SEED")
+            normalized = f"{int(match[1])}:{int(match[2])}"
+    if "choices" in spec and normalized not in spec["choices"]:
+        raise CommandError("argument is not one of the permitted values")
+    return normalized
+
+
+def normalize_arguments(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object], *, run_id: str | None = None) -> dict[str, object]:
+    """Normalize an explicit typed subset; output is fixed when planning a run."""
+    profile = _profile(config, profile_id)
+    if not isinstance(arguments, Mapping) or any(not isinstance(key, str) for key in arguments):
+        raise CommandError("arguments must be an object with string keys")
+    if set(arguments) - set(profile.allowed_args):
+        raise CommandError("unknown command arguments: " + str(sorted(set(arguments) - set(profile.allowed_args))))
+    supplied = dict(arguments)
+    if run_id is not None:
+        try:
+            _identifier(run_id)
+        except RecordError as exc:
+            raise CommandError(str(exc)) from exc
+        output = str(config.artifact_root / run_id / config.command_profiles[profile_id]["output_name"])
+        if "output" in supplied and _path(config, supplied["output"], profile.allowed_args["output"]["path_role"], run_id=run_id) != output:
+            raise CommandError("output must equal the registered run artifact destination")
+        supplied["output"] = output
+    if any(name not in supplied for name in profile.required_args):
+        raise CommandError("missing required explicit command arguments")
+    normalized = {}
+    for name in sorted(supplied):
+        spec, value = profile.allowed_args[name], supplied[name]
+        if spec.get("repeated", False):
+            if not isinstance(value, (list, tuple)) or not value:
+                raise CommandError("repeated argument requires a nonempty list")
+            normalized[name] = [_value(config, spec, item, run_id=run_id) for item in value]
+        else:
+            normalized[name] = _value(config, spec, value, run_id=run_id)
+    if profile_id == "benchmark_corridor_diagnostic" and not any(name in normalized for name in ("track", "site-map", "site-map-split")):
+        raise CommandError("diagnostic requires explicitly registered track or map input")
+    return normalized
+
+
+def build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]:
+    profile = _profile(config, profile_id)
+    normalized = normalize_arguments(config, profile_id, arguments)
+    if "output" not in normalized:
+        raise CommandError("argv requires a planned output path")
+    argv = [sys.executable, "-m", profile.module]
+    for name, value in normalized.items():
+        spec = profile.allowed_args[name]
+        if spec["type"] == "bool":
+            if value:
+                argv.append(spec["flag"])
+        else:
+            values = value if spec.get("repeated", False) else [value]
+            for item in values:
+                argv.extend((spec["flag"], str(item)))
+    return argv
+
+
+def _manifest_metadata(manifest: RunManifest) -> dict[str, object]:
+    return {name: value for name, value in _json_value(manifest).items() if name not in {"plan_hash", "approval_hash"}}
+
+
+def _research(value: Mapping[str, object]) -> dict[str, object]:
+    try:
+        hypothesis = _typed(Hypothesis, dict(value))
+    except (RecordError, TypeError, ValueError) as exc:
+        raise CommandError(f"complete hypothesis research metadata required: {exc}") from exc
+    if any(not isinstance(getattr(hypothesis, item.name), str) or not getattr(hypothesis, item.name).strip()
+           for item in fields(Hypothesis) if item.name != "source_paths"):
+        raise CommandError("hypothesis fields must be nonempty reviewable strings")
+    if any(not isinstance(path, str) or not path.strip() for path in hypothesis.source_paths):
+        raise CommandError("hypothesis source paths must be nonempty strings")
+    return _json_value(hypothesis)
+
+
+def _event(kind: str, state: WorkflowState, **kwargs) -> RunEvent:
+    return RunEvent(datetime.now(timezone.utc), kind, state, str(uuid.uuid4()), **kwargs)
+
+
+def register_plan(config: HarnessConfig, metadata: Mapping[str, object], profile_id: str,
+                  arguments: Mapping[str, object], *, research: Mapping[str, object],
+                  previous_run_dir: Path | None = None) -> Path:
+    """Register one operation without invoking a runner or reading historical data."""
+    if not isinstance(metadata, Mapping):
+        raise CommandError("manifest metadata must be an object")
+    data = dict(metadata)
+    if data.pop("approval_hash", "") or data.pop("plan_hash", ""):
+        raise CommandError("new plans cannot supply prior approval or plan hashes")
+    try:
+        run_id = data["run_id"]
+        normalized = normalize_arguments(config, profile_id, arguments, run_id=run_id)
+        destination = str(config.artifact_root / run_id)
+        if "output_paths" in data and list(data["output_paths"]) != [normalized["output"]]:
+            raise CommandError("manifest output paths must match the planned output")
+        data["output_paths"] = [normalized["output"]]
+        provisional = _typed(RunManifest, dict(data, plan_hash="pending", approval_hash=""))
+    except (KeyError, RecordError, TypeError, ValueError) as exc:
+        if isinstance(exc, CommandError):
+            raise
+        raise CommandError(f"invalid complete manifest metadata: {exc}") from exc
+    for name in ("purpose", "hypothesis_hash", "candidate_revision", "control_revision", "candidate_package_hash", "control_package_hash"):
+        if not isinstance(getattr(provisional, name), str) or not getattr(provisional, name).strip():
+            raise CommandError(f"manifest {name} must be reviewable and nonempty")
+    for name in ("data_ids", "map_ids", "split_ids"):
+        if not getattr(provisional, name) or any(not isinstance(item, str) or not item.strip() for item in getattr(provisional, name)):
+            raise CommandError(f"manifest requires registered {name}")
+    if any(item not in config.split_ids for item in provisional.split_ids):
+        raise CommandError("manifest uses unregistered split identities")
+    if not provisional.resource_limits or not provisional.permission_limits or not provisional.source_hashes:
+        raise CommandError("manifest requires resource, permission and source hash metadata")
+    payload = dict(schema_version=1, manifest=_manifest_metadata(provisional), profile_id=profile_id,
+                   arguments=normalized, profile=_json_value(config.command_profiles[profile_id]),
+                   research=_research(research), artifact_destination=destination)
+    digest = _hash(payload)
+    manifest = _typed(RunManifest, dict(data, plan_hash=digest, approval_hash=""))
+    path = create_run(config, manifest, previous_run_dir=previous_run_dir)
+    with run_transaction(path, config=config) as run:
+        run.write_plan(dict(payload, plan_hash=digest))
+        for state in _INITIAL:
+            run.append(_event("STATE", state))
+    return path
+
+
+def _validated_plan(config: HarnessConfig, run: RunTransaction) -> dict[str, object]:
+    plan = run.plan
+    if not isinstance(plan, dict) or set(plan) != {"schema_version", "manifest", "profile_id", "arguments", "profile", "research", "artifact_destination", "plan_hash"}:
+        raise CommandError("persisted execution plan is missing or malformed")
+    digest = _hash({name: value for name, value in plan.items() if name != "plan_hash"})
+    if digest != plan["plan_hash"] or digest != run.manifest.plan_hash:
+        raise CommandError("persisted execution plan hash mismatch")
+    if plan["manifest"] != _manifest_metadata(run.manifest):
+        raise CommandError("manifest/source revisions differ from immutable plan")
+    if plan["schema_version"] != 1 or type(plan["schema_version"]) is not int:
+        raise CommandError("unknown execution plan schema")
+    profile_id = plan["profile_id"]
+    _profile(config, profile_id)
+    if plan["profile"] != _json_value(config.command_profiles[profile_id]):
+        raise CommandError("current command profile fingerprint differs from approved plan")
+    normalized = normalize_arguments(config, profile_id, plan["arguments"], run_id=run.manifest.run_id)
+    if normalized != plan["arguments"] or plan["artifact_destination"] != str(config.artifact_root / run.manifest.run_id):
+        raise CommandError("persisted arguments/output destination are not canonical")
+    if _research(plan["research"]) != plan["research"]:
+        raise CommandError("persisted hypothesis metadata is not canonical")
+    return plan
+
+
+def _reference(event: RunEvent, approvals: tuple[Approval, ...], stage: str) -> Approval:
+    matched = [approval for approval in approvals if approval.stage == stage and approval.source_ref == event.approval_ref]
+    if len(matched) != 1:
+        raise ApprovalError("transition must reference that stage's current-run APPROVAL event")
+    return matched[0]
+
+
+def _replay(run: RunTransaction) -> RunHistory:
+    events = run.events
+    if len(events) < len(_INITIAL):
+        raise CommandError("run has incomplete plan registration history")
+    state = WorkflowState.STOPPED
+    approvals = ()
+    started = finished = succeeded = released = False
+    outcome = None
+    gates = run.report.gate_results if run.report else ()
+    for index, event in enumerate(events):
+        if index < len(_INITIAL):
+            if event.kind != "STATE" or event.workflow_state != _INITIAL[index] or event.approval_ref is not None:
+                raise CommandError("run must register STOPPED/DISCOVER/HYPOTHESIZE/DESIGN in order")
+            if index:
+                state = transition(state, event.workflow_state, plan_hash=run.manifest.plan_hash, approvals=(), gates=())
+            continue
+        requested = event.workflow_state
+        if event.kind == "APPROVAL":
+            stage = event.approval_stage
+            if (stage not in _STAGES or state != _STAGES[stage][0] or requested != state
+                    or event.approved_plan_hash != run.manifest.plan_hash
+                    or any(approval.stage == stage for approval in approvals)):
+                raise ApprovalError("approval stages cannot be bypassed, reordered, duplicated, or stale")
+            source = event.resource_usage.get("authorization_source")
+            if not isinstance(source, str) or not source.strip() or event.approval_ref is not None:
+                raise ApprovalError("approval must record the user's authorization source")
+            approvals += (Approval(stage, event.approved_plan_hash, event.timestamp, event.event_id),)
+        elif event.kind == "EXECUTION_STARTED":
+            if started or state != WorkflowState.EXECUTE_PENDING_APPROVAL or requested != WorkflowState.EVALUATE or event.execution_status != "running":
+                raise CommandError("execution may start exactly once from its pending approval")
+            _reference(event, approvals, "execution")
+            state = transition(state, requested, plan_hash=run.manifest.plan_hash, approvals=approvals, gates=())
+            started = True
+        elif event.kind in {"EXECUTION_FINISHED", "EXECUTION_FAILED"}:
+            if not started or finished or state != WorkflowState.EVALUATE or requested != state:
+                raise CommandError("execution finish requires exactly one earlier start")
+            _reference(event, approvals, "execution")
+            succeeded = event.kind == "EXECUTION_FINISHED"
+            if event.execution_status != ("succeeded" if succeeded else "failed"):
+                raise CommandError("execution finish status does not match event kind")
+            code = event.resource_usage.get("returncode")
+            if succeeded and (type(code) is not int or code != 0):
+                raise CommandError("successful execution requires exit code zero evidence")
+            if not succeeded and (code is not None and (type(code) is not int or code == 0)):
+                raise CommandError("failed execution cannot record a successful exit code")
+            if not succeeded and not event.error:
+                raise CommandError("failed execution requires error evidence")
+            finished = True
+        elif event.kind == "CYCLE_DECISION":
+            if not finished or state != WorkflowState.EVALUATE or requested not in _OUTCOMES or outcome is not None:
+                raise CommandError("cycle decision requires a finished execution and one evaluation outcome")
+            if not succeeded and requested == WorkflowState.ADVANCE:
+                raise CommandError("failed execution cannot advance")
+            state = transition(state, requested, plan_hash=run.manifest.plan_hash, approvals=approvals, gates=())
+            outcome = requested
+        elif event.kind == "GATE_REVIEW":
+            if outcome is None or requested != WorkflowState[f"GATE_REVIEW_{outcome.value}"] or event.correction_ref != "integration_report.json":
+                raise CommandError("gate review must reference the matching outcome and persisted report")
+            state = transition(state, requested, plan_hash=run.manifest.plan_hash, approvals=approvals, gates=gates)
+        elif event.kind == "STATE":
+            stage = next((name for name, edge in _STAGES.items() if (state, requested) == edge), None)
+            if stage == "execution":
+                raise CommandError("EVALUATE requires EXECUTION_STARTED, not a state label")
+            if stage:
+                _reference(event, approvals, stage)
+            elif requested not in {WorkflowState.RELEASE_IF_GATE_PASS, WorkflowState.STOPPED} or event.approval_ref is not None:
+                raise CommandError("unexpected lifecycle state event")
+            state = transition(state, requested, plan_hash=run.manifest.plan_hash, approvals=approvals, gates=gates)
+            if state == WorkflowState.RELEASE_IF_GATE_PASS:
+                released = True
+        else:
+            raise CommandError(f"unsupported lifecycle event: {event.kind}")
+    if started and not run.execution_reserved:
+        raise CommandError("execution history has no immutable reservation")
+    if started:
+        start_event = next(event for event in events if event.kind == "EXECUTION_STARTED")
+        if run.execution_claim != {"event_id": start_event.event_id, "plan_hash": run.manifest.plan_hash}:
+            raise CommandError("execution claim must reference this exact run's start event and plan")
+    return RunHistory(state, approvals, started, finished, succeeded, outcome, released)
+
+
+def replay_run_history(config: HarnessConfig, run_dir: Path) -> RunHistory:
+    """Validate the complete current-run plan/log and replay actual state edges.
+
+    Task 7 must require history.released to prove the ADVANCE release path.
+    """
+    with run_transaction(run_dir, config=config) as run:
+        _validated_plan(config, run)
+        return _replay(run)
+
+
+def load_run_plan(config: HarnessConfig, run_dir: Path) -> dict[str, object]:
+    with run_transaction(run_dir, config=config) as run:
+        plan = _validated_plan(config, run)
+        _replay(run)
+        return plan
+
+
+def approve_run(config: HarnessConfig, run_dir: Path, stage: str, *, source_ref: str) -> Approval:
+    if stage not in _STAGES or not isinstance(source_ref, str) or not source_ref.strip():
+        raise ApprovalError("approval requires a registered stage and user authorization source reference")
+    with run_transaction(run_dir, config=config) as run:
+        _validated_plan(config, run)
+        history = _replay(run)
+        if history.state != _STAGES[stage][0] or any(approval.stage == stage for approval in history.approvals):
+            raise ApprovalError("approval is not legal at the current stage")
+        event = _event("APPROVAL", history.state, approval_stage=stage, approved_plan_hash=run.manifest.plan_hash,
+                       resource_usage={"authorization_source": source_ref})
+        approval = Approval(stage, run.manifest.plan_hash, event.timestamp, event.event_id)
+        run.append(event)
+        if stage != "execution":
+            requested = transition(history.state, _STAGES[stage][1], plan_hash=run.manifest.plan_hash,
+                                   approvals=history.approvals + (approval,), gates=())
+            run.append(_event("STATE", requested, approval_ref=event.event_id))
+        return approval
+
+
+def execute_approved(config: HarnessConfig, run_dir: Path, plan_hash: str, profile_id: str,
+                     arguments: Mapping[str, object], *, runner=subprocess.run) -> CommandResult:
+    with run_transaction(run_dir, config=config) as run:
+        plan = _validated_plan(config, run)
+        history = _replay(run)
+        if plan_hash != plan["plan_hash"] or profile_id != plan["profile_id"]:
+            raise CommandError("caller command/hash differs from persisted approved plan")
+        normalized = normalize_arguments(config, profile_id, arguments, run_id=run.manifest.run_id)
+        if normalized != plan["arguments"]:
+            raise CommandError("changed arguments require a new plan, run and approvals")
+        if history.execution_started or run.execution_reserved:
+            raise CommandError("execution has already been reserved; retry requires a new run")
+        if history.state != WorkflowState.EXECUTE_PENDING_APPROVAL:
+            raise ApprovalError("execution requires EXECUTE_PENDING_APPROVAL")
+        execution = next((approval for approval in history.approvals if approval.stage == "execution"), None)
+        if execution is None:
+            raise ApprovalError("execution approval for the exact current plan hash is required")
+        argv = build_argv(config, plan["profile_id"], plan["arguments"])
+        profile = _profile(config, plan["profile_id"])
+        state = transition(history.state, WorkflowState.EVALUATE, plan_hash=plan_hash, approvals=history.approvals, gates=())
+        run.reserve_execution(_event("EXECUTION_STARTED", state, approval_ref=execution.source_ref, execution_status="running"))
+    try:
+        completed = runner(argv, cwd=config.repo_root, timeout=profile.timeout_seconds,
+                           shell=False, capture_output=True, text=True, check=False)
+        if type(completed.returncode) is not int:
+            raise ValueError("runner did not return an integer exit code")
+        result = CommandResult(completed.returncode, completed.returncode == 0,
+                               completed.stdout or "", completed.stderr or "",
+                               None if completed.returncode == 0 else f"process exited with code {completed.returncode}")
+    except Exception as exc:
+        # Preserve the permanent claim on timeouts, launch errors and runner failures.
+        result = CommandResult(None, False, error=f"{type(exc).__name__}: {exc}")
+    with run_transaction(run_dir, config=config) as run:
+        _validated_plan(config, run)
+        history = _replay(run)
+        if not history.execution_started or history.execution_finished:
+            raise CommandError("execution finish history is inconsistent")
+        run.append(_event("EXECUTION_FINISHED" if result.succeeded else "EXECUTION_FAILED", WorkflowState.EVALUATE,
+                          approval_ref=execution.source_ref,
+                          execution_status="succeeded" if result.succeeded else "failed", error=result.error,
+                          resource_usage={"returncode": result.returncode}))
+    return result
+
+
+def report_run(config: HarnessConfig, run_dir: Path, outcome: str | WorkflowState,
+               report: IntegrationReport) -> RunHistory:
+    try:
+        outcome = WorkflowState(outcome)
+    except ValueError as exc:
+        raise CommandError("unknown evaluation outcome") from exc
+    if outcome not in _OUTCOMES or not isinstance(report, IntegrationReport):
+        raise CommandError("report requires an evaluation outcome and typed IntegrationReport")
+    with run_transaction(run_dir, config=config) as run:
+        _validated_plan(config, run)
+        history = _replay(run)
+        if history.state != WorkflowState.EVALUATE or not history.execution_finished:
+            raise CommandError("report requires a finished execution in EVALUATE")
+        if outcome == WorkflowState.ADVANCE and not history.execution_succeeded:
+            raise CommandError("failed execution cannot advance")
+        state = transition(history.state, outcome, plan_hash=run.manifest.plan_hash, approvals=history.approvals, gates=())
+        review = transition(state, WorkflowState[f"GATE_REVIEW_{outcome.value}"], plan_hash=run.manifest.plan_hash,
+                            approvals=history.approvals, gates=report.gate_results)
+        # Validate every edge before any immutable report write.
+        release = outcome == WorkflowState.ADVANCE and all(gate.status == GateStatus.PASS for gate in report.gate_results)
+        target = WorkflowState.RELEASE_IF_GATE_PASS if release else WorkflowState.STOPPED
+        transition(review, target, plan_hash=run.manifest.plan_hash, approvals=history.approvals, gates=report.gate_results)
+        run.write_report(report)
+        run.append(_event("CYCLE_DECISION", state))
+        run.append(_event("GATE_REVIEW", review, correction_ref="integration_report.json"))
+        run.append(_event("STATE", target))
+        if release:
+            run.append(_event("STATE", WorkflowState.STOPPED))
+        return _replay(run)
