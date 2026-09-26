@@ -1,0 +1,88 @@
+{
+  "action_parity_atol": {
+    "batched_native_vs_recorded": 1e-05,
+    "root_agent_official_vs_recorded": 1e-06
+  },
+  "actor": {
+    "export_protocol_sha256": "2960b561f24f6dc23a42dd0d49fd1ef7a5a0864e0e3f7543cb6920bc465a4329",
+    "id": "long-horizon-seed11",
+    "path": "runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/actor.pt",
+    "sha256": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+    "source_sha256": "cf92e27db8e40eae3ca2c629f7db3c5bf833cb0b5d83a9621d1885b482b324e3"
+  },
+  "coverage": {
+    "min_fit_decisions": 256,
+    "min_positive_diagnostic_geometries": 1,
+    "min_positive_fit_geometries": 2,
+    "require_both_fit_classes": true
+  },
+  "execution": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python -B -m scripts.probe_rlpd_visual_representation --protocol experiments/rlpd-visual-representation-probe-v1.json --protocol-sha256 <FROZEN_FILE_SHA256> --output-root runs/20260926-rlpd-visual-representation-probe-v1",
+    "device": "cpu",
+    "max_torch_threads": 1,
+    "numpy_version": "1.26.0",
+    "output_root": "runs/20260926-rlpd-visual-representation-probe-v1",
+    "protocol_path": "experiments/rlpd-visual-representation-probe-v1.json",
+    "python_version": "3.11.14",
+    "source_revision": "47392115e0281943f55a2f68970bbc210ad8264a",
+    "torch_version": "2.11.0+cu128",
+    "working_tree_source_hashes_authoritative": true
+  },
+  "format": "haic-rlpd-visual-representation-probe-v1",
+  "head": {
+    "batch_size": 256,
+    "loss": "BCEWithLogitsLoss",
+    "lr": 0.001,
+    "optimizer": "Adam",
+    "positive_weight": "min(10,max(1,train_negative_decisions/train_positive_decisions))",
+    "sampling": "train-decision-uniform-with-replacement",
+    "seed": 20260926,
+    "type": "torch.nn.Linear(50,1)",
+    "updates": 256,
+    "weight_decay": 0.0001
+  },
+  "label": {
+    "burn_in_decisions": 20,
+    "definition": "pre-decision speed_m_s[j-1] <= 2 for j>=20; exclude j<20",
+    "role": "retrospective-telemetry-target-only",
+    "speed_m_s_max": 2.0
+  },
+  "report": {
+    "baseline": "constant fit-decision positive prevalence",
+    "cutoff": 0.5,
+    "cutoff_rule": "sigmoid(logit)>=0.5",
+    "diagnostic": "retrospective, previously viewed TRAIN roads 09..12"
+  },
+  "representation": {
+    "device": "cpu",
+    "feature_dim": 50,
+    "input": "HUD-inclusive pre-action float32 CHW (4,84,84) uint8 stack / 255",
+    "max_stack_batch": 256,
+    "module": "Agent.model.encoder"
+  },
+  "role": "reused-TRAIN-retrospective-diagnostic-not-generalization",
+  "source": {
+    "cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+    "cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+    "manifest_path": "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+    "manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+    "protocol_path": "experiments/rlpd-g0-completion-v1.json",
+    "protocol_sha256": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b"
+  },
+  "source_hashes": {
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "haic/__init__.py": "83308c227e0b3fb28104d947b2758833edb9fdb010d7b75c69ffe3a3f7c95670",
+    "haic/algorithms/__init__.py": "a89e2d259085e8f75c9547960bc51157b4e6b876efdba96a1b7c82c26aba338a",
+    "haic/algorithms/rlpd/model.py": "5a6e6693bf97cc43ded65d1f3c19a348b7e6719044490e10fb7a160e7908e79e",
+    "requirements.txt": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+    "scripts/__init__.py": "c5d8359e421222eabceeba933289459a1e3f136ce6ef9d393e8a90b14b1ccfda",
+    "scripts/probe_rlpd_visual_representation.py": "35e7f2b30a2afa520ed0bb076b23aab6e00c661f92096d8140a1e16e195fa4f3"
+  },
+  "split": {
+    "diagnostic_geometry_indices": [9, 10, 11, 12],
+    "fit_geometry_indices": [1, 2, 3, 4, 5, 6, 7, 8],
+    "unit": "both actors on each G0 road geometry stay together"
+  },
+  "status": "frozen"
+}

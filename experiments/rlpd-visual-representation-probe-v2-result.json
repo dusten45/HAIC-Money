@@ -1,0 +1,62 @@
+{
+  "format": "haic-rlpd-visual-representation-probe-result-summary-v1",
+  "role": "internal-head-only-reused-TRAIN-representation-proxy",
+  "status": "complete-inconclusive-for-G1-controller",
+  "failed_preflight_only_protocol": {
+    "path": "experiments/rlpd-visual-representation-probe-v1.json",
+    "sha256": "747dc000173709b38b1e13a33b149db5fab875d71a56ce1f647908f495a39d33",
+    "reason": "Concurrent unrelated Git HEAD revision changed while exact executable byte hashes stayed stable; no actor load, label scan, output or optimizer step under v1."
+  },
+  "frozen_protocol_path": "experiments/rlpd-visual-representation-probe-v2.json",
+  "frozen_protocol_sha256": "4793cf4abe2f011192c43b94ec2db79ec3d1be5a0d40bfbcecfe6f6883a03f57",
+  "attempt_path": "runs/20260926-rlpd-visual-representation-probe-v2/attempt.json",
+  "attempt_sha256": "1ef9953f2a5a2a9f60beb38a0b050eaefdf89db34669242a9afc83bb8ada5aba",
+  "head_path": "runs/20260926-rlpd-visual-representation-probe-v2/head.pt",
+  "head_sha256": "f769ae8f9fa00d74fb582970b45311e5cf2d36ba4bd54833bec44f5b052fb40f",
+  "receipt_path": "runs/20260926-rlpd-visual-representation-probe-v2/receipt.json",
+  "receipt_sha256": "63a17cc73d4f8d199fb8f42d804b16c261a0a95c84398eba7c05c4d796a723da",
+  "source_g0_manifest_sha256": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+  "integrity": {
+    "source_trace_hashes_verified": 24,
+    "paired_geometry_clusters": 12,
+    "actor_parameter_sha256_before": "a65677aff9a34c24cd668ec4cdfcaaeb9c1bf0d60d6a676b02d545ddf724db9e",
+    "actor_parameter_sha256_after": "a65677aff9a34c24cd668ec4cdfcaaeb9c1bf0d60d6a676b02d545ddf724db9e",
+    "head_parameters": "finite CPU float32 Linear(50,1), diagnostic-only; not a submitted or driving actor",
+    "receipt_reported_head_updates": 256,
+    "independent_optimizer_history_proof": false,
+    "environment_resets": 0,
+    "policy_updates": 0
+  },
+  "retrospective_target": "For pre-action four-frame visual input at decision j>=20, label speed_m_s[j-1] <= 2; j<20 excluded.",
+  "fit": {
+    "geometry_clusters": 8,
+    "eligible_decisions": 6610,
+    "positive_decisions": 275,
+    "positive_geometry_clusters": 6,
+    "finished_parent_episodes": 6,
+    "fit_prevalence_baseline": 0.0416036308623298,
+    "finished_parent_eligible_decisions": 2708,
+    "finished_parent_false_positives_at_fixed_0_5": 1
+  },
+  "retrospective_diagnostic": {
+    "geometry_clusters": 4,
+    "eligible_decisions": 2959,
+    "positive_decisions": 190,
+    "positive_geometry_clusters": 3,
+    "finished_parent_episodes": 0,
+    "cutoff": 0.5,
+    "TP": 188,
+    "FN": 2,
+    "FP": 9,
+    "TN": 2760,
+    "geometry_concentration": "All 188 true positives occur in the two serially correlated actor episodes on one geometry; single positives on two other diagnostic geometries are both missed."
+  },
+  "limits": [
+    "All 12 track-1 geometries were used to inspect G0 before this split; roads 09..12 are previously viewed TRAIN diagnostics, not a fresh holdout or private tracks.",
+    "The dataset contains 24 correlated actor-road episodes, not 9,569 independent examples; diagnostic positives are concentrated on one geometry.",
+    "No finished-parent episode exists in the retrospective diagnostic split; finished-control false positives were measured only on fitting geometries.",
+    "The original HUD draws true hull speed in permitted policy pixels. A linear head may decode the speedometer, not road optical flow, wrong-way direction, contact cause, or future recovery.",
+    "Frozen encoder and driving actor were unchanged. No CarRacing interaction, G1 intervention, official score or learner-policy improvement is supported."
+  ],
+  "decision": "Do not promote the diagnostic head, select a G1 contact-stall trigger or claim finish improvement. A separate source-hashed geometry-level attribution/coverage gate with independent positive and finished-parent controls is prerequisite to any RLPD-specific exact-prefix intervention."
+}
