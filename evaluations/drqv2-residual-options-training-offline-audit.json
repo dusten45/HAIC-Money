@@ -1,0 +1,825 @@
+{
+  "base_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+  "confirmation_or_blind_cells_accessed": false,
+  "created_at_utc": "2026-09-24T13:23:54.518106+00:00",
+  "cross_head_replay_policy_comparisons": {
+    "v1": {
+      "v1": {
+        "gate_scenarios": {
+          "v1_head_on_v1_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.4114990234375,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 0,
+              "COAST": 755,
+              "KEEP": 6144,
+              "STEER_MINUS": 877,
+              "STEER_PLUS": 416
+            },
+            "margin_gated_effective_action_change_fraction": 0.23876953125,
+            "margin_gated_option_selection_fraction": 0.25,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 11,
+              "COAST": 2109,
+              "KEEP": 1788,
+              "STEER_MINUS": 2543,
+              "STEER_PLUS": 1741
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.53173828125
+          },
+          "v1_training_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.4114990234375,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 0,
+              "COAST": 755,
+              "KEEP": 6144,
+              "STEER_MINUS": 877,
+              "STEER_PLUS": 416
+            },
+            "margin_gated_effective_action_change_fraction": 0.23876953125,
+            "margin_gated_option_selection_fraction": 0.25,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 11,
+              "COAST": 2109,
+              "KEEP": 1788,
+              "STEER_MINUS": 2543,
+              "STEER_PLUS": 1741
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.53173828125
+          },
+          "zero": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.4114990234375,
+            "margin": 0.0,
+            "margin_gated_choice_counts": {
+              "BRAKE": 11,
+              "COAST": 2109,
+              "KEEP": 1788,
+              "STEER_MINUS": 2543,
+              "STEER_PLUS": 1741
+            },
+            "margin_gated_effective_action_change_fraction": 0.755615234375,
+            "margin_gated_option_selection_fraction": 0.78173828125,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 11,
+              "COAST": 2109,
+              "KEEP": 1788,
+              "STEER_MINUS": 2543,
+              "STEER_PLUS": 1741
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.0
+          }
+        },
+        "q_gap_distribution": {
+          "gap_quantiles": {
+            "0.0": -15.984451293945312,
+            "0.25": 0.2258472442626953,
+            "0.5": 1.7689476013183594,
+            "0.75": 3.4834041595458984,
+            "0.9": 5.526759338378906,
+            "1.0": 17.96075439453125
+          },
+          "positive_non_keep_advantage_fraction": 0.78173828125,
+          "states": 8192
+        },
+        "target_selector_vs_gated_behavior": {
+          "bootstrap_rows": 8154,
+          "interpretation": "Current training code chooses the unrestricted online argmax for its Double-Q bootstrap. The saved target-head weights are absent, so this compares action indices only; it does not reconstruct target values or prove the off-policy target is invalid.",
+          "margin_gated_next_action_counts": {
+            "BRAKE": 11,
+            "COAST": 2109,
+            "KEEP": 1766,
+            "STEER_MINUS": 2533,
+            "STEER_PLUS": 1735
+          },
+          "selector_mismatch_count": 0,
+          "selector_mismatch_fraction": 0.0,
+          "unrestricted_next_action_counts": {
+            "BRAKE": 11,
+            "COAST": 2109,
+            "KEEP": 1766,
+            "STEER_MINUS": 2533,
+            "STEER_PLUS": 1735
+          }
+        },
+        "training_option_support": {
+          "capacity": 8192,
+          "cursor": 10,
+          "episode_ids_saved": false,
+          "executed_applied_action_saved_per_step": false,
+          "feature_dim": 256,
+          "geometry_ids_saved": false,
+          "option_support": {
+            "BRAKE": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9940915805022157,
+              "mean_recorded_option_return": 0.9136883524003022,
+              "median_recorded_option_return": -0.7960000038146973,
+              "terminal_count": 5,
+              "terminated_count": 5,
+              "transition_count": 677,
+              "truncated_count": 0
+            },
+            "COAST": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9990978800180423,
+              "mean_recorded_option_return": 2.2124813206033442,
+              "median_recorded_option_return": 2.526259183883667,
+              "terminal_count": 6,
+              "terminated_count": 6,
+              "transition_count": 2217,
+              "truncated_count": 0
+            },
+            "KEEP": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9955947136563876,
+              "mean_recorded_option_return": 1.399891095966232,
+              "median_recorded_option_return": 2.3669393062591553,
+              "terminal_count": 16,
+              "terminated_count": 13,
+              "transition_count": 1816,
+              "truncated_count": 3
+            },
+            "STEER_MINUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 2.0,
+              "mean_recorded_option_return": 1.907678701147634,
+              "median_recorded_option_return": 2.487862467765808,
+              "terminal_count": 4,
+              "terminated_count": 3,
+              "transition_count": 1816,
+              "truncated_count": 1
+            },
+            "STEER_PLUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9963985594237694,
+              "mean_recorded_option_return": 1.8650710000952824,
+              "median_recorded_option_return": 2.493473768234253,
+              "terminal_count": 7,
+              "terminated_count": 6,
+              "transition_count": 1666,
+              "truncated_count": 1
+            }
+          },
+          "stored_rows": 8192,
+          "total_recorded_option_return": "discounted raw reward accumulated only over this observed option; not episodic return or counterfactual advantage"
+        }
+      },
+      "v2": {
+        "gate_scenarios": {
+          "v1_head_on_v1_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.250732421875,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 1,
+              "COAST": 646,
+              "KEEP": 5805,
+              "STEER_MINUS": 1045,
+              "STEER_PLUS": 695
+            },
+            "margin_gated_effective_action_change_fraction": 0.27978515625,
+            "margin_gated_option_selection_fraction": 0.2913818359375,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 10,
+              "COAST": 1674,
+              "KEEP": 2105,
+              "STEER_MINUS": 2801,
+              "STEER_PLUS": 1602
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.45166015625
+          },
+          "v1_training_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.250732421875,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 1,
+              "COAST": 646,
+              "KEEP": 5805,
+              "STEER_MINUS": 1045,
+              "STEER_PLUS": 695
+            },
+            "margin_gated_effective_action_change_fraction": 0.27978515625,
+            "margin_gated_option_selection_fraction": 0.2913818359375,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 10,
+              "COAST": 1674,
+              "KEEP": 2105,
+              "STEER_MINUS": 2801,
+              "STEER_PLUS": 1602
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.45166015625
+          },
+          "zero": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.250732421875,
+            "margin": 0.0,
+            "margin_gated_choice_counts": {
+              "BRAKE": 10,
+              "COAST": 1674,
+              "KEEP": 2105,
+              "STEER_MINUS": 2801,
+              "STEER_PLUS": 1602
+            },
+            "margin_gated_effective_action_change_fraction": 0.712646484375,
+            "margin_gated_option_selection_fraction": 0.7430419921875,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 10,
+              "COAST": 1674,
+              "KEEP": 2105,
+              "STEER_MINUS": 2801,
+              "STEER_PLUS": 1602
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.0
+          }
+        },
+        "q_gap_distribution": {
+          "gap_quantiles": {
+            "0.0": -8.534263610839844,
+            "0.25": -0.07274723052978516,
+            "0.5": 1.8901329040527344,
+            "0.75": 3.9467945098876953,
+            "0.9": 6.400199127197269,
+            "1.0": 15.866378784179688
+          },
+          "positive_non_keep_advantage_fraction": 0.7430419921875,
+          "states": 8192
+        },
+        "target_selector_vs_gated_behavior": {
+          "bootstrap_rows": 8153,
+          "interpretation": "Current training code chooses the unrestricted online argmax for its Double-Q bootstrap. The saved target-head weights are absent, so this compares action indices only; it does not reconstruct target values or prove the off-policy target is invalid.",
+          "margin_gated_next_action_counts": {
+            "BRAKE": 10,
+            "COAST": 1674,
+            "KEEP": 2079,
+            "STEER_MINUS": 2791,
+            "STEER_PLUS": 1599
+          },
+          "selector_mismatch_count": 0,
+          "selector_mismatch_fraction": 0.0,
+          "unrestricted_next_action_counts": {
+            "BRAKE": 10,
+            "COAST": 1674,
+            "KEEP": 2079,
+            "STEER_MINUS": 2791,
+            "STEER_PLUS": 1599
+          }
+        },
+        "training_option_support": {
+          "capacity": 8192,
+          "cursor": 8,
+          "episode_ids_saved": false,
+          "executed_applied_action_saved_per_step": false,
+          "feature_dim": 256,
+          "geometry_ids_saved": false,
+          "option_support": {
+            "BRAKE": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9970414201183433,
+              "mean_recorded_option_return": 1.0061902173701123,
+              "median_recorded_option_return": -0.7960000038146973,
+              "terminal_count": 4,
+              "terminated_count": 4,
+              "transition_count": 676,
+              "truncated_count": 0
+            },
+            "COAST": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9967141292442496,
+              "mean_recorded_option_return": 1.5703215017049754,
+              "median_recorded_option_return": 2.4298064708709717,
+              "terminal_count": 3,
+              "terminated_count": 3,
+              "transition_count": 913,
+              "truncated_count": 0
+            },
+            "KEEP": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9978943338437978,
+              "mean_recorded_option_return": 1.9638818306720047,
+              "median_recorded_option_return": 2.4719738960266113,
+              "terminal_count": 26,
+              "terminated_count": 21,
+              "transition_count": 5224,
+              "truncated_count": 5
+            },
+            "STEER_MINUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9975093399750934,
+              "mean_recorded_option_return": 1.7588842713075734,
+              "median_recorded_option_return": 2.4713268280029297,
+              "terminal_count": 6,
+              "terminated_count": 6,
+              "transition_count": 803,
+              "truncated_count": 0
+            },
+            "STEER_PLUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 2.0,
+              "mean_recorded_option_return": 1.8449289960165818,
+              "median_recorded_option_return": 2.4713268280029297,
+              "terminal_count": 0,
+              "terminated_count": 0,
+              "transition_count": 576,
+              "truncated_count": 0
+            }
+          },
+          "stored_rows": 8192,
+          "total_recorded_option_return": "discounted raw reward accumulated only over this observed option; not episodic return or counterfactual advantage"
+        }
+      }
+    },
+    "v2": {
+      "v1": {
+        "gate_scenarios": {
+          "v1_training_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.22119140625,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 288,
+              "COAST": 397,
+              "KEEP": 6845,
+              "STEER_MINUS": 629,
+              "STEER_PLUS": 33
+            },
+            "margin_gated_effective_action_change_fraction": 0.1522216796875,
+            "margin_gated_option_selection_fraction": 0.1644287109375,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 843,
+              "COAST": 772,
+              "KEEP": 3080,
+              "STEER_MINUS": 2368,
+              "STEER_PLUS": 1129
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.4595947265625
+          },
+          "v2_head_on_v2_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.22119140625,
+            "margin": 2.3705520629882812,
+            "margin_gated_choice_counts": {
+              "BRAKE": 470,
+              "COAST": 507,
+              "KEEP": 6053,
+              "STEER_MINUS": 976,
+              "STEER_PLUS": 186
+            },
+            "margin_gated_effective_action_change_fraction": 0.2447509765625,
+            "margin_gated_option_selection_fraction": 0.2611083984375,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 843,
+              "COAST": 772,
+              "KEEP": 3080,
+              "STEER_MINUS": 2368,
+              "STEER_PLUS": 1129
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.3629150390625
+          },
+          "zero": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.22119140625,
+            "margin": 0.0,
+            "margin_gated_choice_counts": {
+              "BRAKE": 843,
+              "COAST": 772,
+              "KEEP": 3080,
+              "STEER_MINUS": 2368,
+              "STEER_PLUS": 1129
+            },
+            "margin_gated_effective_action_change_fraction": 0.5931396484375,
+            "margin_gated_option_selection_fraction": 0.6240234375,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 677,
+              "COAST": 2217,
+              "KEEP": 1816,
+              "STEER_MINUS": 1816,
+              "STEER_PLUS": 1666
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 843,
+              "COAST": 772,
+              "KEEP": 3080,
+              "STEER_MINUS": 2368,
+              "STEER_PLUS": 1129
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.0
+          }
+        },
+        "q_gap_distribution": {
+          "gap_quantiles": {
+            "0.0": -8.813156127929688,
+            "0.25": -0.8031234741210938,
+            "0.5": 0.6614761352539062,
+            "0.75": 2.527101516723633,
+            "0.9": 4.8153717041015645,
+            "1.0": 18.01227569580078
+          },
+          "positive_non_keep_advantage_fraction": 0.6240234375,
+          "states": 8192
+        },
+        "target_selector_vs_gated_behavior": {
+          "bootstrap_rows": 8154,
+          "interpretation": "Current training code chooses the unrestricted online argmax for its Double-Q bootstrap. The saved target-head weights are absent, so this compares action indices only; it does not reconstruct target values or prove the off-policy target is invalid.",
+          "margin_gated_next_action_counts": {
+            "BRAKE": 288,
+            "COAST": 397,
+            "KEEP": 6809,
+            "STEER_MINUS": 627,
+            "STEER_PLUS": 33
+          },
+          "selector_mismatch_count": 3757,
+          "selector_mismatch_fraction": 0.46075545744419916,
+          "unrestricted_next_action_counts": {
+            "BRAKE": 842,
+            "COAST": 772,
+            "KEEP": 3052,
+            "STEER_MINUS": 2364,
+            "STEER_PLUS": 1124
+          }
+        },
+        "training_option_support": {
+          "capacity": 8192,
+          "cursor": 10,
+          "episode_ids_saved": false,
+          "executed_applied_action_saved_per_step": false,
+          "feature_dim": 256,
+          "geometry_ids_saved": false,
+          "option_support": {
+            "BRAKE": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9940915805022157,
+              "mean_recorded_option_return": 0.9136883524003022,
+              "median_recorded_option_return": -0.7960000038146973,
+              "terminal_count": 5,
+              "terminated_count": 5,
+              "transition_count": 677,
+              "truncated_count": 0
+            },
+            "COAST": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9990978800180423,
+              "mean_recorded_option_return": 2.2124813206033442,
+              "median_recorded_option_return": 2.526259183883667,
+              "terminal_count": 6,
+              "terminated_count": 6,
+              "transition_count": 2217,
+              "truncated_count": 0
+            },
+            "KEEP": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9955947136563876,
+              "mean_recorded_option_return": 1.399891095966232,
+              "median_recorded_option_return": 2.3669393062591553,
+              "terminal_count": 16,
+              "terminated_count": 13,
+              "transition_count": 1816,
+              "truncated_count": 3
+            },
+            "STEER_MINUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 2.0,
+              "mean_recorded_option_return": 1.907678701147634,
+              "median_recorded_option_return": 2.487862467765808,
+              "terminal_count": 4,
+              "terminated_count": 3,
+              "transition_count": 1816,
+              "truncated_count": 1
+            },
+            "STEER_PLUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9963985594237694,
+              "mean_recorded_option_return": 1.8650710000952824,
+              "median_recorded_option_return": 2.493473768234253,
+              "terminal_count": 7,
+              "terminated_count": 6,
+              "transition_count": 1666,
+              "truncated_count": 1
+            }
+          },
+          "stored_rows": 8192,
+          "total_recorded_option_return": "discounted raw reward accumulated only over this observed option; not episodic return or counterfactual advantage"
+        }
+      },
+      "v2": {
+        "gate_scenarios": {
+          "v1_training_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.3477783203125,
+            "margin": 3.4834041595458984,
+            "margin_gated_choice_counts": {
+              "BRAKE": 264,
+              "COAST": 268,
+              "KEEP": 7140,
+              "STEER_MINUS": 484,
+              "STEER_PLUS": 36
+            },
+            "margin_gated_effective_action_change_fraction": 0.1199951171875,
+            "margin_gated_option_selection_fraction": 0.12841796875,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 1017,
+              "COAST": 807,
+              "KEEP": 2783,
+              "STEER_MINUS": 2306,
+              "STEER_PLUS": 1279
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.5318603515625
+          },
+          "v2_head_on_v2_replay_q75": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.3477783203125,
+            "margin": 2.3705520629882812,
+            "margin_gated_choice_counts": {
+              "BRAKE": 488,
+              "COAST": 360,
+              "KEEP": 6144,
+              "STEER_MINUS": 1015,
+              "STEER_PLUS": 185
+            },
+            "margin_gated_effective_action_change_fraction": 0.2308349609375,
+            "margin_gated_option_selection_fraction": 0.25,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 1017,
+              "COAST": 807,
+              "KEEP": 2783,
+              "STEER_MINUS": 2306,
+              "STEER_PLUS": 1279
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.4102783203125
+          },
+          "zero": {
+            "current_head_greedy_vs_recorded_behavior_agreement_fraction": 0.3477783203125,
+            "margin": 0.0,
+            "margin_gated_choice_counts": {
+              "BRAKE": 1017,
+              "COAST": 807,
+              "KEEP": 2783,
+              "STEER_MINUS": 2306,
+              "STEER_PLUS": 1279
+            },
+            "margin_gated_effective_action_change_fraction": 0.6175537109375,
+            "margin_gated_option_selection_fraction": 0.6602783203125,
+            "recorded_behavior_option_counts": {
+              "BRAKE": 676,
+              "COAST": 913,
+              "KEEP": 5224,
+              "STEER_MINUS": 803,
+              "STEER_PLUS": 576
+            },
+            "states": 8192,
+            "unrestricted_argmax_counts": {
+              "BRAKE": 1017,
+              "COAST": 807,
+              "KEEP": 2783,
+              "STEER_MINUS": 2306,
+              "STEER_PLUS": 1279
+            },
+            "unrestricted_vs_gated_choice_mismatch_fraction": 0.0
+          }
+        },
+        "q_gap_distribution": {
+          "gap_quantiles": {
+            "0.0": -11.40350341796875,
+            "0.25": -0.5663983821868896,
+            "0.5": 0.9066390991210938,
+            "0.75": 2.3705520629882812,
+            "0.9": 4.032899475097657,
+            "1.0": 23.009811401367188
+          },
+          "positive_non_keep_advantage_fraction": 0.6602783203125,
+          "states": 8192
+        },
+        "target_selector_vs_gated_behavior": {
+          "bootstrap_rows": 8153,
+          "interpretation": "Current training code chooses the unrestricted online argmax for its Double-Q bootstrap. The saved target-head weights are absent, so this compares action indices only; it does not reconstruct target values or prove the off-policy target is invalid.",
+          "margin_gated_next_action_counts": {
+            "BRAKE": 264,
+            "COAST": 268,
+            "KEEP": 7101,
+            "STEER_MINUS": 484,
+            "STEER_PLUS": 36
+          },
+          "selector_mismatch_count": 4354,
+          "selector_mismatch_fraction": 0.5340365509628358,
+          "unrestricted_next_action_counts": {
+            "BRAKE": 1017,
+            "COAST": 807,
+            "KEEP": 2747,
+            "STEER_MINUS": 2303,
+            "STEER_PLUS": 1279
+          }
+        },
+        "training_option_support": {
+          "capacity": 8192,
+          "cursor": 8,
+          "episode_ids_saved": false,
+          "executed_applied_action_saved_per_step": false,
+          "feature_dim": 256,
+          "geometry_ids_saved": false,
+          "option_support": {
+            "BRAKE": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9970414201183433,
+              "mean_recorded_option_return": 1.0061902173701123,
+              "median_recorded_option_return": -0.7960000038146973,
+              "terminal_count": 4,
+              "terminated_count": 4,
+              "transition_count": 676,
+              "truncated_count": 0
+            },
+            "COAST": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9967141292442496,
+              "mean_recorded_option_return": 1.5703215017049754,
+              "median_recorded_option_return": 2.4298064708709717,
+              "terminal_count": 3,
+              "terminated_count": 3,
+              "transition_count": 913,
+              "truncated_count": 0
+            },
+            "KEEP": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9978943338437978,
+              "mean_recorded_option_return": 1.9638818306720047,
+              "median_recorded_option_return": 2.4719738960266113,
+              "terminal_count": 26,
+              "terminated_count": 21,
+              "transition_count": 5224,
+              "truncated_count": 5
+            },
+            "STEER_MINUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 1.9975093399750934,
+              "mean_recorded_option_return": 1.7588842713075734,
+              "median_recorded_option_return": 2.4713268280029297,
+              "terminal_count": 6,
+              "terminated_count": 6,
+              "transition_count": 803,
+              "truncated_count": 0
+            },
+            "STEER_PLUS": {
+              "both_terminated_and_truncated_count": 0,
+              "mean_duration_decisions": 2.0,
+              "mean_recorded_option_return": 1.8449289960165818,
+              "median_recorded_option_return": 2.4713268280029297,
+              "terminal_count": 0,
+              "terminated_count": 0,
+              "transition_count": 576,
+              "truncated_count": 0
+            }
+          },
+          "stored_rows": 8192,
+          "total_recorded_option_return": "discounted raw reward accumulated only over this observed option; not episodic return or counterfactual advantage"
+        }
+      }
+    }
+  },
+  "development_evaluation_cells_accessed": false,
+  "environment_interaction": false,
+  "head_specific_q75_training_gaps": {
+    "v1": 3.4834041595458984,
+    "v2": 2.3705520629882812
+  },
+  "limits": [
+    "Replay rows are transitions from the option behavior policy, not independent states; counts are not episode-level coverage.",
+    "The stored per-option reward is a discounted raw return over the actually executed option only. No unchosen-option counterfactual outcome exists.",
+    "Episode IDs, geometry IDs, and per-decision applied actions were not saved in option replay, so option reward summaries cannot identify a causal failure mechanism.",
+    "The q-gap quantiles are training-replay diagnostics, not calibration on held-out states and not confidence bounds on actual finish value.",
+    "The v2 reused margin was derived from the v1 head/replay; recomputed head-specific quantiles diagnose scale transfer but do not validate a new margin."
+  ],
+  "name": "drqv2-residual-options-offline-training-audit",
+  "next_gate": "If the target-versus-deployed selector differs materially, decide before any new study whether Q estimates the unconstrained optimal option or the margin-gated deployed policy; then freeze a policy-consistent target and a head-specific training-only calibration rule. No new rollout follows from this audit alone.",
+  "runs": {
+    "v1": {
+      "base_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "gradient_steps": 7947,
+      "head_feature_dim": 256,
+      "optimizer_saved": false,
+      "option_checkpoint_sha256": "d9d842bae529f37e8e4bfd3f1d51563cb5da9cbd90b0f4043c1935292dda2a23",
+      "protocol": "experiments/drqv2-residual-options-pilot-v1.json",
+      "protocol_sha256": "3fd1222a5c0833633d8c35bd3e765470556b23ae50ec03f33fe6496d907be56d",
+      "replay_sha256": "2c51beda537e1fc0437359d40d5248cdb965113e23793c59643e5e86f404ce0f",
+      "run_dir": "/workspace/HAIC-Money/runs/20260924-drqv2-residual-options-pilot/iteration-1-retry",
+      "stored_intervention_margin": 0.0,
+      "target_head_saved": false,
+      "training_result": {
+        "completed_episode_finishes": 5,
+        "completed_episodes": 38,
+        "environment_decisions": 16385
+      },
+      "training_source_sha256": {
+        "experiments/drqv2-augmentation-pad-v1.json": "4a383ec6b83c501a814b0a18c22a39b851d23b22093d56244aa6540b977f160b",
+        "experiments/drqv2-promotion-v1.json": "f53db79f5d9c9695acd37a862fe1f1f9797dc293764c05f68579900dcf337a96",
+        "experiments/drqv2-steering-logit-v1.json": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
+        "haic/algorithms/drq_v2/residual_options.py": "3851180ed56ea97af8ed6befbd97b6d4b0b6b3d7b66bd1e59b73f7487f8041d9",
+        "scripts/drqv2_residual_options.py": "e36d81d7a0b6be4dd47c6cedc73c8a7c18fb6106444d3281ac6627fa133b7657"
+      }
+    },
+    "v2": {
+      "base_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "gradient_steps": 7945,
+      "head_feature_dim": 256,
+      "optimizer_saved": false,
+      "option_checkpoint_sha256": "d47942f61fea5e94ab080f292f0629021a28fb8e08aa4faa728c6862fff1b79c",
+      "protocol": "experiments/drqv2-residual-options-pilot-v2.json",
+      "protocol_sha256": "773965f17061c16e33236cfb6d2a676998e772194b342ca4f387d7b21ec53b2e",
+      "replay_sha256": "1403230ba000d254b92393b87841962980e497f270f42160715a8c6994463849",
+      "run_dir": "/workspace/HAIC-Money/runs/20260924-drqv2-residual-options-pilot/iteration-2",
+      "stored_intervention_margin": 3.4834041595458984,
+      "target_head_saved": false,
+      "training_result": {
+        "completed_episode_finishes": 5,
+        "completed_episodes": 39,
+        "environment_decisions": 16382
+      },
+      "training_source_sha256": {
+        "experiments/drqv2-augmentation-pad-v1.json": "4a383ec6b83c501a814b0a18c22a39b851d23b22093d56244aa6540b977f160b",
+        "experiments/drqv2-promotion-v1.json": "f53db79f5d9c9695acd37a862fe1f1f9797dc293764c05f68579900dcf337a96",
+        "experiments/drqv2-residual-options-pilot-v1.json": "3fd1222a5c0833633d8c35bd3e765470556b23ae50ec03f33fe6496d907be56d",
+        "experiments/drqv2-steering-logit-v1.json": "348d1534a429a313a2927200f027f8e14b957f109aa7e2451fecb0ae1c76b235",
+        "haic/algorithms/drq_v2/residual_options.py": "56f0526413697f1dbbab1db46f32e64775b93a2bb7c25deb31d1666819664b26",
+        "scripts/drqv2_residual_options.py": "242a4bcdadc5c88dde30ab2bdf65b006a0b6a65e92a4446caa212d8c02b4bf15"
+      }
+    }
+  },
+  "schema_version": 1,
+  "status": "read-only-training-artifact-diagnostic",
+  "target_value_reconstruction": {
+    "possible": false,
+    "reason": "The saved pilot checkpoint includes the online option head, but not the target option head or optimizer. This audit compares online action indices only and cannot reproduce historical Double-Q target values."
+  }
+}
