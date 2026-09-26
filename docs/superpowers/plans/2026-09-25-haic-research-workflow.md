@@ -211,7 +211,7 @@ Expected: FAIL because the state and schema modules do not exist.
 
 - [ ] **Step 3: Implement typed schemas and explicit transition map**
 
-Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec, including the `ADVANCE`, `REJECT`, `REVISE`, and `PIVOT` branches. Reject illegal transitions, stage/hash mismatch, and `RELEASE_IF_GATE_PASS` unless `rule_compliance`, `mechanism_activation`, and `competitive_or_product_outcome` are all `PASS` (or the config explicitly marks a non-rule gate not applicable). `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
+Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec. `ADVANCE` alone may transition to `RELEASE_IF_GATE_PASS`, which returns to `STOPPED` only when `rule_compliance`, `mechanism_activation`, and `competitive_or_product_outcome` are `PASS` (or the config explicitly marks a non-rule gate not applicable). `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. A revised or pivoted effort starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; pivot preserves the prior checkpoint. Reject illegal transitions and stage/hash mismatch. `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 

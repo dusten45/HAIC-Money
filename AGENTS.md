@@ -23,6 +23,8 @@ STOPPED
 
 `STOPPED` is the default. Design, implementation, and execution each require a separate approval record tied to the exact plan revision/hash. Reading documents does not authorize training, evaluation, packaging, or submission. The CLI defaults to plan-only. Only registered local HAIC command profiles may execute after their approval gate. Official submission, model confirmation, and competition-site upload are separate external actions requiring explicit user authorization immediately before execution; they are not CLI operations.
 
+After `EVALUATE`, only `ADVANCE` may enter `RELEASE_IF_GATE_PASS`; that transition requires all three gates to pass and then returns to `STOPPED`. `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. A revised or pivoted effort begins a new cycle at `DISCOVER` with a new plan hash and fresh approvals. `PIVOT` preserves the prior checkpoint.
+
 ## Central coordination
 
 The central coordinator owns the current state, active cycle, priorities, resource budget, non-overlapping agent assignments, approval records, and integration decision. Before execution it checks the control, registered split, map/seed set, completion endpoint, falsifier, resource limit, and plan hash. It reconciles duplicate hypotheses, conflicting evidence, rule compliance, and each independent report. Agents work only in assigned read/write scope and do not concurrently edit shared records. A handoff informs the central decision; it does not make it.

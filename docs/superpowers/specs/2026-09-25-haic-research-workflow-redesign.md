@@ -163,6 +163,8 @@ STOPPED
 → STOPPED
 ```
 
+- `ADVANCE` is the only evaluation outcome that can enter `RELEASE_IF_GATE_PASS`; all three gates must pass before that state returns to `STOPPED`.
+- `REJECT`, `REVISE`, and `PIVOT` return to `STOPPED` without releasing the current candidate. Revised or pivoted work starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; `PIVOT` preserves the prior checkpoint.
 - `STOPPED`가 기본이다. 문서 조사만으로 학습·평가·제출 실행 상태에 들어가지 않는다.
 - 설계, 구현, 실행 승인은 서로 분리하고 승인한 계획 revision/hash를 기록한다.
 - 배치에는 최소 4개 독립 메커니즘 방향, 전체 최대 8개 후보, 방향별 최대 2개 후보를 둔다.
