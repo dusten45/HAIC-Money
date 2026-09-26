@@ -1,0 +1,75 @@
+{
+  "format": "haic-dreamerv3-reused-train-development-result-v1",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "status": "negative_update_budget_sensitivity_on_consumed_development",
+  "freshness_claim": false,
+  "matched_fresh_p1b_claim": false,
+  "promotion_eligible": false,
+  "source_scope": "Four training-excluded but previously allocated r6 TRAIN roads per action-source stratum. This development set was scored at 64 updates before the 256-update budget was selected; the second score is iterative tuning, not independent validation.",
+  "development_collection_protocol": {
+    "path": "experiments/dreamerv3-reused-train-development-v1.json",
+    "sha256": "4c958edc8783e682922bfa69f9f6f0214f39b5710866619bb00b784495355f61"
+  },
+  "training_offline_protocols": [
+    {"updates": 64, "path": "experiments/dreamerv3-reused-train-offline-v1.json", "sha256": "2cb3883109ef43a001d741cdc5055c6448a8a312094f687d907454d7bf6296ba"},
+    {"updates": 256, "path": "experiments/dreamerv3-reused-train-offline-v2.json", "sha256": "ba837ebc3f64282bbd77b4444c6f337c23a3ebce12602d328e9626c1c406b290"}
+  ],
+  "scores": [
+    {
+      "updates": 64,
+      "protocol_path": "experiments/dreamerv3-reused-train-score-v1.json",
+      "protocol_sha256": "8fc90d1024e6bc55d1e42d3ba442bd3c493bfece195571fa34063a15203c4a5d",
+      "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/scoring-v1/score-result.json",
+      "result_sha256": "748de44441dedf08b98d2fc28464578cf28b7d9d0483eb762552cb142ad6b4b5"
+    },
+    {
+      "updates": 256,
+      "protocol_path": "experiments/dreamerv3-reused-train-budget-probe-v1.json",
+      "protocol_sha256": "ddcb33d19b36f6c0c17942263da835a45bf87f76271f550027e6113824ebf994",
+      "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/scoring-v2/score-result.json",
+      "result_sha256": "94bbd7457283d5ec8f0ad4a4ff2e654b97839d09a7eca764615de6fae625ff5d"
+    }
+  ],
+  "design": {
+    "world_model_seeds_per_arm": [0, 1],
+    "development_cells": [
+      {"track_id": 1, "geometry_seed": 3910800002},
+      {"track_id": 1, "geometry_seed": 3910800009},
+      {"track_id": 1, "geometry_seed": 3910800057},
+      {"track_id": 1, "geometry_seed": 3910800044}
+    ],
+    "source_strata": ["uniform-native-random", "drq-source-0"],
+    "context_decisions": 8,
+    "prediction_window_decisions": 32,
+    "independent_episode_and_road_count_per_stratum": 4,
+    "windows_per_stratum": 8,
+    "unique_scored_labels_per_stratum": 256,
+    "independent_terminal_positive_labels_per_stratum": 4,
+    "local_finished_geometries_per_stratum": 0,
+    "actual_duplicate_label_uses_per_stratum": 0
+  },
+  "image_mse": {
+    "model_order": ["random_seed_0", "random_seed_1", "teacher_seed_0", "teacher_seed_1"],
+    "random_source_stratum": {
+      "shifted_repeat_baseline": 0.0026553440738013023,
+      "after_64_updates": [0.002623914855377052, 0.0030167803110288105, 0.005381744110124487, 0.008742216571363315],
+      "after_256_updates": [0.002613776715108429, 0.003663525077584495, 0.036492159028313154, 0.02872417803848748]
+    },
+    "teacher_source_stratum": {
+      "shifted_repeat_baseline": 0.01488432277896834,
+      "after_64_updates": [0.0150755839780361, 0.015572085354136789, 0.01806999066226922, 0.01733071254624008],
+      "after_256_updates": [0.015059294679043544, 0.018854082060968835, 0.019303350453441226, 0.02397579594440913]
+    }
+  },
+  "teacher_model_reward_mse_on_teacher_source": {
+    "training_mean_constant_baseline": 2.5093904461570276,
+    "after_256_updates_seed_0": 2.5136164470737916,
+    "after_256_updates_seed_1": 2.51744448946537
+  },
+  "interpretation": [
+    "On this consumed four-road development set, increasing model-only updates from 64 to 256 did not make either teacher-trained world model beat shifted-repeat image prediction on either source stratum; both teacher seeds worsened on both strata.",
+    "Image/reward MSE and terminal BCE are internal proxies, not driving or competition scores; the four independent terminal events and zero independent finish positives preclude finish-event conclusions.",
+    "A negative update-budget sensitivity here does not identify the cause or prove that longer training generally fails. No further unregistered update escalation or student actor training is justified by this result.",
+    "The next diagnostic is separately pinned logged-action versus shuffled/zero-action model-input sensitivity on the same consumed episodes, not a counterfactual environment experiment."
+  ]
+}
