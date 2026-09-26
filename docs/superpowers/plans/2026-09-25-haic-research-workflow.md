@@ -417,6 +417,10 @@ Source inspection notes: train_policy and evaluate_closed_loop --output are dire
 
 Task6 scope may extend records.py with confined immutable execution-plan read/write, read_integration_report, and execution-reservation helpers, reusing the same path/lock boundary. Do not introduce unguarded arbitrary file writes for plan/claim files. Plan source/hypothesis/resource metadata must remain reviewable in the hashed payload; if actual Hypothesis input is accepted validate its required fields. Synchronize Task6 plan text with this lifecycle before implementation. Do not redesign already-reviewed persistence or state beyond necessary integration helpers.
 
+**Task 6 review correction:** Caller revision labels are insufficient executable identity. Include in the canonical plan the actual SHA-256 bytes and exact bounded inventory policy for non-recursive Python files in `training/`, `haic_agent/`, `core/`, and `core/vendor/`, plus explicit root `agent.py`, `env_wrapper.py`, and `damage.py`. Include the selected interpreter path/version/implementation identity and packaging's explicitly selected inference sources when `source-root` differs. Reject source redirections and hardlinks before opening them. Recompute this inventory before execution reservation; added, removed, or changed source files require a new run/plan/approvals. Do not require a clean Git checkout or inspect legacy/data roots. Installed third-party package binaries are outside this local source-byte inventory.
+
+For split inputs, read only the exact split JSON and validate referenced map paths through the historical/no-redirection boundary before any runner call, without opening forbidden map targets or scanning directories. TRAIN-only validates only its loaded TRAIN group; evaluation and benchmark split loaders validate all three groups because the modules load all three. Revalidate split references after approval and before reservation so changed split contents cannot introduce a historical target.
+
 ## Task 7: Add result, experiment and SOTA reporting
 
 **Files:**

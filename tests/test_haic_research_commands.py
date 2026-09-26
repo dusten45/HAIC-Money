@@ -9,6 +9,9 @@ import unittest
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
+
+from haic_research import records as record_module
 
 from haic_research.commands import (
     CommandError, UnknownProfileError, approve_run, build_argv, execute_approved,
@@ -60,9 +63,21 @@ class CommandFixture(unittest.TestCase):
         self.root = Path(self.temp.name).resolve()
         (self.root / 'harness.config.json').write_text((ROOT / 'harness.config.json').read_text(encoding='utf-8'), encoding='utf-8')
         self.config = load_config(self.root)
+        for folder in ('training', 'haic_agent', 'core', 'core/vendor'):
+            (self.root / folder).mkdir(parents=True, exist_ok=True)
+            (self.root / folder / '__init__.py').write_text('# fake source fixture\n', encoding='utf-8')
+        for module in ('train_policy', 'evaluate_closed_loop', 'package_submission', 'benchmark_corridor'):
+            (self.root / 'training' / (module + '.py')).write_text('# fake registered module\n', encoding='utf-8')
+        for filename in ('agent.py', 'env_wrapper.py', 'damage.py'):
+            (self.root / filename).write_text('# fake source fixture\n', encoding='utf-8')
         self.input = self.root / 'training/maps/test.json'
         self.input.parent.mkdir(parents=True)
-        self.input.write_text('{}', encoding='utf-8')
+        for name in ('train-map.json', 'tune-map.json', 'held-map.json'):
+            (self.input.parent / name).write_text('{}', encoding='utf-8')
+        self.input.write_text(json.dumps({'schema_version': 1,
+                              'train': [{'map': 'train-map.json', 'seeds': [1]}],
+                              'tune': [{'map': 'tune-map.json', 'seeds': [2]}],
+                              'held_out': [{'map': 'held-map.json', 'seeds': [3]}]}), encoding='utf-8')
         self.args = {'train-only-site-map-split': str(self.input), 'defer-tune': True, 'total-steps': 4}
         self.runner = FakeRunner()
 
@@ -133,6 +148,122 @@ class CommandProfileTests(CommandFixture):
 
 
 class CommandLifecycleTests(CommandFixture):
+    def test_actual_module_shared_dependency_and_source_inventory_drift_refuse_runner(self):
+        mutations = (
+            ('training/train_policy.py', 'changed'),
+            ('haic_agent/__init__.py', 'changed'),
+            ('core/vendor/__init__.py', 'changed'),
+            ('damage.py', 'changed'),
+            ('training/new_local_helper.py', 'added'),
+            ('haic_agent/__init__.py', None),
+        )
+        for index, (relative, value) in enumerate(mutations):
+            with self.subTest(relative=relative):
+                path = self.plan('source-' + str(index))
+                for stage in ('design', 'implementation', 'execution'):
+                    approve_run(self.config, path, stage, source_ref='user')
+                if value is None:
+                    (self.root / relative).unlink()
+                else:
+                    (self.root / relative).write_text('# ' + value + '\n', encoding='utf-8')
+                manifest = read_manifest(path, config=self.config)
+                with self.assertRaises(CommandError):
+                    execute_approved(self.config, path, manifest.plan_hash, 'train_policy', self.args, runner=self.runner)
+                self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_explicit_package_source_root_is_bound_to_approval(self):
+        package_root = self.root / 'selected-package'
+        for relative in ('agent.py', 'haic_agent/__init__.py', 'haic_agent/observation.py',
+                         'haic_agent/pixel_features.py', 'haic_agent/networks.py', 'haic_agent/dynamics.py',
+                         'haic_agent/planner.py', 'haic_agent/runtime_config.py'):
+            filename = package_root / relative
+            filename.parent.mkdir(parents=True, exist_ok=True)
+            filename.write_text('# selected package fixture\n', encoding='utf-8')
+        args = {'policy-checkpoint': str(self.input), 'dynamics-checkpoint': str(self.input), 'source-root': str(package_root)}
+        path = register_plan(self.config, metadata('package-source'), 'package_submission', args, research=research())
+        for stage in ('design', 'implementation', 'execution'):
+            approve_run(self.config, path, stage, source_ref='user')
+        manifest = read_manifest(path, config=self.config)
+        (package_root / 'agent.py').write_text('# changed selected source\n', encoding='utf-8')
+        with self.assertRaises(CommandError):
+            execute_approved(self.config, path, manifest.plan_hash, 'package_submission', args, runner=self.runner)
+        self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_interpreter_identity_drift_refuses_runner(self):
+        path = self.approved()
+        manifest = read_manifest(path, config=self.config)
+        with patch('haic_research.commands.sys.version', 'different-runtime'):
+            with self.assertRaises(CommandError):
+                execute_approved(self.config, path, manifest.plan_hash, 'train_policy', self.args, runner=self.runner)
+        self.assertEqual(self.runner.calls, [])
+
+    def test_source_hardlink_is_refused_before_opening_linked_content(self):
+        import os
+        source = self.root / 'training/train_policy.py'
+        old = self.root / 'runs/old/source.py'
+        old.parent.mkdir(parents=True)
+        old.write_text('# forbidden historical source\n', encoding='utf-8')
+        source.unlink()
+        os.link(old, source)
+        with patch.object(Path, 'read_bytes', side_effect=AssertionError('unguarded source read')):
+            with self.assertRaises((CommandError, RecordError)):
+                self.plan()
+
+    def test_split_references_reject_legacy_targets_without_opening_them(self):
+        split = self.root / 'split.json'
+        for index, forbidden in enumerate(('runs/old/map.json', 'artifacts/haic/map.json', 'submissions/map.json')):
+            split.write_text(json.dumps({'schema_version': 1, 'train': [{'map': forbidden, 'seeds': [1]}]}), encoding='utf-8')
+            with self.subTest(forbidden=forbidden), patch('haic_research.records._read_text', wraps=record_module._read_text) as reader:
+                with self.assertRaises(CommandError):
+                    register_plan(self.config, metadata('legacy-' + str(index)), 'train_policy', dict(self.args, **{'train-only-site-map-split': str(split)}), research=research())
+                self.assertTrue(all(str(call.args[0]) != str(self.root / forbidden) for call in reader.call_args_list))
+        self.assertEqual(self.runner.calls, [])
+
+    def test_split_mutation_after_approval_refuses_before_execution_claim(self):
+        # Put the split at repository root so the module's relative confinement
+        # would otherwise allow its historical target.
+        split = self.root / 'split.json'
+        split.write_text(json.dumps({'schema_version': 1, 'train': [{'map': 'training/maps/train-map.json', 'seeds': [1]}]}), encoding='utf-8')
+        args = dict(self.args, **{'train-only-site-map-split': str(split)})
+        path = register_plan(self.config, metadata('changed-split'), 'train_policy', args, research=research())
+        for stage in ('design', 'implementation', 'execution'):
+            approve_run(self.config, path, stage, source_ref='user')
+        manifest = read_manifest(path, config=self.config)
+        split.write_text(json.dumps({'schema_version': 1, 'train': [{'map': 'runs/old/map.json', 'seeds': [1]}]}), encoding='utf-8')
+        with self.assertRaises(CommandError):
+            execute_approved(self.config, path, manifest.plan_hash, 'train_policy', args, runner=self.runner)
+        self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_split_map_hardlink_is_refused_without_opening_target(self):
+        import os
+        safe_name = self.root / 'training/maps/linked-map.json'
+        forbidden = self.root / 'runs/old/map.json'
+        forbidden.parent.mkdir(parents=True)
+        forbidden.write_text('{}', encoding='utf-8')
+        os.link(forbidden, safe_name)
+        self.input.write_text(json.dumps({'schema_version': 1, 'train': [{'map': 'linked-map.json', 'seeds': [1]}]}), encoding='utf-8')
+        with patch('haic_research.records._read_text', wraps=record_module._read_text) as reader:
+            with self.assertRaises(CommandError):
+                self.plan()
+            self.assertTrue(all(call.args[0] not in {safe_name, forbidden} for call in reader.call_args_list))
+
+    def test_normal_split_loaders_check_all_groups_and_train_only_ignores_unloaded_groups(self):
+        split = self.root / 'split.json'
+        split.write_text(json.dumps({'schema_version': 1,
+                                    'train': [{'map': 'training/maps/train-map.json', 'seeds': [1]}],
+                                    'tune': [{'map': 'runs/old/tune-map.json', 'seeds': [2]}],
+                                    'held_out': [{'map': 'runs/old/held-map.json', 'seeds': [3]}]}), encoding='utf-8')
+        register_plan(self.config, metadata('train-only'), 'train_policy', dict(self.args, **{'train-only-site-map-split': str(split)}), research=research())
+        for profile in ('evaluate_closed_loop', 'benchmark_corridor_diagnostic'):
+            with self.subTest(profile=profile), self.assertRaises(CommandError):
+                args = {'site-map-split': str(split)}
+                if profile == 'evaluate_closed_loop':
+                    args.update({'policy-checkpoint': str(self.input), 'dynamics-checkpoint': str(self.input)})
+                register_plan(self.config, metadata(profile), profile, args, research=research())
+
     def test_new_persistence_helpers_confine_and_preserve_immutable_plan(self):
         path = self.plan()
         payload = read_execution_plan(path, config=self.config)

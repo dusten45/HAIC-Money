@@ -17,7 +17,7 @@ from typing import Mapping
 from .config import HarnessConfig, validate_config
 from .models import Approval, GateStatus, Hypothesis, IntegrationReport, RunEvent, RunManifest, WorkflowState
 from .records import (
-    RecordError, RunTransaction, _canonical, _identifier, _json_value, _typed,
+    RecordError, RunTransaction, _canonical, _identifier, _json_value, _typed, _open, _read_json,
     create_run, run_transaction,
 )
 from .state import ApprovalError, TransitionError, transition
@@ -69,6 +69,14 @@ _STAGES = {
 _INITIAL = (WorkflowState.STOPPED, WorkflowState.DISCOVER, WorkflowState.HYPOTHESIZE,
             WorkflowState.DESIGN_PENDING_APPROVAL)
 _OUTCOMES = frozenset({WorkflowState.ADVANCE, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT})
+_SOURCE_POLICY = {
+    "version": 1,
+    "nonrecursive_python_directories": ["training", "haic_agent", "core", "core/vendor"],
+    "root_files": ["agent.py", "env_wrapper.py", "damage.py"],
+    "package_inference_files": ["agent.py", "haic_agent/__init__.py", "haic_agent/observation.py",
+                                "haic_agent/pixel_features.py", "haic_agent/networks.py", "haic_agent/dynamics.py",
+                                "haic_agent/planner.py", "haic_agent/runtime_config.py"],
+}
 
 
 def _canonical_json(value: object) -> str:
@@ -80,6 +88,58 @@ def _canonical_json(value: object) -> str:
 
 def _hash(value: object) -> str:
     return hashlib.sha256(_canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def _source_bytes(config: HarnessConfig, path: Path) -> str:
+    """Hash exact local source bytes through no-redirect/single-link checks."""
+    checked = Path(_path(config, path, "input_file"))
+    # records._open checks identity again after opening and does not follow links.
+    with _open(checked, "r") as stream:
+        return hashlib.sha256(stream.buffer.read()).hexdigest()
+
+
+def _source_identity(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> dict[str, object]:
+    """Inventory only four concrete code directories and named source files.
+
+    It deliberately includes untracked local .py files and observes additions.
+    It never walks subdirectories, maps, run roots, or installed packages.
+    """
+    hashes = {}
+    directories = {}
+    for relative in _SOURCE_POLICY["nonrecursive_python_directories"]:
+        directory = config.repo_root / relative
+        try:
+            checked = _canonical(directory)
+        except RecordError as exc:
+            raise CommandError(str(exc)) from exc
+        directories[relative] = checked.is_dir()
+        if not checked.exists():
+            continue
+        if not checked.is_dir():
+            raise CommandError("source inventory location must be a directory")
+        for path in sorted(checked.iterdir()):
+            if path.suffix.lower() == ".py":
+                hashes[path.relative_to(config.repo_root).as_posix()] = _source_bytes(config, path)
+    for relative in _SOURCE_POLICY["root_files"]:
+        path = config.repo_root / relative
+        try:
+            checked = _canonical(path)
+        except RecordError as exc:
+            raise CommandError(str(exc)) from exc
+        hashes[relative] = _source_bytes(config, checked) if checked.exists() else None
+    module_path = config.command_profiles[profile_id]["module"].replace(".", "/") + ".py"
+    if module_path not in hashes:
+        raise CommandError("registered executable module source is missing")
+    packaged = {}
+    if profile_id == "package_submission":
+        source_root = Path(arguments.get("source-root", config.repo_root))
+        if source_root != config.repo_root:
+            for relative in _SOURCE_POLICY["package_inference_files"]:
+                path = source_root / relative
+                packaged[path.relative_to(config.repo_root).as_posix()] = _source_bytes(config, path)
+    return dict(policy=_SOURCE_POLICY, directories=directories, files=hashes, package_sources=packaged,
+                interpreter={"executable": str(Path(sys.executable).resolve()), "version": sys.version,
+                             "implementation": sys.implementation.name, "cache_tag": sys.implementation.cache_tag})
 
 
 def _profile(config: HarnessConfig, profile_id: str) -> CommandProfile:
@@ -203,7 +263,38 @@ def normalize_arguments(config: HarnessConfig, profile_id: str, arguments: Mappi
             normalized[name] = _value(config, spec, value, run_id=run_id)
     if profile_id == "benchmark_corridor_diagnostic" and not any(name in normalized for name in ("track", "site-map", "site-map-split")):
         raise CommandError("diagnostic requires explicitly registered track or map input")
+    for name in ("train-only-site-map-split", "site-map-split"):
+        if name in normalized:
+            _validate_split_references(config, Path(normalized[name]), train_only=name == "train-only-site-map-split")
     return normalized
+
+
+def _validate_split_references(config: HarnessConfig, split: Path, *, train_only: bool) -> None:
+    """Inspect only a named manifest; reject forbidden map targets before opening.
+
+    Full split loaders open all three groups even if their later selection picks
+    one group. TRAIN-only never touches the other groups' map paths.
+    """
+    try:
+        payload = _read_json(split)
+    except RecordError as exc:
+        raise CommandError(f"invalid split manifest: {exc}") from exc
+    if not isinstance(payload, dict) or type(payload.get("schema_version")) is not int or payload["schema_version"] != 1:
+        raise CommandError("split manifest requires schema_version 1")
+    for group in (("train",) if train_only else ("train", "tune", "held_out")):
+        entries = payload.get(group)
+        if not isinstance(entries, list) or not entries:
+            raise CommandError(f"split {group} requires nonempty explicit map entries")
+        for entry in entries:
+            raw = entry.get("map") if isinstance(entry, dict) else None
+            if not isinstance(raw, str) or not raw:
+                raise CommandError(f"split {group} map requires a relative file path")
+            parsed = Path(raw.replace("\\", "/"))
+            if parsed.is_absolute() or ".." in parsed.parts:
+                raise CommandError("split map must remain inside its manifest directory")
+            # _path rejects historical roots lexically before any lstat/open.
+            # Only existence/type is needed; never open the referenced map here.
+            _path(config, split.parent / parsed, "input_file")
 
 
 def build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]:
@@ -278,7 +369,8 @@ def register_plan(config: HarnessConfig, metadata: Mapping[str, object], profile
         raise CommandError("manifest requires resource, permission and source hash metadata")
     payload = dict(schema_version=1, manifest=_manifest_metadata(provisional), profile_id=profile_id,
                    arguments=normalized, profile=_json_value(config.command_profiles[profile_id]),
-                   research=_research(research), artifact_destination=destination)
+                   research=_research(research), artifact_destination=destination,
+                   executable_identity=_source_identity(config, profile_id, normalized))
     digest = _hash(payload)
     manifest = _typed(RunManifest, dict(data, plan_hash=digest, approval_hash=""))
     path = create_run(config, manifest, previous_run_dir=previous_run_dir)
@@ -291,7 +383,7 @@ def register_plan(config: HarnessConfig, metadata: Mapping[str, object], profile
 
 def _validated_plan(config: HarnessConfig, run: RunTransaction) -> dict[str, object]:
     plan = run.plan
-    if not isinstance(plan, dict) or set(plan) != {"schema_version", "manifest", "profile_id", "arguments", "profile", "research", "artifact_destination", "plan_hash"}:
+    if not isinstance(plan, dict) or set(plan) != {"schema_version", "manifest", "profile_id", "arguments", "profile", "research", "artifact_destination", "executable_identity", "plan_hash"}:
         raise CommandError("persisted execution plan is missing or malformed")
     digest = _hash({name: value for name, value in plan.items() if name != "plan_hash"})
     if digest != plan["plan_hash"] or digest != run.manifest.plan_hash:
@@ -305,6 +397,8 @@ def _validated_plan(config: HarnessConfig, run: RunTransaction) -> dict[str, obj
     if plan["profile"] != _json_value(config.command_profiles[profile_id]):
         raise CommandError("current command profile fingerprint differs from approved plan")
     normalized = normalize_arguments(config, profile_id, plan["arguments"], run_id=run.manifest.run_id)
+    if plan["executable_identity"] != _source_identity(config, profile_id, normalized):
+        raise CommandError("actual executable source/interpreter changed; a new run, plan and approvals are required")
     if normalized != plan["arguments"] or plan["artifact_destination"] != str(config.artifact_root / run.manifest.run_id):
         raise CommandError("persisted arguments/output destination are not canonical")
     if _research(plan["research"]) != plan["research"]:
