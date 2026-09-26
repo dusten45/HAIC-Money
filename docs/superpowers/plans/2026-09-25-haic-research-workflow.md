@@ -43,7 +43,7 @@
 | `RESTRICTIONS.md` | competition/runtime, privacy/leakage, split, execution and submission limits |
 | `harness.config.json` | HAIC-only path, metric, split, search, budget, and command-profile settings |
 | `haic_research/config.py` | load and validate the single HAIC configuration |
-| `haic_research/models.py` | hypothesis, approval, result, gate, manifest, event and report schemas |
+| `haic_research/models.py` | hypothesis, approval, result, gate, manifest, event, five-field report and coordinator envelope schemas |
 | `haic_research/state.py` | legal workflow transitions and approval checks |
 | `haic_research/policy.py` | comparable-result checks, completion-first ranking, promotion and pivot rules |
 | `haic_research/coordinator.py` | batch validation, non-overlapping assignments, report consolidation |
@@ -241,7 +241,8 @@ git commit -m "feat: model HAIC workflow states and approvals"
 - `promotion_decision(candidate: ExperimentResult, control: ExperimentResult) -> PromotionDecision`.
 - `validate_batch(hypotheses: Sequence[Hypothesis]) -> None`; `should_pivot(cycles: Sequence[CycleSummary], limit: int = 3) -> bool`.
 - `CycleSummary` and `WorkAssignment` are immutable `models.py` records. `assign_work(batch_id: str, hypotheses: Sequence[Hypothesis]) -> list[WorkAssignment]` gives each direction one owner and non-overlapping scope; it records assignments but does not spawn external agents itself.
-- `integrate_reports(assignments: Sequence[WorkAssignment], reports: Sequence[AgentReport]) -> IntegrationReport` verifies complete scope ownership and the `fact`, `inference`, `unknown`, `recommendation`, and `source_paths` fields before central synthesis. `AgentReport` is an immutable `models.py` record.
+- `AgentReport` remains an immutable record with exactly five fields. `AgentReportEnvelope` is a separate immutable record with `handoff_path`, `owner`, `edited_paths`, and `report: AgentReport`.
+- `integrate_reports(assignments: Sequence[WorkAssignment], reports: Sequence[AgentReportEnvelope]) -> IntegrationReport` verifies complete scope ownership, unique handoff/owner matching, that each edited path is within the assignment's allowed write scope, and all five report fields before central synthesis.
 
 - [ ] **Step 1: Write completion-priority and gate tests**
 
@@ -271,7 +272,7 @@ Compute completion rate as `completion_count / episode_count`. Require identical
 
 - [ ] **Step 4: Implement batch validation, pivot counter and work assignments**
 
-Reject fewer than four independent directions, more than eight total hypotheses, or more than two per direction. `should_pivot` counts only valid comparable non-improving cycles; `infra_invalid` entries are ignored and do not increment the streak. Assignments contain direction, hypothesis IDs, owner label, allowed read/write scope and required handoff path. `integrate_reports` rejects missing/duplicate reports, out-of-scope edits, or reports missing any required field, then emits an integration report with all three gate results and evidence paths.
+Reject fewer than four independent directions, more than eight total hypotheses, or more than two per direction. `should_pivot` counts only valid comparable non-improving cycles; `infra_invalid` entries are ignored and do not increment the streak. Assignments contain direction, hypothesis IDs, owner label, allowed read/write scope and required handoff path. Wrap each unchanged five-field `AgentReport` in an `AgentReportEnvelope` carrying owner, handoff path and edited paths. `integrate_reports` rejects missing/duplicate or mismatched envelopes, out-of-scope edits, or reports missing any required field, then emits an integration report with all three gate results and evidence paths.
 
 - [ ] **Step 5: Run the focused test to verify it passes**
 
