@@ -306,8 +306,9 @@ git commit -m "feat: prioritize completion in HAIC research policy"
 
 **Interfaces:**
 - `create_run(config: HarnessConfig, manifest: RunManifest, *, previous_run_dir: Path | None = None) -> Path` creates one directory only under configured `run_root`; a continuation may read only the explicitly named predecessor inside the new v2 run root.
-- `append_event(run_dir: Path, event: RunEvent) -> None` appends one JSON line.
-- `write_integration_report(run_dir: Path, report: IntegrationReport) -> None` writes the report once; corrections become new `events.jsonl` entries.
+- `append_event(run_dir: Path, event: RunEvent, *, config: HarnessConfig) -> None` appends one JSON line.
+- `write_integration_report(run_dir: Path, report: IntegrationReport, *, config: HarnessConfig) -> None` writes the report once; corrections become new `events.jsonl` entries.
+- `read_manifest(run_dir: Path, *, config: HarnessConfig) -> RunManifest` and `read_events(run_dir: Path, *, config: HarnessConfig) -> tuple[RunEvent, ...]` validate the configured persistence boundary before reading.
 - Extend `RunManifest` with `plan_hash`, `cycle_id`, optional `checkpoint_ref`, `predecessor_run_id`, and `predecessor_decision_ref`; extend `RunEvent` with a stable `event_id`, structured approval fields, and optional `checkpoint_ref`. Add an immutable `CheckpointRef(path, sha256)` record. Approval events belong to exactly one run and identify the stage and approved plan hash.
 
 - [ ] **Step 1: Write path and append-only tests**
@@ -326,8 +327,8 @@ class RunRecordTests(unittest.TestCase):
         self.assertEqual(path.parent.name, "haic-research-v2")
 
     def test_events_append_without_replacing_prior_lines(self):
-        append_event(self.run_dir, event("DISCOVER"))
-        append_event(self.run_dir, event("HYPOTHESIZE"))
+        append_event(self.run_dir, event("DISCOVER"), config=self.config)
+        append_event(self.run_dir, event("HYPOTHESIZE"), config=self.config)
         self.assertEqual(len((self.run_dir / "events.jsonl").read_text().splitlines()), 2)
 
     def test_legacy_and_outside_paths_are_refused(self):
@@ -336,10 +337,10 @@ class RunRecordTests(unittest.TestCase):
 
     def test_new_cycle_requires_distinct_plan_and_parent_decision_event(self):
         decision = event("CYCLE_DECISION", state=WorkflowState.REVISE)
-        append_event(self.run_dir, decision)
-        append_event(self.run_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_REVISE))
-        write_integration_report(self.run_dir, passing_report())
-        append_event(self.run_dir, event("STATE", state=WorkflowState.STOPPED))
+        append_event(self.run_dir, decision, config=self.config)
+        append_event(self.run_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_REVISE), config=self.config)
+        write_integration_report(self.run_dir, passing_report(), config=self.config)
+        append_event(self.run_dir, event("STATE", state=WorkflowState.STOPPED), config=self.config)
         revised = linked_manifest("run-002", parent=self.manifest,
                                   decision_ref=decision.event_id, outcome=WorkflowState.REVISE)
         create_run(self.config, revised, previous_run_dir=self.run_dir)
@@ -349,20 +350,20 @@ class RunRecordTests(unittest.TestCase):
         prior = manifest("run-001", checkpoint_ref=checkpoint)
         prior_dir = create_run(self.config, prior)
         decision = event("CYCLE_DECISION", state=WorkflowState.PIVOT, checkpoint_ref=checkpoint)
-        append_event(prior_dir, decision)
-        append_event(prior_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_PIVOT))
-        write_integration_report(prior_dir, passing_report())
-        append_event(prior_dir, event("STATE", state=WorkflowState.STOPPED))
+        append_event(prior_dir, decision, config=self.config)
+        append_event(prior_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_PIVOT), config=self.config)
+        write_integration_report(prior_dir, passing_report(), config=self.config)
+        append_event(prior_dir, event("STATE", state=WorkflowState.STOPPED), config=self.config)
         pivot = linked_manifest("run-002", parent=prior, decision_ref=decision.event_id,
                                 outcome=WorkflowState.PIVOT, checkpoint_ref=checkpoint)
         create_run(self.config, pivot, previous_run_dir=prior_dir)
 
     def test_record_serializer_handles_frozen_mappings(self):
-        write_json_record(self.run_dir / "fixture.json", self.manifest)
-        self.assertEqual(json.loads((self.run_dir / "fixture.json").read_text())["tool_versions"], {})
+        record = read_manifest(self.run_dir, config=self.config)
+        self.assertEqual(dict(record.tool_versions), {})
 
     def test_record_serializer_handles_nested_frozen_event_data(self):
-        append_event(self.run_dir, event("RESOURCE", resource_usage={"cpu": {"seconds": 3}}))
+        append_event(self.run_dir, event("RESOURCE", resource_usage={"cpu": {"seconds": 3}}), config=self.config)
         row = json.loads((self.run_dir / "events.jsonl").read_text().splitlines()[0])
         self.assertEqual(row["resource_usage"]["cpu"]["seconds"], 3)
 ```
@@ -374,7 +375,7 @@ Expected: FAIL because the record store does not exist.
 
 - [ ] **Step 3: Implement confined run creation and append-only event writes**
 
-Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize dataclasses, enums, UTC timestamps, frozen mappings and tuples explicitly to stable JSON; do not use `dataclasses.asdict()` on `MappingProxyType` values. For a continuation, read only the exact predecessor named by the caller and verify it is a direct child of the configured v2 run root. Require matching predecessor run ID, a referenced `CYCLE_DECISION` event with outcome `REVISE` or `PIVOT`, a later `GATE_REVIEW` event in the matching `GATE_REVIEW_REVISE` or `GATE_REVIEW_PIVOT` substate and integration report, and a later `STOPPED` event. Require distinct run ID, cycle ID, and plan hash. A `PIVOT` must carry the same non-empty checkpoint reference and hash as the predecessor. Do not enumerate, import, or inspect legacy `runs/`, `artifacts/haic/`, or `submissions/`. Task 6 must source approvals only from the current run's events and require the exact current plan hash.
+Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize dataclasses, enums, UTC timestamps, frozen mappings and tuples explicitly to stable JSON; do not use `dataclasses.asdict()` on `MappingProxyType` values. For a continuation, read only the exact predecessor named by the caller and verify it is a direct child of the configured v2 run root. Require matching predecessor run ID, a referenced `CYCLE_DECISION` event with outcome `REVISE` or `PIVOT`, a later `GATE_REVIEW` event in the matching `GATE_REVIEW_REVISE` or `GATE_REVIEW_PIVOT` substate and integration report, and a later `STOPPED` event. Require distinct run ID, cycle ID, and plan hash. The referenced parent decision must be the latest cycle decision. A `PIVOT` must carry the same non-empty selected checkpoint path and hash, taking the decision event checkpoint in preference to the initial manifest. Validate checkpoint confinement without reading/copying checkpoint data. Do not enumerate, import, or inspect legacy `runs/`, `artifacts/haic/`, or `submissions/`. Task 6 must source approvals only from the current run's events and require the exact current plan hash.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 
@@ -387,6 +388,9 @@ Expected: PASS; tests use temporary directories and do not touch project data.
 git add haic_research/records.py tests/test_haic_research_records.py
 git commit -m "feat: add isolated HAIC run records"
 ```
+
+
+**Persistence boundary addendum:** Every append/read/report call requires `config` and proves the run directory is an exact direct child of its run root, has a matching manifest run ID, and has no symlink, junction, hardlink, or path alias. Validate config before creating directories. Reject reused IDs, Windows reserved names, traversal and separators before writes. Use a per-run exclusive lock, failing closed on an existing or stale lock; manifest and report creation are exclusive. Event IDs are unique, timestamps are nondecreasing UTC, and corrections reference an existing event or immutable report. APPROVAL events contain `approval_stage`, `approved_plan_hash`, and optional authorization `approval_ref`; downstream `Approval.source_ref` identifies their unique event ID. Reports contain every registered gate exactly once, including FAIL/UNKNOWN/NOT_APPLICABLE observations without granting release permission. Continuations read only their explicitly named v2 predecessor and never import approvals.
 
 ## Task 6: Add typed command profiles and plan-only CLI execution
 

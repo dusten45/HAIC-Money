@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from haic_research.models import (
     AgentReport,
     Approval,
+    CheckpointRef,
     CycleSummary,
     GateResult,
     GateStatus,
@@ -52,14 +53,17 @@ class SchemaTests(unittest.TestCase):
                          "expected_success_endpoint", "eligible_state", "control", "falsifier",
                          "smallest_decisive_experiment", "resource_and_risk_gate", "source_paths"},
             GateResult: {"name", "status", "rationale", "evidence_paths"},
+            CheckpointRef: {"path", "sha256"},
             RunManifest: {"run_id", "purpose", "hypothesis_hash", "approval_hash",
                           "candidate_revision", "control_revision", "candidate_package_hash",
                           "control_package_hash", "tool_versions", "runtime_versions",
                           "data_ids", "map_ids", "split_ids", "resource_limits",
-                          "permission_limits", "output_paths", "source_hashes"},
+                          "permission_limits", "output_paths", "source_hashes", "plan_hash", "cycle_id",
+                          "checkpoint_ref", "predecessor_run_id", "predecessor_decision_ref"},
             RunEvent: {"timestamp", "kind", "workflow_state", "approval_ref",
                        "execution_status", "error", "resource_usage", "mechanism_signal",
-                       "endpoint", "correction_ref"},
+                       "endpoint", "correction_ref", "event_id", "approval_stage", "approved_plan_hash",
+                       "checkpoint_ref"},
             IntegrationReport: {"gate_results", "evidence_paths"},
             AgentReport: {"fact", "inference", "unknown", "recommendation", "source_paths"},
             CycleSummary: {"valid", "protocol_match", "improved", "infra_invalid"},
@@ -85,7 +89,7 @@ class SchemaTests(unittest.TestCase):
     def test_record_mapping_values_cannot_be_changed_after_creation(self):
         supplied = {"cpu": {"seconds": 10}}
         event = RunEvent(datetime(2026, 9, 26, tzinfo=timezone.utc), "resource",
-                         WorkflowState.EVALUATE, resource_usage=supplied)
+                         WorkflowState.EVALUATE, "resource-1", resource_usage=supplied)
         supplied["cpu"]["seconds"] = 20
         self.assertEqual(event.resource_usage["cpu"]["seconds"], 10)
         with self.assertRaises(TypeError):
@@ -97,7 +101,8 @@ class SchemaTests(unittest.TestCase):
             (Hypothesis(*("entry",) * 11), ("source_paths",)),
             (gate, ("evidence_paths",)),
             (RunManifest("run", "purpose", "hypothesis", "approval", "candidate", "control",
-                         "candidate-package", "control-package", {}, {}, (), (), (), {}, {}, (), {}),
+                         "candidate-package", "control-package", {}, {}, (), (), (), {}, {}, (), {},
+                         PLAN_HASH, "cycle-1"),
              ("data_ids", "map_ids", "split_ids", "output_paths")),
             (IntegrationReport((), ()), ("gate_results", "evidence_paths")),
             (AgentReport("fact", "inference", "unknown", "recommendation", ()),

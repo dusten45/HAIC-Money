@@ -102,6 +102,16 @@ class GateResult:
 
 
 @dataclass(frozen=True)
+class CheckpointRef:
+    path: str
+    sha256: str
+
+    def __post_init__(self) -> None:
+        if not all(isinstance(value, str) and value.strip() for value in (self.path, self.sha256)):
+            raise ValueError("checkpoint requires a path and content hash")
+
+
+@dataclass(frozen=True)
 class RunManifest:
     run_id: str
     purpose: str
@@ -120,8 +130,17 @@ class RunManifest:
     permission_limits: Mapping[str, object]
     output_paths: tuple[str, ...]
     source_hashes: Mapping[str, str]
+    plan_hash: str
+    cycle_id: str
+    checkpoint_ref: CheckpointRef | None = None
+    predecessor_run_id: str | None = None
+    predecessor_decision_ref: str | None = None
 
     def __post_init__(self) -> None:
+        if not all(isinstance(value, str) and value.strip() for value in (self.run_id, self.plan_hash, self.cycle_id)):
+            raise ValueError("manifest requires run, cycle, and plan identifiers")
+        if self.checkpoint_ref is not None and not isinstance(self.checkpoint_ref, CheckpointRef):
+            raise TypeError("checkpoint_ref must be a CheckpointRef")
         for name in ("tool_versions", "runtime_versions", "resource_limits",
                      "permission_limits", "source_hashes"):
             object.__setattr__(self, name, _freeze(getattr(self, name)))
@@ -133,6 +152,10 @@ class RunEvent:
     timestamp: datetime
     kind: str
     workflow_state: WorkflowState
+    event_id: str
+    approval_stage: str | None = None
+    approved_plan_hash: str | None = None
+    checkpoint_ref: CheckpointRef | None = None
     approval_ref: str | None = None
     execution_status: str | None = None
     error: str | None = None
@@ -144,6 +167,18 @@ class RunEvent:
     def __post_init__(self) -> None:
         if self.timestamp.tzinfo is None or self.timestamp.utcoffset() != timezone.utc.utcoffset(None):
             raise ValueError("event timestamp must use UTC")
+        if not isinstance(self.event_id, str) or not self.event_id.strip():
+            raise ValueError("event requires a stable event_id")
+        if not isinstance(self.kind, str) or not self.kind.strip():
+            raise ValueError("event requires a kind")
+        object.__setattr__(self, "workflow_state", WorkflowState(self.workflow_state))
+        if self.kind == "APPROVAL":
+            if self.approval_stage not in {"design", "implementation", "execution"} or not self.approved_plan_hash:
+                raise ValueError("APPROVAL requires a stage and approved plan hash")
+        elif self.approval_stage is not None or self.approved_plan_hash is not None:
+            raise ValueError("structured approval fields belong to APPROVAL events")
+        if self.checkpoint_ref is not None and not isinstance(self.checkpoint_ref, CheckpointRef):
+            raise TypeError("checkpoint_ref must be a CheckpointRef")
         object.__setattr__(self, "resource_usage", _freeze(self.resource_usage))
 
 
