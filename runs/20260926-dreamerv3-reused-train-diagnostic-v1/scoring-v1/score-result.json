@@ -1,0 +1,2821 @@
+{
+  "development_collection_protocol_sha256": "4c958edc8783e682922bfa69f9f6f0214f39b5710866619bb00b784495355f61",
+  "format": "haic-dreamerv3-reused-train-score-v1",
+  "fresh_claim": false,
+  "interpretation": "Training-excluded but explicitly reused r6 TRAIN roads. No fresh, held-out, confirmation, blind, official, actor or promotion inference; window labels on one road are not independent experiments. Last-logged-reward uses the preceding recorded reward, including inside the scored window.",
+  "offline_protocol_sha256": "2cb3883109ef43a001d741cdc5055c6448a8a312094f687d907454d7bf6296ba",
+  "p1b_claim": false,
+  "promotion_eligible": false,
+  "purpose": "reused-TRAIN-training-excluded-open-loop-diagnostic",
+  "sampling": {
+    "baselines": [
+      "shifted-repeat",
+      "training-mean-reward",
+      "last-logged-reward",
+      "training-terminal-prevalence"
+    ],
+    "context_decisions": 8,
+    "context_mode": "reset-origin-full-prefix-terminal",
+    "latent_seed": 120926,
+    "min_geometries_per_stratum": 4,
+    "min_terminal_episodes_per_stratum": 4,
+    "window_decisions": 32
+  },
+  "score_protocol_sha256": "8fc90d1024e6bc55d1e42d3ba442bd3c493bfece195571fa34063a15203c4a5d",
+  "source_sha256": {
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "scripts/diagnose/dreamerv3_reused_train_open_loop.py": "cdf2b476a498a4c16649819ce598428f74f7f738e79cd30fd0803bfe6dc548db"
+  },
+  "status": "descriptive_only",
+  "strata": {
+    "random": {
+      "collected_complete_episodes": 4,
+      "collected_terminal_episodes": 4,
+      "coverage": "descriptive_sufficient_minimum",
+      "coverage_reasons": [],
+      "development_archive_sha256": "bb31810e28b2a5b7dfb761150b6c02319ddddba2ceb29bf8754a60f8ffc2213f",
+      "models": [
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.002623914855377052,
+              "last_logged_reward_mse": 1.107570453688128,
+              "reward_mse": 1.087785814194036,
+              "shifted_repeat_mse": 0.0026553440738013023,
+              "terminal_bce": 0.0808643549766306,
+              "training_constant_reward_mse": 0.5291832045081741,
+              "training_prevalence_bce": 0.09346377553112158
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "f278d1eca6045aac63d9c0a8e641925de622f49c0d8871154a5b13c6bd14224b",
+          "episodes": [
+            {
+              "decisions": 262,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.0020107053207993886,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.4233234352587076,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.07956441363673467,
+                "training_constant_reward_mse": 0.8173287234469155,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.002331549053451454,
+                    "last_logged_reward_mse": 3.4807304816233833,
+                    "reward_mse": 1.9990909134183812,
+                    "shifted_repeat_mse": 0.002264392284814676,
+                    "terminal_bce": 0.01538818412868842,
+                    "training_constant_reward_mse": 1.5969975517306987,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 230,
+                  "first_target_decision": 230,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 261,
+                  "metrics": {
+                    "image_mse": 0.0016898615881473233,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.847555957099034,
+                    "shifted_repeat_mse": 0.001600497410436219,
+                    "terminal_bce": 0.1437406431447809,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 230,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 260,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.00444803730761123,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.207111123123825,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08192491315232753,
+                "training_constant_reward_mse": 0.5433541559637314,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0017819857630456681,
+                    "last_logged_reward_mse": 2.276341819352813,
+                    "reward_mse": 1.9730789212324111,
+                    "shifted_repeat_mse": 0.0018062980187778521,
+                    "terminal_bce": 0.015332684896704198,
+                    "training_constant_reward_mse": 1.0490484167643304,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 228,
+                  "first_target_decision": 228,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 259,
+                  "metrics": {
+                    "image_mse": 0.007114088852176792,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.44114332501523873,
+                    "shifted_repeat_mse": 0.0076275793926470215,
+                    "terminal_bce": 0.14851714140795086,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 228,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 335,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.0023441814277020967,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 0.9281490712729499,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08178590487395829,
+                "training_constant_reward_mse": 0.3772993571094916,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0017466126282670302,
+                    "last_logged_reward_mse": 1.528192092551364,
+                    "reward_mse": 1.225605689452046,
+                    "shifted_repeat_mse": 0.0017475989989179652,
+                    "terminal_bce": 0.01546065031103327,
+                    "training_constant_reward_mse": 0.7169388190558508,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 303,
+                  "first_target_decision": 303,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 334,
+                  "metrics": {
+                    "image_mse": 0.002941750227137163,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6306924530938537,
+                    "shifted_repeat_mse": 0.0028970152036436048,
+                    "terminal_bce": 0.1481111594368833,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 303,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 321,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.0016927353653954924,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.7925596271206623,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08018218824350189,
+                "training_constant_reward_mse": 0.3787505815125579,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0019188096648576902,
+                    "last_logged_reward_mse": 1.5752992359774631,
+                    "reward_mse": 1.1224539161410048,
+                    "shifted_repeat_mse": 0.00190109390860016,
+                    "terminal_bce": 0.015196587262019645,
+                    "training_constant_reward_mse": 0.7198412678619834,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 289,
+                  "first_target_decision": 289,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 320,
+                  "metrics": {
+                    "image_mse": 0.0014666610659332946,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.46266533810031973,
+                    "shifted_repeat_mse": 0.0013982773725729203,
+                    "terminal_bce": 0.14516778922498413,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 289,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 0,
+          "model_arm": "random",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.0020107053207993886,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.4233234352587076,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.07956441363673467,
+                "training_constant_reward_mse": 0.8173287234469155,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.00444803730761123,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.207111123123825,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08192491315232753,
+                "training_constant_reward_mse": 0.5433541559637314,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.0016927353653954924,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.7925596271206623,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08018218824350189,
+                "training_constant_reward_mse": 0.3787505815125579,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.0023441814277020967,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 0.9281490712729499,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08178590487395829,
+                "training_constant_reward_mse": 0.3772993571094916,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": -0.2059384302605531,
+            "terminal_prevalence": 0.0030627871362940277,
+            "training_decisions": 1306,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.0030167803110288105,
+              "last_logged_reward_mse": 1.107570453688128,
+              "reward_mse": 1.0946280284353245,
+              "shifted_repeat_mse": 0.0026553440738013023,
+              "terminal_bce": 0.08115169120311815,
+              "training_constant_reward_mse": 0.5291832045081741,
+              "training_prevalence_bce": 0.09346377553112158
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "53ac63f11d7c90d598eaa0ec787b048a618d970f175c328483da82caf09b4ea0",
+          "episodes": [
+            {
+              "decisions": 262,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.0024250875235338754,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.0937751247997123,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08054590187416755,
+                "training_constant_reward_mse": 0.8173287234469155,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0030919458999960625,
+                    "last_logged_reward_mse": 3.4807304816233833,
+                    "reward_mse": 1.5304666566702063,
+                    "shifted_repeat_mse": 0.002264392284814676,
+                    "terminal_bce": 0.02180341450666213,
+                    "training_constant_reward_mse": 1.5969975517306987,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 230,
+                  "first_target_decision": 230,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 261,
+                  "metrics": {
+                    "image_mse": 0.0017582291470716882,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6570835929292185,
+                    "shifted_repeat_mse": 0.001600497410436219,
+                    "terminal_bce": 0.13928838924167297,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 230,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 260,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.0047388164389872145,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.2003741195962379,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08291698499084424,
+                "training_constant_reward_mse": 0.5433541559637314,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0019349085006297173,
+                    "last_logged_reward_mse": 2.276341819352813,
+                    "reward_mse": 1.7247685307377796,
+                    "shifted_repeat_mse": 0.0018062980187778521,
+                    "terminal_bce": 0.021345714877550177,
+                    "training_constant_reward_mse": 1.0490484167643304,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 228,
+                  "first_target_decision": 228,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 259,
+                  "metrics": {
+                    "image_mse": 0.007542724377344712,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6759797084546961,
+                    "shifted_repeat_mse": 0.0076275793926470215,
+                    "terminal_bce": 0.1444882551041383,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 228,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 335,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.0027384353203387946,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.1333797139964166,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08110221164325258,
+                "training_constant_reward_mse": 0.3772993571094916,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.002025594812948839,
+                    "last_logged_reward_mse": 1.528192092551364,
+                    "reward_mse": 1.3446917819554267,
+                    "shifted_repeat_mse": 0.0017475989989179652,
+                    "terminal_bce": 0.020985059427764425,
+                    "training_constant_reward_mse": 0.7169388190558508,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 303,
+                  "first_target_decision": 303,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 334,
+                  "metrics": {
+                    "image_mse": 0.0034512758277287503,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.9220676460374063,
+                    "shifted_repeat_mse": 0.0028970152036436048,
+                    "terminal_bce": 0.14121936385874073,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 303,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 321,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.0021647819612553576,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.9509831553489314,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08004166630420824,
+                "training_constant_reward_mse": 0.3787505815125579,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0023991413527255645,
+                    "last_logged_reward_mse": 1.5752992359774631,
+                    "reward_mse": 1.248024733728574,
+                    "shifted_repeat_mse": 0.00190109390860016,
+                    "terminal_bce": 0.021396665809105785,
+                    "training_constant_reward_mse": 0.7198412678619834,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 289,
+                  "first_target_decision": 289,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 320,
+                  "metrics": {
+                    "image_mse": 0.0019304225697851507,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6539415769692889,
+                    "shifted_repeat_mse": 0.0013982773725729203,
+                    "terminal_bce": 0.1386866667993107,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 289,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 1,
+          "model_arm": "random",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.0024250875235338754,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.0937751247997123,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08054590187416755,
+                "training_constant_reward_mse": 0.8173287234469155,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.0047388164389872145,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.2003741195962379,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08291698499084424,
+                "training_constant_reward_mse": 0.5433541559637314,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.0021647819612553576,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.9509831553489314,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08004166630420824,
+                "training_constant_reward_mse": 0.3787505815125579,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.0027384353203387946,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.1333797139964166,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08110221164325258,
+                "training_constant_reward_mse": 0.3772993571094916,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": -0.2059384302605531,
+            "terminal_prevalence": 0.0030627871362940277,
+            "training_decisions": 1306,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.005381744110124487,
+              "last_logged_reward_mse": 1.107570453688128,
+              "reward_mse": 1.2254657712667387,
+              "shifted_repeat_mse": 0.0026553440738013023,
+              "terminal_bce": 0.08198475580866207,
+              "training_constant_reward_mse": 1.4416650990557458,
+              "training_prevalence_bce": 0.10243356978423063
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "669663a7a251d1db78c0ea42450e48251ef951678e57545ca0dd453a75cfbf09",
+          "episodes": [
+            {
+              "decisions": 262,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.005162197434742666,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.2475776476000684,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08147511217407984,
+                "training_constant_reward_mse": 1.5955566581161298,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.004648470986239772,
+                    "last_logged_reward_mse": 3.4807304816233833,
+                    "reward_mse": 1.7719784371741671,
+                    "shifted_repeat_mse": 0.002264392284814676,
+                    "terminal_bce": 0.019706938560670302,
+                    "training_constant_reward_mse": 1.9451005768803504,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 230,
+                  "first_target_decision": 230,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 261,
+                  "metrics": {
+                    "image_mse": 0.005675923883245559,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.7231768580259696,
+                    "shifted_repeat_mse": 0.001600497410436219,
+                    "terminal_bce": 0.14324328578748938,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 230,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 260,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.0064608452433390084,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.2675346431277938,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08190127059912677,
+                "training_constant_reward_mse": 1.450469686362897,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.004562727152574553,
+                    "last_logged_reward_mse": 2.276341819352813,
+                    "reward_mse": 1.7941717129901598,
+                    "shifted_repeat_mse": 0.0018062980187778521,
+                    "terminal_bce": 0.02096050090779271,
+                    "training_constant_reward_mse": 1.654926633373885,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 228,
+                  "first_target_decision": 228,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 259,
+                  "metrics": {
+                    "image_mse": 0.008358963334103464,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.7408975732654279,
+                    "shifted_repeat_mse": 0.0076275793926470215,
+                    "terminal_bce": 0.14284204029046085,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 228,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 335,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.006076901961478143,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.166805712881684,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08196039821913659,
+                "training_constant_reward_mse": 1.384125139867212,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.006855607960460475,
+                    "last_logged_reward_mse": 1.528192092551364,
+                    "reward_mse": 1.2757519110127118,
+                    "shifted_repeat_mse": 0.0017475989989179652,
+                    "terminal_bce": 0.02270396837799065,
+                    "training_constant_reward_mse": 1.522237540382515,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 303,
+                  "first_target_decision": 303,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 334,
+                  "metrics": {
+                    "image_mse": 0.005298195962495811,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 1.057859514750656,
+                    "shifted_repeat_mse": 0.0028970152036436048,
+                    "terminal_bce": 0.14121682806028252,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 303,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 321,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.00382703180093813,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 1.2199450814574084,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08260224224230509,
+                "training_constant_reward_mse": 1.3365089118767441,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.004291509465474519,
+                    "last_logged_reward_mse": 1.5752992359774631,
+                    "reward_mse": 1.272971324713428,
+                    "shifted_repeat_mse": 0.00190109390860016,
+                    "terminal_bce": 0.020677347192906648,
+                    "training_constant_reward_mse": 1.4270050844015794,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 289,
+                  "first_target_decision": 289,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 320,
+                  "metrics": {
+                    "image_mse": 0.003362554136401741,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 1.1669188382013886,
+                    "shifted_repeat_mse": 0.0013982773725729203,
+                    "terminal_bce": 0.14452713729170352,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 289,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 0,
+          "model_arm": "teacher",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.005162197434742666,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.2475776476000684,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08147511217407984,
+                "training_constant_reward_mse": 1.5955566581161298,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.0064608452433390084,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 1.2675346431277938,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.08190127059912677,
+                "training_constant_reward_mse": 1.450469686362897,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.00382703180093813,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 1.2199450814574084,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08260224224230509,
+                "training_constant_reward_mse": 1.3365089118767441,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.006076901961478143,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.166805712881684,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08196039821913659,
+                "training_constant_reward_mse": 1.384125139867212,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": 0.7162494013638614,
+            "terminal_prevalence": 0.0015698587127158557,
+            "training_decisions": 2548,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.008742216571363315,
+              "last_logged_reward_mse": 1.107570453688128,
+              "reward_mse": 1.0904353310253356,
+              "shifted_repeat_mse": 0.0026553440738013023,
+              "terminal_bce": 0.08300807194198169,
+              "training_constant_reward_mse": 1.4416650990557458,
+              "training_prevalence_bce": 0.10243356978423063
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "da92456cc27ac2a910d04f7ebc67cd7cd6b6f5b3af7f7bbbe7f6e154700a297f",
+          "episodes": [
+            {
+              "decisions": 262,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.008008772727407631,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.404323629818761,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08410757107275149,
+                "training_constant_reward_mse": 1.5955566581161298,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.005955181044555502,
+                    "last_logged_reward_mse": 3.4807304816233833,
+                    "reward_mse": 1.721566548725958,
+                    "shifted_repeat_mse": 0.002264392284814676,
+                    "terminal_bce": 0.021486408309903338,
+                    "training_constant_reward_mse": 1.9451005768803504,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 230,
+                  "first_target_decision": 230,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 261,
+                  "metrics": {
+                    "image_mse": 0.010062364410259761,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 1.0870807109115637,
+                    "shifted_repeat_mse": 0.001600497410436219,
+                    "terminal_bce": 0.14672873383559965,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 230,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 260,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.009967019579107728,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 0.9981181525514458,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.07855084357116372,
+                "training_constant_reward_mse": 1.450469686362897,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.00695215959331108,
+                    "last_logged_reward_mse": 2.276341819352813,
+                    "reward_mse": 1.3511636620339722,
+                    "shifted_repeat_mse": 0.0018062980187778521,
+                    "terminal_bce": 0.02452111754747447,
+                    "training_constant_reward_mse": 1.654926633373885,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 228,
+                  "first_target_decision": 228,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 259,
+                  "metrics": {
+                    "image_mse": 0.012981879564904375,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6450726430689194,
+                    "shifted_repeat_mse": 0.0076275793926470215,
+                    "terminal_bce": 0.13258056959485298,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 228,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 335,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.00959003416073756,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.0641453094226476,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08417154592910339,
+                "training_constant_reward_mse": 1.384125139867212,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.009821201292652404,
+                    "last_logged_reward_mse": 1.528192092551364,
+                    "reward_mse": 1.2811340881978905,
+                    "shifted_repeat_mse": 0.0017475989989179652,
+                    "terminal_bce": 0.025405040099615916,
+                    "training_constant_reward_mse": 1.522237540382515,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 303,
+                  "first_target_decision": 303,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 334,
+                  "metrics": {
+                    "image_mse": 0.009358867028822715,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.8471565306474048,
+                    "shifted_repeat_mse": 0.0028970152036436048,
+                    "terminal_bce": 0.14293805175859087,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 303,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 321,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.007403039818200341,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.8951542323084887,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08520232719490814,
+                "training_constant_reward_mse": 1.3365089118767441,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.008763404290220933,
+                    "last_logged_reward_mse": 1.5752992359774631,
+                    "reward_mse": 1.0776264248945133,
+                    "shifted_repeat_mse": 0.00190109390860016,
+                    "terminal_bce": 0.024429010625408927,
+                    "training_constant_reward_mse": 1.4270050844015794,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 289,
+                  "first_target_decision": 289,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 320,
+                  "metrics": {
+                    "image_mse": 0.006042675346179749,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.712682039722464,
+                    "shifted_repeat_mse": 0.0013982773725729203,
+                    "terminal_bce": 0.14597564376440736,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 289,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 1,
+          "model_arm": "teacher",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.008008772727407631,
+                "last_logged_reward_mse": 1.7403652408116916,
+                "reward_mse": 1.404323629818761,
+                "shifted_repeat_mse": 0.0019324448476254474,
+                "terminal_bce": 0.08410757107275149,
+                "training_constant_reward_mse": 1.5955566581161298,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.009967019579107728,
+                "last_logged_reward_mse": 1.1381709096764066,
+                "reward_mse": 0.9981181525514458,
+                "shifted_repeat_mse": 0.004716938705712437,
+                "terminal_bce": 0.07855084357116372,
+                "training_constant_reward_mse": 1.450469686362897,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.007403039818200341,
+                "last_logged_reward_mse": 0.7876496179887316,
+                "reward_mse": 0.8951542323084887,
+                "shifted_repeat_mse": 0.00164968564058654,
+                "terminal_bce": 0.08520232719490814,
+                "training_constant_reward_mse": 1.3365089118767441,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.00959003416073756,
+                "last_logged_reward_mse": 0.764096046275682,
+                "reward_mse": 1.0641453094226476,
+                "shifted_repeat_mse": 0.002322307101280785,
+                "terminal_bce": 0.08417154592910339,
+                "training_constant_reward_mse": 1.384125139867212,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": 0.7162494013638614,
+            "terminal_prevalence": 0.0015698587127158557,
+            "training_decisions": 2548,
+            "training_terminal_events": 4
+          }
+        }
+      ],
+      "scored_episode_count": 4,
+      "scored_independent_geometries": 4,
+      "scored_independent_terminal_episodes": 4,
+      "source_id": "uniform-native-random-seed-7392"
+    },
+    "teacher": {
+      "collected_complete_episodes": 4,
+      "collected_terminal_episodes": 4,
+      "coverage": "descriptive_sufficient_minimum",
+      "coverage_reasons": [],
+      "development_archive_sha256": "4d3bc41b1bc8416b9a244e08b11613b339c37ace4e382d3a990bf04e743f9b4f",
+      "models": [
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.0150755839780361,
+              "last_logged_reward_mse": 4.944128304769557,
+              "reward_mse": 2.8169679925610454,
+              "shifted_repeat_mse": 0.01488432277896834,
+              "terminal_bce": 0.08065440413797614,
+              "training_constant_reward_mse": 3.1811888483520345,
+              "training_prevalence_bce": 0.09346377553112158
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "f278d1eca6045aac63d9c0a8e641925de622f49c0d8871154a5b13c6bd14224b",
+          "episodes": [
+            {
+              "decisions": 164,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.006213495143544634,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.8648274872362727,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08093524489324046,
+                "training_constant_reward_mse": 3.3512524153692125,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.012220707034430234,
+                    "last_logged_reward_mse": 10.007100134667226,
+                    "reward_mse": 5.199641584945456,
+                    "shifted_repeat_mse": 0.012084238689567428,
+                    "terminal_bce": 0.016412665194363078,
+                    "training_constant_reward_mse": 6.664844935575292,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 132,
+                  "first_target_decision": 132,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 163,
+                  "metrics": {
+                    "image_mse": 0.00020628325265903413,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.5300133895270895,
+                    "shifted_repeat_mse": 4.21464923192616e-05,
+                    "terminal_bce": 0.14545782459211784,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 132,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 790,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.02101539813884301,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.6538907775619203,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08066085490992295,
+                "training_constant_reward_mse": 2.9032607063665288,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.013308850568137132,
+                    "last_logged_reward_mse": 8.346586670960312,
+                    "reward_mse": 4.704331486346657,
+                    "shifted_repeat_mse": 0.012981355175725184,
+                    "terminal_bce": 0.016547925693683945,
+                    "training_constant_reward_mse": 5.768861517569925,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 758,
+                  "first_target_decision": 758,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 789,
+                  "metrics": {
+                    "image_mse": 0.02872194570954889,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6034500687771832,
+                    "shifted_repeat_mse": 0.02932951060938649,
+                    "terminal_bce": 0.14477378412616196,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 758,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 323,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.014662882067568717,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 2.986578938192733,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.08153067000391417,
+                "training_constant_reward_mse": 3.4764630948142416,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.016739556740503758,
+                    "last_logged_reward_mse": 10.697344726012492,
+                    "reward_mse": 5.316287065269849,
+                    "shifted_repeat_mse": 0.015989448758773506,
+                    "terminal_bce": 0.016147603584220193,
+                    "training_constant_reward_mse": 6.915266294465351,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 291,
+                  "first_target_decision": 291,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 322,
+                  "metrics": {
+                    "image_mse": 0.012586207394633675,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.656870811115617,
+                    "shifted_repeat_mse": 0.012066835388395702,
+                    "terminal_bce": 0.14691373642360817,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 291,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 623,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.01841056056218804,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.7625747672532555,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.07949084674482698,
+                "training_constant_reward_mse": 2.993779176858154,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.01885221638076473,
+                    "last_logged_reward_mse": 5.776097198584035,
+                    "reward_mse": 2.6659381581543973,
+                    "shifted_repeat_mse": 0.01814173173625022,
+                    "terminal_bce": 0.01630389905135592,
+                    "training_constant_reward_mse": 3.4485667586573876,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 591,
+                  "first_target_decision": 591,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 622,
+                  "metrics": {
+                    "image_mse": 0.017968904743611347,
+                    "last_logged_reward_mse": 4.725897707932392,
+                    "reward_mse": 2.859211376352113,
+                    "shifted_repeat_mse": 0.018439315381328925,
+                    "terminal_bce": 0.14267779443829803,
+                    "training_constant_reward_mse": 2.5389915950589197,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 591,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 0,
+          "model_arm": "random",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.006213495143544634,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.8648274872362727,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08093524489324046,
+                "training_constant_reward_mse": 3.3512524153692125,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.02101539813884301,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.6538907775619203,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08066085490992295,
+                "training_constant_reward_mse": 2.9032607063665288,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.01841056056218804,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.7625747672532555,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.07949084674482698,
+                "training_constant_reward_mse": 2.993779176858154,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.014662882067568717,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 2.986578938192733,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.08153067000391417,
+                "training_constant_reward_mse": 3.4764630948142416,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": -0.2059384302605531,
+            "terminal_prevalence": 0.0030627871362940277,
+            "training_decisions": 1306,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.015572085354136789,
+              "last_logged_reward_mse": 4.944128304769557,
+              "reward_mse": 3.101989743768134,
+              "shifted_repeat_mse": 0.01488432277896834,
+              "terminal_bce": 0.080530693504591,
+              "training_constant_reward_mse": 3.1811888483520345,
+              "training_prevalence_bce": 0.09346377553112158
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "53ac63f11d7c90d598eaa0ec787b048a618d970f175c328483da82caf09b4ea0",
+          "episodes": [
+            {
+              "decisions": 164,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.006437558664742937,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 3.5277839464794196,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08055872048044793,
+                "training_constant_reward_mse": 3.3512524153692125,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.012274748962227022,
+                    "last_logged_reward_mse": 10.007100134667226,
+                    "reward_mse": 6.209485820711116,
+                    "shifted_repeat_mse": 0.012084238689567428,
+                    "terminal_bce": 0.02242555422876809,
+                    "training_constant_reward_mse": 6.664844935575292,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 132,
+                  "first_target_decision": 132,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 163,
+                  "metrics": {
+                    "image_mse": 0.0006003683672588522,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.8460820722477237,
+                    "shifted_repeat_mse": 4.21464923192616e-05,
+                    "terminal_bce": 0.13869188673212776,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 132,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 790,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.02213454945012927,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.931192167040516,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08252773000320959,
+                "training_constant_reward_mse": 2.9032607063665288,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.013086978055071086,
+                    "last_logged_reward_mse": 8.346586670960312,
+                    "reward_mse": 5.217737161832317,
+                    "shifted_repeat_mse": 0.012981355175725184,
+                    "terminal_bce": 0.023137734444864427,
+                    "training_constant_reward_mse": 5.768861517569925,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 758,
+                  "first_target_decision": 758,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 789,
+                  "metrics": {
+                    "image_mse": 0.031182120845187455,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.6446471722487148,
+                    "shifted_repeat_mse": 0.02932951060938649,
+                    "terminal_bce": 0.14191772556155477,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 758,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 323,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.01509114637337916,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.2813790696810083,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07827456294847981,
+                "training_constant_reward_mse": 3.4764630948142416,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.016889991878997535,
+                    "last_logged_reward_mse": 10.697344726012492,
+                    "reward_mse": 5.752635189490395,
+                    "shifted_repeat_mse": 0.015989448758773506,
+                    "terminal_bce": 0.022677443525387364,
+                    "training_constant_reward_mse": 6.915266294465351,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 291,
+                  "first_target_decision": 291,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 322,
+                  "metrics": {
+                    "image_mse": 0.013292300867760787,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.8101229498716223,
+                    "shifted_repeat_mse": 0.012066835388395702,
+                    "terminal_bce": 0.13387168237157226,
+                    "training_constant_reward_mse": 0.037659895163132416,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 291,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 623,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.018625086928295786,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.6676037918715916,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.08076176058622667,
+                "training_constant_reward_mse": 2.993779176858154,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.01927007967606187,
+                    "last_logged_reward_mse": 5.776097198584035,
+                    "reward_mse": 3.525073566113991,
+                    "shifted_repeat_mse": 0.01814173173625022,
+                    "terminal_bce": 0.02318679249209809,
+                    "training_constant_reward_mse": 3.4485667586573876,
+                    "training_prevalence_bce": 0.0030674870678618345
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 591,
+                  "first_target_decision": 591,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 622,
+                  "metrics": {
+                    "image_mse": 0.017980094180529704,
+                    "last_logged_reward_mse": 4.725897707932392,
+                    "reward_mse": 1.8101340176291922,
+                    "shifted_repeat_mse": 0.018439315381328925,
+                    "terminal_bce": 0.13833672868035524,
+                    "training_constant_reward_mse": 2.5389915950589197,
+                    "training_prevalence_bce": 0.18386006399438132
+                  },
+                  "reset_origin_prefix_decisions": 591,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 1,
+          "model_arm": "random",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.006437558664742937,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 3.5277839464794196,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08055872048044793,
+                "training_constant_reward_mse": 3.3512524153692125,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.02213454945012927,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.931192167040516,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08252773000320959,
+                "training_constant_reward_mse": 2.9032607063665288,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.018625086928295786,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.6676037918715916,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.08076176058622667,
+                "training_constant_reward_mse": 2.993779176858154,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.01509114637337916,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.2813790696810083,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07827456294847981,
+                "training_constant_reward_mse": 3.4764630948142416,
+                "training_prevalence_bce": 0.09346377553112158
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": -0.2059384302605531,
+            "terminal_prevalence": 0.0030627871362940277,
+            "training_decisions": 1306,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.01806999066226922,
+              "last_logged_reward_mse": 4.944128304769557,
+              "reward_mse": 2.9855581190509897,
+              "shifted_repeat_mse": 0.01488432277896834,
+              "terminal_bce": 0.08014482656353138,
+              "training_constant_reward_mse": 2.5093904461570276,
+              "training_prevalence_bce": 0.10243356978423063
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "669663a7a251d1db78c0ea42450e48251ef951678e57545ca0dd453a75cfbf09",
+          "episodes": [
+            {
+              "decisions": 164,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.00975969220769457,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.936927340022331,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08171602321709334,
+                "training_constant_reward_mse": 2.7315743940998454,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.013788443837256636,
+                    "last_logged_reward_mse": 10.007100134667226,
+                    "reward_mse": 4.7760010423909085,
+                    "shifted_repeat_mse": 0.012084238689567428,
+                    "terminal_bce": 0.018768907404945655,
+                    "training_constant_reward_mse": 4.217136048847782,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 132,
+                  "first_target_decision": 132,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 163,
+                  "metrics": {
+                    "image_mse": 0.005730940578132504,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 1.0978536376537535,
+                    "shifted_repeat_mse": 4.21464923192616e-05,
+                    "terminal_bce": 0.14466313902924102,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 132,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 790,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.02394966709834989,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 3.137745547073371,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08048750661632269,
+                "training_constant_reward_mse": 2.4046021057475064,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.0174721501825843,
+                    "last_logged_reward_mse": 8.346586670960312,
+                    "reward_mse": 5.456441293104835,
+                    "shifted_repeat_mse": 0.012981355175725184,
+                    "terminal_bce": 0.018473068005730765,
+                    "training_constant_reward_mse": 3.5631914721431035,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 758,
+                  "first_target_decision": 758,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 789,
+                  "metrics": {
+                    "image_mse": 0.030427184014115483,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.819049801041906,
+                    "shifted_repeat_mse": 0.02932951060938649,
+                    "terminal_bce": 0.14250194522691462,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 758,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 323,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.017990126369113568,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.5447452849064716,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07958960594178086,
+                "training_constant_reward_mse": 2.871072383546946,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.021025362555519678,
+                    "last_logged_reward_mse": 10.697344726012492,
+                    "reward_mse": 5.834056549558995,
+                    "shifted_repeat_mse": 0.015989448758773506,
+                    "terminal_bce": 0.017987946179490188,
+                    "training_constant_reward_mse": 4.496132027741983,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 291,
+                  "first_target_decision": 291,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 322,
+                  "metrics": {
+                    "image_mse": 0.014954890182707459,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 1.2554340202539485,
+                    "shifted_repeat_mse": 0.012066835388395702,
+                    "terminal_bce": 0.14119126570407153,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 291,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 623,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.02058047697391885,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.3228143042017857,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.07878617047892865,
+                "training_constant_reward_mse": 2.030312901233813,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.021711605921154842,
+                    "last_logged_reward_mse": 5.776097198584035,
+                    "reward_mse": 2.5523376212442352,
+                    "shifted_repeat_mse": 0.01814173173625022,
+                    "terminal_bce": 0.017775495789105842,
+                    "training_constant_reward_mse": 2.1509744646002598,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 591,
+                  "first_target_decision": 591,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 622,
+                  "metrics": {
+                    "image_mse": 0.019449348026682856,
+                    "last_logged_reward_mse": 4.725897707932392,
+                    "reward_mse": 2.0932909871593366,
+                    "shifted_repeat_mse": 0.018439315381328925,
+                    "terminal_bce": 0.13979684516875146,
+                    "training_constant_reward_mse": 1.909651337867366,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 591,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 0,
+          "model_arm": "teacher",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.00975969220769457,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.936927340022331,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.08171602321709334,
+                "training_constant_reward_mse": 2.7315743940998454,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.02394966709834989,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 3.137745547073371,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.08048750661632269,
+                "training_constant_reward_mse": 2.4046021057475064,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.02058047697391885,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 2.3228143042017857,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.07878617047892865,
+                "training_constant_reward_mse": 2.030312901233813,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.017990126369113568,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.5447452849064716,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07958960594178086,
+                "training_constant_reward_mse": 2.871072383546946,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": 0.7162494013638614,
+            "terminal_prevalence": 0.0015698587127158557,
+            "training_decisions": 2548,
+            "training_terminal_events": 4
+          }
+        },
+        {
+          "aggregate": {
+            "duplicate_label_uses": 0,
+            "episode_count": 4,
+            "metrics_episode_mean": {
+              "image_mse": 0.01733071254624008,
+              "last_logged_reward_mse": 4.944128304769557,
+              "reward_mse": 2.646845345327128,
+              "shifted_repeat_mse": 0.01488432277896834,
+              "terminal_bce": 0.07909538793521935,
+              "training_constant_reward_mse": 2.5093904461570276,
+              "training_prevalence_bce": 0.10243356978423063
+            },
+            "terminal_positive_label_uses": 4,
+            "unique_scored_decisions": 256,
+            "unique_terminal_positive_labels": 4,
+            "window_count": 8,
+            "window_label_uses": 256
+          },
+          "checkpoint_sha256": "da92456cc27ac2a910d04f7ebc67cd7cd6b6f5b3af7f7bbbe7f6e154700a297f",
+          "episodes": [
+            {
+              "decisions": 164,
+              "duplicate_label_uses": 0,
+              "episode_id": "0",
+              "finished": false,
+              "geometry_seed": 3910800002,
+              "metrics": {
+                "image_mse": 0.011046107506388125,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.908400187902766,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.07780222867080619,
+                "training_constant_reward_mse": 2.7315743940998454,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.015333503804868087,
+                    "last_logged_reward_mse": 10.007100134667226,
+                    "reward_mse": 5.343425780299203,
+                    "shifted_repeat_mse": 0.012084238689567428,
+                    "terminal_bce": 0.017986836373854138,
+                    "training_constant_reward_mse": 4.217136048847782,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 132,
+                  "first_target_decision": 132,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 163,
+                  "metrics": {
+                    "image_mse": 0.0067587112079081635,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.4733745955063291,
+                    "shifted_repeat_mse": 4.21464923192616e-05,
+                    "terminal_bce": 0.13761762096775823,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 132,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 790,
+              "duplicate_label_uses": 0,
+              "episode_id": "1",
+              "finished": false,
+              "geometry_seed": 3910800009,
+              "metrics": {
+                "image_mse": 0.02389031475468073,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.588917665443231,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.07875255658558693,
+                "training_constant_reward_mse": 2.4046021057475064,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.014233387162676081,
+                    "last_logged_reward_mse": 8.346586670960312,
+                    "reward_mse": 4.2397111919522015,
+                    "shifted_repeat_mse": 0.012981355175725184,
+                    "terminal_bce": 0.01786820648118861,
+                    "training_constant_reward_mse": 3.5631914721431035,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 758,
+                  "first_target_decision": 758,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 789,
+                  "metrics": {
+                    "image_mse": 0.03354724234668538,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.9381241389342606,
+                    "shifted_repeat_mse": 0.02932951060938649,
+                    "terminal_bce": 0.13963690668998524,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 758,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 323,
+              "duplicate_label_uses": 0,
+              "episode_id": "2",
+              "finished": false,
+              "geometry_seed": 3910800057,
+              "metrics": {
+                "image_mse": 0.014936749061234877,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.167129643583751,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07886913017933955,
+                "training_constant_reward_mse": 2.871072383546946,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.016073543985839933,
+                    "last_logged_reward_mse": 10.697344726012492,
+                    "reward_mse": 5.536026850566078,
+                    "shifted_repeat_mse": 0.015989448758773506,
+                    "terminal_bce": 0.017400644625193265,
+                    "training_constant_reward_mse": 4.496132027741983,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 291,
+                  "first_target_decision": 291,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 322,
+                  "metrics": {
+                    "image_mse": 0.013799954136629822,
+                    "last_logged_reward_mse": 0.0,
+                    "reward_mse": 0.7982324366014244,
+                    "shifted_repeat_mse": 0.012066835388395702,
+                    "terminal_bce": 0.14033761573348585,
+                    "training_constant_reward_mse": 1.246012739351909,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 291,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            },
+            {
+              "decisions": 623,
+              "duplicate_label_uses": 0,
+              "episode_id": "3",
+              "finished": false,
+              "geometry_seed": 3910800044,
+              "metrics": {
+                "image_mse": 0.019449678862656583,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 1.9229338843787647,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.08095763630514474,
+                "training_constant_reward_mse": 2.030312901233813,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_event": true,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "windows": [
+                {
+                  "context_anchor_decision": 8,
+                  "first_target_decision": 8,
+                  "kind": "reset",
+                  "label_uses": 32,
+                  "last_target_decision": 39,
+                  "metrics": {
+                    "image_mse": 0.01563789242936764,
+                    "last_logged_reward_mse": 5.776097198584035,
+                    "reward_mse": 1.7197629070309088,
+                    "shifted_repeat_mse": 0.01814173173625022,
+                    "terminal_bce": 0.018101817756723735,
+                    "training_constant_reward_mse": 2.1509744646002598,
+                    "training_prevalence_bce": 0.0015710922320412136
+                  },
+                  "reset_origin_prefix_decisions": 8,
+                  "terminal_positive_label_uses": 0
+                },
+                {
+                  "context_anchor_decision": 591,
+                  "first_target_decision": 591,
+                  "kind": "terminal",
+                  "label_uses": 32,
+                  "last_target_decision": 622,
+                  "metrics": {
+                    "image_mse": 0.023261465295945527,
+                    "last_logged_reward_mse": 4.725897707932392,
+                    "reward_mse": 2.1261048617266205,
+                    "shifted_repeat_mse": 0.018439315381328925,
+                    "terminal_bce": 0.14381345485356575,
+                    "training_constant_reward_mse": 1.909651337867366,
+                    "training_prevalence_bce": 0.20329604733642004
+                  },
+                  "reset_origin_prefix_decisions": 591,
+                  "terminal_positive_label_uses": 1
+                }
+              ]
+            }
+          ],
+          "learner_seed": 1,
+          "model_arm": "teacher",
+          "roads": [
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800002,
+              "metrics_episode_mean": {
+                "image_mse": 0.011046107506388125,
+                "last_logged_reward_mse": 5.003550067333613,
+                "reward_mse": 2.908400187902766,
+                "shifted_repeat_mse": 0.006063192590943345,
+                "terminal_bce": 0.07780222867080619,
+                "training_constant_reward_mse": 2.7315743940998454,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800009,
+              "metrics_episode_mean": {
+                "image_mse": 0.02389031475468073,
+                "last_logged_reward_mse": 4.173293335480156,
+                "reward_mse": 2.588917665443231,
+                "shifted_repeat_mse": 0.021155432892555837,
+                "terminal_bce": 0.07875255658558693,
+                "training_constant_reward_mse": 2.4046021057475064,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800044,
+              "metrics_episode_mean": {
+                "image_mse": 0.019449678862656583,
+                "last_logged_reward_mse": 5.250997453258213,
+                "reward_mse": 1.9229338843787647,
+                "shifted_repeat_mse": 0.018290523558789573,
+                "terminal_bce": 0.08095763630514474,
+                "training_constant_reward_mse": 2.030312901233813,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            },
+            {
+              "duplicate_label_uses": 0,
+              "episode_count": 1,
+              "geometry_seed": 3910800057,
+              "metrics_episode_mean": {
+                "image_mse": 0.014936749061234877,
+                "last_logged_reward_mse": 5.348672363006246,
+                "reward_mse": 3.167129643583751,
+                "shifted_repeat_mse": 0.014028142073584604,
+                "terminal_bce": 0.07886913017933955,
+                "training_constant_reward_mse": 2.871072383546946,
+                "training_prevalence_bce": 0.10243356978423063
+              },
+              "terminal_positive_label_uses": 1,
+              "track_id": 1,
+              "unique_scored_decisions": 64,
+              "unique_terminal_positive_labels": 1,
+              "window_count": 2,
+              "window_label_uses": 64
+            }
+          ],
+          "training_baselines": {
+            "constant_reward": 0.7162494013638614,
+            "terminal_prevalence": 0.0015698587127158557,
+            "training_decisions": 2548,
+            "training_terminal_events": 4
+          }
+        }
+      ],
+      "scored_episode_count": 4,
+      "scored_independent_geometries": 4,
+      "scored_independent_terminal_episodes": 4,
+      "source_id": "drq-source-0"
+    }
+  },
+  "student_actor_trained": false
+}
