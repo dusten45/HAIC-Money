@@ -1,0 +1,74 @@
+{
+  "actor_critic_target_unchanged": true,
+  "actor_trained": false,
+  "archive_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/support-dataset.npz",
+  "archive_sha256": "70ee42bf8a341dcac8b5c73a44c84b7bd9972633aef0c2c6ff95610d50ba650f",
+  "arm": "random",
+  "checkpoint_path": "world-model-checkpoint.pt",
+  "checkpoint_sha256": "735ece4d5eb36d8dd902fb11aa1e44ad92ff05090f7d93d39787446221061e98",
+  "collection_decisions_spent": 1306,
+  "collection_protocol_sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386",
+  "collection_receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/collection-result.json",
+  "collection_receipt_sha256": "edbefd01f6066d548030e7c6ec5063f1aa7ab91587d8bf75a33d28fdbfbd8fb0",
+  "dataset_digest": "09079f9cd3bb5de58cf0f591df486b30331c791467cf098b20df4a6470cb28d2",
+  "dataset_evidence": {
+    "archive_sha256": "70ee42bf8a341dcac8b5c73a44c84b7bd9972633aef0c2c6ff95610d50ba650f",
+    "covered_cells": [
+      [
+        1,
+        3910800001
+      ],
+      [
+        1,
+        3910800004
+      ],
+      [
+        1,
+        3910800034
+      ],
+      [
+        1,
+        3910800085
+      ]
+    ],
+    "dataset_digest": "09079f9cd3bb5de58cf0f591df486b30331c791467cf098b20df4a6470cb28d2",
+    "decisions": 1306,
+    "distinct_finished_cells": 0,
+    "episodes": 4,
+    "finished_cells": [],
+    "source_actor_sha256": "d4e284caa45613f7cacb36ce93c4cd4c3e02a4574e9d3aa82092b1d3d8f78e6a",
+    "source_id": "uniform-native-random-seed-7391",
+    "terminal_events": 4
+  },
+  "environment_steps": 0,
+  "format": "haic-dreamerv3-reused-train-offline-result-v1",
+  "fresh_claim": false,
+  "metrics_path": "update-metrics.jsonl",
+  "metrics_sha256": "efdabb8324ced1c79a83a4cab430b9b51fd3dcde1a392597aaac03b6d5685b81",
+  "model_only_updates": 256,
+  "offline_protocol_sha256": "ba837ebc3f64282bbd77b4444c6f337c23a3ebce12602d328e9626c1c406b290",
+  "p1b_claim": false,
+  "promotion_eligible": false,
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "resource_snapshot": {
+    "archive_size_bytes": 1050724,
+    "peak_process_rss_kib": 2668728,
+    "post_cgroup": {
+      "available_bytes": 24398356480,
+      "limit_bytes": 62302191616,
+      "used_bytes": 37903835136
+    },
+    "preflight_cgroup": {
+      "available_bytes": 25867993088,
+      "limit_bytes": 62302191616,
+      "used_bytes": 36434198528
+    },
+    "replay_memory_bytes": 231545088,
+    "required_available_bytes": 8589934592
+  },
+  "seed": 0,
+  "source_actor_sha256": "d4e284caa45613f7cacb36ce93c4cd4c3e02a4574e9d3aa82092b1d3d8f78e6a",
+  "source_id": "uniform-native-random-seed-7391",
+  "status": "complete",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1"
+}

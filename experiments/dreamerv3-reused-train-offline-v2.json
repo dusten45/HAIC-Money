@@ -1,0 +1,109 @@
+{
+  "format": "haic-dreamerv3-reused-train-offline-v1",
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1",
+  "collection_protocol": {
+    "path": "experiments/dreamerv3-reused-train-diagnostic-v1.json",
+    "sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386"
+  },
+  "source_sha256": {
+    "scripts/train_dreamerv3_reused_train.py": "8aee16446eae32408765496570c2df589a0e396ac602c12714a56047b63599ac",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/dreamer_v3/offline.py": "4a2b3ae338c0d20f17dd135220bccdcdcf43df3cc5f715eeaf34de0142074826",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3"
+  },
+  "datasets": {
+    "random": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/collection-result.json",
+      "receipt_sha256": "edbefd01f6066d548030e7c6ec5063f1aa7ab91587d8bf75a33d28fdbfbd8fb0",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/support-dataset.npz",
+      "archive_sha256": "70ee42bf8a341dcac8b5c73a44c84b7bd9972633aef0c2c6ff95610d50ba650f",
+      "dataset_digest": "09079f9cd3bb5de58cf0f591df486b30331c791467cf098b20df4a6470cb28d2",
+      "source_id": "uniform-native-random-seed-7391",
+      "source_actor_sha256": "d4e284caa45613f7cacb36ce93c4cd4c3e02a4574e9d3aa82092b1d3d8f78e6a",
+      "stored_decisions": 1306,
+      "allowed_cells": [
+        {"track_id": 1, "geometry_seed": 3910800001},
+        {"track_id": 1, "geometry_seed": 3910800004},
+        {"track_id": 1, "geometry_seed": 3910800034},
+        {"track_id": 1, "geometry_seed": 3910800085}
+      ],
+      "excluded_seeds": [
+        3910800045, 3910800124, 3910800134, 3910800148,
+        3910800153, 3910800160, 3910800162, 3910800163,
+        3910800164, 3910800169, 3910800171, 3910800172,
+        3910800174, 3910800175, 3910800182, 3910800187
+      ]
+    },
+    "teacher": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/teacher/collection-result.json",
+      "receipt_sha256": "3e6c3b0d7d8256b285807ee894da501fae54b992dc95e4d91eef9e59096727a5",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/teacher/support-dataset.npz",
+      "archive_sha256": "9e9170f735bfe9771f7f46698271de2659b4acfc4190465da9ccad5fc36aad17",
+      "dataset_digest": "f06519b7e376743f56f4fa9cddeb39a8eee292bcb992dc8e6de607bdc5a7e480",
+      "source_id": "drq-source-0",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "stored_decisions": 2548,
+      "allowed_cells": [
+        {"track_id": 1, "geometry_seed": 3910800001},
+        {"track_id": 1, "geometry_seed": 3910800004},
+        {"track_id": 1, "geometry_seed": 3910800034},
+        {"track_id": 1, "geometry_seed": 3910800085}
+      ],
+      "excluded_seeds": [
+        3910800045, 3910800124, 3910800134, 3910800148,
+        3910800153, 3910800160, 3910800162, 3910800163,
+        3910800164, 3910800169, 3910800171, 3910800172,
+        3910800174, 3910800175, 3910800182, 3910800187
+      ]
+    }
+  },
+  "learner": {
+    "seeds": [0, 1],
+    "updates": 256,
+    "config": {
+      "actor_entropy_coeff": 0.0003,
+      "actor_lr": 0.00003,
+      "batch_size": 4,
+      "burnin_steps": 8,
+      "continue_positive_weight": 1.0,
+      "critic_ema_tau": 0.02,
+      "critic_lr": 0.00003,
+      "device": "cpu",
+      "embed_dim": 128,
+      "gamma": 0.99,
+      "grad_clip_norm": 100.0,
+      "hidden_dim": 128,
+      "imagination_horizon": 15,
+      "kl_dyn_weight": 1.0,
+      "kl_free_nats": 0.1,
+      "kl_rep_weight": 0.1,
+      "model_lr": 0.0001,
+      "num_categoricals": 8,
+      "num_classes": 8,
+      "observation_loss_scale": 256.0,
+      "overshoot_free_nats": 0.0,
+      "overshoot_horizon": 5,
+      "overshoot_kl_weight": 1.0,
+      "replay_capacity": 8192,
+      "replay_value_weight": 1.0,
+      "reset_start_fraction": 0.25,
+      "seed": 0,
+      "seq_len": 32,
+      "short_episode_fraction": 0.25,
+      "slow_critic_weight": 1.0,
+      "td_lambda": 0.95,
+      "terminal_window_fraction": 0.5,
+      "twohot_bins": 255,
+      "unimix": 0.01,
+      "updates_per_step": 1,
+      "warmup_steps": 0
+    }
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592
+  }
+}
