@@ -171,6 +171,11 @@ class CommandProfileTests(CommandFixture):
 
 
 class CommandLifecycleTests(CommandFixture):
+    def test_execution_plan_schema_versions_input_identity(self):
+        plan = read_execution_plan(self.plan(), config=self.config)
+        self.assertEqual(plan['schema_version'], 2)
+        self.assertIn('input_identity', plan)
+
     def test_actual_module_shared_dependency_and_source_inventory_drift_refuse_runner(self):
         mutations = (
             ('training/train_policy.py', 'changed'),
@@ -255,6 +260,46 @@ class CommandLifecycleTests(CommandFixture):
             approve_run(self.config, path, stage, source_ref='user')
         manifest = read_manifest(path, config=self.config)
         split.write_text(json.dumps({'schema_version': 1, 'train': [{'map': 'runs/old/map.json', 'seeds': [1]}]}), encoding='utf-8')
+        with self.assertRaises(CommandError):
+            execute_approved(self.config, path, manifest.plan_hash, 'train_policy', args, runner=self.runner)
+        self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_safe_split_content_mutation_after_approval_refuses_before_execution_claim(self):
+        split = self.root / 'split.json'
+        split.write_text(json.dumps({'schema_version': 1,
+                                    'train': [{'map': 'training/maps/train-map.json', 'seeds': [1]}]}), encoding='utf-8')
+        args = dict(self.args, **{'train-only-site-map-split': str(split)})
+        path = register_plan(self.config, metadata('safe-split-change'), 'train_policy', args, research=research())
+        for stage in ('design', 'implementation', 'execution'):
+            approve_run(self.config, path, stage, source_ref='user')
+        manifest = read_manifest(path, config=self.config)
+        split.write_text(json.dumps({'schema_version': 1,
+                                    'train': [{'map': 'training/maps/train-map.json', 'seeds': [2]}]}), encoding='utf-8')
+        with self.assertRaises(CommandError):
+            execute_approved(self.config, path, manifest.plan_hash, 'train_policy', args, runner=self.runner)
+        self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_referenced_map_content_mutation_after_approval_refuses_before_execution_claim(self):
+        path = self.approved()
+        manifest = read_manifest(path, config=self.config)
+        map_path = self.input.parent / 'train-map.json'
+        map_path.write_text('{"changed": true}', encoding='utf-8')
+        with self.assertRaises(CommandError):
+            execute_approved(self.config, path, manifest.plan_hash, 'train_policy', self.args, runner=self.runner)
+        self.assertFalse((path / '.execution.claim').exists())
+        self.assertEqual(self.runner.calls, [])
+
+    def test_checkpoint_content_mutation_after_approval_refuses_before_execution_claim(self):
+        checkpoint = self.root / 'training/maps/resume.pt'
+        checkpoint.write_bytes(b'checkpoint-v1')
+        args = dict(self.args, resume=str(checkpoint))
+        path = register_plan(self.config, metadata('changed-checkpoint'), 'train_policy', args, research=research())
+        for stage in ('design', 'implementation', 'execution'):
+            approve_run(self.config, path, stage, source_ref='user')
+        manifest = read_manifest(path, config=self.config)
+        checkpoint.write_bytes(b'checkpoint-v2')
         with self.assertRaises(CommandError):
             execute_approved(self.config, path, manifest.plan_hash, 'train_policy', args, runner=self.runner)
         self.assertFalse((path / '.execution.claim').exists())

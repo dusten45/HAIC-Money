@@ -69,6 +69,7 @@ _STAGES = {
 _INITIAL = (WorkflowState.STOPPED, WorkflowState.DISCOVER, WorkflowState.HYPOTHESIZE,
             WorkflowState.DESIGN_PENDING_APPROVAL)
 _OUTCOMES = frozenset({WorkflowState.ADVANCE, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT})
+_EXECUTION_PLAN_SCHEMA_VERSION = 2
 _SOURCE_POLICY = {
     "version": 1,
     "nonrecursive_python_directories": ["training", "haic_agent", "core", "core/vendor"],
@@ -91,11 +92,14 @@ def _hash(value: object) -> str:
 
 
 def _source_bytes(config: HarnessConfig, path: Path) -> str:
-    """Hash exact local source bytes through no-redirect/single-link checks."""
+    """Hash exact local file bytes through no-redirect/single-link checks."""
     checked = Path(_path(config, path, "input_file"))
     # records._open checks identity again after opening and does not follow links.
     with _open(checked, "r") as stream:
-        return hashlib.sha256(stream.buffer.read()).hexdigest()
+        digest = hashlib.sha256()
+        while chunk := stream.buffer.read(1024 * 1024):
+            digest.update(chunk)
+        return digest.hexdigest()
 
 
 def _source_identity(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> dict[str, object]:
@@ -140,6 +144,31 @@ def _source_identity(config: HarnessConfig, profile_id: str, arguments: Mapping[
     return dict(policy=_SOURCE_POLICY, directories=directories, files=hashes, package_sources=packaged,
                 interpreter={"executable": str(Path(sys.executable).resolve()), "version": sys.version,
                              "implementation": sys.implementation.name, "cache_tag": sys.implementation.cache_tag})
+
+
+def _input_identity(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> dict[str, object]:
+    """Hash explicitly named input files and map files referenced by named splits."""
+    profile = config.command_profiles[profile_id]
+    hashes = {}
+    for name, spec in profile["arguments"].items():
+        if name not in arguments or spec.get("path_role") != "input_file":
+            continue
+        value = arguments[name]
+        values = value if spec.get("repeated", False) else (value,)
+        for index, raw_path in enumerate(values):
+            checked = Path(_path(config, raw_path, "input_file"))
+            relative = checked.relative_to(config.repo_root).as_posix()
+            key = f"{name}[{index}]" if spec.get("repeated", False) else name
+            hashes[key] = {"path": relative, "sha256": _source_bytes(config, checked)}
+            if name in {"train-only-site-map-split", "site-map-split"}:
+                map_paths = _validate_split_references(
+                    config, checked, train_only=name == "train-only-site-map-split")
+                hashes[key]["maps"] = [
+                    {"path": map_path.relative_to(config.repo_root).as_posix(),
+                     "sha256": _source_bytes(config, map_path)}
+                    for map_path in map_paths
+                ]
+    return {"policy": "explicit-input-bytes-v1", "files": hashes}
 
 
 def _profile(config: HarnessConfig, profile_id: str) -> CommandProfile:
@@ -269,7 +298,7 @@ def normalize_arguments(config: HarnessConfig, profile_id: str, arguments: Mappi
     return normalized
 
 
-def _validate_split_references(config: HarnessConfig, split: Path, *, train_only: bool) -> None:
+def _validate_split_references(config: HarnessConfig, split: Path, *, train_only: bool) -> tuple[Path, ...]:
     """Inspect only a named manifest; reject forbidden map targets before opening.
 
     Full split loaders open all three groups even if their later selection picks
@@ -281,6 +310,7 @@ def _validate_split_references(config: HarnessConfig, split: Path, *, train_only
         raise CommandError(f"invalid split manifest: {exc}") from exc
     if not isinstance(payload, dict) or type(payload.get("schema_version")) is not int or payload["schema_version"] != 1:
         raise CommandError("split manifest requires schema_version 1")
+    map_paths = []
     for group in (("train",) if train_only else ("train", "tune", "held_out")):
         entries = payload.get(group)
         if not isinstance(entries, list) or not entries:
@@ -296,7 +326,8 @@ def _validate_split_references(config: HarnessConfig, split: Path, *, train_only
                 raise CommandError("split map must remain inside its manifest directory")
             # _path rejects historical roots lexically before any lstat/open.
             # Only existence/type is needed; never open the referenced map here.
-            _path(config, split.parent / parsed, "input_file")
+            map_paths.append(Path(_path(config, split.parent / parsed, "input_file")))
+    return tuple(map_paths)
 
 
 def build_argv(config: HarnessConfig, profile_id: str, arguments: Mapping[str, object]) -> list[str]:
@@ -369,9 +400,10 @@ def register_plan(config: HarnessConfig, metadata: Mapping[str, object], profile
         raise CommandError("manifest uses unregistered split identities")
     if not provisional.resource_limits or not provisional.permission_limits or not provisional.source_hashes:
         raise CommandError("manifest requires resource, permission and source hash metadata")
-    payload = dict(schema_version=1, manifest=_manifest_metadata(provisional), profile_id=profile_id,
+    payload = dict(schema_version=_EXECUTION_PLAN_SCHEMA_VERSION, manifest=_manifest_metadata(provisional), profile_id=profile_id,
                    arguments=normalized, profile=_json_value(config.command_profiles[profile_id]),
                    research=_research(research), artifact_destination=destination,
+                   input_identity=_input_identity(config, profile_id, normalized),
                    executable_identity=_source_identity(config, profile_id, normalized))
     digest = _hash(payload)
     manifest = _typed(RunManifest, dict(data, plan_hash=digest, approval_hash=""))
@@ -385,24 +417,26 @@ def register_plan(config: HarnessConfig, metadata: Mapping[str, object], profile
 
 def _validated_plan(config: HarnessConfig, run: RunTransaction) -> dict[str, object]:
     plan = run.plan
-    if not isinstance(plan, dict) or set(plan) != {"schema_version", "manifest", "profile_id", "arguments", "profile", "research", "artifact_destination", "executable_identity", "plan_hash"}:
+    if not isinstance(plan, dict) or set(plan) != {"schema_version", "manifest", "profile_id", "arguments", "profile", "research", "artifact_destination", "input_identity", "executable_identity", "plan_hash"}:
         raise CommandError("persisted execution plan is missing or malformed")
     digest = _hash({name: value for name, value in plan.items() if name != "plan_hash"})
     if digest != plan["plan_hash"] or digest != run.manifest.plan_hash:
         raise CommandError("persisted execution plan hash mismatch")
     if plan["manifest"] != _manifest_metadata(run.manifest):
         raise CommandError("manifest/source revisions differ from immutable plan")
-    if plan["schema_version"] != 1 or type(plan["schema_version"]) is not int:
+    if plan["schema_version"] != _EXECUTION_PLAN_SCHEMA_VERSION or type(plan["schema_version"]) is not int:
         raise CommandError("unknown execution plan schema")
     profile_id = plan["profile_id"]
     _profile(config, profile_id)
     if plan["profile"] != _json_value(config.command_profiles[profile_id]):
         raise CommandError("current command profile fingerprint differs from approved plan")
     normalized = normalize_arguments(config, profile_id, plan["arguments"], run_id=run.manifest.run_id)
-    if plan["executable_identity"] != _source_identity(config, profile_id, normalized):
-        raise CommandError("actual executable source/interpreter changed; a new run, plan and approvals are required")
     if normalized != plan["arguments"] or plan["artifact_destination"] != str(config.artifact_root / run.manifest.run_id):
         raise CommandError("persisted arguments/output destination are not canonical")
+    if plan["input_identity"] != _input_identity(config, profile_id, normalized):
+        raise CommandError("planned input file bytes changed; a new run, plan and approvals are required")
+    if plan["executable_identity"] != _source_identity(config, profile_id, normalized):
+        raise CommandError("actual executable source/interpreter changed; a new run, plan and approvals are required")
     if _research(plan["research"]) != plan["research"]:
         raise CommandError("persisted hypothesis metadata is not canonical")
     return plan
