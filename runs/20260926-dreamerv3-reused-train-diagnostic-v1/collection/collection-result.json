@@ -1,0 +1,342 @@
+{
+  "allowed_cells": [
+    {
+      "geometry_seed": 3910800001,
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 3910800004,
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 3910800034,
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 3910800085,
+      "track_id": 1
+    }
+  ],
+  "arms": {
+    "random": {
+      "allowed_cells": [
+        {
+          "geometry_seed": 3910800001,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800004,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800034,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800085,
+          "track_id": 1
+        }
+      ],
+      "archive_sha256": "70ee42bf8a341dcac8b5c73a44c84b7bd9972633aef0c2c6ff95610d50ba650f",
+      "arm": "random",
+      "complete_episode_count": 4,
+      "dataset_digest": "09079f9cd3bb5de58cf0f591df486b30331c791467cf098b20df4a6470cb28d2",
+      "dataset_path": "support-dataset.npz",
+      "decision_calls": 1306,
+      "decision_cap": 8000,
+      "decisions_spent": 1306,
+      "distinct_finished_geometries": [],
+      "episode_rows": [
+        {
+          "attempt": 0,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.0,
+          "decision_calls": 305,
+          "decisions": 305,
+          "episode_id": 0,
+          "finished": false,
+          "geometry_seed": 3910800001,
+          "progress": 0.07,
+          "raw_reward_sum": -58.666666666667105,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        },
+        {
+          "attempt": 1,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.0,
+          "decision_calls": 382,
+          "decisions": 382,
+          "episode_id": 1,
+          "finished": false,
+          "geometry_seed": 3910800004,
+          "progress": 0.0851063829787234,
+          "raw_reward_sum": -73.77264437690027,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        },
+        {
+          "attempt": 2,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.0,
+          "decision_calls": 304,
+          "decisions": 304,
+          "episode_id": 2,
+          "finished": false,
+          "geometry_seed": 3910800034,
+          "progress": 0.06578947368421052,
+          "raw_reward_sum": -62.38947368421117,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        },
+        {
+          "attempt": 3,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.0,
+          "decision_calls": 315,
+          "decisions": 315,
+          "episode_id": 3,
+          "finished": false,
+          "geometry_seed": 3910800085,
+          "progress": 0.05763688760806916,
+          "raw_reward_sum": -74.12680115273821,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        }
+      ],
+      "excluded_seeds": [
+        3910800045,
+        3910800124,
+        3910800134,
+        3910800148,
+        3910800153,
+        3910800160,
+        3910800162,
+        3910800163,
+        3910800164,
+        3910800169,
+        3910800171,
+        3910800172,
+        3910800174,
+        3910800175,
+        3910800182,
+        3910800187
+      ],
+      "format": "haic-dreamerv3-reused-train-collection-result-v1",
+      "freshness_claim": "reused r6 TRAIN cells; not fresh P1/P1b, evaluation, or promotion",
+      "partial_decisions": 0,
+      "protocol_sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386",
+      "purpose": "reused-TRAIN-engineering-diagnostic",
+      "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+      "random_rng_seed": 7391,
+      "schedule_attempts": 4,
+      "schedule_exhausted": true,
+      "source_actor_sha256": "d4e284caa45613f7cacb36ce93c4cd4c3e02a4574e9d3aa82092b1d3d8f78e6a",
+      "source_checkpoint_sha256": null,
+      "source_id": "uniform-native-random-seed-7391",
+      "source_pair_audit": null,
+      "status": "completed",
+      "stored_decisions": 1306,
+      "study_id": "dreamerv3-reused-train-diagnostic-v1",
+      "unresolved_decision_calls": 0
+    },
+    "teacher": {
+      "allowed_cells": [
+        {
+          "geometry_seed": 3910800001,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800004,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800034,
+          "track_id": 1
+        },
+        {
+          "geometry_seed": 3910800085,
+          "track_id": 1
+        }
+      ],
+      "archive_sha256": "9e9170f735bfe9771f7f46698271de2659b4acfc4190465da9ccad5fc36aad17",
+      "arm": "teacher",
+      "complete_episode_count": 4,
+      "dataset_digest": "f06519b7e376743f56f4fa9cddeb39a8eee292bcb992dc8e6de607bdc5a7e480",
+      "dataset_path": "support-dataset.npz",
+      "decision_calls": 2548,
+      "decision_cap": 8000,
+      "decisions_spent": 2548,
+      "distinct_finished_geometries": [
+        3910800001
+      ],
+      "episode_rows": [
+        {
+          "attempt": 0,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.0,
+          "decision_calls": 563,
+          "decisions": 563,
+          "episode_id": 0,
+          "finished": true,
+          "geometry_seed": 3910800001,
+          "progress": 1.0,
+          "raw_reward_sum": 768.4333333333063,
+          "retire_reason": null,
+          "status": "complete",
+          "terminal": true,
+          "terminated": false,
+          "track_id": 1,
+          "truncated": true
+        },
+        {
+          "attempt": 1,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.4,
+          "decision_calls": 740,
+          "decisions": 740,
+          "episode_id": 1,
+          "finished": false,
+          "geometry_seed": 3910800004,
+          "progress": 0.7173252279635258,
+          "raw_reward_sum": 415.2462006078639,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        },
+        {
+          "attempt": 2,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.8,
+          "decision_calls": 373,
+          "decisions": 373,
+          "episode_id": 2,
+          "finished": false,
+          "geometry_seed": 3910800034,
+          "progress": 0.20065789473684212,
+          "raw_reward_sum": 44.87894736842662,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        },
+        {
+          "attempt": 3,
+          "collector_episode_id": 0,
+          "complete": true,
+          "damage": 0.4,
+          "decision_calls": 872,
+          "decisions": 872,
+          "episode_id": 3,
+          "finished": false,
+          "geometry_seed": 3910800085,
+          "progress": 0.9510086455331412,
+          "raw_reward_sum": 596.4449567722812,
+          "retire_reason": "off_track",
+          "status": "complete",
+          "terminal": true,
+          "terminated": true,
+          "track_id": 1,
+          "truncated": false
+        }
+      ],
+      "excluded_seeds": [
+        3910800045,
+        3910800124,
+        3910800134,
+        3910800148,
+        3910800153,
+        3910800160,
+        3910800162,
+        3910800163,
+        3910800164,
+        3910800169,
+        3910800171,
+        3910800172,
+        3910800174,
+        3910800175,
+        3910800182,
+        3910800187
+      ],
+      "format": "haic-dreamerv3-reused-train-collection-result-v1",
+      "freshness_claim": "reused r6 TRAIN cells; not fresh P1/P1b, evaluation, or promotion",
+      "partial_decisions": 0,
+      "protocol_sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386",
+      "purpose": "reused-TRAIN-engineering-diagnostic",
+      "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+      "random_rng_seed": null,
+      "schedule_attempts": 4,
+      "schedule_exhausted": true,
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "source_id": "drq-source-0",
+      "source_pair_audit": {
+        "action_fingerprint": "51cf16d2850eeca7031eb0c155bf04239b9207085d9a139e5de8c2d718bfecf4",
+        "actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+        "actor_weights_sha256": "81a8c0785e7f586481af40ae628714aec858c1c0a89db27c79e709311997ba93",
+        "checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+        "checkpoint_source_hash_count": 17,
+        "cpu_smoke_observations": 3,
+        "learner_seed": 0,
+        "observation_fingerprint": "e51233d7c43372af7c560d529b0cbb84dad5b7a9e0e6637514cf010ea8adee39",
+        "source_revision": "3ea51d6"
+      },
+      "status": "completed",
+      "stored_decisions": 2548,
+      "study_id": "dreamerv3-reused-train-diagnostic-v1",
+      "unresolved_decision_calls": 0
+    }
+  },
+  "excluded_seeds": [
+    3910800045,
+    3910800124,
+    3910800134,
+    3910800148,
+    3910800153,
+    3910800160,
+    3910800162,
+    3910800163,
+    3910800164,
+    3910800169,
+    3910800171,
+    3910800172,
+    3910800174,
+    3910800175,
+    3910800182,
+    3910800187
+  ],
+  "format": "haic-dreamerv3-reused-train-result-v1",
+  "freshness_claim": "reused r6 TRAIN cells; not fresh P1/P1b, evaluation, or promotion",
+  "protocol_sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386",
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1"
+}

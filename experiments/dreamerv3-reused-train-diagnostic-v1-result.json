@@ -1,0 +1,104 @@
+{
+  "format": "haic-dreamerv3-reused-train-engineering-result-v1",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1",
+  "status": "non_promoting_engineering_loop_complete",
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "freshness_claim": false,
+  "p1_or_p1b_claim": false,
+  "promotion_eligible": false,
+  "collection_protocol": {
+    "path": "experiments/dreamerv3-reused-train-diagnostic-v1.json",
+    "sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386"
+  },
+  "offline_protocol": {
+    "path": "experiments/dreamerv3-reused-train-offline-v1.json",
+    "sha256": "2cb3883109ef43a001d741cdc5055c6448a8a312094f687d907454d7bf6296ba"
+  },
+  "collection_summary": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/collection-result.json",
+    "sha256": "dcbf143ef9659497e23feb3ab1bf0ae67bd3df8c543275f5caa1594a0911d4fb"
+  },
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800001},
+    {"track_id": 1, "geometry_seed": 3910800004},
+    {"track_id": 1, "geometry_seed": 3910800034},
+    {"track_id": 1, "geometry_seed": 3910800085}
+  ],
+  "decision_cap_per_arm": 8000,
+  "model_only_updates_per_arm_and_seed": 64,
+  "learner_seeds": [0, 1],
+  "arms": {
+    "random": {
+      "source_id": "uniform-native-random-seed-7391",
+      "collection_receipt": {
+        "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/collection-result.json",
+        "sha256": "edbefd01f6066d548030e7c6ec5063f1aa7ab91587d8bf75a33d28fdbfbd8fb0"
+      },
+      "archive_sha256": "70ee42bf8a341dcac8b5c73a44c84b7bd9972633aef0c2c6ff95610d50ba650f",
+      "spent_and_stored_decisions": 1306,
+      "completed_episodes": 4,
+      "distinct_finished_geometries": 0,
+      "terminal_events": 4,
+      "learners": [
+        {
+          "seed": 0,
+          "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/random-seed-0/training-result.json",
+          "result_sha256": "5495b244ebe71e03e843c01d6af99a9f7a2ee532b51ed7862ec8b540061cbd00",
+          "checkpoint_sha256": "f278d1eca6045aac63d9c0a8e641925de622f49c0d8871154a5b13c6bd14224b",
+          "metrics_sha256": "aad33893fd1dcef6bd5de16d861c16fe6ab0afb937bab909686803dc7a76d73a",
+          "train_loss_wm_first8_mean": 6.510818004608154,
+          "train_loss_wm_last8_mean": 3.322963833808899
+        },
+        {
+          "seed": 1,
+          "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/random-seed-1/training-result.json",
+          "result_sha256": "fba6ad7f937f91086b6b116c1b759269fcd387a01e0bf7f407049e2481ae1bd6",
+          "checkpoint_sha256": "53ac63f11d7c90d598eaa0ec787b048a618d970f175c328483da82caf09b4ea0",
+          "metrics_sha256": "0466f6c7608cdb59764f19aff7a39ae27f61fab5dabdcbf84e6817f804dec326",
+          "train_loss_wm_first8_mean": 6.501332104206085,
+          "train_loss_wm_last8_mean": 3.7828420102596283
+        }
+      ]
+    },
+    "teacher": {
+      "source_id": "drq-source-0",
+      "collection_receipt": {
+        "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/teacher/collection-result.json",
+        "sha256": "3e6c3b0d7d8256b285807ee894da501fae54b992dc95e4d91eef9e59096727a5"
+      },
+      "archive_sha256": "9e9170f735bfe9771f7f46698271de2659b4acfc4190465da9ccad5fc36aad17",
+      "spent_and_stored_decisions": 2548,
+      "completed_episodes": 4,
+      "distinct_finished_geometries": 1,
+      "terminal_events": 4,
+      "learners": [
+        {
+          "seed": 0,
+          "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/teacher-seed-0/training-result.json",
+          "result_sha256": "ebb5ba69f0740242424c2f33fdffd1e9a62fb559c6a7b7893b8e86455f1deff5",
+          "checkpoint_sha256": "669663a7a251d1db78c0ea42450e48251ef951678e57545ca0dd453a75cfbf09",
+          "metrics_sha256": "2fa170da7c77c5738b522c0014653fb3d5c2c2839dc1a1e9d7cd7d665b276464",
+          "train_loss_wm_first8_mean": 6.935879647731781,
+          "train_loss_wm_last8_mean": 3.6794888079166412
+        },
+        {
+          "seed": 1,
+          "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/teacher-seed-1/training-result.json",
+          "result_sha256": "4188d3aac8919800f39869a618e867ff83d155cc931703d81c2ef46c3975d536",
+          "checkpoint_sha256": "da92456cc27ac2a910d04f7ebc67cd7cd6b6f5b3af7f7bbbe7f6e154700a297f",
+          "metrics_sha256": "e323fc51919452ca190ab54b8ff52d4fafd9be3995aeeb7377d66bbd33630fb3",
+          "train_loss_wm_first8_mean": 6.928941130638123,
+          "train_loss_wm_last8_mean": 3.925635516643524
+        }
+      ]
+    }
+  },
+  "validated_contract": "Each learner recorded 64 finite model-only updates, zero environment steps, unchanged actor/critic/target parameters and no exported actor.",
+  "limits": [
+    "Road IDs were previously allocated to DrQ r6 TRAIN; this is neither fresh nor a holdout.",
+    "Only four episodes per arm and one teacher-finished geometry were collected.",
+    "Per-arm within-training loss decreases do not compare generalization across different source distributions or decision counts.",
+    "No training-excluded prediction or student driving was evaluated in this first loop.",
+    "The new fresh P1 seed audit and P1b paired offline comparison remain blocked."
+  ]
+}
