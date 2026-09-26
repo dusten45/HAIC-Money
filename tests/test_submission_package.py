@@ -5,18 +5,22 @@ import json
 import sys
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 import torch
 
 from action_smoothing import canonical_action_smoothing, normalize_action_smoothing
 from agent import Baseline1Actor, MODEL_FILENAME
 from export_policy import export_payload
+from haic.algorithms.rlpd.agent import PixelRLPDAgent
 from package_submission import (
+    RLPD_ACTOR_FORMAT,
     build_submission,
     create_submission_record,
     resolve_python_executable,
     smoke_submission,
     validate_agent_source,
+    validate_submission_archive,
 )
 
 
@@ -109,6 +113,61 @@ class TestSubmissionPackage(unittest.TestCase):
                 self.assertEqual(package.read("model.pt"), actor.read_bytes())
                 self.assertNotIn("dreamer_v3.py", package.namelist())
                 self.assertNotIn("common_adapter.py", package.namelist())
+
+    def test_rlpd_actor_package_is_root_only_smokes_tag_and_records_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            actor = PixelRLPDAgent(seed=23)
+            actor_path = actor.export_actor(
+                path / "actor.pt",
+                source_sha256="a" * 64,
+                protocol_sha256="b" * 64,
+                training_seed=23,
+                environment_contract={
+                    "observation_fingerprint": actor.observation_spec.fingerprint,
+                    "action_fingerprint": actor.action_adapter.spec.fingerprint,
+                },
+            )
+            payload = torch.load(actor_path, map_location="cpu", weights_only=True)
+
+            self.assertEqual(payload["format"], RLPD_ACTOR_FORMAT)
+            self.assertEqual(
+                set(payload),
+                {
+                    "format", "config", "observation_spec", "action_spec",
+                    "actor_state_dict", "training_seed", "environment_steps",
+                    "gradient_steps", "source_sha256", "protocol_sha256",
+                    "environment_contract",
+                },
+            )
+            self.assertEqual(set(payload["actor_state_dict"]), set(actor.actor.state_dict()))
+            self.assertTrue(
+                all(value.device.type == "cpu" for value in payload["actor_state_dict"].values())
+            )
+
+            record, manifest = create_submission_record(
+                ROOT / "agent.py",
+                actor_path,
+                None,
+                path / "records",
+                "rlpd actor",
+                smoke_test=True,
+                python_executable=sys.executable,
+            )
+            archive_path = record / "submission.zip"
+            self.assertEqual(validate_agent_source(ROOT / "agent.py"), MODEL_FILENAME)
+            validate_submission_archive(archive_path, MODEL_FILENAME, expected_modules=())
+            with zipfile.ZipFile(archive_path) as archive:
+                self.assertEqual(archive.namelist(), ["agent.py", "model.pt"])
+                self.assertEqual(archive.read("model.pt"), actor_path.read_bytes())
+
+            self.assertEqual(manifest["dependencies"], [])
+            self.assertEqual(manifest["model"]["format"], RLPD_ACTOR_FORMAT)
+            self.assertEqual(manifest["smoke_test"]["actor_format"], RLPD_ACTOR_FORMAT)
+
+            with patch("package_submission.MAX_ARCHIVE_BYTES", archive_path.stat().st_size - 1):
+                with self.assertRaisesRegex(ValueError, "exceeds 500 MiB"):
+                    validate_submission_archive(archive_path, MODEL_FILENAME, expected_modules=())
 
     def test_rejects_banned_submission_import(self):
         with tempfile.TemporaryDirectory() as directory:

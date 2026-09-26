@@ -23,6 +23,7 @@ from agent import (
     Baseline1Actor,
     DRQ_ACTOR_FORMAT,
     DREAMERV3_ACTOR_FORMAT,
+    RLPD_ACTOR_FORMAT,
     DreamerV3Encoder,
     DreamerV3RSSM,
     DreamerV3Actor,
@@ -32,6 +33,7 @@ from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
 from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
 from drq_v2 import DrQActor as NativeDrQActor, DrQv2Config
+from haic.algorithms.rlpd.model import PixelActor as NativeRLPDActor
 
 
 class TestSubmissionPolicy(unittest.TestCase):
@@ -60,6 +62,16 @@ class TestSubmissionPolicy(unittest.TestCase):
             "observation_spec": asdict(ObservationSpec()),
             "action_spec": asdict(ActionSpec()),
             "state_dict": model.state_dict(),
+        }
+
+    def rlpd_payload(self):
+        actor = NativeRLPDActor()
+        return actor, {
+            "format": RLPD_ACTOR_FORMAT,
+            "config": {"latent_dim": 50},
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+            "actor_state_dict": actor.state_dict(),
         }
 
     def test_predict_action_has_submission_bounds(self):
@@ -254,6 +266,168 @@ assert first.shape == (3,) and np.isfinite(first).all()
             path = Path(directory)
             for filename in ("agent.py", "action_smoothing.py", "action_representation.py"):
                 shutil.copy2(root / filename, path / filename)
+            torch.save(payload, path / "model.pt")
+            environment = dict(os.environ, CUDA_VISIBLE_DEVICES="", PYTHONDONTWRITEBYTECODE="1")
+            environment.pop("PYTHONPATH", None)
+            result = subprocess.run(
+                [sys.executable, "-B", "-c", code], cwd=path,
+                env=environment, capture_output=True, text=True, timeout=15,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_rlpd_export_matches_training_actor_and_official_mapping(self):
+        source, payload = self.rlpd_payload()
+        rng = np.random.default_rng(29)
+        observations = [
+            np.zeros((4, 84, 84), dtype=np.float32),
+            np.ones((4, 84, 84), dtype=np.float32),
+            rng.random((4, 84, 84), dtype=np.float32),
+        ]
+        expected = []
+        for observation in observations:
+            tensor = torch.from_numpy(observation).unsqueeze(0)
+            native, _, _ = source.sample(tensor, deterministic=True)
+            expected.append(
+                ActionAdapter().to_official(native.squeeze(0).detach().numpy())
+            )
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            torch.save(payload, path)
+            agent = Agent(path)
+            actual = [agent.act(observation) for observation in observations]
+
+        self.assertEqual(agent.format, RLPD_ACTOR_FORMAT)
+        for result, reference in zip(actual, expected):
+            np.testing.assert_array_equal(result, reference)
+        self.assertTrue(all(parameter.device.type == "cpu" for parameter in agent.model.parameters()))
+
+    def test_rlpd_maps_native_action_to_official_box_once(self):
+        source, payload = self.rlpd_payload()
+        with torch.no_grad():
+            source.mean.weight.zero_()
+            source.mean.bias.copy_(torch.tensor([0.2, 0.0, -0.4]))
+        payload["actor_state_dict"] = source.state_dict()
+        observation = np.zeros((4, 84, 84), dtype=np.float32)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            torch.save(payload, path)
+            action = Agent(path).act(observation)
+
+        np.testing.assert_allclose(
+            action,
+            [np.tanh(0.2), 0.5, (np.tanh(-0.4) + 1.0) * 0.5],
+            rtol=0.0,
+            atol=1e-7,
+        )
+
+    def test_rlpd_reset_and_reload_preserve_deterministic_trace(self):
+        _source, payload = self.rlpd_payload()
+        rng = np.random.default_rng(31)
+        observations = [
+            rng.random((4, 84, 84), dtype=np.float32) for _ in range(3)
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            torch.save(payload, path)
+            agent = Agent(path)
+            first = [agent.act(observation) for observation in observations]
+            agent.reset(observations[0])
+            reset_trace = [agent.act(observation) for observation in observations]
+            reloaded_agent = Agent(path)
+            reloaded_trace = [
+                reloaded_agent.act(observation) for observation in observations
+            ]
+
+        for expected, reset_action, reloaded_action in zip(
+            first, reset_trace, reloaded_trace
+        ):
+            np.testing.assert_array_equal(expected, reset_action)
+            np.testing.assert_array_equal(expected, reloaded_action)
+
+    def test_rlpd_rejects_malformed_exports_and_observations(self):
+        _source, payload = self.rlpd_payload()
+        cases = []
+        wrong_tag = copy.deepcopy(payload)
+        wrong_tag["format"] = "haic-rlpd-pixel-actor-v0"
+        cases.append(wrong_tag)
+        for section, key, value in (
+            ("observation_spec", "channel_order", "HWC"),
+            ("action_spec", "frame_skip", 8),
+            ("config", "latent_dim", 51),
+        ):
+            malformed = copy.deepcopy(payload)
+            malformed[section][key] = value
+            cases.append(malformed)
+        extra_config = copy.deepcopy(payload)
+        extra_config["config"]["hidden_dim"] = 256
+        cases.append(extra_config)
+        missing = copy.deepcopy(payload)
+        del missing["actor_state_dict"]["mean.bias"]
+        cases.append(missing)
+        extra = copy.deepcopy(payload)
+        extra["actor_state_dict"]["unexpected.weight"] = torch.zeros(1)
+        cases.append(extra)
+        wrong_shape = copy.deepcopy(payload)
+        wrong_shape["actor_state_dict"]["encoder.projection.1.weight"] = torch.zeros(
+            (51, 4096)
+        )
+        cases.append(wrong_shape)
+        for nonfinite in (float("nan"), float("inf")):
+            invalid = copy.deepcopy(payload)
+            invalid["actor_state_dict"]["mean.bias"][0] = nonfinite
+            cases.append(invalid)
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "actor.pt"
+            for index, malformed in enumerate(cases):
+                with self.subTest(case=index):
+                    torch.save(malformed, path)
+                    with self.assertRaises((ValueError, RuntimeError)):
+                        Agent(path)
+
+            torch.save(payload, path)
+            agent = Agent(path)
+            for observation in (
+                np.zeros((4, 84, 84), dtype=np.uint8),
+                np.zeros((84, 84, 4), dtype=np.float32),
+                np.full((4, 84, 84), 1.1, dtype=np.float32),
+                np.full((4, 84, 84), np.nan, dtype=np.float32),
+            ):
+                with self.assertRaisesRegex(ValueError, "RLPD observation"):
+                    agent.act(observation)
+
+    def test_rlpd_root_only_runtime_does_not_import_research_modules(self):
+        _source, payload = self.rlpd_payload()
+        root = Path(__file__).resolve().parents[1]
+        code = """
+import builtins
+import sys
+import torch
+import numpy as np
+original_import = builtins.__import__
+def restricted(name, *args, **kwargs):
+    if name.split('.')[0] in {'haic', 'drq_v2', 'dreamer_v3', 'stable_baselines3'}:
+        raise AssertionError('research import: ' + name)
+    return original_import(name, *args, **kwargs)
+builtins.__import__ = restricted
+from agent import Agent, RLPD_ACTOR_FORMAT
+agent = Agent()
+assert agent.format == RLPD_ACTOR_FORMAT
+observation = np.zeros((4, 84, 84), dtype=np.float32)
+first = agent.act(observation)
+agent.reset(observation)
+assert np.array_equal(first, agent.act(observation))
+assert first.shape == (3,) and np.isfinite(first).all()
+assert all(parameter.device.type == 'cpu' for parameter in agent.model.parameters())
+assert not torch.cuda.is_initialized()
+assert not any(name == 'haic' or name.startswith('haic.') for name in sys.modules)
+assert 'common_adapter' not in sys.modules
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            shutil.copy2(root / "agent.py", path / "agent.py")
             torch.save(payload, path / "model.pt")
             environment = dict(os.environ, CUDA_VISIBLE_DEVICES="", PYTHONDONTWRITEBYTECODE="1")
             environment.pop("PYTHONPATH", None)

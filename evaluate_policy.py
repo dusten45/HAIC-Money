@@ -83,6 +83,7 @@ ENVIRONMENT_SOURCES = (
 RUNTIME_SOURCES = (
     Path("evaluate_policy.py"),
     Path("agent.py"),
+    Path("haic/algorithms/rlpd/model.py"),
     Path("train.py"),
     Path("tracking.py"),
     Path("action_smoothing.py"),
@@ -92,6 +93,18 @@ RUNTIME_SOURCES = (
 MAX_PROCESS_RSS_BYTES = 1024 * 1024 * 1024
 MAX_INIT_SECONDS = 10.0
 MAX_ACTION_SECONDS = 5.0
+RLPD_ACTOR_FORMAT = "haic-rlpd-pixel-actor-v1"
+NATIVE_ACTOR_ALGORITHMS = frozenset(("drq-v2", "dreamerv3", "rlpd"))
+
+
+def _native_actor_format_algorithms() -> dict[str, str]:
+    from agent import DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT
+
+    return {
+        DRQ_ACTOR_FORMAT: "drq-v2",
+        DREAMERV3_ACTOR_FORMAT: "dreamerv3",
+        RLPD_ACTOR_FORMAT: "rlpd",
+    }
 
 
 def parse_int_list(value: str, name: str, minimum: int) -> list[int]:
@@ -181,16 +194,22 @@ def candidate_metadata(path: Path, run_dir: Path | None = None) -> dict:
     if explicit_run and not path.resolve().is_relative_to(run_dir.resolve()):
         raise ValueError("candidate must belong to the explicit run directory")
     export_metadata = None
+    algorithm = "ppo"
     archive_sha256 = sha256_file(path)
     if path.suffix == ".pt":
-        from agent import Agent, DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT
+        from agent import Agent
 
         if path.stat().st_size > 500 * 1024 * 1024:
             raise ValueError("evaluate an exported actor, not a full training checkpoint")
         agent = Agent(model_path=path)
-        if agent.format not in (DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT):
-            raise ValueError(".pt evaluation requires a DrQ or DreamerV3 exported actor")
         export_metadata = agent.export_metadata
+        algorithm = _native_actor_format_algorithms().get(agent.format)
+        if (
+            algorithm is None
+            or not isinstance(export_metadata, dict)
+            or export_metadata.get("format") != agent.format
+        ):
+            raise ValueError(".pt evaluation requires a supported exported native actor")
         vecnormalize = None
         policy_sha256 = archive_sha256
     else:
@@ -247,13 +266,8 @@ def candidate_metadata(path: Path, run_dir: Path | None = None) -> dict:
         or type(recorded_config.get("frame_skip")) is not int or recorded_config["frame_skip"] <= 0
     ):
         raise ValueError("explicit run config requires max_steps and frame_skip provenance")
-    from agent import DREAMERV3_ACTOR_FORMAT
     return {
-        "algorithm": (
-            "dreamerv3" if export_metadata and export_metadata.get("format") == DREAMERV3_ACTOR_FORMAT
-            else "drq-v2" if export_metadata is not None
-            else "ppo"
-        ),
+        "algorithm": algorithm,
         "export_metadata": export_metadata,
         "export_spec_fingerprints": {
             key: hashlib.sha256(json.dumps(
@@ -501,13 +515,17 @@ def evaluate_cell(
 ) -> dict:
     torch.set_num_threads(1)
     load_started = time.perf_counter()
-    is_pt = is_drq = model_path.suffix == ".pt"
-    if is_pt:
-        from agent import Agent, DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT
+    is_native_actor = model_path.suffix == ".pt"
+    if is_native_actor:
+        from agent import Agent
 
         model, _ = timed_policy_call(Agent, model_path, seconds=MAX_INIT_SECONDS)
-        if model.format not in (DRQ_ACTOR_FORMAT, DREAMERV3_ACTOR_FORMAT):
-            raise ValueError("expected a DrQ or DreamerV3 exported actor")
+        if (
+            model.format not in _native_actor_format_algorithms()
+            or not isinstance(model.export_metadata, dict)
+            or model.export_metadata.get("format") != model.format
+        ):
+            raise ValueError("expected a supported exported native actor")
         if frame_skip != model.export_metadata["action_spec"]["frame_skip"]:
             raise ValueError(f"{model.format} frame_skip does not match exported action spec")
         if (
@@ -520,7 +538,7 @@ def evaluate_cell(
         model = PPO.load(str(model_path), device="cpu")
     load_seconds = time.perf_counter() - load_started
     init_seconds = time.perf_counter() - (worker_started or load_started)
-    if is_pt and init_seconds > MAX_INIT_SECONDS:
+    if is_native_actor and init_seconds > MAX_INIT_SECONDS:
         raise TimeoutError("CPU worker import and actor construction exceeded 10 seconds")
     actor_peak_rss = peak_rss_bytes()
     action_smoothing = resolve_action_smoothing(model_path, action_smoothing)
@@ -543,7 +561,7 @@ def evaluate_cell(
         observation, _ = env.reset()
         reset_seconds = time.perf_counter() - reset_started
         agent_reset_seconds = 0.0
-        if is_drq:
+        if is_native_actor:
             _, agent_reset_seconds = timed_policy_call(model.reset, observation)
         start_time_s = env.unwrapped.t
         total_reward = 0.0
@@ -551,9 +569,9 @@ def evaluate_cell(
         info = {}
         steps = 0
         while not (terminated or truncated):
-            if peak_rss_bytes() > MAX_PROCESS_RSS_BYTES and is_drq:
+            if peak_rss_bytes() > MAX_PROCESS_RSS_BYTES and is_native_actor:
                 raise MemoryError("CPU evaluation worker exceeded 1,024 MiB peak RSS")
-            if is_drq:
+            if is_native_actor:
                 action, elapsed = timed_policy_call(model.act, observation)
             else:
                 action_started = time.perf_counter()
@@ -594,7 +612,10 @@ def evaluate_cell(
         )
         peak_rss = peak_rss_bytes()
         return {
-            "status": "resource_limit" if is_drq and peak_rss > MAX_PROCESS_RSS_BYTES else "ok",
+            "status": (
+                "resource_limit"
+                if is_native_actor and peak_rss > MAX_PROCESS_RSS_BYTES else "ok"
+            ),
             "track_id": track_id,
             "seed": seed,
             "steps": steps,
@@ -844,7 +865,7 @@ def candidate_summary(candidate: dict, episodes, non_reproducible: set[str], una
     }
     failures = [
         episode for episode in episodes if episode["status"] != "ok" or (
-            candidate.get("algorithm") == "drq-v2" and any(
+            candidate.get("algorithm") in NATIVE_ACTOR_ALGORITHMS and any(
                 type(episode.get(key)) not in (int, float)
                 or not np.isfinite(episode[key]) or not 0 <= episode[key] <= limit
                 for key, limit in limits.items()
@@ -936,7 +957,9 @@ def validate_cpu_runtime(runtime: dict) -> None:
         or runtime["torch_cuda"] is not None or runtime["cuda_available"]
         or runtime["torch_threads"] != 1 or runtime["torch_interop_threads"] != 1
     ):
-        raise ValueError("DrQ selection requires the pinned Python 3.11 Linux Torch 2.1 CPU runtime")
+        raise ValueError(
+            "native actor evaluation requires the pinned Python 3.11 Linux Torch 2.1 CPU runtime"
+        )
 
 
 def git_metadata() -> dict:
@@ -996,6 +1019,12 @@ def snapshot_runtime(temporary_dir: Path) -> Path:
         Path("damage.py"),
     ):
         shutil.copy2(source_root / source, runtime_dir / source.name)
+    rlpd_runtime_dir = runtime_dir / "haic" / "algorithms" / "rlpd"
+    rlpd_runtime_dir.mkdir(parents=True)
+    shutil.copy2(
+        source_root / "haic/algorithms/rlpd/model.py",
+        rlpd_runtime_dir / "model.py",
+    )
     shutil.copytree(source_root / "core", runtime_dir / "core", ignore=shutil.ignore_patterns("__pycache__"))
     return runtime_dir / "evaluate_policy.py"
 
@@ -1126,8 +1155,10 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
     if args.legacy_model is not None:
         candidate_paths.append(args.legacy_model)
     candidates = discover_candidates(candidate_paths, args.run_dir if spec is not None else None)
-    if spec is None and any(candidate["algorithm"] == "drq-v2" for candidate in candidates):
-        raise ValueError("DrQ actors require an explicit --protocol-file")
+    if spec is None and any(
+        candidate["algorithm"] in NATIVE_ACTOR_ALGORITHMS for candidate in candidates
+    ):
+        raise ValueError("native actors require an explicit custom --protocol-file")
     for candidate in candidates:
         candidate["diagnostic_only"] = diagnostic_only
         candidate["expected_cells"] = len(protocol["track_ids"]) * len(protocol["seeds"])
@@ -1270,7 +1301,7 @@ def run_checkpoint_protocol(args, protocol_name: str) -> Path:
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Evaluate deterministic PPO or exported DrQ policies on fixed HAIC tracks"
+        description="Evaluate deterministic PPO or exported native policies on fixed HAIC tracks"
     )
     parser.add_argument("--model", type=Path, action="append")
     parser.add_argument("--track-ids", default="1")
@@ -1357,7 +1388,7 @@ def validate_protocol_request(args) -> None:
     if args.previous_evaluation is not None:
         raise ValueError("--previous-evaluation requires --protocol-file")
     if args.model and any(path.suffix == ".pt" for path in args.model):
-        raise ValueError("DrQ actors require --protocol-file for isolated CPU evaluation")
+        raise ValueError("native .pt actors require a custom frozen --protocol-file")
     if args.protocol == "ad-hoc":
         if not args.model:
             raise ValueError("--model is required for ad-hoc evaluation")

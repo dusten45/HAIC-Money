@@ -29,7 +29,9 @@ from agent import (
 from common_adapter import ActionSpec, ObservationSpec
 from evaluate_policy import (
     MAX_PROCESS_RSS_BYTES,
+    NATIVE_ACTOR_ALGORITHMS,
     PROTOCOLS,
+    RLPD_ACTOR_FORMAT,
     candidate_summary,
     determinism_audit,
     discover_candidates,
@@ -92,6 +94,22 @@ class TestEvaluatePolicy(unittest.TestCase):
             "config": {"algorithm": "dreamerv3", "max_steps": 2, "frame_skip": 4},
         }))
         return actor
+
+    def rlpd_candidate(self, root):
+        actor = root / "actor.pt"
+        actor.write_bytes(b"synthetic RLPD actor")
+        (root / "config.json").write_text(json.dumps({
+            "config": {"algorithm": "rlpd", "max_steps": 2, "frame_skip": 4},
+        }))
+        return actor
+
+    def rlpd_agent(self):
+        metadata = {
+            "format": RLPD_ACTOR_FORMAT,
+            "observation_spec": asdict(ObservationSpec()),
+            "action_spec": asdict(ActionSpec()),
+        }
+        return SimpleNamespace(format=RLPD_ACTOR_FORMAT, export_metadata=metadata)
 
     def protocol_spec(self):
         return {
@@ -186,6 +204,69 @@ class TestEvaluatePolicy(unittest.TestCase):
             self.assertEqual(candidates[0]["algorithm"], "dreamerv3")
             self.assertEqual(candidates[0]["export_metadata"]["format"], DREAMERV3_ACTOR_FORMAT)
 
+    def test_rlpd_actor_tag_has_explicit_algorithm_provenance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.rlpd_candidate(root)
+            with patch("agent.Agent", return_value=self.rlpd_agent()):
+                candidate, = discover_candidates([actor], run_dir=root)
+
+        self.assertEqual(candidate["algorithm"], "rlpd")
+        self.assertEqual(candidate["export_metadata"]["format"], RLPD_ACTOR_FORMAT)
+
+    def test_native_pt_actor_requires_custom_frozen_protocol(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.rlpd_candidate(root)
+            args = SimpleNamespace(
+                max_steps=2, frame_skip=4, timeout_seconds=30, workers=1,
+                protocol="checkpoint-v1-screen", protocol_file=None,
+                diagnostic_confirmation=False, run_dir=root, model=[actor],
+                partition=None, previous_evaluation=None, legacy_model=None,
+                seeds="0", output=None, evaluations_dir=root / "evaluations",
+            )
+            with self.assertRaisesRegex(ValueError, "custom frozen --protocol-file"):
+                evaluate_policy.validate_protocol_request(args)
+            with patch("agent.Agent", return_value=self.rlpd_agent()):
+                with self.assertRaisesRegex(ValueError, "custom --protocol-file"):
+                    run_checkpoint_protocol(args, "checkpoint-v1-screen")
+
+    def test_rlpd_custom_protocol_repeats_and_audits_actor_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            actor = self.rlpd_candidate(root)
+            spec_path = root / "protocol.json"
+            spec = self.protocol_spec()
+            spec_path.write_text(json.dumps(spec))
+            args = SimpleNamespace(
+                model=[actor], run_dir=root, legacy_model=None, protocol_file=spec_path,
+                partition="screen", output=root / "pointer.json", max_steps=2,
+                frame_skip=4, evaluations_dir=root / "evaluations", timeout_seconds=30,
+                workers=2,
+            )
+
+            def worker(candidate, track_id, seed, repeat, **_arguments):
+                return {
+                    **self.episode(repeat),
+                    "candidate_id": candidate["candidate_id"],
+                    "track_id": track_id,
+                    "seed": seed,
+                    "loaded_archive_sha256": candidate["archive_sha256"],
+                    "runtime": {"test": True},
+                }
+
+            with patch("agent.Agent", return_value=self.rlpd_agent()):
+                with patch("evaluate_policy.run_isolated_cell", side_effect=worker) as run:
+                    result_dir = run_checkpoint_protocol(args, "ad-hoc")
+            ranked = json.loads((result_dir / "summary.json").read_text())
+            audits = json.loads((result_dir / "determinism.json").read_text())
+            self.assertEqual(run.call_count, 2)
+            self.assertEqual(ranked[0]["algorithm"], "rlpd")
+            self.assertTrue(ranked[0]["eligible"])
+            self.assertTrue(ranked[0]["cpu_reload_matches"])
+            self.assertEqual(audits[0]["repeats"], 2)
+            self.assertTrue(audits[0]["matches_canonical"])
+
     def test_terminal_class_preserves_official_outcomes(self):
         self.assertEqual(terminal_class(True, False, True, {}), "finished")
         self.assertEqual(terminal_class(False, True, False, {"retire_reason": "crash"}), "crash")
@@ -242,6 +323,7 @@ class TestEvaluatePolicy(unittest.TestCase):
             self.assertTrue((worker.parent / "tracking.py").is_file())
             self.assertTrue((worker.parent / "action_smoothing.py").is_file())
             self.assertTrue((worker.parent / "agent.py").is_file())
+            self.assertTrue((worker.parent / "haic/algorithms/rlpd/model.py").is_file())
 
     def test_drq_discovery_without_sb3_normalizer_and_immutable_snapshot(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -406,20 +488,28 @@ class TestEvaluatePolicy(unittest.TestCase):
         self.assertEqual(summary["operational_failures"], 1)
 
     def test_resource_violation_in_second_repeat_blocks_selection(self):
-        candidate = {"candidate_id": "candidate", "algorithm": "drq-v2",
-                     "expected_cells": 1, "expected_results": 2}
-        for key, value in (
-            ("process_initialization_seconds", 10.01), ("agent_reset_seconds", 5.01),
-            ("max_action_seconds", 5.01), ("peak_rss_bytes", MAX_PROCESS_RSS_BYTES + 1),
-            ("max_action_seconds", float("nan")),
-        ):
-            with self.subTest(resource=key, value=value):
-                episodes = [self.episode(), {**self.episode(1), key: value}]
-                _, non_reproducible, unaudited = determinism_audit(episodes)
-                summary = candidate_summary(candidate, episodes, non_reproducible, unaudited)
-                self.assertFalse(summary["eligible"])
-                self.assertFalse(summary["cpu_reload_matches"])
-                self.assertEqual(summary["operational_failures"], 1)
+        for algorithm in NATIVE_ACTOR_ALGORITHMS:
+            candidate = {"candidate_id": "candidate", "algorithm": algorithm,
+                         "expected_cells": 1, "expected_results": 2}
+            _, non_reproducible, unaudited = determinism_audit(
+                [self.episode(), self.episode(1)]
+            )
+            eligible = candidate_summary(
+                candidate, [self.episode(), self.episode(1)], non_reproducible, unaudited
+            )
+            self.assertTrue(eligible["eligible"], algorithm)
+            for key, value in (
+                ("process_initialization_seconds", 10.01), ("agent_reset_seconds", 5.01),
+                ("max_action_seconds", 5.01), ("peak_rss_bytes", MAX_PROCESS_RSS_BYTES + 1),
+                ("max_action_seconds", float("nan")),
+            ):
+                with self.subTest(algorithm=algorithm, resource=key, value=value):
+                    episodes = [self.episode(), {**self.episode(1), key: value}]
+                    _, non_reproducible, unaudited = determinism_audit(episodes)
+                    summary = candidate_summary(candidate, episodes, non_reproducible, unaudited)
+                    self.assertFalse(summary["eligible"])
+                    self.assertFalse(summary["cpu_reload_matches"])
+                    self.assertEqual(summary["operational_failures"], 1)
 
     def test_confirmation_and_blind_bind_immutable_predecessor_receipt(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -645,6 +735,79 @@ class TestEvaluatePolicy(unittest.TestCase):
                 with patch("evaluate_policy.peak_rss_bytes", return_value=MAX_PROCESS_RSS_BYTES + 1):
                     with self.assertRaises(MemoryError):
                         evaluate_cell(actor, 1, 0, 2, 4)
+
+    def test_rlpd_cell_uses_native_actor_and_repeated_reload_is_identical(self):
+        class Actor:
+            format = RLPD_ACTOR_FORMAT
+            export_metadata = {
+                "format": RLPD_ACTOR_FORMAT,
+                "action_spec": asdict(ActionSpec()),
+            }
+
+            def __init__(self):
+                self.reset_calls = 0
+                self.deterministic_requests = []
+
+            def reset(self, _observation):
+                self.reset_calls += 1
+
+            def act(self, _observation, deterministic=True):
+                self.deterministic_requests.append(deterministic)
+                return np.asarray((0.25, 0.5, -0.25), dtype=np.float32)
+
+        class Environment:
+            def __init__(self):
+                self.unwrapped = self
+                self.t = 1.0
+                self.closed = False
+
+            def reset(self):
+                return np.zeros((4, 84, 84), dtype=np.float32), {}
+
+            def step(self, _action):
+                self.t += 0.08
+                return np.zeros((4, 84, 84), dtype=np.float32), 1.0, False, True, {
+                    "progress": 0.75, "damage": 0.1,
+                }
+
+            def close(self):
+                self.closed = True
+
+        with tempfile.TemporaryDirectory() as directory:
+            actor_path = Path(directory) / "actor.pt"
+            actor_path.write_bytes(b"synthetic RLPD actor")
+            actors = []
+
+            def load_actor(_path):
+                actor = Actor()
+                actors.append(actor)
+                return actor
+
+            episodes = []
+            with patch("agent.Agent", side_effect=load_actor):
+                with patch("evaluate_policy.build_env", side_effect=lambda *_a, **_k: Environment()):
+                    with patch("evaluate_policy.peak_rss_bytes", return_value=128 * 1024 * 1024):
+                        for repeat in range(2):
+                            result = evaluate_cell(actor_path, 1, 0, 2, 4)
+                            episodes.append({
+                                **result,
+                                "candidate_id": "rlpd-candidate",
+                                "repeat": repeat,
+                                "loaded_archive_sha256": "f" * 64,
+                            })
+
+        audits, non_reproducible, unaudited = determinism_audit(episodes)
+        self.assertEqual([model.reset_calls for model in actors], [1, 1])
+        self.assertEqual([model.deterministic_requests for model in actors], [[True], [True]])
+        self.assertEqual(episodes[0]["action_trace_sha256"], episodes[1]["action_trace_sha256"])
+        self.assertTrue(audits[0]["matches_canonical"])
+        self.assertEqual(non_reproducible, set())
+        self.assertEqual(unaudited, set())
+        self.assertTrue(all(result["status"] == "ok" for result in episodes))
+        self.assertTrue(all(result["process_initialization_seconds"] >= 0 for result in episodes))
+        self.assertTrue(all(result["agent_reset_seconds"] >= 0 for result in episodes))
+        self.assertTrue(all(result["max_action_seconds"] <= 5.0 for result in episodes))
+        self.assertTrue(all(result["peak_rss_bytes"] < MAX_PROCESS_RSS_BYTES for result in episodes))
 
     def test_policy_call_budget_and_malformed_worker_output(self):
         with self.assertRaises(TimeoutError):

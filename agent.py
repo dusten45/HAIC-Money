@@ -11,6 +11,7 @@ POLICY_MODEL_FILENAME = "policy.pt"
 DYNAMICS_MODEL_FILENAME = "dynamics.pt"
 DRQ_ACTOR_FORMAT = "haic-drq-v2-actor-v1"
 DREAMERV3_ACTOR_FORMAT = "haic-dreamerv3-actor-v1"
+RLPD_ACTOR_FORMAT = "haic-rlpd-pixel-actor-v1"
 
 # Small single-observation CNN inference is faster and more predictable without
 # the default large CPU thread pool.
@@ -97,6 +98,63 @@ class DrQActor(nn.Module):
 
     def forward(self, observation):
         return torch.tanh(self.policy(self.trunk(self.encoder(observation))))
+
+
+class RLPDFeatures(nn.Module):
+    """CPU inference encoder matching the exported pixel RLPD actor keys."""
+
+    def __init__(self, latent_dim):
+        super().__init__()
+        channels = (4, 32, 64, 128, 256)
+        layers = []
+        for in_channels, out_channels in zip(channels, channels[1:]):
+            layers.extend((nn.Conv2d(in_channels, out_channels, 3, stride=2), nn.ReLU()))
+        self.convolution = nn.Sequential(*layers)
+        self.projection = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(256 * 4 * 4, latent_dim),
+            nn.LayerNorm(latent_dim),
+            nn.Tanh(),
+        )
+
+    def forward(self, observation):
+        return self.projection(self.convolution(observation.float()))
+
+
+class RLPDActor(nn.Module):
+    """Inference-only PixelActor with the native export state-dict layout."""
+
+    def __init__(self, latent_dim=50):
+        super().__init__()
+        self.encoder = RLPDFeatures(latent_dim)
+        self.trunk = nn.Sequential(
+            nn.Linear(latent_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+        )
+        self.mean = nn.Linear(256, 3)
+        self.log_std = nn.Linear(256, 3)
+
+    def forward(self, observation):
+        features = self.trunk(self.encoder(observation))
+        return torch.tanh(self.mean(features))
+
+
+class RLPDActionAdapterFallback:
+    """Standalone copy of the frozen adapter contract for minimal actor bundles."""
+
+    @staticmethod
+    def to_official(native_action):
+        values = np.asarray(native_action, dtype=np.float32)
+        if values.shape != (3,) or not np.isfinite(values).all():
+            raise ValueError("action must be a finite shape-(3,) vector")
+        values = np.clip(values, [-1.0, -1.0, -1.0], [1.0, 1.0, 1.0])
+        official = values.copy()
+        official[1:] = (values[1:] + 1.0) * 0.5
+        return np.clip(official, [-1.0, 0.0, 0.0], [1.0, 1.0, 1.0]).astype(
+            np.float32
+        )
 
 
 class DreamerV3LayerNormGRUCell(nn.Module):
@@ -318,6 +376,8 @@ class Agent:
                     self._init_drq(payload)
                 elif model_format == DREAMERV3_ACTOR_FORMAT:
                     self._init_dreamerv3(payload)
+                elif model_format == RLPD_ACTOR_FORMAT:
+                    self._init_rlpd(payload)
                 elif model_format is not None:
                     raise ValueError(f"unsupported model format: {model_format}")
                 else:
@@ -460,6 +520,84 @@ class Agent:
         self._runtime_mode = "dreamerv3"
         self.export_metadata = {
             key: value for key, value in payload.items() if key != "state_dict"
+        }
+        self.reset(None)
+
+    def _init_rlpd(self, payload):
+        try:
+            from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
+        except ModuleNotFoundError as error:
+            if error.name != "common_adapter":
+                raise
+            expected_observation = {
+                "shape": (4, 84, 84), "dtype": "float32", "channel_order": "CHW",
+                "low": 0.0, "high": 1.0, "uint8_scale": 255,
+                "control_plane_fingerprint": None,
+            }
+            expected_action = {
+                "native_low": (-1.0, -1.0, -1.0),
+                "native_high": (1.0, 1.0, 1.0),
+                "official_low": (-1.0, 0.0, 0.0),
+                "official_high": (1.0, 1.0, 1.0),
+                "frame_skip": 4,
+                "order": ("steer", "gas", "brake"),
+                "method": "symmetric-native-to-haic-box",
+            }
+            action_adapter = RLPDActionAdapterFallback()
+        else:
+            from dataclasses import asdict
+
+            expected_observation = asdict(ObservationSpec())
+            expected_action = asdict(ActionSpec())
+            action_adapter = ActionAdapter(ActionSpec())
+
+        config = payload.get("config")
+        if (
+            not isinstance(config, dict)
+            or set(config) != {"latent_dim"}
+            or type(config.get("latent_dim")) is not int
+            or config["latent_dim"] != 50
+        ):
+            raise ValueError("invalid RLPD actor architecture config")
+
+        for name, actual, expected in (
+            ("observation", payload.get("observation_spec"), expected_observation),
+            ("action", payload.get("action_spec"), expected_action),
+        ):
+            if not isinstance(actual, dict) or set(actual) != set(expected):
+                raise ValueError(f"invalid RLPD {name} spec")
+            if any(
+                type(actual[key]) is not type(value) or actual[key] != value
+                for key, value in expected.items()
+            ):
+                raise ValueError(f"unsupported RLPD {name} spec")
+
+        with torch.random.fork_rng(devices=[]):
+            model = RLPDActor(config["latent_dim"])
+        state_dict = payload.get("actor_state_dict")
+        expected_state = model.state_dict()
+        if not isinstance(state_dict, dict) or set(state_dict) != set(expected_state):
+            raise ValueError("invalid RLPD actor state keys")
+        for key, expected_tensor in expected_state.items():
+            value = state_dict[key]
+            if (
+                not isinstance(value, torch.Tensor)
+                or value.device.type != "cpu"
+                or value.dtype != torch.float32
+                or value.layout != torch.strided
+                or tuple(value.shape) != tuple(expected_tensor.shape)
+                or not torch.isfinite(value).all()
+            ):
+                raise ValueError(f"invalid or non-finite RLPD actor tensor: {key}")
+
+        model.load_state_dict(state_dict, strict=True)
+        model.eval()
+        self.model = model
+        self.action_adapter = action_adapter
+        self.format = RLPD_ACTOR_FORMAT
+        self._runtime_mode = "rlpd"
+        self.export_metadata = {
+            key: value for key, value in payload.items() if key != "actor_state_dict"
         }
         self.reset(None)
 
@@ -705,6 +843,9 @@ class Agent:
         if self._runtime_mode == "drq":
             # The deterministic actor is feed-forward.
             return
+        if self._runtime_mode == "rlpd":
+            # Pixel RLPD export inference is stateless and deterministic.
+            return
         if self._runtime_mode == "dreamerv3":
             self.model.reset_episode()
             return
@@ -738,6 +879,23 @@ class Agent:
             if not np.isfinite(action).all():
                 raise ValueError("DrQ actor produced a non-finite action")
             return action
+        if self._runtime_mode == "rlpd":
+            observation = np.asarray(observation)
+            if (
+                observation.shape != (4, 84, 84)
+                or observation.dtype != np.float32
+                or not np.isfinite(observation).all()
+                or np.any(observation < 0.0)
+                or np.any(observation > 1.0)
+            ):
+                raise ValueError(
+                    "RLPD observation must be float32 CHW (4, 84, 84) in [0, 1]"
+                )
+            tensor_obs = torch.as_tensor(np.ascontiguousarray(observation)).unsqueeze(0)
+            native = self.model(tensor_obs).squeeze(0).numpy()
+            if not np.isfinite(native).all():
+                raise ValueError("RLPD actor produced a non-finite action")
+            return self.action_adapter.to_official(native)
         if self._runtime_mode == "dreamerv3":
             observation = np.asarray(observation)
             if (

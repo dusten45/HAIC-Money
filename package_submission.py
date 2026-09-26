@@ -27,6 +27,7 @@ MAX_ARCHIVE_BYTES = 500 * 1024 * 1024
 MAX_EXTRACTED_BYTES = 2 * 1024 * 1024 * 1024
 MAX_FILE_COUNT = 1_000
 MAX_COMPRESSION_RATIO = 100
+RLPD_ACTOR_FORMAT = "haic-rlpd-pixel-actor-v1"
 BANNED_IMPORTS = {
     "ctypes",
     "importlib",
@@ -66,6 +67,20 @@ def file_metadata(path: Path):
         "sha256": sha256_file(path),
         "bytes": path.stat().st_size,
     }
+
+
+def model_payload_format(model_path: Path):
+    """Read a safe tagged actor format without constraining legacy payloads."""
+
+    try:
+        import torch
+
+        payload = torch.load(model_path, map_location="cpu", weights_only=True)
+    except Exception:
+        return None
+    if not isinstance(payload, dict) or not isinstance(payload.get("format"), str):
+        return None
+    return payload["format"]
 
 
 def git_provenance():
@@ -308,6 +323,13 @@ def agent_dependency_paths(agent_path: Path):
     return dependencies
 
 
+def submission_dependency_paths(agent_path: Path, model_format: str | None):
+    # RLPD inference is implemented inline in agent.py; its package is actor-only.
+    if model_format == RLPD_ACTOR_FORMAT:
+        return []
+    return agent_dependency_paths(agent_path)
+
+
 def validate_submission_archive(
     archive_path: Path,
     expected_model_filename: str,
@@ -348,7 +370,8 @@ def build_submission(agent_path: Path, model_path: Path, archive_path: Path):
     expected_model_filename = validate_agent_source(agent_path)
     if not model_path.is_file():
         raise FileNotFoundError(model_path)
-    dependencies = agent_dependency_paths(agent_path)
+    model_format = model_payload_format(model_path)
+    dependencies = submission_dependency_paths(agent_path, model_format)
 
     archive_path.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
@@ -391,6 +414,7 @@ print(json.dumps({
     "finite": bool(all(np.isfinite(action).all() for action in actions)),
     "reset_matches_first": bool(np.array_equal(first_action, reset_action)),
     "unreset_matches_first": bool(np.array_equal(unreset_action, first_action)),
+    "actor_format": getattr(agent, "format", None),
 }))
 """
     with tempfile.TemporaryDirectory() as directory:
@@ -410,6 +434,9 @@ print(json.dumps({
         raise RuntimeError(completed.stderr.strip() or completed.stdout.strip())
 
     result = json.loads(completed.stdout.strip().splitlines()[-1])
+    actor_format = result.pop("actor_format")
+    if actor_format == RLPD_ACTOR_FORMAT:
+        result["actor_format"] = actor_format
     if result["init_seconds"] > 10:
         raise RuntimeError(f"Agent import and construction exceeded 10 s: {result}")
     if result["act_seconds"] > 5:
@@ -444,6 +471,7 @@ def create_submission_record(
     expected_model_filename = validate_agent_source(agent_path)
     if not model_path.is_file():
         raise FileNotFoundError(model_path)
+    model_format = model_payload_format(model_path)
 
     source_model = source_model_metadata(source_model_path)
     action_smoothing = model_action_smoothing(model_path, source_model_path)
@@ -456,6 +484,18 @@ def create_submission_record(
         smoke_result = (
             smoke_submission(archive_path, python_executable) if smoke_test else None
         )
+        if (
+            smoke_result is not None
+            and model_format == RLPD_ACTOR_FORMAT
+            and smoke_result.get("actor_format") != RLPD_ACTOR_FORMAT
+        ):
+            raise RuntimeError("Agent did not load the packaged RLPD actor format")
+        model_metadata = {
+            **file_metadata(model_path),
+            "archive_path": expected_model_filename,
+        }
+        if model_format == RLPD_ACTOR_FORMAT:
+            model_metadata["format"] = model_format
         manifest = {
             "schema_version": 2,
             "submission_id": submission_id,
@@ -468,12 +508,15 @@ def create_submission_record(
                 "python_executable": python_executable,
             },
             "agent": file_metadata(agent_path),
-            "dependencies": [file_metadata(path) for path in agent_dependency_paths(agent_path)],
+            "dependencies": [
+                file_metadata(path)
+                for path in submission_dependency_paths(agent_path, model_format)
+            ],
             "action_smoothing": action_smoothing,
             "action_smoothing_fingerprint": action_smoothing_fingerprint(action_smoothing),
             "action_control": action_control,
             "action_control_fingerprint": action_control_fingerprint(action_control),
-            "model": {**file_metadata(model_path), "archive_path": expected_model_filename},
+            "model": model_metadata,
             "source_model": source_model,
             "submission_zip": {
                 "path": "submission.zip",
