@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "format": "haic-drq-teacher-replay-a3-coverage-decision-v1",
+  "status": "inconclusive-fail",
+  "study_id": "drqv2-teacher-replay-v1-r3",
+  "study_protocol_path": "experiments/drqv2-teacher-replay-v1-r3.json",
+  "study_protocol_sha256": "7b73cab4fb46ca2fb8e34b99a8667022f3027640e1582343b0b91aa4df4e0e14",
+  "a0_collection_gate_path": "runs/20260924-drqv2-teacher-replay-v1-r3/a0-collection-gate.json",
+  "a0_collection_gate_sha256": "30f105047874ad1b0fb37706f054633f023c53137926a269ea1065d1cc2f7afc",
+  "coverage_rule": "at least four finished episodes on four distinct geometry seeds per source within exactly 16384 decisions",
+  "minimum_distinct_finished_geometries": 4,
+  "sources": [
+    {
+      "learner_seed": 0,
+      "collection_result_path": "runs/20260924-drqv2-teacher-replay-v1-r3/teacher-data/learner-0/collection-result.json",
+      "collection_result_sha256": "d3f9becf1ee4cb0533abd9f900ada045bfc23df70f440b536ca9bab8e1a5b436",
+      "decisions": 16384,
+      "complete_episodes": 35,
+      "complete_transitions": 16379,
+      "finished_geometry_seeds": [4260100001, 4260100002, 4260100003, 4260100008],
+      "coverage_pass": true,
+      "dataset_path": "runs/20260924-drqv2-teacher-replay-v1-r3/teacher-data/learner-0/teacher-dataset.npz",
+      "dataset_file_sha256": "7492f277d53681978bdaf95d461a590d0ea2169f0c89d7ba488d83b48fbd6e57",
+      "dataset_digest": "7a70f62e3383e9c773e2a5e6c7f6f723f9fb775ba070e13e9beefa5b1cbbb20d"
+    },
+    {
+      "learner_seed": 1,
+      "collection_result_path": "runs/20260924-drqv2-teacher-replay-v1-r3/teacher-data/learner-1/collection-result.json",
+      "collection_result_sha256": "c669534688aba8113eefe081e43821131fbdb17a7ee5c783c978fb130eb47d87",
+      "decisions": 16384,
+      "complete_episodes": 39,
+      "complete_transitions": 16269,
+      "finished_geometry_seeds": [4260100002, 4260100003, 4260100004],
+      "coverage_pass": false,
+      "dataset_path": "runs/20260924-drqv2-teacher-replay-v1-r3/teacher-data/learner-1/teacher-dataset.npz",
+      "dataset_file_sha256": "0e9c1b5b23c4d5d4eb2482fbce6d8648c92b391362d65849ab12a48e4b0564e9",
+      "dataset_digest": "8c347e3579607ebaa11f8121013521ecb7e214270553fdffa5c987e8cc297f18"
+    }
+  ],
+  "online_decisions": 0,
+  "learner_updates": 0,
+  "training_run_directories_created": [],
+  "screen_evaluations_started": false,
+  "confirmation_opened": false,
+  "blind_opened": false,
+  "promotion_status": "none",
+  "stop_rule": "one source failed A3; do not enlarge budget, replace the source, train either arm, or consume any evaluation partition; retain both datasets as used/ineligible for a fresh retry"
+}

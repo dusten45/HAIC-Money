@@ -16,6 +16,218 @@
 | Rejection | A faithful repair still fails the renewed stability/completion gates or violates CPU/package constraints. Record failure or inconclusive tooling separately instead of scaling it. |
 | Stop condition | Do not start matched scale-up until all preceding gates pass. Official actions require their separate workflows and explicit user authorization. |
 
+## 2026-09-26 완주 우선 연구 제안
+
+사용자 요청에 따라 **구현 없이** 현재 코드·동결 자료·문헌을 다시 검증한
+[완주 우선 연구 보고서](../dreamerv3-completion-first-research.md)를 추가했다.
+이는 아래 계획을 자동 실행하거나 기존 B1 실패를 통과로 바꾸는 변경이 아니다.
+
+- 9개 개발 자료의 288개 episode는 모두 `off_track` 종료이며 완주 0건,
+  최종 진행률 20% 이상도 0건이다. 후반 주행과 결승선 통과의 학습·검증
+  자료를 먼저 확보하는 별도 data-first 연구를 제안한다.
+- `off_track`은 단순 잔디 판정이 아니라 음수 decision reward 101회 연속
+  조건이다. 진행률 1도 유효한 순방향 결승선 통과와 같지 않으므로 무조건
+  제동하거나 생존만 늘리는 전략은 완주 해법이 아니다.
+- 타인 의견 검토 후 우선순위를 **실패·데이터 공백 진단 후 처리 선택**으로
+  수정했다. 현재 Dreamer의 데이터 단독 비교는 조건부로 유지하되,
+  finish 도달가치·의미 보조학습·역방향 커리큘럼은 진단 근거가 있을 때만
+  각각 검증한다. raw reward와 환경은 보존한다.
+- 추가 무학습 수치 검사에서 actor score loss의 imagined feature를 통한
+  이전 행동 gradient 경로를 확인했다. return target도 계획/상류 설정과
+  차이가 있다. 아래 A3의 구현 기록은 완전한 fidelity 인증이 아니며,
+  actor 경로가 실행되지 않은 B1 실패를 이 결함들로 설명하지 않는다.
+
+14개 기존 순수 계약 시험과 메모리 내 검사 결과, 수학적 검증, 근거 경로,
+새 실험의 반증·중단 기준은 보고서에 기록했다. 코드 수정·새 학습·주행 평가·
+공식 행동은 하지 않았고, 완주율 개선은 아직 실증되지 않았다.
+
+### 타인 의견 비교에 따른 수정
+
+처음 보고서에서 읽지 못했던 `n8w3`의 06:34:21·06:37:49 UTC 대화와
+`r4f7`의 후속 결과를 읽고 근거를 재검증했다. 상세 비교는
+[보고서의 Peer Direction Review](../dreamerv3-completion-first-research.md#peer-direction-review)에 있다.
+
+- 완주 가치함수부터 정하기보다 실패 유형과 개입 효과부터 확인하자는
+  우선순위를 채택했다. 단, RLPD의 실패 분포를 아직 학습하지 않은
+  수리 후 Dreamer 정책의 실패 원인으로 옮겨 해석하지 않는다.
+- 교사 whole-episode 데이터만 비교하는 P1b에 복구 분기 사례를 요구했던
+  선행조건을 제거했다. 복구 분기는 별도 조건부 R1 연구로 분리했다.
+- 복구의 trigger·행동 선택·종료·제어권 반환·recurrent carry 전체가
+  픽셀과 실제 실행 행동 이력만으로 작동해야 한다. 사후 best-of-branches는
+  정책이 아니며, 실제 전체 주행에서 구한 횟수와 기존 완주를 잃은 횟수를
+  함께 판정한다. 실제 후보 ZIP parity도 일반 smoke/reload와 구분한다.
+
+이번 수정도 문서와 읽기 전용 검증에 한정하며 기존 B1 중단은 유지한다.
+
+### 2026-09-26 P0 구현 경과 (합성 시험만)
+
+위의 완주 우선 *연구 보고서*는 작성 당시 구현 전 제안이었다. 별도 요청으로
+이후 Dreamer 전용 P0 계약 중 다음을 구현하고 시험했다. DrQ r6가 해시로
+동결한 `agent.py`, `common_adapter.py`, DrQ trainer 및 환경 파일은 건드리지
+않았으며, 기존 B1 자료·프로토콜·체크포인트는 수정하지 않았다.
+
+- `dreamer_v3.py`의 actor score/entropy 입력에서 imagined feature의
+  gradient를 끊었다. 표본 action의 score detach뿐 아니라 이전 행동에서
+  다음 imagined state를 경유하는 잘못된 gradient 경로도 합성 회귀로
+  막는다. Imagination 및 replay λ-return은 current critic을 사용하고,
+  slow critic은 별도 value 정규화 목표로만 남겼다. 이 결함들은 actor가
+  실행되지 않은 B1의 실패 원인이 아니다.
+- 옵트인 `--reset-start-fraction`(기본 0)을 추가했다. 해당 batch는 기록된
+  실제 episode 시작에서 가변 0~8 decision burn-in과 고정 32 decision
+  학습창을 사용한다. 첫 transition과 39-decision 종료·절단 episode의
+  후반을 정상 `T+1` 관측/실행 행동으로 지도할 수 있다. Ring에서 reset이
+  지워지면 임의 중간 상태를 초기 상태인 양 사용하지 않는다. 기본
+  표집은 유지하고, 옵션 값은 trainer protocol budget에 포함한다.
+  진단도 batch의 실제 burn-in을 사용한다. Terminal-anchored 창 수와
+  학습 target의 terminal label 수·중복 제거된 event 수를 구분해 기록한다.
+- 후속 옵트인 `--short-episode-fraction`(기본 0)은 **실제로 완료된**
+  1~31-decision episode 중 길이가 같은 것만 batch로 만든다. 각 batch는
+  실제 `T+1` 결과 관측까지 포함해 padding·가짜 종료·손실 마스크 없이
+  1-decision 비종결 절단에서도 마지막 실제 관측 값으로 bootstrap한다.
+  미완료 prefix, 덮인 reset/결과 관측은 받지 않는다. 드문 단일 episode가
+  batch에서 반복될 수 있어 `unique_short_episodes`와 실제 terminal
+  label/event를 함께 기록한다. 독립된 완주 geometry를 늘리는 기능은
+  아니다. 해당 옵션도 frozen training budget과 진단에 반영한다.
+- 신설 합성 시험은 두 목적함수 경로, 39-step 종료/절단, ring overwrite,
+  replay 복원, 짧은 episode의 model-only update·진단, 표집 fallback 및
+  새 옵션의 protocol 동결을 검증한다. 소스가 변경됐으므로 종전의
+  v9 B1 프로토콜은 source-hash preflight에서 **거부**된다. 동결된 v9
+  기록을 새 코드의 재실행 또는 통과 결과로 변경하지 않는다.
+- 새 D0 open-loop 보고서 `haic-dreamerv3-open-loop-v2`는 기존 자연 TRAIN
+  빈도의 `constant_prevalence_bce`를 보존하고 같은 채점창 빈도의
+  `scored_window_fitted_constant_bce`를 terminal BCE 내부 비교에 사용한다.
+  후자는 개발 label을 이용한 **사후적 기준선**이며 독립 학습한 배포 예측기가
+  아니다. v1-v9의 과거 결과/판정은 유지한다. Episode 간 reward Spearman도
+  동일 상태의 대안 action 순위가 아니다. 신규 명시적 연구 프로토콜에서
+  `source_sha256`이 비면 trainer preflight가 거부한다.
+- `scripts/collect_dreamerv3_support.py`에 **새 소스 전용 TRAIN-only P1
+  수집기**와 합성 preflight/collector 시험을 추가했다. 명시 cell schedule,
+  source/checkpoint/actor weight 해시, 새로운 cross-lane 감사 receipt와
+  runtime 소스 해시를 환경 reset **전에** 확인한다. 실행 시 결정 cap을
+  넘기지 않고 완료 episode만 sealed `TeacherDataset`에 기록하며,
+  미완료 prefix는 소모량으로만 남긴다. 공식 환경의 정상 완주가
+  `finished=True, truncated=True, terminated=False, terminal=True`인
+  계약을 보존한다. 모든 테스트는 fake 환경으로만 수행했다.
+- `haic/algorithms/dreamer_v3/offline.py`의 bytes 입력 계약은 archive
+  SHA, dataset digest, 한 source의 ID/actor 해시, 선언 TRAIN cell과
+  제외 seed를 검증한 후 실제 `T+1` 관측·실행 action을 Dreamer replay에
+  넣는다. 무관한 데이터는 물론 순수 시간초과를 terminal로 둔 잘못된
+  label도 거부한다. 압축 해제 전 action 행 수/메모리 상한을 검증한다.
+  수집기 결과에서 replay로 이어지는 실제 완주 flag 연결도 합성으로
+  검증했다. Corpus 읽기 전에 선언된 TRAIN 경로·감사 receipt를 확인하는
+  **학습 runner는 아직 없고**, 이 변환만으로 학습 허가가 생기지 않는다.
+
+검증: `PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+python -m unittest tests.test_dreamerv3 tests.test_dreamerv3_offline
+tests.test_dreamerv3_support tests.test_train_dreamerv3
+tests.test_dreamerv3_development tests.test_drq_teacher_replay
+tests.test_evaluate_policy tests.test_local_contract tests.test_agent_inference
+tests.test_submission_policy tests.test_submission_package`에서 172개 통과.
+이는 기존 mock trainer와 메모리 내 synthetic update를 포함하는 계약
+시험이지 새 연구용 모델 학습·주행·평가 결과가 아니다.
+
+### 강제 종료 후 코드 복구 및 게이트 (2026-09-26)
+
+중단된 Dreamer 전용 `scripts/audit_dreamerv3_p1_seeds.py`와 신규 합성 시험을
+완성했다. 실제 r6의 `runs`/`seeds_by_source` 내 `geometry_seed`는 고정
+TRAIN 도로 ID가 아니라 catalog sampler의 RNG이므로, 양쪽 값이 같은
+learner seed에 대해 일치하는지 검증하고 road 충돌 목록에서는 제외한다.
+알려진 입력의 SHA·스키마, TRAIN ledger, partition exclusion을 확인하지만
+과거 사용 도로와 폐기된 할당의 독립적이고 완전한 목록 및 r5 부분 영수증
+검증이 없으므로 **항상** `passed=False, inventory_complete=False`로 남는다.
+파일당 32 MiB 상한으로 감사 자료 읽기를 제한한다. 이는 P1 통과 receipt가
+아니며 도로 fresh 증명도 아니다.
+
+추가 안전성 수리: P1 수집기는 영수증의 `passed=True`와 해시만 믿지 않고
+실행 중인 pinned 감사기를 다시 호출해 전체 결과와 대조한다. 감사기가
+재현 가능한 통과 결과를 내기 전에는 fake 영수증으로 환경 reset을 열 수
+없다. `short_episode_fraction`의 부분 replay에서는 유효한 전체 학습창이
+없을 때 실제 완료된 짧은 episode만 선택하며, 둘 다 없으면 trainer가
+처리하는 `NoValidSequenceError`를 돌려준다.
+
+검증: 앞의 11개 `python -m unittest` 모듈에
+`tests.test_audit_dreamerv3_p1_seeds`를 추가한 동일한 단일-thread 명령에서
+184개 통과. 여기에는 실제 r6 JSON의 *읽기 전용* 파싱과 합성 P1 수집
+preflight 및 replay 검사만 포함된다. 학습·새 환경 주행·정식 P1 시드
+배정이나 평가가 아니며 기존 B1 실패를 변경하지 않는다.
+
+### 별도 재사용 TRAIN 엔지니어링 진단 제안 (2026-09-26)
+
+사용자 요청에 따른 반복의 첫 실증 경로이며, **P1/P1b가 아니다**. 새로운
+도로의 current-recorded source 감사가 아직 막혀 있으므로 기존 r6가
+TRAIN-only로 이미 소비한 카탈로그 안에서만 새 교사·uniform-random
+episode를 얻어 archive/replay/model-only 경로의 동작과 종료 label을
+진단한다. r2/r3 teacher 데이터는 재사용하지 않는다. 카탈로그에 기록된
+첫 도로를 네 개의 정적 모양 계열에서 한 개씩 택하는 사전 규칙의 제안
+결과는 track 1의 `3910800001` (opening-short), `3910800004`
+(opening-delayed), `3910800034` (easy-curvature), `3910800085`
+(mid-reversal)이다. 모두 `experiments/drqv2-geometry-mix-v1-r6.json`의
+기존 TRAIN pool에 속하며, 진단/확인/blind 재활용이나 새 fresh 할당이
+아니다. catalog 성공 결과로 ID를 고르지 않는다.
+
+한 frozen pad-4 source0 교사와 독립 시드 uniform-native random을 동일
+순서, frame skip 4, episode 최대 2,000결정/셀로 각각 한 번 시도한다.
+각 arm의 전체 결정 상한은 8,000이고 끝난 episode만 sealed archive에
+보존하며 중도 중단분은 소비량으로만 기록한다. 선택된 네 도로에서
+교사의 완주가 없거나 한 arm에 학습 가능한 실제 연속 창이 없으면
+해당 연구 질문은 미해결로 끝내고 cap/도로/source를 결과를 보고 바꾸지
+않는다. 동일한 모델 설정과 고정 2 learner seed, 64 model-only update/seed
+및 충분한 memory headroom을 잠정 상한으로 삼되 **실행 전 새 source-pinned
+collection/offline protocol 두 개로 동결**한다. 학생 actor/critic은 갱신하지
+않고, 실행 행동/다음 프레임/종료와 arm별 완주·실제 replay 크기·메모리
+및 model loss만 보고한다. 데이터 분포가 다른 arm의 학습 loss 차이는
+학생 일반화나 교사 우위의 증거가 아니다. 새 P1 audit/coverage, 학습
+제외 development set, student full-reset 및 정책 승격은 별도 게이트다.
+
+### 재사용 TRAIN 엔지니어링 진단 첫 루프 완료 (2026-09-26)
+
+앞 절은 실행 전 제안이다. 별도로 동결한
+[수집 프로토콜](../../../experiments/dreamerv3-reused-train-diagnostic-v1.json)과
+[모델 전용 offline 프로토콜](../../../experiments/dreamerv3-reused-train-offline-v1.json)에 따라
+이미 r6 TRAIN으로 할당된 동일한 4개 도로만 두 출처에서 주행했다.
+[random 수집 영수증](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/random/collection-result.json)은
+1,306 decision/4개 완료 episode/완주 0개,
+[DrQ 교사 수집 영수증](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/collection/teacher/collection-result.json)은
+2,548 decision/4개 완료 episode/완주 1개를 기록한다. 두 출처의 자료량과
+분포가 다르므로 이것은 Dreamer 학생 정책이나 교사 우위의 matched 평가가 아니다.
+
+별도 CPU offline 학습은 random/teacher 각각 learner seed 0/1에서 64회씩
+model-only update를 완료했다: [random 0](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/random-seed-0/training-result.json),
+[random 1](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/random-seed-1/training-result.json),
+[teacher 0](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/teacher-seed-0/training-result.json),
+[teacher 1](../../../runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline/teacher-seed-1/training-result.json).
+각 결과에서 offline 환경 decision은 0이고 actor/critic target은 변경되지
+않았다. 이는 archive/replay/model-only 경로의 bounded 엔지니어링 확인이며
+새로운 P1/P1b, 독립 개발 점수, 정책 완주, held-out/blind 또는 공식 결과가
+아니다. 다음 개발 점수에는 별도 source-pinned TRAIN 재사용 중에서도 학습에서
+제외한 자료와 사전 정의된 scorer/기준선이 필요하다. B1 중단과 새로운 P1
+시드 감사 게이트는 그대로다.
+
+**남은 게이트:** 짧은 episode의 실제 TRAIN 빈도·geometry별 완주 support와
+reset-start 표집의 충분성은 측정하지 않았다. P1은 과거 모든 lane의
+seed 사용/제외 목록 감사와 신규 TRAIN-only 분할·중단 규칙·source/actor
+해시를 동결한 protocol이 필요하다. 종전 DrQ seed 감사기는 r6의
+`training_pool.geometry_seeds` 및 RLPD prior `collection.jsonl`을
+지원하지 않아 종전 receipt를 P1 증거로 재사용할 수 없다. RLPD G0의
+`4272000001..4272000012`는 이제 별도 동결 RLPD G0에서 TRAIN-only로
+소비됐다. Dreamer의 새로운 P1 pool은 아직 배정·주행되지 않았으며,
+위 진단은 이미 소비한 r6 TRAIN 도로의 별도 재사용이었다. 새로운 pool 선정
+시 G0 및 그 밖의 모든 lane과 별도 감사·분리를 요한다. P1b에는 같은
+선언 TRAIN 도로 풀의 random 대 teacher whole
+episode 수집과 Dreamer offline learner runner, matched update budget이
+추가로 필요하다. 이번 재사용 TRAIN offline runner는 새 P1b의
+source/분할 게이트나 독립 개발 점수를 대신할 수 없으며
+과거 DrQ r3 자료도 재사용하지 않는다.
+Deadline/finish label 계약, 미래 복구 controller의 실행 행동 기반 recurrent carry,
+실제 후보 ZIP과 로컬 actor 간 action parity, 공식 CPU 런타임 적격성은
+통과하지 않았다. D0 확인 결과 수리 후 Dreamer에는 진단할 학습 주행
+정책이 없으므로, 현존 B1의 TRAIN support/prediction 공백만 진단할 수
+있다. 동결된 B1 실패와 P1/P1b의 독립 source/partition/protocol 게이트는
+그대로 유지한다. 내부 연구 반복 승인이 공식 제출/모델 확정의 즉시
+승인을 대신하지 않는다.
+RLPD 주행 실패 유형을 Dreamer의 원인으로 대체하지 않고, 복구 정책·
+finish critic·의미 head·커리큘럼은 각각 근거가 생길 때까지 미구현이다.
+
 The detailed diagnosis and phased technical work below are retained from the
 pre-migration recovery strategy.
 
@@ -92,6 +304,44 @@ state, and evaluation contracts. Read it before implementing the phases below.
   The [`B1 diagnosis`](../../../experiments/dreamerv3-b1-failure-diagnosis-v1.json)
   records an actual four-decision transition trace and same-anchor 5/8/10/full
   context tests. Results remain local and do not select a policy.
+
+### B1 Diagnosis Reproduction Notes (2026-09-26)
+
+These details supplement, but do not alter, the frozen v1-v9 protocols or the
+[`diagnosis`](../../../experiments/dreamerv3-b1-failure-diagnosis-v1.json).
+
+- The read-only v9 latent probe used the exact-source v9 encoder/RSSM checkpoints
+  on CPU with `torch.manual_seed(7310 + learner_seed)`. For every development
+  episode it reset `h`, `z`, and previous native action to zero, observed the
+  entire episode with `/255` input, and extracted each resulting state's
+  one-step prior and posterior features. It selected transition `t` when
+  `t >= 10` and either `t % 10 == 0` or `L - 1 - t <= 10`, where `L` is that
+  episode's decision count. Terminal proximity was a retrospective label, not
+  an input. Ridge `alpha=100` used fold `(episode_id // 4) % 4`; features were
+  standardized using only training episodes in each fold. The elapsed-time
+  baseline ranked by raw decision index `t`, not the future episode length.
+  The original inline probe command was not saved as a script: numeric results
+  and limitations are in the diagnosis JSON, but byte-exact reproduction of
+  that *probe* has not been established. The separate matched-context CLI was
+  reproduced byte-for-byte for seed 0.
+- The real 4-decision training-only `(track_id=1, seed=7, frame_skip=4)` trace
+  recorded full SHA-256 hashes of rounded uint8 observation stacks. Its
+  actions/rewards/flags and shortened hashes are in the diagnosis JSON:
+
+  | Stack | SHA-256 |
+  |---|---|
+  | `o0` | `8795e83b345545e1e38f50a2e8e5db948f36faa1ad723ce30b33175b6c48b2e5` |
+  | `o1` | `330e7fabe983c38bf8da82e734fe3b8ec9bac563ef75c4cd4a17654cc7566713` |
+  | `o2` | `f05d3fe05e90de646605ad125a8ee2d3eacdd009ebfa0542c3fd3012e396dfd8` |
+  | `o3` | `a6b8830ffeb751461b21f1feea3de89f8ab03647fa0441ecb0f1e1ecf3796f76` |
+  | `o4` | `463e5f44bdf9f9d7c87b87090704ab4050be859f8b427c503b98ceb8bc9a313a` |
+
+- `scripts/diagnose/dreamerv3_b1_context_audit.py` refuses to overwrite an
+  existing `--output` file. When reproducing either seed, replace the example
+  `/tmp/kilo/dreamerv3-b1-context-repro-seedN.json` output in the diagnosis
+  with a **new, unused path**. In particular, the seed-0 example path was used
+  during the original byte-for-byte reproduction; do not delete or overwrite
+  the frozen JSON in `experiments/`.
 
 ## 핵심 결론
 
@@ -807,10 +1057,11 @@ Progress만으로 131k로 확장하지 않으며, A/B/CPU package 게이트가
 교사와 DrQ의 학습 비용·자료 분포가 다르면 같은 평가 셀이라도 훈련
 방법까지 매칭되었다고 주장하지 않는다. 과거 DrQ confirmation 수치나
 Dreamer 0/6 smoke를 새로운 matched outcome으로 재사용하지 않는다.
-기존 `evaluate_policy.py`의 수치형 CPU latency/RSS eligibility 검사는
-DrQ 경로에만 적용되므로, 새로운 Dreamer actor에는 별도로 Python 3.11
-CPU 환경에서 생성 `<=10s`, 각 reset/act `<=5s`, 전체 프로세스
-peak RSS `<=1024 MB`를 계측·판정한다. 과거 Gate 1과 로컬 패키지
+현재 `evaluate_policy.py`의 수치형 CPU latency/RSS eligibility 검사는
+DrQ뿐 아니라 Dreamer와 RLPD를 포함한 태그된 native actor 모두에 적용된다.
+새 Dreamer actor도 Python 3.11 CPU 환경에서 생성 `<=10s`, 각
+reset/act `<=5s`, 전체 프로세스 peak RSS `<=1024 MB`를
+계측·판정한다. 과거 Gate 1과 로컬 패키지
 smoke는 **옛 구현**의 운영 증거이지 수정 actor의 공식 서버 통과
 증명이 아니다. 공식 pinned Dreamer의 `policy()`와 이 저장소의 CPU
 deterministic 선택은 같은 mode 계약이라고 가정하지 않는다.
@@ -829,8 +1080,10 @@ native actor를 custom 환경에서 검증하는 연결과 parity 시험이 먼�
 필요하다. 그 결과는 항상 **로컬 custom 환경 proxy**로 별도 표기한다.
 
 **공개/비공개와 외부 행동:** 2026-09-24 10:16 UTC의
-[공식 공개 트랙 API](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks)
-읽기 전용 확인에서는 공개 트랙 1·2·3이 조회됐다. 이 스냅샷은 바뀔 수 있고
+[당시 공식 공개 트랙 API](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks)
+읽기 전용 확인에서는 공개 트랙 1·2·3이 조회됐다. 현재 접근 주소는
+[새 공식 공개 트랙 API](https://scholarships-hardwood-headers-influenced.trycloudflare.com/api/tracks)다.
+이 스냅샷은 바뀔 수 있고
 `docs/competition/info.md`의 전날 1·2 기록보다 새로운 시점의
 정보다. 하나의 동일한 불변 package로 모든 당시 접근 가능한 공개
 트랙 결과를 기록해야 하며, 트랙별로 서로 다른 제출의 최고값을 합쳐

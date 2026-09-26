@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "status": "aborted-before-first-online-decision",
+  "study_id": "drqv2-teacher-replay-v1-r2",
+  "protocol_path": "experiments/drqv2-teacher-replay-v1-r2.json",
+  "protocol_sha256": "30037fdaf935939dafb0f9be673275d8bac69f020212cfbd48d0ad426996cf90",
+  "failure": "NameError: _load_collection referenced protocol training pools without a protocol argument",
+  "phase": "training artifact preflight",
+  "trainer_processes_started": 1,
+  "online_decisions": 0,
+  "learner_updates": 0,
+  "online_run_directories_created": [],
+  "source_checkpoint_or_dataset_mutated": false,
+  "teacher_datasets": [
+    {
+      "learner_seed": 0,
+      "path": "runs/20260924-drqv2-teacher-replay-v1-r2/teacher-data/learner-0/teacher-dataset.npz",
+      "sha256": "891f360dde1de467d1e286507a2ddd8f6e12d9fdaee0f0f4eff67edc71ab6c0f",
+      "digest": "ac9892f96aae904c6d1ccbf1f40dff0d1f78e1673f6937244fc9740fe500e72e",
+      "coverage_pass": true
+    },
+    {
+      "learner_seed": 1,
+      "path": "runs/20260924-drqv2-teacher-replay-v1-r2/teacher-data/learner-1/teacher-dataset.npz",
+      "sha256": "d189fcf0dd23a6cb60bbd1641bf3d90a3e5ff4d75fc3c0f58f64132cb64750fb",
+      "digest": "00a0c86788af6ff2770e4e1b1c5d7a00d659d9c098e613ef92aee34017d00b38",
+      "coverage_pass": true
+    }
+  ],
+  "next_action": "fix helper protocol binding, test it, and restart with fresh r3 geometry; r2 datasets are not reused"
+}

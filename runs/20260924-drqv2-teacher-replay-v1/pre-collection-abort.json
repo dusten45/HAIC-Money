@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "aborted-before-first-reset",
+  "study_id": "drqv2-teacher-replay-v1",
+  "protocol_path": "experiments/drqv2-teacher-replay-v1.json",
+  "protocol_sha256": "136cf1dcf8cd52ec667d4559100b78b9fc26f746eea6b124104f9a29210b5b1a",
+  "a0_gate_path": "runs/20260924-drqv2-teacher-replay-v1/a0-collection-gate.json",
+  "a0_gate_sha256": "c6c96601663838951b9b50dc2c6de14358a2b32309bf768c9f0a89bf11e048a7",
+  "cause": "SampledHaicTrack was not located because Gymnasium .unwrapped points to the inner CarRacing environment",
+  "processes": [
+    {
+      "learner_seed": 0,
+      "exit_status": "failed",
+      "resets": 0,
+      "environment_decisions": 0,
+      "dataset_written": false
+    },
+    {
+      "learner_seed": 1,
+      "exit_status": "failed",
+      "resets": 0,
+      "environment_decisions": 0,
+      "dataset_written": false
+    }
+  ],
+  "consumed_geometry_cells": [],
+  "protocol_action": "retired; do not overwrite or reuse its allocated seed list",
+  "next_action": "correct wrapper traversal and freeze a new disjoint protocol"
+}
