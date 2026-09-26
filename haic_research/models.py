@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
@@ -143,6 +144,9 @@ class RunManifest:
     checkpoint_ref: CheckpointRef | None = None
     predecessor_run_id: str | None = None
     predecessor_decision_ref: str | None = None
+    comparison_id: str | None = None
+    seed_ids: tuple[str, ...] = ()
+    comparison_episode_count: int | None = None
 
     def __post_init__(self) -> None:
         if not all(isinstance(value, str) and value.strip() for value in (self.run_id, self.plan_hash, self.cycle_id)):
@@ -151,7 +155,13 @@ class RunManifest:
             raise TypeError("checkpoint_ref must be a CheckpointRef")
         _freeze_mapping_fields(self, ("tool_versions", "runtime_versions", "resource_limits",
                                      "permission_limits", "source_hashes"))
-        _freeze_tuple_fields(self, ("data_ids", "map_ids", "split_ids", "output_paths"))
+        _freeze_tuple_fields(self, ("data_ids", "map_ids", "split_ids", "output_paths", "seed_ids"))
+        if self.comparison_episode_count is not None and (type(self.comparison_episode_count) is not int or self.comparison_episode_count <= 0):
+            raise ValueError("registered comparison denominator must be a positive integer, not a boolean")
+        if self.comparison_id is not None and (not isinstance(self.comparison_id, str) or not self.comparison_id.strip()):
+            raise ValueError("comparison_id must be a nonempty string when registered")
+        if any(not isinstance(seed, str) or not seed.strip() for seed in self.seed_ids) or len(set(self.seed_ids)) != len(self.seed_ids):
+            raise ValueError("registered seed identifiers must be unique nonempty strings")
 
 
 @dataclass(frozen=True)
@@ -255,12 +265,37 @@ class ExperimentResult:
         _freeze_tuple_fields(self, ("map_ids", "seed_ids"))
         object.__setattr__(self, "rule_compliance", GateStatus(self.rule_compliance))
         object.__setattr__(self, "mechanism_activation", GateStatus(self.mechanism_activation))
+        if any(not isinstance(value, str) or not value.strip() for value in (self.candidate_id, self.comparison_id, self.split_id, *self.map_ids, *self.seed_ids)):
+            raise ValueError("experiment identifiers must be nonempty strings")
         if not all((self.candidate_id, self.comparison_id, self.split_id, self.map_ids, self.seed_ids)):
             raise ValueError("experiment result requires candidate and comparison protocol identifiers")
         if len(set(self.map_ids)) != len(self.map_ids) or len(set(self.seed_ids)) != len(self.seed_ids):
             raise ValueError("map and seed identifiers must be unique")
+        if type(self.completion_count) is not int or type(self.episode_count) is not int:
+            raise ValueError("completion and episode counts must be integers, not booleans")
         if self.episode_count <= 0 or not 0 <= self.completion_count <= self.episode_count:
             raise ValueError("completion count must fit a positive episode denominator")
+        for name in ("median_finished_lap_ms", "mean_incomplete_progress", "p90_finished_lap_ms", "collisions", "damage", "act_latency_p95_ms", "official_score"):
+            value = getattr(self, name)
+            optional = name in {"median_finished_lap_ms", "p90_finished_lap_ms", "official_score"}
+            if optional and value is None:
+                continue
+            try:
+                finite = type(value) in (int, float) and math.isfinite(value)
+            except OverflowError:
+                finite = False
+            if not finite:
+                raise ValueError(f"{name} must be a finite number")
+            if name != "official_score" and value < 0:
+                raise ValueError(f"{name} must be nonnegative")
+        if not 0 <= self.mean_incomplete_progress <= 1:
+            raise ValueError("incomplete progress must be between zero and one")
+        if self.completion_count and (self.median_finished_lap_ms is None or self.p90_finished_lap_ms is None):
+            raise ValueError("completed episodes require median and P90 finished lap metrics")
+        if not self.completion_count and (self.median_finished_lap_ms is not None or self.p90_finished_lap_ms is not None):
+            raise ValueError("finished lap metrics require a completed episode")
+        if self.median_finished_lap_ms is not None and (self.median_finished_lap_ms <= 0 or self.p90_finished_lap_ms < self.median_finished_lap_ms):
+            raise ValueError("finished lap times must be positive with P90 at least median")
         if self.eligibility not in {"candidate", "teacher", "smoke", "diagnostic"}:
             raise ValueError("unknown experiment eligibility label")
 

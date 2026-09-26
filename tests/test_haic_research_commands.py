@@ -101,6 +101,29 @@ class CommandFixture(unittest.TestCase):
         target.write_text(''.join(json.dumps(row) + '\n' for row in events), encoding='utf-8')
 
 
+class RegisteredComparisonTests(CommandFixture):
+    def test_optional_comparison_protocol_is_hash_bound_and_drift_refused(self):
+        meta = dict(metadata(), comparison_id='comparison-1', seed_ids=['seed-1', 'seed-2'], comparison_episode_count=10)
+        path = register_plan(self.config, meta, 'train_policy', self.args, research=research())
+        plan = load_run_plan(self.config, path)
+        self.assertEqual(plan['manifest']['comparison_id'], 'comparison-1')
+        self.assertEqual(plan['manifest']['seed_ids'], ['seed-1', 'seed-2'])
+        self.assertEqual(plan['manifest']['comparison_episode_count'], 10)
+        target = path / 'run_manifest.json'
+        original = json.loads(target.read_text(encoding='utf-8'))
+        for change in ({'seed_ids': ['seed-3', 'seed-4']}, {'comparison_id': 'other-comparison'}, {'comparison_episode_count': 11}):
+            with self.subTest(change=change):
+                target.write_text(json.dumps(dict(original, **change)), encoding='utf-8')
+                with self.assertRaises(CommandError):
+                    load_run_plan(self.config, path)
+
+    def test_invalid_comparison_identity_is_refused_before_registration(self):
+        for change in ({'comparison_id': ''}, {'comparison_id': True}, {'seed_ids': ['s', 's']}, {'seed_ids': [False]}, {'comparison_episode_count': True}, {'comparison_episode_count': 1.0}, {'comparison_episode_count': 0}):
+            with self.subTest(change=change), self.assertRaises(CommandError):
+                register_plan(self.config, dict(metadata(), **change), 'train_policy', self.args, research=research())
+            self.assertFalse((self.config.run_root / 'run-001').exists())
+
+
 class CommandProfileTests(CommandFixture):
     def test_unknown_profile_and_arguments_are_rejected(self):
         with self.assertRaises(UnknownProfileError):

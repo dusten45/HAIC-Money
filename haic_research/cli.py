@@ -14,7 +14,8 @@ from .commands import (
     replay_run_history, report_run,
 )
 from .config import ConfigError, load_config
-from .models import IntegrationReport
+from .models import ExperimentResult, IntegrationReport
+from .results import report_experiment
 from .records import RecordError, _canonical, _identifier, _json_value, _read_json, _typed
 from .state import TransitionError
 
@@ -47,6 +48,9 @@ def parser() -> argparse.ArgumentParser:
     report.add_argument("run_id")
     report.add_argument("--outcome", choices=("ADVANCE", "REJECT", "REVISE", "PIVOT"), required=True)
     report.add_argument("--report", type=Path, required=True, help="IntegrationReport JSON")
+    report.add_argument("--result", type=Path, help="explicit candidate ExperimentResult JSON")
+    report.add_argument("--control", type=Path, help="explicit control ExperimentResult JSON; requires --result")
+    report.add_argument("--promote-sota", action="store_true", help="request local SOTA gate review; requires --result/--control")
     return result
 
 
@@ -113,7 +117,16 @@ def main(argv=None, *, runner=subprocess.run, stdout=None, stderr=None) -> int:
                 exit_code = 0
         else:
             report = _typed(IntegrationReport, _input_json(config, args.report))
-            output = _status(report_run(config, _run_dir(config, args.run_id), args.outcome, report))
+            path = _run_dir(config, args.run_id)
+            if (args.control or args.promote_sota) and not args.result:
+                raise CommandError("--control/--promote-sota require --result")
+            if args.result:
+                candidate = _typed(ExperimentResult, _input_json(config, args.result))
+                control = _typed(ExperimentResult, _input_json(config, args.control)) if args.control else None
+                decision = report_experiment(config, path, args.outcome, report, candidate, control, promote=args.promote_sota)
+                output = dict(_status(replay_run_history(config, path)), promotion=_json_value(decision))
+            else:
+                output = _status(report_run(config, path, args.outcome, report))
             exit_code = 0
         print(json.dumps(_json_value(output), sort_keys=True, ensure_ascii=False, allow_nan=False), file=stdout)
         return exit_code

@@ -423,62 +423,21 @@ For split inputs, read only the exact split JSON and validate referenced map pat
 
 ## Task 7: Add result, experiment and SOTA reporting
 
-**Files:**
-- Create: `haic_research/results.py`
-- Create: `tests/test_haic_research_results.py`
-- Modify: `RESULTS.md`
-- Modify: `SOTA.md`
-- Modify: `docs/experiments/INDEX.md`
-- Modify: `docs/report.md`
+**Files:** `haic_research/results.py`, focused results/policy/CLI/commands tests, minimal models/records/CLI extensions, `RESULTS.md`, `SOTA.md`, `docs/experiments/INDEX.md`, and `docs/report.md`.
 
-**Interfaces:**
-- `append_experiment_summary(results_path: Path, experiment_path: Path, result: ExperimentResult) -> None` adds a dated record before the frozen generated block and links its full experiment file.
-- `promote_sota(sota_path: Path, candidate: ExperimentResult, control: ExperimentResult, report_path: Path) -> PromotionDecision` updates only after all gates pass and completion-first comparison selects the candidate.
+**Final controller contract (2026-09-26):**
 
-- [ ] **Step 1: Write append-only and completion-promotion tests**
+- Summary and SOTA APIs require `config` and explicitly named `run_dir`; canonical RESULTS/SOTA/detail/index targets only. No arbitrary report paths, historical discovery, import, data reads, or actual HAIC operation.
+- Use existing guarded `run_transaction` IO and Task 6 `load_run_plan`, `replay_run_history`, and `report_run`; do not duplicate security/state machinery. Source labels alone are unverified. Task 6 binds and rechecks bounded executable source bytes/interpreter identity; checkpoint/map contents and installed package bytes remain unmeasured.
+- Persist immutable `result_evidence.json` and, when a control is supplied, `comparison_evidence.json` with exact candidate/control payloads and run/plan identity before the immutable gate report. Link those records in report `evidence_paths`; unrelated all-PASS reports cannot authorize arbitrary results.
+- Add optional manifest `comparison_id`, `seed_ids`, and strict positive integer `comparison_episode_count` to preregister protocol identity and denominator within the existing approval hash. Omitted protocol remains valid for new gate-only plans but cannot promote. Never retrospectively migrate existing run files.
+- External `ExperimentResult` validation rejects noninteger/boolean counts, invalid denominators, nonfinite/nonnumeric/negative duration, collision, damage or latency metrics, invalid progress, and missing finished-lap metrics when completions exist. Keep official score separate and reuse existing completion-first `promotion_decision(...).eligible`; do not change ranking policy.
+- SOTA requires exactly three PASS gates, eligible candidate/control, a registered independent evaluation profile with `sota_eligible`, registered maps/split/seeds/denominator/model identities, at least two seeds, and the exact history-replayed ADVANCE -> GATE_REVIEW_ADVANCE -> RELEASE_IF_GATE_PASS path in the same run. REVISE/PIVOT/REJECT, train/tune, teacher/smoke/diagnostic, unmatched and one-seed observations cannot promote.
+- Preserve historical SOTA text by appending the new pointer. Preserve the entire generated RESULTS suffix byte-for-byte including line endings. Full immutable experiment detail includes registered research metadata, protocol, manifest/report/evidence links, result/gates/outcome. Add summary and index entries; reject duplicate run IDs before document writes rather than silently overwrite prior records. Corrections need a distinct new record.
+- CLI `report <run-id> --outcome <outcome> --report <JSON>` retains gate-only reporting; `--result <JSON>`, optional `--control <JSON>`, and `--promote-sota` reach reporting and the same promotion gate. Promotion requires result/control input.
+- Fix the RESULTS introduction's automatic-rebuild claim and explicitly bound pre-v2 research instructions. Update implementation status and honest limitations in docs/report.md; do not fabricate performance changes.
 
-```python
-class ResultReportingTests(unittest.TestCase):
-    def setUp(self):
-        self.temp_dir = tempfile.TemporaryDirectory()
-        self.addCleanup(self.temp_dir.cleanup)
-        self.path = Path(self.temp_dir.name) / "SOTA.md"
-        self.path.write_text("# SOTA\n", encoding="utf-8")
-        self.report = Path(self.temp_dir.name) / "integration_report.json"
-
-    def test_append_preserves_frozen_generated_section(self):
-        before = "# Results\n\n<!-- BEGIN GENERATED RESULTS -->\nold rows\n<!-- END GENERATED RESULTS -->\n"
-        path = write_fixture(before)
-        append_experiment_summary(path, experiment_file(), result("r1"))
-        after = path.read_text()
-        marker = "<!-- BEGIN GENERATED RESULTS -->"
-        self.assertEqual(after[after.index(marker):], before[before.index(marker):])
-
-    def test_sota_does_not_promote_lower_completion_candidate(self):
-        decision = promote_sota(self.path, result("fast", completion_count=6, episode_count=10), result("control", completion_count=8, episode_count=10), self.report)
-        self.assertFalse(decision.promoted)
-```
-
-- [ ] **Step 2: Run the focused test to verify it fails**
-
-Run: `python -m unittest tests.test_haic_research_results -v`
-Expected: FAIL because new-only result reporting is not implemented.
-
-- [ ] **Step 3: Implement append-only records and SOTA gate**
-
-Write full experiment detail to `docs/experiments/<run-id>.md` with manifest/report paths. Append a short row to the human-managed section of `RESULTS.md` without regenerating or rewriting the frozen JSON block. Update `SOTA.md` only for rule-compliant, mechanism-activated, matched candidates selected first by completion rate.
-
-- [ ] **Step 4: Verify historical section preservation and run focused tests**
-
-Run: `python -m unittest tests.test_haic_research_results -v`
-Expected: PASS with byte-identical generated section and no data-directory reads.
-
-- [ ] **Step 5: Commit**
-
-```powershell
-git add haic_research/results.py tests/test_haic_research_results.py RESULTS.md SOTA.md docs/experiments/INDEX.md docs/report.md
-git commit -m "feat: record HAIC results with completion-first promotion"
-```
+**Verification and completion:** Observe focused failing tests first, implement, then run only focused temporary-fixture/FakeRunner results/policy/CLI/commands/records/state/config tests. Cover frozen bytes, old SOTA preservation, completion-first rejection, unrelated/changed evidence, immutable files, protocol binding, no-release outcomes, bad metrics, confined paths/IDs, duplicate preflight, and CLI integration. Inspect exact scoped diff/staged paths and commit a coherent Task 7 unit; no network or push. Write the controller handoff with exact commands/results/API/limitations under `.superpowers/sdd/2026-09-25-haic-research-workflow/task-7-report.md`.
 
 ## Task 8: Implement the harness-aligned structural validator
 

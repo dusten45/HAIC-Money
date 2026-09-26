@@ -1,6 +1,12 @@
 # HAIC RESULTS database
 
-This file is the human-readable normalized result database. The generated section is rebuilt from allowlisted JSON summaries; raw artifacts and checkpoints remain untouched. Human experiment notes may be added above the generated section.
+This file preserves historical results and human-reviewed v2 experiment summaries. The generated section is frozen byte-for-byte; it is not rebuilt or scanned for new runs. New records link their immutable v2 run evidence and full experiment detail above that section.
+
+<!-- BEGIN PRE-V2 RESEARCH HISTORY -->
+
+## Pre-v2 research instructions and history
+
+The instructions and observations in this boundary describe the historical workflow. New research follows AGENTS.md and the registered v2 report command.
 
 ## Database rules
 
@@ -63,6 +69,8 @@ The same frozen PPO actor was run with four versus two raw physics ticks per act
 Four PPO-only arms used fresh actors with no checkpoint or teacher initialization, 8,192 decisions/eight updates each, and paired model seeds 8104/8105 (`off` versus `adaptive`). On the locked TUNE map, all eight episode runs retired off-track at progress 0.090535 after 174–175 decisions: 0/8 completed, 0/8 under 13 seconds, and zero collision frames/onsets or damage. Off and adaptive had identical completion and progress for both paired model seeds. The two TUNE seed labels repeat one geometry, so this is one map, not eight independent scenarios.
 
 The action traces stayed near steer −0.12, gas 0.07, brake 0 through retirement; the nearest obstacle was still roughly 129–138 map units away. This is a basic visual track-following failure before obstacle contact, so the experiment does not test whether adaptive safety cost improves obstacle avoidance. The short eight-update fresh-actor budget is a likely cause of the unlearned policy (inference from its nearly constant actions and early off-track failures). Do not interpret the 40.0–40.5 m/s mean speed as a racing improvement: no lap was completed. [Locked TUNE trace and paired summary](artifacts/haic/lagrangian-fresh-runtime-architecture-20260925/tune-evaluation.json) · [runner](training/evaluate_lagrangian_tune.py). SOTA and submission ZIP were not promoted or replaced.
+<!-- END PRE-V2 RESEARCH HISTORY -->
+
 ## V2 document migration (2026-09-26)
 
 The generated block below is frozen historical output. New HAIC research experiments are recorded in docs/experiments/INDEX.md and appended as human-reviewed entries here. Legacy rows are not imported as v2 runs or automatically promoted to SOTA.

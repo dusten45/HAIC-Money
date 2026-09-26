@@ -16,3 +16,7 @@ Tune은 후보 선택에만 사용하고, corridor teacher 기록은 이 포인�
 - checkpoint: `artifacts\haic\site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101\policy.pt`
 - checkpoint SHA-256: `3CEB5EBBE2A4BD96944649A693B8EF924C0252FA620B0FD547C7FB494AFFF199`
 - submission archive: `artifacts\haic\submission\haic-obstacle-risk-ppo-actor.zip`
+
+## V2 reporting implementation (2026-09-26)
+
+The report command can append a new local pointer after immutable result/comparison evidence, a preregistered replicated independent evaluation, all three PASS gates, and the replayed ADVANCE release path. It preserves the historical reference above. No v2 candidate or performance improvement was established by implementing or testing this writer. Supplied metrics are evidence inputs; this writer does not independently rerun races.

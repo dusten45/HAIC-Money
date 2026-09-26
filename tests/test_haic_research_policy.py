@@ -76,6 +76,37 @@ class CompletionPriorityTests(unittest.TestCase):
             promotion_decision(result(), result("control", seed_ids=("other",)))
 
 
+class ResultMetricBoundaryTests(unittest.TestCase):
+    def test_counts_are_actual_integers_and_valid_denominators(self):
+        for changes in ({'completion_count': True}, {'completion_count': 1.5}, {'episode_count': True},
+                        {'episode_count': 10.0}, {'episode_count': 0}, {'completion_count': -1}, {'completion_count': 11}):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                result(**changes)
+
+    def test_nonfinite_nonnumeric_and_negative_metrics_refused(self):
+        for name in ('median_finished_lap_ms', 'p90_finished_lap_ms', 'mean_incomplete_progress',
+                     'collisions', 'damage', 'act_latency_p95_ms', 'official_score'):
+            for value in (float('nan'), float('inf'), float('-inf'), True, '10', 10 ** 500):
+                with self.subTest(name=name, value=value), self.assertRaises(ValueError):
+                    result(**{name: value})
+            if name != 'official_score':
+                with self.subTest(name=name), self.assertRaises(ValueError):
+                    result(**{name: -1})
+
+    def test_finished_lap_and_progress_consistency(self):
+        for changes in ({'median_finished_lap_ms': None}, {'p90_finished_lap_ms': None},
+                        {'median_finished_lap_ms': 0}, {'p90_finished_lap_ms': 20000},
+                        {'mean_incomplete_progress': 1.1}, {'completion_count': 0}):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                result(**changes)
+        self.assertEqual(result(completion_count=0, median_finished_lap_ms=None, p90_finished_lap_ms=None).completion_count, 0)
+
+    def test_identifier_types_and_empty_identifiers_refused(self):
+        for changes in ({'candidate_id': 12}, {'comparison_id': ' '}, {'map_ids': (True,)}, {'seed_ids': ('',)}):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                result(**changes)
+
+
 class BatchAndPivotTests(unittest.TestCase):
     def test_batch_limits_and_duplicate_ids(self):
         valid = [hypothesis(str(i), f"direction-{i}") for i in range(4)]

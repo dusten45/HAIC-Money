@@ -35,7 +35,7 @@ class RecordLockError(RecordError):
 
 
 _FILES = ("run_manifest.json", "events.jsonl", "integration_report.json", ".records.lock",
-          "execution_plan.json", ".execution.claim")
+          "execution_plan.json", ".execution.claim", "result_evidence.json", "comparison_evidence.json")
 _GATES = frozenset({"rule_compliance", "mechanism_activation", "competitive_or_product_outcome"})
 _RESERVED = {"con", "prn", "aux", "nul", "clock$", "conin$", "conout$"} | {
     f"{prefix}{number}" for prefix in ("com", "lpt") for number in range(1, 10)
@@ -418,6 +418,25 @@ class RunTransaction:
         with _open(path / "integration_report.json", "x") as stream:
             stream.write(_encode(report))
         self.report = report
+
+    def read_result_evidence(self, *, comparison: bool = False) -> dict[str, object]:
+        path = self._active_path()
+        name = "comparison_evidence.json" if comparison else "result_evidence.json"
+        payload = _read_json(path / name)
+        if not isinstance(payload, dict):
+            raise RecordError("result evidence must be an object")
+        return payload
+
+    def write_result_evidence(self, payload: Mapping[str, object], *, comparison: bool = False) -> None:
+        """Immutable named evidence, only before the gate report, under this lock."""
+        path = self._active_path()
+        if self.report is not None:
+            raise RecordError("result evidence must precede the immutable gate report")
+        if not isinstance(payload, Mapping):
+            raise RecordError("result evidence must be an object")
+        name = "comparison_evidence.json" if comparison else "result_evidence.json"
+        with _open(path / name, "x") as stream:
+            stream.write(_encode(payload))
 
     def reserve_execution(self, event: RunEvent) -> None:
         path = self._active_path()

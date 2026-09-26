@@ -1,21 +1,39 @@
-# HAIC research report
+# HAIC 하네스 문서 요약과 현재 상태
 
-Updated: 2026-09-26. This is the current synthesis of v2 research evidence; it does not convert historical local results into a newly validated candidate.
+갱신: 2026-09-26. 최신 요청에 따라 작업 범위는 **문서 정리**로 한정한다. 코드 구현·테스트·구조 전환 작업은 중단했다.
 
-## Verified facts
+## 합의한 운영 방식
 
-- The v2 document contract defines completion rate as the primary internal selection metric on matched registered cells. See `AGENTS.md` and `harness.config.json`.
-- The existing `SOTA.md` record is a historical local reference. Its source remains at its original path; no v2 candidate has been promoted here.
+- **완주율이 최우선**이다. 같은 조건의 후보끼리 비교하고, 완주율이 같을 때만 랩타임·미완주 진행도·충돌·손상·추론 지연을 비교한다. 공식 대회 점수와 내부 선택 기준은 구분한다.
+- 중앙 담당자가 상태·우선순위·예산·역할을 조율한다. 여러 에이전트는 서로 다른 탐색 방향을 맡고, 사실·추론·미확인 사항·권고·근거 경로를 나누어 보고한다.
+- 가설마다 근거, 관측 가능한 정보, 허용 행동, 성공 조건, 비교군, 반증 조건, 최소 실험, 자원 한도를 적는다.
+- 설계·구현·실행 승인을 구분한다. 평가 뒤 ADVANCE / REJECT / REVISE / PIVOT 모두 게이트 검토를 거친다. **ADVANCE이며 세 게이트가 모두 PASS일 때만 릴리스 가능**하다. 공식 제출은 별도 승인 사항이다.
+- 탐색 배치는 독립 방향 4개 이상, 후보 8개 이하, 방향별 2개 이하로 제한한다. 비교 가능한 유효 주기 3회 연속 비개선이면 체크포인트를 보존하고 방향을 바꾼다. 실행 장애는 성능 실패 횟수에 넣지 않는다.
+- 과거 데이터는 원래 위치에 보존한다. 자동 수집·복사·이동·재분류하지 않는다. 새 체계에서 과거 최고기록을 자동으로 승격하지 않는다.
+- HAIC에 필요한 운영 원칙을 적용한다. 여러 프로젝트용 포터블 에이전트 제품을 만드는 계획은 아니다.
 
-## Inference
+## 문서 역할
 
-- None established by the document migration. Mechanism claims require an activation measurement and a matched outcome comparison.
+| 문서 | 확인할 내용 |
+|---|---|
+| [AGENTS.md](../AGENTS.md) | 운영 규약, 상태 전이, 승인, 에이전트 역할 |
+| [PROJECT_INFO.md](../PROJECT_INFO.md) | 프로젝트 목표와 실행 구조 설명 |
+| [RESTRICTIONS.md](../RESTRICTIONS.md) | 대회·데이터·보안·운영 제한 |
+| [RESULTS.md](../RESULTS.md) / [SOTA.md](../SOTA.md) | 기존 결과와 역사적 로컬 최고기록 |
+| [sources/INDEX.md](sources/INDEX.md) | 출처와 확인 시점 |
+| [sources/legacy-path-map.md](sources/legacy-path-map.md) | 과거 데이터의 위치와 용도 |
+| [strategy-history.md](strategy-history.md) | 기존 전략과 판단의 역사 |
+| [handoffs/REPORT_TEMPLATE.md](handoffs/REPORT_TEMPLATE.md) | 에이전트 보고 양식 |
+| [experiments/INDEX.md](experiments/INDEX.md) | 새 실험 기록 위치 |
 
-## Unknowns and limits
+## 기존 방식과 바꾸려던 부분
 
-- Current official rules and schedule require a fresh source check before external action.
-- New v2 experiments and gate outcomes have not yet been recorded.
+기존 research_ops와 training/improvement_loop.py는 결과 탐색·색인, 비교, RESULTS/SOTA 갱신, 선택적 실행을 맡았다. 새 운영안은 명시적으로 등록한 실행과 근거를 중심으로 기록하고 판단하도록 책임을 나눈다. 기존 코드와의 연결을 줄인다는 방향은 문서에 남기되, 현재 요청에서는 추가 코드 변경이나 기존 실행 경로 삭제를 진행하지 않는다.
 
-## Next priority
+## 실제 완료 상태와 한계
 
-Implement the v2 config validator and approval-gated workflow, then record a preregistered matched experiment under the new roots after the required approvals.
+- 문서 정리를 넘어 진행한 설정·상태·비교·기록·승인 실행 코드는 이미 로컬 커밋으로 남아 있다. 결과 갱신 관련 코드에는 미커밋 작업도 남아 있으며, 완성·전환 완료로 취급하지 않는다.
+- 구조 검증기와 기존 오케스트레이터 퇴역은 완료되지 않았다. 해당 구현 계획은 중단 상태이며 자동으로 재개하지 않는다.
+- 이미 생긴 코드 변경은 임의로 되돌리거나 삭제하지 않았다. 기존 사용자 변경과 과거 데이터도 그대로 보존한다.
+- 이번 작업에서는 실제 학습·주행 평가·패키징·공식 제출을 하지 않았다. 따라서 새로운 완주율 개선이나 공식 성과는 없다.
+- SOTA 문서의 완주율 0.75, 중앙 랩타임 19.32초는 기존 문서에 남아 있는 역사적 로컬 기록이다. 이번에 원자료를 다시 검증한 결과가 아니다.
