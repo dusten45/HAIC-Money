@@ -1,0 +1,58 @@
+{
+  "format": "haic-dreamerv3-reused-train-action-input-result-v1",
+  "status": "non_promoting_consumed_development_input_sensitivity",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "freshness_claim": false,
+  "counterfactual_environment_claim": false,
+  "p1b_or_promotion_claim": false,
+  "source": {
+    "path": "scripts/diagnose/dreamerv3_reused_action_probe.py",
+    "sha256": "b230439344be2adeb1548ff3c3053768646c5e9fbc9d92fdc4445ebdcc44b21c"
+  },
+  "scored_evidence": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/action-sensitivity-v1/action-result.json",
+    "sha256": "223aef77d71e0fcc705ee29f4c63bebc8481a697e520963f1b006dced6a87e88"
+  },
+  "pinned_inputs": {
+    "original_score_protocol_sha256": "8fc90d1024e6bc55d1e42d3ba442bd3c493bfece195571fa34063a15203c4a5d",
+    "original_score_result_sha256": "748de44441dedf08b98d2fc28464578cf28b7d9d0483eb762552cb142ad6b4b5",
+    "budget_score_protocol_sha256": "ddcb33d19b36f6c0c17942263da835a45bf87f76271f550027e6113824ebf994",
+    "budget_score_result_sha256": "94bbd7457283d5ec8f0ad4a4ff2e654b97839d09a7eca764615de6fae625ff5d"
+  },
+  "design": {
+    "training_source_arms": ["random", "teacher"],
+    "learner_seeds": [0, 1],
+    "model_only_update_budgets": [64, 256],
+    "development_action_source_strata": ["random", "teacher"],
+    "independent_episodes_and_roads_per_stratum": 4,
+    "prediction_windows_per_model_and_stratum": 8,
+    "unique_scored_labels_per_model_and_stratum": 256,
+    "terminal_positive_labels_per_stratum": 4,
+    "local_finish_positives_per_stratum": 0,
+    "conditions": ["logged", "future_native_action_roll_11", "future_zero_native_actions"],
+    "held_constant": ["observed_reset_origin_context", "posterior_anchor_state", "latent_rng_stream", "logged_next_frame_reward_terminal_targets"]
+  },
+  "teacher_trained_256_update_teacher_stratum": {
+    "seed_order": [0, 1],
+    "zero_vs_logged_image_prediction_mse": [0.02784415135188567, 0.018726095371892626],
+    "zero_vs_logged_image_error_delta_on_logged_targets": [0.022732615224185793, 0.015001897031680755],
+    "roll11_vs_logged_image_prediction_mse": [0.002890052947534359, 0.002441140744053931],
+    "roll11_vs_logged_image_error_delta_on_logged_targets": [0.0003424420233955061, 0.0007150460615434895]
+  },
+  "teacher_trained_256_update_random_stratum": {
+    "seed_order": [0, 1],
+    "roll11_vs_logged_image_error_delta_on_logged_targets": [-0.0011857371332837374, -0.000924281629863799]
+  },
+  "random_trained_256_update_small_response_heuristic": {
+    "seed_0": true,
+    "seed_1": false,
+    "meaning": "A predeclared display heuristic for both rotated/zero input responses, not a skill or learning gate."
+  },
+  "interpretation": [
+    "Teacher-data world-model predictions respond to altered future action inputs, but a response does not imply correct action-conditional dynamics or simulator success.",
+    "Rotated logged inputs sometimes lower error against the fixed logged-action outcomes. This cannot rank actual interventions because the environment was never branched and targets were not counterfactual.",
+    "Road episodes and labels are reused iterative development evidence already inspected during update-budget selection; models/windows do not increase the independent geometry denominator.",
+    "Neither more training updates nor action-input sensitivity justifies actor training, fresh P1b promotion or official evaluation.",
+    "Before another model change, check posterior reconstruction versus prior forecast and one-sample versus predictive-mean image estimands with separately pinned read-only diagnostics."
+  ]
+}
