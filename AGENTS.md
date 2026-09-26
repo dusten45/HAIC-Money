@@ -50,3 +50,7 @@ Each new run writes an immutable `run_manifest.json`, append-only `events.jsonl`
 - Do not automatically merge external project code. Adopting a branch or external strategy requires a registered hypothesis, control, checkpoint and failure conditions.
 - Literature supports hypotheses; measured driving evidence determines performance. Evidence from one branch or dataset must be flagged as possible overfitting; it does not establish generalization.
 - Record completion/lap distributions, incomplete progress, collisions/damage, action latency p50/p95/max and invalid actions, import/reset time, RSS, rollout/update/evaluation duration, and checkpoint/package references as applicable to the registered experiment.
+
+## Current task boundary
+
+Discovery/hypothesis integration is complete: four independent completion-rate directions are recorded. The current stage is drafting and revising a batch design. No plan revision/hash, splits, seeds, denominator, resource budget, or design approval has been fixed yet. Design, implementation and execution approval gates remain required before experiment implementation or operations. Preserve earlier user constraints and the official source precedence. See docs/report.md for current status. Task 9 physical legacy retirement remains blocked and incomplete; its ten authorized files are preserved.

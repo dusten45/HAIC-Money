@@ -48,7 +48,7 @@ Choose one `report` command for the actual outcome after successful execution. I
 
 ## 현재 작업 범위
 
-하네스를 바탕으로 작업을 재개했습니다. 현재 여러 에이전트가 독립 방향 4개에서 가설을 탐색하는 DISCOVER/HYPOTHESIZE 단계이며, corridor 경로의 제출 적격성은 아직 미확인입니다. 구체적인 실험은 중앙 통합과 설계·구현·실행 승인 게이트를 거칩니다.
+완주율 관련 네 독립 방향을 [중앙 인계 문서](docs/handoffs/completion-first-discovery-20260926/INDEX.md)에 기록하고 탐색·가설 통합을 완료했습니다. corridor 전용 아이디어는 후보 배치에서 제외했습니다. 현재는 배치 설계를 작성·수정하는 단계이며, plan revision/hash·split·seed·denominator·자원 예산·설계 승인은 아직 확정하지 않았습니다. 실험 구현과 실행 전 설계·구현·실행 승인 게이트를 거칩니다.
 
 Task 7 결과 기록·SOTA 승격 코드와 Task 8 구조 검증기가 커밋됐습니다. Task 9 문서 전환과 새 하네스 전체 단위·구조 검증은 완료했으며, 기존 파일의 실제 삭제는 자동 정책 차단으로 남아 있습니다. 검증 수치와 한계는 [운영 요약](docs/report.md)에 기록합니다.
 
