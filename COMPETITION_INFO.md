@@ -1,6 +1,6 @@
 # HAIC Competition 정보
 
-이 문서는 과거 로컬 대회 요약이다. 규칙·제출·일정 사실은 현재 [대회 사이트](https://ships-duo-ethical-saver.trycloudflare.com/)와 [공식 Participants 저장소](https://github.com/2026-HAIC/Participants)를 먼저 확인한다. 출처 우선순위는 [AGENTS.md](AGENTS.md), 프로젝트 목적은 [PROJECT_INFO.md](PROJECT_INFO.md), 실행·누수·제출 제한은 [RESTRICTIONS.md](RESTRICTIONS.md)에 있다. 아래 `variables-6` 수치는 로컬 스냅샷이며 외부 조치 전 재확인이 필요하다.
+이 문서는 과거 로컬 대회 요약이다. 규칙·제출·일정 사실은 현재 [대회 사이트](https://ships-duo-ethical-saver.trycloudflare.com/)와 [공식 Participants 저장소](https://github.com/2026-HAIC/Participants)를 먼저 확인한다. 공식 Participants README와 LICENSE의 고정 로컬 원문은 [docs/sources/official-participants/](docs/sources/official-participants/README.md)에 있다. 출처 우선순위는 [AGENTS.md](AGENTS.md), 프로젝트 목적은 [PROJECT_INFO.md](PROJECT_INFO.md), 실행·누수·제출 제한은 [RESTRICTIONS.md](RESTRICTIONS.md)에 있다. 아래 `variables-6` 수치는 로컬 스냅샷이며 외부 조치 전 재확인이 필요하다.
 
 ## 관측과 행동
 

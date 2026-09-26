@@ -15,9 +15,6 @@
 
 - train 외 tune/held-out map·seed·obstacle 정답·geometry를 학습/증강에 사용하지 않는다.
 - map 좌표와 simulator state를 제출 추론 입력으로 전달하지 않는다.
-- teacher/corridor는 train-only 진단·워밍업에만 사용하며 ZIP에 넣지 않는다.
-- S1 PPO actor-only를 기본 제출로 하고 S2 CEM은 비교 전용으로 둔다.
-- S3 corridor 교사는 제출 actor와 SOTA 성능에 포함하지 않는다.
 
 ## V2 연구 운영 제한
 
@@ -30,6 +27,5 @@
 
 ## 기록
 
-- Tune 선택 뒤 held-out과 공식 Track1 seed42, `official_plus_custom` 장애물 맵을 별도 실행한다.
-- smoke나 teacher 단독 완주를 PPO 제출 성능으로 기록하지 않는다.
+- smoke나 teacher 단독 완주를 제출 후보 성능으로 기록하지 않는다.
 - 실패 실험도 원본 JSON과 함께 남기며 유리한 시드만 보고하지 않는다.
