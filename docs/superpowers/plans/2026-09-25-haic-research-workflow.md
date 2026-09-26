@@ -182,12 +182,12 @@ git commit -m "feat: validate HAIC research configuration"
 - Create: `tests/test_haic_research_state.py`
 
 **Interfaces:**
-- `WorkflowState` enum contains every state in `AGENTS.md`, including `GATE_REVIEW`.
+- `WorkflowState` enum contains every state in `AGENTS.md`, including all four `GATE_REVIEW_<OUTCOME>` substates.
 - `Approval` has `stage`, `plan_hash`, `approved_at`, and `source_ref`.
 - `Hypothesis` has all eleven fields from the spec, with `source_paths: tuple[str, ...]` for cited evidence.
 - `GateResult` contains gate name, one of `PASS/FAIL/UNKNOWN/NOT_APPLICABLE`, rationale, and evidence paths. `RunManifest` contains run ID, purpose, hypothesis/approval hashes, candidate/control revisions and package hashes, tool/runtime versions, data/map/split IDs, resource/permission limits, output paths and source hashes. `RunEvent` contains UTC timestamp, event kind, workflow state, approval reference, execution status/error, resource usage, mechanism signal, endpoint, and correction reference.
 - `IntegrationReport` contains each gate result and cited evidence paths. `AgentReport` contains exactly `fact`, `inference`, `unknown`, `recommendation`, and `source_paths`. `CycleSummary` carries validity, protocol-match, improvement, and infra-invalid status. `WorkAssignment` carries direction, hypothesis IDs, owner, allowed read/write scope, and handoff path. These are immutable records in `models.py`.
-- `transition(current: WorkflowState, requested: WorkflowState, *, plan_hash: str, approvals: Sequence[Approval], gates: Sequence[GateResult], evaluation_outcome: WorkflowState | None = None) -> WorkflowState`.
+- `transition(current: WorkflowState, requested: WorkflowState, *, plan_hash: str, approvals: Sequence[Approval], gates: Sequence[GateResult]) -> WorkflowState`.
 
 - [ ] **Step 1: Write transition and schema tests**
 
@@ -201,19 +201,17 @@ class WorkflowTests(unittest.TestCase):
     def test_every_evaluation_outcome_enters_gate_review(self):
         for outcome in (WorkflowState.ADVANCE, WorkflowState.REJECT,
                         WorkflowState.REVISE, WorkflowState.PIVOT):
-            self.assertEqual(transition(outcome, WorkflowState.GATE_REVIEW,
+            self.assertEqual(transition(outcome, WorkflowState[f"GATE_REVIEW_{outcome.value}"],
                                         plan_hash="p1", approvals=[], gates=all_gates()),
-                             WorkflowState.GATE_REVIEW)
+                             WorkflowState[f"GATE_REVIEW_{outcome.value}"])
 
     def test_only_advance_with_all_pass_gates_can_release(self):
         with self.assertRaises(GateError):
-            transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                       plan_hash="p1", approvals=[], gates=unknown_gates(),
-                       evaluation_outcome=WorkflowState.ADVANCE)
-        with self.assertRaises(GateError):
-            transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                       plan_hash="p1", approvals=[], gates=passing_gates(),
-                       evaluation_outcome=WorkflowState.PIVOT)
+            transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
+                       plan_hash="p1", approvals=[], gates=unknown_gates())
+        with self.assertRaises(TransitionError):
+            transition(WorkflowState.GATE_REVIEW_PIVOT, WorkflowState.RELEASE_IF_GATE_PASS,
+                       plan_hash="p1", approvals=[], gates=passing_gates())
 ```
 
 - [ ] **Step 2: Run the focused test to verify it fails**
@@ -223,7 +221,7 @@ Expected: FAIL because the state and schema modules do not exist.
 
 - [ ] **Step 3: Implement typed schemas and explicit transition map**
 
-Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec. All four evaluation outcomes enter `GATE_REVIEW` and record exactly the three gates. Only `GATE_REVIEW` with `evaluation_outcome=ADVANCE` and all three statuses `PASS` may enter `RELEASE_IF_GATE_PASS`; every other outcome stops without release. The current config defines no `NOT_APPLICABLE` exemptions; any future exemption requires an explicit validated config value and transition API support, and can never exempt rule compliance. A revised or pivoted effort starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; pivot preserves the prior checkpoint. Reject illegal transitions and stage/hash mismatch. `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
+Represent gate states as `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`; model the exact state sequence in the spec. Each evaluation outcome enters only its matching `GATE_REVIEW_<OUTCOME>` substate and records exactly the three registered gates. Remove the caller-supplied `evaluation_outcome` override. Only `GATE_REVIEW_ADVANCE` with all three statuses `PASS` may enter `RELEASE_IF_GATE_PASS`; all other review substates may only stop without release. The ADVANCE review may also stop without release. Test the chained REJECT-to-review-to-release bypass. The current config defines no `NOT_APPLICABLE` exemptions; any future exemption requires an explicit validated config value and transition API support, and can never exempt rule compliance. A revised or pivoted effort starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; pivot preserves the prior checkpoint. Reject illegal transitions and stage/hash mismatch. `UNKNOWN` is never a pass. Store approvals as events; never infer approval from the presence of a plan file.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 
@@ -339,7 +337,7 @@ class RunRecordTests(unittest.TestCase):
     def test_new_cycle_requires_distinct_plan_and_parent_decision_event(self):
         decision = event("CYCLE_DECISION", state=WorkflowState.REVISE)
         append_event(self.run_dir, decision)
-        append_event(self.run_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW))
+        append_event(self.run_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_REVISE))
         write_integration_report(self.run_dir, passing_report())
         append_event(self.run_dir, event("STATE", state=WorkflowState.STOPPED))
         revised = linked_manifest("run-002", parent=self.manifest,
@@ -352,7 +350,7 @@ class RunRecordTests(unittest.TestCase):
         prior_dir = create_run(self.config, prior)
         decision = event("CYCLE_DECISION", state=WorkflowState.PIVOT, checkpoint_ref=checkpoint)
         append_event(prior_dir, decision)
-        append_event(prior_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW))
+        append_event(prior_dir, event("GATE_REVIEW", state=WorkflowState.GATE_REVIEW_PIVOT))
         write_integration_report(prior_dir, passing_report())
         append_event(prior_dir, event("STATE", state=WorkflowState.STOPPED))
         pivot = linked_manifest("run-002", parent=prior, decision_ref=decision.event_id,
@@ -376,7 +374,7 @@ Expected: FAIL because the record store does not exist.
 
 - [ ] **Step 3: Implement confined run creation and append-only event writes**
 
-Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize dataclasses, enums, UTC timestamps, frozen mappings and tuples explicitly to stable JSON; do not use `dataclasses.asdict()` on `MappingProxyType` values. For a continuation, read only the exact predecessor named by the caller and verify it is a direct child of the configured v2 run root. Require matching predecessor run ID, a referenced `CYCLE_DECISION` event with outcome `REVISE` or `PIVOT`, a later `GATE_REVIEW` event and integration report, and a later `STOPPED` event. Require distinct run ID, cycle ID, and plan hash. A `PIVOT` must carry the same non-empty checkpoint reference and hash as the predecessor. Do not enumerate, import, or inspect legacy `runs/`, `artifacts/haic/`, or `submissions/`. Task 6 must source approvals only from the current run's events and require the exact current plan hash.
+Resolve and check all output paths against configured roots. Refuse path traversal, reused run IDs, symlinks escaping the root, writes into `artifacts/haic/` or `submissions/`, and writes to legacy manifests. Serialize dataclasses, enums, UTC timestamps, frozen mappings and tuples explicitly to stable JSON; do not use `dataclasses.asdict()` on `MappingProxyType` values. For a continuation, read only the exact predecessor named by the caller and verify it is a direct child of the configured v2 run root. Require matching predecessor run ID, a referenced `CYCLE_DECISION` event with outcome `REVISE` or `PIVOT`, a later `GATE_REVIEW` event in the matching `GATE_REVIEW_REVISE` or `GATE_REVIEW_PIVOT` substate and integration report, and a later `STOPPED` event. Require distinct run ID, cycle ID, and plan hash. A `PIVOT` must carry the same non-empty checkpoint reference and hash as the predecessor. Do not enumerate, import, or inspect legacy `runs/`, `artifacts/haic/`, or `submissions/`. Task 6 must source approvals only from the current run's events and require the exact current plan hash.
 
 - [ ] **Step 4: Run the focused test to verify it passes**
 
@@ -436,7 +434,7 @@ Expected: FAIL because command profiles and CLI do not exist.
 
 - [ ] **Step 3: Register only HAIC local operations**
 
-Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Add `GATE_REVIEW` to the configured workflow state list. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
+Register typed profiles for `training.train_policy`, `training.evaluate_closed_loop`, and `training.package_submission`; add a benchmark profile only for diagnostics and label its results ineligible for SOTA. Keep all four `GATE_REVIEW_<OUTCOME>` substates in the configured workflow state list. Always override outputs to the new artifact root. Do not register official submit/upload/model-confirmation operations.
 
 - [ ] **Step 4: Implement argv construction and execution approval checks**
 

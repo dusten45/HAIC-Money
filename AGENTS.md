@@ -17,14 +17,14 @@ STOPPED
 → EXECUTE_PENDING_APPROVAL
 → EVALUATE
 → ADVANCE / REJECT / REVISE / PIVOT
-→ GATE_REVIEW
+→ GATE_REVIEW_ADVANCE / GATE_REVIEW_REJECT / GATE_REVIEW_REVISE / GATE_REVIEW_PIVOT
 → RELEASE_IF_GATE_PASS (ADVANCE + all gates PASS only)
 → STOPPED
 ```
 
 `STOPPED` is the default. Design, implementation, and execution each require a separate approval record tied to the exact plan revision/hash. Reading documents does not authorize training, evaluation, packaging, or submission. The CLI defaults to plan-only. Only registered local HAIC command profiles may execute after their approval gate. Official submission, model confirmation, and competition-site upload are separate external actions requiring explicit user authorization immediately before execution; they are not CLI operations.
 
-Every evaluation outcome (`ADVANCE`, `REJECT`, `REVISE`, `PIVOT`) proceeds through `GATE_REVIEW`, which records all three gate results. Only `ADVANCE` with all three gates `PASS` may proceed to `RELEASE_IF_GATE_PASS`; other outcomes stop without releasing the current candidate. The current config defines no `NOT_APPLICABLE` release exemptions, so `NOT_APPLICABLE` never passes a release gate. Any future exemption requires an explicit validated config value and transition support; rule compliance cannot be exempted. A revised or pivoted effort begins a new cycle at `DISCOVER` with a new plan hash and fresh approvals. `PIVOT` preserves the prior checkpoint.
+Every evaluation outcome (`ADVANCE`, `REJECT`, `REVISE`, `PIVOT`) enters its matching `GATE_REVIEW_<OUTCOME>` substate, which records exactly the three registered gate results. Branch history is carried by that state; callers cannot override it. Only `GATE_REVIEW_ADVANCE` with all three gates `PASS` may proceed to `RELEASE_IF_GATE_PASS`; the other three review substates may only enter `STOPPED` without release. `GATE_REVIEW_ADVANCE` may also stop without release. The current config defines no `NOT_APPLICABLE` release exemptions, so `NOT_APPLICABLE` never passes a release gate. Any future exemption requires an explicit validated config value and transition support; rule compliance cannot be exempted. A revised or pivoted effort begins a new cycle at `DISCOVER` with a new plan hash and fresh approvals. `PIVOT` preserves the prior checkpoint.
 
 ## Central coordination
 

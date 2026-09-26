@@ -19,7 +19,7 @@
   ],
   "workflow": {
     "default_mode": "plan-only",
-    "states": ["STOPPED", "DISCOVER", "HYPOTHESIZE", "DESIGN_PENDING_APPROVAL", "IMPLEMENT_PENDING_APPROVAL", "EXECUTE_PENDING_APPROVAL", "EVALUATE", "ADVANCE", "REJECT", "REVISE", "PIVOT", "RELEASE_IF_GATE_PASS"],
+    "states": ["STOPPED", "DISCOVER", "HYPOTHESIZE", "DESIGN_PENDING_APPROVAL", "IMPLEMENT_PENDING_APPROVAL", "EXECUTE_PENDING_APPROVAL", "EVALUATE", "ADVANCE", "REJECT", "REVISE", "PIVOT", "GATE_REVIEW_ADVANCE", "GATE_REVIEW_REJECT", "GATE_REVIEW_REVISE", "GATE_REVIEW_PIVOT", "RELEASE_IF_GATE_PASS"],
     "separate_approval_stages": ["design", "implementation", "execution"],
     "pivot_after_valid_non_improving_cycles": 3,
     "gates": ["rule_compliance", "mechanism_activation", "competitive_or_product_outcome"]

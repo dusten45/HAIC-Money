@@ -38,7 +38,7 @@ class SchemaTests(unittest.TestCase):
         self.assertEqual({state.value for state in WorkflowState}, {
             "STOPPED", "DISCOVER", "HYPOTHESIZE", "DESIGN_PENDING_APPROVAL",
             "IMPLEMENT_PENDING_APPROVAL", "EXECUTE_PENDING_APPROVAL", "EVALUATE",
-            "ADVANCE", "REJECT", "REVISE", "PIVOT", "GATE_REVIEW", "RELEASE_IF_GATE_PASS",
+            "ADVANCE", "REJECT", "REVISE", "PIVOT", "GATE_REVIEW_ADVANCE", "GATE_REVIEW_REJECT", "GATE_REVIEW_REVISE", "GATE_REVIEW_PIVOT", "RELEASE_IF_GATE_PASS",
         })
         self.assertEqual({status.value for status in GateStatus}, {
             "PASS", "FAIL", "UNKNOWN", "NOT_APPLICABLE"
@@ -156,9 +156,9 @@ class WorkflowTests(unittest.TestCase):
         for outcome in (WorkflowState.ADVANCE, WorkflowState.REJECT,
                         WorkflowState.REVISE, WorkflowState.PIVOT):
             with self.subTest(outcome=outcome):
-                self.assertEqual(transition(outcome, WorkflowState.GATE_REVIEW,
+                self.assertEqual(transition(outcome, WorkflowState[f"GATE_REVIEW_{outcome.value}"],
                                             plan_hash=PLAN_HASH, approvals=[], gates=passing_gates()),
-                                 WorkflowState.GATE_REVIEW)
+                                 WorkflowState[f"GATE_REVIEW_{outcome.value}"])
                 for bypass in (WorkflowState.STOPPED, WorkflowState.RELEASE_IF_GATE_PASS):
                     with self.assertRaises(TransitionError):
                         transition(outcome, bypass, plan_hash=PLAN_HASH,
@@ -168,7 +168,7 @@ class WorkflowTests(unittest.TestCase):
         for gates in ([], passing_gates()[:2], passing_gates() + passing_gates()[:1],
                       passing_gates() + [GateResult("other", GateStatus.PASS)]):
             with self.assertRaises(GateError):
-                transition(WorkflowState.REJECT, WorkflowState.GATE_REVIEW,
+                transition(WorkflowState.REJECT, WorkflowState.GATE_REVIEW_REJECT,
                            plan_hash=PLAN_HASH, approvals=[], gates=gates)
 
     def test_gate_review_accepts_non_passing_results_and_can_stop(self):
@@ -176,24 +176,35 @@ class WorkflowTests(unittest.TestCase):
             gates = [GateResult(name, status) for name in (
                 "rule_compliance", "mechanism_activation", "competitive_or_product_outcome"
             )]
-            self.assertEqual(transition(WorkflowState.ADVANCE, WorkflowState.GATE_REVIEW,
+            self.assertEqual(transition(WorkflowState.ADVANCE, WorkflowState.GATE_REVIEW_ADVANCE,
                                         plan_hash=PLAN_HASH, approvals=[], gates=gates),
-                             WorkflowState.GATE_REVIEW)
-            self.assertEqual(transition(WorkflowState.GATE_REVIEW, WorkflowState.STOPPED,
-                                        plan_hash=PLAN_HASH, approvals=[], gates=gates,
-                                        evaluation_outcome=WorkflowState.ADVANCE), WorkflowState.STOPPED)
+                             WorkflowState.GATE_REVIEW_ADVANCE)
+            self.assertEqual(transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.STOPPED,
+                                        plan_hash=PLAN_HASH, approvals=[], gates=gates), WorkflowState.STOPPED)
 
-    def test_non_advance_or_missing_outcome_cannot_release(self):
-        for outcome in (None, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT):
-            with self.subTest(outcome=outcome):
-                with self.assertRaises(GateError):
-                    transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                               plan_hash=PLAN_HASH, approvals=[], gates=passing_gates(),
-                               evaluation_outcome=outcome)
+    def test_chained_non_advance_review_cannot_be_relabelled_to_release(self):
         for outcome in (WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT):
-            self.assertEqual(transition(WorkflowState.GATE_REVIEW, WorkflowState.STOPPED,
-                                        plan_hash=PLAN_HASH, approvals=[], gates=passing_gates(),
-                                        evaluation_outcome=outcome), WorkflowState.STOPPED)
+            with self.subTest(outcome=outcome):
+                reviewed = transition(outcome, WorkflowState[f"GATE_REVIEW_{outcome.value}"],
+                                      plan_hash=PLAN_HASH, approvals=[], gates=passing_gates())
+                with self.assertRaises(TransitionError):
+                    transition(reviewed, WorkflowState.RELEASE_IF_GATE_PASS,
+                               plan_hash=PLAN_HASH, approvals=[], gates=passing_gates())
+                with self.assertRaises(TransitionError):
+                    transition(reviewed, WorkflowState.GATE_REVIEW_ADVANCE,
+                               plan_hash=PLAN_HASH, approvals=[], gates=passing_gates())
+                self.assertEqual(transition(reviewed, WorkflowState.STOPPED,
+                                            plan_hash=PLAN_HASH, approvals=[], gates=passing_gates()),
+                                 WorkflowState.STOPPED)
+
+    def test_outcomes_cannot_enter_another_outcomes_review(self):
+        outcomes = (WorkflowState.ADVANCE, WorkflowState.REJECT, WorkflowState.REVISE, WorkflowState.PIVOT)
+        for outcome in outcomes:
+            for other in outcomes:
+                if outcome is not other:
+                    with self.assertRaises(TransitionError):
+                        transition(outcome, WorkflowState[f"GATE_REVIEW_{other.value}"],
+                                   plan_hash=PLAN_HASH, approvals=[], gates=passing_gates())
 
     def test_release_returns_to_stopped_and_new_cycle_starts_at_discover(self):
         self.assertEqual(transition(WorkflowState.RELEASE_IF_GATE_PASS, WorkflowState.STOPPED,
@@ -202,9 +213,8 @@ class WorkflowTests(unittest.TestCase):
                                     plan_hash="new-cycle-hash", approvals=[], gates=[]), WorkflowState.DISCOVER)
 
     def test_release_requires_each_gate_to_pass(self):
-        self.assertEqual(transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                                    plan_hash=PLAN_HASH, approvals=[], gates=passing_gates(),
-                                    evaluation_outcome=WorkflowState.ADVANCE),
+        self.assertEqual(transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
+                                    plan_hash=PLAN_HASH, approvals=[], gates=passing_gates()),
                          WorkflowState.RELEASE_IF_GATE_PASS)
         for index in range(3):
             for bad in (GateStatus.UNKNOWN, GateStatus.FAIL, GateStatus.NOT_APPLICABLE):
@@ -212,22 +222,21 @@ class WorkflowTests(unittest.TestCase):
                     gates = passing_gates()
                     gates[index] = GateResult(gates[index].name, bad, "", ())
                     with self.assertRaises(GateError):
-                        transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                                   plan_hash=PLAN_HASH, approvals=[], gates=gates, evaluation_outcome=WorkflowState.ADVANCE)
+                        transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
+                                   plan_hash=PLAN_HASH, approvals=[], gates=gates)
 
     def test_cannot_release_with_unknown_gate(self):
         with self.assertRaises(GateError):
-            transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
+            transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
                        plan_hash="p1", approvals=[],
-                       gates=[GateResult("rule_compliance", "UNKNOWN")],
-                       evaluation_outcome=WorkflowState.ADVANCE)
+                       gates=[GateResult("rule_compliance", "UNKNOWN")])
 
     def test_release_rejects_duplicate_or_unrecognized_gates(self):
         for gates in (passing_gates() + passing_gates()[:1],
                       passing_gates() + [GateResult("other", GateStatus.PASS)]):
             with self.assertRaises(GateError):
-                transition(WorkflowState.GATE_REVIEW, WorkflowState.RELEASE_IF_GATE_PASS,
-                           plan_hash=PLAN_HASH, approvals=[], gates=gates, evaluation_outcome=WorkflowState.ADVANCE)
+                transition(WorkflowState.GATE_REVIEW_ADVANCE, WorkflowState.RELEASE_IF_GATE_PASS,
+                           plan_hash=PLAN_HASH, approvals=[], gates=gates)
 
     def test_illegal_jump_is_rejected(self):
         with self.assertRaises(TransitionError):

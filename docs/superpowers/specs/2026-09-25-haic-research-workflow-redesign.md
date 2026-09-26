@@ -161,12 +161,12 @@ STOPPED
 → EXECUTE_PENDING_APPROVAL
 → EVALUATE
 → ADVANCE / REJECT / REVISE / PIVOT
-→ GATE_REVIEW
+→ GATE_REVIEW_ADVANCE / GATE_REVIEW_REJECT / GATE_REVIEW_REVISE / GATE_REVIEW_PIVOT
 → RELEASE_IF_GATE_PASS (ADVANCE + all gates PASS only)
 → STOPPED
 ```
 
-- Every evaluation outcome (`ADVANCE`, `REJECT`, `REVISE`, `PIVOT`) enters `GATE_REVIEW` and records all three gate results. Only `ADVANCE` with all three gates `PASS` may enter `RELEASE_IF_GATE_PASS`; other outcomes stop without releasing the current candidate.
+- Every evaluation outcome (`ADVANCE`, `REJECT`, `REVISE`, `PIVOT`) enters its matching `GATE_REVIEW_<OUTCOME>` substate and records exactly the three registered gate results. Branch history is carried by that state; callers cannot override it. Only `GATE_REVIEW_ADVANCE` with all three gates `PASS` may enter `RELEASE_IF_GATE_PASS`; the other three review substates may only enter `STOPPED` without release. `GATE_REVIEW_ADVANCE` may also stop without release.
 - Revised or pivoted work starts a new cycle at `DISCOVER` with a new plan hash and fresh approvals; `PIVOT` preserves the prior checkpoint.
 - `STOPPED`가 기본이다. 문서 조사만으로 학습·평가·제출 실행 상태에 들어가지 않는다.
 - 설계, 구현, 실행 승인은 서로 분리하고 승인한 계획 revision/hash를 기록한다.
