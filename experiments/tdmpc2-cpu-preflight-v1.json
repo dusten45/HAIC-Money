@@ -1,0 +1,36 @@
+{
+  "format": "haic-tdmpc2-cpu-preflight-v1",
+  "scope": "untrained-model-shape engineering timing; not official runtime acceptance or driving evidence",
+  "upstream_commit": "e9f59321933cbc8e11a002b842adc7d4ffae8ff1",
+  "participants_commit": "1c11db8afc2fbfcfb610672b7ee0ecd122c97741",
+  "command": "/tmp/kilo/haic-cpu21/bin/python -m scripts.benchmark_tdmpc2_cpu --trials 25 --threads 2 --seed 42",
+  "sources_sha256": {
+    "haic/algorithms/tdmpc2/model.py": "a121d8688e5ab954abe2e6468ca84760e035f15b49004b695fc465696eb90c65",
+    "haic/algorithms/tdmpc2/planner.py": "4ecd47820f6488e1b1aeb975eeb224323eacf413b03281dc58743c93ae3788a0",
+    "scripts/benchmark_tdmpc2_cpu.py": "b8dddbf9f4c93bf6e6bed2526da42ed574abf2d883adb01838fdcfc0c93174aa"
+  },
+  "observations": {
+    "torch": "2.1.0+cpu",
+    "threads": 2,
+    "trials": 25,
+    "import_and_construct_s": 0.5669293571263552,
+    "first_act_s": 0.3385495003312826,
+    "warm_act_median_s": 0.3370634773746133,
+    "warm_act_p95_s": 0.3416874734684825,
+    "max_act_s": 0.3555481620132923,
+    "initial_resident_mib": 257.70703125,
+    "max_sampled_resident_mib": 303.14453125
+  },
+  "official_limits": {
+    "import_and_agent_construct_s": 10,
+    "each_reset_s": 5,
+    "each_act_s": 5,
+    "process_resident_mib": 1024
+  },
+  "limits_of_evidence": [
+    "Untrained random model and constant synthetic 4x64x64 uint8 observation; action-model dimensions and full 512x6 MPPI settings match baseline.",
+    "Sampled RSS is not guaranteed process peak, and this is not an official packaged Agent or server measurement.",
+    "The first official-version CPU attempt failed because torch 2.1 rejects all(dim=(0,2)); source was corrected to successive single-axis reductions before this measurement.",
+    "Trained-checkpoint import, load, reset, full-episode latency under contention and identical CPU worker traces remain unverified."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "format": "haic-tdmpc2-v2-prior-train-exposure-v1",
+  "status": "v2 source/cell protocol frozen, resource preflight currently blocked; no v2 reset",
+  "v2_protocol": "experiments/tdmpc2-reused-train-pilot-v2.json",
+  "v2_protocol_sha256": "209f8a752a6ef61a3dcec6c770fe10fd71158779b83afbf72f9b5d72410c8bfb",
+  "v1_protocol_sha256": "e671cb916ea07c7c902b029393d5728560cfe9b48b04bade3a8c5604d54ef748",
+  "v1_failure_receipt": "experiments/tdmpc2-reused-train-pilot-v1-failure.json",
+  "v1_failure_receipt_sha256": "0c5a4c999e751bb7a2e0858f2c649a1ddf90a4441dd45507a6dfe122bf4d6df9",
+  "v1_ledger_sha256": "ff909545fe87fac34e649e016586b8babc22ab296aa33ad935ca4a1e13871961",
+  "v1_last_boundary_sha256": "d3502e430a0c4bb3be9a993ab16434d6b5400afdc201177080f8cc4d035d8b4c",
+  "eligible_conditions": {"partition": "TRAIN", "obstacles": true, "track_id": 1,
+                          "geometry_seeds": [3910800001, 3910800004, 3910800034, 3910800085],
+                          "previously_consumed_by": ["DrQ r6", "Dreamer reused-TRAIN development", "TD-MPC2 v1 partial attempt"]},
+  "v1_interaction_denominator": {"recorded_decisions": 10061, "completed_episodes": 29,
+                                  "planned_decisions": 60, "last_reset_intent_after_checkpoint": true},
+  "fresh_seed_claim": false,
+  "new_confirmation_or_blind": false,
+  "exact_v1_resume": false,
+  "v2_method": "new from-scratch attempt with identical consumed TRAIN schedule/seed and only tensor-replacement planner reset source correction; no v1 checkpoint imported",
+  "before_reset": "Recheck talk/cross-lane TRAIN cell conditions and complete source/cgroup/disk/GPU preflight; operator requires >=16 GiB RAW cgroup free, >=5 GiB disk; no resource-floor relaxation is authorized by this file."
+}

@@ -1,0 +1,24 @@
+{
+  "format": "haic-tdmpc2-cpu-export-preflight-v1",
+  "scope": "synthetic random-weight model-only checkpoint compatibility and deterministic full-MPPI trace; not a trained model or official Agent",
+  "torch_producer": "2.11.0+cu128",
+  "torch_consumer": "2.1.0+cpu",
+  "producer_command": "python -c 'import torch; from haic.algorithms.tdmpc2.model import WorldModel,TDMPC2ModelConfig; torch.manual_seed(733); model=WorldModel(TDMPC2ModelConfig(obs_shape={\"rgb\":(4,64,64)},episodic=True)); torch.save({\"model\":model.state_dict()},\"/tmp/kilo/tdmpc2-synthetic-export.pt\")'",
+  "consumer_command": "/tmp/kilo/haic-cpu21/bin/python -m scripts.check_tdmpc2_cpu_export --model-only-state /tmp/kilo/tdmpc2-synthetic-export.pt --seed 2026 --threads 2 --trace-length 4",
+  "consumer_process_repeats": 2,
+  "trace_repeats_within_each_process": 2,
+  "full_planner_actions_per_process": 8,
+  "model_only_state_sha256": "4a3bd828f422104bbc167e23f77a5022755b0df4c137d20740ac0c7dac9fe80f",
+  "model_source_sha256": "a121d8688e5ab954abe2e6468ca84760e035f15b49004b695fc465696eb90c65",
+  "checker_sha256": "d22fa2d0352c3e9b9cfb0a49ae40221d52ee2d7043ecedc459d8892c3eddd18e",
+  "trace_sha256_both_processes": "b08ab43c54c6d71c60c68b2a330d9b414f5b1aeb580d1b1db285041df7cb1b79",
+  "both_within_process_repeats_identical": true,
+  "process_1": {"construct_and_load_s": 0.6425120327621698, "first_act_s": 0.0843701483681798, "max_act_s": 0.08501636702567339, "max_sampled_process_rss_mib": 317.66015625},
+  "process_2": {"construct_and_load_s": 0.6016906192526221, "first_act_s": 0.07810432184487581, "max_act_s": 0.07810432184487581, "max_sampled_process_rss_mib": 315.54296875},
+  "official_limits": {"import_and_construct_s": 10, "each_act_s": 5, "process_mib": 1024},
+  "limits_of_evidence": [
+    "Model-only random-weight state and synthetic constant pixels; does not verify later trained-checkpoint export or real-road trajectories.",
+    "A participant root Agent, packaged file/dependency validation, reset latency, peak RSS and official evaluator/server acceptance were not exercised.",
+    "Sampling process RSS is not measuring peak lifetime memory; the separate 25-action preflight in tdmpc2-cpu-preflight-v1.json was slower, so do not infer an official latency bound from this sample."
+  ]
+}

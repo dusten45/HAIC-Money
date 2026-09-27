@@ -1,0 +1,52 @@
+{
+  "format": "haic-tdmpc2-reused-train-pilot-failure-v1",
+  "recorded_at": "2026-09-27T03:37:24Z",
+  "scope": "partial reused-TRAIN engineering attempt; no final learning or driving judgment",
+  "protocol_sha256": "e671cb916ea07c7c902b029393d5728560cfe9b48b04bade3a8c5604d54ef748",
+  "operator_sha256": "580b867a826c72cebe4e5c116e782d442b96d681549792e0a224e52523a1fc0c",
+  "planner_sha256": "4ecd47820f6488e1b1aeb975eeb224323eacf413b03281dc58743c93ae3788a0",
+  "primary_artifacts": {
+    "ledger": "runs/tdmpc2-reused-train-20260927-v1/training.jsonl",
+    "ledger_sha256": "ff909545fe87fac34e649e016586b8babc22ab296aa33ad935ca4a1e13871961",
+    "last_boundary_checkpoint": "runs/tdmpc2-reused-train-20260927-v1/boundary.pt",
+    "last_boundary_checkpoint_sha256": "d3502e430a0c4bb3be9a993ab16434d6b5400afdc201177080f8cc4d035d8b4c"
+  },
+  "observations": {
+    "recorded_decisions": 10061,
+    "complete_episodes": 29,
+    "completely_random_episodes": 28,
+    "seed_boundary_mixed_episodes": 1,
+    "complete_planned_episodes": 0,
+    "planned_decisions": 60,
+    "completed_pretraining_updates": 10000,
+    "completed_total_updates_at_last_boundary": 10060,
+    "final_ledger_event": "partial",
+    "exact_resume_permitted": false,
+    "latest_boundary_checkpoint_hash_valid": true,
+    "finishes": 0,
+    "mean_progress_over_29_completed_episodes": 0.07434001801554807,
+    "mean_raw_reward_over_29_completed_episodes": -70.71808466470371,
+    "paired_prior_mppi_evaluation_episodes": 0
+  },
+  "frozen_within_train_probe": {
+    "sample_count": 256,
+    "constant_reward_mae": 0.37949177622795105,
+    "reward_mae_initial": 0.5523956418037415,
+    "reward_mae_after_10000_pretrain_updates": 0.06260677427053452,
+    "latent_mse_initial": 0.012215640395879745,
+    "latent_mse_after_pretraining": 0.009512468241155148,
+    "q_td_residual_initial": 0.5523956418037415,
+    "q_td_residual_after_pretraining": 0.515826404094696,
+    "note": "same completed TRAIN replay probe with a changing encoder/latent target; in-replay fit, not held-out generalization or driving improvement"
+  },
+  "stop_reason": {
+    "category": "implementation_planner_reset_contract",
+    "exception": "RuntimeError: Inplace update to inference tensor outside InferenceMode is not allowed",
+    "location": "haic/algorithms/tdmpc2/planner.py:81 in reset()",
+    "mechanism": "plan() assigned prev_mean while called under torch.inference_mode(); next episode's reset() called prev_mean.zero_() outside that mode",
+    "reset_after_last_boundary_was_attempted": true,
+    "resource_oom_kill_delta": 0,
+    "algorithm_limit_inferred": false
+  },
+  "next_gate": "Preserve this v1 partial ledger unmodified. Test a tensor-replacement reset, re-pin source hashes and an explicit new v2 reused-TRAIN protocol before any further road reset. No v1 in-place resume or fresh validation claim."
+}

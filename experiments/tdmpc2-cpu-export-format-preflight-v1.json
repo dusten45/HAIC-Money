@@ -1,0 +1,18 @@
+{
+  "format": "haic-tdmpc2-cpu-export-format-preflight-v1",
+  "scope": "synthetic metadata-shaped export compatibility only; fake hashes are not a training result",
+  "consumer_command": "/tmp/kilo/haic-cpu21/bin/python -m scripts.check_tdmpc2_cpu_export --model-only-state /tmp/kilo/tdmpc2-source-bound-synthetic.pt --trace-length 4",
+  "checker_sha256": "30c69b70e76ce0f9c1efa536732cdce2e203247358c0bd76e64396ff6a388fa4",
+  "synthetic_export_sha256": "4baf0ff18b6d762b0152ccf291d0540bc09c0fc4fc58af9a831a4cf779199392",
+  "synthetic_export_format": "haic-tdmpc2-cpu-model-v1",
+  "lineage_is_dummy": true,
+  "torch_consumer": "2.1.0+cpu",
+  "export_kind": "source_bound_training_export",
+  "within_process_trace_repeats": 2,
+  "full_mppi_actions": 8,
+  "both_trace_sha256": "b08ab43c54c6d71c60c68b2a330d9b414f5b1aeb580d1b1db285041df7cb1b79",
+  "construct_and_load_s": 0.5953061385080218,
+  "max_act_s": 0.0799834718927741,
+  "max_sampled_process_rss_mib": 318.91796875,
+  "limitations": "Not produced by the training operator, not a real checkpoint, not a HAIC road, not an official Agent. After TRAIN pilot, independently verify the operator's actual source-bound export and complete-road behavior."
+}
