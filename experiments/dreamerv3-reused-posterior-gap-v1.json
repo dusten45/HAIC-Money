@@ -1,0 +1,39 @@
+{
+  "format": "haic-dreamerv3-reused-posterior-gap-v1",
+  "purpose": "reused-TRAIN-consumed-development-posterior-prior-diagnostic",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "budget_score_protocol": {
+    "path": "experiments/dreamerv3-reused-train-budget-probe-v1.json",
+    "sha256": "ddcb33d19b36f6c0c17942263da835a45bf87f76271f550027e6113824ebf994"
+  },
+  "budget_score_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/scoring-v2/score-result.json",
+    "sha256": "94bbd7457283d5ec8f0ad4a4ff2e654b97839d09a7eca764615de6fae625ff5d"
+  },
+  "source_sha256": {
+    "scripts/diagnose/dreamerv3_reused_train_open_loop.py": "cdf2b476a498a4c16649819ce598428f74f7f738e79cd30fd0803bfe6dc548db",
+    "scripts/diagnose/dreamerv3_reused_train_budget_probe.py": "0a8615f8d4f979ee1a5c218437cdb725ad778b77c5079bea45d601584719c494",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "scripts/diagnose/dreamerv3_reused_action_probe.py": "b230439344be2adeb1548ff3c3053768646c5e9fbc9d92fdc4445ebdcc44b21c",
+    "scripts/diagnose/dreamerv3_reused_posterior_gap.py": "397640213f9c31c15a0b45ac67612b1d5425e1b6565aec7722afc43aea214609"
+  },
+  "sampling": {
+    "context_decisions": 8,
+    "window_decisions": 32,
+    "horizons": [1, 8, 32],
+    "latent_seed": 120926,
+    "context_mode": "reset-origin-full-prefix-terminal",
+    "posterior_conditioning": "logged-observation-at-t-plus-1-target-conditioned",
+    "one_step_conditioning": "posterior-at-t-and-logged-native-action-at-t"
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_uncompressed_bytes": 268435456,
+    "max_decisions_per_archive": 8000,
+    "max_checkpoint_bytes": 268435456,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592
+  }
+}

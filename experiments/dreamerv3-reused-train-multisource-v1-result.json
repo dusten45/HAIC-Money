@@ -1,0 +1,88 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-training-result-v1",
+  "study_id": "dreamerv3-reused-train-multisource-v1",
+  "status": "source_tagged_model_only_training_complete_development_unscored",
+  "freshness_claim": false,
+  "matched_random_teacher_claim": false,
+  "p1b_or_promotion_claim": false,
+  "student_actor_trained": false,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-v1.json",
+    "sha256": "1a7ddee161bf1958eb5c59152326b6f2fed8899eed41294e55e86edc5ccce42d"
+  },
+  "source": {
+    "path": "scripts/train_dreamerv3_reused_multisource.py",
+    "sha256": "522201e8e608c967b59b5b8e80fff3129e3593aed1f4e6b2922f18c5b0b7aaa7"
+  },
+  "source0_and_source1": {
+    "source0_decisions": 5420,
+    "source1_decisions": 5192,
+    "combined_decisions": 10612,
+    "source0_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+    "source1_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "source0_episode_count": 12,
+    "source1_episode_count": 12,
+    "total_source_tagged_whole_episodes": 24,
+    "distinct_training_road_geometries": 12,
+    "distinct_finished_training_roads_across_sources": [3910800008, 3910800011, 3910800041],
+    "interpreted_as_24_independent_roads": false,
+    "source0_only_finish_gate_retrospectively_passed": false
+  },
+  "lineage": {
+    "sidecar_path_seed0": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-0/lineage.json",
+    "sidecar_path_seed1": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-1/lineage.json",
+    "identical_sha256_per_seed": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a",
+    "episode_source0_count": 12,
+    "episode_source1_count": 12,
+    "globally_unique_replay_episode_count": 24,
+    "first_sequence_id": 0,
+    "last_sequence_id_inclusive": 10611,
+    "covered_sequence_decisions": 10612,
+    "replay_capacity": 16384,
+    "cross_source_sequence_window_rejection": true
+  },
+  "learner": {
+    "seeds": [0, 1],
+    "fixed_model_only_updates_per_seed": 256,
+    "environment_steps_per_seed": 0,
+    "actor_critic_target_and_optimizers_unchanged": true,
+    "prior_image_auxiliary_optimizer_steps": 0,
+    "peak_process_rss_kib_per_seed": 6156084,
+    "seed_results": [
+      {
+        "seed": 0,
+        "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-0/training-result.json",
+        "result_sha256": "ecb070a98f20a679f3743ed81a1423b4b899696871607a2990c7b7c5e19c6896",
+        "checkpoint_sha256": "cff37b13a7b38153f44a0035f548eb2925603a3357efe804e95255ef838546e6",
+        "metrics_sha256": "6abd76d6ccfd2be51247262ae0aeaaf6483397af2c3eda18fb2b532d77d245cf",
+        "train_loss_wm_first8_mean": 6.803491771221161,
+        "train_loss_wm_last8_mean": 1.705334484577179,
+        "train_loss_obs_first8_mean": 0.38769140280783176,
+        "train_loss_obs_last8_mean": 0.38385183177888393
+      },
+      {
+        "seed": 1,
+        "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-1/training-result.json",
+        "result_sha256": "516487dba3ca2b55c018bd2cbf874a820ebb5646ab58dbb06444d99db0aa7dc0",
+        "checkpoint_sha256": "35b61f080df5246adcd46bd5d259031909881575d4ebb44a382932e4ee0b12d0",
+        "metrics_sha256": "b23f9b34e29d201500d652b08ae037bd0b7ed53fc3d1683ee85fcaa5255c5d89",
+        "train_loss_wm_first8_mean": 6.77876740694046,
+        "train_loss_wm_last8_mean": 1.717848226428032,
+        "train_loss_obs_first8_mean": 0.3720323108136654,
+        "train_loss_obs_last8_mean": 0.360225697979331
+      }
+    ]
+  },
+  "prospective_development": {
+    "protocol_path": "experiments/dreamerv3-reused-train-multisource-development-v1.json",
+    "protocol_sha256": "0f2c622e008ab7e4bce98c376c2a6c3e4ef6e78d73d07d82d2716185ff9d2fb0",
+    "status": "static_four_road_training_excluded_reused_TRAIN_protocol_frozen_no_reset_yet"
+  },
+  "limits": [
+    "Different frozen DrQ actor sources and duplicate road IDs retain separate actor/archive/dataset lineage; this is not 24 independent geometry samples.",
+    "The source0 single-source >=3 finish gate remains failed; a new multi-source study uses already consumed TRAIN data and is not a retroactive source0 promotion.",
+    "Original uniform-random archive has 4,137 decisions and is not sample-volume matched to the mixed 10,612-decision teacher corpus; no random-versus-teacher causal improvement can be claimed.",
+    "Within-training total-loss decreases and a SHA-pinned replay do not establish training-excluded image dynamics or driving skill.",
+    "No Dreamer actor update, full-reset student evaluation, fresh P1/P1b audit pass, protected cell, confirmation/blind or official result occurred."
+  ]
+}

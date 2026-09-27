@@ -1,0 +1,55 @@
+{
+  "format": "haic-dreamerv3-reused-posterior-gap-result-v1",
+  "status": "non_promoting_consumed_development_prior_rollout_diagnostic",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-posterior-gap-v1.json",
+    "sha256": "ab9152985a21425d9350099f3580b32ee186a0915ec1b9e7fa3f5dfd800d186a"
+  },
+  "source": {
+    "path": "scripts/diagnose/dreamerv3_reused_posterior_gap.py",
+    "sha256": "397640213f9c31c15a0b45ac67612b1d5425e1b6565aec7722afc43aea214609"
+  },
+  "primary_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/posterior-gap-v1/posterior-gap-result.json",
+    "sha256": "b7128ee383985359a6905a4ffb7c5edf08b3e60bf3658e7fe55541b3e1225759"
+  },
+  "design": {
+    "model_only_update_budgets": [64, 256],
+    "training_arms": ["random", "teacher"],
+    "learner_seeds": [0, 1],
+    "development_source_strata": ["random", "teacher"],
+    "independent_episodes_and_roads_per_source_stratum": 4,
+    "reset_and_terminal_windows_per_episode": 2,
+    "scored_future_decisions_per_window": 32,
+    "unique_scored_decisions_per_model_and_source_stratum": 256,
+    "finished_development_roads_per_source_stratum": 0,
+    "posterior_reconstruction_uses_future_target_observation": true,
+    "one_step_prior_uses_only_logged_preaction_state_and_action": true,
+    "free_running_prior_uses_only_original_pinned_anchor_and_future_logged_actions": true
+  },
+  "teacher_trained_models_on_teacher_source_development": {
+    "learner_seed_order": [0, 1],
+    "posterior_image_mse_after_64": [0.004368139982073416, 0.0043695086069988065],
+    "posterior_image_mse_after_256": [0.004304618297766183, 0.004306549775606072],
+    "teacher_forced_repeat_image_mse": 0.004368847563810618,
+    "one_step_prior_image_mse_after_64": [0.004365115079117743, 0.0043657945234478746],
+    "one_step_prior_image_mse_after_256": [0.004302984884063221, 0.004307684020488978],
+    "free_32_prior_image_mse_after_64": [0.01806999066226922, 0.01733071254624008],
+    "free_32_prior_image_mse_after_256": [0.019303350453441226, 0.02397579594440913],
+    "frozen_anchor_repeat_image_mse_32": 0.01488432277896834,
+    "raw_same_transition_kl_nats_after_64": [0.1016766567938947, 0.11210629851459848],
+    "raw_same_transition_kl_nats_after_256": [0.021215805118847953, 0.028340077418541866],
+    "free_32_clipped_pixel_fraction_after_64": [0.026421994579081634, 0.023053850446428572],
+    "free_32_clipped_pixel_fraction_after_256": [0.04053121899801587, 0.0324070383361678]
+  },
+  "interpretation": [
+    "Target-conditioned posterior reconstruction is not a predictive forecast; on these already-consumed teacher-source episodes, it and teacher-forced one-step prior are near the true-previous-frame repeat baseline.",
+    "For the same two teacher-trained seeds, 32-decision free-running prior error exceeds frozen-anchor repeat and worsens with additional model-only updates even though raw same-transition categorical KL falls. This localizes a descriptive divergence to unobserved multi-step rollout, not a proved causal loss or architecture defect.",
+    "The one-step posterior baseline sees the true previous frame while the 32-decision repeat baseline persists only the window anchor. Their different information sets must not be compared as if they were the same counterfactual policy.",
+    "With only four independent road episodes per action stratum and no development finish positives, neither a student driving result nor terminal/finish prediction generalization can be inferred.",
+    "A bounded multi-step prior image-consistency loss is a prospective hypothesis requiring new source-pinned code, contract tests and a separate frozen training protocol before any new model update."
+  ]
+}

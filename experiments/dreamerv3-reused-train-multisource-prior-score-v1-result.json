@@ -1,0 +1,80 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-prior-score-result-v1",
+  "study_id": "dreamerv3-reused-train-multisource-prior-score-v1",
+  "status": "predeclared_paired_and_repeat_two_seed_gate_failed",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "student_actor_trained": false,
+  "training_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-prior-v1.json",
+    "sha256": "4dad8f8be6ec6f56cc766ade6b3a6f4f8ddb44424c6a6b33e4f2f22293718c80"
+  },
+  "training_only_result": {
+    "path": "experiments/dreamerv3-reused-train-multisource-prior-v1-result.json",
+    "sha256": "9ec2cf52acc33fb24b9b941468b9fe48e2c63b97be1d8cd15eb293d5ed98532a"
+  },
+  "scoring_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-prior-score-v1.json",
+    "sha256": "cad40887e9c7b5e97319067f3a5cb284da87e13e04ac63b29921c018b5f187a3"
+  },
+  "scoring_executable": {
+    "path": "scripts/diagnose/dreamerv3_reused_multisource_prior_score.py",
+    "sha256": "68a641181e17c29c1f2c308cafcaa2aecf16b0d4870cc072386b6ff688ec9c5a"
+  },
+  "primary_score": {
+    "path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-score-v1/score-result.json",
+    "sha256": "e274128fcc65d3ad28101fad20440bb01387a659a5080494766501164135b75d"
+  },
+  "pure_256_score_reference": {
+    "protocol_sha256": "dc40240247673ba26e6a722c68ffd7b93c501a2881d8bc01a1a631ed4d3615f1",
+    "result_sha256": "93174115d081a04344b91a31fe42ad4ac2020b69afcc655e921c589013fd2e93"
+  },
+  "comparison": {
+    "base_model_only_steps_per_seed": 256,
+    "extra_prior_image_optimizer_steps_per_seed": 64,
+    "compute_matched_to_pure_256": false,
+    "learner_seeds": [0, 1],
+    "actor_source_episodes_in_training": 24,
+    "distinct_training_roads": 12,
+    "source_lineage_sha256": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a",
+    "previously_r6_allocated_development_roads_per_action_stratum": 4,
+    "independent_complete_development_episodes_per_stratum": 4,
+    "reset_and_terminal_windows_per_model_and_stratum": 8,
+    "unique_scored_decisions_per_model_and_stratum": 256,
+    "unique_terminal_positive_labels_per_stratum": 4,
+    "finished_development_roads_per_stratum": 0,
+    "duplicate_label_uses_per_stratum": 0,
+    "latent_seed": 120927
+  },
+  "predeclared_local_image_gate": {
+    "rule": "Both seeds strictly improve image MSE over their own pure-256 model and strictly beat frozen-anchor shifted-repeat on BOTH consumed development action-source strata.",
+    "passed": false,
+    "random_action_stratum": {
+      "repeat_mse": 0.0014941054360804173,
+      "pure_256_mse_seed_order_0_1": [0.0015440702225077985, 0.0038620918077327815],
+      "mixed_h8_mse_seed_order_0_1": [0.00352015553286833, 0.0015087258392014746],
+      "seed_passed": [false, false]
+    },
+    "source0_action_stratum": {
+      "repeat_mse": 0.009230010535757671,
+      "pure_256_mse_seed_order_0_1": [0.009115637544630295, 0.01398715063894862],
+      "mixed_h8_mse_seed_order_0_1": [0.010054984313708104, 0.009040690559686038],
+      "seed_passed": [false, true]
+    },
+    "teacher_seed_0_passed": false,
+    "teacher_seed_1_passed": false
+  },
+  "pre_scoring_abort": {
+    "superseded_protocol_sha256": "be1bb0e86b71b47ad94613c3b7c5071d3c5b71c2762d69e6ef3eac69f847e60d",
+    "reason": "An initial read-only metadata preflight rejected a 1,526,286-byte pinned DrQ catalog at an unintended generic 1 MiB cap, before development ZIP decode or output creation.",
+    "correction": "Only the named catalog now has a 4 MiB fixed metadata limit; the new executable/protocol SHAs and 33 targeted tests were pinned before the first actual score.",
+    "preserved_failure_message": "20260927T025027Z-k9r4-dreamer-score-catalog-cap-abort"
+  },
+  "limits": [
+    "This scored four already r6-allocated, earlier inspected development roads per action stratum. The roads and 8+32 windows were predeclared, but the scorer implementation and final SHA were finished after collection, so this is consumed iterative tuning, not blind validation.",
+    "Source0/source1 teacher archives contain 24 actor episodes on the SAME twelve training roads; the older random archive has different decision count and no new random student was trained here.",
+    "Seed1's source0-only below-repeat image value cannot replace the failed both-seed/both-stratum image gate, and an auxiliary optimizer budget of 320 cannot establish a causal loss-shape effect versus pure256.",
+    "Four terminal events but zero development finishes per stratum do not establish finish prediction or driving skill.",
+    "Predeclared static seventh-per-family r6 TRAIN-reuse roads were NOT opened, and no new fresh P1/P1b audit, actor training, confirmation/blind or official performance result exists."
+  ]
+}

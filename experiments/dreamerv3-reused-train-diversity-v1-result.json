@@ -1,0 +1,79 @@
+{
+  "format": "haic-dreamerv3-reused-train-diversity-result-v1",
+  "status": "source0_two_of_twelve_finish_support_gate_failed_no_learner",
+  "study_id": "dreamerv3-reused-train-diversity-v1",
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "dreamer_student_updates_on_this_new_corpus": 0,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-train-diversity-v1.json",
+    "sha256": "a2f3e92fd1b2e95f883b24e3ef28d58b3e70938a0dd867d2c9ec5da5bd46df83"
+  },
+  "catalog": {
+    "path": "runs/20260925-drqv2-geometry-augmentation-v1/catalog/catalog.json",
+    "sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+    "hash_scope": "Read-only post-collection catalog snapshot; road order and r6 TRAIN membership were checked before reset, but the collector protocol pins r6 rather than this catalog file."
+  },
+  "r6_training_pool_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "primary_collection": {
+    "path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/collection-result.json",
+    "sha256": "c46f6dab34b9f17c33732f25085db557025df62fb3f7fe937af9cc41ea0bb244"
+  },
+  "fixed_attempt_design": {
+    "source_actor_id": "drq-source-0",
+    "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+    "random_rng_seed": 7394,
+    "track_id": 1,
+    "independent_road_attempts_per_arm": 12,
+    "shape_families": 6,
+    "max_decisions_per_episode": 2000,
+    "decision_cap_per_arm": 24000,
+    "completed_episode_requirement": 12,
+    "partial_decisions_allowed_for_learner_gate": false,
+    "training_disjoint_from_prior_dreamer_training_and_development_roads": true
+  },
+  "predeclared_teacher_support_gate": {
+    "min_distinct_genuinely_finished_road_geometries": 3,
+    "min_distinct_shape_families_with_finish": 2,
+    "require_complete_fixed_road_schedule": true,
+    "passed": false,
+    "observed_distinct_finished_road_geometries": 2,
+    "observed_families_with_finish": ["opening-delayed-high-turn", "easy-curvature-anchor"]
+  },
+  "arms": {
+    "random": {
+      "source_id": "uniform-native-random-seed-7394",
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/random/collection-result.json",
+      "receipt_sha256": "7e78777d8e293e0be71efe0afae46827250dbcee70e894dc2783eaa844a6e21f",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/random/support-dataset.npz",
+      "archive_sha256": "60c2a06dd00f6b841b7e1c8e2eea4d37498d0b73eec0b574e8e315592b8ba15e",
+      "dataset_digest": "97d8ebc8b91ecda2c18956b3cb52d5581521230622339fe7923ca13c27675255",
+      "spent_and_stored_decisions": 4137,
+      "complete_episodes": 12,
+      "local_finished_geometries": [],
+      "partial_decisions": 0,
+      "unresolved_calls": 0
+    },
+    "teacher": {
+      "source_id": "drq-source-0",
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/collection-result.json",
+      "receipt_sha256": "00a388f5eabdd9707b096dfb735b2d717b309b86a9daa1423d2c16177fa2c353",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/support-dataset.npz",
+      "archive_sha256": "c7e988303d485744c73d6bb987d40a44ae51e0f11855ba4d33e8255bf971c596",
+      "dataset_digest": "4eb201475c013ef669dcfc12cab798747c15d2e82b6a0b7d21d6024d6d991d3d",
+      "spent_and_stored_decisions": 5420,
+      "complete_episodes": 12,
+      "local_finished_geometries": [3910800011, 3910800041],
+      "partial_decisions": 0,
+      "unresolved_calls": 0
+    }
+  },
+  "interpretation": [
+    "All twelve source0 and random TRAIN-reuse episodes were completed on the same static road order, but the teacher's 2 finished roads do not meet the predeclared 3-finish feasibility gate; no Dreamer learner was run on either new archive.",
+    "The two teacher finishes span two catalog families, but they are one attempt per road and cannot establish a generally better demonstrator or official driving score.",
+    "Different stored decision counts, previously allocated r6 TRAIN roads and the absence of a trained student prevent a matched fresh P1b or policy-retention claim.",
+    "The sealed files remain consumed evidence; the same cap, actor or episode schedule was not silently altered and the prospective four third-family internal evaluation roads were not opened.",
+    "A separate source1 complement or broader data-support study would need its own frozen source, pool, cap and hypothesis; the actual fresh P1 auditor remains non-passing."
+  ]
+}

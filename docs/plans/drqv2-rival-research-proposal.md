@@ -2,8 +2,10 @@
 
 ## Status and Decision Boundary
 
-**Status: historical design proposal, not the active plan.** The active work remains
-[`active/dreamerv3-recovery-strategy.md`](active/dreamerv3-recovery-strategy.md).
+**Status: historical design proposal, not the active plan.** DreamerV3's recovery
+line has since been closed; its former plan is
+[archived](archived/dreamerv3-recovery-strategy-2026-09-27.md), with only a
+[deferred last-resort revival outline](dreamerv3-revival-plan.md).
 This file describes two **independent** alternatives, not a combined treatment:
 
 1. **A (priority):** keep an existing DrQ-v2 driver frozen and learn a small,
@@ -42,10 +44,10 @@ partitions; see [`run-experiment`](../workflows/run-experiment.md).
 
 ### Why these are different research questions
 
-The [active plan](active/dreamerv3-recovery-strategy.md) repairs DreamerV3
-transitions/objectives, tests its world model, then conditionally considers a DrQ
-teacher and episode-balanced *replay*. A preserves the existing DrQ policy at
-inference and learns only a constrained, model-free intervention decision; it does
+The [archived Dreamer plan](archived/dreamerv3-recovery-strategy-2026-09-27.md)
+records attempted transition/objective repairs, world-model gates, and conditional
+teacher/replay designs; that research line is now closed. A preserves the existing
+DrQ policy at inference and learns only a constrained, model-free intervention decision; it does
 not train an RSSM, run CEM, copy DrQ into a student, or revise the DrQ steering
 loss. B changes the *environment-reset road distribution*, not replay sampling,
 custom-map evaluation, or Dreamer training. A and B must not be run together in a

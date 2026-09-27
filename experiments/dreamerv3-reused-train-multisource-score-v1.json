@@ -1,0 +1,82 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-score-v1",
+  "purpose": "reused-TRAIN-training-excluded-open-loop-diagnostic",
+  "study_id": "dreamerv3-reused-train-multisource-score-v1",
+  "training_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-v1.json",
+    "sha256": "1a7ddee161bf1958eb5c59152326b6f2fed8899eed41294e55e86edc5ccce42d"
+  },
+  "development_collection_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-development-v1.json",
+    "sha256": "0f2c622e008ab7e4bce98c376c2a6c3e4ef6e78d73d07d82d2716185ff9d2fb0"
+  },
+  "training": [
+    {
+      "seed": 0,
+      "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-0/training-result.json",
+      "result_sha256": "ecb070a98f20a679f3743ed81a1423b4b899696871607a2990c7b7c5e19c6896",
+      "checkpoint_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-0/world-model-checkpoint.pt",
+      "checkpoint_sha256": "cff37b13a7b38153f44a0035f548eb2925603a3357efe804e95255ef838546e6",
+      "lineage_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-0/lineage.json",
+      "lineage_sha256": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a"
+    },
+    {
+      "seed": 1,
+      "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-1/training-result.json",
+      "result_sha256": "516487dba3ca2b55c018bd2cbf874a820ebb5646ab58dbb06444d99db0aa7dc0",
+      "checkpoint_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-1/world-model-checkpoint.pt",
+      "checkpoint_sha256": "35b61f080df5246adcd46bd5d259031909881575d4ebb44a382932e4ee0b12d0",
+      "lineage_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/learner-1/lineage.json",
+      "lineage_sha256": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a"
+    }
+  ],
+  "development": {
+    "source0": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/teacher/collection-result.json",
+      "receipt_sha256": "9f8e19be8ec12a50b663bcd3eee4e97469dca4e6a359c178cc0460b0558b343e",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/teacher/support-dataset.npz",
+      "archive_sha256": "a4c4e7913bd97e0287b17f802737ea113721c172129548a0f43c91b602406aa2",
+      "dataset_digest": "e3b9be8edbd27d90de42f14a1a655c09b97a85d09590835469a064d2093fdf54",
+      "source_id": "drq-source-0",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37"
+    },
+    "random": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/random/collection-result.json",
+      "receipt_sha256": "79d21f0d1a2f76e0f2d3b4a0510560ac4f8d7aa2e36010c5ef80fa78d6a572b7",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/random/support-dataset.npz",
+      "archive_sha256": "1948ee6105e55ba1f820cc73d9aae8804bd201b6d930baefb0597c955c7f24b2",
+      "dataset_digest": "83860e2deead0a438d6311143688e00bab74bb966f86ff9cdbf2684f163fc640",
+      "source_id": "uniform-native-random-seed-7395",
+      "source_actor_sha256": "eb084e3dd87b70fc86129464294d06a62e3557aaa02aa8800a983d410442aac2"
+    }
+  },
+  "source_sha256": {
+    "scripts/diagnose/dreamerv3_reused_multisource_open_loop.py": "280d01c6d992808805a32893a7c542a2b1d2c7f94b0c7454690a1a9b611cb2d8",
+    "scripts/diagnose/dreamerv3_reused_train_open_loop.py": "cdf2b476a498a4c16649819ce598428f74f7f738e79cd30fd0803bfe6dc548db",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df"
+  },
+  "scoring": {
+    "context_decisions": 8,
+    "window_decisions": 32,
+    "latent_seed": 120927,
+    "context_mode": "reset-origin-full-prefix-terminal",
+    "baselines": [
+      "shifted-repeat",
+      "training-mean-reward",
+      "last-logged-reward",
+      "training-terminal-prevalence"
+    ],
+    "min_complete_roads_per_stratum": 4
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_uncompressed_bytes": 268435456,
+    "max_decisions_per_archive": 16384,
+    "max_checkpoint_bytes": 536870912,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592,
+    "min_disk_available_bytes": 4294967296
+  }
+}

@@ -1,6 +1,6 @@
 # Current Research State
 
-Last refreshed: 2026-09-26. This is the current-state source of truth, not an
+Last refreshed: 2026-09-27. This is the current-state source of truth, not an
 experiment changelog. Evidence and historical decisions are linked below.
 
 ## Current Position
@@ -8,8 +8,8 @@ experiment changelog. Evidence and historical decisions are linked below.
 | Area | Current status |
 |---|---|
 | Validated internal baseline | Native DrQ-v2 control with augmentation pad 4. Two unique control actors, one per training seed, were evaluated on two fresh internal confirmation cohorts; the recorded control outcomes range from 4 to 7 finishes in 32 cells. |
-| Active research direction | Diagnose DreamerV3 v1-v9 world-model B1 failure with frozen artifacts before deciding whether a differently designed, newly frozen experiment is warranted. No new Dreamer actor training is authorized by the B1 record. |
-| Current blocker | Two learner seeds failed B1 across all nine random-data world-model studies. v8's tiny image gain did not yield reliable terminal/reward signal. v9's `pos_weight=56` upweighted common `continue=1` rather than rare terminal events; the original BCE comparator mixed training and sampled-window prevalences. See the indexed B1 diagnosis. The earlier steering-saturated policy pilot also remains a separate failure. |
+| Active research direction | DreamerV3 is CLOSED. Other algorithm work is listed separately below; there is no active Dreamer experiment or implementation task. |
+| Current blocker | None for DreamerV3: the research line is closed under the current design and budget. This is not a theoretical impossibility judgment; further progress would require design-level rework. |
 | DrQ-v2 narrow tuning | Closed. The predeclared steering-logit L2 and pad=1 follow-ups both regressed; do not launch a third narrow tuning axis. |
 | DrQ-v2 teacher-replay plan | The isolated r3 collection completed its fixed 16,384 decisions/source cap, but one source had only 3/4 required finished geometries. A3 is inconclusive; no paired learner training, screen, confirmation, or blind evaluation occurred. Preserve both datasets as consumed and do not extend the cap or substitute a source. See `docs/experiments/INDEX.md`. |
 | DrQ-v2 training-only geometry study | Completed: consumed-road failure analysis, blind-safe seed audit, 120 distinct TRAIN roads + 16 separate TRAIN-DIAGNOSTIC roads in six measured families, static/finish-logic sanity, and 272 sealed frozen actor diagnostics. The same 136 training-only roads gave 10 both-actor finishes, 74 provisional boundary, 50 difficult-with-progress, 2 unresolved and zero selected malformed geometries. No new learner training or held-out/blind action. See `docs/experiments/drqv2-geometry-augmentation-v1.md`. |
@@ -19,10 +19,50 @@ experiment changelog. Evidence and historical decisions are linked below.
 | Best single-model designation | No official or competition-confirmed model is designated. Pixel RLPD seed 11 is an internal, limited-geometry blind-tested candidate only. See `docs/results/MODEL_STATUS.md`. |
 | Official external state | This repository has no committed official server submission identifier, public-track result, or model-confirmation receipt. A local package archive is not proof of an official submission. |
 
+## DreamerV3 Research Line: CLOSED
+
+Decision as of 2026-09-27: **additional DreamerV3 work is not worth pursuing under
+the current design and budget.** The local implementation, available data, and
+experiment contract have not solved long-horizon prior dynamics; further progress
+would require design-level rework. This is not a claim that DreamerV3 is
+theoretically impossible.
+
+- Posterior reconstruction and short, logged-action predictions can look
+  reasonable, but multi-step free prior rollout is unstable; 32-decision prediction
+  error worsened beyond a simple repeat baseline. Posterior reconstruction is not
+  open-loop prediction.
+- Static random B1 v1-v9, random/teacher data, two DrQ-source replay, and H8
+  prior-image auxiliary work did not establish stable improvement across two
+  learner seeds and both scored action-source strata. The strict H8
+  paired-improvement-and-repeat gate failed.
+- The evidence does not support explaining the failure solely by unused actions,
+  an obvious off-by-one alignment bug, or one missing prior-image auxiliary loss:
+  action-input sensitivity was observed, the tested real transition trace found no
+  target offset, and prior-image/H8 treatments were actually tried but failed
+  their declared gates.
+- Residual causes remain hypotheses, not proven mechanisms: limited state/action
+  coverage; possible redundancy between the four-frame stack and RSSM memory or a
+  reconstruction shortcut; the offline-world-model-first structure; and long-rollout
+  dynamics drift.
+- Stop local searches over loss weights, horizons, update counts, and similar
+  parameters. No further experiment, training, collection, evaluation, promotion,
+  official submission, or protected evaluation-cell use is part of this line.
+
+The latest available multi-source+H8 checkpoints are world-model diagnostics at
+[`seed 0`](../../runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-0/world-model-checkpoint.pt)
+and
+[`seed 1`](../../runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-1/world-model-checkpoint.pt).
+Both receipts report `actor_trained=false` and `promotion_eligible=false`; neither
+is a performance actor, and no Dreamer checkpoint is selected as a best model.
+The final evidence/gate index is [`docs/experiments/INDEX.md`](../experiments/INDEX.md).
+The former active plan is now a [closed status pointer](../plans/active/dreamerv3-recovery-strategy.md)
+to its [archive](../plans/archived/dreamerv3-recovery-strategy-2026-09-27.md).
+Any future contingency is only the
+[`DEFERRED / LAST-RESORT ONLY` revival plan](../plans/dreamerv3-revival-plan.md).
 ## Active Work
 
 The user-authorized DrQ-v2 geometry-mix study is a separate matched experiment;
-it neither reopens teacher-replay r1-r3 nor changes the active Dreamer B1 plan.
+it neither reopens teacher-replay r1-r3 nor changes DreamerV3's closed status.
 Its three fixed family mixtures and diagnostic-only protocol are frozen at
 [`drqv2-geometry-mix-v1-r6`](../../experiments/drqv2-geometry-mix-v1-r6.json).
 Mix r1-r3 were superseded before any interaction. R4 and r5 each had one partial
@@ -57,10 +97,13 @@ reordering on some cells and incomplete source-state replay retention remain
 contributors to test, not proven causes. This does not authorize training,
 promotion or a new evaluation partition.
 
-The active plan is
-[`docs/plans/active/dreamerv3-recovery-strategy.md`](../plans/active/dreamerv3-recovery-strategy.md).
-It is a correctness-and-feasibility plan, not authorization to start a 131,072-
-decision run. The initial fidelity work and nine B1 static-random-data trials
+### Historical DreamerV3 Evidence (CLOSED; No Follow-up)
+
+The former plan is preserved in the
+[`archive`](../plans/archived/dreamerv3-recovery-strategy-2026-09-27.md).
+All following paragraphs are historical evidence, not active requirements or
+authorization to continue. Reentry is governed only by the deferred revival plan.
+The initial fidelity work and nine B1 static-random-data trials
 are complete; all failed their frozen gates. The
 [`B1 failure diagnosis`](../../experiments/dreamerv3-b1-failure-diagnosis-v1.json)
 separates implementation errors, sparse training signal, and gate design defects.

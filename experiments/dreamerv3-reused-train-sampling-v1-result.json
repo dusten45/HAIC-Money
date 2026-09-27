@@ -1,0 +1,49 @@
+{
+  "format": "haic-dreamerv3-reused-train-sampling-result-v1",
+  "status": "non_promoting_consumed_development_prior_sampling_diagnostic",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "executable": {
+    "path": "scripts/diagnose/dreamerv3_reused_sampling_probe.py",
+    "sha256": "2fe51e65a93b1f9d449df590d08382b155c56ba440ce67047f8028b59682d6a6"
+  },
+  "primary_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/sampling-v1/sampling-result.json",
+    "sha256": "5eb5c71b53e4b89349cdf1655da5e7302f56064b5fe899fd5efa805172138732"
+  },
+  "pinned_score_inputs": {
+    "original_64_update_score_protocol_sha256": "8fc90d1024e6bc55d1e42d3ba442bd3c493bfece195571fa34063a15203c4a5d",
+    "original_64_update_score_result_sha256": "748de44441dedf08b98d2fc28464578cf28b7d9d0483eb762552cb142ad6b4b5",
+    "256_update_score_protocol_sha256": "ddcb33d19b36f6c0c17942263da835a45bf87f76271f550027e6113824ebf994",
+    "256_update_score_result_sha256": "94bbd7457283d5ec8f0ad4a4ff2e654b97839d09a7eca764615de6fae625ff5d"
+  },
+  "design": {
+    "prior_trajectories_per_window": 8,
+    "original_single_trajectory_is_path": 0,
+    "context_decisions": 8,
+    "future_decisions": 32,
+    "horizon_buckets": ["t1", "t1_through_8", "t9_through_32"],
+    "unique_training_excluded_but_previously_allocated_roads_per_source_stratum": 4,
+    "windows_per_model_and_source_stratum": 8,
+    "unique_scored_decisions_per_model_and_source_stratum": 256,
+    "terminal_positive_labels_per_source_stratum": 4,
+    "finished_geometries_per_source_stratum": 0,
+    "mse_of_mean_images_not_mean_of_mses": true
+  },
+  "teacher_trained_256_update_teacher_source_stratum": {
+    "learner_seed_order": [0, 1],
+    "repeat_baseline_image_mse_t1_through_8": 0.013546511955070173,
+    "single_prior_image_mse_t1_through_8": [0.013093907315465003, 0.012993682692695074],
+    "mean_eight_prior_images_mse_t1_through_8": [0.013154630382473442, 0.013034849108862545],
+    "repeat_baseline_image_mse_t9_through_32": 0.01533025972026773,
+    "single_prior_image_mse_t9_through_32": [0.021373164832766633, 0.027636500361647144],
+    "mean_eight_prior_images_mse_t9_through_32": [0.02008654545594861, 0.026549153272450592]
+  },
+  "interpretation": [
+    "Path 0 reproduced the pinned one-sampled prior score; averaging eight predicted images changes the estimate but does not remove either teacher-trained seed's long-horizon deficit to the frozen-anchor repeat baseline on these four reused teacher-source roads.",
+    "Both teacher-trained seeds have a small early-horizon image-MSE advantage on this consumed teacher-source stratum, yet their late free-running prior errors exceed the repeated-anchor comparator. This suggests error accumulation as a mechanism to investigate, not a causal diagnosis.",
+    "The eight paths are correlated samples from the same model/window, not eight independent episodes or generalization trials; one-trajectory stochastic variance is not established as the sole cause of the previous 32-decision error.",
+    "No target-conditioned posterior is used as a prior forecast. No student actor was trained or evaluated and no fresh P1/P1b or official result follows."
+  ]
+}

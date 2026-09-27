@@ -1,0 +1,90 @@
+{
+  "format": "haic-dreamerv3-reused-prior-image-training-result-v1",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1",
+  "status": "non_promoting_auxiliary_training_complete_development_score_pending",
+  "freshness_claim": false,
+  "matched_pure_256_step_claim": false,
+  "p1b_or_promotion_claim": false,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-train-prior-image-v1.json",
+    "sha256": "bddec29a834f68ac9cd25f151fdf3da30c798b9f0be7adc93c2e7c74080eaa71"
+  },
+  "base_protocol": {
+    "path": "experiments/dreamerv3-reused-train-offline-v2.json",
+    "sha256": "ba837ebc3f64282bbd77b4444c6f337c23a3ebce12602d328e9626c1c406b290"
+  },
+  "frozen_executable_sources": {
+    "helper": "bb878da6f8903cee17383061e759baf2c87abd4101e78c9dc27cf3d7bfed1166",
+    "runner": "59dbefa7c8d51b1b7808862ccdb7253933f46936f22eeb810a24a7f8c5216f34"
+  },
+  "treatment": {
+    "standard_model_only_updates_per_seed": 256,
+    "additional_world_model_optimizer_steps_per_seed": 64,
+    "total_world_model_optimizer_steps_per_seed": 320,
+    "auxiliary_after_every_base_updates": 4,
+    "prior_image_horizon_decisions": 8,
+    "auxiliary_weight": 0.25,
+    "anchors": "first-and-latest-full-horizon-posterior-anchors",
+    "auxiliary_rng_fork": "CPU Torch, NumPy and Python state restored after each deterministic auxiliary replay draw",
+    "auxiliary_sampled_target_uses_per_step": 64,
+    "learner_seeds": [0, 1],
+    "environment_steps": 0,
+    "actor_critic_target_and_optimizers_unchanged": true,
+    "peak_process_rss_kib_per_run": 5484816
+  },
+  "arms": {
+    "random": {
+      "sealed_training_decisions": 1306,
+      "complete_source_episodes": 4,
+      "distinct_source_finished_roads": 0,
+      "learners": [
+        {
+          "seed": 0,
+          "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-0/training-result.json",
+          "receipt_sha256": "158dc5935ed831ae32794fa4d1e749c11a7e5d3b4921d75e871a5d4b93b2a874",
+          "checkpoint_sha256": "554590638da323ecd94adf2abb9565ff7b5c143dc838cb990f4d2658a0ca76d9",
+          "auxiliary_frame_mse_first8_mean": 0.0013401303440332413,
+          "auxiliary_frame_mse_last8_mean": 0.0011168337223352864
+        },
+        {
+          "seed": 1,
+          "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-1/training-result.json",
+          "receipt_sha256": "b9774af0e3e8b71d164a7cdac4ea1f023752563b6208fbb4b48b56e0f744e179",
+          "checkpoint_sha256": "e34a59eef5b5a6afb02e351cf0fd34b7876c8e23ba39941f28dfdfcc7acadf39",
+          "auxiliary_frame_mse_first8_mean": 0.0014653716134489514,
+          "auxiliary_frame_mse_last8_mean": 0.001463672233512625
+        }
+      ]
+    },
+    "teacher": {
+      "sealed_training_decisions": 2548,
+      "complete_source_episodes": 4,
+      "distinct_source_finished_roads": 1,
+      "learners": [
+        {
+          "seed": 0,
+          "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-0/training-result.json",
+          "receipt_sha256": "c0e84612e1f1c2aee68c6c187b5829cb412c35de37b5ed0cfa2d453222fded9b",
+          "checkpoint_sha256": "c2446e40aba600a65e5a5996f80521867447a42b185058905fe488527465e988",
+          "auxiliary_frame_mse_first8_mean": 0.01218506507575512,
+          "auxiliary_frame_mse_last8_mean": 0.010921349050477147
+        },
+        {
+          "seed": 1,
+          "receipt_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-1/training-result.json",
+          "receipt_sha256": "68878e3c4dcdb19dd6b129d715a0fb979cd710fd76f811bcc578e43237903d1c",
+          "checkpoint_sha256": "ac235882a19524684544ca1ddf62b785d168f8a0c81db19b59bbb7a19c44bd11",
+          "auxiliary_frame_mse_first8_mean": 0.011826884583570063,
+          "auxiliary_frame_mse_last8_mean": 0.012421310995705426
+        }
+      ]
+    }
+  },
+  "limits": [
+    "The treatment adds 64 extra optimizer steps and compute, so it is not a matched 256-only loss-shape ablation.",
+    "First/last eight-step anchors and 64 target uses per sampled batch are correlated training windows, not independent geometry or success events.",
+    "Auxiliary training losses on repeatedly sampled TRAIN replay cannot establish unseen-road prediction or student driving.",
+    "The original P1 source auditor remains non-passing; these roads were previously allocated to r6 TRAIN and are not fresh P1/P1b cells.",
+    "No Dreamer actor was updated or screened; a separately pinned read-only development score is required before the predeclared local gate can be applied."
+  ]
+}

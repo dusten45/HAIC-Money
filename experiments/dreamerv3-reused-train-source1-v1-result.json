@@ -1,0 +1,70 @@
+{
+  "format": "haic-dreamerv3-reused-train-source1-result-v1",
+  "study_id": "dreamerv3-reused-train-source1-v1",
+  "status": "source1_replication_complement_design_gate_true_no_learner",
+  "freshness_claim": false,
+  "source0_original_learner_gate_passed": false,
+  "multi_source_model_data_protocol_exists": false,
+  "student_model_updates_on_new_corpus": 0,
+  "p1b_or_promotion_claim": false,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-train-source1-v1.json",
+    "sha256": "cc6746d0a7c51b27112d1d0b7569d2483cdfc7f7c03d81e8dc7b4fcc42c47262"
+  },
+  "executing_sources": {
+    "source1_wrapper_sha256": "f868479f9b9d1ac14868e9ccf97611807124e0e28f59c4bc38be709d62642030",
+    "original_source0_collector_sha256": "3217f00a626694372b4c935d6d4503bdc8d407867d62df53cee42d6d9c5dea17",
+    "r6_training_pool_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+    "shape_catalog_sha256_enforced_before_each_reset": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+    "historical_paired_summary_sha256": "29fe9d2b8d4eff04879cc9c1390b4701e4f235af710856f39acf6592f65015ee"
+  },
+  "primary_receipts": {
+    "root_path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/collection-result.json",
+    "root_sha256": "502676b60faa51de06fc0f72f53edcb57e53710c063dbc965bc8e4689398984c",
+    "source1_arm_path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/teacher/collection-result.json",
+    "source1_arm_sha256": "21918ba3d83bd947e896d15a96b5aed4a34e4d723514cf892b77a0f0dc56fe48",
+    "source1_archive_path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/teacher/support-dataset.npz",
+    "source1_archive_sha256": "aa8af2512ef248c0d8927459b2acb175eb46ffb56afbcd9e3e0e668080bd0607",
+    "source1_dataset_digest": "f1176a0e7661cc5594a891e172b9918dc6e3a9a97477ed4281e52e1e3db5c126"
+  },
+  "frozen_source0_reference": {
+    "protocol_sha256": "a2f3e92fd1b2e95f883b24e3ef28d58b3e70938a0dd867d2c9ec5da5bd46df83",
+    "teacher_receipt_sha256": "00a388f5eabdd9707b096dfb735b2d717b309b86a9daa1423d2c16177fa2c353",
+    "finished_roads": [3910800011, 3910800041],
+    "failed_separate_min_three_finish_gate": true
+  },
+  "source1_replication": {
+    "source_id": "drq-source-1",
+    "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "checkpoint_sha256": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4",
+    "actor_weights_sha256": "e0984f709d1971754f2e9b64a69bf216922ca5bd0791ad247181b218f830b736",
+    "independent_same_road_attempts": 12,
+    "decision_cap": 24000,
+    "decisions_spent_and_stored": 5192,
+    "completed_whole_episodes": 12,
+    "partial_decisions": 0,
+    "unresolved_calls": 0,
+    "finished_roads": [3910800008, 3910800011],
+    "historical_single_attempt_finished_roads": [3910800008, 3910800011, 3910800041, 3910800074],
+    "repeated_historical_source1_finishes": [3910800008, 3910800011],
+    "prior_measured_road_interpretation": "These are replicas/variation on historically measured r6 TRAIN roads, not unseen-road observations."
+  },
+  "predeclared_source_union_design_gate": {
+    "passed": true,
+    "required_new_finished_road_relative_to_source0": 1,
+    "observed_new_finished_roads_relative_to_source0": [3910800008],
+    "min_union_distinct_finished_roads": 3,
+    "observed_union_distinct_finished_roads": [3910800008, 3910800011, 3910800041],
+    "min_union_shape_families": 2,
+    "observed_union_shape_families": ["easy-curvature-anchor", "opening-delayed-high-turn", "opening-short-entry-left-turn"],
+    "only_permits": "design and separately freeze a future multi-source Dreamer data-lineage/learner protocol",
+    "authorizes_training_now": false
+  },
+  "limits": [
+    "Both source actors are frozen DrQ pad-4 teachers; no Dreamer student drove a road. Each source1 road had one new attempt, and some historical source1 finishes did not recur.",
+    "Source0's separate >=3 finish gate remains false; unioning road IDs is not a retroactive pass or a matched learner comparison.",
+    "The source0/source1 archives have distinct actor SHA values and duplicate road geometry IDs; a future Dreamer replay adapter must retain hashed per-episode source lineage and globally unique replay episode IDs.",
+    "The original single-source offline runner cannot ingest or truthfully label both teacher archives, and its 8,192-decision replay capacity is smaller than the 5,420+5,192 combined decisions.",
+    "The consumed r6 TRAIN roads and historical paired catalog prohibit fresh P1/P1b, protected-cell, model-promotion and official generalization claims."
+  ]
+}

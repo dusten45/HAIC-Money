@@ -5,7 +5,7 @@
 | Field | Plan |
 |---|---|
 | Status | Historical research design; the separately frozen r3 study stopped at A3 as inconclusive. This document alone authorizes no new training, evaluation, package release, or official action. |
-| Relationship to current work | Independent of the active DreamerV3 recovery plan and the separate [pixel RLPD study](pixel-rlpd-offpolicy-plan.md); any new study needs its own frozen protocol and fresh partitions. |
+| Relationship to current work | Independent of the now-closed DreamerV3 recovery line and the separate [pixel RLPD study](pixel-rlpd-offpolicy-plan.md); any new study needs its own frozen protocol and fresh partitions. |
 | Claim under test | With a fixed additional online-decision and learner-update budget, replaying new training-only trajectories from an already competent frozen DrQ-v2 driver may improve repeated unseen-track completion when fine-tuning a copy of that driver. |
 | Primary variable | Use of a fixed, source-matched teacher replay buffer in 25% of each learner minibatch. The paired control uses only newly collected online replay. |
 | Not claimed | Equal *total* training cost, RLPD reproduction, causal benefit from steering desaturation, official score improvement, or an automatic replacement of either existing DrQ-v2 control. |

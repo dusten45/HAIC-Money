@@ -1,0 +1,72 @@
+{
+  "format": "haic-dreamerv3-reused-prior-image-development-result-v1",
+  "status": "predeclared_teacher_image_gate_failed_on_consumed_development",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "student_actor_trained": false,
+  "prior_image_training_protocol": {
+    "path": "experiments/dreamerv3-reused-train-prior-image-v1.json",
+    "sha256": "bddec29a834f68ac9cd25f151fdf3da30c798b9f0be7adc93c2e7c74080eaa71"
+  },
+  "prior_image_training_result": {
+    "path": "experiments/dreamerv3-reused-train-prior-image-v1-result.json",
+    "sha256": "606a4ab78a71c6b2e8bec29de1a370431b095519e7dca1c303e55e028fe93acf"
+  },
+  "scoring_protocol": {
+    "path": "experiments/dreamerv3-reused-train-prior-image-score-v1.json",
+    "sha256": "918ce7b48a37a2347e2a1cc6babc39eb57bde5f4a8f0b34221510d72d8d54e70"
+  },
+  "scoring_executable": {
+    "path": "scripts/diagnose/dreamerv3_reused_prior_image_score.py",
+    "sha256": "564aa649d8d5f8f468f6dcf0117b1a001fb2c83c39d57469d79bee843638ffe6"
+  },
+  "primary_scoring_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/scoring-prior-v1/score-result.json",
+    "sha256": "f7054d9a5e7f7e865c407ba18dc5e77504e7356e0a0e06a73cfc22badc321253"
+  },
+  "design": {
+    "base_model_only_updates": 256,
+    "extra_prior_image_optimizer_steps": 64,
+    "optimizer_step_confounded_comparison": true,
+    "learner_seeds": [0, 1],
+    "independent_previously_allocated_development_roads_per_action_source": 4,
+    "prediction_windows_per_model_and_action_source": 8,
+    "unique_scored_decisions_per_model_and_action_source": 256,
+    "terminal_positive_labels_per_action_source": 4,
+    "finished_development_roads_per_action_source": 0,
+    "development_already_consumed_for_iterative_tuning": true
+  },
+  "predeclared_local_gate": {
+    "source": "20260926T120118Z-k9r4-dreamer-aux-gate-predeclare",
+    "passed": false,
+    "rule": "Both teacher-data seeds must strictly beat their own pure-256 image MSE on both action-source strata and also beat the frozen-anchor repeat image MSE on teacher-action development.",
+    "teacher_action_repeat_image_mse": 0.01488432277896834,
+    "teacher_trained_seed_order": [0, 1],
+    "random_action_source": {
+      "pure_256_image_mse": [0.036492159028313154, 0.02872417803848748],
+      "auxiliary_image_mse": [0.003183128492693754, 0.003173380447861973],
+      "both_improved": true
+    },
+    "teacher_action_source": {
+      "pure_256_image_mse": [0.019303350453441226, 0.02397579594440913],
+      "auxiliary_image_mse": [0.01595182063626588, 0.016134877649484736],
+      "both_improved": true,
+      "both_below_frozen_anchor_repeat": false
+    },
+    "teacher_seed_0_passed": false,
+    "teacher_seed_1_passed": false
+  },
+  "descriptive_nonselected_random_trained_models": {
+    "teacher_action_auxiliary_image_mse_seed_0": 0.0148686468792123,
+    "teacher_action_auxiliary_image_mse_seed_1": 0.014839376661063941,
+    "interpretation": "Small below-repeat values on the same consumed roads are not the preregistered teacher-data treatment and cannot replace its failed gate."
+  },
+  "limits": [
+    "Auxiliary training took 320 rather than 256 world-model optimizer steps; the experiment cannot isolate the prior-image loss shape from the extra compute.",
+    "These r6-allocated TRAIN development roads were already scored after earlier 64/256-update iterations; no fresh holdout or official HAIC evidence exists.",
+    "Only four independent episode/road units and no finish-positive development roads exist per action-source stratum.",
+    "The static third-per-family TRAIN-reuse road group is not opened because the frozen teacher-data image gate failed.",
+    "No Dreamer actor or critic update, full-reset student run, P1b matched study, confirmation, blind evaluation or official submission occurred."
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-prior-result-v1",
+  "study_id": "dreamerv3-reused-train-multisource-prior-v1",
+  "status": "model_only_256_plus_64_complete_development_score_pending",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "student_actor_trained": false,
+  "matched_pure_256_step_claim": false,
+  "protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-prior-v1.json",
+    "sha256": "4dad8f8be6ec6f56cc766ade6b3a6f4f8ddb44424c6a6b33e4f2f22293718c80"
+  },
+  "source": {
+    "path": "scripts/train_dreamerv3_reused_multisource_prior.py",
+    "sha256": "4c1e4ae6a90a04fe1070d8f946759497b47c8a3d6d1e588549976d6efd87ce56"
+  },
+  "original_mixed_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-v1.json",
+    "sha256": "1a7ddee161bf1958eb5c59152326b6f2fed8899eed41294e55e86edc5ccce42d"
+  },
+  "design": {
+    "seeds": [0, 1],
+    "base_model_only_updates_per_seed": 256,
+    "additional_prior_image_optimizer_steps_per_seed": 64,
+    "total_world_model_optimizer_steps_per_seed": 320,
+    "aux_after_every_base_updates": 4,
+    "prior_horizon_decisions": 8,
+    "prior_image_weight": 0.25,
+    "anchor_mode": "deterministic-first-last-full-horizon",
+    "aux_rng_mode": "fork-torch-numpy-python",
+    "training_archive_decisions": 10612,
+    "source0_decisions": 5420,
+    "source1_decisions": 5192,
+    "actor_tagged_whole_episodes": 24,
+    "distinct_road_geometries": 12,
+    "replay_capacity": 16384,
+    "environment_steps_per_seed": 0,
+    "actor_critic_target_and_optimizer_states_unchanged": true,
+    "peak_process_rss_kib_per_seed": 7285220,
+    "additional_cgroup_oom_kills": 0
+  },
+  "source_lineage": {
+    "sha256_identical_both_seeds": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a",
+    "source0_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+    "source1_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "source0_complete_episodes": 12,
+    "source1_complete_episodes": 12,
+    "sequence_id_first": 0,
+    "sequence_id_last_inclusive": 10611,
+    "source0_only_failed_support_gate_retroactively_passed": false
+  },
+  "seed_results": [
+    {
+      "seed": 0,
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-0/training-result.json",
+      "receipt_sha256": "f9b07cde32894b55993fd454202e05506c6ea3eb1f1310373502884147816aff",
+      "checkpoint_sha256": "a67c35b4289be70731b0f16eeb4a9cbeef344cfd1e81d074f1a328b0c4b0c464",
+      "base_metrics_sha256": "74cc5c0ba62f9a11316530db53d3237fb802c3f9dad68cd1347c8f2aa2f0d7ad",
+      "aux_metrics_sha256": "482c9c152a70c23e813e19ed56d58ea83c790c50a916aed67465f304f27eca26",
+      "aux_frame_mse_first8_mean": 0.009089916537050158,
+      "aux_frame_mse_last8_mean": 0.009619329473935068,
+      "aux_targets_per_sampled_update_min": 64,
+      "aux_targets_per_sampled_update_max": 64
+    },
+    {
+      "seed": 1,
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-1/training-result.json",
+      "receipt_sha256": "65e5527f3b562ab5d0fe64093641a846fc0b30df56157c12577fac9b99c4b815",
+      "checkpoint_sha256": "f74bc3d01607a9db10af918fc949d1e790a90f124bed9f38b33f9504026417d7",
+      "base_metrics_sha256": "13b767e40ca2422b41d8d033c5e7c610bd606bbf186fc1a03e132e47d646298f",
+      "aux_metrics_sha256": "c4c7f2251b178f24ece356948833efa25c6e08a6a2fbd4330b9c9b62d68bd61f",
+      "aux_frame_mse_first8_mean": 0.008823640353512019,
+      "aux_frame_mse_last8_mean": 0.006782133015803993,
+      "aux_targets_per_sampled_update_min": 64,
+      "aux_targets_per_sampled_update_max": 64
+    }
+  ],
+  "prospective_score": {
+    "source": "20260926T144241Z-k9r4-dreamer-multisource-prior-interaction-scope",
+    "development_protocol_sha256": "0f2c622e008ab7e4bce98c376c2a6c3e4ef6e78d73d07d82d2716185ff9d2fb0",
+    "pure_256_score_result_sha256": "93174115d081a04344b91a31fe42ad4ac2020b69afcc655e921c589013fd2e93",
+    "status": "not_yet_scored",
+    "predeclared_local_gate": "Both seeds improve their own pure-256 image MSE and beat the frozen-anchor repeat on both previously consumed source0/random development strata."
+  },
+  "limits": [
+    "The treatment uses 320 rather than 256 world-model optimizer steps. A later local gain cannot be assigned solely to the auxiliary loss shape or claimed as a compute-matched improvement.",
+    "Source0/source1 are 24 separate actor-policy attempts on the SAME twelve previously r6-allocated TRAIN roads, not 24 independent geometries or fresh P1b cells.",
+    "Within-training auxiliary frame losses are sampled from replay and moved in different directions for the two learner seeds; they do not establish development prediction or driving skill.",
+    "The four-road development material was already scored for pure-256 training. Any further score uses consumed iterative tuning; seventh static TRAIN-reuse roads remain unopened pending a separate gate.",
+    "No Dreamer student actor/critic update, official result, protected cell, confirmation/blind, or fresh P1 audit clearance was produced."
+  ]
+}

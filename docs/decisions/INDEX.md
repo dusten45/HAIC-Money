@@ -62,27 +62,37 @@ visual regularization as a cause remains a hypothesis.
 **Revisit condition:** A distinct research direction with new evidence and an
 explicit user-authorized plan, not a third follow-up sweep.
 
-## Do Not Scale the Current DreamerV3 Formulation
+## Close the Current DreamerV3 Research Line
 
-**Context:** Pre-repair native DreamerV3 passed packaging/recurrent and short training
-gates.
+**Context:** The current local design and budget no longer justify continued
+DreamerV3 work. Posterior/short-term prediction did not yield stable long-horizon
+free-prior dynamics, and the remaining improvement path requires design-level
+rework.
 
-**Evidence:** The pre-repair pilot policy saturated steering and achieved no screen
-finishes; its diagnostics did not establish a world model suitable for control.
-See [`dreamerv3-feasibility-gate.json`](../../experiments/dreamerv3-feasibility-gate.json).
-A1-A3 repairs and B1 tooling were subsequently implemented, but all nine
-source-pinned random-data world-model studies v1-v9 failed their frozen B1 gates
-in both learner seeds. See the
-[`v1-v9 summary`](../../experiments/dreamerv3-b1-iteration-summary-v1-v9.json)
-and [`B1 diagnosis`](../../experiments/dreamerv3-b1-failure-diagnosis-v1.json).
-No post-repair policy was trained in those studies.
+**Evidence:** All nine static-random-data B1 studies failed for both learner seeds
+([`v1-v9 summary`](../../experiments/dreamerv3-b1-iteration-summary-v1-v9.json),
+[`diagnosis`](../../experiments/dreamerv3-b1-failure-diagnosis-v1.json)). The
+later teacher-data prior-image and multi-source+H8 strict gates also failed; the
+32-decision free-prior error was worse than simple repeat. The actual fresh-P1
+seed audit remains `passed=false, inventory_complete=false`. The consumed-TRAIN
+records and final gate status are indexed in
+[`docs/experiments/INDEX.md`](../experiments/INDEX.md). The feasibility artifact's
+older Gate 3 pass label is superseded by the later diagnosis.
 
-**Decision:** Do not launch the 131k matched run for the pre-repair formulation
-or the B1-failed repaired studies. Keep policy training blocked under the active
-recovery plan; this is not a family-wide rejection of DreamerV3.
+**Decision:** Close this research line. Do not run further DreamerV3 experiments,
+training, data collection, evaluation, or local hyperparameter/horizon/update
+search. Current checkpoints are world-model diagnostics only; there is no selected
+Dreamer performance model. No official submission, model promotion, or protected
+evaluation use follows. This is **not** a theoretical impossibility judgment
+about DreamerV3; the current implementation/data/contract did not resolve prior
+dynamics and further progress would require design-level rework.
 
-**Revisit condition:** The active plan's correctness, open-loop, counterfactual,
-and renewed pilot gates pass.
+**Revisit condition:** Only the conjunctive conditions in the
+[`DEFERRED / LAST-RESORT ONLY revival plan`](../plans/dreamerv3-revival-plan.md)
+may reopen this line: the other serious algorithms lack sufficient performance
+potential, a new design-level research line is accepted, and failed B1/H8 work is
+not repeated as-is. Existing TRAIN consumption and fresh-evaluation boundaries
+must be preserved.
 
 ## Preserve Internal Blind Partitions and Separate External Actions
 
@@ -98,20 +108,20 @@ refresh.
 
 **Revisit condition:** A new protocol reserves new cells or competition rules change.
 
-## Keep Future Algorithm Families as Candidates, Not Active Work
+## Do Not Treat Historical Roadmap Order as Authorization
 
-**Context:** The prior algorithm roadmap listed TD-MPC2 and Dreamer 4 after DrQ-v2
-and DreamerV3.
+**Context:** Historical roadmaps placed TD-MPC2 and DreamerV3 later in an algorithm
+sequence, which could be mistaken for an active queue.
 
-**Evidence:** No current artifact establishes a feasible CPU/package path or a
-matched improvement for either family. DreamerV3 A1-A3 repairs and B1 tooling
-are implemented, but all nine two-seed v1-v9 B1-only studies failed; no
-post-repair actor performance is known.
+**Evidence:** The archived roadmap predates current research status. DreamerV3's
+current-design line is explicitly closed above, while other algorithm directions
+have independent status and gates in `docs/context/current-state.md`.
 
-**Decision:** Keep those families as strategic possibilities in the archived roadmap
-([`2026-09-23-algorithm-migration-plan.md`](../plans/archived/2026-09-23-algorithm-migration-plan.md)),
-not as active tasks. Do not skip evaluation/compatibility gates merely because they
-appear later in an old sequence.
+**Decision:** Do not infer that an algorithm is active or next merely because it
+appears later in the archived roadmap. Follow current-state and active-plan status;
+the old sequence does not authorize experiments or allow skipping current
+experiment/evaluation gates. See the archived
+[`algorithm migration roadmap`](../plans/archived/2026-09-23-algorithm-migration-plan.md).
 
-**Revisit condition:** The active DreamerV3 decision closes or new evidence justifies
-a separately scoped plan.
+**Revisit condition:** Each family follows its own explicitly documented status,
+evidence, and authorization boundary.

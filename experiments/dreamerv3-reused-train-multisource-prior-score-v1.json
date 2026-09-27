@@ -1,0 +1,101 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-prior-score-v1",
+  "purpose": "reused-TRAIN-consumed-development-prior-interaction-diagnostic",
+  "study_id": "dreamerv3-reused-train-multisource-prior-score-v1",
+  "prior_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-prior-v1.json",
+    "sha256": "4dad8f8be6ec6f56cc766ade6b3a6f4f8ddb44424c6a6b33e4f2f22293718c80"
+  },
+  "pure_256_score_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-score-v1.json",
+    "sha256": "dc40240247673ba26e6a722c68ffd7b93c501a2881d8bc01a1a631ed4d3615f1"
+  },
+  "pure_256_score_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-multisource-v1/open-loop-v1/score-result.json",
+    "sha256": "93174115d081a04344b91a31fe42ad4ac2020b69afcc655e921c589013fd2e93"
+  },
+  "training": [
+    {
+      "seed": 0,
+      "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-0/training-result.json",
+      "result_sha256": "f9b07cde32894b55993fd454202e05506c6ea3eb1f1310373502884147816aff",
+      "checkpoint_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-0/world-model-checkpoint.pt",
+      "checkpoint_sha256": "a67c35b4289be70731b0f16eeb4a9cbeef344cfd1e81d074f1a328b0c4b0c464",
+      "lineage_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-0/lineage.json",
+      "lineage_sha256": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a"
+    },
+    {
+      "seed": 1,
+      "result_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-1/training-result.json",
+      "result_sha256": "65e5527f3b562ab5d0fe64093641a846fc0b30df56157c12577fac9b99c4b815",
+      "checkpoint_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-1/world-model-checkpoint.pt",
+      "checkpoint_sha256": "f74bc3d01607a9db10af918fc949d1e790a90f124bed9f38b33f9504026417d7",
+      "lineage_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/prior-interaction-v1/learner-1/lineage.json",
+      "lineage_sha256": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a"
+    }
+  ],
+  "development": {
+    "source0": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/teacher/collection-result.json",
+      "receipt_sha256": "9f8e19be8ec12a50b663bcd3eee4e97469dca4e6a359c178cc0460b0558b343e",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/teacher/support-dataset.npz",
+      "archive_sha256": "a4c4e7913bd97e0287b17f802737ea113721c172129548a0f43c91b602406aa2",
+      "dataset_digest": "e3b9be8edbd27d90de42f14a1a655c09b97a85d09590835469a064d2093fdf54",
+      "source_id": "drq-source-0",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37"
+    },
+    "random": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/random/collection-result.json",
+      "receipt_sha256": "79d21f0d1a2f76e0f2d3b4a0510560ac4f8d7aa2e36010c5ef80fa78d6a572b7",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-multisource-v1/development/random/support-dataset.npz",
+      "archive_sha256": "1948ee6105e55ba1f820cc73d9aae8804bd201b6d930baefb0597c955c7f24b2",
+      "dataset_digest": "83860e2deead0a438d6311143688e00bab74bb966f86ff9cdbf2684f163fc640",
+      "source_id": "uniform-native-random-seed-7395",
+      "source_actor_sha256": "eb084e3dd87b70fc86129464294d06a62e3557aaa02aa8800a983d410442aac2"
+    }
+  },
+  "source_sha256": {
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/dreamer_v3/offline.py": "4a2b3ae338c0d20f17dd135220bccdcdcf43df3cc5f715eeaf34de0142074826",
+    "haic/algorithms/dreamer_v3/prior_image.py": "bb878da6f8903cee17383061e759baf2c87abd4101e78c9dc27cf3d7bfed1166",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "scripts/diagnose/dreamerv3_reused_multisource_open_loop.py": "280d01c6d992808805a32893a7c542a2b1d2c7f94b0c7454690a1a9b611cb2d8",
+    "scripts/diagnose/dreamerv3_reused_multisource_prior_score.py": "68a641181e17c29c1f2c308cafcaa2aecf16b0d4870cc072386b6ff688ec9c5a",
+    "scripts/diagnose/dreamerv3_reused_train_open_loop.py": "cdf2b476a498a4c16649819ce598428f74f7f738e79cd30fd0803bfe6dc548db",
+    "scripts/train_dreamerv3_prior_image.py": "59dbefa7c8d51b1b7808862ccdb7253933f46936f22eeb810a24a7f8c5216f34",
+    "scripts/train_dreamerv3_reused_multisource.py": "522201e8e608c967b59b5b8e80fff3129e3593aed1f4e6b2922f18c5b0b7aaa7",
+    "scripts/train_dreamerv3_reused_multisource_prior.py": "4c1e4ae6a90a04fe1070d8f946759497b47c8a3d6d1e588549976d6efd87ce56",
+    "scripts/train_dreamerv3_reused_train.py": "8aee16446eae32408765496570c2df589a0e396ac602c12714a56047b63599ac"
+  },
+  "scoring": {
+    "context_decisions": 8,
+    "window_decisions": 32,
+    "latent_seed": 120927,
+    "context_mode": "reset-origin-full-prefix-terminal",
+    "baselines": [
+      "shifted-repeat",
+      "training-mean-reward",
+      "last-logged-reward",
+      "training-terminal-prevalence"
+    ],
+    "min_complete_roads_per_stratum": 4
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_uncompressed_bytes": 268435456,
+    "max_decisions_per_archive": 16384,
+    "max_checkpoint_bytes": 536870912,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592,
+    "min_disk_available_bytes": 4294967296
+  },
+  "local_gate": {
+    "metric": "image_mse",
+    "learner_seeds": [0, 1],
+    "development_action_strata": ["source0", "random"],
+    "strictly_below_own_pure_256_on_both_strata": true,
+    "strictly_below_frozen_anchor_repeat_on_both_strata": true,
+    "min_independent_complete_roads_per_stratum": 4
+  }
+}

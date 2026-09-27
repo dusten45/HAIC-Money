@@ -1,0 +1,81 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-score-result-v1",
+  "study_id": "dreamerv3-reused-train-multisource-score-v1",
+  "status": "predeclared_two_seed_two_source_image_gate_failed",
+  "freshness_claim": false,
+  "p1b_or_promotion_claim": false,
+  "student_actor_trained": false,
+  "training_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-v1.json",
+    "sha256": "1a7ddee161bf1958eb5c59152326b6f2fed8899eed41294e55e86edc5ccce42d"
+  },
+  "training_only_result": {
+    "path": "experiments/dreamerv3-reused-train-multisource-v1-result.json",
+    "sha256": "bf7550951200625684180a02b2c031044a2be92e65f4a7fbf3259c73b62e6457"
+  },
+  "development_collection_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-development-v1.json",
+    "sha256": "0f2c622e008ab7e4bce98c376c2a6c3e4ef6e78d73d07d82d2716185ff9d2fb0"
+  },
+  "scoring_protocol": {
+    "path": "experiments/dreamerv3-reused-train-multisource-score-v1.json",
+    "sha256": "dc40240247673ba26e6a722c68ffd7b93c501a2881d8bc01a1a631ed4d3615f1"
+  },
+  "scorer_source": {
+    "path": "scripts/diagnose/dreamerv3_reused_multisource_open_loop.py",
+    "sha256": "280d01c6d992808805a32893a7c542a2b1d2c7f94b0c7454690a1a9b611cb2d8"
+  },
+  "primary_score": {
+    "path": "runs/20260926-dreamerv3-reused-train-multisource-v1/open-loop-v1/score-result.json",
+    "sha256": "93174115d081a04344b91a31fe42ad4ac2020b69afcc655e921c589013fd2e93"
+  },
+  "source_data_and_lineage": {
+    "distinct_training_roads": 12,
+    "source0_complete_episodes": 12,
+    "source1_complete_episodes": 12,
+    "total_training_decisions": 10612,
+    "source0_decisions": 5420,
+    "source1_decisions": 5192,
+    "source_actor_sha256_are_distinct": true,
+    "lineage_sha256_bound_to_both_checkpoints": "431990749c7c9069a5fb33269cfd726d38d1ff53a21f50f28f59380a8aade52a",
+    "model_only_updates_per_seed": 256,
+    "learner_seeds": [0, 1],
+    "environment_steps": 0
+  },
+  "development": {
+    "source_strata": ["random", "source0"],
+    "training_excluded_but_r6_allocated_roads_per_stratum": 4,
+    "complete_episodes_per_stratum": 4,
+    "finished_episodes_per_stratum": 0,
+    "terminal_events_per_stratum": 4,
+    "reset_terminal_windows_per_model_and_stratum": 8,
+    "unique_scored_labels_per_model_and_stratum": 256,
+    "actual_duplicate_label_uses_per_model_and_stratum": 0,
+    "context_decisions": 8,
+    "prediction_decisions_per_window": 32,
+    "latent_seed": 120927
+  },
+  "predeclared_local_image_gate": {
+    "rule": "Both fixed model-only learner seeds strictly beat frozen-anchor shifted-repeat image MSE in both development action-source strata, with four independent complete road episodes per stratum.",
+    "passed": false,
+    "learner_seed_order": [0, 1],
+    "random_action_development": {
+      "repeat_image_mse": 0.0014941054360804173,
+      "seed_model_image_mse": [0.0015440702225077985, 0.0038620918077327815],
+      "seed_gate_passed": [false, false]
+    },
+    "source0_action_development": {
+      "repeat_image_mse": 0.009230010535757671,
+      "seed_model_image_mse": [0.009115637544630295, 0.01398715063894862],
+      "seed_gate_passed": [true, false]
+    }
+  },
+  "limits": [
+    "The separately pinned development collection preceded final scorer implementation; development road/source/metric gate/window/latent seed were predeclared before reset, but final scorer bytes and all development archive hashes were frozen only before ZIP decoding/prediction scoring. This is not a blinded or fresh holdout.",
+    "Training source0/source1 are two actor attempts on the same twelve road IDs, not twenty-four independent geometries; their union-support gate never retroactively changed source0's failed standalone gate.",
+    "The mixed teacher model uses 10,612 decisions whereas the old random archive uses 4,137; no new random student model or matched random-versus-teacher learner trial occurred in this study.",
+    "Only one learner seed had a tiny below-repeat image value on source0-action roads, while the other seed and both random-action cases failed. Post hoc seed selection cannot replace the registered two-seed/two-stratum gate.",
+    "Four terminal events but no finished development road in each stratum cannot support independent finish prediction or student driving claims.",
+    "No Dreamer actor/critic training, private/held-out/confirmation/blind evaluation, fresh P1b result, model promotion or official HAIC score was produced."
+  ]
+}

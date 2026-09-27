@@ -1,0 +1,35 @@
+{
+  "format": "haic-dreamerv3-reused-prior-image-offline-v1",
+  "purpose": "reused-TRAIN-prior-image-auxiliary-diagnostic",
+  "study_id": "dreamerv3-reused-train-diagnostic-v1",
+  "base_offline_protocol": {
+    "path": "experiments/dreamerv3-reused-train-offline-v2.json",
+    "sha256": "ba837ebc3f64282bbd77b4444c6f337c23a3ebce12602d328e9626c1c406b290"
+  },
+  "source_sha256": {
+    "scripts/train_dreamerv3_reused_train.py": "8aee16446eae32408765496570c2df589a0e396ac602c12714a56047b63599ac",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/dreamer_v3/offline.py": "4a2b3ae338c0d20f17dd135220bccdcdcf43df3cc5f715eeaf34de0142074826",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "scripts/train_dreamerv3_prior_image.py": "59dbefa7c8d51b1b7808862ccdb7253933f46936f22eeb810a24a7f8c5216f34",
+    "haic/algorithms/dreamer_v3/prior_image.py": "bb878da6f8903cee17383061e759baf2c87abd4101e78c9dc27cf3d7bfed1166"
+  },
+  "learner": {
+    "base_updates": 256,
+    "aux_updates": 64,
+    "aux_every_base_updates": 4,
+    "prior_horizon": 8,
+    "prior_weight": 0.25,
+    "anchor_mode": "deterministic-first-last-full-horizon",
+    "aux_rng_mode": "fork-torch-numpy-python",
+    "aux_rng_seed_base": 260926000,
+    "aux_rng_seed_stride": 1000
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592
+  },
+  "output_root": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1"
+}

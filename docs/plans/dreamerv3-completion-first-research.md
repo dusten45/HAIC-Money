@@ -1,11 +1,14 @@
 # DreamerV3 Completion-First Research Proposal
 
-Date: 2026-09-26. **Originally research and design only.** Subsequent,
-separately authorized P0 contract repairs and synthetic tests are recorded in
-the [active recovery plan](active/dreamerv3-recovery-strategy.md); they do not
-establish driving performance or authorize a new P1/P1b study. This report
-remains a research proposal, not a frozen execution protocol; it does not
-replace the failed B1 gates, reopen partitions, or designate a model.
+Date: 2026-09-26. **Originally research and design only; now historical and
+superseded by the 2026-09-27 closure.** Subsequent, separately authorized P0
+contract repairs and synthetic tests are recorded in the
+[archived recovery plan](archived/dreamerv3-recovery-strategy-2026-09-27.md);
+they did not establish driving performance. Nothing in this proposal remains an
+active task or execution authorization. Any last-resort contingency is described
+only in the [`DEFERRED / LAST-RESORT ONLY revival plan`](dreamerv3-revival-plan.md).
+This report does not reopen B1/P1 partitions, designate a model, or imply that
+DreamerV3 is theoretically impossible.
 
 ## Recommendation
 

@@ -1,0 +1,128 @@
+{
+  "format": "haic-dreamerv3-reused-train-multisource-v1",
+  "purpose": "reused-TRAIN-engineering-diagnostic",
+  "study_id": "dreamerv3-reused-train-multisource-v1",
+  "source0_protocol": {
+    "path": "experiments/dreamerv3-reused-train-diversity-v1.json",
+    "sha256": "a2f3e92fd1b2e95f883b24e3ef28d58b3e70938a0dd867d2c9ec5da5bd46df83"
+  },
+  "source1_protocol": {
+    "path": "experiments/dreamerv3-reused-train-source1-v1.json",
+    "sha256": "cc6746d0a7c51b27112d1d0b7569d2483cdfc7f7c03d81e8dc7b4fcc42c47262"
+  },
+  "source1_root_receipt": {
+    "path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/collection-result.json",
+    "sha256": "502676b60faa51de06fc0f72f53edcb57e53710c063dbc965bc8e4689398984c"
+  },
+  "r6_protocol": {
+    "path": "experiments/drqv2-geometry-mix-v1-r6.json",
+    "sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab"
+  },
+  "catalog": {
+    "path": "runs/20260925-drqv2-geometry-augmentation-v1/catalog/catalog.json",
+    "sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b"
+  },
+  "historical_train_summary": {
+    "path": "experiments/drqv2-geometry-augmentation-v1-training-summary.json",
+    "sha256": "29fe9d2b8d4eff04879cc9c1390b4701e4f235af710856f39acf6592f65015ee"
+  },
+  "base_model_protocol": {
+    "path": "experiments/dreamerv3-reused-train-offline-v2.json",
+    "sha256": "ba837ebc3f64282bbd77b4444c6f337c23a3ebce12602d328e9626c1c406b290"
+  },
+  "source_sha256": {
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/dreamer_v3/offline.py": "4a2b3ae338c0d20f17dd135220bccdcdcf43df3cc5f715eeaf34de0142074826",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "scripts/train_dreamerv3_reused_train.py": "8aee16446eae32408765496570c2df589a0e396ac602c12714a56047b63599ac",
+    "scripts/train_dreamerv3_reused_multisource.py": "522201e8e608c967b59b5b8e80fff3129e3593aed1f4e6b2922f18c5b0b7aaa7"
+  },
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800008},
+    {"track_id": 1, "geometry_seed": 3910800011},
+    {"track_id": 1, "geometry_seed": 3910800019},
+    {"track_id": 1, "geometry_seed": 3910800007},
+    {"track_id": 1, "geometry_seed": 3910800074},
+    {"track_id": 1, "geometry_seed": 3910800069},
+    {"track_id": 1, "geometry_seed": 3910800010},
+    {"track_id": 1, "geometry_seed": 3910800016},
+    {"track_id": 1, "geometry_seed": 3910800041},
+    {"track_id": 1, "geometry_seed": 3910800030},
+    {"track_id": 1, "geometry_seed": 3910800081},
+    {"track_id": 1, "geometry_seed": 3910800070}
+  ],
+  "datasets": {
+    "source0": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/collection-result.json",
+      "receipt_sha256": "00a388f5eabdd9707b096dfb735b2d717b309b86a9daa1423d2c16177fa2c353",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/support-dataset.npz",
+      "archive_sha256": "c7e988303d485744c73d6bb987d40a44ae51e0f11855ba4d33e8255bf971c596",
+      "dataset_digest": "4eb201475c013ef669dcfc12cab798747c15d2e82b6a0b7d21d6024d6d991d3d",
+      "source_id": "drq-source-0",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "stored_decisions": 5420
+    },
+    "source1": {
+      "receipt_path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/teacher/collection-result.json",
+      "receipt_sha256": "21918ba3d83bd947e896d15a96b5aed4a34e4d723514cf892b77a0f0dc56fe48",
+      "archive_path": "runs/20260926-dreamerv3-reused-train-source1-v1/collection/teacher/support-dataset.npz",
+      "archive_sha256": "aa8af2512ef248c0d8927459b2acb175eb46ffb56afbcd9e3e0e668080bd0607",
+      "dataset_digest": "f1176a0e7661cc5594a891e172b9918dc6e3a9a97477ed4281e52e1e3db5c126",
+      "source_id": "drq-source-1",
+      "source_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "source_checkpoint_sha256": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4",
+      "stored_decisions": 5192
+    }
+  },
+  "learner": {
+    "seeds": [0, 1],
+    "updates": 256,
+    "config": {
+      "actor_entropy_coeff": 0.0003,
+      "actor_lr": 0.00003,
+      "batch_size": 4,
+      "burnin_steps": 8,
+      "continue_positive_weight": 1.0,
+      "critic_ema_tau": 0.02,
+      "critic_lr": 0.00003,
+      "device": "cpu",
+      "embed_dim": 128,
+      "gamma": 0.99,
+      "grad_clip_norm": 100.0,
+      "hidden_dim": 128,
+      "imagination_horizon": 15,
+      "kl_dyn_weight": 1.0,
+      "kl_free_nats": 0.1,
+      "kl_rep_weight": 0.1,
+      "model_lr": 0.0001,
+      "num_categoricals": 8,
+      "num_classes": 8,
+      "observation_loss_scale": 256.0,
+      "overshoot_free_nats": 0.0,
+      "overshoot_horizon": 5,
+      "overshoot_kl_weight": 1.0,
+      "replay_capacity": 16384,
+      "replay_value_weight": 1.0,
+      "reset_start_fraction": 0.25,
+      "seed": 0,
+      "seq_len": 32,
+      "short_episode_fraction": 0.25,
+      "slow_critic_weight": 1.0,
+      "td_lambda": 0.95,
+      "terminal_window_fraction": 0.5,
+      "twohot_bins": 255,
+      "unimix": 0.01,
+      "updates_per_step": 1,
+      "warmup_steps": 0
+    }
+  },
+  "resources": {
+    "max_archive_bytes": 67108864,
+    "max_total_uncompressed_bytes": 268435456,
+    "max_cgroup_memory_bytes": 62302191616,
+    "min_cgroup_available_bytes": 8589934592,
+    "min_disk_available_bytes": 4294967296
+  }
+}

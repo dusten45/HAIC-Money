@@ -1,0 +1,73 @@
+{
+  "format": "haic-dreamerv3-reused-prior-image-score-v1",
+  "purpose": "reused-TRAIN-consumed-development-prior-image-diagnostic",
+  "study_id": "dreamerv3-reused-train-development-v1",
+  "prior_protocol": {
+    "path": "experiments/dreamerv3-reused-train-prior-image-v1.json",
+    "sha256": "bddec29a834f68ac9cd25f151fdf3da30c798b9f0be7adc93c2e7c74080eaa71"
+  },
+  "budget_score_protocol": {
+    "path": "experiments/dreamerv3-reused-train-budget-probe-v1.json",
+    "sha256": "ddcb33d19b36f6c0c17942263da835a45bf87f76271f550027e6113824ebf994"
+  },
+  "budget_score_result": {
+    "path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/scoring-v2/score-result.json",
+    "sha256": "94bbd7457283d5ec8f0ad4a4ff2e654b97839d09a7eca764615de6fae625ff5d"
+  },
+  "training": {
+    "random": [
+      {
+        "seed": 0,
+        "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-0/training-result.json",
+        "result_sha256": "158dc5935ed831ae32794fa4d1e749c11a7e5d3b4921d75e871a5d4b93b2a874",
+        "checkpoint_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-0/world-model-checkpoint.pt",
+        "checkpoint_sha256": "554590638da323ecd94adf2abb9565ff7b5c143dc838cb990f4d2658a0ca76d9"
+      },
+      {
+        "seed": 1,
+        "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-1/training-result.json",
+        "result_sha256": "b9774af0e3e8b71d164a7cdac4ea1f023752563b6208fbb4b48b56e0f744e179",
+        "checkpoint_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/random-seed-1/world-model-checkpoint.pt",
+        "checkpoint_sha256": "e34a59eef5b5a6afb02e351cf0fd34b7876c8e23ba39941f28dfdfcc7acadf39"
+      }
+    ],
+    "teacher": [
+      {
+        "seed": 0,
+        "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-0/training-result.json",
+        "result_sha256": "c0e84612e1f1c2aee68c6c187b5829cb412c35de37b5ed0cfa2d453222fded9b",
+        "checkpoint_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-0/world-model-checkpoint.pt",
+        "checkpoint_sha256": "c2446e40aba600a65e5a5996f80521867447a42b185058905fe488527465e988"
+      },
+      {
+        "seed": 1,
+        "result_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-1/training-result.json",
+        "result_sha256": "68878e3c4dcdb19dd6b129d715a0fb979cd710fd76f811bcc578e43237903d1c",
+        "checkpoint_path": "runs/20260926-dreamerv3-reused-train-diagnostic-v1/offline-prior-v1/teacher-seed-1/world-model-checkpoint.pt",
+        "checkpoint_sha256": "ac235882a19524684544ca1ddf62b785d168f8a0c81db19b59bbb7a19c44bd11"
+      }
+    ]
+  },
+  "source_sha256": {
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "dreamer_v3.py": "8863d5f101bd28fe1a71cd7daf6f2a1e321a54e4557fa87296c26d945bfe4bab",
+    "haic/algorithms/dreamer_v3/offline.py": "4a2b3ae338c0d20f17dd135220bccdcdcf43df3cc5f715eeaf34de0142074826",
+    "haic/algorithms/dreamer_v3/prior_image.py": "bb878da6f8903cee17383061e759baf2c87abd4101e78c9dc27cf3d7bfed1166",
+    "haic/algorithms/drq_v2/teacher_replay.py": "f44e1f6884321df4c482f8fa92cb7026deb0f93de02ffa80c50ca68396d9f7df",
+    "scripts/diagnose/dreamerv3_reused_train_open_loop.py": "cdf2b476a498a4c16649819ce598428f74f7f738e79cd30fd0803bfe6dc548db",
+    "scripts/diagnose/dreamerv3_reused_train_budget_probe.py": "0a8615f8d4f979ee1a5c218437cdb725ad778b77c5079bea45d601584719c494",
+    "scripts/diagnose/dreamerv3_reused_prior_image_score.py": "564aa649d8d5f8f468f6dcf0117b1a001fb2c83c39d57469d79bee843638ffe6",
+    "scripts/train_dreamerv3_reused_train.py": "8aee16446eae32408765496570c2df589a0e396ac602c12714a56047b63599ac",
+    "scripts/train_dreamerv3_prior_image.py": "59dbefa7c8d51b1b7808862ccdb7253933f46936f22eeb810a24a7f8c5216f34"
+  },
+  "local_gate": {
+    "metric": "image_mse",
+    "window_decisions": 32,
+    "model_arm": "teacher",
+    "learner_seeds": [0, 1],
+    "source_strata": ["random", "teacher"],
+    "strictly_below_own_256_on_both_strata": true,
+    "strictly_below_shifted_repeat_on_teacher_stratum": true,
+    "teacher_shifted_repeat_mse": 0.01488432277896834
+  }
+}
