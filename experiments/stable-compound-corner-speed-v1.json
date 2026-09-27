@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "name": "stable-compound-corner-speed-v1",
+  "purpose": "consumed-video-guided-longitudinal-safety-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T00:53:47+09:00",
+  "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "impose one immediate 30-speed target cap only when a detected obstacle coincides with a curve already saturated at the stable controller's 36-speed floor",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "controller": "agent._StableCompletionController",
+    "known_consumed_cell": {
+      "track_id": 1,
+      "geometry_seed": 42,
+      "finished": true,
+      "lap_time_ms": 28400,
+      "damage": 0.0,
+      "collision_count": 0
+    }
+  },
+  "evidence": {
+    "classification": "consumed-diagnostic-video-without-observation-action-receipt",
+    "submission_zip_sha256": "457fe4cb454df99eecda4912925c20a0eedf1590f536539a764d84355a794152",
+    "lineage_interpretation": "The ZIP contents match the current runtime files, but no official receipt binds that ZIP to the videos; attribution remains a hypothesis.",
+    "videos": [
+      {
+        "path": "evaluation_videos/video_track-01_4_4.mp4",
+        "sha256": "0c5ac7c3561c23044959dfae84352da2113894b855d9f542af8afb3196885732",
+        "outcome": "FINISHED",
+        "displayed_lap_time": "00:28.36"
+      },
+      {
+        "path": "evaluation_videos/video_track-02_4_4.mp4",
+        "sha256": "33172a2e1111604042ab158f325eb4ca9ce43af542ae18a5cd57dec1de48b7ef",
+        "outcome": "DNF_OFF_TRACK",
+        "displayed_failure_time": "00:07.36",
+        "displayed_progress": 0.205,
+        "observation": "The first exit occurs at an obstacle-adjacent sharp bend and is followed by approximately eight seconds without progress."
+      },
+      {
+        "path": "evaluation_videos/video_track-03_4_4.mp4",
+        "sha256": "f73c5c96598821e93d1b2b8c8564c28d627bd2a96910258d20d6632a6bbea95c",
+        "outcome": "FINISHED",
+        "displayed_lap_time": "00:31.12"
+      }
+    ]
+  },
+  "hypothesis": {
+    "failure": "The stable controller's standalone curve target floors at 36 while obstacle caps are 40 or 47, so an obstacle adds no longitudinal safety margin once a strong curve is visible. Target EMA further delays entry braking.",
+    "repair": "After the existing target EMA, cap the target at 30 only for the conjunction of a detected obstacle and a curve target at the 36 floor. Preserve perception, steering, obstacle-side latch, target EMA, weights, and every non-conjunction action.",
+    "expected_effect": "Create immediate braking margin for obstacle-adjacent sharp bends without changing steering or the previously completion-proven behavior outside that narrow compound hazard."
+  },
+  "fixed": {
+    "compound_target_speed": 30.0,
+    "compound_curve_predicate": "pre-obstacle curve target <= 36.0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
+    "forbidden_inputs": [
+      "track identifier",
+      "video coordinates or minimap geometry",
+      "reserved or fresh competition seeds",
+      "top-down video converted into agent observations"
+    ]
+  },
+  "acceptance": {
+    "synthetic": [
+      "After four straight frames at speed 48, mirrored sharp curves with a detected near-apex obstacle produce gas=0 and brake>=0.20.",
+      "Candidate steering is bit-exact to the stable control and mirrored scenes have identical gas and brake.",
+      "Straight, obstacle-free curve, straight obstacle, lost-road, invalid-input, and reset actions are bit-exact to the stable control.",
+      "Actions remain finite, bounded, mutually exclusive in gas and brake, and deterministic after reset."
+    ],
+    "regression": [
+      "The frozen stable-controller trace remains bit-exact.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing selects the compound controller while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any steering value changes relative to control.",
+    "Any action outside the compound-hazard predicate changes.",
+    "A second safety parameter is needed to pass the preregistered assertions.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, or user video changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "The videos contain no raw 4x84x84 observations, actions, source receipt, collision telemetry, or official submission receipt.",
+    "No environment execution, submission, unseen-track claim, causal claim, or SOTA promotion is authorized."
+  ]
+}

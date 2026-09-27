@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "name": "stable-clear-straight-throttle-v1",
+  "purpose": "consumed-video-guided-straight-acceleration-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T00:53:47+09:00",
+  "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+  "depends_on": "stable-compound-corner-speed-v1 synthetic and regression acceptance",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "scale positive throttle from the stable 0.08 envelope to a 0.10 envelope only while the existing detector reports a clear straight with no obstacle",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._CompoundHazardController",
+    "base_source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "classification": "consumed-diagnostic-video-without-observation-action-receipt",
+    "track_1_displayed_result": {"outcome": "FINISHED", "lap_time": "00:28.36"},
+    "track_3_displayed_result": {"outcome": "FINISHED", "lap_time": "00:31.12"},
+    "code_mechanism": "The effective controller's maximum throttle is 0.08 in every context, including obstacle-free straights; the target-speed and braking thresholds already prevent positive throttle above the target envelope."
+  },
+  "hypothesis": {
+    "failure": "Uniformly conservative throttle slows acceleration on clearly observed, centered, obstacle-free straights even though the same limit is valuable in uncertain and curved contexts.",
+    "repair": "Multiply only positive clear-straight throttle by 1.25, capped at 0.10. Keep cruise speed 48, all braking thresholds, steering, curve throttle, obstacle throttle, compound-hazard behavior, and perception unchanged.",
+    "expected_effect": "Reduce time spent accelerating toward the unchanged cruise target without increasing target speed or changing any curve, obstacle, lost-road, or overspeed action."
+  },
+  "fixed": {
+    "clear_straight_max_gas": 0.10,
+    "base_max_gas": 0.08,
+    "multiplier": 1.25,
+    "cruise_speed": 48.0,
+    "predicate": "existing straight=true AND obstacle is None AND brake=0 AND gas>0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"]
+  },
+  "acceptance": {
+    "synthetic": [
+      "At straight speeds 0, 42, and 47, candidate steering and brake are exact to the compound control while positive gas is exactly 1.25x and no greater than 0.10.",
+      "At straight overspeed, all actions are bit-exact to control and throttle remains zero.",
+      "Obstacle-free curves, straight obstacles, compound hazards, lost-road, invalid-input, and reset behavior are bit-exact to the compound control.",
+      "Actions remain finite, bounded, mutually exclusive in gas and brake, and deterministic after reset."
+    ],
+    "regression": [
+      "The stable and compound-controller isolated contracts both remain valid.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing selects the guarded controller while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Cruise speed, braking, steering, perception, or any non-clear-straight action changes.",
+    "The compound safety controller has not passed its prior acceptance gate.",
+    "A throttle value above 0.10 or gas/brake overlap occurs.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, or user video changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No paired raw action telemetry or comparable evaluation protocol is attached to the videos.",
+    "No environment execution, lap-time improvement claim, submission, or SOTA promotion is authorized."
+  ]
+}
