@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "name": "stable-curve-obstacle-arbitration-v1",
+  "purpose": "consumed-video-guided-lateral-safety-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T00:57:00+09:00",
+  "source_commit": "68fbfd091cc281ffe966d2f1e73a2eba3d185c6c",
+  "depends_on": "stable-compound-corner-speed-v1 synthetic and regression acceptance",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "veto obstacle steering bias when it opposes an already-established curve-following steering command; preserve the curve steering limit in that conflict case",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._CompoundHazardController",
+    "base_source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "classification": "consumed-top-down-video-association-without-agent-observation-action-receipt",
+    "track_2_video_sha256": "33172a2e1111604042ab158f325eb4ca9ce43af542ae18a5cd57dec1de48b7ef",
+    "observed_sequence": [
+      "At displayed race time 6.80 the car is aligned with the road and an obstacle is visible ahead on the bend.",
+      "From 6.96 through 7.28 the vehicle yaw moves rapidly toward the outside while road-boundary clearance collapses.",
+      "At 7.44 the vehicle center is outside the road; progress then remains 20.5 percent for approximately 7.8 seconds."
+    ],
+    "cross_track_observation": "Tracks 1 and 3 also contain repeated obstacle/bend boundary excursions, so the predicate is geometric rather than keyed to track 2.",
+    "lineage_limitation": "The video does not expose the grayscale agent observation or action, so steering conflict is a code-consistent hypothesis rather than established causality."
+  },
+  "hypothesis": {
+    "failure": "The stable controller adds up to 0.24 obstacle bias to curve following and lowers the obstacle steering limit to 0.32 without checking whether the bias points against the visible bend. On an inside obstacle this can cancel or reverse the required turn toward the road's future center.",
+    "repair": "When the existing non-straight road command and latched obstacle bias have opposite signs, suppress only that lateral bias and retain the normal curve steering limit. Keep obstacle detection, side latching, compound speed cap, and all non-conflicting obstacle behavior unchanged.",
+    "expected_effect": "Prevent an inside obstacle from commanding a bend-exit trajectory while retaining straight-road avoidance and longitudinal safety margin."
+  },
+  "fixed": {
+    "conflict_predicate": "straight=false AND base_steering*obstacle_bias<0",
+    "conflicting_bias": 0.0,
+    "conflicting_steer_limit": "existing curve limit",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
+    "forbidden_inputs": ["track identifier", "minimap", "video coordinates", "timing trigger", "evaluation progress"]
+  },
+  "acceptance": {
+    "synthetic": [
+      "For mirrored curves with an inside obstacle whose avoidance bias opposes the bend, candidate steering keeps the obstacle-free curve sign and longitudinal action is bit-exact to the compound control.",
+      "For clear straights, straight obstacles, obstacle-free curves, and curve obstacles whose bias agrees with the road command, the full action is bit-exact to the compound control.",
+      "Mirrored conflict scenes have equal-magnitude opposite steering after identical state priming.",
+      "Actions remain finite, bounded, gas/brake mutually exclusive, and deterministic after reset."
+    ],
+    "regression": [
+      "The frozen stable-controller and isolated compound-speed contracts remain valid.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing uses the final guarded subclass while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any longitudinal action differs from the compound control.",
+    "Straight obstacle avoidance or same-direction curve avoidance changes.",
+    "A track-specific position, time, progress, or identifier enters the runtime.",
+    "A second lateral parameter or recovery redesign is needed to pass the preregistered assertions.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, or user video changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "deferred": [
+    "Active road-loss recovery requires remembered geometry and a wider separate protocol; it is not bundled into this single-factor repair.",
+    "Road-footprint clearance planning requires calibrated camera observations unavailable in the supplied top-down videos."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No environment execution, causal claim, finish-rate claim, submission, or SOTA promotion is authorized."
+  ]
+}
