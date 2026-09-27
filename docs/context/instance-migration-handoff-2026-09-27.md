@@ -3,7 +3,7 @@
 ## Shutdown Boundary
 
 The user directed **no new experiments** while retiring this instance. This
-document preserves the state as of 2026-09-27 05:35 UTC; recheck live processes,
+document preserves the state as of 2026-09-27 05:49 UTC; recheck live processes,
 Git and archive bytes immediately before transfer/deletion. The TD-MPC2 v2
 resource-check wakeup was cancelled. The only TD-MPC2 Kilo background process
 had already failed and exited; no TD-MPC2 v2 road was ever reset. Another Kilo
@@ -59,6 +59,21 @@ portions. Transferring all four artifact roots including `experiments/` and
 `submissions/` allocated 109,232,029,696 bytes at audit; do not double-count
 these roots and their subgroups. Recompute totals at copy time as peer commits
 and disk allocation change.
+
+**Post-commit recheck at 05:49 UTC:** `git status` now reports *no* untracked or
+modified paths under `haic/`, `scripts/`, `tests/`, `docs/`, or `experiments/`;
+all reviewed code/protocol/docs from those roots reached `origin/main` at
+`805f793`. Only 194 append-only `talk/messages/` posts remain untracked there,
+using **798,720 allocated bytes**. Together with the unchanged audited
+Git-external `runs/` (104,216,604,672) and `evaluations/` (280,645,632),
+the revised non-Git transfer total is **104,498,049,024 bytes**. Excluding
+only regenerable run bytecode (270,336) leaves **104,497,778,688 bytes** of
+non-Git evidence/coordination to preserve. Transferring whole `runs/` and
+`evaluations/` plus the remaining untracked talk takes
+**109,218,652,160 allocated bytes**, including some Git-covered run/evaluation files.
+`experiments/` is now Git-covered; the private rsync example still includes
+it as a conservative small extra copy, not a new non-Git requirement. Recheck
+this snapshot after any additional talk post or filesystem write.
 
 ### Partition Of `runs/`
 
