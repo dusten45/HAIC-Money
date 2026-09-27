@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "experiment": "stable-clear-straight-throttle-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-28T01:20:00+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "0c5db7b4d34654546fde222d3250567f8d8ef8c571b865ae1dea6a6b770a0b80",
+  "protocol_history": {
+    "initial_registration_commit": "68fbfd091cc281ffe966d2f1e73a2eba3d185c6c",
+    "dependency_order_commit": "899de98",
+    "clarification_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "clarification_scope": "Require residual steering to be able to settle to zero before the clear-straight throttle multiplier is enabled.",
+    "clarification_timing": "Post-registration and committed with the implementation; it is not an independently preregistered acceptance change."
+  },
+  "lineage": {
+    "control_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "candidate_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "candidate_agent_git_blob": "201842659b1990eb9665cfcb6b4c113b458d79dc",
+    "candidate_agent_sha256": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._CurveAwareObstacleController",
+    "candidate_class": "agent._GuardedCompletionController"
+  },
+  "video_diagnostic": {
+    "track_1": {"outcome": "FINISHED", "displayed_lap_time": "00:28.36"},
+    "track_3": {"outcome": "FINISHED", "displayed_lap_time": "00:31.12"},
+    "interpretation": "The videos establish slow completed laps but contain no comparable action/speed trace, so the code-level 0.08 throttle envelope is only a candidate mechanism."
+  },
+  "synthetic_result": {
+    "settled_clear_straight_speeds": [0.0, 42.0, 47.0],
+    "gas_multiplier": 1.25,
+    "base_max_gas": 0.08,
+    "candidate_max_gas": 0.10,
+    "cruise_target_unchanged": 48.0,
+    "steering_exact_to_control": true,
+    "brake_exact_to_control": true,
+    "overspeed_action_exact_to_control": true,
+    "non_clear_straight_actions_exact_to_control": true,
+    "residual_steering_transition": "gas remains exact to control until the current straight action can settle steering to zero",
+    "five_repeated_clear_actions": [0.0, 0.10, 0.0]
+  },
+  "shared_validation_reference": "experiments/stable-compound-corner-speed-v1-result.json#shared_validation",
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "cruise_target_changed": false,
+    "curve_or_obstacle_throttle_changed_by_this_stage": false,
+    "model_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "No paired environment execution was allowed, so a lap-time reduction on Tracks 1 or 3 has not been measured.",
+    "Only acceleration toward the unchanged target is altered; long straights already at target will not become faster.",
+    "The temporary package and timing checks used Windows Python 3.11.15, Torch 2.1.0+cpu and NumPy 1.26.0 rather than the official Linux runtime.",
+    "Post-registration acceptance clarifications were committed with implementation and therefore are not independently preregistered evidence.",
+    "This result is a bounded implementation diagnostic, not evidence of performance improvement, generalization, submission readiness, or SOTA."
+  ]
+}

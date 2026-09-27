@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "experiment": "stable-compound-corner-speed-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-28T01:20:00+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "86622987c494fa12db573a2af6fed03716486ee9ab477a79517e5f8ccdfe3b1d",
+  "protocol_history": {
+    "initial_registration_commit": "68fbfd091cc281ffe966d2f1e73a2eba3d185c6c",
+    "clarification_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "clarification_scope": "State that the intermediate class is tested directly and final bare routing occurs only after all preregistered stages are composed.",
+    "clarification_timing": "Post-registration and committed with the implementation; it is not an independently preregistered acceptance change."
+  },
+  "lineage": {
+    "control_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "candidate_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "candidate_agent_git_blob": "201842659b1990eb9665cfcb6b4c113b458d79dc",
+    "candidate_agent_sha256": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._StableCompletionController",
+    "candidate_class": "agent._CompoundHazardController"
+  },
+  "synthetic_result": {
+    "four_frame_prime_speed": 48.0,
+    "mirrored_curve_values": [-0.75, 0.75],
+    "obstacle_row": 50,
+    "control_brake": 0.05039999,
+    "candidate_brake": 0.21599999,
+    "candidate_gas": 0.0,
+    "steering_exact_to_control": true,
+    "mirrored_longitudinal_exact": true,
+    "stored_ema_target_exact_to_control": true,
+    "boundary": {
+      "curve_0.20_pre_obstacle_target": 38.0,
+      "curve_0.20_action_exact_to_control": true,
+      "curve_0.25_pre_obstacle_target": 36.0,
+      "curve_0.25_candidate_brake": 0.21599999
+    }
+  },
+  "shared_validation": {
+    "local_environment": {
+      "executable": "C:/HAIC-Money/.venv/Scripts/python.exe",
+      "executable_sha256": "44005177ec4697ca85c23b5ddb3cfb6f6e1680efd6ffdacc7d4d846f0d9669ad1",
+      "python": "3.11.15",
+      "torch": "2.1.0+cpu",
+      "numpy": "1.26.0",
+      "platform": "Windows"
+    },
+    "final_relevant_suite": {
+      "result": "146 passed",
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py"
+    },
+    "pre_final_broad_suite": {
+      "result": "373 passed, 10 skipped",
+      "command": ".venv\\Scripts\\python.exe -m pytest -q --ignore=tests/test_drqv2_matched.py",
+      "qualification": "Executed before the residual-steering guard and opposite-transition test; final affected suite was rerun afterward."
+    },
+    "stable_controller_randomized_parity": {
+      "result": "600/600 stateful synthetic actions exact against control commit 0c95cd3",
+      "rng_seed": 20260928,
+      "retained_harness_or_raw_log": false,
+      "qualification": "Ad-hoc inline diagnostic, not independently reproducible evidence."
+    },
+    "final_controller_randomized_contract": {
+      "result": "3000/3000 stateful cases deterministic, finite, bounded, gas/brake-exclusive; 33 resets and 30 invalid observations",
+      "rng_seed": 20260928,
+      "retained_harness_or_raw_log": false,
+      "qualification": "Ad-hoc inline diagnostic, not independently reproducible evidence."
+    },
+    "temporary_package": {
+      "files": ["action_representation.py", "action_smoothing.py", "agent.py", "model.pt"],
+      "bytes": 6276333,
+      "embedded_agent_sha256": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+      "shape": [3],
+      "finite": true,
+      "reset_matches_first": true,
+      "unreset_matches_first": true,
+      "local_windows_init_seconds": 1.6349869,
+      "local_windows_act_seconds": 0.0037656,
+      "retained_archive_or_raw_log": false,
+      "qualification": "Built in a temporary directory; embedded source hash and package tests are reproducible, but exact archive bytes and timings were not retained."
+    },
+    "preserved_root_control_package": {
+      "path": "submission.zip",
+      "sha256": "457fe4cb454df99eecda4912925c20a0eedf1590f536539a764d84355a794152",
+      "embedded_agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
+      "is_current_candidate": false,
+      "instruction": "Preserve as baseline evidence; do not submit or label as the guarded candidate."
+    }
+  },
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "model_changed": false,
+    "official_environment_changed": false,
+    "drq_or_haic_paths_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The top-down videos do not contain raw 4x84x84 observations, actions, or a receipt binding them to submission.zip, so the mechanism remains a code-consistent hypothesis.",
+    "The cap is deliberately current-detection-only. A one-frame obstacle detector miss can remove the cap and create longitudinal chatter; persisting it would be a separate unregistered change.",
+    "Post-registration acceptance clarifications were committed with implementation and therefore are not independently preregistered evidence.",
+    "No environment execution was allowed because required competition governance files are absent; finish-rate and Track 2 completion effects are unknown.",
+    "This result cannot support a causal, unseen-track, lap-time, submission, or SOTA claim."
+  ]
+}

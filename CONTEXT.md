@@ -3,11 +3,11 @@
 ## Current Objective
 
 Develop the strongest rule-compliant agent while preserving the active DrQ-v2
-padding study and its frozen artifacts. The bare `model.pt` path now uses an
-explicit completion-first controller recovered from source commit `52976fe`;
-the DrQ, explicit-export and HAIC policy paths are unchanged. Required competition
-documents are missing, so fresh/confirmation/blind evaluation, submission and
-SOTA promotion remain blocked.
+padding study and its frozen artifacts. The bare `model.pt` path now composes a
+video-diagnostic safety/pace layer over the completion-first controller recovered
+from source commit `52976fe`; the DrQ, explicit-export and HAIC policy paths are
+unchanged. Required competition documents are missing, so environment evaluation,
+submission, performance claims and SOTA promotion remain blocked.
 
 ## Frozen Contract
 
@@ -143,10 +143,30 @@ unseen-track generalization or SOTA. See
 `experiments/stable-completion-controller-v1-result.json` for hashes and raw-log
 pointers.
 
+Three staged video-diagnostic protocols, registered before source editing but with
+post-registration acceptance clarifications committed alongside implementation,
+now compose the bare runtime as `_GuardedCompletionController` at commit `5192c2b`:
+a current-frame speed cap30
+for obstacle+floor-speed curves, half-strength curve-command retention when
+obstacle bias would cancel the bend, and a clear-straight-only gas envelope0.10
+with residual steering settled. The frozen stable class remains bit-exact; model
+weights and all other runtime paths are unchanged. Final reproducible relevant
+tests are146 passed; one unretained seeded diagnostic also exercised3,000 stateful
+synthetic cases. Track execution was intentionally not performed, so all three
+results are `INCOMPARABLE`; no Track2 finish or Track1/3 lap-time improvement is
+established. Detector flicker, the inherited opposite-curve slew delay, and
+passive road-loss recovery remain explicit risks. The untracked root
+`submission.zip` is the old stable control (embedded agent SHA `395253e1...`), not
+the guarded candidate, and must not be submitted. See the three
+`stable-*-v1-result.json` records.
+
 ## Runtime And Infrastructure
 
-- Preserve `.venv` -> `/venv/main`: Python3.11.14, Torch2.11.0+cu128, RTX5070Ti.
-  Actual GPU learning works. Never lock-sync back to Torch2.1 or redesign the image.
+- Current Windows `.venv`: Python3.11.15, Torch2.1.0+cpu, NumPy1.26.0. It was used
+  for the video-diagnostic unit, package and inference checks. Frozen DrQ run
+  receipts declare the separate Linux `/venv/main` Python3.11.14,
+  Torch2.11.0+cu128, RTX5070Ti training runtime; preserve it and re-verify its host
+  before resumed learning rather than inferring it from this desktop environment.
 - CPU gate interpreter: `/tmp/kilo/haic-cpu21/bin/python`, Torch2.1.0+cpu,
   NumPy1.26.0, Gymnasium0.29.1, OpenCV4.8.1.78. Preserve its symlink path when
   invoking it: resolving to the base executable loses venv isolation.

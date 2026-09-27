@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "experiment": "stable-curve-obstacle-arbitration-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-28T01:20:00+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "87e94e9f319917740b00d3f8aa27fbad7ee194058aadee0d261b60c431a229c0",
+  "protocol_history": {
+    "initial_registration_commit": "dc64c9d",
+    "preimplementation_projection_fix_commit": "0e648c5",
+    "clarification_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "clarification_scope": "Declare the unavoidable slew-state footprint, settled-state sign claim, and no-worse control requirement for abrupt opposite-curve transitions.",
+    "clarification_timing": "Post-registration and committed with the implementation; it is not an independently preregistered acceptance change."
+  },
+  "lineage": {
+    "control_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
+    "candidate_commit": "5192c2bbaf818b51e52fd65a4935fc3fb89d74ea",
+    "candidate_agent_git_blob": "201842659b1990eb9665cfcb6b4c113b458d79dc",
+    "candidate_agent_sha256": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._CompoundHazardController",
+    "candidate_class": "agent._CurveAwareObstacleController"
+  },
+  "video_diagnostic": {
+    "track_2_video_sha256": "33172a2e1111604042ab158f325eb4ca9ce43af542ae18a5cd57dec1de48b7ef",
+    "aligned_before_failure_display_time": "00:06.80",
+    "rapid_outward_yaw_interval": "00:06.96-00:07.28",
+    "first_center_outside_display_time": "00:07.44",
+    "stalled_progress": 0.205,
+    "stalled_duration_seconds_approx": 7.8,
+    "interpretation": "Association only: additive obstacle bias can oppose visible bend steering, and the observed car exited on that outside side."
+  },
+  "synthetic_result": {
+    "direct_projection": {
+      "right_base": 0.18,
+      "right_opposing_bias": -0.24,
+      "right_output": 0.09,
+      "left_base": -0.18,
+      "left_opposing_bias": 0.24,
+      "left_output": -0.09,
+      "minimum_retained_fraction": 0.5
+    },
+    "settled_full_action": {
+      "mirrored": true,
+      "curve_sign_preserved": true,
+      "longitudinal_exact_to_control": true,
+      "candidate_first_steer_magnitude": 0.07,
+      "control_first_steer_magnitude": 0.012
+    },
+    "post_conflict_clear_curve": {
+      "longitudinal_exact": true,
+      "curve_sign_preserved": true,
+      "reconverged_with_control_within_frames": 4
+    },
+    "abrupt_opposite_curve": {
+      "legacy_prior_sign_frames": 3,
+      "candidate_no_farther_unsafe_than_control": true,
+      "candidate_turns_more_strongly_after_shared_slew_gate": true
+    }
+  },
+  "shared_validation_reference": "experiments/stable-compound-corner-speed-v1-result.json#shared_validation",
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "track_specific_runtime_inputs": false,
+    "model_changed": false,
+    "official_environment_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The top-down replay cannot establish which grayscale observation or exact action caused the visible yaw.",
+    "The inherited 0.07 steering slew retains a previous opposite-curve sign for three frames in an abrupt synthetic S-transition; this candidate matches control during that interval rather than eliminating it.",
+    "Post-registration acceptance clarifications were committed with implementation and therefore are not independently preregistered evidence.",
+    "Active road-loss recovery and camera-calibrated road-footprint constraints remain deferred because they require separate state and observation evidence.",
+    "No environment execution was allowed, so Track 2 completion and cross-track safety remain unverified and incomparable."
+  ]
+}
