@@ -56,6 +56,56 @@ road coverage under a separate frozen protocol, then an RLPD-specific complete
 state/prefix parity and harmed-finish branch. The contacted comparison is not
 matched by actor or road; the G1 intervention remains unselected.
 
+**G1 preparatory implementation, not a run:** New RLPD-only
+`haic/algorithms/rlpd/prefix_parity.py` and `recorded_prefix.py` require the
+SHA-pinned original G0 protocol/manifest/ledger/trace before the public replay
+can reset an environment. The accessible-state snapshot covers individual tile
+visitation and polygon/filter/body state, finish tracker, wheel/damage effects,
+raw official actions and the original 2,000/8,200 decision/raw clocks. Synthetic
+single-field divergence tests pass, and two-decision original action/observation
+prefixes were verified read-only for all 24 consumed G0 episodes. Neither those
+file checks nor synthetic reset parity establish equal hidden Box2D contact
+state, image-realizable rescue, diagnostic finished-parent coverage or full-lap
+benefit. A new frozen G1 TRAIN protocol must predeclare actor/source identity,
+independent cell/anchor selection, real same-anchor replay checks, original
+deadline and harm controls before any branch interaction is permitted.
+
+**Next proposed coverage gate, not a frozen run:** For the narrower question of
+pixel-observable post-contact stall feasibility, preselect V5 author-target
+seed-50 as source-primary (its G0 retrospective labels covered three road
+geometries versus seed-11's one) and retain seed-11 as a fully reported
+two-actor comparator. This G0-informed source choice does not designate V5 as
+a better official model or transfer a V5-specific finding to seed-11. Audit a
+FIXED 24-road TRAIN-only geometry cohort before interaction; run both unchanged
+deterministic exports once on each road with one obstacle-enabled track variant,
+at most 2,000 high-level decisions each: at most 48 episodes and 96,000 driven
+decisions, plus reset/raw-frame accounting and a separately declared four
+core-hour process cap. Require at least three distinct NEW V5 geometry clusters
+with a fully observed nonfinish AND unambiguous pre-action four-frame pixel
+stall, and three OTHER distinct new geometries with genuine full-lap V5
+finished-parent controls. Freeze the outcome-blinded image rubric and common
+failure/finish anchors BEFORE driving; diagnostic-only speed/contact/tile
+signals may annotate but cannot declare image positivity. All episodes and
+unknown/censored records count toward the fixed cap, with no top-up or
+outcome-based early success stop. Missing coverage is `inconclusive`, not an
+excuse to lower the geometry gate or search a different source actor.
+No seed IDs, collector or new environment reset are allocated by this plan
+update: G0's source-catalog receipt predates newly frozen Dreamer allocations,
+live DrQ r7 ledgers and the completed G0 cohort. A new G1-specific, stable,
+source-hashed cross-lane seed audit and separate protocol are prerequisites.
+Preparatory `haic/algorithms/rlpd/g1_coverage.py` now applies the fixed 48-slot
+V5-primary coverage/censoring gate only to an already frozen and authenticated
+cohort; it does not authenticate actor bytes, blind-reviewed pixel labels or
+seed freshness itself. A new `scripts/audit_rlpd_g1_coverage_seeds.py` checks
+candidate-relevant unknown catalog/ledger schemas and hashes current r5 evidence.
+Its read-only collision CONTROL using consumed G0 seed IDs returned `BLOCKED`,
+not a reusable no-overlap certificate; live r7 ledgers and new Dreamer JSON
+must be checked for candidate intersections before freezing any G1 batch.
+These are synthetic/preflight-only
+implementation steps with **zero G1 environment interaction**. Do not lower
+pixel-positive/finished-parent geometry requirements, choose a different seed
+block, or open reserved cells to make the auditor pass.
+
 **Prospective audit rule revision, not a G1 release:** The old G0 v1 audit and
 its exact whole-directory SHA pin remain frozen historical evidence; it cannot
 be reinterpreted as a G1 receipt. New `audit_rlpd_g1_coverage_seeds.py` v2
@@ -71,6 +121,24 @@ supersession, metrics and trace supply only recorded seed exclusions. The
 existing consumed-G0 collision control remains `BLOCKED`; no G1 candidate
 seeds, claim or driving were opened. Unrelated warnings do not certify global
 freshness or waive any proposed G1 coverage, parity, harm or protected-cell gate.
+
+**Synthetic-only G1 operator boundary:** A separate RLPD collector-preflight
+module checks the prospective 24x2 schedule, actor/source bytes, claims and
+candidate audit without invoking G0's fixed 12-road `preflight`/`collect`.
+Its injected-fake scheduler journals all 48 slots and preserves unknown/unrun
+status on partial failures; PUBLIC `collect()` still returns `BLOCKED` because
+the source-pinned G0 per-cell runner cannot stop safely at a mid-episode four
+core-hour cap. An isolated image-review module builds salted, outcome-free
+pre-action pixel packets and SHA-seals a separate restricted mapping/rubric/
+label receipt before any outcome join. It is only process evidence, not proof
+of human blindness; its first image-only flag parameter has NOT been validated
+as a deployable threshold and no fresh annotations exist. All 30 focused
+tests are synthetic. The peer-owned candidate-scoped seed auditor must close
+the reported unfamiliar `{start,end}` allocation and self-protocol exclusion
+false passes before any new G1 road batch is chosen or claimed. Resource
+availability, typed cell/source audit, fresh source-specific positive/finished
+parent controls, real original-state prefix parity and harmed-finish evidence
+remain separate execution gates; do not call these files a G1 study result.
 
 ## 1. Recommendation
 
