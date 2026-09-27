@@ -938,6 +938,288 @@ class _ForwardCorridorController:
         return np.asarray([steering, gas, brake], dtype=np.float32)
 
 
+class _StableCompletionController:
+    """Completion-first bare-checkpoint runtime with frozen source lineage.
+
+    The broader racing-line controller below accumulated several interacting
+    grayscale hazard heuristics without a matched multi-track evaluation.  The
+    smaller controller at source commit ``52976fe`` is the only local runtime
+    in this lineage with a reproducible clean finish.  Keep that policy
+    explicit here instead of silently treating the neural ``model.pt`` state
+    dict as the effective policy.
+
+    This class intentionally reproduces the historical camera-only action
+    contract.  DrQ actors, explicit baseline exports, and the HAIC policy path
+    do not use it.
+    """
+
+    IMAGE_CENTER = 41.5
+    ROAD_LOW = 0.24
+    ROAD_HIGH = 0.52
+    OBSTACLE_LOW = 0.54
+    MAX_STEER = 0.48
+    STRAIGHT_MAX_STEER = 0.16
+    STRAIGHT_CENTER_DEADBAND = 1.25
+    STRAIGHT_SWEEP_DEADBAND = 1.5
+    MAX_STEER_STEP = 0.07
+    MAX_GAS = 0.08
+    MAX_BRAKE = 0.28
+    OBSTACLE_MISS_LIMIT = 4
+    SPEED_ROI = (77, 83, 10, 13)
+    SPEED_BASELINE = 0.27
+    SPEED_PER_UNIT = 0.085
+
+    def __init__(self, *, cruise_speed: float = 48.0) -> None:
+        self.cruise_speed = float(cruise_speed)
+        self._obstacle_side = 0.0
+        self._obstacle_missing = 0
+        self._last_obstacle_side_offset = None
+        self._last_steer = 0.0
+        self._target_speed = None
+        self.road_visible = False
+        self.has_seen_road = False
+
+    def reset(self, observation=None) -> None:
+        del observation
+        self._obstacle_side = 0.0
+        self._obstacle_missing = 0
+        self._last_obstacle_side_offset = None
+        self._last_steer = 0.0
+        self._target_speed = None
+        self.road_visible = False
+        self.has_seen_road = False
+
+    @staticmethod
+    def _frame(observation) -> np.ndarray | None:
+        try:
+            pixels = np.asarray(observation, dtype=np.float32)
+        except (TypeError, ValueError, OverflowError):
+            return None
+        if pixels.shape != (4, 84, 84):
+            return None
+        frame = pixels[-1]
+        if not np.all(np.isfinite(frame)):
+            return None
+        if float(frame.min()) < 0.0 or float(frame.max()) > 1.0:
+            return None
+        return frame
+
+    def _road_centers(self, frame: np.ndarray) -> dict[int, float]:
+        asphalt = (frame >= self.ROAD_LOW) & (frame <= self.ROAD_HIGH)
+        horizontal = np.arange(frame.shape[1], dtype=np.float32)
+        centers: dict[int, float] = {}
+        previous = self.IMAGE_CENTER
+        for row in (54, 50, 46, 42, 38, 34, 30):
+            selected = asphalt[row] & (np.abs(horizontal - previous) <= 17.0)
+            locations = np.flatnonzero(selected)
+            if len(locations) >= 4:
+                previous = float(locations.mean())
+                centers[row] = previous
+        return centers
+
+    @classmethod
+    def _center_at(cls, row: float, centers: dict[int, float]) -> float:
+        if not centers:
+            return cls.IMAGE_CENTER
+        known_rows = sorted(centers)
+        return float(
+            np.interp(
+                row,
+                np.asarray(known_rows, dtype=np.float32),
+                np.asarray([centers[y] for y in known_rows], dtype=np.float32),
+            )
+        )
+
+    @classmethod
+    def _road_sweep(cls, centers: dict[int, float]) -> float:
+        return max(
+            (
+                abs(
+                    centers.get(row, cls.IMAGE_CENTER)
+                    - centers.get(row + 24, cls.IMAGE_CENTER)
+                )
+                for row in (30, 34, 38, 42)
+            ),
+            default=0.0,
+        )
+
+    def _nearest_obstacle(
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
+    ) -> tuple[float, float, float] | None:
+        """Reproduce the compact-component gate from the frozen controller."""
+        del spans
+        if len(centers) < 3:
+            return None
+        bright = frame >= self.OBSTACLE_LOW
+        bright[:22, :] = False
+        bright[62:, :] = False
+        visited = np.zeros(bright.shape, dtype=np.bool_)
+        candidates: list[tuple[float, float, float]] = []
+        width = bright.shape[1]
+        for start_y in range(22, 62):
+            for start_x in range(width):
+                if not bright[start_y, start_x] or visited[start_y, start_x]:
+                    continue
+                stack = [(start_x, start_y)]
+                visited[start_y, start_x] = True
+                min_x = max_x = start_x
+                min_y = max_y = start_y
+                sum_x = sum_y = area = 0
+                while stack:
+                    x, y = stack.pop()
+                    area += 1
+                    sum_x += x
+                    sum_y += y
+                    min_x = min(min_x, x)
+                    max_x = max(max_x, x)
+                    min_y = min(min_y, y)
+                    max_y = max(max_y, y)
+                    for neighbor_y in range(max(22, y - 1), min(62, y + 2)):
+                        for neighbor_x in range(max(0, x - 1), min(width, x + 2)):
+                            if (
+                                bright[neighbor_y, neighbor_x]
+                                and not visited[neighbor_y, neighbor_x]
+                            ):
+                                visited[neighbor_y, neighbor_x] = True
+                                stack.append((neighbor_x, neighbor_y))
+                box_width = max_x - min_x + 1
+                box_height = max_y - min_y + 1
+                if not (
+                    4 <= area <= 80
+                    and 2 <= box_width <= 9
+                    and 2 <= box_height <= 10
+                ):
+                    continue
+                center_x = sum_x / area
+                center_y = sum_y / area
+                road_center = self._center_at(center_y, centers)
+                if abs(center_x - road_center) <= 24.0:
+                    candidates.append((center_y, center_x, road_center))
+        return max(candidates, key=lambda item: item[0]) if candidates else None
+
+    @classmethod
+    def _estimate_speed(cls, frame: np.ndarray) -> float:
+        top, bottom, left, right = cls.SPEED_ROI
+        mass = float(frame[top:bottom, left:right].sum())
+        return float(
+            np.clip(
+                (mass - cls.SPEED_BASELINE) / cls.SPEED_PER_UNIT,
+                0.0,
+                80.0,
+            )
+        )
+
+    def _pedals(self, speed: float, target_speed: float) -> tuple[float, float]:
+        if speed > target_speed + 1.0:
+            brake = float(
+                np.clip((speed - target_speed) * 0.012, 0.04, self.MAX_BRAKE)
+            )
+            return 0.0, brake
+        if speed < target_speed - 8.0:
+            return self.MAX_GAS, 0.0
+        if speed < target_speed - 3.0:
+            return self.MAX_GAS * (2.0 / 3.0), 0.0
+        return self.MAX_GAS * (5.0 / 12.0), 0.0
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._last_steer = float(
+            self._last_steer
+            + np.clip(-self._last_steer, -self.MAX_STEER_STEP, self.MAX_STEER_STEP)
+        )
+        return np.asarray(
+            [self._last_steer, 0.0, min(self.MAX_BRAKE, 0.06)],
+            dtype=np.float32,
+        )
+
+    def act(self, observation) -> np.ndarray:
+        frame = self._frame(observation)
+        if frame is None:
+            self.road_visible = False
+            if self.has_seen_road:
+                return self._lost_road_action()
+            return np.zeros(3, dtype=np.float32)
+
+        centers = self._road_centers(frame)
+        self.road_visible = len(centers) >= 3
+        if not self.road_visible:
+            if self.has_seen_road:
+                return self._lost_road_action()
+            return np.zeros(3, dtype=np.float32)
+        self.has_seen_road = True
+
+        far = centers.get(42, self.IMAGE_CENTER)
+        near = centers.get(54, self.IMAGE_CENTER)
+        road_sweep = self._road_sweep(centers)
+        center_offset = far - self.IMAGE_CENTER
+        straight = (
+            abs(center_offset) <= self.STRAIGHT_CENTER_DEADBAND
+            and abs(far - near) <= self.STRAIGHT_SWEEP_DEADBAND
+            and road_sweep <= self.STRAIGHT_SWEEP_DEADBAND
+        )
+        if straight:
+            steering = 0.0
+            steer_limit = self.STRAIGHT_MAX_STEER
+        else:
+            steering = 0.016 * center_offset + 0.012 * (far - near)
+            steer_limit = self.MAX_STEER
+        target_speed = float(
+            np.clip(self.cruise_speed - 2.0 * road_sweep, 36.0, self.cruise_speed)
+        )
+
+        obstacle = self._nearest_obstacle(frame, centers)
+        if obstacle is not None:
+            obstacle_y, obstacle_x, road_center = obstacle
+            steer_limit = min(self.MAX_STEER, 0.32)
+            side_offset = obstacle_x - road_center
+            candidate_side = 1.0 if side_offset < 0.0 else -1.0
+            if self._obstacle_side == 0.0:
+                self._obstacle_side = candidate_side
+            elif obstacle_y < 52.0:
+                self._obstacle_side = candidate_side
+            self._last_obstacle_side_offset = side_offset
+            urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
+            steering += self._obstacle_side * 0.24 * urgency
+            target_speed = min(target_speed, 47.0 if obstacle_y < 44.0 else 40.0)
+            self._obstacle_missing = 0
+        elif self._obstacle_side != 0.0:
+            self._obstacle_missing += 1
+            if self._obstacle_missing > self.OBSTACLE_MISS_LIMIT:
+                self._obstacle_side = 0.0
+                self._obstacle_missing = 0
+                self._last_obstacle_side_offset = None
+
+        if self._target_speed is not None:
+            target_speed = 0.65 * self._target_speed + 0.35 * target_speed
+        self._target_speed = target_speed
+        if not straight and abs(steering) > 0.28:
+            target_speed = min(target_speed, 44.0)
+        speed = self._estimate_speed(frame)
+        gas, brake = self._pedals(speed, target_speed)
+
+        if not straight and abs(steering) > 0.28:
+            gas = min(gas, self.MAX_GAS * 0.5)
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
+        if (
+            self._last_steer != 0.0
+            and steering * self._last_steer < 0.0
+            and abs(self._last_steer) > self.MAX_STEER_STEP
+        ):
+            steering = 0.0
+        steering = self._last_steer + float(
+            np.clip(
+                steering - self._last_steer,
+                -self.MAX_STEER_STEP,
+                self.MAX_STEER_STEP,
+            )
+        )
+        steering = float(np.clip(steering, -steer_limit, steer_limit))
+        self._last_steer = steering
+        return np.asarray([steering, gas, brake], dtype=np.float32)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -1379,8 +1661,8 @@ class Agent:
 
         # A bare OrderedDict is the original baseline export.  That actor has
         # no longitudinal/direction safety contract, so route it through the
-        # forward corridor controller below.  Explicit exports retain their
-        # recorded action contract and continue to use the neural actor.
+        # source-pinned completion controller below.  Explicit exports retain
+        # their recorded action contract and continue to use the neural actor.
         use_forward_controller = not (
             isinstance(payload, dict) and "state_dict" in payload
         )
@@ -1439,7 +1721,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _RacingLineController() if use_forward_controller else None
+            _StableCompletionController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None

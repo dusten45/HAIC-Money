@@ -2,6 +2,7 @@ import tempfile
 import unittest
 import hashlib
 import json
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -72,6 +73,36 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["finite"])
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
+
+    def test_packaged_bare_model_uses_stable_controller_on_visible_road(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            model_path = directory_path / MODEL_FILENAME
+            archive_path = directory_path / "submission.zip"
+            extracted = directory_path / "extracted"
+            torch.save(Baseline1Actor().state_dict(), model_path)
+            build_submission(ROOT / "agent.py", model_path, archive_path)
+            with zipfile.ZipFile(archive_path) as package:
+                package.extractall(extracted)
+
+            code = """
+import numpy as np
+from agent import Agent, _StableCompletionController
+frame = np.full((84, 84), 0.1, dtype=np.float32)
+frame[20:63, 31:53] = 0.4
+frame[77:83, 10:13] = 0.27 / 18.0
+observation = np.tile(frame[None, :, :], (4, 1, 1))
+agent = Agent()
+assert isinstance(agent._forward_controller, _StableCompletionController)
+np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.08, 0.0], dtype=np.float32))
+"""
+            subprocess.run(
+                [sys.executable, "-c", code],
+                cwd=extracted,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
 
     def test_explicit_drq_actor_is_packaged_under_declared_model_filename(self):
         from drq_v2 import DrQv2Agent, DrQv2Config

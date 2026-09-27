@@ -49,6 +49,36 @@ def _near_corridor_dropout_observation(*, far_center=53.0, speed=24.0):
 
 
 class TestVisionCorridorAgent(unittest.TestCase):
+    def test_stable_completion_controller_matches_frozen_reference_trace(self):
+        from agent import _StableCompletionController
+
+        controller = _StableCompletionController()
+        observations = [
+            _observation(speed=0.0),
+            _observation(curve=0.25, speed=30.0),
+            _observation(obstacle_x=35, obstacle_y=52, speed=20.0),
+            _observation(obstacle_x=46, obstacle_y=52, speed=20.0),
+            _observation(speed=55.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        ]
+        expected = np.asarray(
+            [
+                [0.0, 0.08, 0.0],
+                [0.07, 0.08, 0.0],
+                [0.14, 0.08, 0.0],
+                [0.21, 0.08, 0.0],
+                [0.14, 0.0, 0.13387705385684967],
+                [0.07, 0.0, 0.06],
+            ],
+            dtype=np.float32,
+        )
+
+        actual = np.asarray([controller.act(observation) for observation in observations])
+
+        np.testing.assert_array_equal(actual, expected)
+        controller.reset(None)
+        np.testing.assert_array_equal(controller.act(observations[0]), expected[0])
+
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent
 

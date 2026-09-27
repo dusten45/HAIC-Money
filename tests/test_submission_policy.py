@@ -18,7 +18,7 @@ from action_smoothing import (
     canonical_action_control,
     canonical_action_smoothing,
 )
-from agent import Agent, Baseline1Actor, DRQ_ACTOR_FORMAT
+from agent import Agent, Baseline1Actor, DRQ_ACTOR_FORMAT, _StableCompletionController
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
 from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
@@ -46,6 +46,20 @@ class TestSubmissionPolicy(unittest.TestCase):
         actions = actor.predict_action(torch.zeros((2, 4, 84, 84)))
 
         self.assertTrue(torch.equal(actions, torch.tensor([[1.0, 0.0, 1.0]]).repeat(2, 1)))
+
+    def test_bare_baseline_routes_only_to_stable_completion_controller(self):
+        actor = Baseline1Actor()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "bare-model.pt"
+            torch.save(actor.state_dict(), path)
+
+            bare = Agent(path)
+            self.assertIsInstance(bare._forward_controller, _StableCompletionController)
+
+            explicit_path = Path(directory) / "explicit-model.pt"
+            torch.save(export_payload(actor, canonical_action_smoothing()), explicit_path)
+            explicit = Agent(explicit_path)
+            self.assertIsNone(explicit._forward_controller)
 
     def test_extract_actor_state_ignores_critic_weights(self):
         actor = Baseline1Actor()
