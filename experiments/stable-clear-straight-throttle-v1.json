@@ -5,7 +5,7 @@
   "status": "preregistered",
   "registered_at": "2026-09-28T00:53:47+09:00",
   "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
-  "depends_on": "stable-compound-corner-speed-v1 synthetic and regression acceptance",
+  "depends_on": "stable-compound-corner-speed-v1 and stable-curve-obstacle-arbitration-v1 synthetic and regression acceptance",
   "scope": {
     "runtime": "bare model.pt only",
     "primary_change": "scale positive throttle from the stable 0.08 envelope to a 0.10 envelope only while the existing detector reports a clear straight with no obstacle",
@@ -17,7 +17,7 @@
     "sota_promotion": false
   },
   "control": {
-    "controller": "agent._CompoundHazardController",
+    "controller": "agent._CurveAwareObstacleController",
     "base_source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
     "agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
     "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
@@ -47,11 +47,11 @@
     "synthetic": [
       "At straight speeds 0, 42, and 47, candidate steering and brake are exact to the compound control while positive gas is exactly 1.25x and no greater than 0.10.",
       "At straight overspeed, all actions are bit-exact to control and throttle remains zero.",
-      "Obstacle-free curves, straight obstacles, compound hazards, lost-road, invalid-input, and reset behavior are bit-exact to the compound control.",
+      "Obstacle-free curves, straight obstacles, compound hazards, curve-conflict arbitration, lost-road, invalid-input, and reset behavior are bit-exact to the curve-aware control.",
       "Actions remain finite, bounded, mutually exclusive in gas and brake, and deterministic after reset."
     ],
     "regression": [
-      "The stable and compound-controller isolated contracts both remain valid.",
+      "The stable, compound-speed, and curve-arbitration isolated contracts all remain valid.",
       "Existing controller, inference, policy-routing, and package tests pass.",
       "Bare state-dict routing selects the guarded controller while DrQ, explicit exports, and HAIC paths remain unchanged."
     ],
