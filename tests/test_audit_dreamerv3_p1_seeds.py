@@ -161,6 +161,88 @@ class DreamerP1SeedAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(audit.SeedAuditError, "unknown geometry seed field"):
             audit._protocol(record, self.mix_path, {}, self.sources)
 
+    def test_typed_protocol_aliases_cannot_hide_candidate_ids(self) -> None:
+        for key, value in (("road_ids", [70, 77, 90]),
+                           ("geometry_seed_candidates", [70, 77, 90]),
+                           ("road_range", {"start": 75, "count": 4})):
+            with self.subTest(key=key):
+                record = copy.deepcopy(self.mix)
+                record["unreviewed"] = {key: value}
+                self.add("protocol", self.mix_path, record)
+                with self.assertRaisesRegex(audit.SeedAuditError, "candidate ID in unreviewed"):
+                    self.run_audit()
+        record = copy.deepcopy(self.mix)
+        record["unreviewed"] = {"road_ids": [70, 71],
+                                "geometry_seed_candidates": [72, 73],
+                                "road_range": {"start": 80, "end": 82}}
+        self.add("protocol", self.mix_path, record)
+        self.assertEqual(self.run_audit()["matched_collisions"], [])
+
+        record = json.loads((self.root / self.dreamer_path).read_text())
+        record["training_development"]["cells"][0]["id"] = 77
+        self.add("protocol", self.dreamer_path, record)
+        with self.assertRaisesRegex(audit.SeedAuditError, r"cells\[0\]\.id: candidate ID"):
+            self.run_audit()
+        record["training_development"]["cells"][0]["id"] = 78
+        self.add("protocol", self.dreamer_path, record)
+        self.assertEqual(self.run_audit()["matched_collisions"], [])
+
+    def test_untyped_intervals_check_inside_and_inclusive_last_seed(self) -> None:
+        path = "experiments/untyped-interval.json"
+        for bounds in ({"start": 75, "end": 79}, {"start": 75, "end": 77},
+                       {"start": 75, "count": 5}, {"start": 75, "count": 3}):
+            with self.subTest(bounds=bounds):
+                self.add("prior_seed_audit", path, {"training_seed_range": bounds})
+                del self.sources["prior_seed_audit"][path]
+                with self.assertRaisesRegex(audit.SeedAuditError, "candidate ID in unreviewed seed range"):
+                    self.run_audit()
+        self.add("prior_seed_audit", path, {"training_seed_range": {"start": 80, "count": 4},
+                                            "reserved_road_range": {"start": 70, "end": 76}})
+        del self.sources["prior_seed_audit"][path]
+        self.assertEqual(self.run_audit()["matched_collisions"], [])
+
+    def test_alternate_ledger_road_ids_and_nested_cells_are_candidate_relevant(self) -> None:
+        ledger = "runs/alternate-train/episodes.jsonl"
+        for alias in ({"road_id": 77}, {"road_ids": [76, 77]},
+                      {"cells": [{"id": 77}]}, {"geometry_seed_candidates": [77]}):
+            with self.subTest(alias=alias):
+                self.add("training_ledger", ledger, json.dumps({
+                    "event": "reset", "track_id": 1, "seed": 10, **alias,
+                }) + "\n")
+                with self.assertRaisesRegex(audit.SeedAuditError, "candidate ID in unreviewed geometry alias"):
+                    self.run_audit()
+        self.add("training_ledger", ledger, json.dumps({
+            "event": "reset", "track_id": 1, "seed": 10, "road_id": 80,
+            "road_ids": [81], "cells": [{"id": 82}], "road_range": {"start": 83, "count": 2},
+        }) + "\n")
+        self.assertEqual(self.run_audit()["matched_collisions"], [])
+        collection = "runs/alternate-prior/collection.jsonl"
+        self.add("prior_collection_ledger", collection, json.dumps({
+            "event": "reset", "track_id": 1, "geometry_seed": 11, "road_id": 77,
+        }) + "\n")
+        with self.assertRaisesRegex(audit.SeedAuditError, "candidate ID in unreviewed geometry alias"):
+            self.run_audit()
+
+    def test_aliases_and_intervals_reject_invalid_uint32_types_and_bounds(self) -> None:
+        path = "experiments/untyped-interval.json"
+        for bounds in ({"start": True, "end": 77}, {"start": 75, "count": True},
+                       {"start": 2**32 - 1, "count": 2}, {"start": 75, "end": 2**32}):
+            with self.subTest(bounds=bounds):
+                self.add("prior_seed_audit", path, {"training_seed_range": bounds})
+                del self.sources["prior_seed_audit"][path]
+                with self.assertRaisesRegex(audit.SeedAuditError, "uint32"):
+                    self.run_audit()
+        (self.root / path).unlink()
+        ledger = "runs/alternate-train/episodes.jsonl"
+        for alias in ({"road_id": True}, {"road_id": 2**32}, {"cells": [{"id": True}]},
+                      {"geometry_seed_candidates": [2**32]}):
+            with self.subTest(alias=alias):
+                self.add("training_ledger", ledger, json.dumps({
+                    "event": "reset", "track_id": 1, "seed": 10, **alias,
+                }) + "\n")
+                with self.assertRaisesRegex(audit.SeedAuditError, "uint32"):
+                    self.run_audit()
+
     def test_all_declared_sources_parse_but_never_authorize_collection(self) -> None:
         receipt = self.run_audit()
         self.assertFalse(receipt["passed"])
@@ -170,6 +252,7 @@ class DreamerP1SeedAuditTests(unittest.TestCase):
         self.assertEqual(len(receipt["source_evidence"]), 7)
         self.assertEqual(receipt["proposed_seeds"], [77])
         self.assertEqual(receipt["inventory_blockers"], [audit.INVENTORY_BLOCKER, audit.R5_BLOCKER])
+        self.assertEqual(receipt["auditor_source_sha256"], hashlib.sha256(Path(audit.__file__).read_bytes()).hexdigest())
         self.assertFalse(self.run_audit(10)["passed"])
         self.assertEqual(self.run_audit(10)["matched_collisions"][0]["seed"], 10)
 
@@ -308,6 +391,7 @@ class DreamerP1SeedAuditTests(unittest.TestCase):
         ledger = f"{audit.R5_RUN}/learner-0-uniform/episodes.jsonl"
         chain = audit._r5_chain(root, contents, {ledger: audit.R5_PINS[ledger]}, ids)
         self.assertEqual(len(chain), 5)
+        self.assertEqual(chain[2]["sha256"], audit.R5_PINS[ledger])
         self.assertIn(3910800035, ids)
         self.assertFalse(self.run_audit()["passed"])
 

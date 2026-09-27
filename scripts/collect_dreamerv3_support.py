@@ -79,7 +79,10 @@ def _file(root: Path, name: str, *, kind: str) -> Path:
     elif kind in ("protocol", "prior_seed_audit"):
         allowed = len(parts) == 2 and parts[0] == "experiments" and name.endswith(".json")
         allowed &= not any(token in parts[-1].lower() for token in ("result", "diagnostic", "outcome", "road"))
-        allowed &= (parts[-1].endswith("-geometry-audit.json") == (kind == "prior_seed_audit"))
+        if kind == "prior_seed_audit":
+            allowed &= parts[-1].endswith("-geometry-audit.json") or name == seed_auditor.G0_AUDIT
+        else:
+            allowed &= not parts[-1].endswith("-geometry-audit.json") and name != seed_auditor.G0_AUDIT
     elif kind == "training_ledger":
         allowed = len(parts) >= 3 and parts[0] == "runs" and parts[-1] == "episodes.jsonl"
     elif kind == "prior_collection_ledger":

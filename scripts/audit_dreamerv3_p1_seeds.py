@@ -65,6 +65,7 @@ R5_PINS = {
     R5_PROTOCOL: "531ca7838c0e911eec70cf729073753367df97ddcb6aedea1fe92091c8327000",
 }
 _TOKEN_BOUNDARY = r"(?<![A-Za-z0-9_.])(?:{})(?![A-Za-z0-9_.])"
+_CELL_ID = re.compile(r"(?:^|[._])(?:[a-z_]+_)?cells\[\d+\]\Z")
 
 
 class SeedAuditError(ValueError):
@@ -223,8 +224,53 @@ def _add(ids: dict[int, list[dict[str, str]]], seeds: list[int], path: str, fiel
             ids[seed].append(source)
 
 
+def _range_key(key: str) -> bool:
+    return key in ("seed_range", "road_range") or key.endswith(("_seed_range", "_road_range"))
+
+
+def _guard_candidate_aliases(value: Any, path: str, candidates: set[int] | None,
+                             prefix: str = "", *, ranges_only: bool = False) -> None:
+    """Reject candidate-bearing unreviewed ID shapes without opening episode data."""
+    if isinstance(value, list):
+        for index, item in enumerate(value):
+            _guard_candidate_aliases(item, path, candidates, f"{prefix}[{index}]", ranges_only=ranges_only)
+        return
+    if not isinstance(value, dict):
+        return
+    for key, item in value.items():
+        field = f"{prefix}.{key}" if prefix else key
+        if _range_key(key):
+            if not isinstance(item, dict) or set(item) not in ({"start", "end"}, {"start", "count"}):
+                raise SeedAuditError(f"{path}.{field}: ambiguous seed range; expected start/end or start/count")
+            start = _uint32(item["start"], f"{path}.{field}.start")
+            if "end" in item:
+                end = _uint32(item["end"], f"{path}.{field}.end")
+                if end < start:
+                    raise SeedAuditError(f"{path}.{field}: reversed seed range")
+            else:
+                count = item["count"]
+                if type(count) is not int or not 1 <= count <= 2**32 or start + count > 2**32:
+                    raise SeedAuditError(f"{path}.{field}: invalid uint32 seed range count")
+                end = start + count - 1
+            if candidates is None or any(start <= seed <= end for seed in candidates):
+                raise SeedAuditError(f"{path}.{field}: candidate ID in unreviewed seed range")
+        elif not ranges_only and (key == "road_ids" or key.endswith("_road_ids")
+                                  or key == "geometry_seed_candidates" or key.endswith("_geometry_seed_candidates")
+                                  or key == "road_seeds" or key.endswith("_road_seeds")):
+            seeds = _seeds(item, f"{path}.{field}")
+            if candidates is None or candidates.intersection(seeds):
+                raise SeedAuditError(f"{path}.{field}: candidate ID in unreviewed geometry alias")
+        elif not ranges_only and (key in ("road_id", "road_seed") or key.endswith(("_road_id", "_road_seed"))
+                                  or key == "id" and _CELL_ID.search(prefix)):
+            seed = _uint32(item, f"{path}.{field}")
+            if candidates is None or seed in candidates:
+                raise SeedAuditError(f"{path}.{field}: candidate ID in unreviewed geometry alias")
+        else:
+            _guard_candidate_aliases(item, path, candidates, field, ranges_only=ranges_only)
+
+
 def _protocol(record: dict[str, Any], path: str, ids: dict[int, list[dict[str, str]]],
-              sources: Mapping[str, Mapping[str, str]]) -> None:
+              sources: Mapping[str, Mapping[str, str]], candidates: set[int] | None = None) -> None:
     """Only explicit, known geometry-ID layouts; never follow metadata pointers."""
     known: set[str] = set()
 
@@ -375,8 +421,9 @@ def _protocol(record: dict[str, Any], path: str, ids: dict[int, list[dict[str, s
             for key, item in value.items():
                 field_name = f"{prefix}.{key}" if prefix else key
                 if ((key in ("seed", "seeds", "geometry_seed", "geometry_seeds")
-                     or key.endswith(("_seeds", "_seed_ids", "_seed_start"))
-                     or "seed_range" in key or "geometry_id" in key)
+                      or key.endswith(("_seeds", "_seed_ids", "_seed_start"))
+                      or "seed_range" in key or "geometry_id" in key)
+                        and not _range_key(key)
                         and field_name not in known and key != "learner_seeds"):
                     raise SeedAuditError(f"{path}: unknown geometry seed field {field_name}")
                 check_unknown(item, field_name)
@@ -385,9 +432,12 @@ def _protocol(record: dict[str, Any], path: str, ids: dict[int, list[dict[str, s
                 check_unknown(item, f"{prefix}[{index}]")
 
     check_unknown(record)
+    _guard_candidate_aliases(record, path, candidates)
 
 
-def _prior_audit(record: dict[str, Any], path: str, ids: dict[int, list[dict[str, str]]]) -> None:
+def _prior_audit(record: dict[str, Any], path: str, ids: dict[int, list[dict[str, str]]],
+                 candidates: set[int] | None = None) -> None:
+    _guard_candidate_aliases(record, path, candidates)
     if path == G0_AUDIT:
         if (record.get("format") != "haic-rlpd-g0-seed-audit-v1"
                 or record.get("status") != "no_known_recorded_overlap"
@@ -435,7 +485,8 @@ def _prior_audit(record: dict[str, Any], path: str, ids: dict[int, list[dict[str
     _add(ids, candidates, path, "candidate_seeds")
 
 
-def _ledger(raw: bytes, path: str, ids: dict[int, list[dict[str, str]]], kind: str) -> None:
+def _ledger(raw: bytes, path: str, ids: dict[int, list[dict[str, str]]], kind: str,
+            candidates: set[int] | None = None) -> None:
     if not raw.strip():
         raise SeedAuditError(f"{path}: empty TRAIN ledger")
     for number, line in enumerate(raw.splitlines(), 1):
@@ -462,6 +513,7 @@ def _ledger(raw: bytes, path: str, ids: dict[int, list[dict[str, str]]], kind: s
             key = "geometry_seed" if "geometry_seed" in row else "seed"
         seed = _uint32(row.get(key), f"{path}:{number}.{key}")
         _add(ids, [seed], path, f"line:{number}.{key}")
+        _guard_candidate_aliases(row, f"{path}:{number}", candidates)
 
 
 def _g0_metadata(root: Path, contents: Mapping[str, bytes],
@@ -695,6 +747,7 @@ def audit_dreamerv3_p1_seeds(
     if len(proposed) != len(set(proposed)):
         raise SeedAuditError("proposed TRAIN geometry seeds must be unique across all track IDs")
     proposed.sort()
+    candidates = set(proposed)
 
     root = Path(repo_root)
     if root.is_symlink() or any(_HELD_OUT.search(part) for part in root.parts) or not root.is_dir():
@@ -734,11 +787,11 @@ def audit_dreamerv3_p1_seeds(
         for path, digest in sorted(declared[kind].items()):
             raw = _source(root, path, digest, kind)
             if kind == "protocol":
-                _protocol(_json(raw, path), path, ids, declared)
+                _protocol(_json(raw, path), path, ids, declared, candidates)
             elif kind == "prior_seed_audit":
-                _prior_audit(_json(raw, path), path, ids)
+                _prior_audit(_json(raw, path), path, ids, candidates)
             else:
-                _ledger(raw, path, ids, kind)
+                _ledger(raw, path, ids, kind, candidates)
             evidence.append({"kind": kind, "path": path, "sha256": digest, "schema_checked": True})
 
     auxiliary = _g0_metadata(root, contents, ids)
@@ -753,6 +806,7 @@ def audit_dreamerv3_p1_seeds(
             if hashlib.sha256(raw).hexdigest() != declared["protocol"].get(path, declared["prior_seed_audit"].get(path)):
                 raise SeedAuditError(f"{path}: experiment changed during catalog audit")
             continue
+        _guard_candidate_aliases(_json(raw, path), path, candidates, ranges_only=True)
         for number, line in enumerate(raw.decode("utf-8").splitlines(), 1):
             if token.search(line):
                 raise SeedAuditError(f"{path}:{number}: candidate ID in untyped experiment JSON")

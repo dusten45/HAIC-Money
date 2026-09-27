@@ -266,6 +266,36 @@ class DreamerSupportTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "not reproduced as a passing"):
                 self.checked()
 
+    def test_only_known_g0_seed_audit_can_be_a_prior_audit(self):
+        name = seed_auditor.G0_AUDIT
+        digest = self.fixture.write(name, b'{"format":"synthetic-g0-audit"}\n')
+        self.assertEqual(support._pinned(self.fixture.root, name, digest, kind="prior_seed_audit"),
+                         self.fixture.root / name)
+        with self.assertRaisesRegex(ValueError, "outside TRAIN-only allowlist"):
+            support._file(self.fixture.root, name, kind="protocol")
+        unrelated = "experiments/unrelated-seed-audit.json"
+        self.fixture.write(unrelated, b"{}\n")
+        with self.assertRaisesRegex(ValueError, "outside TRAIN-only allowlist"):
+            support._file(self.fixture.root, unrelated, kind="prior_seed_audit")
+        geometry_audit = next(iter(self.fixture.audit_sources["prior_seed_audit"]))
+        self.assertEqual(support._file(self.fixture.root, geometry_audit, kind="prior_seed_audit"),
+                         self.fixture.root / geometry_audit)
+
+    def test_g0_seed_audit_is_pinned_in_the_complete_p1_source_inventory(self):
+        self.mocks()
+        name = seed_auditor.G0_AUDIT
+        self.fixture.audit_sources["prior_seed_audit"][name] = self.fixture.write(
+            name, b'{"format":"synthetic-g0-audit"}\n',
+        )
+        self.fixture.write_audit()
+        self.fixture.write_protocol()
+        checked = self.checked()
+        self.assertIn(name, checked["protocol"]["seed_audit"]["sources"]["prior_seed_audit"])
+        (self.fixture.root / name).write_bytes(b'{"format":"changed"}\n')
+        with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
+            self.checked()
+        self.assertEqual(self.envs, [])
+
     def test_preflight_requires_new_exact_protocol_and_independent_audit_source(self):
         self.mocks()
         checked = self.checked()
