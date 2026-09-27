@@ -3,6 +3,16 @@
 Last refreshed: 2026-09-27. This is the current-state source of truth, not an
 experiment changelog. Evidence and historical decisions are linked below.
 
+**Instance-migration freeze (2026-09-27 05:10 UTC):** The user stopped new
+experiments and requested safe Vast.ai shutdown. The last live DrQ learner was
+interrupted after its step-16,384 checkpoint; its partial ledger ends at step
+21,037 and is not an exact resumable result. TD-MPC2 v1 remains partial and v2
+has zero resets. No training, evaluation, confirmation/blind or official action
+should be launched during migration. See the detailed
+[instance handoff](instance-migration-handoff-2026-09-27.md), including the
+Git-external transfer inventory and deletion gate. A Git push alone is not
+proof this instance can be removed.
+
 ## Current Position
 
 | Area | Current status |
@@ -14,6 +24,9 @@ experiment changelog. Evidence and historical decisions are linked below.
 | DrQ-v2 teacher-replay plan | The isolated r3 collection completed its fixed 16,384 decisions/source cap, but one source had only 3/4 required finished geometries. A3 is inconclusive; no paired learner training, screen, confirmation, or blind evaluation occurred. Preserve both datasets as consumed and do not extend the cap or substitute a source. See `docs/experiments/INDEX.md`. |
 | DrQ-v2 training-only geometry study | Completed: consumed-road failure analysis, blind-safe seed audit, 120 distinct TRAIN roads + 16 separate TRAIN-DIAGNOSTIC roads in six measured families, static/finish-logic sanity, and 272 sealed frozen actor diagnostics. The same 136 training-only roads gave 10 both-actor finishes, 74 provisional boundary, 50 difficult-with-progress, 2 unresolved and zero selected malformed geometries. No new learner training or held-out/blind action. See `docs/experiments/drqv2-geometry-augmentation-v1.md`. |
 | DrQ-v2 geometry-mix fine-tuning | All six frozen r6 online-only runs completed 32,768 additional decisions and 22,768 updates each, sampling TRAIN only. On the same 16 previously designated TRAIN-DIAGNOSTIC roads, canonical repeat-0 finishes were uniform 1/32, failure-weighted 4/32, and easy-retention 3/32 across the two learner seeds; the unchanged source actors finished 11/32. This is descriptive, unranked development evidence, not fresh generalization, confirmation, blind, or official HAIC performance; no weights were selected or promoted. r4/r5 partial attempts remain preserved and are not resumed or counted. See the r6 [`active plan`](../plans/active/drqv2-geometry-mix-plan.md), [`protocol`](../../experiments/drqv2-geometry-mix-v1-r6.json), six run `result.json` files, and [`diagnostic manifest`](../../runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/manifest.json). |
+| DrQ-v2 r7 source retention | Twelve frozen 32:32 source/online TRAIN runs completed the r6 budget with and without one pre-fixed actor preservation loss. On the same 16 reused TRAIN-DIAGNOSTIC roads, r7a kept 1/3/1 of the eleven source-success actor/road cells and gained 2/7/4; r7b kept 4/1/5 and gained 5/7/5 (uniform/failure-weighted/easy-retention). All six arms lost at least six old successes; the predeclared >=9 kept and >=2 gained retention contract failed despite higher total finishes. No model promotion or fresh held-out/confirmation/blind/official action. See the [`r7 evidence report`](../experiments/drqv2-retention-r7.md), [`result`](../../experiments/drqv2-retention-r7-result.json), and [`384-episode trace manifest`](../../runs/20260926-drqv2-retention-r7/train-diagnostic/manifest.json). |
+| DrQ-v2 final-source retention and migration stop | Offline longitudinal parity passed 5,998 archived source actions/666 prior state hashes; full old replay scan found far fewer feature-near middle/corner/late/finish-approach than early states, without identifying a causal mechanism. Both final-source-policy TRAIN pools sealed 100,000 decisions each. **Five of six** matched 32:32, lambda=0.5 learners completed; seed1/easy-retention stopped for instance migration after a valid step-16,384 checkpoint, although the retained TRAIN ledger extends to step 21,037/gradient 11,037. There is no exact restart implementation, completed sixth result, all-six sample audit or final-source TRAIN-DIAGNOSTIC episode. The fixed >=9/11 retained AND >=2/21 gained gate remains **unevaluated**, not failed or passed. All DrQ work is paused for migration; no automatic new experiment or restart. Transfer Git-external source/control/final pools, five complete arms and the entire partial sixth directory. See the [detailed DrQ handoff](../experiments/drqv2-final-source-replay-v1.md) and [migration stop receipt](../../experiments/drqv2-final-source-replay-v1-migration-stop.json). |
+| Independent TD-MPC2 pixel baseline | Paper/current-official-source faithful 5M-size-class world model, episodic termination and MPPI are isolated from DrQ/PPO; HAIC alone requires four-channel grayscale/64px and action conversion. The first frozen reused-TRAIN pilot recorded 10,061 decisions and 10,000 pretraining plus 60 later updates but failed at a next-episode planner reset because an inference tensor was zeroed outside inference mode. Its 29 completed episodes had no finishes and no complete planned episode; within-replay model fit cannot establish driving benefit. The regression is repaired and tested. Separate v2 full source/resource preflight passed once with zero resets, but shared disk had only 5.5GiB free against its unchanged >=5GiB floor and continued peer writes, so v2 has NOT run. No TD-MPC2 candidate, held-out or official action. See the [`active plan`](../plans/active/tdmpc2-pixel-online-baseline.md), [`v1 failure`](../../experiments/tdmpc2-reused-train-pilot-v1-failure.json), and [`v2 exposure`](../../experiments/tdmpc2-reused-train-pilot-v2-exposure.json). |
 | User-directed pixel RLPD pilot | V2 is closed stop/hold. The separate long-horizon v1 passed screen, strict confirmation, and blind; RLPD seed 11 at 131,072 steps remains an internal candidate. Entropy V1–V3 aborted before interaction. V4 consumed fresh teacher/student runs but stopped before screen on source-hash drift; its held-outs are retired. V5 used fresh prior data and four 131,072-step target-arm runs; its screen had 29/192 canonical finishes and passed all target/seed gates. Strict confirmations were author-target 17/32 and 7/32 versus +1.5 target 6/32 and 6/32; all were eligible and operationally clean. Author-target passed the paired dominance gate, and its selected seed-50 actor finished 7/24 on the internal blind (mean progress 0.657). This remains two-seed internal evidence, not an official result. See `docs/experiments/INDEX.md`. |
 | Pixel RLPD completion-first G0 | Complete TRAIN-only observational diagnosis: two frozen actors on 12 shared geometries, 24 episodes and 10,049 decisions; each finished 3/12 and failed 9/12. Contact and centerline-distance events also occurred on successful controls; the 20-decision low-directed-motion event appeared only on nonfinishes in this cohort. No causal remedy or learner experiment is selected. All cells are consumed; see `experiments/rlpd-g0-completion-v1-result.json`. |
 | Best single-model designation | No official or competition-confirmed model is designated. Pixel RLPD seed 11 is an internal, limited-geometry blind-tested candidate only. See `docs/results/MODEL_STATUS.md`. |
@@ -59,6 +72,7 @@ The former active plan is now a [closed status pointer](../plans/active/dreamerv
 to its [archive](../plans/archived/dreamerv3-recovery-strategy-2026-09-27.md).
 Any future contingency is only the
 [`DEFERRED / LAST-RESORT ONLY` revival plan](../plans/dreamerv3-revival-plan.md).
+
 ## Active Work
 
 The user-authorized DrQ-v2 geometry-mix study is a separate matched experiment;
@@ -94,16 +108,32 @@ decisions) matched the old traces exactly and measured deterministic actor,
 twin-critic and encoder outputs on identical source observations without a new
 policy rollout or update. Early actor/encoder drift is directly observed; Q1
 reordering on some cells and incomplete source-state replay retention remain
-contributors to test, not proven causes. This does not authorize training,
-promotion or a new evaluation partition.
+contributors to test, not proven causes. That diagnosis alone did not authorize
+training, promotion or a new evaluation partition.
+
+The subsequent separately authorized [r7 retention study](../experiments/drqv2-retention-r7.md)
+kept r6's geometry mixtures and exact 32,768-decision/22,768-update budget.
+An offline hybrid probe found early action differences from both encoder and
+actor-head changes; a TRAIN-only gradient probe fixed one source-action
+preservation weight. The actual source/online sample traces verified 32:32 for
+every minibatch, and all twelve runs and 384 reused-development episodes passed
+independent artifact, repeat and paired-cell checks. r7a's replay-only relative
+to r7b's added preservation term did **not** preserve most of the eleven old
+successful actor/road cells under any mixture. Failure-weighted r7a's 10/32
+total finishes in particular comprise just **three kept plus seven gained**;
+easy-retention r7b's 10/32 comprise **five kept plus five gained**. Both old
+success retention and adaptation remain separate unsolved questions. Reused
+TRAIN-DIAGNOSTIC cells are consumed development feedback, not a fresh holdout;
+the [frozen result](../../experiments/drqv2-retention-r7-result.json) does not
+promote a model or authorize protected/official action.
 
 ### Historical DreamerV3 Evidence (CLOSED; No Follow-up)
 
-The former plan is preserved in the
+The former active plan is preserved in the
 [`archive`](../plans/archived/dreamerv3-recovery-strategy-2026-09-27.md).
-All following paragraphs are historical evidence, not active requirements or
-authorization to continue. Reentry is governed only by the deferred revival plan.
-The initial fidelity work and nine B1 static-random-data trials
+The details below are a dated record of completed diagnostics and failed gates,
+not open prerequisites or authorization for another study. The initial fidelity
+work and nine B1 static-random-data trials
 are complete; all failed their frozen gates. The
 [`B1 failure diagnosis`](../../experiments/dreamerv3-b1-failure-diagnosis-v1.json)
 separates implementation errors, sparse training signal, and gate design defects.
@@ -148,6 +178,93 @@ average terminal BCE is not evidence of finish-event discrimination. The
 second score reused development already inspected after 64 updates, so it is
 consumed tuning feedback, not a fresh holdout or P1b result. The B1/P1 gates,
 no-trained-student-actor status and prohibition on official claims remain.
+
+Read-only [action-input](../../experiments/dreamerv3-reused-train-action-input-v1-result.json),
+[eight-prior sampling](../../experiments/dreamerv3-reused-train-sampling-v1-result.json),
+and [posterior/prior](../../experiments/dreamerv3-reused-posterior-gap-v1-result.json)
+diagnostics on those SAME consumed road episodes show that teacher-data model
+predictions respond to changed future action inputs, but not consistently in
+the correct direction against logged targets. Averaging eight prior paths does
+not eliminate their 9-32-step image error above frozen-anchor repeat.
+Target-conditioned posterior reconstruction is not prediction; one-step prior
+is near the true-previous-frame repeat, while 32-step free prior worsens
+despite lower raw same-transition KL. That motivated the subsequent bounded
+multi-step prior-image treatment reported below; its 256 base plus 64
+additional optimizer steps cannot by itself isolate a loss-shape benefit.
+No Dreamer actor/policy result, fresh evaluation or official score exists.
+
+The separate [prior-image auxiliary training and score](../../experiments/dreamerv3-reused-train-prior-image-score-v1-result.json)
+completed 256 ordinary plus 64 additional world-model optimizer steps per
+arm/seed without actor or environment updates. Both teacher-data seeds improved
+paired image MSE on both *consumed* development action-source strata, but
+teacher-action values **0.015952/0.016135** remained above the predeclared
+frozen-anchor repeat **0.014884**. The local teacher-data gate therefore failed;
+the statically proposed third-per-family four roads were not opened, and the
+extra optimizer steps prevent a pure loss-shape conclusion. A distinct
+[12-road source0 diversity collection](../../experiments/dreamerv3-reused-train-diversity-v1-result.json)
+used other, previously allocated r6 TRAIN cells: random finished 0/12 and
+source0 finished 2/12 roads in two shape families, below its separately fixed
+>=3-road teacher support gate. Both sealed archives were preserved but **no
+Dreamer learner was released by the source0-only protocol**. A prior DrQ
+catalog summary already has one source1 attempt on each same TRAIN road. The separately frozen
+[source1 replication](../../experiments/dreamerv3-reused-train-source1-v1-result.json)
+completed 5,192 decisions on all 12 roads, finishing 2/12: one road overlaps
+source0's two finishes, so the *source-union* is three distinct roads in three
+shape families. Its descriptive complement gate permitted **design only** of a
+new multi-source study; source0's failed single-source gate stays failed.
+Historical source1 also measured these same roads, so this is replication/variation,
+not unseen-road support. The original Dreamer offline bridge accepts only one
+actor ID/hash and its replay loses tags; the separate
+[mixed-source learner](../../experiments/dreamerv3-reused-train-multisource-v1-result.json)
+validated each archive independently, bound 24 episodes/10,612 decisions on
+only 12 road IDs to a per-seed identical hashed replay lineage and completed
+256 model-only updates for each of two seeds. Its predeclared
+[four-road image score](../../experiments/dreamerv3-reused-train-multisource-score-v1-result.json)
+failed: both seeds missed frozen-anchor repeat on random-action development,
+and source0-action development had only seed0's tiny below-repeat value.
+Development source/outcome receipts were visible before the scorer source was
+finalized, so this training-excluded r6 TRAIN set is consumed iterative tuning,
+not a blind/fresh validation target. No actor/critic was trained, no student
+driving or official score exists. A separate multi-source data plus H8
+prior-image auxiliary interaction was subsequently trained and scored as a
+separate model-only study; its predeclared two-seed/two-stratum image gate
+failed. The real fresh P1 cross-lane seed audit remains non-passing.
+
+The isolated [mixed-source+H8 model-only training result](../../experiments/dreamerv3-reused-train-multisource-prior-v1-result.json)
+used the original source0/source1 sealed 10,612-decision replay and identical
+per-seed SHA-bound lineage. Both fixed learner seeds completed 256 ordinary
+plus 64 additional prior-image world-model optimizer steps, with zero new
+environment steps and unchanged actor/critic/target and their optimizers.
+After the owner freed memory, the independently rechecked raw cgroup headroom
+met the unchanged 12 GiB floor plus projected peak; no OOM kill was added.
+Auxiliary TRAIN frame loss changed in opposite directions across seeds, so this
+is pipeline/training evidence, **not** a scored prediction gain. The separately
+pinned [read-only comparison](../../experiments/dreamerv3-reused-train-multisource-prior-score-v1-result.json)
+against the earlier pure-256 models on the SAME already-consumed four-road
+source0/random development cells failed: seed0 worsened on both source strata;
+seed1 improved versus pure256 on both but random-action image MSE `0.001509`
+remained above frozen-anchor repeat `0.001494`. The rule required BOTH seeds
+to improve and beat repeat on BOTH strata. The first metadata-only score
+preflight stopped on a 1-MiB catalog cap before ZIP decoding; a catalog-only
+bounded correction, 33 scorer tests and new hashes preceded the first actual
+score. Additional 64 optimizer steps preclude a compute-matched loss-shape
+claim, and the development material was previously consumed iterative tuning.
+Previously allocated seventh-per-family r6 TRAIN roads remain unopened,
+the fresh P1 audit fails closed, and no Dreamer student actor or official result
+exists. The earlier [memory hold](../../talk/messages/20260926T181924Z-k9r4-dreamer-resource-hold-final-check.md)
+was resolved for this study after the owner's resource change; do not relax
+limits for any future experiment.
+
+For the blocked fresh P1 path, the Dreamer collector now accepts the **exact**
+historical G0 `*-seed-audit.json` only as a SHA-pinned prior audit, not as a
+protocol or a generic foreign seed audit. Synthetic manifest/hash-drift tests
+and the full 367-test Dreamer regression suite passed. The auditor now guards
+candidate-bearing known typed road/cell aliases, ledger road IDs and untyped
+`start/end` and `start/count` ranges, without failing disjoint synthetic cells.
+These fixes do **not** certify candidate freshness: the actual Dreamer P1 audit
+still returns `passed=False`; other unknown field/range encodings, TRAIN
+start/partial/claim records, own-protocol bootstrap and re-audit before each
+reset remain unproven. No fresh P1 road has been selected or driven.
 
 ## Completed Teacher-Replay Gate
 
@@ -236,21 +353,41 @@ diagnostic true positives came from two correlated episodes on ONE geometry and
 none of its diagnostic roads supplied a finished parent. It can at most decode
 the existing visual speed HUD on reused TRAIN roads, not justify an intervention.
 A new source-hashed geometry-level positive and successful-parent coverage gate,
-followed by separate exact-prefix parity/harm evidence, must precede G1. None
-of these observations proves recovery data, value shaping, or memory is the
-causal fix. The r5 seed-audit
-erratum is narrow and does not retroactively attest the malformed receipt.
+followed by separate exact-prefix parity/harm evidence, must precede G1. The
+RLPD-specific parity comparator and original-G0 SHA binder now pass synthetic
+state/action tests and file-only two-decision prefix checks on 24/24 consumed
+TRAIN episodes, but **no real reset/replay or G1 branch** was executed; hidden
+Box2D equality remains unproven. None of these observations proves recovery
+data, value shaping, or memory is the causal fix. The r5 seed-audit erratum is
+narrow and does not retroactively attest the malformed receipt.
 
-The prospective G1 v2 seed auditor checks candidate-specific TRAIN collisions,
-consumption, reservations and exclusions; unrelated DrQ/Dreamer JSON or ledger
-changes are provenance warnings, not collisions. The read-only consumed-G0
-control `--seed-start 4272000001` remains `BLOCKED` with 12 actual consumed-road
-intersections, not a proposed G1 batch. Current r5 TRAIN ledger, abort,
-supersession, metrics and trace bytes are independently checked without
+The proposed next RLPD G1 coverage design fixes 24 new TRAIN geometries x two
+unchanged actors, with V5 seed-50 source-primary only for its G0-informed
+post-contact-stall feasibility question and seed-11 fully reported as comparator.
+Pure synthetic coverage checks require all 48 actor-road slots and distinct
+pixel-positive failure/finished-parent roads; they do not certify annotations
+or road freshness. A separate G1 v2 seed auditor now checks candidate-specific
+TRAIN collisions, consumption, reservations and exclusions; unrelated DrQ/Dreamer
+JSON or ledger changes are provenance warnings, not collisions. The read-only
+consumed-G0 control `--seed-start 4272000001` remains `BLOCKED` with 12 actual
+consumed-road intersections, not a proposed G1 batch. Current r5 TRAIN ledger,
+abort, supersession, metrics and trace bytes are independently checked without
 validating the malformed historical receipt SHA or changing the G0 v1 audit.
 The shared TRAIN claim registry re-audits under a lock if a future batch is
 separately selected; legacy/other-lane allocation races remain a limitation.
 No G1 seed batch, claim, frozen protocol or environment reset has been allocated.
+
+Additional RLPD-only G1 preparation is synthetic: a blocked-by-default
+collector skeleton checks future audit/claim/source identity and preserves all
+48 attempted, censored or unrun slots; a separate image-review module seals
+opaque pixel-only packets and restricted mappings before outcome joining.
+Thirty focused synthetic tests pass. The real collector remains disabled
+because a mid-episode four-core-hour stop cannot yet be enforced by the
+source-pinned G0 `run_cell`; no pixel trigger, genuine blinded annotation or
+positive/finished-parent G1 coverage has been established. Two conditional
+candidate-relevant G1 auditor false-pass shapes (`{start,end}` seed ranges and
+self-protocol exclusions) are awaiting peer-owner correction. No new G1
+interaction or policy promotion is justified by these preparatory files.
 
 ## Competition Schedule And Access
 
