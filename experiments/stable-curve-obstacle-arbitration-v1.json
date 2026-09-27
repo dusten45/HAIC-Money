@@ -8,7 +8,7 @@
   "depends_on": "stable-compound-corner-speed-v1 synthetic and regression acceptance",
   "scope": {
     "runtime": "bare model.pt only",
-    "primary_change": "veto obstacle steering bias when it opposes an already-established curve-following steering command; preserve the curve steering limit in that conflict case",
+    "primary_change": "project an obstacle-adjusted steering proposal onto a half-strength curve-following minimum when opposing avoidance would cancel or reverse an established bend command",
     "training": false,
     "environment_execution": false,
     "fresh_evaluation": false,
@@ -35,13 +35,14 @@
   },
   "hypothesis": {
     "failure": "The stable controller adds up to 0.24 obstacle bias to curve following and lowers the obstacle steering limit to 0.32 without checking whether the bias points against the visible bend. On an inside obstacle this can cancel or reverse the required turn toward the road's future center.",
-    "repair": "When the existing non-straight road command and latched obstacle bias have opposite signs, suppress only that lateral bias and retain the normal curve steering limit. Keep obstacle detection, side latching, compound speed cap, and all non-conflicting obstacle behavior unchanged.",
+    "repair": "When the existing non-straight road command and latched obstacle bias have opposite signs, retain at least half the magnitude of the road command in its original direction. Keep the existing 0.32 obstacle steering limit, obstacle detection, side latching, compound speed cap, and all non-conflicting proposals unchanged.",
     "expected_effect": "Prevent an inside obstacle from commanding a bend-exit trajectory while retaining straight-road avoidance and longitudinal safety margin."
   },
   "fixed": {
     "conflict_predicate": "straight=false AND base_steering*obstacle_bias<0",
-    "conflicting_bias": 0.0,
-    "conflicting_steer_limit": "existing curve limit",
+    "minimum_retained_curve_fraction": 0.5,
+    "projection": "sign(base_steering) * max(sign(base_steering) * (base_steering + obstacle_bias), 0.5 * abs(base_steering))",
+    "conflicting_steer_limit": 0.32,
     "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
     "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
     "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
@@ -49,7 +50,7 @@
   },
   "acceptance": {
     "synthetic": [
-      "For mirrored curves with an inside obstacle whose avoidance bias opposes the bend, candidate steering keeps the obstacle-free curve sign and longitudinal action is bit-exact to the compound control.",
+      "For mirrored curves with an inside obstacle whose avoidance bias would cancel the bend, candidate steering keeps the obstacle-free curve sign and at least half its pre-obstacle magnitude; longitudinal action is bit-exact to the compound control.",
       "For clear straights, straight obstacles, obstacle-free curves, and curve obstacles whose bias agrees with the road command, the full action is bit-exact to the compound control.",
       "Mirrored conflict scenes have equal-magnitude opposite steering after identical state priming.",
       "Actions remain finite, bounded, gas/brake mutually exclusive, and deterministic after reset."
