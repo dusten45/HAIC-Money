@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "name": "stable-completion-controller-v1",
+  "purpose": "consumed-development-runtime-lineage-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-27T22:20:00+09:00",
+  "source_commit": "1eca7123ddd0882d5850966c645af9d1c6455a41",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "replace the unvalidated racing-line override with an explicit controller that reproduces the completion-proven 52976fe runtime",
+    "training": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "source_commit": "1eca7123ddd0882d5850966c645af9d1c6455a41",
+    "agent_sha256": "155b1d91316e5da3c01dd5c42776dfc9bd75541b1bfe9ccb4ccaa840cc59d9c4",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "controller": "agent._RacingLineController",
+    "cell": {"track_id": 1, "geometry_seed": 42, "status": "consumed-development"},
+    "summary": {
+      "finished": false,
+      "decisions": 782,
+      "progress": 0.8162544169611308,
+      "damage": 0.0,
+      "collision_count": 0,
+      "retire_reason": "off_track"
+    }
+  },
+  "reference": {
+    "source_commit": "52976fe1200115037a61c425ef049b789c740770",
+    "agent_git_blob": "5cf9e2506c9343bc17e6f8ccc72f96f079ea5e8f",
+    "controller": "agent._ForwardCorridorController",
+    "dynamic_reproduction_log": ".haic-artifacts/runs/historical-52976fe-reproduction.json",
+    "dynamic_reproduction_log_sha256": "a3539e8df04a61dcae98cfe8b28cd7ec155b22b8aaac64c09a98fa548485d719",
+    "summary": {
+      "finished": true,
+      "decisions": 356,
+      "progress": 0.9646643109540636,
+      "lap_time_ms": 28400,
+      "damage": 0.0,
+      "collision_count": 0,
+      "retire_reason": null
+    },
+    "interpretation": "This is deterministic consumed-development evidence and a source-lineage target, not fresh generalization evidence or a SOTA result."
+  },
+  "hypothesis": {
+    "failure": "The active runtime accumulated broad grayscale hazard, edge, obstacle, and recovery heuristics that fire on ordinary road geometry; model.pt is bypassed, so those unvalidated heuristics are the effective policy.",
+    "repair": "Make the smaller completion-proven camera controller an explicit current runtime class while preserving all DrQ, explicit baseline-export, and HAIC policy paths.",
+    "expected_effect": "Recover deterministic completion on the consumed diagnostic cell and remove the overbroad hazard state machine from the bare-checkpoint action path without changing weights or official environment code."
+  },
+  "fixed": {
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
+    "evaluation_cell": {"track_id": 1, "geometry_seed": 42},
+    "run_count": 1
+  },
+  "acceptance": {
+    "unit": [
+      "The stable class matches the 52976fe controller's deterministic action sequence on representative straight, curve, obstacle, invalid-input, and reset cases.",
+      "Bare model.pt explicitly routes to the stable class while DrQ and explicit exports retain their existing paths.",
+      "All existing controller, inference, local simulator, contract, and submission tests pass."
+    ],
+    "consumed_development_smoke": {
+      "cell": {"track_id": 1, "geometry_seed": 42},
+      "minimum_result": "finished=true with zero damage and zero collisions",
+      "reference_result": "progress 0.9646643109540636 and lap_time_ms 28400",
+      "interpretation": "diagnostic only; no SOTA, unseen-track, or submission claim"
+    }
+  },
+  "abort": [
+    "The stable implementation diverges from the frozen 52976fe reference action contract.",
+    "Any DrQ, explicit baseline-export, HAIC, official environment, frozen experiment, or reserved seed changes.",
+    "Relevant tests regress or the single consumed-development smoke does not finish cleanly."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No fresh evaluation, generalization claim, submission, or SOTA promotion is authorized until those sources are restored and audited."
+  ]
+}

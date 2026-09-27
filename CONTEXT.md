@@ -2,11 +2,12 @@
 
 ## Current Objective
 
-Develop a submission-capable DrQ-v2 candidate, not a PPO improvement project.
-The current user request authorizes implementation of a separate, permanent
-demonstration replay for DrQ-v2. This implementation-only task must not train a
-candidate or run any performance evaluation; model quality remains the user's
-decision. The running padding study and its frozen artifacts remain untouched.
+Develop the strongest rule-compliant agent while preserving the active DrQ-v2
+padding study and its frozen artifacts. The bare `model.pt` path now uses an
+explicit completion-first controller recovered from source commit `52976fe`;
+the DrQ, explicit-export and HAIC policy paths are unchanged. Required competition
+documents are missing, so fresh/confirmation/blind evaluation, submission and
+SOTA promotion remain blocked.
 
 ## Frozen Contract
 
@@ -117,75 +118,30 @@ The Track Lab web server now exposes a local Agent catalog under
 selection to the automatic run endpoint. Map files, official seeds, and generated
 custom tracks remain selectable in the same UI.
 
-## Reinitialized Racing-Line Runtime
+## Bare Baseline Runtime Repair
 
-The bare `model.pt` baseline was reinitialized around a fresh racing-line
-controller at inference time. It estimates the visible road centerline and asphalt
-spans, rate-limits steering, snaps near-centered straight segments to zero steering,
-regulates speed from the HUD (clear-road cruise target 72, throttle cap 0.18),
-and emits mutually exclusive throttle or brake. The older forward-corridor class
-remains only as a compatibility/test primitive; Agent now instantiates the fresh
-racing-line controller for the bare checkpoint.
-Because the official RGB input is converted to grayscale, green background and orange
-obstacles are treated as the same bright non-road hazard. Narrowing or disappearing
-near-road spans, small edge clearance, and bright pixels inside the road corridor all
-cut throttle; the controller uses a short bounded brake window and then resumes a
-small forward crawl while biasing only toward the visible road. Compact bright
-objects still trigger bounded avoidance, but never override the road-width safety
-gate. The near-edge margin is deliberately sized for the vehicle envelope, and a
-blocked corridor receives a five-frame green-contact brake window before crawl
-motion is allowed. After the road has been seen, a temporary visual dropout similarly brakes for
-only a bounded number of frames before using a low forward recovery throttle rather
-than falling back to an unconstrained turn. Recovery stores the last near/far
-centerline and heading error, searches the full image when the local corridor window
-is lost, and steers toward the remembered/look-ahead road instead of decaying to
-straight indefinitely. Opposite steering must first pass through zero, and a
-one-step steering change is limited to 0.07. The heading contribution is ignored
-when it would oppose a meaningful look-ahead center error, while clear-road gas is
-raised to 0.18 on a confirmed clear road and speed-target recovery is faster after a hazard.
-Even a distant compact obstacle cuts gas immediately. Curve handling
-now measures the centerline over a longer preview, applies an entry-speed penalty
-before the near edge turns, and scales throttle down continuously with preview
-curvature. The fresh racing-line controller uses a 30-unit target-speed floor,
-0.36 curve steering cap, 0.05 per-step steering slew, and a 0.48 minimum
-clear-road gas scale. Because the local body has a strong response to small
-steering inputs, its curve preview gain is scaled to 0.78 while the bounded
-steering envelope remains active. No simulation or performance evaluation was
-run for this repair.
-The runtime priority stack was re-based on the competition contract rather than on
-the earlier ad-hoc curve/green/speed preferences: perception of the traversable
-road comes first, a preview path is selected from the wider free-space side of an
-obstacle, curvature and image-space obstacle distance produce a continuous speed
-target, and the final action is passed through a bounded safety envelope. The
-obstacle distance target uses a TTC-like piecewise limit (47/30/18 speed units
-from far to close) instead of a binary near/far switch. Explicit action-contract
-payloads, DrQ actors, and the HAIC visual-policy runtime keep their recorded model
-paths.
+The neural weights in bare `model.pt` are bypassed after road detection, so the
+controller selected by `Agent` is the effective policy. The accumulated
+`_RacingLineController` was not backed by a matched protocol: on the deterministic
+consumed development cell track1/seed42 it twice stopped at progress `0.816254`
+after 782 decisions. Its visual corridor hazard fired on 680/782 recorded frames,
+making the safety state too broad for targeted longitudinal repair.
 
-The F1-inspired update adds an explicit near-row vehicle envelope: each preview
-centre is clipped to the visible asphalt span minus the edge-clearance margin,
-and the final steering proposal suppresses any component pointing outward from
-that envelope. This treats the car centre as a geometric state that must remain
-on track, while still allowing higher straight-line cruise and re-acceleration
-after a corner. The entry speed planner keeps braking before the turn and leaves
-the bounded steering rate in place through the apex; no simulator performance
-evaluation was run for this update.
+Experiment `racing-line-hazard-recovery-v1` tried to preserve overspeed braking
+under that gate. Although 92 tests passed, the preregistered smoke crashed at
+progress `0.356890`, with damage 1.0 and five collisions; the change was rolled
+back and recorded as `REJECT`.
 
-The follow-up obstacle/curve repair keeps the reset controller on that same
-envelope: a distant obstacle on a straight selects the wider safe edge and starts
-the lateral move before urgency rises, while a sharp preview raises the entry
-brake demand, lowers the curve floor to 24 speed units, tightens the steering
-limit/slew, and reduces throttle. A final outward-sign gate runs after slew
-limiting so the last action cannot point across the visible track boundary.
-Obstacle components now accept a wider range of projected sizes and aspect ratios
-while rejecting the connected bright shoulder/background; the road-corridor gate
-still handles components that merge into the visible edge.
-
-The forward-progress adjustment follows the environment's continuous action and
-finish semantics documented by Gymnasium, while using the practical separation of a
-nominal road follower and a safety filter described by vision-based driving and
-control-barrier-function work. It is a heuristic runtime guard, not a formal safety
-guarantee.
+The replacement `_StableCompletionController` is a standalone behavioral copy
+of the smaller controller at source commit `52976fe`. Only bare state-dict routing
+changed. It matches the frozen implementation on all 782 recorded frames and on
+the full canonical 356-step trajectory. The single preregistered consumed-cell
+smoke finished in 28.4s with progress `0.964664`, zero damage and zero collisions,
+matching the independently reproduced reference exactly. This justifies the local
+runtime repair but is diagnostic, reused-cell evidence: it does not establish
+unseen-track generalization or SOTA. See
+`experiments/stable-completion-controller-v1-result.json` for hashes and raw-log
+pointers.
 
 ## Runtime And Infrastructure
 

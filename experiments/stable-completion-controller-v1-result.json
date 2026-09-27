@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "experiment": "stable-completion-controller-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_RESTORATION",
+  "classification": "INCOMPARABLE",
+  "result_recorded_after_execution": true,
+  "preregistered_protocol_sha256": "ec2f80c59913ed60327101ed20b67310042e50297f8bfd4196651816e68bfcc3",
+  "implementation_decision": "Adopt the source-pinned controller for the local bare-checkpoint runtime; do not promote it as SOTA.",
+  "lineage": {
+    "base_commit": "1eca7123ddd0882d5850966c645af9d1c6455a41",
+    "candidate_commit": "95f3e8846c48828dd16753f422b16613890b8c62",
+    "evaluated_dirty_agent_sha256": "395253e1d5ea3d6ae1869bf58f3218cd51137f15efb4abd1d297ae4671215bb4",
+    "evaluated_agent_git_blob": "1f83fa282a7cfa32f7a38483fde1f353cea4681f",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "reference_commit": "52976fe1200115037a61c425ef049b789c740770",
+    "reference_tree": "12e5c3079ccb2383816e2b96ba4537d23703a7c1",
+    "reference_agent_blob": "5cf9e2506c9343bc17e6f8ccc72f96f079ea5e8f",
+    "reference_agent_sha256": "d496f38613472b877de99cdbe8f62eea21693bb17233a3ce8629fef38119b531"
+  },
+  "validation": {
+    "relevant_tests": "92 passed",
+    "pre_package_test_full_windows_suite": "366 passed, 10 skipped",
+    "post_package_change_affected_suite": "75 passed",
+    "full_suite_collection_exception": "tests/test_drqv2_matched.py requires POSIX fcntl and cannot be collected by the Windows interpreter",
+    "recorded_jpeg_frame_differential": {
+      "input_log": ".haic-artifacts/runs/run-b0183cb5d3ed46be8be7a96663f86c3c.json",
+      "frames": 782,
+      "action_mismatches_against_52976fe": 0,
+      "interpretation": "Implementation-parity evidence after replay JPEG preprocessing; not an original observation replay or a performance/generalization result."
+    },
+    "independent_synthetic_sequences": {
+      "cases": 403,
+      "exact_matches": 403
+    },
+    "independent_package_audit": {
+      "archive_files": [
+        "agent.py",
+        "model.pt",
+        "action_smoothing.py",
+        "action_representation.py"
+      ],
+      "static_violations": 0,
+      "initialization_seconds": 1.8,
+      "recorded_frame_max_action_ms": 9.5,
+      "visible_road_action": [0.0, 0.08, 0.0]
+    }
+  },
+  "map": {
+    "kind": "official",
+    "track_id": 1,
+    "geometry_seed": 42,
+    "max_steps": 2000,
+    "frame_skip": 4,
+    "file_sha256": "af642f6cf06e5c75927f6b3b2de656ebb42d59dd9f618c1aa7aa71f681f7bc07",
+    "fingerprint": "e8c90bd6dfdf964b",
+    "canonical_track_sha256": "51e6d42d152621761f757298a048be44ec8c138065c93ce7cff6627d9534fa17"
+  },
+  "artifacts": {
+    "run_log": ".haic-artifacts/runs/stable-completion-controller-v1.json",
+    "run_log_sha256": "f0f66455bcb0b8160174bc0f49f8227c282d5cbffc5cf33b2888d2d231141740",
+    "historical_reproduction_log": ".haic-artifacts/runs/historical-52976fe-reproduction.json",
+    "historical_reproduction_sha256": "a3539e8df04a61dcae98cfe8b28cd7ec155b22b8aaac64c09a98fa548485d719",
+    "control_log": ".haic-artifacts/runs/run-b0183cb5d3ed46be8be7a96663f86c3c.json",
+    "control_log_sha256": "7cb0ebdb0612c28c099b7c5b00ccb8d5bd19278590db5cab1e86b8e5d65dfa75",
+    "canonical_step_trace_sha256": "4a393a354671038f881c29fdbdabed236d37ce7b700cf216f1895250093df5a1",
+    "trace_matches_reference": true
+  },
+  "summary": {
+    "finished": true,
+    "decisions": 356,
+    "progress": 0.9646643109540636,
+    "lap_time_ms": 28400,
+    "damage": 0.0,
+    "collision_count": 0,
+    "retire_reason": null
+  },
+  "diagnostic_delta_from_control": {
+    "finish": "false -> true",
+    "progress": 0.1484098939929328,
+    "decisions": -426,
+    "damage": 0.0,
+    "collision_count": 0
+  },
+  "limitations": [
+    "All performance executions reuse one consumed track/seed; deterministic repetitions are not independent samples.",
+    "The active-control artifact labels the map official_plus_custom with a different fingerprint, although its empty custom set and canonical track match; strict protocol comparison is therefore limited.",
+    "The run log does not embed policy source hash; lineage is bound by both the pre/post dirty-tree byte SHA and the Git-clean agent blob because checkout EOL normalization changes raw bytes.",
+    "Execution used local Windows CPU rather than the official Linux submission container; package, latency, RSS, and official resource gates were not established by this study.",
+    "This restores the effective runtime controller; it does not improve the neural weights in model.pt, which remain bypassed after road detection.",
+    "The heuristic consumes only the newest grayscale frame and remains threshold-sensitive; one track/seed provides no unseen-geometry or obstacle generalization evidence.",
+    "There is no matched comparison with the frozen DrQ or archived PPO candidates, and the active DrQ padding study was not changed.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent, so fresh evaluation, submission, SOTA comparison, and promotion remain blocked."
+  ]
+}

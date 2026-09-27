@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "name": "racing-line-hazard-recovery-v1",
+  "purpose": "consumed-development-controller-correctness-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-27T22:08:00+09:00",
+  "source_commit": "1eca7123ddd0882d5850966c645af9d1c6455a41",
+  "scope": {
+    "runtime": "bare model.pt routed through agent._RacingLineController",
+    "primary_change": "blocked-corridor longitudinal recovery policy",
+    "training": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "baseline": {
+    "agent_sha256": "155b1d91316e5da3c01dd5c42776dfc9bd75541b1bfe9ccb4ccaa840cc59d9c4",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "run_log": ".haic-artifacts/runs/run-b0183cb5d3ed46be8be7a96663f86c3c.json",
+    "run_log_sha256": "7cb0ebdb0612c28c099b7c5b00ccb8d5bd19278590db5cab1e86b8e5d65dfa75",
+    "cell": {"track_id": 1, "geometry_seed": 42, "status": "consumed-development"},
+    "summary": {
+      "finished": false,
+      "decisions": 782,
+      "progress": 0.8162544169611308,
+      "damage": 0.0,
+      "collision_count": 0,
+      "retire_reason": "off_track",
+      "last_progress_step": 680,
+      "no_progress_tail_decisions": 101
+    },
+    "reproduction": {
+      "duplicate_runs": 2,
+      "duplicate_outcome": "exact step/action/trajectory replay on the same cell",
+      "blocked_frames_with_gas_above_crawl": 218,
+      "tail_positive_gas_fraction": 0.752
+    }
+  },
+  "hypothesis": {
+    "failure": "After two hazard frames the controller replaces an active overspeed brake with gas, so the car accelerates while still outside the road envelope.",
+    "repair": "Preserve longitudinal braking while above the hazard target and emit only the bounded crawl command after speed is safe.",
+    "expected_effect": "Remove overspeed reacceleration without changing steering, perception thresholds, obstacle detection, neural weights, official environment files, or the frozen DrQ studies.",
+    "rejected_before_execution": "A proposed look-ahead hazard-steering change was rejected by the synthetic envelope test: the final near-road vehicle-envelope gate correctly retains authority when near and far road directions conflict. No steering change remains in this experiment."
+  },
+  "acceptance": {
+    "unit": [
+      "A persistent blocked view above hazard target speed must keep gas at zero and retain braking after the initial hold.",
+      "A persistent blocked view below hazard target speed may resume only HAZARD_CRAWL_GAS after the initial hold.",
+      "All existing controller, inference, contract, and submission tests pass."
+    ],
+    "recorded_replay": [
+      "No blocked frame may cancel an overspeed brake to apply gas."
+    ],
+    "consumed_development_smoke": {
+      "cell": {"track_id": 1, "geometry_seed": 42},
+      "run_count": 1,
+      "minimum_result": "strictly improve finish first, otherwise progress above 0.8162544169611308 without damage or collision regression",
+      "interpretation": "diagnostic only; this reused public cell cannot promote, unlock blind, or establish generalization"
+    }
+  },
+  "abort": [
+    "Any official interface, core, env_wrapper.py, damage.py, model.pt, DrQ protocol, run artifact, or reserved seed is modified.",
+    "The repair needs perception-threshold tuning or a second independent optimization axis.",
+    "Relevant tests regress or the consumed-development smoke fails the minimum result."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No fresh evaluation, submission, or SOTA claim is authorized until those sources are restored and audited."
+  ]
+}

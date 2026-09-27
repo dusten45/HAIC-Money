@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "experiment": "racing-line-hazard-recovery-v1",
+  "status": "rejected",
+  "classification": "REJECT",
+  "result_recorded_after_execution": true,
+  "preregistered_protocol_sha256": "88888c19d849a3a14c86b6be3aad3d21b158cfb3392ce9d57a7816470fa68103",
+  "reason": "The consumed-development smoke failed the preregistered minimum and introduced a severe collision regression.",
+  "implementation": "Preserve active overspeed braking during a persistent corridor hazard, then emit exactly HAZARD_CRAWL_GAS.",
+  "tests_before_smoke": "92 passed",
+  "run_log": ".haic-artifacts/runs/racing-line-hazard-recovery-v1.json",
+  "run_log_sha256": "3dd2a3fd9e4129588c5a66f74c2f1835049d43603904a96531d6980467bb885e",
+  "canonical_step_trace_sha256": "7538d61a959fff1a547a5c1a405da24951f794a326e83f4179015a2633b6ab2e",
+  "summary": {
+    "finished": false,
+    "decisions": 336,
+    "progress": 0.3568904593639576,
+    "lap_time_ms": null,
+    "damage": 1.0,
+    "collision_count": 5,
+    "retire_reason": "crash"
+  },
+  "diagnosis": "The corridor hazard was active in 680 of 782 recorded control frames, so applying the stronger longitudinal rule to the broad visual gate overconstrained ordinary driving and increased exposure to collisions.",
+  "rollback": "The implementation and its two candidate-specific tests were removed after this result.",
+  "limitations": [
+    "The run log does not embed a source hash, so it is bound to the candidate only by the recorded dirty-tree audit.",
+    "This reused consumed-development cell is diagnostic and cannot promote a model or establish generalization."
+  ]
+}
