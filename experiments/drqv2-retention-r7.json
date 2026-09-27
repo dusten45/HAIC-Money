@@ -1,0 +1,90 @@
+{
+  "format": "haic-drq-retention-study-v1",
+  "study_id": "drqv2-retention-r7",
+  "r6_protocol_path": "experiments/drqv2-geometry-mix-v1-r6.json",
+  "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "r6_contract": "inherit-learner-budget-geometry-environment-verbatim",
+  "r6_control": "existing completed six r6 runs; no additional control training",
+  "run_root": "runs/20260926-drqv2-retention-r7",
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "diagnostic_manifest_sha256": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+  "partition_contract": {
+    "online_training": "only the original 120 TRAIN catalog roads, tracks 1-4",
+    "source_training_replay": "original source checkpoint rolling replay, sequence IDs 31072..131071; evolving source-training behavior, not frozen final-actor demonstrations",
+    "train_diagnostic_cache": "reused 11 source-success cells; forward-only drift measurement; excluded from learner replay, actor preservation and lambda selection",
+    "held_out_confirmation_blind_official": "prohibited",
+    "development_only": true
+  },
+  "source_replay": {
+    "0": {
+      "checkpoint_path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "episode_ledger_path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/episodes.jsonl",
+      "episode_ledger_sha256": "d38f84661f92836a8d164f48d48cceb8e8c43c5f8e9a3f29f50257f1e52fe3e6"
+    },
+    "1": {
+      "checkpoint_path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/checkpoint.pt",
+      "checkpoint_sha256": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4",
+      "episode_ledger_path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl",
+      "episode_ledger_sha256": "568b07056916435bb53db0f3694a445f97728d4cb5fe2e316bdf4715788eeecd"
+    }
+  },
+  "replay_contract": {
+    "batch_size": 64,
+    "source_rows": 32,
+    "online_rows": 32,
+    "sample_without_replacement_per_pool": true,
+    "source_checkpoint_immutable": true,
+    "source_pool_is_not_the_r3_consumed_teacher_dataset": true,
+    "odd_batch_size": "not allowed: r6 batch size is frozen at 64"
+  },
+  "preservation_contract": {
+    "condition_r7a": "r6 DrQ Q1 actor objective only; no preservation term",
+    "condition_r7b": "r6 DrQ Q1 objective + lambda_preserve * mean action-axis MSE on raw 32 source replay states",
+    "teacher": "frozen source actor export paired by source seed; eval, requires_grad=False, no optimizer",
+    "encoder_update": "same as r6; actor and both critic encoders trainable",
+    "action_space": "native continuous deterministic tanh output; no pre-squash or privileged inputs"
+  },
+  "gradient_probe": {
+    "path": "runs/20260926-drqv2-retention-r7/gradient-scale-v1.json",
+    "sha256": "3069899b49aaaaff7156ea2cdff9b054bb78ac0dd1765924dd3b5246abc79d18"
+  },
+  "lambda_preserve": 0.5,
+  "diagnostic_cache": {
+    "path": "runs/20260926-drqv2-retention-r7/hybrid/first20-v2/first20-observations.npz",
+    "sha256": "2679b63c5569b9c2b6a3ecbc9f3461563560a5e44b0581103e2366fa46dc7f28",
+    "hybrid_result_path": "runs/20260926-drqv2-retention-r7/hybrid/first20-v2/result.json",
+    "hybrid_result_sha256": "5614b8c2a1c7b261857c3fde4f0a2896b525ba217a4a50acf28c1931efd84369",
+    "per_source_success_road_first_n": 20,
+    "source_success_cells": 11
+  },
+  "diagnostic_updates": [0, 1, 2000, 6384, 11384, 14576, 22768],
+  "interpretation": {
+    "strong_positive": "at least 9 of 11 existing source successes retained and at least 2 new successes",
+    "partial": "9-11 retained with 0-1 new successes; adaptation not established",
+    "failure": "most prior successes lost or r6-like early policy drift despite retention",
+    "no_promotion": true,
+    "no_post_result_lambda_or_threshold_change": true
+  },
+  "code_revision_before_r7": "d1589a352b9ccc7c57ffe3e6040c72f93031a166",
+  "code_sha256": {
+    "scripts/train_drq_retention_r7.py": "a34877ddba0275d639347dda72825af19732d82e01e05a02b2bf3fc490f8c6b2",
+    "haic/algorithms/drq_v2/retention.py": "1c60e9fd951d9645ed1adf3a6db6ced628ba05a27d9a76e212a6a451062e9ff7",
+    "scripts/probe_drq_r7_gradient.py": "f222debaa7fd50616738b9b467f036a5bc413d6ecbdc9f1fe6bb4f88bf2d3554",
+    "scripts/diagnose_drq_r7_hybrids.py": "9f7783d67342932260ee7eca3662461949f27abe7ab46dca265ce71cdb28b99b"
+  },
+  "runs": [
+    {"source_seed": 0, "variant": "uniform", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-uniform-r7a", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "uniform", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-uniform-r7b", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "failure_weighted", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-failure_weighted-r7a", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "failure_weighted", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-failure_weighted-r7b", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "easy_retention", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-easy_retention-r7a", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "easy_retention", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-0-easy_retention-r7b", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 1, "variant": "uniform", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-uniform-r7a", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "uniform", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-uniform-r7b", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "failure_weighted", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-failure_weighted-r7a", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "failure_weighted", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-failure_weighted-r7b", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "easy_retention", "condition": "r7a", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-easy_retention-r7a", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "easy_retention", "condition": "r7b", "run_dir": "runs/20260926-drqv2-retention-r7/learner-1-easy_retention-r7b", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}}
+  ]
+}

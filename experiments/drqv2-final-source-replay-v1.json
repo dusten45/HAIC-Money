@@ -1,0 +1,77 @@
+{
+  "format": "haic-drq-final-source-replay-study-v1",
+  "study_id": "drqv2-final-source-replay-v1",
+  "run_root": "runs/20260927-drqv2-final-source-replay-v1",
+  "r6_protocol_path": "experiments/drqv2-geometry-mix-v1-r6.json",
+  "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "r7_protocol_path": "experiments/drqv2-retention-r7.json",
+  "r7_protocol_sha256": "774b4a7119b32bde359d5a6e5b789b69badd6c899bf15eebf5e5825b6e6a59c9",
+  "r6_manifest_sha256": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+  "r7_manifest_sha256": "0e4662102bd1d2f10536a04e9c7dfa8e48ef3952ba4d0782e6e4c89791835678",
+  "collection_protocol_path": "experiments/drqv2-final-source-replay-collection-v1.json",
+  "collection_protocol_sha256": "1fd60b9ab8a6d37171e5ed3989c63ba3cee059262159a68952563e99a01c28a2",
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "source_replay": {
+    "0": {
+      "pool_path": "runs/20260927-drqv2-final-source-replay-v1/collection/seed0/pool.pt",
+      "pool_sha256": "2ffcf546543b84ac4b157a705d0e9a765eab0f9b32985d87a7896441c42b73a1",
+      "receipt_path": "runs/20260927-drqv2-final-source-replay-v1/collection/seed0/receipt.json",
+      "receipt_sha256": "b364d9954a742abddcdf8d9d15b816a708b7bf6806b7a521e517b2e0fbb9038d"
+    },
+    "1": {
+      "pool_path": "runs/20260927-drqv2-final-source-replay-v1/collection/seed1/pool.pt",
+      "pool_sha256": "dbe53fa71e39eeb3f007547b10732bcec3e9eefd8b4da42ca33d58439836ac14",
+      "receipt_path": "runs/20260927-drqv2-final-source-replay-v1/collection/seed1/receipt.json",
+      "receipt_sha256": "3fdf12038b4babd1f1ae2e70a0eec5b12a415623358ccc5fe220c01f0aad620d"
+    }
+  },
+  "lambda_preserve": 0.5,
+  "replay_contract": {
+    "batch_size": 64,
+    "source_rows": 32,
+    "online_rows": 32,
+    "sample_without_replacement_per_pool": true,
+    "source_kind": "final_source_policy"
+  },
+  "diagnostic_cache": {
+    "path": "runs/20260926-drqv2-retention-r7/hybrid/first20-v2/first20-observations.npz",
+    "sha256": "2679b63c5569b9c2b6a3ecbc9f3461563560a5e44b0581103e2366fa46dc7f28",
+    "hybrid_result_path": "runs/20260926-drqv2-retention-r7/hybrid/first20-v2/result.json",
+    "hybrid_result_sha256": "5614b8c2a1c7b261857c3fde4f0a2896b525ba217a4a50acf28c1931efd84369",
+    "per_source_success_road_first_n": 20,
+    "source_success_cells": 11
+  },
+  "diagnostic_updates": [0, 1, 2000, 6384, 11384, 14576, 22768],
+  "development_gate": {
+    "source_success_cells": 11,
+    "source_failure_cells": 21,
+    "min_kept": 9,
+    "min_gained": 2,
+    "applies_per_mixture": true,
+    "no_confirmation_blind_or_official_action": true
+  },
+  "interpretation": "One source-pool-provenance treatment only; do not identify actor-only causality because collection episode lengths and fixed noise change decision-weighted exposure. No r7c, encoder freeze, lambda/ratio sweep or promotion after the gate.",
+  "code_sha256": {
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "drq_v2.py": "023407d773c22df679164d3b593e9ac7c1ba56c67e5b32caed1fb42a912f1e36",
+    "haic/algorithms/drq_v2/retention.py": "1c60e9fd951d9645ed1adf3a6db6ced628ba05a27d9a76e212a6a451062e9ff7",
+    "scripts/audit_drq_final_replay_samples.py": "2dc13fc274aeaf481191d2a272f3e4bd44a850e02cfee277f39a6dcddc126025",
+    "scripts/audit_drq_final_source_seeds.py": "e8a87b776ac948bb5396c96b63a0e37ed96f166782c183028ba9c3d257d70d97",
+    "scripts/collect_drq_final_source_replay.py": "9bf2a272442c98d4a852fae7979c5f3ee4a873f17d085971d39de02742a31410",
+    "scripts/diagnose_drq_final_replay.py": "09c6f5fdc999f43fdbbfc1e61f1bc7d10c3d27f5d975a352a9f4095cc755ec66",
+    "scripts/diagnose_drq_geometry_mix.py": "8243ca4215ebd57dd50fdb92067024ea5fb83b21bac621b6d3a2d802fe40c6a3",
+    "scripts/diagnose_drq_retention_r7.py": "ce36a8c0c769f9e646224823207a92b1b7d9a398c45d80122070c01669e310f2",
+    "scripts/train_drq_final_source_replay.py": "0d3f6e284e869a940ecc8715a98959dfe6036eec261c2784fac9126f93dd6615",
+    "scripts/train_drq_geometry_mix.py": "2f7838d5132f5515c5568407c88ba7707221a0d1abd32337ac3922981e43fc5e",
+    "scripts/train_drq_retention_r7.py": "a34877ddba0275d639347dda72825af19732d82e01e05a02b2bf3fc490f8c6b2",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  },
+  "runs": [
+    {"source_seed": 0, "variant": "uniform", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-0-uniform-final_source", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "failure_weighted", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-0-failure_weighted-final_source", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 0, "variant": "easy_retention", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-0-easy_retention-final_source", "rng_seeds": {"track_seed": 102000, "geometry_seed": 103000, "actor_rng_seed": 104000, "replay_rng_seed": 105000, "target_noise_seed": 106000, "update_rng_seed": 107000}},
+    {"source_seed": 1, "variant": "uniform", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-1-uniform-final_source", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "failure_weighted", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-1-failure_weighted-final_source", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}},
+    {"source_seed": 1, "variant": "easy_retention", "condition": "final_source", "run_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source", "rng_seeds": {"track_seed": 102001, "geometry_seed": 103001, "actor_rng_seed": 104001, "replay_rng_seed": 105001, "target_noise_seed": 106001, "update_rng_seed": 107001}}
+  ]
+}

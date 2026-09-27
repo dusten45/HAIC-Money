@@ -87,3 +87,81 @@ and episode/trace records also retain reward, progress, damage, termination,
 collision, action, and sparse road-location telemetry. The diagnostic is
 unranked, development-only evidence: no variant is selected or promoted, and no
 fresh held-out, confirmation, blind, or official HAIC evaluation occurred.
+
+## Separately Frozen r7 Retention Follow-Up
+
+The subsequently authorized r7 study is **not** an amendment or restart of
+the r4/r5/r6 protocols. The independent
+[`r7 protocol`](../../../experiments/drqv2-retention-r7.json) (SHA-256
+`774b4a7119b32bde359d5a6e5b789b69badd6c899bf15eebf5e5825b6e6a59c9`)
+retained the original geometry families, two source seeds, 120-road TRAIN
+catalog, learner/augmentation/optimizer/encoder updates, and 32,768-decision/
+22,768-update budget. Across six arms each, r7a enforced 32 original-source
+checkpoint replay rows plus 32 online rows in every batch with **no** new
+actor objective; r7b added only a TRAIN-gradient-probe-fixed source-action
+preservation term (`lambda=0.5`). Source checkpoints and old r6 results remained
+unchanged. All twelve TRAIN arms completed and the full offline
+[`sample-provenance audit`](../../../runs/20260926-drqv2-retention-r7/pre-evaluation-trace-audit-v1.json)
+passed before the reused 16-road TRAIN-DIAGNOSTIC reset.
+
+The new [`384-episode manifest`](../../../runs/20260926-drqv2-retention-r7/train-diagnostic/manifest.json)
+(SHA-256 `0e4662102bd1d2f10536a04e9c7dfa8e48ef3952ba4d0782e6e4c89791835678`)
+binds all trace hashes, and all 192 repeat pairs reproduced exactly. On 32
+actor-seed/road cells with 11 old source-success cells, the six preregistered
+comparisons produced the following canonical repeat-0 decomposition:
+
+| Mixture | r6 kept/new/total | r7a kept/new/total | r7b kept/new/total |
+|---|---:|---:|---:|
+| Uniform | 0/1/1 | 1/2/3 | 4/5/9 |
+| Failure-weighted | 1/3/4 | 3/7/10 | 1/7/8 |
+| Easy-retention | 1/2/3 | 1/4/5 | 5/5/10 |
+
+None met the pre-fixed >=9/11 old-success retention plus >=2/21 new-success
+signal; even 10/32 totals hide six to eight lost source-success cells. The
+completed [`result`](../../../experiments/drqv2-retention-r7-result.json) and
+[`A-M evidence report`](../../experiments/drqv2-retention-r7.md) retain
+actor/road-level gain/loss lists, exact per-arm replay/checkpoint/gradient/
+diagnostic hashes, early actor/encoder/critic cross-forward caveats and
+reproduction CLIs. The next *research question*, not an authorized learner
+run, is whether original-source replay actually covers the successful source
+policy's critical middle/late states. No model was selected, no development
+threshold revised, and no fresh held-out, confirmation, blind or official
+evaluation was opened by r7.
+
+## Migration Pause: Final-Source Retention Test
+
+The separately authorized [final-source replay study](../../experiments/drqv2-final-source-replay-v1.md)
+audited all eleven earlier successful source-action trajectories through 5,998
+decisions and all 99,994 valid original evolving-source replay starts per source
+seed, without learner updates or diagnostic data entering replay. Only 10, 4,
+36 and 56 source-encoder feature-near pairs (cosine >=0.95) were found across
+the 33 middle, corner, late and finish-approach representatives, respectively,
+versus 4,660 for early states; differing diagnostic/TRAIN roads and off-policy
+action/encoder drift prevent a causal explanation. The [offline receipts](../../experiments/drqv2-final-source-replay-v1.md)
+and immutable [collection protocol](../../../experiments/drqv2-final-source-replay-collection-v1.json)
+retain the parity, source/road provenance and metric denominators.
+
+Two directly collected, final-actor-frozen TRAIN source pools each contain
+100,000 decisions and 99,997 valid three-step starts. Five of six learners
+completed the [fixed six-arm protocol](../../../experiments/drqv2-final-source-replay-v1.json):
+both source seeds x the original three r7b geometry mixtures, with the same
+32 source + 32 online, lambda=0.5, initial weights, seeds, optimizer,
+augmentation, 32,768 decisions and 22,768 updates. The final
+`learner-1-easy_retention-final_source` stopped for instance migration after
+its valid step-16,384 checkpoint (SHA-256
+`9081cadf89539cfbde96206638f504c70e8b9e6659b57e80e2683fbdf0ef2637`),
+with append-only TRAIN ledger through step 21,037/gradient 11,037. There is
+no exact restart implementation, final receipt/checkpoint, semantic six-arm
+sample audit, or new TRAIN-DIAGNOSTIC episode. The >=9/11 kept AND >=2/21
+gained gate is **not yet evaluated**. The predeclared fail=>freeze decision
+cannot be invoked merely from the migration interruption.
+
+**Stop here for migration.** Transfer the source checkpoints/exports and old
+control/diagnostic artifacts along with both new sealed pools, five complete
+learner directories and the entire interrupted sixth directory before deleting
+the old instance. The [migration-stop receipt](../../../experiments/drqv2-final-source-replay-v1-migration-stop.json)
+records exact hashes/exposure. On a new instance, verify byte identities and
+consult the DrQ report and global migration handoff before deciding whether an
+explicitly authorized, separately audited sixth-arm reconstruction is feasible.
+Do not launch a seventh arm, change lambda/ratio/encoder, rerun occupied paths,
+open protected data, or evaluate the incomplete six-arm gate on your own.

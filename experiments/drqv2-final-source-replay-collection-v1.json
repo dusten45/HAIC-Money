@@ -1,0 +1,65 @@
+{
+  "format": "haic-drq-final-source-collection-v1",
+  "study_id": "drqv2-final-source-replay-v1",
+  "run_root": "runs/20260927-drqv2-final-source-replay-v1",
+  "r6_protocol_path": "experiments/drqv2-geometry-mix-v1-r6.json",
+  "r6_protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+  "r7_protocol_path": "experiments/drqv2-retention-r7.json",
+  "r7_protocol_sha256": "774b4a7119b32bde359d5a6e5b789b69badd6c899bf15eebf5e5825b6e6a59c9",
+  "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+  "schedule_algorithm": "original-retained-then-earlier-once-v1",
+  "schedule_scope": "For each seed, original source TRAIN episode containing retained sequence 31072, subsequent source TRAIN resets in order, then earlier original source TRAIN resets at most once. All pairs already interacted with in original source training; no replacement, no fresh cell, no success filtering. Stop with partial evidence on schedule exhaustion.",
+  "decisions": 100000,
+  "capacity": 100000,
+  "n_step": 3,
+  "gamma": 0.99,
+  "collection_noise_std": 0.05,
+  "environment": {
+    "frame_skip": 4,
+    "max_steps": 2000,
+    "obstacles": true,
+    "raw_reward": true,
+    "track_ids": [1, 2, 3, 4]
+  },
+  "sources": {
+    "0": {
+      "source_checkpoint_sha256": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "source_actor_sha256": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+      "original_ledger_sha256": "d38f84661f92836a8d164f48d48cceb8e8c43c5f8e9a3f29f50257f1e52fe3e6",
+      "schedule_sha256": "1a63af057d26b1b252426d69865398bcef94579eff860aed1c50ae3af618722f",
+      "collection_rng_seeds": {"action_noise_seed": 209270000}
+    },
+    "1": {
+      "source_checkpoint_sha256": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4",
+      "source_actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+      "original_ledger_sha256": "568b07056916435bb53db0f3694a445f97728d4cb5fe2e316bdf4715788eeecd",
+      "schedule_sha256": "bd17e3cc438aa9476a8257e3243edf13cbc58688fec4c820630486f14452325c",
+      "collection_rng_seeds": {"action_noise_seed": 209270001}
+    }
+  },
+  "cross_lane_audit": {
+    "path": "runs/20260927-drqv2-final-source-replay-v1/cross-lane-audit-v1.json",
+    "sha256": "29ea04a47ce8fc732c75e4424f650a2d44420d001f08e4f87ca9f0d865f735f4"
+  },
+  "runtime": {
+    "box2d-py": "2.3.5",
+    "gymnasium": "0.29.1",
+    "numpy": "1.26.0",
+    "opencv-python": "4.8.1.78",
+    "pygame": "2.6.1",
+    "python": "3.11.14",
+    "torch": "2.11.0+cu128"
+  },
+  "code_sha256": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "drq_v2.py": "023407d773c22df679164d3b593e9ac7c1ba56c67e5b32caed1fb42a912f1e36",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "haic/algorithms/drq_v2/teacher_study.py": "433f5b7ae9121cca6b62519939f1910d0296c3e61ccaf124cd4154e7ca059ed4",
+    "scripts/audit_drq_final_source_seeds.py": "e8a87b776ac948bb5396c96b63a0e37ed96f166782c183028ba9c3d257d70d97",
+    "scripts/collect_drq_final_source_replay.py": "9bf2a272442c98d4a852fae7979c5f3ee4a873f17d085971d39de02742a31410",
+    "scripts/train_drq_geometry_mix.py": "2f7838d5132f5515c5568407c88ba7707221a0d1abd32337ac3922981e43fc5e",
+    "scripts/train_drq_retention_r7.py": "a34877ddba0275d639347dda72825af19732d82e01e05a02b2bf3fc490f8c6b2",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  }
+}

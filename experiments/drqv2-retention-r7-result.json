@@ -1,0 +1,77 @@
+{
+  "format": "haic-drq-retention-result-v1",
+  "study_id": "drqv2-retention-r7",
+  "source_protocol": {
+    "r6_path": "experiments/drqv2-geometry-mix-v1-r6.json",
+    "r6_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+    "r7_path": "experiments/drqv2-retention-r7.json",
+    "r7_sha256": "774b4a7119b32bde359d5a6e5b789b69badd6c899bf15eebf5e5825b6e6a59c9"
+  },
+  "frozen_pretraining_evidence": {
+    "hybrid_result_path": "runs/20260926-drqv2-retention-r7/hybrid/first20-v2/result.json",
+    "hybrid_result_sha256": "5614b8c2a1c7b261857c3fde4f0a2896b525ba217a4a50acf28c1931efd84369",
+    "first20_cache_sha256": "2679b63c5569b9c2b6a3ecbc9f3461563560a5e44b0581103e2366fa46dc7f28",
+    "gradient_probe_path": "runs/20260926-drqv2-retention-r7/gradient-scale-v1.json",
+    "gradient_probe_sha256": "3069899b49aaaaff7156ea2cdff9b054bb78ac0dd1765924dd3b5246abc79d18",
+    "lambda_preserve": 0.5
+  },
+  "training": {
+    "source_actor_seeds": [0, 1],
+    "variants": ["uniform", "failure_weighted", "easy_retention"],
+    "conditions": ["r7a", "r7b"],
+    "complete_run_count": 12,
+    "decisions_per_run": 32768,
+    "updates_per_run": 22768,
+    "actor_encoder_trainable": true,
+    "source_rows_per_update": 32,
+    "online_rows_per_update": 32,
+    "actual_source_slots_per_run": 728576,
+    "actual_online_slots_per_run": 728576,
+    "actual_source_slots_all_runs": 8742912,
+    "actual_online_slots_all_runs": 8742912,
+    "original_source_replay_checkpoint_sha256_by_seed": {
+      "0": "4248750c7114afdf955ea85a60c842565498aba3a64e380fa81164c7eb340979",
+      "1": "c806c0998d4a9241917dd368581b9625e293c16ff45e0e1fb7bd5759dd20b3d4"
+    },
+    "catalog_sha256": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+    "per_arm_receipt_and_final_checkpoint_hashes": "runs/20260926-drqv2-retention-r7/pre-evaluation-trace-audit-v1.json",
+    "pre_evaluation_trace_audit_sha256": "826e6fad1a58ea5880c25b7f3354ab6cf06122099d803f465f1d7b02c95c0db9"
+  },
+  "development_diagnostic": {
+    "role": "reused TRAIN-DIAGNOSTIC",
+    "fresh_generalization": false,
+    "original_r6_manifest_sha256": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+    "manifest_path": "runs/20260926-drqv2-retention-r7/train-diagnostic/manifest.json",
+    "manifest_sha256": "0e4662102bd1d2f10536a04e9c7dfa8e48ef3952ba4d0782e6e4c89791835678",
+    "summary_sha256": "a127bdf1a179e97f134b43acd4e0a113de80106ee0e9ba1c0bfabcdf408d48f1",
+    "paired_json_sha256": "8f10b5dae1701c5832079bfec2298fd8f9f916cffc5a839ea0a4669bea9d5f37",
+    "catalog_geometry_count": 16,
+    "canonical_repeat": 0,
+    "repeats_per_role_road": 2,
+    "episode_count": 384,
+    "deterministic_repeat_pairs": 192,
+    "distinct_reused_road_count": 16,
+    "paired_actor_road_cells_per_arm": 32,
+    "source_success_cells": 11,
+    "source_success_distinct_roads": 9,
+    "source_failure_cells": 21,
+    "frozen_strong_signal": "source-success cells kept >=9/11 AND source-failure cells gained >=2/21",
+    "any_arm_passes_strong_signal": false,
+    "arms": [
+      {"variant": "uniform", "condition": "r7a", "r6_total": 1, "source_kept": 1, "source_lost": 10, "source_gained": 2, "both_failed": 19, "r7_total": 3, "distinct_gained_roads": 2, "roads_unfinished_by_both_sources_gained": 2},
+      {"variant": "uniform", "condition": "r7b", "r6_total": 1, "source_kept": 4, "source_lost": 7, "source_gained": 5, "both_failed": 16, "r7_total": 9, "distinct_gained_roads": 5, "roads_unfinished_by_both_sources_gained": 3},
+      {"variant": "failure_weighted", "condition": "r7a", "r6_total": 4, "source_kept": 3, "source_lost": 8, "source_gained": 7, "both_failed": 14, "r7_total": 10, "distinct_gained_roads": 6, "roads_unfinished_by_both_sources_gained": 4},
+      {"variant": "failure_weighted", "condition": "r7b", "r6_total": 4, "source_kept": 1, "source_lost": 10, "source_gained": 7, "both_failed": 14, "r7_total": 8, "distinct_gained_roads": 7, "roads_unfinished_by_both_sources_gained": 3},
+      {"variant": "easy_retention", "condition": "r7a", "r6_total": 3, "source_kept": 1, "source_lost": 10, "source_gained": 4, "both_failed": 17, "r7_total": 5, "distinct_gained_roads": 4, "roads_unfinished_by_both_sources_gained": 3},
+      {"variant": "easy_retention", "condition": "r7b", "r6_total": 3, "source_kept": 5, "source_lost": 6, "source_gained": 5, "both_failed": 16, "r7_total": 10, "distinct_gained_roads": 4, "roads_unfinished_by_both_sources_gained": 3}
+    ]
+  },
+  "interpretation": {
+    "observation": "All arms gain >=2 source-failed actor-road cells, but every arm loses >=6 of 11 original source-success cells. r7b reduces cached native-action L1 in every seed/mixture pair while failure-weighted retention worsens relative to r7a.",
+    "conclusion": "Neither frozen 50:50 source-training replay alone nor this single preservation weight establishes the preregistered source-success retention contract.",
+    "uncertainties": ["r7 replaces half r6 online samples per update", "original source-training replay is from an evolving actor", "early-frame cached actions are serially correlated", "reused 16 TRAIN-DIAGNOSTIC road IDs are development feedback, not fresh generalization"],
+    "held_out_or_confirmation_or_blind_opened": false,
+    "model_promoted": false,
+    "official_evaluation_or_score": false
+  }
+}

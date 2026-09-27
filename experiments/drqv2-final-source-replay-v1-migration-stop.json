@@ -1,0 +1,39 @@
+{
+  "format": "haic-drq-final-source-migration-stop-v1",
+  "recorded_at": "2026-09-27T05:20:53Z",
+  "cause": "user-directed Vast.ai instance migration shutdown; no further experiments",
+  "study_protocol_path": "experiments/drqv2-final-source-replay-v1.json",
+  "study_protocol_sha256": "1d891d82e8a5d04be1fed53265df3b36d96d76d2e3317b110626f5f15d4f4e64",
+  "arm": "learner-1-easy_retention-final_source",
+  "source_seed": 1,
+  "variant": "easy_retention",
+  "state": "partial; interrupted with SIGINT after existing step-16384 checkpoint; no final result",
+  "last_saved_checkpoint": {
+    "additional_online_step": 16384,
+    "path": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source/checkpoints/step-000016384/checkpoint.pt",
+    "size_bytes": 802467664,
+    "sha256": "9081cadf89539cfbde96206638f504c70e8b9e6659b57e80e2683fbdf0ef2637",
+    "actor_path": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source/checkpoints/step-000016384/actor.pt",
+    "actor_sha256": "3751318d80d94c43fdf88d258b65d7da7e6a61865acbdddec0eab1330e7c1181"
+  },
+  "exposure_after_checkpoint": {
+    "last_logged_additional_online_step": 21037,
+    "last_logged_gradient_step": 11037,
+    "last_logged_episode_id": 52,
+    "last_logged_track_id": 3,
+    "last_logged_geometry_seed": 3910800146,
+    "post_checkpoint_consumed_decisions": 4653,
+    "step_metrics_path": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source/step-metrics.jsonl",
+    "step_metrics_sha256": "79a46419b5cd3c6badea4d278aa1f5ac6efb2d34bb20a863fae91043baaf209c",
+    "drift_path": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source/drift.jsonl",
+    "drift_sha256": "b55824cd6dfb422223792ffa7f8721ccecacee2fa9303e9c19a55cbfdc26d0ac"
+  },
+  "transfer_dir": "runs/20260927-drqv2-final-source-replay-v1/learner-1-easy_retention-final_source",
+  "transfer_dir_size_bytes": 820660753,
+  "completed_other_arms": 5,
+  "sixth_arm_completed": false,
+  "final_train_diagnostic_exists": false,
+  "exact_resume_authorized_or_supported": false,
+  "interpretation": "partial TRAIN exposure, not six-arm gate result or a matched evaluation",
+  "stop_boundary": "The checkpoint is older than the interrupted ledger and the runner did not seal a new checkpoint, result, or episode ledger at interruption. Preserve all partial bytes; research resumption needs an explicitly new, audited decision after migration."
+}
