@@ -4,6 +4,8 @@
   "purpose": "consumed-video-guided-longitudinal-safety-repair",
   "status": "preregistered",
   "registered_at": "2026-09-28T00:53:47+09:00",
+  "clarified_at": "2026-09-28T01:12:00+09:00",
+  "clarification": "The isolated compound class is tested directly; final bare routing is checked only after the preregistered dependent controller gates are composed.",
   "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
   "scope": {
     "runtime": "bare model.pt only",
@@ -84,7 +86,7 @@
     "regression": [
       "The frozen stable-controller trace remains bit-exact.",
       "Existing controller, inference, policy-routing, and package tests pass.",
-      "Bare state-dict routing selects the compound controller while DrQ, explicit exports, and HAIC paths remain unchanged."
+      "The compound controller is directly testable as an isolated stage; after dependent gates, bare state-dict routing selects the final subclass while DrQ, explicit exports, and HAIC paths remain unchanged."
     ],
     "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
   },

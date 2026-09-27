@@ -1134,6 +1134,40 @@ class _StableCompletionController:
             dtype=np.float32,
         )
 
+    def _adjust_obstacle_steering(
+        self,
+        *,
+        base_steering: float,
+        obstacle_bias: float,
+        straight: bool,
+    ) -> float:
+        """Extension point whose default preserves the frozen controller."""
+        del straight
+        return base_steering + obstacle_bias
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        """Extension point whose default preserves the frozen controller."""
+        del curve_target_speed, obstacle
+        return target_speed
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        """Extension point whose default preserves the frozen controller."""
+        del straight, obstacle
+        return gas, brake
+
     def act(self, observation) -> np.ndarray:
         frame = self._frame(observation)
         if frame is None:
@@ -1165,9 +1199,10 @@ class _StableCompletionController:
         else:
             steering = 0.016 * center_offset + 0.012 * (far - near)
             steer_limit = self.MAX_STEER
-        target_speed = float(
+        curve_target_speed = float(
             np.clip(self.cruise_speed - 2.0 * road_sweep, 36.0, self.cruise_speed)
         )
+        target_speed = curve_target_speed
 
         obstacle = self._nearest_obstacle(frame, centers)
         if obstacle is not None:
@@ -1181,7 +1216,11 @@ class _StableCompletionController:
                 self._obstacle_side = candidate_side
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
-            steering += self._obstacle_side * 0.24 * urgency
+            steering = self._adjust_obstacle_steering(
+                base_steering=steering,
+                obstacle_bias=self._obstacle_side * 0.24 * urgency,
+                straight=straight,
+            )
             target_speed = min(target_speed, 47.0 if obstacle_y < 44.0 else 40.0)
             self._obstacle_missing = 0
         elif self._obstacle_side != 0.0:
@@ -1194,6 +1233,11 @@ class _StableCompletionController:
         if self._target_speed is not None:
             target_speed = 0.65 * self._target_speed + 0.35 * target_speed
         self._target_speed = target_speed
+        target_speed = self._adjust_target_speed(
+            target_speed=target_speed,
+            curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
         if not straight and abs(steering) > 0.28:
             target_speed = min(target_speed, 44.0)
         speed = self._estimate_speed(frame)
@@ -1201,6 +1245,12 @@ class _StableCompletionController:
 
         if not straight and abs(steering) > 0.28:
             gas = min(gas, self.MAX_GAS * 0.5)
+        gas, brake = self._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         if (
             self._last_steer != 0.0
@@ -1218,6 +1268,71 @@ class _StableCompletionController:
         steering = float(np.clip(steering, -steer_limit, steer_limit))
         self._last_steer = steering
         return np.asarray([steering, gas, brake], dtype=np.float32)
+
+
+class _CompoundHazardController(_StableCompletionController):
+    """Add immediate longitudinal margin for obstacle-adjacent sharp bends."""
+
+    CURVE_TARGET_FLOOR = 36.0
+    COMPOUND_TARGET_SPEED = 30.0
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        if obstacle is not None and curve_target_speed <= self.CURVE_TARGET_FLOOR:
+            return min(target_speed, self.COMPOUND_TARGET_SPEED)
+        return target_speed
+
+
+class _CurveAwareObstacleController(_CompoundHazardController):
+    """Keep obstacle avoidance from cancelling the visible bend command."""
+
+    MIN_CURVE_RETENTION = 0.5
+
+    def _adjust_obstacle_steering(
+        self,
+        *,
+        base_steering: float,
+        obstacle_bias: float,
+        straight: bool,
+    ) -> float:
+        proposed = base_steering + obstacle_bias
+        if straight or base_steering * obstacle_bias >= 0.0:
+            return proposed
+        direction = 1.0 if base_steering > 0.0 else -1.0
+        minimum = self.MIN_CURVE_RETENTION * abs(base_steering)
+        return direction * max(direction * proposed, minimum)
+
+
+class _GuardedCompletionController(_CurveAwareObstacleController):
+    """Final bare-checkpoint policy with conservative clear-straight pace."""
+
+    CLEAR_STRAIGHT_MAX_GAS = 0.10
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        if (
+            straight
+            and obstacle is None
+            and gas > 0.0
+            and brake == 0.0
+            and abs(self._last_steer) <= self.MAX_STEER_STEP
+        ):
+            gas = min(
+                gas * (self.CLEAR_STRAIGHT_MAX_GAS / self.MAX_GAS),
+                self.CLEAR_STRAIGHT_MAX_GAS,
+            )
+        return gas, brake
 
 
 class _RacingLineController(_ForwardCorridorController):
@@ -1721,7 +1836,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _StableCompletionController() if use_forward_controller else None
+            _GuardedCompletionController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None

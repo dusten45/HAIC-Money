@@ -4,6 +4,8 @@
   "purpose": "consumed-video-guided-lateral-safety-repair",
   "status": "preregistered",
   "registered_at": "2026-09-28T00:57:00+09:00",
+  "clarified_at": "2026-09-28T01:12:00+09:00",
+  "clarification": "A changed steering command necessarily changes the slew state. Non-conflict exactness is from matched state; the bounded post-conflict footprint is now explicitly tested for sign safety and convergence.",
   "source_commit": "68fbfd091cc281ffe966d2f1e73a2eba3d185c6c",
   "depends_on": "stable-compound-corner-speed-v1 synthetic and regression acceptance",
   "scope": {
@@ -50,8 +52,10 @@
   },
   "acceptance": {
     "synthetic": [
-      "For mirrored curves with an inside obstacle whose avoidance bias would cancel the bend, candidate steering keeps the obstacle-free curve sign and at least half its pre-obstacle magnitude; longitudinal action is bit-exact to the compound control.",
-      "For clear straights, straight obstacles, obstacle-free curves, and curve obstacles whose bias agrees with the road command, the full action is bit-exact to the compound control.",
+      "After four settled straight frames, mirrored curves with an inside obstacle whose avoidance bias would cancel the bend keep the obstacle-free curve sign and at least half its pre-obstacle magnitude; longitudinal action is bit-exact to the compound control.",
+      "From matched controller state, clear straights, straight obstacles, obstacle-free curves, and curve obstacles whose bias agrees with the road command are bit-exact to the compound control.",
+      "After a conflict changes steering state, longitudinal actions remain exact, the curve sign is preserved, and steering reconverges to compound control within four obstacle-free frames in the registered sharp-curve sequence.",
+      "Across the registered abrupt opposite-curve transition, the legacy slew may retain the prior sign for three frames; candidate output is no farther in that unsafe direction than compound control and turns more strongly after the shared gate releases.",
       "Mirrored conflict scenes have equal-magnitude opposite steering after identical state priming.",
       "Actions remain finite, bounded, gas/brake mutually exclusive, and deterministic after reset."
     ],
@@ -64,7 +68,7 @@
   },
   "abort": [
     "Any longitudinal action differs from the compound control.",
-    "Straight obstacle avoidance or same-direction curve avoidance changes.",
+    "Straight obstacle avoidance or same-direction curve avoidance changes from matched controller state.",
     "A track-specific position, time, progress, or identifier enters the runtime.",
     "A second lateral parameter or recovery redesign is needed to pass the preregistered assertions.",
     "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, or user video changes.",
@@ -72,7 +76,8 @@
   ],
   "deferred": [
     "Active road-loss recovery requires remembered geometry and a wider separate protocol; it is not bundled into this single-factor repair.",
-    "Road-footprint clearance planning requires calibrated camera observations unavailable in the supplied top-down videos."
+    "Road-footprint clearance planning requires calibrated camera observations unavailable in the supplied top-down videos.",
+    "The inherited 0.07 steering slew can retain a previous opposite-curve sign for up to three synthetic abrupt-transition frames. Increasing reversal slew is a separate unregistered factor; the candidate is required only to be no worse than control during that interval."
   ],
   "compliance_blockers": [
     "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",

@@ -4,6 +4,8 @@
   "purpose": "consumed-video-guided-straight-acceleration-repair",
   "status": "preregistered",
   "registered_at": "2026-09-28T00:53:47+09:00",
+  "clarified_at": "2026-09-28T01:12:00+09:00",
+  "clarification": "Clear-straight gating also requires residual steering to be small enough to settle to zero on the current frame; this closes a state-transition ambiguity before any environment execution.",
   "source_commit": "0c95cd31d22b431b14e7fa8cd1008a39f0164a78",
   "depends_on": "stable-compound-corner-speed-v1 and stable-curve-obstacle-arbitration-v1 synthetic and regression acceptance",
   "scope": {
@@ -38,14 +40,15 @@
     "base_max_gas": 0.08,
     "multiplier": 1.25,
     "cruise_speed": 48.0,
-    "predicate": "existing straight=true AND obstacle is None AND brake=0 AND gas>0",
+    "predicate": "existing straight=true AND obstacle is None AND brake=0 AND gas>0 AND abs(previous steering)<=MAX_STEER_STEP",
     "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
     "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
     "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"]
   },
   "acceptance": {
     "synthetic": [
-      "At straight speeds 0, 42, and 47, candidate steering and brake are exact to the compound control while positive gas is exactly 1.25x and no greater than 0.10.",
+      "At straight speeds 0, 42, and 47 from settled steering, candidate steering and brake are exact to the curve-aware control while positive gas is exactly 1.25x and no greater than 0.10.",
+      "After sustained curve steering, clear-straight throttle remains bit-exact to control until residual steering can settle to zero; only then is positive gas multiplied by 1.25.",
       "At straight overspeed, all actions are bit-exact to control and throttle remains zero.",
       "Obstacle-free curves, straight obstacles, compound hazards, curve-conflict arbitration, lost-road, invalid-input, and reset behavior are bit-exact to the curve-aware control.",
       "Actions remain finite, bounded, mutually exclusive in gas and brake, and deterministic after reset."

@@ -79,6 +79,380 @@ class TestVisionCorridorAgent(unittest.TestCase):
         controller.reset(None)
         np.testing.assert_array_equal(controller.act(observations[0]), expected[0])
 
+    def test_compound_hazard_controller_brakes_without_changing_steering(self):
+        from agent import _CompoundHazardController, _StableCompletionController
+
+        longitudinal_actions = []
+        for curve, obstacle_x in ((-0.75, 35), (0.75, 48)):
+            control = _StableCompletionController()
+            candidate = _CompoundHazardController()
+            for _ in range(4):
+                straight = _observation(speed=48.0)
+                control.act(straight)
+                candidate.act(straight)
+            hazard = _observation(
+                curve=curve,
+                obstacle_x=obstacle_x,
+                obstacle_y=50,
+                speed=48.0,
+            )
+
+            control_action = control.act(hazard)
+            candidate_action = candidate.act(hazard)
+
+            np.testing.assert_array_equal(candidate_action[:1], control_action[:1])
+            self.assertEqual(float(candidate_action[1]), 0.0)
+            self.assertGreaterEqual(float(candidate_action[2]), 0.20)
+            self.assertGreater(float(candidate_action[2]), float(control_action[2]))
+            longitudinal_actions.append(candidate_action[1:])
+
+            self.assertEqual(candidate._target_speed, control._target_speed)
+            clear_curve = _observation(curve=curve, speed=48.0)
+            np.testing.assert_array_equal(
+                candidate.act(clear_curve), control.act(clear_curve)
+            )
+
+        np.testing.assert_array_equal(
+            longitudinal_actions[0], longitudinal_actions[1]
+        )
+
+    def test_compound_hazard_controller_is_exact_outside_joint_predicate(self):
+        from agent import _CompoundHazardController, _StableCompletionController
+
+        observations = [
+            _observation(speed=0.0),
+            _observation(curve=0.75, speed=48.0),
+            _observation(obstacle_x=35, obstacle_y=50, speed=48.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        ]
+        control = _StableCompletionController()
+        candidate = _CompoundHazardController()
+
+        control_actions = np.asarray([control.act(item) for item in observations])
+        candidate_actions = np.asarray([candidate.act(item) for item in observations])
+
+        np.testing.assert_array_equal(candidate_actions, control_actions)
+        self.assertTrue(np.all(np.isfinite(candidate_actions)))
+        self.assertTrue(np.all(candidate_actions[:, 0] >= -1.0))
+        self.assertTrue(np.all(candidate_actions[:, 0] <= 1.0))
+        self.assertTrue(np.all(candidate_actions[:, 1:] >= 0.0))
+        self.assertTrue(np.all(candidate_actions[:, 1:] <= 1.0))
+        self.assertFalse(
+            np.any((candidate_actions[:, 1] > 0.0) & (candidate_actions[:, 2] > 0.0))
+        )
+
+        candidate.reset(None)
+        first = candidate.act(observations[0])
+        candidate.act(observations[1])
+        candidate.reset(None)
+        np.testing.assert_array_equal(candidate.act(observations[0]), first)
+
+    def test_compound_hazard_controller_uses_exact_registered_boundary(self):
+        from agent import _CompoundHazardController, _StableCompletionController
+
+        controller = _CompoundHazardController()
+        obstacle = (50.0, 35.0, 40.0)
+
+        self.assertEqual(
+            controller._adjust_target_speed(
+                target_speed=44.0,
+                curve_target_speed=36.0,
+                obstacle=obstacle,
+            ),
+            30.0,
+        )
+        self.assertEqual(
+            controller._adjust_target_speed(
+                target_speed=44.0,
+                curve_target_speed=float(np.nextafter(36.0, 37.0)),
+                obstacle=obstacle,
+            ),
+            44.0,
+        )
+
+        for curve, expected_brake in ((0.20, None), (0.25, 0.216)):
+            control = _StableCompletionController()
+            candidate = _CompoundHazardController()
+            for _ in range(4):
+                control.act(_observation(speed=48.0))
+                candidate.act(_observation(speed=48.0))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=37,
+                obstacle_y=50,
+                speed=48.0,
+            )
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+            if expected_brake is None:
+                np.testing.assert_array_equal(candidate_action, control_action)
+            else:
+                np.testing.assert_array_equal(candidate_action[:2], control_action[:2])
+                self.assertAlmostEqual(
+                    float(candidate_action[2]), expected_brake, places=6
+                )
+        self.assertEqual(
+            controller._adjust_target_speed(
+                target_speed=44.0,
+                curve_target_speed=36.0,
+                obstacle=None,
+            ),
+            44.0,
+        )
+
+    def test_curve_aware_controller_preserves_turn_in_against_conflicting_avoidance(self):
+        from agent import _CompoundHazardController, _CurveAwareObstacleController
+
+        candidate_steering = []
+        for curve, obstacle_x in ((-0.75, 35), (0.75, 48)):
+            control = _CompoundHazardController()
+            candidate = _CurveAwareObstacleController()
+            control_curve_only = _CompoundHazardController()
+            straight = _observation(speed=48.0)
+            for _ in range(4):
+                control.act(straight)
+                candidate.act(straight)
+                control_curve_only.act(straight)
+            hazard = _observation(
+                curve=curve,
+                obstacle_x=obstacle_x,
+                obstacle_y=50,
+                speed=48.0,
+            )
+            curve_only = _observation(curve=curve, speed=48.0)
+
+            control_action = control.act(hazard)
+            candidate_action = candidate.act(hazard)
+            curve_action = control_curve_only.act(curve_only)
+
+            np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+            self.assertEqual(
+                np.sign(float(candidate_action[0])), np.sign(float(curve_action[0]))
+            )
+            self.assertGreaterEqual(
+                abs(float(candidate_action[0])), 0.5 * abs(float(curve_action[0]))
+            )
+            self.assertGreater(
+                abs(float(candidate_action[0])), abs(float(control_action[0]))
+            )
+            candidate_steering.append(float(candidate_action[0]))
+
+        self.assertAlmostEqual(candidate_steering[0], -candidate_steering[1], places=7)
+
+    def test_curve_aware_projection_boundaries(self):
+        from agent import _CurveAwareObstacleController
+
+        controller = _CurveAwareObstacleController()
+
+        cases = (
+            (0.18, -0.24, False, 0.09),
+            (-0.18, 0.24, False, -0.09),
+            (0.18, -0.05, False, 0.13),
+            (0.18, 0.24, False, 0.42),
+            (0.0, -0.24, False, -0.24),
+            (0.18, -0.24, True, -0.06),
+        )
+        for base, bias, straight, expected in cases:
+            with self.subTest(base=base, bias=bias, straight=straight):
+                self.assertAlmostEqual(
+                    controller._adjust_obstacle_steering(
+                        base_steering=base,
+                        obstacle_bias=bias,
+                        straight=straight,
+                    ),
+                    expected,
+                    places=7,
+                )
+
+    def test_curve_aware_conflict_state_converges_after_obstacle_clears(self):
+        from agent import _CompoundHazardController, _CurveAwareObstacleController
+
+        control = _CompoundHazardController()
+        candidate = _CurveAwareObstacleController()
+        straight = _observation(speed=48.0)
+        for _ in range(4):
+            control.act(straight)
+            candidate.act(straight)
+        conflict = _observation(
+            curve=-0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=48.0,
+        )
+        control.act(conflict)
+        candidate.act(conflict)
+        clear_curve = _observation(curve=-0.75, speed=48.0)
+
+        traces = [
+            (control.act(clear_curve), candidate.act(clear_curve))
+            for _ in range(4)
+        ]
+
+        for control_action, candidate_action in traces:
+            np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+            self.assertLess(float(candidate_action[0]), 0.0)
+        self.assertTrue(
+            any(
+                not np.array_equal(control_action, candidate_action)
+                for control_action, candidate_action in traces[:-1]
+            )
+        )
+        np.testing.assert_array_equal(traces[-1][0], traces[-1][1])
+
+    def test_curve_aware_opposite_curve_transition_is_no_worse_than_control(self):
+        from agent import _CompoundHazardController, _CurveAwareObstacleController
+
+        control = _CompoundHazardController()
+        candidate = _CurveAwareObstacleController()
+        right_curve = _observation(curve=0.75, speed=48.0)
+        for _ in range(5):
+            control.act(right_curve)
+            candidate.act(right_curve)
+        left_conflict = _observation(
+            curve=-0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=48.0,
+        )
+
+        traces = [
+            (control.act(left_conflict), candidate.act(left_conflict))
+            for _ in range(6)
+        ]
+
+        for control_action, candidate_action in traces:
+            np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+            if float(control_action[0]) > 0.0:
+                self.assertLessEqual(
+                    float(candidate_action[0]), float(control_action[0])
+                )
+        self.assertTrue(all(float(item[0][0]) > 0.0 for item in traces[:3]))
+        self.assertTrue(all(float(item[1][0]) > 0.0 for item in traces[:3]))
+        self.assertLess(float(traces[3][1][0]), 0.0)
+        self.assertLess(float(traces[-1][1][0]), float(traces[-1][0][0]))
+
+    def test_curve_aware_controller_is_exact_without_steering_conflict(self):
+        from agent import _CompoundHazardController, _CurveAwareObstacleController
+
+        observations = [
+            _observation(speed=24.0),
+            _observation(obstacle_x=35, obstacle_y=50, speed=24.0),
+            _observation(curve=-0.75, obstacle_x=45, obstacle_y=50, speed=48.0),
+            _observation(curve=0.75, obstacle_x=38, obstacle_y=50, speed=48.0),
+            _observation(curve=0.75, speed=48.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        ]
+        control = _CompoundHazardController()
+        candidate = _CurveAwareObstacleController()
+
+        np.testing.assert_array_equal(
+            np.asarray([candidate.act(item) for item in observations]),
+            np.asarray([control.act(item) for item in observations]),
+        )
+
+    def test_guarded_controller_only_raises_clear_straight_throttle(self):
+        from agent import _CurveAwareObstacleController, _GuardedCompletionController
+
+        for speed in (0.0, 42.0, 47.0):
+            control_action = _CurveAwareObstacleController().act(
+                _observation(speed=speed)
+            )
+            candidate_action = _GuardedCompletionController().act(
+                _observation(speed=speed)
+            )
+
+            np.testing.assert_array_equal(candidate_action[[0, 2]], control_action[[0, 2]])
+            self.assertAlmostEqual(
+                float(candidate_action[1]),
+                float(control_action[1]) * 1.25,
+                places=7,
+            )
+            self.assertLessEqual(float(candidate_action[1]), float(np.float32(0.10)))
+
+        overspeed = _observation(speed=55.0)
+        np.testing.assert_array_equal(
+            _GuardedCompletionController().act(overspeed),
+            _CurveAwareObstacleController().act(overspeed),
+        )
+
+    def test_guarded_controller_preserves_non_clear_straight_actions(self):
+        from agent import _CurveAwareObstacleController, _GuardedCompletionController
+
+        observations = [
+            _observation(curve=-0.75, speed=24.0),
+            _observation(obstacle_x=35, obstacle_y=50, speed=24.0),
+            _observation(
+                curve=-0.75,
+                obstacle_x=35,
+                obstacle_y=50,
+                speed=48.0,
+            ),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        ]
+        control = _CurveAwareObstacleController()
+        candidate = _GuardedCompletionController()
+
+        control_actions = np.asarray([control.act(item) for item in observations])
+        candidate_actions = np.asarray([candidate.act(item) for item in observations])
+
+        np.testing.assert_array_equal(candidate_actions, control_actions)
+        candidate.reset(None)
+        first = candidate.act(observations[0])
+        candidate.act(observations[1])
+        candidate.reset(None)
+        np.testing.assert_array_equal(candidate.act(observations[0]), first)
+
+    def test_guarded_controller_waits_for_residual_steering_to_settle(self):
+        from agent import _CurveAwareObstacleController, _GuardedCompletionController
+
+        control = _CurveAwareObstacleController()
+        candidate = _GuardedCompletionController()
+        curve = _observation(curve=-0.75, speed=0.0)
+        for _ in range(4):
+            control.act(curve)
+            candidate.act(curve)
+        straight = _observation(speed=0.0)
+
+        while abs(candidate._last_steer) > candidate.MAX_STEER_STEP:
+            control_action = control.act(straight)
+            candidate_action = candidate.act(straight)
+            np.testing.assert_array_equal(candidate_action, control_action)
+
+        settled_action = candidate.act(straight)
+        control_action = control.act(straight)
+        np.testing.assert_array_equal(settled_action[[0, 2]], control_action[[0, 2]])
+        self.assertAlmostEqual(
+            float(settled_action[1]), float(control_action[1]) * 1.25, places=7
+        )
+        self.assertAlmostEqual(float(settled_action[0]), 0.0, places=7)
+
+    def test_guarded_controller_combines_all_three_gates(self):
+        from agent import _GuardedCompletionController
+
+        controller = _GuardedCompletionController()
+        for _ in range(4):
+            controller.act(_observation(speed=48.0))
+
+        action = controller.act(
+            _observation(
+                curve=-0.75,
+                obstacle_x=35,
+                obstacle_y=50,
+                speed=48.0,
+            )
+        )
+
+        self.assertLess(float(action[0]), 0.0)
+        self.assertEqual(float(action[1]), 0.0)
+        self.assertGreaterEqual(float(action[2]), 0.20)
+
+        clear = _GuardedCompletionController()
+        actions = [clear.act(_observation(speed=0.0)) for _ in range(5)]
+        for clear_action in actions:
+            np.testing.assert_array_equal(
+                clear_action, np.asarray([0.0, 0.10, 0.0], dtype=np.float32)
+            )
+
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent
 
