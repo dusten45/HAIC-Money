@@ -1,0 +1,47 @@
+{
+  "format": "haic-tdmpc2-final-100k-freeze-parity-v1",
+  "status": "read_only_consumed_TRAIN_checkpoint_diagnostic",
+  "operator": "scripts/diagnose_tdmpc2_freeze_parity.py",
+  "operator_sha256": "b57134c543c2cce4cc6550d21f9edf23370701daaf5f13ae3b5e03dfbbf987cf",
+  "command": "OMP_NUM_THREADS=2 python -m scripts.diagnose_tdmpc2_freeze_parity --planner-mode-pair",
+  "source_protocol_sha256": "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec",
+  "source_result_sha256": "287470932dbba9a7eeed778a5be7762b736e6679d99fd29078c5103890a75a4b",
+  "source_checkpoint_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "training_ledger_sha256": "84f06ee4dcc8568bd5d384d1811252321ad5dc6a98ce19d18badb448d09123d7",
+  "step_ledger_sha256": "a94ce156afcb6e4f706474d6cf2d2ccb4754a868eb75a3eb4b53df5d2be37945",
+  "cursor_binder_sha256": "d2f3df9522257f2dfbffe5167571c5a491b7929acbbbcb3b84ebb0c2f8b91089",
+  "source_decisions": 100354,
+  "source_completed_episodes": 307,
+  "environment_resets": 0,
+  "optimizer_steps": 0,
+  "window_denominator": 4,
+  "archived_window_ids": [
+    {"label": "seed-random-ep0", "episode_id": 0, "start_step": 16, "shift_yx": [0, 0]},
+    {"label": "seed-random-ep1", "episode_id": 1, "start_step": 16, "shift_yx": [-1, 2]},
+    {"label": "late-finished-ep305", "episode_id": 305, "start_step": 16, "shift_yx": [2, -2]},
+    {"label": "late-nonfinish-ep306", "episode_id": 306, "start_step": 16, "shift_yx": [1, 1]}
+  ],
+  "crop_fixture": "Explicit aligned replicated-pad-3 integer shifts on CPU and GPU replace stochastic ShiftAug grid_sample for this calculation only; these are not historical source RNG offsets.",
+  "devices": "CPU Torch 2.1.0+cu121 and NVIDIA GeForce RTX 4060 Ti with strictly identical source-bound model weights",
+  "all_four_windows_within_predeclared_tolerances": true,
+  "maximum_absolute_difference": {
+    "encoded_latent": {"observed": 0.000005602836608886719, "tolerance": 0.0002},
+    "predicted_next_latent": {"observed": 0.0000015497207641601562, "tolerance": 0.0002},
+    "tanh_actor_prior_mean": {"observed": 0.000012487173080444336, "tolerance": 0.0003},
+    "reward_logits": {"observed": 0.00006580352783203125, "tolerance": 0.002},
+    "decoded_reward": {"observed": 0.00005078315734863281, "tolerance": 0.02},
+    "q_logits_all_five": {"observed": 0.00008487701416015625, "tolerance": 0.002},
+    "decoded_q_all_five": {"observed": 0.00014495849609375, "tolerance": 0.25},
+    "terminal_logits": {"observed": 0.000011444091796875, "tolerance": 0.002},
+    "terminal_probability": {"observed": 0.0000000016589183360338211, "tolerance": 0.0005}
+  },
+  "same_device_eval_mode_pair": {
+    "initial_rng_and_warm_start_identical": true,
+    "selected_elite_index_and_action_identical": true,
+    "planner_prev_mean_bit_identical": true,
+    "final_action_bit_identical": false,
+    "final_action_delta_l2": 0.08229389786720276,
+    "only_final_additive_gaussian_diff_reconstructed": true
+  },
+  "interpretation": "The source-bound final raw-target model's CPU and GPU forward outputs on four archived TRAIN H3 windows closely agree under explicit aligned crop fixtures, and a same-CPU planner pair isolates the training-only final Gaussian action perturbation. This rules out a large numeric discrepancy on these *selected offline inputs*, not the historically stochastic pixel shifts, CPU-versus-GPU trajectory divergence or actual cause of 0/8 frozen MPPI/prior finishes. Full CPU evaluation stored only action hashes, not exact failure-action or observation bytes; no protected/new-road data or environment reset was used. The later single-axis damage-target treatment is a separate hypothesis, not explained or validated by this result."
+}
