@@ -219,6 +219,47 @@ def test_prior_hook_has_identical_actions_and_rng_without_extra_forward(dim):
         assert operator.action_3d(on[0][0]).shape == (3,)
 
 
+@pytest.mark.parametrize("dim", [2, 3])
+def test_one_ulp_elite_mean_overflow_is_diagnostic_only(dim):
+    operator._seed(11)
+    model = FakeModel(dim)
+
+    class RoundedPlanner(FakePlanner):
+        def plan(self, obs, *, t0=False):
+            applied = super().plan(obs, t0=t0)
+            self.prev_mean[0, 0] = torch.nextafter(
+                torch.tensor(1.0), torch.tensor(2.0))
+            return applied
+
+    pixels = np.zeros((4, 64, 64), np.uint8)
+    planner = RoundedPlanner(model)
+    action, metrics = operator._planned_action(model, planner, pixels, "cpu", t0=True)
+    assert metrics is not None
+    assert metrics["mppi_weighted_elite_mean_clipped"] is True
+    assert metrics["mppi_weighted_elite_mean_raw_max_abs"] > 1
+    assert metrics["mppi_weighted_elite_mean"][0] == 1
+    np.testing.assert_allclose(metrics["applied_exploration_noised_action"], action)
+    native = operator.action_2d if dim == 2 else operator.action_3d
+    assert native(action).shape == (3,)
+    assert native(np.asarray(metrics["mppi_weighted_elite_mean"], dtype=np.float32)).shape == (3,)
+    np.testing.assert_array_equal(planner.prev_mean[0, 0].numpy(),
+                                  np.nextafter(np.float32(1), np.float32(2)))
+
+
+def test_material_elite_mean_overflow_remains_a_hard_error():
+    model = FakeModel(3)
+
+    class InvalidPlanner(FakePlanner):
+        def plan(self, obs, *, t0=False):
+            applied = super().plan(obs, t0=t0)
+            self.prev_mean[0, 0] = 1.01
+            return applied
+
+    with pytest.raises(ValueError, match="weighted elite mean materially"):
+        operator._planned_action(model, InvalidPlanner(model),
+                                 np.zeros((4, 64, 64), np.uint8), "cpu", t0=True)
+
+
 class FakeLearner(torch.nn.Module):
     def __init__(self, dim):
         super().__init__()

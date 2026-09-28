@@ -352,10 +352,17 @@ def _planned_action(model, planner, pixels: np.ndarray, device: str, *, t0: bool
     if (len(captured) != 1 or captured[0].shape != action.shape or mppi_mean.shape != action.shape
             or not np.isfinite(captured[0]).all() or not np.isfinite(mppi_mean).all()):
         raise ValueError("planner did not expose same-observation first policy-prior mean")
+    raw_mean_max_abs = float(np.max(np.abs(mppi_mean)))
+    if raw_mean_max_abs > 1 + 1e-6:
+        raise ValueError(f"planner weighted elite mean materially exceeds [-1,1]: max_abs={raw_mean_max_abs:.9g}")
+    # Float32 normalization of weighted elites may exceed one by one ULP.
+    mppi_mean = np.clip(mppi_mean, -1, 1)
     prior = captured[0]
     return action, {"kind": "first_planner_pi_tanh_mean_vs_mppi_weighted_elite_mean",
                     "prior_mean": prior.tolist(),
                     "mppi_weighted_elite_mean": mppi_mean.tolist(),
+                    "mppi_weighted_elite_mean_raw_max_abs": raw_mean_max_abs,
+                    "mppi_weighted_elite_mean_clipped": raw_mean_max_abs > 1,
                     "delta": (mppi_mean - prior).tolist(),
                     "delta_l2": float(np.linalg.norm(mppi_mean - prior)),
                     "applied_exploration_noised_action": action.tolist(),
