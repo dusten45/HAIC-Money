@@ -1,0 +1,78 @@
+{
+  "format": "haic-tdmpc2-long-train-v1",
+  "purpose": "consumed-TRAIN-development",
+  "upstream_revision": "e9f59321933cbc8e11a002b842adc7d4ffae8ff1",
+  "source_sha256": {
+    "scripts/train_tdmpc2_long.py": "b20f7f05f3629a02a7af4c5bf3da00347e6dbb5f24aa90054b2d8a8b4f494ff9",
+    "haic/algorithms/tdmpc2/__init__.py": "9b993133e8341c45c159cb75770dfa2897c0a22ea4cee8dde22a51af24ea5b97",
+    "haic/algorithms/tdmpc2/action_2d.py": "4b72f84a259c8dd9756501a7b6a9d7aa82c387e65ab28541b88122ed787c4b96",
+    "haic/algorithms/tdmpc2/haic_env.py": "e1b17451b862f26f9389992e907b37586a263d6470c3c8102857abdb592a4db2",
+    "haic/algorithms/tdmpc2/model.py": "a121d8688e5ab954abe2e6468ca84760e035f15b49004b695fc465696eb90c65",
+    "haic/algorithms/tdmpc2/replay.py": "bef63630556a1adbfb26278190c2549f4415ab1c90b5775d920187cfc4576254",
+    "haic/algorithms/tdmpc2/learner.py": "e0f1c814a5162b6cf34383a675ec10e768f3a046ac82c6500400cdfed23d2c9a",
+    "haic/algorithms/tdmpc2/planner.py": "e0c114570343fbd74f20611732c85766edbb1b33684527d2c7b37bda528eb009",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204"
+  },
+  "r6_protocol": {
+    "path": "experiments/drqv2-geometry-mix-v1-r6.json",
+    "sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab"
+  },
+  "prior_consumption": {
+    "path": "experiments/dreamerv3-reused-train-diagnostic-v1.json",
+    "sha256": "2e4a837795abad44623653f789d966cdeed3bb93b154bb2b17cbff18d1c35386"
+  },
+  "exploration_protocol": {
+    "path": "experiments/tdmpc2-exploration-v2.json",
+    "sha256": "2013024e45e80dd3dd75c532ccb378b9df9a10d6627344487ecb20fbbae4b48f"
+  },
+  "exploration_result": {
+    "path": "experiments/tdmpc2-exploration-v2-result.json",
+    "sha256": "9bf23985562495298a36600ce8b298d18b6860d1558f7c27cfecb629fa0002d4"
+  },
+  "selection": {"arm": "independent_3d", "action_dim": 3},
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800001},
+    {"track_id": 1, "geometry_seed": 3910800004},
+    {"track_id": 1, "geometry_seed": 3910800034},
+    {"track_id": 1, "geometry_seed": 3910800085}
+  ],
+  "episode_schedule": [0, 1, 2, 3],
+  "environment": {"track_id": 1, "obstacles": true, "frame_skip": 4, "reward": "raw"},
+  "run_dir": "runs/tdmpc2-long-20260928-v1",
+  "training": {
+    "seed": 733,
+    "decision_cap": 102000,
+    "seed_steps": 10000,
+    "pretrain_updates": 10000,
+    "update_cap": 102000,
+    "updates_per_post_seed_decision": 1,
+    "max_steps": 2000,
+    "replay_capacity": 120000,
+    "batch_size": 256,
+    "device": "cuda",
+    "horizon": 3,
+    "discount": 0.995,
+    "rho": 0.5,
+    "model_size": 5,
+    "num_bins": 101,
+    "augmentation_pad": 3,
+    "episodic": true,
+    "observation_shape": [4, 64, 64],
+    "action_dim": 3
+  },
+  "checkpoint_targets": [20000, 40000, 70000, 100000],
+  "resources": {
+    "min_cgroup_available_bytes": 17179869184,
+    "min_disk_available_bytes": 17179869184,
+    "max_wall_seconds": 21600
+  },
+  "seed_schedule": "exactly 10000 uniform actions; pretrain after decision 10000 before first planned action; v2 used 10001 uniform actions"
+}
