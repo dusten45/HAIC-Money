@@ -20,7 +20,7 @@
 |---|---|---|
 | `haic_agent/*_runtime.py` (`runtime_config.py` 제외) | `haic_agent/variants/` | 실험용 actor 변형을 한 패키지에 모은다. 내부 import, 연구 스크립트, 테스트, 향후 패키지 생성 코드의 참조를 갱신한다. |
 | `training/curve_brake_screen.py`, `evaluate_hazard_potential_tune.py`, `evaluate_lagrangian_tune.py`, `preflight_hazard_potential_screen.py`, `preflight_lagrangian_screen.py` | `training/diagnostics/` | 등록 프로필이 아닌 진단 코드를 묶고 import 및 `__file__` 기반 저장소 루트 계산을 갱신한다. |
-| `research/*_20260928.py` | `research/scripts/2026_09_28/` | 날짜별 직접 진단·비교·로컬 패키지 생성 스크립트를 묶는다. 스크립트 간 import, 상대 경로, 문서의 현재 실행 안내를 갱신한다. |
+| `research/*_20260928.py` | `research/scripts/y2026_09_28/` | 날짜별 직접 진단·비교·로컬 패키지 생성 스크립트를 묶는다. 스크립트 간 import, 상대 경로, 문서의 현재 실행 안내를 갱신한다. Python import에 유효한 이름을 사용한다. |
 | 최상위 `scratch_*.py`와 `scratch_*.json` | `research/scripts/legacy_scratch/` | 과거 임시 스크립트와 그 직접 출력물을 함께 둔다. 참조가 있는 과거 계획서 자체는 고치지 않고 이동 지도에서 이전 위치를 찾게 한다. |
 | `docs/strategy-history.md` | `docs/history/strategy-history.md` | 역사 문서를 현재 문서와 분리한다. 현재 문서의 링크를 갱신한다. |
 
