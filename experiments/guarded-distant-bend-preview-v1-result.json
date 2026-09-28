@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "experiment": "guarded-distant-bend-preview-v1",
+  "status": "implemented-diagnostic-pass-with-required-safety-guard",
+  "development_decision": "ACCEPT_ONLY_WITH_ANTICIPATORY_OBSTACLE_TRANSITION_PRIORITY_V1",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-28T16:27:53.5420269+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "42d21ccbc90e1d9e7cefdbad56f261692a147994922fa27b4c89613009e32e5a",
+  "protocol_history": {
+    "initial_registration_commit": "0f2b529",
+    "implementation_commit": "8a3428d866bc77c0fd7e869be612c1752a7c91ce",
+    "required_safety_protocol_commit": "c6d8945"
+  },
+  "lineage": {
+    "control_commit": "8a3428d866bc77c0fd7e869be612c1752a7c91ce",
+    "candidate_commit": "8a3428d866bc77c0fd7e869be612c1752a7c91ce",
+    "candidate_agent_git_blob": "7169a2c625008c14c49cf7bb04e0b97b80811b29",
+    "candidate_agent_sha256": "ed079457c723d55b369ed80607709bdeee3c8bc9893ea3846e97da19c1d2fd3c",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._DistantObstacleController",
+    "isolated_candidate_class": "agent._AnticipatoryCompletionController",
+    "final_composed_class": "agent._ObstaclePriorityController"
+  },
+  "video_diagnostic": {
+    "track_1": {
+      "video_sha256": "5c0fa60259dce1a520e5fa22019f3508705e2f2001b903332400deacd7e630b7",
+      "outcome": "FINISHED",
+      "displayed_lap_time": "00:27.50",
+      "slow_section": "race time 17.52 through 20.80; center-biased U/S line"
+    },
+    "track_2": {
+      "video_sha256": "10c45df51389a7d70beaa5502dc9f324c6dd47d6122de7f9040e41316eafc926",
+      "outcome": "FINISHED",
+      "displayed_lap_time": "00:32.96",
+      "slow_section": "race time 17.60 through 25.60; repeated center/outside-biased hairpins"
+    },
+    "interpretation": "The replay supports late/center-biased cornering as a target for investigation, but it does not calibrate tire clearance or prove an optimal apex."
+  },
+  "synthetic_result": {
+    "current_centers": {"row_42": 41.5, "row_54": 41.5},
+    "mirrored_distant_centers": {"row_34_delta": 4.0, "row_30_delta": 6.0},
+    "road_sweep": 6.0,
+    "target_speed": 36.0,
+    "control_action": [0.0, 0.08, 0.0],
+    "candidate_actions": [[-0.05, 0.08, 0.0], [0.05, 0.08, 0.0]],
+    "longitudinal_and_target_speed_exact": true,
+    "clear_straight_exact": true,
+    "established_curve_exact": true,
+    "detected_obstacle_exact_from_matched_state": true,
+    "missing_or_disagreeing_rows_exact": true,
+    "registered_inclusive_boundaries_pass": true,
+    "reset_pass": true
+  },
+  "safety_review": {
+    "finding": "The isolated preview left +/-0.05 steering history that reduced an immediately opposing obstacle command to magnitude 0.02 instead of the distant-obstacle control's 0.07.",
+    "decision": "Do not route the isolated anticipatory class. Require anticipatory-obstacle-transition-priority-v1 and route only agent._ObstaclePriorityController.",
+    "resolution": "The composed controller restores mirrored straight and curve+obstacle opposing transitions to the distant-obstacle control action while preserving same-direction and non-obstacle transitions."
+  },
+  "shared_validation_reference": "experiments/guarded-distant-obstacle-preposition-v1-result.json#shared_validation",
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "global_inside_bias_added": false,
+    "track_map_or_identifier_added": false,
+    "model_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The implementation previews the distant road center; it is not a calibrated outside-inside-outside racing line and does not target the road edge.",
+    "An always-inside bias and track-specific apex memory were rejected as unsafe and unsupported by the available runtime contract.",
+    "The isolated preview is not safe to route without the registered obstacle-transition guard.",
+    "No environment execution measured a Track 1 or Track 2 time change, so the candidate remains INCOMPARABLE."
+  ]
+}

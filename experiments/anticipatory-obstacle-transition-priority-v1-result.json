@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment": "anticipatory-obstacle-transition-priority-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_COMPOSED_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-28T16:27:53.5420269+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "2402e4e216c29380606cac9b1d54bb171b062d7d7738ab61a442d9cfc77078e0",
+  "protocol_history": {
+    "registration_commit": "c6d8945",
+    "implementation_commit": "8a3428d866bc77c0fd7e869be612c1752a7c91ce",
+    "trigger": "Independent pre-merge review of the already preregistered obstacle and bend implementations."
+  },
+  "lineage": {
+    "control_agent_worktree_sha256": "5fe410acd3551e1e77ffd0ed5f1347c33d5f9c08c361a2cc9a366a4ce25db9cb",
+    "candidate_commit": "8a3428d866bc77c0fd7e869be612c1752a7c91ce",
+    "candidate_agent_git_blob": "7169a2c625008c14c49cf7bb04e0b97b80811b29",
+    "candidate_agent_sha256": "ed079457c723d55b369ed80607709bdeee3c8bc9893ea3846e97da19c1d2fd3c",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._AnticipatoryCompletionController",
+    "candidate_class": "agent._ObstaclePriorityController"
+  },
+  "synthetic_result": {
+    "mirrored_opposing_straight_transition": {
+      "frame_1_distant_bend_control_steering": 0.0,
+      "frame_1_candidate_preview_steering_values": [0.05, -0.05],
+      "frame_2_unguarded_avoidance_steering_values": [-0.02, 0.02],
+      "frame_2_distant_obstacle_control_steering_values": [-0.07, 0.07],
+      "frame_2_guarded_candidate_steering_values": [-0.07, 0.07],
+      "complete_frame_2_action_exact_to_distant_obstacle_control": true
+    },
+    "mirrored_opposing_curve_obstacle_exact": true,
+    "same_direction_transition_exact_to_anticipatory_control": true,
+    "fresh_ordinary_obstacles_exact_to_anticipatory_control": true,
+    "preview_to_clear_curve_and_invalid_exact": true,
+    "marker_clears_after_non_preview": true,
+    "reset_deterministic": true,
+    "perception_target_speed_gas_and_brake_unchanged": true
+  },
+  "shared_validation_reference": "experiments/guarded-distant-obstacle-preposition-v1-result.json#shared_validation",
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "general_slew_changed": false,
+    "direct_action_override_added": false,
+    "model_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The gate repairs command-state arbitration; it cannot undo physical lateral displacement already caused by the preceding preview.",
+    "Only an immediately preceding actually reached +/-0.05 preview is eligible. Longer-horizon vehicle dynamics require environment telemetry and matched evaluation.",
+    "No environment execution established collision reduction or completion, so the result remains INCOMPARABLE."
+  ]
+}

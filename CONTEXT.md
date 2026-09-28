@@ -4,10 +4,12 @@
 
 Develop the strongest rule-compliant agent while preserving the active DrQ-v2
 padding study and its frozen artifacts. The bare `model.pt` path now composes a
-video-diagnostic safety/pace layer over the completion-first controller recovered
-from source commit `52976fe`; the DrQ, explicit-export and HAIC policy paths are
-unchanged. Required competition documents are missing, so environment evaluation,
-submission, performance claims and SOTA promotion remain blocked.
+camera-only, video-diagnostic safety/pace layer over the completion-first controller
+recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
+paths are unchanged. Submission-5 video analysis led to bounded early obstacle and
+distant-bend responses plus a reviewed obstacle-priority transition guard at source
+commit `8a3428d`. Required competition documents are missing, so environment
+evaluation, submission, performance claims and SOTA promotion remain blocked.
 
 ## Frozen Contract
 
@@ -143,22 +145,37 @@ unseen-track generalization or SOTA. See
 `experiments/stable-completion-controller-v1-result.json` for hashes and raw-log
 pointers.
 
-Three staged video-diagnostic protocols, registered before source editing but with
-post-registration acceptance clarifications committed alongside implementation,
-now compose the bare runtime as `_GuardedCompletionController` at commit `5192c2b`:
-a current-frame speed cap30
-for obstacle+floor-speed curves, half-strength curve-command retention when
-obstacle bias would cancel the bend, and a clear-straight-only gas envelope0.10
-with residual steering settled. The frozen stable class remains bit-exact; model
-weights and all other runtime paths are unchanged. Final reproducible relevant
-tests are146 passed; one unretained seeded diagnostic also exercised3,000 stateful
-synthetic cases. Track execution was intentionally not performed, so all three
-results are `INCOMPARABLE`; no Track2 finish or Track1/3 lap-time improvement is
-established. Detector flicker, the inherited opposite-curve slew delay, and
-passive road-loss recovery remain explicit risks. The untracked root
-`submission.zip` is the old stable control (embedded agent SHA `395253e1...`), not
-the guarded candidate, and must not be submitted. See the three
-`stable-*-v1-result.json` records.
+The submission-4 video protocols compose speed cap30 for obstacle+floor-speed
+curves, half-strength curve-command retention when avoidance would cancel a bend,
+and a clear-straight-only gas envelope0.10. Their final guarded source is commit
+`5192c2b`; all results remain `INCOMPARABLE` without environment execution.
+
+Submission-5 videos show Track1 finished27.50s (versus28.36), Track2 finished32.96s
+(versus prior DNF20.5%), and Track3 failed at19.4% from repeated contact with the
+orange obstacle while still inside the road. Track3's replay obstacle is visible
+well before contact, but the replay is top-down and does not establish policy-camera
+detection timing. Track1/2 remain center/outside-biased through slow U/hairpin
+sections. This supports only the hypothesis of earlier reactions to geometry already
+detected in the current policy camera, not track-ID, minimap, timing,
+memorized-coordinate, or global inside-edge behavior.
+
+At commit `8a3428d`, the final bare route is `_ObstaclePriorityController`. On an
+already detected straight obstacle it floors inherited urgency at0.50; on a
+centered/aligned current corridor with agreeing rows30/34 and no obstacle it applies
+only a +/-0.05 distant-road preview. Independent review found that preview history
+could weaken an immediately opposing obstacle command, so a separately registered
+gate restores that first command to the no-preview obstacle control; same-direction
+and non-obstacle transitions remain exact. Always-inside bias was rejected. The
+frozen stable class, `model.pt`, official environment, DrQ, explicit-export and HAIC
+paths remain unchanged. Final affected tests are159 passed; a pre-final broad run
+was386 passed,10 skipped. Track execution was intentionally not performed, so
+completion, lap-time and unseen-track improvement are not established. See the
+three `guarded-distant-*-v1-result.json` / `anticipatory-*-v1-result.json` records.
+
+The untracked root `submission.zip` (SHA `1232f763...`, embedded agent SHA
+`fbac3fda...`) plausibly corresponds to the submission-5 guarded control but lacks
+an official receipt binding it to the videos. It is now stale relative to candidate
+agent SHA `ed079457...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 
