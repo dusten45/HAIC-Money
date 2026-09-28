@@ -1,0 +1,37 @@
+{
+  "format": "haic-tdmpc2-exploration-v2",
+  "partition": "consumed-TRAIN-development",
+  "purpose": "Correct v1 zero-decision reset metadata check and compare iid 3D independent pedals with iid 2D exclusive longitudinal actions before training",
+  "supersedes": "experiments/tdmpc2-exploration-v1.json",
+  "v1_reset_only": "runs/tdmpc2-exploration-20260928-v1/failure.json",
+  "v2_protocol_sha256": "209f8a752a6ef61a3dcec6c770fe10fd71158779b83afbf72f9b5d72410c8bfb",
+  "source_sha256": {
+    "scripts/diagnose_tdmpc2_exploration.py": "1ed19d83f4b73cac2ed657381130e9328acf2b9c72867520957e9cd2911a5d2e",
+    "haic/algorithms/tdmpc2/haic_env.py": "e1b17451b862f26f9389992e907b37586a263d6470c3c8102857abdb592a4db2",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204"
+  },
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800001},
+    {"track_id": 1, "geometry_seed": 3910800004},
+    {"track_id": 1, "geometry_seed": 3910800034},
+    {"track_id": 1, "geometry_seed": 3910800085}
+  ],
+  "environment": {"track_id": 1, "obstacles": true, "frame_skip": 4, "reward": "raw"},
+  "arms": ["independent_3d", "exclusive_2d"],
+  "repeats": 2,
+  "rng_seed": 7332026,
+  "randomness": "At each decision draw three iid uniform [-1,1] values from the identical per-cell/repeat stream: steer=d0, 3D gas=(d1+1)/2 brake=(d2+1)/2, 2D gas=max(d1,0) brake=max(-d1,0). Steering draws are matched but diverging trajectories are not transition-matched.",
+  "max_steps": 2000,
+  "max_decisions_per_arm": 16000,
+  "state_diversity": "Diagnostic-only simulator telemetry: unique 10m xy occupancy bins, and unique (10m xy, 8 heading sectors, 5m/s speed sectors) bins; also report occupied xy bins per 100 decisions. No privileged telemetry is given to either action policy or learner.",
+  "selection": "Compare 8 paired road/repeat episodes. Prefer larger mean final progress when difference >=0.01 unless its mean damage is more than 0.1 higher. Otherwise prefer larger mean raw return when difference >=1. Otherwise prefer more mean unique spatial bins, then lower mean damage; a remaining tie favors 2D exclusivity. Report reward, lengths, finishes, occupancy and per-road differences regardless; selection is an engineering decision on reused TRAIN, not generalization.",
+  "resource_floor_bytes": {"cgroup": 17179869184, "disk": 5368709120},
+  "run_dir": "runs/tdmpc2-exploration-20260928-v2",
+  "excluded": "No confirmation, blind, official, or fresh development geometry resets. No learner update during comparison."
+}
