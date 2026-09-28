@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "name": "guarded-distant-bend-preview-v1",
+  "purpose": "submission-5-video-guided-steering-horizon-repair",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T16:01:51.9375363+09:00",
+  "source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
+  "depends_on": "guarded-distant-obstacle-preposition-v1 synthetic and regression acceptance",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "apply a fixed 0.05 steering preview toward two agreeing distant road centers only while the current row-42/54 corridor remains centered and flat, no obstacle is detected, and the base steering is near zero",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._DistantObstacleController after guarded-distant-obstacle-preposition-v1 acceptance",
+    "base_source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
+    "agent_sha256_before_dependency": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "classification": "consumed-top-down-video-association-plus-static-code-mechanism-without-agent-observation-action-receipt",
+    "submission_5_track_1_video_sha256": "5c0fa60259dce1a520e5fa22019f3508705e2f2001b903332400deacd7e630b7",
+    "submission_5_track_2_video_sha256": "10c45df51389a7d70beaa5502dc9f324c6dd47d6122de7f9040e41316eafc926",
+    "displayed_results": {
+      "track_1": {"outcome": "FINISHED", "lap_time": "00:27.50"},
+      "track_2": {"outcome": "FINISHED", "lap_time": "00:32.96"}
+    },
+    "observed_sequence": [
+      "Track 1 spends about 3.28 seconds from race time 17.52 to 20.80 in a U/S section and remains close to the dashed center rather than using the visible apex at 18.16.",
+      "Track 2 spends about 8.00 seconds from race time 17.60 to 25.60 in repeated hairpins and remains near the center or outside at the 21.36 apex and 21.84 exit."
+    ],
+    "code_mechanism": "The existing road sweep and curve speed use centers at rows 30 and 34, but base steering uses only rows 42 and 54. A distant bend can therefore trigger curve-speed behavior while steering remains zero.",
+    "lineage_limitation": "Top-down apex position does not reveal tire clearance, policy-camera geometry, speed, or action. The proposed repair addresses the independently observable steering-horizon mismatch, not an asserted optimal racing line."
+  },
+  "feedback_decision": {
+    "accepted": "Use consistent farther-ahead road geometry to start a small turn before the current steering rows react, which may shorten center/outside-biased corner paths.",
+    "rejected": "Do not impose a permanent inside-edge target or memorize track-specific apexes. Always-inside driving can reduce radius and boundary margin; a true outside-inside-outside line needs calibrated corridor clearance unavailable in replay-only evidence.",
+    "deferred": "A unified clearance-aware racing-line and obstacle corridor planner requires agent-view calibration and matched multi-track evaluation."
+  },
+  "hypothesis": {
+    "failure": "The speed planner sees a distant bend before the steering planner, delaying turn-in and leaving the car near the center or outside through the apex.",
+    "repair": "When rows 42 and 54 are still centered and aligned, rows 30 and 34 both differ from row 42 by more than 1.25 pixels in the same direction, no obstacle is detected, and the base command is at most half one steering-slew step and does not oppose the preview, replace it with a bounded 0.05 command toward the distant centers.",
+    "expected_effect": "Align steering and speed preview horizons with a small generic turn-in command while preserving established curves, obstacle handling, straights, and longitudinal behavior."
+  },
+  "fixed": {
+    "preview_rows": [30, 34],
+    "reference_row": 42,
+    "near_row": 54,
+    "preview_steering_magnitude": 0.05,
+    "distant_delta_threshold_pixels": 1.25,
+    "reference_center_threshold_pixels": 1.25,
+    "reference_near_alignment_threshold_pixels": 1.50,
+    "maximum_base_steering_magnitude": 0.035,
+    "direction_rule": "both distant deltas relative to row 42 exceed threshold and have the same sign; base steering must be zero or have that sign",
+    "exclusions": ["detected obstacle", "existing straight classification", "established curve steering", "missing preview row", "distant-row disagreement", "current base steering opposing preview"],
+    "target_speed": "unchanged from control",
+    "pedals": "unchanged from control",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
+    "forbidden_inputs": ["track identifier", "submission number", "minimap", "replay coordinates", "timing trigger", "evaluation progress"]
+  },
+  "acceptance": {
+    "synthetic": [
+      "With rows 42 and 54 centered and rows 30 and 34 consistently displaced left or right, control steering is near zero and candidate steering is exactly mirrored at magnitude 0.05; gas, brake, target speed, obstacle state, and detector result are exact to control.",
+      "Clear straight, established curve, detected-obstacle, missing-row, distant-row-disagreement, and current-command-opposition cases are bit-exact to the distant-obstacle control from matched state.",
+      "Candidate steering remains within the inherited 0.07 slew and all action bounds, with deterministic reset behavior and no gas/brake overlap."
+    ],
+    "regression": [
+      "The distant-obstacle protocol and every earlier stable-controller isolated contract remain valid.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing selects the final anticipatory subclass while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any longitudinal action, target speed, detector state, obstacle action, established-curve action, or clear-straight action changes from matched control state.",
+    "The preview magnitude exceeds 0.05 or a second racing-line/apex parameter is needed to pass acceptance.",
+    "A track-specific position, time, progress, identifier, or replay-only signal enters runtime.",
+    "The dependent distant-obstacle protocol does not pass all synthetic and regression gates.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, user video, or evidence ZIP changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No environment execution, lap-time improvement claim, submission, or SOTA promotion is authorized."
+  ]
+}

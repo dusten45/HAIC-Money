@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "name": "guarded-distant-obstacle-preposition-v1",
+  "purpose": "submission-5-video-guided-early-obstacle-avoidance",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T16:01:51.9375363+09:00",
+  "source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "raise the existing straight-road obstacle urgency to a minimum of 0.50 after and only after the existing camera detector has returned an obstacle",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._GuardedCompletionController",
+    "base_source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
+    "agent_sha256": "fbac3fda147709ba33659fd4a6fb438019c6cbe1a623dde216c657fc9eab1fc0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "submission_zip_sha256": "1232f763336e93c00c60f966ec7c08d8f71892e3e5adf673c975349a51bdd42d"
+  },
+  "evidence": {
+    "classification": "consumed-top-down-video-association-without-agent-observation-action-receipt",
+    "submission_5_track_3_video_sha256": "ca0dbac20eaa124fb9b71629bcb21a0139facaafe158b02660f1dd3fd0b7f41f",
+    "submission_4_track_3_video_sha256": "f73c5c9fa3caf22b17dab93b05504e16eb594e7acef2ffbea9e2466d3b5e95c",
+    "displayed_result": {
+      "submission_5": {"outcome": "DNF", "progress_percent": 19.4, "reason": "COLLISION LIMIT"},
+      "submission_4": {"outcome": "FINISHED", "lap_time": "00:31.12"}
+    },
+    "observed_sequence": [
+      "At displayed race time 4.80 the orange obstacle is clearly visible in the top-down replay.",
+      "The submission-5 car remains near the dashed center until first overlap at 6.16, spins through repeated contact, and terminates at 6.48 while still well inside both road boundaries.",
+      "At the same displayed time 6.16, submission 4 is about 1.3 progress percentage points farther from the obstacle and begins a large late avoidance maneuver at 6.24 that survives but reaches the outer road edge."
+    ],
+    "code_mechanism": "The current detector accepts obstacle components from row 22, but urgency is clip((row-22)/18), so the first accepted component produces zero obstacle steering and distant rows below 31 produce less than half-strength bias.",
+    "lineage_limitation": "The root ZIP embeds the same agent and model hashes as the control, but no official receipt cryptographically binds that ZIP to the videos. The replay does not expose the actual 84x84 policy observation or action, so exact detector timing and causality are unproven."
+  },
+  "feedback_decision": {
+    "accepted": "Begin a small avoidance offset earlier once an obstacle is actually present in the legal current camera observation.",
+    "rejected": "Do not use track number, submission number, replay time, progress, minimap, memorized obstacle coordinates, or a claim that the runtime receives a known global track; Agent receives only the image stack under the available contract.",
+    "deferred": "Detector ROI or threshold expansion and pass-side redesign require raw policy frames or a separate protocol because they can increase false positives."
+  },
+  "hypothesis": {
+    "failure": "The controller detects a distant obstacle but initially commands little or no lateral motion, leaving the full avoidance maneuver until the obstacle is close; the submission-5 clear-straight acceleration reduced the remaining reaction margin.",
+    "repair": "On an existing straight classification and an already detected obstacle only, floor urgency at 0.50. Keep the pass side, 0.24 bias gain, detector, steering limits and slew, target speed, throttle, braking, and all curve behavior unchanged.",
+    "expected_effect": "Reach a modest offset over several frames instead of demanding a large near-obstacle correction, reducing collision risk and the path loss of late emergency avoidance."
+  },
+  "fixed": {
+    "straight_detected_obstacle_minimum_urgency": 0.50,
+    "existing_urgency": "clip((obstacle_y-22)/18, 0, 1)",
+    "effective_urgency": "max(existing_urgency, 0.50) when straight=true; existing_urgency otherwise",
+    "obstacle_bias_gain": 0.24,
+    "first_unslewed_bias_magnitude": 0.12,
+    "steering_slew_per_step": 0.07,
+    "cruise_speed": 48.0,
+    "clear_straight_max_gas": 0.10,
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"],
+    "forbidden_inputs": ["track identifier", "submission number", "minimap", "replay coordinates", "timing trigger", "evaluation progress"]
+  },
+  "acceptance": {
+    "synthetic": [
+      "For mirrored straight-road obstacles whose top begins at rows 22, 26, and 30, candidate steering begins earlier in the correct mirrored direction, remains no greater than 0.16 in magnitude, and has gas, brake, target speed, detector result, and selected side exact to control.",
+      "At obstacle rows whose existing urgency is at least 0.50, every action is bit-exact to control from matched state.",
+      "Clear straights, obstacle-free curves, curve obstacles including conflict and compound-hazard cases, lost-road, invalid-input, and reset behavior are bit-exact to control from matched state.",
+      "After a distant obstacle disappears, steering remains slew-bounded and converges under the inherited miss-limit behavior.",
+      "Actions remain finite, bounded, deterministic after reset, and mutually exclusive in gas and brake."
+    ],
+    "regression": [
+      "All prior stable, compound-speed, curve-arbitration, and guarded-throttle isolated contracts remain valid.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing selects the new subclass while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any detector boundary, pass-side decision, longitudinal action, target speed, curve action, obstacle action at existing urgency >=0.50, or non-obstacle action changes from matched control state.",
+    "A track-specific position, time, progress, identifier, or replay-only signal enters runtime.",
+    "A second lateral parameter or speed change is needed to pass the preregistered assertions.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, user video, or evidence ZIP changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No environment execution, causal claim, finish-rate claim, submission, or SOTA promotion is authorized."
+  ]
+}
