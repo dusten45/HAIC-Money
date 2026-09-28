@@ -4,6 +4,8 @@
   "purpose": "submission-5-video-guided-early-obstacle-avoidance",
   "status": "preregistered",
   "registered_at": "2026-09-28T16:01:51.9375363+09:00",
+  "clarified_at": "2026-09-28T16:09:00+09:00",
+  "clarification": "Synthetic row values refer to the component centroid returned by the detector, not its bounding-box top. The early sequence is fixed at centroid rows 22.5, 26.5, and 30.5; exact-control behavior begins at centroid row 31.0 where the inherited urgency reaches 0.50. This resolves detector-coordinate wording before source editing.",
   "source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
   "scope": {
     "runtime": "bare model.pt only",
@@ -64,8 +66,8 @@
   },
   "acceptance": {
     "synthetic": [
-      "For mirrored straight-road obstacles whose top begins at rows 22, 26, and 30, candidate steering begins earlier in the correct mirrored direction, remains no greater than 0.16 in magnitude, and has gas, brake, target speed, detector result, and selected side exact to control.",
-      "At obstacle rows whose existing urgency is at least 0.50, every action is bit-exact to control from matched state.",
+      "Across mirrored straight-road obstacle sequences with detector-returned centroid rows 22.5, 26.5, and 30.5, candidate steering begins earlier in the correct mirrored direction, remains no greater than 0.16 in magnitude, and has gas, brake, target speed, detector result, and selected side exact to control.",
+      "At detector-returned centroid rows at or beyond 31.0, where existing urgency is at least 0.50, every action is bit-exact to control from matched state.",
       "Clear straights, obstacle-free curves, curve obstacles including conflict and compound-hazard cases, lost-road, invalid-input, and reset behavior are bit-exact to control from matched state.",
       "After a distant obstacle disappears, steering remains slew-bounded and converges under the inherited miss-limit behavior.",
       "Actions remain finite, bounded, deterministic after reset, and mutually exclusive in gas and brake."
