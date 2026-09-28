@@ -1,0 +1,36 @@
+{
+  "format": "haic-tdmpc2-full-consumed-train-v1",
+  "purpose": "consumed-TRAIN-development",
+  "evaluation_source_sha256": "d2f3df9522257f2dfbffe5167571c5a491b7929acbbbcb3b84ebb0c2f8b91089",
+  "source": {
+    "protocol": {
+      "path": "experiments/tdmpc2-long-reused-train-v2.json",
+      "sha256": "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec"
+    },
+    "result": {
+      "path": "runs/tdmpc2-long-20260928-v2/result.json",
+      "sha256": "287470932dbba9a7eeed778a5be7762b736e6679d99fd29078c5103890a75a4b"
+    },
+    "checkpoints": [
+      {
+        "target": 100000,
+        "path": "runs/tdmpc2-long-20260928-v2/checkpoint-at-least-100000-step-100354.pt",
+        "sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+        "training_cursor_sha256": "84f06ee4dcc8568bd5d384d1811252321ad5dc6a98ce19d18badb448d09123d7",
+        "step_cursor_sha256": "a94ce156afcb6e4f706474d6cf2d2ccb4754a868eb75a3eb4b53df5d2be37945"
+      }
+    ]
+  },
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800001},
+    {"track_id": 1, "geometry_seed": 3910800004},
+    {"track_id": 1, "geometry_seed": 3910800034},
+    {"track_id": 1, "geometry_seed": 3910800085}
+  ],
+  "environment": {"track_id": 1, "obstacles": true, "frame_skip": 4, "reward": "raw"},
+  "modes": ["prior", "mppi"],
+  "repeats": 2,
+  "seed": 20260928,
+  "max_steps": 2000,
+  "output_dir": "runs/tdmpc2-full-train-20260928-v1"
+}
