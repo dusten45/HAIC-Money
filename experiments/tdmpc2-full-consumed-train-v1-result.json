@@ -1,0 +1,55 @@
+{
+  "format": "haic-tdmpc2-full-consumed-train-result-v1",
+  "status": "complete_valid_full_episode_finish_comparison",
+  "partition": "same four heavily reused obstacle-enabled track-1 TRAIN roads used by long-v2 training; not fresh or protected evaluation",
+  "evaluation_protocol": "experiments/tdmpc2-full-consumed-train-v1.json",
+  "evaluation_protocol_sha256": "874d01d1396697efc9e4b119b0cd9ce8189fe36fa8d44773dcc13d30ab9ddbcd",
+  "evaluation_operator": "scripts/evaluate_tdmpc2_full_train.py",
+  "evaluation_operator_sha256": "d2f3df9522257f2dfbffe5167571c5a491b7929acbbbcb3b84ebb0c2f8b91089",
+  "primary_result": "runs/tdmpc2-full-train-20260928-v1/result.json",
+  "primary_result_sha256": "09b54dd849438f3a37bbfdf5c25f8448164e04f559056b57e5f8fb3ae641978c",
+  "episode_ledger": "runs/tdmpc2-full-train-20260928-v1/episodes.jsonl",
+  "episode_ledger_sha256": "519bcd0b51aa13336128ae733be37a229e0c7b969fdb7e817db00f037395dfcf",
+  "source_model": "runs/tdmpc2-long-20260928-v2/checkpoint-at-least-100000-step-100354.pt",
+  "source_model_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "source_training_result_sha256": "287470932dbba9a7eeed778a5be7762b736e6679d99fd29078c5103890a75a4b",
+  "first_source_decisions": 100354,
+  "source_selection": "First completed episode-boundary checkpoint >=100k, committed before observing its outcome; no replacement by better-looking intermediate model",
+  "runtime": "isolated Torch 2.1.0+cpu, raw unmodified environment, default H3 MPPI and actor-prior mean, two canonical repeats per road/mode",
+  "denominators": {"distinct_training_roads": 4, "repeats_per_road_per_mode": 2, "prior_episodes": 8, "mppi_episodes": 8, "total_episodes": 16, "max_decisions_per_episode": 2000},
+  "validity": {"all_scheduled_episodes_complete": true, "censored_episodes": 0, "semantic_terminal_episodes": 16, "full_episode_finish_comparison_valid": true, "generalization_claim": false, "official_score": false},
+  "prior": {
+    "finishes": 0,
+    "episodes": 8,
+    "decisions": 1660,
+    "mean_progress": 0.3269992957226747,
+    "mean_raw_return": 237.7272131847918,
+    "mean_damage": 0.35,
+    "mean_action_latency_s": 0.0019255946067734116,
+    "max_action_latency_s": 0.004700479097664356,
+    "per_road": [
+      {"geometry_seed": 3910800001, "episodes": 2, "finishes": 0, "mean_progress": 0.5816666666666667, "mean_raw_return": 471.1999999999856, "mean_damage": 0.2},
+      {"geometry_seed": 3910800004, "episodes": 2, "finishes": 0, "mean_progress": 0.3541033434650456, "mean_raw_return": 267.8243161094159, "mean_damage": 0.5},
+      {"geometry_seed": 3910800034, "episodes": 2, "finishes": 0, "mean_progress": 0.12006578947368421, "mean_raw_return": 57.28684210526521, "mean_damage": 0.7000000000000001},
+      {"geometry_seed": 3910800085, "episodes": 2, "finishes": 0, "mean_progress": 0.2521613832853026, "mean_raw_return": 154.59769452450047, "mean_damage": 0.0}
+    ]
+  },
+  "mppi": {
+    "finishes": 0,
+    "episodes": 8,
+    "decisions": 2288,
+    "mean_progress": 0.5066043214065576,
+    "mean_raw_return": 385.9322388686642,
+    "mean_damage": 0.45,
+    "mean_action_latency_s": 0.738557125563844,
+    "max_action_latency_s": 0.8392029292881489,
+    "per_road": [
+      {"geometry_seed": 3910800001, "episodes": 2, "finishes": 0, "mean_progress": 0.615, "mean_raw_return": 448.13333333330525, "mean_damage": 0.2},
+      {"geometry_seed": 3910800004, "episodes": 2, "finishes": 0, "mean_progress": 0.5364741641337386, "mean_raw_return": 401.99513677809955, "mean_damage": 0.5},
+      {"geometry_seed": 3910800034, "episodes": 2, "finishes": 0, "mean_progress": 0.42105263157894735, "mean_raw_return": 347.27368421052273, "mean_damage": 0.8},
+      {"geometry_seed": 3910800085, "episodes": 2, "finishes": 0, "mean_progress": 0.45389048991354464, "mean_raw_return": 346.32680115272916, "mean_damage": 0.30000000000000004}
+    ]
+  },
+  "comparison_limits": "Prior and MPPI share road/reset conditions, not identical states or action trajectories after their first action. MPPI achieved higher mean raw return/progress on all-roads aggregate and progress on all four per-road pairs, but had higher mean damage and zero finishes just like prior. Action latency is an internal CPU proxy, not official packaged-agent validation. The training collector's evolving-policy 14/87 post70k finishes are neither the final model's rate nor a matched comparator. All sixteen source-bound frozen-model episodes ended uncensored before the 2000-decision limit. Four repeatedly viewed road geometries cannot establish fresh-road generalization, 50% completion, model promotion, or official score.",
+  "decision": "The original 100k raw-reward H3 default-MPPI baseline is operationally complete and showed within-TRAIN H3 reward-ranking improvement (100k 31/40 vs pilot 25/40), but its frozen prior and MPPI both finished 0/8 on reused full episodes. Do not call the algorithm intrinsically failed or increase horizon/MPPI samples together; inspect a separately frozen single-axis training-target damage-increment reward-shaping hypothesis next while preserving official raw environment and evaluation metrics. The historic fresh-grid allocation auditor is still BLOCKED, and no protected/official evaluation is authorized."
+}
