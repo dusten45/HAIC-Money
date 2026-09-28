@@ -18,7 +18,12 @@ from action_smoothing import (
     canonical_action_control,
     canonical_action_smoothing,
 )
-from agent import Agent, Baseline1Actor, DRQ_ACTOR_FORMAT, _GuardedCompletionController
+from agent import (
+    Agent,
+    Baseline1Actor,
+    DRQ_ACTOR_FORMAT,
+    _ObstaclePriorityController,
+)
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
 from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
@@ -47,14 +52,16 @@ class TestSubmissionPolicy(unittest.TestCase):
 
         self.assertTrue(torch.equal(actions, torch.tensor([[1.0, 0.0, 1.0]]).repeat(2, 1)))
 
-    def test_bare_baseline_routes_only_to_guarded_completion_controller(self):
+    def test_bare_baseline_routes_only_to_obstacle_priority_controller(self):
         actor = Baseline1Actor()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bare-model.pt"
             torch.save(actor.state_dict(), path)
 
             bare = Agent(path)
-            self.assertIs(type(bare._forward_controller), _GuardedCompletionController)
+            self.assertIs(
+                type(bare._forward_controller), _ObstaclePriorityController
+            )
 
             explicit_path = Path(directory) / "explicit-model.pt"
             torch.save(export_payload(actor, canonical_action_smoothing()), explicit_path)

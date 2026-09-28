@@ -48,6 +48,46 @@ def _near_corridor_dropout_observation(*, far_center=53.0, speed=24.0):
     return np.tile(frame[None, :, :], (4, 1, 1))
 
 
+def _compact_obstacle_observation(
+    *, obstacle_x, obstacle_top, obstacle_height=2, obstacle_width=3, speed=24.0
+):
+    """Render a compact component with an explicitly controlled centroid row."""
+    frame = _observation(speed=speed)[-1].copy()
+    frame[
+        obstacle_top : obstacle_top + obstacle_height,
+        obstacle_x : obstacle_x + obstacle_width,
+    ] = 0.68
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
+def _distant_bend_observation(
+    *,
+    direction=1.0,
+    speed=24.0,
+    obstacle_x=None,
+    obstacle_top=26,
+    missing_rows=(),
+    row_offsets=None,
+):
+    """Keep rows 42/54 centered while bending only the distant road."""
+    frame = np.full((84, 84), 0.1, dtype=np.float32)
+    overrides = {} if row_offsets is None else dict(row_offsets)
+    missing = set(missing_rows)
+    for y in range(20, 63):
+        if y in missing:
+            continue
+        offset = direction * 0.5 * max(42 - y, 0)
+        offset = overrides.get(y, offset)
+        center = 42.0 + offset
+        left = int(round(center - 11))
+        right = int(round(center + 11))
+        frame[y, left:right] = 0.4
+    if obstacle_x is not None:
+        frame[obstacle_top : obstacle_top + 2, obstacle_x : obstacle_x + 3] = 0.68
+    frame[77:83, 10:13] = (0.27 + 0.085 * speed) / 18.0
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
 class TestVisionCorridorAgent(unittest.TestCase):
     def test_stable_completion_controller_matches_frozen_reference_trace(self):
         from agent import _StableCompletionController
@@ -452,6 +492,471 @@ class TestVisionCorridorAgent(unittest.TestCase):
             np.testing.assert_array_equal(
                 clear_action, np.asarray([0.0, 0.10, 0.0], dtype=np.float32)
             )
+
+    def test_distant_obstacle_controller_prepositions_on_first_detected_rows(self):
+        from agent import _DistantObstacleController, _GuardedCompletionController
+
+        mirrored_candidate_steering = []
+        for obstacle_x, expected_sign in ((35, 1.0), (46, -1.0)):
+            control = _GuardedCompletionController()
+            candidate = _DistantObstacleController()
+            control_steering = []
+            candidate_steering = []
+            for obstacle_top in (22, 26, 30):
+                observation = _compact_obstacle_observation(
+                    obstacle_x=obstacle_x,
+                    obstacle_top=obstacle_top,
+                )
+                frame = control._frame(observation)
+                centers = control._road_centers(frame)
+                self.assertEqual(
+                    candidate._nearest_obstacle(frame, centers),
+                    control._nearest_obstacle(frame, centers),
+                )
+
+                control_action = control.act(observation)
+                candidate_action = candidate.act(observation)
+
+                np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+                self.assertEqual(candidate._target_speed, control._target_speed)
+                self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+                self.assertEqual(np.sign(float(candidate_action[0])), expected_sign)
+                self.assertGreater(
+                    abs(float(candidate_action[0])), abs(float(control_action[0]))
+                )
+                self.assertLessEqual(abs(float(candidate_action[0])), 0.16)
+                control_steering.append(float(control_action[0]))
+                candidate_steering.append(float(candidate_action[0]))
+            self.assertTrue(
+                all(
+                    abs(candidate_value) > abs(control_value)
+                    for candidate_value, control_value in zip(
+                        candidate_steering, control_steering
+                    )
+                )
+            )
+            mirrored_candidate_steering.append(candidate_steering)
+
+        np.testing.assert_allclose(
+            mirrored_candidate_steering[0],
+            -np.asarray(mirrored_candidate_steering[1]),
+            rtol=0.0,
+            atol=0.0,
+        )
+
+    def test_distant_obstacle_controller_is_exact_from_half_urgency(self):
+        from agent import _DistantObstacleController, _GuardedCompletionController
+
+        for obstacle_top, obstacle_height in ((30, 3), (40, 2)):
+            control = _GuardedCompletionController()
+            candidate = _DistantObstacleController()
+            observation = _compact_obstacle_observation(
+                obstacle_x=35,
+                obstacle_top=obstacle_top,
+                obstacle_height=obstacle_height,
+            )
+            for _ in range(3):
+                np.testing.assert_array_equal(
+                    candidate.act(observation), control.act(observation)
+                )
+                self.assertEqual(candidate._target_speed, control._target_speed)
+
+    def test_distant_obstacle_controller_is_exact_outside_early_straight_gate(self):
+        from agent import _DistantObstacleController, _GuardedCompletionController
+
+        curve_obstacle = _observation(curve=0.25, speed=24.0)[-1].copy()
+        curve_obstacle[22:24, 46:49] = 0.68
+        observations = [
+            _observation(speed=24.0),
+            _observation(curve=-0.75, speed=24.0),
+            np.tile(curve_obstacle[None, :, :], (4, 1, 1)),
+            _compact_obstacle_observation(obstacle_x=35, obstacle_top=40),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        ]
+        control = _GuardedCompletionController()
+        candidate = _DistantObstacleController()
+
+        np.testing.assert_array_equal(
+            np.asarray([candidate.act(item) for item in observations]),
+            np.asarray([control.act(item) for item in observations]),
+        )
+
+        candidate.reset(None)
+        first = candidate.act(observations[0])
+        candidate.act(observations[1])
+        candidate.reset(None)
+        np.testing.assert_array_equal(candidate.act(observations[0]), first)
+
+    def test_distant_obstacle_controller_converges_after_component_disappears(self):
+        from agent import _DistantObstacleController
+
+        controller = _DistantObstacleController()
+        for obstacle_top in (22, 26, 30):
+            action = controller.act(
+                _compact_obstacle_observation(
+                    obstacle_x=35,
+                    obstacle_top=obstacle_top,
+                )
+            )
+            self.assertTrue(np.all(np.isfinite(action)))
+
+        previous = float(action[0])
+        clear_actions = []
+        for _ in range(controller.OBSTACLE_MISS_LIMIT + 2):
+            action = controller.act(_observation(speed=24.0))
+            clear_actions.append(action)
+            self.assertLessEqual(
+                abs(float(action[0]) - previous), controller.MAX_STEER_STEP + 1e-7
+            )
+            previous = float(action[0])
+
+        self.assertAlmostEqual(float(clear_actions[-1][0]), 0.0, places=7)
+        self.assertEqual(controller._obstacle_side, 0.0)
+        self.assertTrue(
+            all(
+                not (float(item[1]) > 0.0 and float(item[2]) > 0.0)
+                for item in clear_actions
+            )
+        )
+
+    def test_distant_obstacle_clear_transition_keeps_residual_steer_guard(self):
+        from agent import _DistantObstacleController, _GuardedCompletionController
+
+        control = _GuardedCompletionController()
+        candidate = _DistantObstacleController()
+        for obstacle_top in (22, 26):
+            observation = _compact_obstacle_observation(
+                obstacle_x=35,
+                obstacle_top=obstacle_top,
+            )
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+            np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+
+        clear = _observation(speed=24.0)
+        control_clear = control.act(clear)
+        candidate_clear = candidate.act(clear)
+        np.testing.assert_array_equal(
+            control_clear, np.asarray([0.0, 0.10, 0.0], dtype=np.float32)
+        )
+        np.testing.assert_array_equal(
+            candidate_clear, np.asarray([0.05, 0.08, 0.0], dtype=np.float32)
+        )
+        self.assertEqual(candidate._target_speed, control._target_speed)
+
+        np.testing.assert_array_equal(candidate.act(clear), control.act(clear))
+
+    def test_anticipatory_controller_turns_toward_consistent_distant_centers(self):
+        from agent import _AnticipatoryCompletionController, _DistantObstacleController
+
+        candidate_steering = []
+        for direction in (-1.0, 1.0):
+            control = _DistantObstacleController()
+            candidate = _AnticipatoryCompletionController()
+            observation = _distant_bend_observation(direction=direction)
+
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+
+            self.assertAlmostEqual(float(control_action[0]), 0.0, places=7)
+            self.assertAlmostEqual(
+                float(candidate_action[0]), direction * 0.05, places=7
+            )
+            np.testing.assert_array_equal(candidate_action[1:], control_action[1:])
+            self.assertEqual(candidate._target_speed, control._target_speed)
+            self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+            self.assertLessEqual(
+                abs(float(candidate_action[0]) - control._last_steer),
+                candidate.MAX_STEER_STEP,
+            )
+            candidate_steering.append(float(candidate_action[0]))
+
+        self.assertAlmostEqual(candidate_steering[0], -candidate_steering[1], places=7)
+
+    def test_anticipatory_controller_is_exact_outside_distant_only_gate(self):
+        from agent import _AnticipatoryCompletionController, _DistantObstacleController
+
+        cases = [
+            _observation(speed=24.0),
+            _observation(curve=0.75, speed=24.0),
+            _distant_bend_observation(
+                direction=1.0,
+                obstacle_x=45,
+                obstacle_top=26,
+            ),
+            _distant_bend_observation(direction=1.0, missing_rows=(30,)),
+            _distant_bend_observation(
+                direction=0.0,
+                row_offsets={30: -4.0, 34: 4.0},
+            ),
+        ]
+        for observation in cases:
+            control = _DistantObstacleController()
+            candidate = _AnticipatoryCompletionController()
+            for _ in range(3):
+                np.testing.assert_array_equal(
+                    candidate.act(observation), control.act(observation)
+                )
+                self.assertEqual(candidate._target_speed, control._target_speed)
+
+        candidate = _AnticipatoryCompletionController()
+        centers = {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+        self.assertEqual(
+            candidate._adjust_road_steering(
+                steering=-0.01,
+                straight=False,
+                centers=centers,
+                obstacle=None,
+            ),
+            -0.01,
+        )
+
+        first = candidate.act(_observation(speed=24.0))
+        candidate.act(_distant_bend_observation(direction=1.0))
+        candidate.reset(None)
+        np.testing.assert_array_equal(candidate.act(_observation(speed=24.0)), first)
+
+    def test_anticipatory_controller_uses_registered_inclusive_boundaries(self):
+        from agent import _AnticipatoryCompletionController
+
+        controller = _AnticipatoryCompletionController()
+        centered = {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.035,
+                straight=False,
+                centers=centered,
+                obstacle=None,
+            ),
+            0.05,
+        )
+        outside_base = float(np.nextafter(0.035, np.inf))
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=outside_base,
+                straight=False,
+                centers=centered,
+                obstacle=None,
+            ),
+            outside_base,
+        )
+
+        centered_limit = {
+            30: 48.75,
+            34: 46.75,
+            42: 42.75,
+            54: 42.75,
+        }
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=centered_limit,
+                obstacle=None,
+            ),
+            0.05,
+        )
+        outside_center = dict(centered_limit)
+        outside_center[42] = float(np.nextafter(42.75, np.inf))
+        outside_center[54] = outside_center[42]
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=outside_center,
+                obstacle=None,
+            ),
+            0.0,
+        )
+
+        alignment_limit = dict(centered)
+        alignment_limit[54] = centered[42] - 1.5
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=alignment_limit,
+                obstacle=None,
+            ),
+            0.05,
+        )
+        outside_alignment = dict(centered)
+        outside_alignment[54] = float(np.nextafter(40.0, -np.inf))
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=outside_alignment,
+                obstacle=None,
+            ),
+            0.0,
+        )
+
+        delta_limit = {30: 42.75, 34: 42.75, 42: 41.5, 54: 41.5}
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=delta_limit,
+                obstacle=None,
+            ),
+            0.0,
+        )
+        beyond_delta = {
+            30: float(np.nextafter(42.75, np.inf)),
+            34: float(np.nextafter(42.75, np.inf)),
+            42: 41.5,
+            54: 41.5,
+        }
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=beyond_delta,
+                obstacle=None,
+            ),
+            0.05,
+        )
+
+        for missing_row in (30, 34, 42, 54):
+            missing = dict(centered)
+            del missing[missing_row]
+            self.assertEqual(
+                controller._adjust_road_steering(
+                    steering=0.0,
+                    straight=False,
+                    centers=missing,
+                    obstacle=None,
+                ),
+                0.0,
+            )
+
+    def test_obstacle_priority_restores_opposing_avoidance_after_preview(self):
+        from agent import (
+            _AnticipatoryCompletionController,
+            _DistantObstacleController,
+            _ObstaclePriorityController,
+        )
+
+        for direction, obstacle_x in ((1.0, 46), (-1.0, 35)):
+            control = _DistantObstacleController()
+            unguarded = _AnticipatoryCompletionController()
+            candidate = _ObstaclePriorityController()
+            preview = _distant_bend_observation(direction=direction)
+
+            control_preview = control.act(preview)
+            unguarded_preview = unguarded.act(preview)
+            candidate_preview = candidate.act(preview)
+            np.testing.assert_array_equal(candidate_preview, unguarded_preview)
+            self.assertAlmostEqual(float(control_preview[0]), 0.0, places=7)
+            self.assertTrue(candidate._previous_action_was_preview)
+
+            obstacle = _compact_obstacle_observation(
+                obstacle_x=obstacle_x,
+                obstacle_top=22,
+            )
+            control_action = control.act(obstacle)
+            unguarded_action = unguarded.act(obstacle)
+            candidate_action = candidate.act(obstacle)
+
+            np.testing.assert_array_equal(candidate_action, control_action)
+            self.assertGreater(
+                abs(float(candidate_action[0])), abs(float(unguarded_action[0]))
+            )
+            self.assertEqual(
+                np.sign(float(candidate_action[0])), -np.sign(direction)
+            )
+            self.assertFalse(candidate._previous_action_was_preview)
+
+    def test_obstacle_priority_preserves_same_direction_and_non_obstacle_transitions(self):
+        from agent import _AnticipatoryCompletionController, _ObstaclePriorityController
+
+        for direction, obstacle_x in ((1.0, 35), (-1.0, 46)):
+            control = _AnticipatoryCompletionController()
+            candidate = _ObstaclePriorityController()
+            preview = _distant_bend_observation(direction=direction)
+            np.testing.assert_array_equal(candidate.act(preview), control.act(preview))
+
+            obstacle = _compact_obstacle_observation(
+                obstacle_x=obstacle_x,
+                obstacle_top=22,
+            )
+            np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+            self.assertEqual(candidate._last_steer, control._last_steer)
+            self.assertEqual(candidate._target_speed, control._target_speed)
+            self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+
+        transitions = (
+            _observation(speed=24.0),
+            _observation(curve=0.75, speed=24.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        )
+        for transition in transitions:
+            control = _AnticipatoryCompletionController()
+            candidate = _ObstaclePriorityController()
+            preview = _distant_bend_observation(direction=1.0)
+            np.testing.assert_array_equal(candidate.act(preview), control.act(preview))
+            np.testing.assert_array_equal(
+                candidate.act(transition), control.act(transition)
+            )
+            self.assertEqual(candidate._last_steer, control._last_steer)
+            self.assertFalse(candidate._previous_action_was_preview)
+
+    def test_obstacle_priority_marker_resets_deterministically(self):
+        from agent import _ObstaclePriorityController
+
+        candidate = _ObstaclePriorityController()
+        candidate.act(_distant_bend_observation(direction=1.0))
+        self.assertTrue(candidate._previous_action_was_preview)
+        candidate.reset(None)
+        self.assertFalse(candidate._previous_action_was_preview)
+
+        obstacle = _compact_obstacle_observation(obstacle_x=46, obstacle_top=22)
+        fresh = _ObstaclePriorityController()
+        np.testing.assert_array_equal(candidate.act(obstacle), fresh.act(obstacle))
+
+    def test_obstacle_priority_is_exact_for_fresh_ordinary_obstacles(self):
+        from agent import _AnticipatoryCompletionController, _ObstaclePriorityController
+
+        curve_obstacle = _observation(curve=-0.75, speed=24.0)[-1].copy()
+        curve_obstacle[22:24, 25:28] = 0.68
+        observations = (
+            _compact_obstacle_observation(obstacle_x=35, obstacle_top=22),
+            _compact_obstacle_observation(obstacle_x=46, obstacle_top=40),
+            np.tile(curve_obstacle[None, :, :], (4, 1, 1)),
+        )
+        for observation in observations:
+            control = _AnticipatoryCompletionController()
+            candidate = _ObstaclePriorityController()
+            for _ in range(3):
+                np.testing.assert_array_equal(
+                    candidate.act(observation), control.act(observation)
+                )
+                self.assertEqual(candidate._last_steer, control._last_steer)
+                self.assertEqual(candidate._target_speed, control._target_speed)
+                self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+
+    def test_obstacle_priority_restores_opposing_curve_obstacle_after_preview(self):
+        from agent import _DistantObstacleController, _ObstaclePriorityController
+
+        for preview_direction, curve, obstacle_x in (
+            (1.0, -0.75, 25),
+            (-1.0, 0.75, 56),
+        ):
+            control = _DistantObstacleController()
+            candidate = _ObstaclePriorityController()
+            preview = _distant_bend_observation(direction=preview_direction)
+            control.act(preview)
+            candidate.act(preview)
+
+            frame = _observation(curve=curve, speed=24.0)[-1].copy()
+            frame[22:24, obstacle_x : obstacle_x + 3] = 0.68
+            obstacle = np.tile(frame[None, :, :], (4, 1, 1))
+
+            np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+            self.assertEqual(candidate._target_speed, control._target_speed)
+            self.assertEqual(candidate._obstacle_side, control._obstacle_side)
 
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent

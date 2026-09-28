@@ -6,6 +6,8 @@
   "registered_at": "2026-09-28T16:01:51.9375363+09:00",
   "clarified_at": "2026-09-28T16:09:00+09:00",
   "clarification": "Synthetic row values refer to the component centroid returned by the detector, not its bounding-box top. The early sequence is fixed at centroid rows 22.5, 26.5, and 30.5; exact-control behavior begins at centroid row 31.0 where the inherited urgency reaches 0.50. This resolves detector-coordinate wording before source editing.",
+  "evidence_correction_at": "2026-09-28T16:17:50.0996916+09:00",
+  "evidence_correction": "After implementation but before any environment execution, static review corrected 'zero' to 'near-zero': the detector's minimum two-row component has a centroid above row 22. This does not change the preregistered factor, thresholds, acceptance, or abort rules.",
   "source_commit": "11a352e1b22d967613e265e3b03122219bf14f62",
   "scope": {
     "runtime": "bare model.pt only",
@@ -37,7 +39,7 @@
       "The submission-5 car remains near the dashed center until first overlap at 6.16, spins through repeated contact, and terminates at 6.48 while still well inside both road boundaries.",
       "At the same displayed time 6.16, submission 4 is about 1.3 progress percentage points farther from the obstacle and begins a large late avoidance maneuver at 6.24 that survives but reaches the outer road edge."
     ],
-    "code_mechanism": "The current detector accepts obstacle components from row 22, but urgency is clip((row-22)/18), so the first accepted component produces zero obstacle steering and distant rows below 31 produce less than half-strength bias.",
+    "code_mechanism": "The current detector scans obstacle components from row 22, but urgency is clip((centroid_row-22)/18), so the earliest accepted components produce near-zero obstacle steering and centroid rows below 31 produce less than half-strength bias.",
     "lineage_limitation": "The root ZIP embeds the same agent and model hashes as the control, but no official receipt cryptographically binds that ZIP to the videos. The replay does not expose the actual 84x84 policy observation or action, so exact detector timing and causality are unproven."
   },
   "feedback_decision": {

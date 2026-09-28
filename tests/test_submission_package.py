@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_guarded_controller_on_visible_road(self):
+    def test_packaged_bare_model_uses_obstacle_priority_controller_on_visible_road(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,13 +87,13 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _GuardedCompletionController
+from agent import Agent, _ObstaclePriorityController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _GuardedCompletionController
+assert type(agent._forward_controller) is _ObstaclePriorityController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.10, 0.0], dtype=np.float32))
 """
             subprocess.run(

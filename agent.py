@@ -1145,6 +1145,28 @@ class _StableCompletionController:
         del straight
         return base_steering + obstacle_bias
 
+    def _adjust_obstacle_urgency(
+        self,
+        *,
+        urgency: float,
+        straight: bool,
+    ) -> float:
+        """Extension point whose default preserves the frozen controller."""
+        del straight
+        return urgency
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        """Extension point whose default preserves the frozen controller."""
+        del straight, centers, obstacle
+        return steering
+
     def _adjust_target_speed(
         self,
         *,
@@ -1205,6 +1227,12 @@ class _StableCompletionController:
         target_speed = curve_target_speed
 
         obstacle = self._nearest_obstacle(frame, centers)
+        steering = self._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
         if obstacle is not None:
             obstacle_y, obstacle_x, road_center = obstacle
             steer_limit = min(self.MAX_STEER, 0.32)
@@ -1216,6 +1244,10 @@ class _StableCompletionController:
                 self._obstacle_side = candidate_side
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
+            urgency = self._adjust_obstacle_urgency(
+                urgency=urgency,
+                straight=straight,
+            )
             steering = self._adjust_obstacle_steering(
                 base_steering=steering,
                 obstacle_bias=self._obstacle_side * 0.24 * urgency,
@@ -1333,6 +1365,129 @@ class _GuardedCompletionController(_CurveAwareObstacleController):
                 self.CLEAR_STRAIGHT_MAX_GAS,
             )
         return gas, brake
+
+
+class _DistantObstacleController(_GuardedCompletionController):
+    """Begin a bounded lateral offset on the first straight obstacle read."""
+
+    STRAIGHT_OBSTACLE_MIN_URGENCY = 0.50
+
+    def _adjust_obstacle_urgency(
+        self,
+        *,
+        urgency: float,
+        straight: bool,
+    ) -> float:
+        if straight:
+            return max(urgency, self.STRAIGHT_OBSTACLE_MIN_URGENCY)
+        return urgency
+
+
+class _AnticipatoryCompletionController(_DistantObstacleController):
+    """Align turn-in with the distant road rows already used for speed."""
+
+    DISTANT_PREVIEW_ROWS = (30, 34)
+    DISTANT_PREVIEW_STEER = 0.05
+    DISTANT_PREVIEW_BASE_LIMIT = 0.5 * _StableCompletionController.MAX_STEER_STEP
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        if (
+            obstacle is not None
+            or straight
+            or abs(steering) > self.DISTANT_PREVIEW_BASE_LIMIT
+            or 42 not in centers
+            or 54 not in centers
+            or any(row not in centers for row in self.DISTANT_PREVIEW_ROWS)
+        ):
+            return steering
+
+        far = centers[42]
+        near = centers[54]
+        if (
+            abs(far - self.IMAGE_CENTER) > self.STRAIGHT_CENTER_DEADBAND
+            or abs(far - near) > self.STRAIGHT_SWEEP_DEADBAND
+        ):
+            return steering
+
+        deltas = tuple(centers[row] - far for row in self.DISTANT_PREVIEW_ROWS)
+        if (
+            any(abs(delta) <= self.STRAIGHT_CENTER_DEADBAND for delta in deltas)
+            or deltas[0] * deltas[1] <= 0.0
+        ):
+            return steering
+
+        direction = 1.0 if deltas[0] > 0.0 else -1.0
+        if steering * direction < 0.0:
+            return steering
+        return direction * self.DISTANT_PREVIEW_STEER
+
+
+class _ObstaclePriorityController(_AnticipatoryCompletionController):
+    """Prevent a prior bend preview from weakening new obstacle avoidance."""
+
+    def __init__(self, *, cruise_speed: float = 48.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._previous_action_was_preview = False
+        self._preview_transition_pending = False
+        self._preview_requested = 0.0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._previous_action_was_preview = False
+        self._preview_transition_pending = False
+        self._preview_requested = 0.0
+
+    def act(self, observation) -> np.ndarray:
+        self._preview_transition_pending = self._previous_action_was_preview
+        self._preview_requested = 0.0
+        action = super().act(observation)
+        self._previous_action_was_preview = (
+            self._preview_requested != 0.0
+            and self._last_steer == self._preview_requested
+        )
+        self._preview_transition_pending = False
+        return action
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        adjusted = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        if adjusted != steering:
+            self._preview_requested = adjusted
+        return adjusted
+
+    def _adjust_obstacle_steering(
+        self,
+        *,
+        base_steering: float,
+        obstacle_bias: float,
+        straight: bool,
+    ) -> float:
+        adjusted = super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+        if self._preview_transition_pending and adjusted * self._last_steer < 0.0:
+            self._last_steer = 0.0
+        return adjusted
 
 
 class _RacingLineController(_ForwardCorridorController):
@@ -1836,7 +1991,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _GuardedCompletionController() if use_forward_controller else None
+            _ObstaclePriorityController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None
