@@ -1,0 +1,20 @@
+{
+  "format": "haic-tdmpc2-long-v2-branch-calibration-v1",
+  "status": "read_only_reused_TRAIN_development_diagnostic",
+  "method": "For each of the same 12 reconstructed TRAIN anchors and five fixed H3 action suffixes, compute absolute difference between the frozen model's predicted discounted raw reward return and independently replayed actual discounted raw reward return, then take mean and maximum across 60 sequences. This is magnitude calibration, distinct from the within-anchor return-order concordance over 40 non-tied pairs.",
+  "pilot_branch_receipt": "runs/tdmpc2-prefix-branches-20260928-v1.json",
+  "pilot_branch_receipt_sha256": "b6dfc5901e9f2425d1af27ec9c95906d2d5c736ebf1475a01bc4e32688339414",
+  "checkpoint_20k_receipt": "runs/tdmpc2-long-v2-ranking-20000.json",
+  "checkpoint_20k_receipt_sha256": "f648a687bfcfaa5aac5645e2f225c6dfdeccabda56583616f361876eaf526005",
+  "checkpoint_40k_receipt": "runs/tdmpc2-long-v2-ranking-40000.json",
+  "checkpoint_40k_receipt_sha256": "bf3a484f24c1699364da529f2152d76d005f074e37c0790ac308feaeb2e7116a",
+  "anchors": 12,
+  "fixed_candidate_sequences": 60,
+  "fixed_informative_within_anchor_pairs": 40,
+  "road_geometries": 4,
+  "partition": "already-consumed track-1 TRAIN, no new reset for this derived calculation",
+  "pilot_12058_decisions": {"mean_abs_h3_return_error": 0.9035645083089514, "max_abs_h3_return_error": 3.313820827652166, "concordant_fixed_pairs": 25},
+  "checkpoint_20099_decisions": {"mean_abs_h3_return_error": 1.1899169741231082, "max_abs_h3_return_error": 8.33224816465737, "concordant_fixed_pairs": 24},
+  "checkpoint_40024_decisions": {"mean_abs_h3_return_error": 0.8998391675612875, "max_abs_h3_return_error": 3.3185692880150177, "concordant_fixed_pairs": 24},
+  "interpretation": "40k improves magnitude error relative to 20k but only returns approximately to the shorter pilot (MAE 0.900 vs 0.904, maximum 3.319 vs 3.314). The user's primary world-model survival signal, identical-anchor actual-return ranking, did not improve (24/40 at both checkpoints vs pilot 25/40). Many real returns are tied; these correlated, in-development sequences cannot measure independent generalization, policy benefit, or official performance. The separately fixed seed replay's one-step reward MAE worsens from 0.059 to 0.088 because it probes another distribution."
+}
