@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "name": "anticipatory-obstacle-transition-priority-v1",
+  "purpose": "safety-review-driven-preview-to-obstacle-transition-guard",
+  "status": "preregistered",
+  "registered_at": "2026-09-28T16:18:34.2583468+09:00",
+  "source_commit": "c5946ff",
+  "depends_on": "guarded-distant-obstacle-preposition-v1 and guarded-distant-bend-preview-v1 synthetic and regression acceptance",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "neutralize only the controller's internal previous-steering value before inherited slew when the immediately preceding emitted action was exactly a registered distant preview and the current detected-obstacle steering proposal points in the opposite direction",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._AnticipatoryCompletionController",
+    "base_source_commit": "c5946ff plus the two already preregistered uncommitted candidate implementations",
+    "control_agent_worktree_sha256": "5fe410acd3551e1e77ffd0ed5f1347c33d5f9c08c361a2cc9a366a4ce25db9cb",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "trigger": {
+    "classification": "pre-merge independent static safety review",
+    "finding": "After a +0.05 distant preview, an immediately detected obstacle requiring negative avoidance is slew-limited to -0.02, while the distant-obstacle control that emitted zero on the preview frame reaches -0.07. The mirrored transition has the same weakness.",
+    "risk": "The pace-oriented preview can therefore weaken the first safety-critical avoidance action in exactly the transition most relevant to the Track 3 collision failure."
+  },
+  "hypothesis": {
+    "failure": "The inherited 0.07 command slew treats the bounded preview as persistent steering history even when a newly detected obstacle requires an immediate opposing maneuver.",
+    "repair": "Remember whether the actual prior emitted steering exactly reached the requested +/-0.05 distant preview. If and only if the next frame has a detected obstacle and the fully inherited obstacle-adjusted proposal opposes that prior preview, set the internal previous-steering value to zero before applying the unchanged sign gate and slew.",
+    "expected_effect": "Restore the first opposing obstacle action to the distant-obstacle control magnitude without increasing any registered steering target, bypassing slew generally, or changing same-direction and non-obstacle transitions."
+  },
+  "fixed": {
+    "preview_marker": "true only when the preceding frame requested distant preview and the final stored/emitted steering exactly equals that requested +/-0.05 value",
+    "transition_predicate": "preview_marker=true AND current obstacle is detected AND inherited obstacle-adjusted steering proposal * previous steering < 0",
+    "state_action": "set only internal previous steering to 0 immediately before the inherited final sign and slew logic",
+    "current_steering_target": "unchanged inherited proposal",
+    "steering_slew_per_step": 0.07,
+    "same_direction_transition": "unchanged",
+    "non_obstacle_transition": "unchanged",
+    "longitudinal_action": "unchanged",
+    "perception": "unchanged",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "official_environment_files": ["core/", "env_wrapper.py", "damage.py"],
+    "other_runtime_paths": ["drq", "explicit baseline export", "haic policy/planner"]
+  },
+  "acceptance": {
+    "synthetic": [
+      "For mirrored two-frame sequences of a qualifying distant bend followed by a straight obstacle requiring opposite avoidance, the candidate emits the same +/-0.05 preview as anticipatory control on frame one, then its complete frame-two action is bit-exact to the distant-obstacle controller and has greater avoidance magnitude than anticipatory control.",
+      "For mirrored preview-to-obstacle transitions whose avoidance agrees with the preview, every action and controller state is bit-exact to anticipatory control.",
+      "Preview-to-clear, preview-to-established-curve, ordinary obstacle, invalid-input, and reset sequences do not apply the neutralization and remain bit-exact to anticipatory control where their prior states match.",
+      "The marker clears after any non-preview emitted action and on reset.",
+      "Actions remain finite, bounded, slew-limited outside the single registered neutralization, deterministic after reset, and mutually exclusive in gas and brake."
+    ],
+    "regression": [
+      "Every earlier stable, obstacle-preposition, and distant-bend-preview isolated contract remains valid.",
+      "Existing controller, inference, policy-routing, and package tests pass.",
+      "Bare state-dict routing selects a final obstacle-priority subclass while DrQ, explicit exports, and HAIC paths remain unchanged."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "The current obstacle steering target, speed target, gas, brake, detector, pass side, or perception changes.",
+    "The gate applies without an immediately preceding actually emitted preview, without a current detected obstacle, or when the proposal agrees with the prior preview.",
+    "A general slew increase, track-specific signal, second transition threshold, or direct action override is required.",
+    "Any frozen DrQ artifact, official environment file, reserved seed, model.pt, user video, or evidence ZIP changes.",
+    "Any relevant interface, package, or deterministic-reset test fails."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "No environment execution, safety improvement claim, submission, or SOTA promotion is authorized."
+  ]
+}
