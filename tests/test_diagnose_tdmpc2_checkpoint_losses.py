@@ -249,3 +249,20 @@ def test_real_tiny_model_repeats_seeded_shifts_without_optimizer_or_rng_mutation
             torch.testing.assert_close(value, before[key], rtol=0, atol=0)
     finally:
         torch.set_num_threads(threads)
+
+
+def test_cli_writes_exclusive_source_scoped_loss_receipt(tmp_path, monkeypatch, capsys):
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    output = runs / "tdmpc2-long-v2-losses-20000.json"
+    monkeypatch.setattr(diagnosis, "ROOT", tmp_path)
+    monkeypatch.setattr(diagnosis, "score", lambda **kwargs: {"checkpoints": [{"target": 20000}]})
+    monkeypatch.setattr("sys.argv", ["audit", "--targets", "20000", "--output", str(output)])
+    diagnosis.main()
+    assert json.loads(output.read_text())["checkpoints"][0]["target"] == 20000
+    assert json.loads(capsys.readouterr().out)["sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()
+    with pytest.raises(FileExistsError):
+        diagnosis.main()
+    monkeypatch.setattr("sys.argv", ["audit", "--targets", "20000", "--output", str(runs / "other.json")])
+    with pytest.raises(SystemExit):
+        diagnosis.main()

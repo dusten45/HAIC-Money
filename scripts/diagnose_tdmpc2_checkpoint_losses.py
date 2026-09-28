@@ -15,6 +15,7 @@ import gc
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import time
 
@@ -436,8 +437,25 @@ def main() -> None:
     parser.add_argument("--targets", nargs="+", type=int, default=list(TARGETS), choices=TARGETS,
                         help="complete checkpoint targets to compare; default: all four")
     parser.add_argument("--seed", type=int, default=834, help="shared CPU augmentation/policy seed")
+    parser.add_argument("--output", type=Path, help="exclusive runs/ receipt for this target subset")
     args = parser.parse_args()
-    print(json.dumps(score(targets=tuple(args.targets), seed=args.seed), sort_keys=True, allow_nan=False))
+    output = args.output.absolute() if args.output is not None else None
+    if output is not None:
+        name = f"tdmpc2-long-v2-losses-{'-'.join(map(str, args.targets))}.json"
+        if output != ROOT / "runs" / name or output.parent.is_symlink():
+            parser.error("output must be the exact source-bound direct runs/ receipt")
+    report = score(targets=tuple(args.targets), seed=args.seed)
+    payload = json.dumps(report, sort_keys=True, allow_nan=False) + "\n"
+    if output is None:
+        print(payload, end="")
+        return
+    with output.open("x", encoding="utf-8") as stream:
+        stream.write(payload)
+        stream.flush()
+        os.fsync(stream.fileno())
+    print(json.dumps({"output": output.relative_to(ROOT).as_posix(),
+                      "sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+                      "targets": args.targets}, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -358,3 +358,20 @@ def test_cli_help_is_read_only(capsys, monkeypatch):
         scorer.main()
     assert ex.value.code == 0
     assert "--targets" in capsys.readouterr().out
+
+
+def test_cli_writes_exclusive_source_scoped_ranking_receipt(tmp_path, monkeypatch, capsys):
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    output = runs / "tdmpc2-long-v2-ranking-20000.json"
+    monkeypatch.setattr(scorer, "ROOT", tmp_path)
+    monkeypatch.setattr(scorer, "score", lambda **kwargs: {"checkpoints": [{"target": 20000}]})
+    monkeypatch.setattr("sys.argv", ["score", "--targets", "20000", "--output", str(output)])
+    scorer.main()
+    assert json.loads(output.read_text())["checkpoints"][0]["target"] == 20000
+    assert json.loads(capsys.readouterr().out)["sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()
+    with pytest.raises(FileExistsError):
+        scorer.main()
+    monkeypatch.setattr("sys.argv", ["score", "--targets", "20000", "--output", str(runs / "other.json")])
+    with pytest.raises(SystemExit):
+        scorer.main()

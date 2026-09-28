@@ -1,6 +1,7 @@
 """Read-only H3 reward-ranking comparison on the frozen v2 TRAIN branches.
 
-No environment import, construction, reset, optimizer step, or output file. A
+No environment import, construction, reset or optimizer step; an optional
+exclusive runs/ output receipt can preserve the read-only score. A
 checkpoint must have a complete episode-boundary training row, matching step
 prefix and SHA before torch.load (which requires trusted local pickle files).
 The 40 informative pairs share anchors/candidates on four reused TRAIN roads;
@@ -13,6 +14,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -29,7 +31,7 @@ BRANCH_SUMMARY_SHA256 = "55fc15b7d6b8951cfc77b051b7719520289a4338d3431783a552c84
 LONG_PROTOCOL = "experiments/tdmpc2-long-reused-train-v2.json"
 LONG_PROTOCOL_SHA256 = "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec"
 CURSOR_SOURCE = "scripts/diagnose_tdmpc2_checkpoint_losses.py"
-CURSOR_SOURCE_SHA256 = "34f0077d86bbfba966fffbbf0a8fab595a7e8aea36130d9a26e0ccce87c1cec3"
+CURSOR_SOURCE_SHA256 = "ef6552479192e2e113951edb3bfbf7a4c87b3a508dd884c45ce6a270a0aebe6f"
 RUN = "runs/tdmpc2-long-20260928-v2"
 TARGETS = (20000, 40000, 70000, 100000)
 ROADS = (3910800001, 3910800004, 3910800034, 3910800085)
@@ -410,8 +412,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--targets", nargs="+", type=int, choices=TARGETS, default=list(TARGETS),
                         help="ascending sealed checkpoint subset; default all four")
+    parser.add_argument("--output", type=Path, help="exclusive runs/ receipt for this target subset")
     args = parser.parse_args()
-    print(json.dumps(score(targets=tuple(args.targets)), sort_keys=True, allow_nan=False))
+    output = args.output.absolute() if args.output is not None else None
+    if output is not None:
+        name = f"tdmpc2-long-v2-ranking-{'-'.join(map(str, args.targets))}.json"
+        if output != ROOT / "runs" / name or output.parent.is_symlink():
+            parser.error("output must be the exact source-bound direct runs/ receipt")
+    payload = json.dumps(score(targets=tuple(args.targets)), sort_keys=True, allow_nan=False) + "\n"
+    if output is None:
+        print(payload, end="")
+        return
+    with output.open("x", encoding="utf-8") as stream:
+        stream.write(payload)
+        stream.flush()
+        os.fsync(stream.fileno())
+    print(json.dumps({"output": output.relative_to(ROOT).as_posix(),
+                      "sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+                      "targets": args.targets}, sort_keys=True))
 
 
 if __name__ == "__main__":
