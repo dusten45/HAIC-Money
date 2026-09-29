@@ -89,6 +89,18 @@ def _distant_bend_observation(
     return np.tile(frame[None, :, :], (4, 1, 1))
 
 
+def _parallel_offset_observation(*, offset=0.0, speed=0.0):
+    """Render a straight corridor translated laterally without changing shape."""
+    frame = np.full((84, 84), 0.1, dtype=np.float32)
+    for row in range(20, 63):
+        center = 42.0 + offset
+        left = int(round(center - 11))
+        right = int(round(center + 11))
+        frame[row, left:right] = 0.4
+    frame[77:83, 10:13] = (0.27 + 0.085 * speed) / 18.0
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
 class TestVisionCorridorAgent(unittest.TestCase):
     def test_stable_completion_controller_matches_frozen_reference_trace(self):
         from agent import _StableCompletionController
@@ -1869,6 +1881,268 @@ class TestVisionCorridorAgent(unittest.TestCase):
                 changed += 1
         self.assertGreater(changed, 0)
         self.assertGreater(obstacle_equal, 0)
+
+    def test_translation_invariant_exit_accelerates_parallel_offsets(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        for offset in (-6.0, -4.0, -2.0, 2.0, 4.0, 6.0):
+            observation = _parallel_offset_observation(
+                offset=offset, speed=60.0
+            )
+            control = _FastCornerCarryController()
+            candidate = _TranslationInvariantExitController()
+            with patch.object(control, "_estimate_speed", return_value=60.0):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=60.0):
+                candidate_action = candidate.act(observation)
+            with self.subTest(offset=offset):
+                self.assertFalse(candidate._pace_straight)
+                self.assertTrue(candidate._clear_exit)
+                self.assertEqual(candidate._exit_shape_sweep, 0.0)
+                self.assertEqual(candidate._pace_command_target, 68.0)
+                self.assertEqual(candidate._pace_effective_target, 68.0)
+                self.assertEqual(
+                    float(candidate_action[0]), float(control_action[0])
+                )
+                self.assertAlmostEqual(
+                    float(candidate_action[1]), 0.135, places=6
+                )
+                self.assertEqual(float(candidate_action[2]), 0.0)
+                self.assertFalse(np.array_equal(candidate_action, control_action))
+
+    def test_translation_invariant_exit_closes_geometry_boundaries(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        frame = np.full((4, 84, 84), 0.1, dtype=np.float32)
+
+        def run(centers):
+            control = _FastCornerCarryController()
+            candidate = _TranslationInvariantExitController()
+            with patch.object(control, "_road_centers", return_value=centers), patch.object(
+                control, "_estimate_speed", return_value=60.0
+            ):
+                control_action = control.act(frame)
+            with patch.object(candidate, "_road_centers", return_value=centers), patch.object(
+                candidate, "_estimate_speed", return_value=60.0
+            ):
+                candidate_action = candidate.act(frame)
+            return control, candidate, control_action, candidate_action
+
+        sampled_rows = (30, 34, 38, 42, 46, 50, 54)
+        at_offset = {row: 47.5 for row in sampled_rows}
+        _, candidate, _, action = run(at_offset)
+        self.assertTrue(candidate._clear_exit)
+        self.assertEqual(candidate._pace_command_target, 68.0)
+        self.assertAlmostEqual(float(action[1]), 0.135, places=6)
+
+        over_offset_value = np.nextafter(47.5, np.inf)
+        over_offset = {
+            row: over_offset_value for row in sampled_rows
+        }
+        control, candidate, control_action, candidate_action = run(over_offset)
+        self.assertFalse(candidate._clear_exit)
+        np.testing.assert_array_equal(candidate_action, control_action)
+        self.assertEqual(
+            candidate._pace_command_target, control._pace_command_target
+        )
+
+        at_shape = dict(at_offset)
+        at_shape[30] = 49.0
+        _, candidate, _, action = run(at_shape)
+        self.assertTrue(candidate._clear_exit)
+        self.assertEqual(candidate._exit_shape_sweep, 1.5)
+        self.assertAlmostEqual(float(action[1]), 0.135, places=6)
+
+        over_shape = dict(at_offset)
+        over_shape[30] = np.nextafter(49.0, np.inf)
+        control, candidate, control_action, candidate_action = run(over_shape)
+        self.assertFalse(candidate._clear_exit)
+        np.testing.assert_array_equal(candidate_action, control_action)
+
+        missing = dict(at_offset)
+        del missing[34]
+        control, candidate, control_action, candidate_action = run(missing)
+        self.assertIsNone(candidate._exit_shape_sweep)
+        self.assertFalse(candidate._clear_exit)
+        np.testing.assert_array_equal(candidate_action, control_action)
+
+        near_kink = dict(at_offset)
+        near_kink[46] = 44.5
+        near_kink[50] = 44.5
+        control, candidate, control_action, candidate_action = run(near_kink)
+        self.assertEqual(candidate._exit_shape_sweep, 3.0)
+        self.assertFalse(candidate._clear_exit)
+        np.testing.assert_array_equal(candidate_action, control_action)
+
+    def test_translation_invariant_exit_closes_steering_boundary(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        centers = {row: 45.5 for row in (30, 34, 38, 42, 46, 50, 54)}
+        for request, expected in (
+            (np.nextafter(0.28, -np.inf), True),
+            (0.28, True),
+            (np.nextafter(0.28, np.inf), False),
+        ):
+            controller = _TranslationInvariantExitController()
+            with patch.object(
+                _FastCornerCarryController,
+                "_adjust_road_steering",
+                return_value=request,
+            ):
+                adjusted = controller._adjust_road_steering(
+                    steering=0.0,
+                    straight=False,
+                    centers=centers,
+                    obstacle=None,
+                )
+            with self.subTest(request=request):
+                self.assertEqual(adjusted, request)
+                self.assertEqual(controller._clear_exit, expected)
+
+    def test_translation_invariant_exit_uses_straight_pedal_boundaries(self):
+        from agent import _TranslationInvariantExitController
+
+        observation = _parallel_offset_observation(offset=6.0, speed=0.0)
+        cases = (
+            (np.nextafter(60.0, -np.inf), 0.18, 0.0),
+            (60.0, 0.135, 0.0),
+            (np.nextafter(65.0, -np.inf), 0.135, 0.0),
+            (65.0, 0.09, 0.0),
+            (69.0, 0.09, 0.0),
+            (np.nextafter(69.0, np.inf), 0.0, 0.04),
+        )
+        for speed, expected_gas, expected_brake in cases:
+            controller = _TranslationInvariantExitController()
+            with patch.object(controller, "_estimate_speed", return_value=speed):
+                action = controller.act(observation)
+            with self.subTest(speed=speed):
+                self.assertTrue(controller._clear_exit)
+                self.assertEqual(controller._pace_command_target, 68.0)
+                self.assertAlmostEqual(
+                    float(action[1]), expected_gas, places=6
+                )
+                self.assertAlmostEqual(
+                    float(action[2]), expected_brake, places=6
+                )
+                self.assertEqual(float(action[1]) * float(action[2]), 0.0)
+
+    def test_translation_invariant_exit_preserves_true_curves_and_hazards(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        control = _FastCornerCarryController()
+        candidate = _TranslationInvariantExitController()
+        true_curve = _observation(curve=0.25, speed=45.0)
+        np.testing.assert_array_equal(
+            candidate.act(true_curve), control.act(true_curve)
+        )
+        self.assertFalse(candidate._clear_exit)
+
+        obstacle = _observation(
+            curve=0.0,
+            obstacle_x=42,
+            obstacle_y=50,
+            speed=60.0,
+        )
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        self.assertFalse(candidate._clear_exit)
+
+        clear_exit = _parallel_offset_observation(offset=6.0, speed=45.0)
+        for miss in range(candidate.OBSTACLE_MISS_LIMIT + 1):
+            control_action = control.act(clear_exit)
+            candidate_action = candidate.act(clear_exit)
+            with self.subTest(miss=miss + 1):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertFalse(candidate._clear_exit)
+
+        control_clear = control.act(clear_exit)
+        candidate_clear = candidate.act(clear_exit)
+        self.assertTrue(candidate._clear_exit)
+        self.assertEqual(float(candidate_clear[0]), float(control_clear[0]))
+        self.assertFalse(np.array_equal(candidate_clear, control_clear))
+
+    def test_translation_invariant_exit_preserves_recovery_and_reset(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        candidate = _TranslationInvariantExitController()
+        control = _FastCornerCarryController()
+        exit_observation = _parallel_offset_observation(offset=6.0, speed=45.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        candidate.act(exit_observation)
+        control.act(exit_observation)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+
+        candidate.reset(None)
+        fresh = _TranslationInvariantExitController()
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+        np.testing.assert_array_equal(
+            candidate.act(exit_observation), fresh.act(exit_observation)
+        )
+
+    def test_translation_invariant_exit_randomized_gate_only(self):
+        from agent import (
+            _FastCornerCarryController,
+            _TranslationInvariantExitController,
+        )
+
+        rng = np.random.default_rng(20260930)
+        changed = 0
+        for _ in range(256):
+            speed = float(rng.uniform(0.0, 80.0))
+            offset = float(rng.uniform(-9.0, 9.0))
+            curve = float(rng.choice((0.0, 0.0, -0.10, 0.10, -0.25, 0.25)))
+            obstacle = bool(rng.integers(0, 2))
+            if curve == 0.0 and not obstacle:
+                observation = _parallel_offset_observation(offset=offset)
+            else:
+                observation = _observation(
+                    curve=curve,
+                    obstacle_x=42 if obstacle else None,
+                    obstacle_y=int(rng.choice((32, 50))),
+                    speed=0.0,
+                )
+
+            control = _FastCornerCarryController()
+            candidate = _TranslationInvariantExitController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(float(candidate_action[0]), float(control_action[0]))
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(
+                float(candidate_action[1]) * float(candidate_action[2]), 0.0
+            )
+            if np.array_equal(candidate_action, control_action):
+                continue
+            changed += 1
+            self.assertTrue(candidate._clear_exit)
+            self.assertFalse(obstacle)
+            self.assertFalse(candidate._pace_straight)
+            self.assertIsNotNone(candidate._exit_shape_sweep)
+            self.assertLessEqual(
+                candidate._exit_shape_sweep,
+                candidate.EXIT_SHAPE_SWEEP_MAX,
+            )
+            self.assertEqual(candidate._pace_command_target, 68.0)
+        self.assertGreater(changed, 0)
 
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (

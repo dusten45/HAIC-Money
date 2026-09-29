@@ -1894,6 +1894,139 @@ class _FastCornerCarryController(_HighSpeedPreviewBrakeController):
         return curve_gas * steering_factor, 0.0
 
 
+class _TranslationInvariantExitController(_FastCornerCarryController):
+    """Accelerate on aligned curve exits before recentering is complete.
+
+    The inherited straight predicate intentionally stays unchanged.  This
+    layer adds only a longitudinal gate whose road-shape measurement compares
+    sampled centers with another sampled center, so lateral translation is not
+    mistaken for curvature.  Steering and all obstacle states remain inherited.
+    """
+
+    EXIT_SHAPE_ROWS = (30, 34, 38, 42, 46, 50)
+    EXIT_SHAPE_SWEEP_MAX = 1.5
+    EXIT_HEADING_MAX = 1.5
+    EXIT_CENTER_OFFSET_MAX = 6.0
+    EXIT_STEER_REQUEST_MAX = 0.28
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._exit_shape_sweep = None
+        self._clear_exit = False
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._exit_shape_sweep = None
+        self._clear_exit = False
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        adjusted = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        self._exit_shape_sweep = None
+        self._clear_exit = False
+        required_rows = (*self.EXIT_SHAPE_ROWS, 54)
+        if any(row not in centers for row in required_rows):
+            return adjusted
+
+        near = float(centers[54])
+        far = float(centers[42])
+        shape_sweep = max(
+            abs(float(centers[row]) - near) for row in self.EXIT_SHAPE_ROWS
+        )
+        self._exit_shape_sweep = float(shape_sweep)
+        self._clear_exit = bool(
+            not straight
+            and obstacle is None
+            and not self._carry_latched_at_frame_start
+            and self._obstacle_side == 0.0
+            and shape_sweep <= self.EXIT_SHAPE_SWEEP_MAX
+            and abs(far - near) <= self.EXIT_HEADING_MAX
+            and abs(far - self.IMAGE_CENTER) <= self.EXIT_CENTER_OFFSET_MAX
+            and abs(adjusted) <= self.EXIT_STEER_REQUEST_MAX
+        )
+        return adjusted
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed(
+            target_speed=target_speed,
+            curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
+        if (
+            self._clear_exit
+            and obstacle is None
+            and not self._carry_latched_at_frame_start
+            and self._obstacle_side == 0.0
+        ):
+            self._pace_command_target = self.STRAIGHT_TARGET_SPEED
+            return self.STRAIGHT_TARGET_SPEED
+        return inherited
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        inherited_gas, inherited_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if (
+            not self._clear_exit
+            or obstacle is not None
+            or self._carry_latched_at_frame_start
+            or self._obstacle_side != 0.0
+            or self._pace_effective_target is None
+        ):
+            return inherited_gas, inherited_brake
+
+        target = self._pace_effective_target
+        if self._pace_speed > target + 1.0:
+            exit_brake = float(
+                np.clip(
+                    (self._pace_speed - target) * 0.012,
+                    0.04,
+                    self.MAX_BRAKE,
+                )
+            )
+            exit_brake = min(
+                exit_brake,
+                float(
+                    np.nextafter(
+                        np.float32(self.MAX_BRAKE), np.float32(0.0)
+                    )
+                ),
+            )
+            return 0.0, exit_brake
+        if self._pace_speed < target - 8.0:
+            return self.STRAIGHT_GAS_FULL, 0.0
+        if self._pace_speed < target - 3.0:
+            return self.STRAIGHT_GAS_MID, 0.0
+        return self.STRAIGHT_GAS_HOLD, 0.0
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2395,7 +2528,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _FastCornerCarryController()
+            _TranslationInvariantExitController()
             if use_forward_controller
             else None
         )
