@@ -4,7 +4,7 @@ This is a candidate/provenance ledger, not a leaderboard. A per-track historical
 best may come from different submissions and is never presented as a single-model
 result.
 
-## Current Validated Baseline
+## Historical Validated DrQ Baseline (Research Closed)
 
 | Field | Value |
 |---|---|
@@ -15,6 +15,7 @@ result.
 | Source revisions | L2 execution `8e5fa46`; padding execution `a28ef02`. Result records are [`L2`](../../experiments/drqv2-steering-logit-v1-result.json) and [`padding`](../../experiments/drqv2-augmentation-pad-v1-result.json). |
 | Confirmation / promotion | Internal confirmation receipts were operationally valid, but both studies rejected their treatments. No blind candidate, official package release, or official confirmation was authorized. |
 | Status | Internal validated baseline only; not an official submitted or confirmed model |
+| Research direction | **CLOSED by user direction on 2026-09-29.** Preserve these actor/checkpoint and local package records as historical evidence only; no further DrQ work, promotion, confirmation or submission is planned. See the [closure decision](../decisions/INDEX.md#close-the-drq-v2-research-line) and [speed-only negative result](../../experiments/drqv2-speed-reused-development-v1-result.json). |
 
 ## Best Single-Model Candidate
 

@@ -31,6 +31,31 @@ submitted, or blind candidate.
 **Revisit condition:** A new candidate follows a new frozen protocol and satisfies
 its own gates.
 
+## Close the DrQ-v2 Research Line
+
+**Context:** The user ended DrQ-v2 work on 2026-09-29 and directed that no more
+resources be spent on this idea. This supersedes the revisit conditions and
+possible follow-ups in the historical DrQ decisions and plans below.
+
+**Evidence:** The pad-4 controls remain historical internal baselines, not an
+official model. Later geometry-mix, source-retention, residual-option and
+speed-only studies did not establish a promotable improvement. The final
+[`speed-only result`](../../experiments/drqv2-speed-reused-development-v1-result.json)
+lost four previously completed local development cells across tracks 1-2;
+track 3 had no paired completed lap. The experiment
+[`index`](../experiments/INDEX.md) links the earlier studies and their limits.
+
+**Decision:** **CLOSED.** Do not spend further resources on DrQ-v2 research,
+training, data collection, diagnostics, evaluation, speed or completion tuning,
+or candidate packaging/submission work. Do not promote the existing local ZIP
+or relabel its internal results as official. Preserve all frozen protocols,
+negative results, checkpoints and local package artifacts as historical evidence;
+the closure is a resource-priority decision, not a proof that DrQ-v2 cannot
+work in principle. Other algorithm lines are unaffected.
+
+**Revisit condition:** Only a new explicit user instruction reopening DrQ-v2;
+historical conditional follow-up language is not authorization.
+
 ## Reject Steering-Logit L2 at 0.001
 
 **Context:** Saturated steering logits and zero squash derivatives motivated one

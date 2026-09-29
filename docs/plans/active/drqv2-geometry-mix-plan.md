@@ -1,4 +1,11 @@
-# DrQ-v2 Geometry-Mix Fine-Tuning
+# DrQ-v2 Geometry-Mix Fine-Tuning (CLOSED)
+
+**Research line closed by user direction on 2026-09-29.** This file preserves
+the historical experiment plan and outcomes, not an active work queue. No
+further DrQ-v2 training, data collection, diagnosis, evaluation, speed tuning,
+candidate selection or official action is planned. Earlier conditional
+follow-up language below is superseded by the
+[closure decision](../../decisions/INDEX.md#close-the-drq-v2-research-line).
 
 ## Hypotheses
 
@@ -165,3 +172,30 @@ consult the DrQ report and global migration handoff before deciding whether an
 explicitly authorized, separately audited sixth-arm reconstruction is feasible.
 Do not launch a seventh arm, change lambda/ratio/encoder, rerun occupied paths,
 open protected data, or evaluate the incomplete six-arm gate on your own.
+
+## Separate Speed-Only Follow-Up (2026-09-29 11:46 UTC)
+
+The user's new direction is to prioritize faster completed laps on local
+track IDs 1-3 while retaining existing completed roads. This does not
+reopen the closed r6/r7/final-source retention-training line above or promote
+its new actors. The unchanged pad-4 control seed1 actor (SHA-256
+`c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954`)
+was the best-supported DrQ starting point, not an official model selection.
+
+The [separate speed protocol](../../../experiments/drqv2-speed-reused-development-v1.json)
+and [cell audit](../../../experiments/drqv2-speed-reused-development-v1-audit.json)
+froze an inference-only light-brake reduction on 16 previously consumed
+track-1 TRAIN-DIAGNOSTIC roads plus eight previously consumed residual-pilot
+development roads each on tracks 2/3. Both fixed arms completed 32 paired
+cells twice (128 episodes). The [source-bound result](../../../experiments/drqv2-speed-reused-development-v1-result.json)
+shows track1 control/treatment 5/16 vs 3/16 (three lost baseline finishes),
+track2 1/8 vs 0/8 (one lost) and track3 0/8 vs 0/8 (no paired speed
+measurement). Two mutually completed track-1 laps were 1,740 and 1,280 ms
+faster; those two conditional observations do not meet the frozen no-loss,
+every-track and >=4,000-ms speed gate. **Reject this controller**, preserve
+the original actor and packaged ZIP, and do not tune its thresholds on this
+already outcome-exposed set. A genuinely different speed hypothesis needs
+its own auditable source/cell protocol and enough baseline completions on
+each target track; no official, protected or fresh claim follows from this
+failed development pilot. The user subsequently closed the whole DrQ-v2
+research line; that hypothetical follow-up is no longer planned.

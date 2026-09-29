@@ -1,7 +1,8 @@
 # Current Research State
 
-Last refreshed: 2026-09-27. This is the current-state source of truth, not an
-experiment changelog. Evidence and historical decisions are linked below.
+Last refreshed: 2026-09-29 for the user-directed DrQ-v2 closure. This is the
+current-state source of truth, not an experiment changelog. Evidence and
+historical decisions are linked below.
 
 **Instance-migration freeze (2026-09-27 05:10 UTC):** The user stopped new
 experiments and requested safe Vast.ai shutdown. The last live DrQ learner was
@@ -15,8 +16,16 @@ proof this instance can be removed.
 
 ## Current Position
 
+**DrQ-v2 is CLOSED by user direction (2026-09-29).** Do not initiate further
+DrQ-v2 research, training, evaluation, speed/completion variants or official
+actions. DrQ rows below and later historical snapshots record past work, not
+an active queue or a candidate promotion. Preserve the original actor, local
+ZIP and all negative-result evidence; see the
+[closure decision](../decisions/INDEX.md#close-the-drq-v2-research-line).
+
 | Area | Current status |
 |---|---|
+| DrQ-v2 speed-only follow-up | **CLOSED with the entire DrQ-v2 line by user direction.** A frozen pad-4 seed1 brake-only inference intervention failed to preserve completed roads on 32 repeatedly reused development cells: track1 5/16 control versus 3/16 treatment (three lost finishes), track2 1/8 versus 0/8 (one lost), track3 0/8 in both arms. Only two mutually completed track1 laps shortened by 1.74/1.28 seconds; no cross-track speed result exists. The 128-episode CPU21 run passed two-reload parity and action-trace hashes. Do not deploy or pursue another DrQ speed hypothesis. The original actor/local ZIP and evidence remain unchanged. See the [`frozen result`](../../experiments/drqv2-speed-reused-development-v1-result.json) and [closure decision](../decisions/INDEX.md#close-the-drq-v2-research-line). |
 | Validated internal baseline | Native DrQ-v2 control with augmentation pad 4. Two unique control actors, one per training seed, were evaluated on two fresh internal confirmation cohorts; the recorded control outcomes range from 4 to 7 finishes in 32 cells. |
 | Active research direction | DreamerV3 is CLOSED. Other algorithm work is listed separately below; there is no active Dreamer experiment or implementation task. |
 | Current blocker | None for DreamerV3: the research line is closed under the current design and budget. This is not a theoretical impossibility judgment; further progress would require design-level rework. |
