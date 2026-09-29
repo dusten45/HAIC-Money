@@ -2692,6 +2692,444 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(changed, 0)
         self.assertGreater(obstacle_exact, 0)
 
+    def test_post_obstacle_retention_is_fast_corner_exact_without_latch(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        observations = (
+            _observation(curve=0.25, speed=45.0),
+            _observation(curve=-0.50, speed=45.0),
+            _observation(curve=0.0, speed=60.0),
+            _parallel_offset_observation(offset=6.0, speed=60.0),
+            _distant_bend_observation(direction=1.0, speed=0.0),
+            _distant_bend_observation(direction=-1.0, speed=0.0),
+        )
+        for index, observation in enumerate(observations):
+            control = _FastCornerCarryController()
+            candidate = _PostObstacleCurveRetentionController()
+            for frame_index in range(3):
+                control_action = control.act(observation)
+                candidate_action = candidate.act(observation)
+                with self.subTest(index=index, frame=frame_index):
+                    np.testing.assert_array_equal(candidate_action, control_action)
+                    self.assertFalse(candidate._curve_retention_active)
+                    for name, value in control.__dict__.items():
+                        self.assertEqual(getattr(candidate, name), value)
+
+    def test_post_obstacle_retention_applies_on_four_matching_misses_only(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        for direction, obstacle_x in ((1.0, 32), (-1.0, 42)):
+            control = _FastCornerCarryController()
+            candidate = _PostObstacleCurveRetentionController()
+            detected = _observation(
+                curve=direction * 0.25,
+                obstacle_x=obstacle_x,
+                obstacle_y=50,
+                speed=45.0,
+            )
+            miss = _observation(curve=direction * 0.25, speed=45.0)
+            np.testing.assert_array_equal(
+                candidate.act(detected), control.act(detected)
+            )
+            self.assertEqual(candidate._obstacle_side, direction)
+            self.assertFalse(candidate._curve_retention_active)
+
+            active = []
+            for miss_index in range(1, 7):
+                control_action = control.act(miss)
+                candidate_action = candidate.act(miss)
+                active.append(candidate._curve_retention_active)
+                with self.subTest(direction=direction, miss=miss_index):
+                    self.assertEqual(
+                        candidate._pace_effective_target,
+                        control._pace_effective_target,
+                    )
+                    if miss_index <= 4:
+                        self.assertAlmostEqual(
+                            candidate._curve_retention_control_request,
+                            direction * 0.084,
+                            places=12,
+                        )
+                        self.assertAlmostEqual(
+                            candidate._carry_steer_request,
+                            direction * 0.1008,
+                            places=12,
+                        )
+                        self.assertGreater(
+                            abs(float(candidate_action[0])),
+                            abs(float(control_action[0])),
+                        )
+                        self.assertEqual(
+                            float(candidate_action[1]),
+                            float(control_action[1]),
+                        )
+                        self.assertEqual(
+                            float(candidate_action[2]),
+                            float(control_action[2]),
+                        )
+                    else:
+                        np.testing.assert_array_equal(
+                            candidate_action, control_action
+                        )
+            self.assertEqual(active, [True, True, True, True, False, False])
+            self.assertEqual(candidate._obstacle_side, 0.0)
+            self.assertEqual(candidate._obstacle_missing, 0)
+
+    def test_post_obstacle_retention_rejects_opposite_curve_and_reacquires_exactly(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        for direction, matching_x, opposing_x in (
+            (1.0, 32, 42),
+            (-1.0, 42, 38),
+        ):
+            control = _FastCornerCarryController()
+            candidate = _PostObstacleCurveRetentionController()
+            detected = _observation(
+                curve=direction * 0.25,
+                obstacle_x=matching_x,
+                obstacle_y=50,
+                speed=45.0,
+            )
+            matching_miss = _observation(
+                curve=direction * 0.25,
+                speed=45.0,
+            )
+            opposing_miss = _observation(
+                curve=-direction * 0.25,
+                speed=45.0,
+            )
+            reacquired = _observation(
+                curve=direction * 0.25,
+                obstacle_x=opposing_x,
+                obstacle_y=50,
+                speed=45.0,
+            )
+            np.testing.assert_array_equal(
+                candidate.act(detected), control.act(detected)
+            )
+            control_matching = control.act(matching_miss)
+            candidate_matching = candidate.act(matching_miss)
+            self.assertTrue(candidate._curve_retention_active)
+            self.assertGreater(
+                abs(float(candidate_matching[0])),
+                abs(float(control_matching[0])),
+            )
+
+            control_opposing = control.act(opposing_miss)
+            candidate_opposing = candidate.act(opposing_miss)
+            with self.subTest(direction=direction, phase="opposite_curve"):
+                self.assertFalse(candidate._curve_retention_active)
+                np.testing.assert_array_equal(
+                    candidate_opposing[1:], control_opposing[1:]
+                )
+                self.assertEqual(
+                    np.sign(float(candidate_opposing[0])),
+                    np.sign(float(control_opposing[0])),
+                )
+                self.assertLessEqual(
+                    abs(
+                        float(candidate_opposing[0])
+                        - float(control_opposing[0])
+                    ),
+                    0.06000001,
+                )
+
+            control_reacquired = control.act(reacquired)
+            candidate_reacquired = candidate.act(reacquired)
+            with self.subTest(direction=direction, phase="reacquired"):
+                np.testing.assert_array_equal(
+                    candidate_reacquired, control_reacquired
+                )
+                self.assertFalse(candidate._curve_retention_active)
+                self.assertEqual(
+                    candidate._obstacle_side, control._obstacle_side
+                )
+
+    def test_post_obstacle_retention_bounds_abrupt_release_transitions(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        for direction, matching_x, opposing_x in (
+            (1.0, 32, 42),
+            (-1.0, 42, 38),
+        ):
+            transitions = (
+                ("straight", _observation(curve=0.0, speed=45.0)),
+                (
+                    "opposite_curve",
+                    _observation(curve=-direction * 0.25, speed=45.0),
+                ),
+                (
+                    "opposing_obstacle",
+                    _observation(
+                        curve=direction * 0.25,
+                        obstacle_x=opposing_x,
+                        obstacle_y=50,
+                        speed=45.0,
+                    ),
+                ),
+            )
+            for name, transition in transitions:
+                control = _FastCornerCarryController()
+                candidate = _PostObstacleCurveRetentionController()
+                detected = _observation(
+                    curve=direction * 0.25,
+                    obstacle_x=matching_x,
+                    obstacle_y=50,
+                    speed=45.0,
+                )
+                matching = _observation(
+                    curve=direction * 0.25,
+                    speed=45.0,
+                )
+                np.testing.assert_array_equal(
+                    candidate.act(detected), control.act(detected)
+                )
+                for _ in range(4):
+                    control.act(matching)
+                    candidate.act(matching)
+                    self.assertTrue(candidate._curve_retention_active)
+
+                control_action = control.act(transition)
+                candidate_action = candidate.act(transition)
+                with self.subTest(direction=direction, transition=name):
+                    self.assertFalse(candidate._curve_retention_active)
+                    np.testing.assert_array_equal(
+                        candidate_action[1:], control_action[1:]
+                    )
+                    self.assertEqual(
+                        np.sign(float(candidate_action[0])),
+                        np.sign(float(control_action[0])),
+                    )
+                    self.assertLessEqual(
+                        abs(
+                            float(candidate_action[0])
+                            - float(control_action[0])
+                        ),
+                        0.06000001,
+                    )
+
+    def test_post_obstacle_retention_preserves_latched_preview_priority(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        for direction, detected_x, obstacle_x in (
+            (1.0, 32, 46),
+            (-1.0, 42, 35),
+        ):
+            control = _FastCornerCarryController()
+            candidate = _PostObstacleCurveRetentionController()
+            detected = _observation(
+                curve=direction * 0.25,
+                obstacle_x=detected_x,
+                obstacle_y=50,
+                speed=0.0,
+            )
+            np.testing.assert_array_equal(
+                candidate.act(detected), control.act(detected)
+            )
+
+            preview = _distant_bend_observation(
+                direction=direction,
+                speed=0.0,
+            )
+            control_preview = control.act(preview)
+            candidate_preview = candidate.act(preview)
+            with self.subTest(direction=direction, phase="preview"):
+                self.assertAlmostEqual(
+                    float(control_preview[0]), direction * 0.05, places=6
+                )
+                self.assertAlmostEqual(
+                    float(candidate_preview[0]), direction * 0.06, places=6
+                )
+                self.assertEqual(
+                    candidate._preview_requested, direction * 0.06
+                )
+                self.assertTrue(candidate._previous_action_was_preview)
+
+            obstacle = _compact_obstacle_observation(
+                obstacle_x=obstacle_x,
+                obstacle_top=22,
+                speed=0.0,
+            )
+            control_obstacle = control.act(obstacle)
+            candidate_obstacle = candidate.act(obstacle)
+            with self.subTest(direction=direction, phase="opposing_obstacle"):
+                np.testing.assert_array_equal(
+                    candidate_obstacle, control_obstacle
+                )
+                self.assertAlmostEqual(
+                    float(candidate_obstacle[0]),
+                    -direction * 0.07,
+                    places=6,
+                )
+                self.assertFalse(candidate._curve_retention_active)
+
+    def test_post_obstacle_retention_closes_geometry_and_reversal_boundaries(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        coherent = {
+            30: 53.5,
+            34: 51.5,
+            38: 49.5,
+            42: 47.5,
+            46: 45.5,
+            50: 43.5,
+            54: 41.5,
+        }
+        mirrored = {row: 83.0 - center for row, center in coherent.items()}
+
+        def adjusted(request, direction, centers, missing=0):
+            controller = _PostObstacleCurveRetentionController()
+            controller._obstacle_side = direction
+            controller._obstacle_missing = missing
+            controller._carry_latched_at_frame_start = True
+            with patch.object(
+                _FastCornerCarryController,
+                "_adjust_road_steering",
+                return_value=direction * request,
+            ):
+                result = controller._adjust_road_steering(
+                    steering=direction * request,
+                    straight=False,
+                    centers=centers,
+                    obstacle=None,
+                )
+            return controller, result
+
+        lower = 0.07 / 1.20
+        for request, active in (
+            (np.nextafter(lower, -np.inf), True),
+            (lower, False),
+            (np.nextafter(lower, np.inf), False),
+            (0.07, False),
+            (np.nextafter(0.07, np.inf), True),
+            (0.30, True),
+            (0.42, True),
+        ):
+            for direction, centers in ((1.0, coherent), (-1.0, mirrored)):
+                controller, result = adjusted(request, direction, centers)
+                with self.subTest(
+                    request=request,
+                    direction=direction,
+                    active=active,
+                ):
+                    self.assertEqual(controller._curve_retention_active, active)
+                    expected = (
+                        direction
+                        * min(0.48, 1.20 * request, request + 0.06)
+                        if active
+                        else direction * request
+                    )
+                    self.assertAlmostEqual(result, expected, places=15)
+
+        controller, result = adjusted(
+            0.084,
+            1.0,
+            coherent,
+            missing=controller.OBSTACLE_MISS_LIMIT,
+        )
+        self.assertFalse(controller._curve_retention_active)
+        self.assertEqual(result, 0.084)
+
+        for missing_row in controller.RETENTION_ROWS:
+            missing_centers = dict(coherent)
+            del missing_centers[missing_row]
+            controller, result = adjusted(0.084, 1.0, missing_centers)
+            with self.subTest(missing_row=missing_row):
+                self.assertFalse(controller._curve_retention_active)
+                self.assertEqual(result, 0.084)
+
+        kink = dict(coherent)
+        kink[46] = 38.5
+        controller, result = adjusted(0.084, 1.0, kink)
+        self.assertFalse(controller._curve_retention_active)
+        self.assertEqual(result, 0.084)
+
+        controller = _PostObstacleCurveRetentionController()
+        controller._curve_retention_active = True
+        controller._curve_retention_direction = 1.0
+        controller._curve_retention_control_request = 0.084
+        controller.reset(None)
+        fresh = _PostObstacleCurveRetentionController()
+        self.assertEqual(controller.__dict__, fresh.__dict__)
+
+    def test_post_obstacle_retention_exact_lower_boundary_transitions_to_obstacle(self):
+        from agent import (
+            _FastCornerCarryController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        frame = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        lower = 0.07 / 1.20
+        positive = {
+            30: 50.0,
+            34: 48.0,
+            38: 46.0,
+            42: 41.5 + lower / 0.028,
+            46: 42.8,
+            50: 42.0,
+            54: 41.5,
+        }
+        negative = {
+            30: 33.0,
+            34: 35.0,
+            38: 37.0,
+            42: 39.0,
+            46: 40.0,
+            50: 41.0,
+            54: 41.5,
+        }
+
+        for mirror in (False, True):
+            def mirrored(centers):
+                if not mirror:
+                    return centers
+                return {row: 83.0 - value for row, value in centers.items()}
+
+            control = _FastCornerCarryController()
+            candidate = _PostObstacleCurveRetentionController()
+            for controller in (control, candidate):
+                controller._obstacle_side = -1.0 if mirror else 1.0
+                controller._obstacle_missing = 0
+                with patch.object(
+                    controller, "_road_centers", return_value=mirrored(positive)
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=None
+                ), patch.object(controller, "_estimate_speed", return_value=45.0):
+                    action = controller.act(frame)
+                self.assertAlmostEqual(abs(float(action[0])), lower, places=6)
+
+            self.assertFalse(candidate._curve_retention_active)
+            obstacle = (50.0, 41.0 if mirror else 42.0, 41.5)
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=mirrored(negative)
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(controller, "_estimate_speed", return_value=45.0):
+                    actions.append(controller.act(frame))
+            with self.subTest(mirror=mirror):
+                np.testing.assert_array_equal(actions[1], actions[0])
+                self.assertFalse(candidate._curve_retention_active)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,

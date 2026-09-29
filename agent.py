@@ -2115,6 +2115,98 @@ class _CoherentCurveAttackController(_TranslationInvariantExitController):
         return candidate
 
 
+class _PostObstacleCurveRetentionController(_FastCornerCarryController):
+    """Retain a coherent turn only through the bounded obstacle-miss latch."""
+
+    RETENTION_GAIN = 1.20
+    RETENTION_MAX_INCREMENT = 0.06
+    RETENTION_DELTA_MIN = 1.5
+    RETENTION_ROWS = (30, 34, 38, 42, 46, 50, 54)
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._curve_retention_active = False
+        self._curve_retention_direction = 0.0
+        self._curve_retention_control_request = 0.0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._curve_retention_active = False
+        self._curve_retention_direction = 0.0
+        self._curve_retention_control_request = 0.0
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._curve_retention_active = False
+        self._curve_retention_direction = 0.0
+        self._curve_retention_control_request = 0.0
+        return super()._lost_road_action()
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        self._curve_retention_active = False
+        self._curve_retention_direction = 0.0
+        self._curve_retention_control_request = float(inherited)
+
+        if (
+            straight
+            or obstacle is not None
+            or not self._carry_latched_at_frame_start
+            or self._obstacle_side == 0.0
+            or self._obstacle_missing >= self.OBSTACLE_MISS_LIMIT
+            or any(row not in centers for row in self.RETENTION_ROWS)
+        ):
+            return inherited
+
+        near = float(centers[54])
+        delta30 = float(centers[30]) - near
+        delta34 = float(centers[34]) - near
+        if (
+            abs(delta30) <= self.RETENTION_DELTA_MIN
+            or abs(delta34) <= self.RETENTION_DELTA_MIN
+            or delta30 * delta34 <= 0.0
+        ):
+            return inherited
+
+        direction = 1.0 if delta30 > 0.0 else -1.0
+        if (
+            direction != self._obstacle_side
+            or inherited * direction <= 0.0
+            or any(
+                (float(centers[row]) - near) * direction < 0.0
+                for row in self.RETENTION_ROWS[:-1]
+            )
+        ):
+            return inherited
+
+        magnitude = min(
+            self.MAX_STEER,
+            self.RETENTION_GAIN * abs(inherited),
+            abs(inherited) + self.RETENTION_MAX_INCREMENT,
+        )
+        if abs(inherited) <= self.MAX_STEER_STEP <= magnitude:
+            return inherited
+
+        candidate = direction * magnitude
+        self._curve_retention_active = True
+        self._curve_retention_direction = direction
+        self._carry_steer_request = candidate
+        if self._preview_requested != 0.0 and self._preview_requested == inherited:
+            self._preview_requested = candidate
+        return candidate
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2616,7 +2708,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _CoherentCurveAttackController()
+            _PostObstacleCurveRetentionController()
             if use_forward_controller
             else None
         )
