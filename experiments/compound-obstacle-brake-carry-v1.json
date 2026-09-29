@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-obstacle-brake-carry-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T04:32:17+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "Submission-11 video and the active controller both indicate excessive longitudinal deceleration when a recognized obstacle overlaps a high-sweep curve. Reducing only the supplemental curve-brake envelope in that registered compound state, while retaining the base distance/speed brake as a hard floor, should improve obstacle-corner carry without weakening the inherited high-overspeed safety brake, target speed, latch or steering.",
+  "scope": {
+    "control_commit": "5dcba0964524584435338b9b161f454293570057",
+    "control_class": "agent._DoubleClearStraightThrottleController",
+    "control_agent_git_blob": "711c3912f5bcc6572c3a32b4c814f0abeff99a85",
+    "control_agent_sha256": "a509f75eda58ab7382f558ea03393bacc83ad910d583fa94a35d39d4fab86105",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._CompoundObstacleBrakeCarryController",
+    "single_factor": "Replace only the supplemental overspeed brake envelope in the existing target30 compound-obstacle state from clip(0.06 + 0.018*excess, 0.06, 0.28) to clip(0.04 + 0.012*excess, 0.04, 0.18), retaining the inherited base brake as a floor."
+  },
+  "eligibility_gate": {
+    "requirements": [
+      "the inherited compound command target is exactly30",
+      "the active pace-latched target is exactly30",
+      "a recognized obstacle is present or the frame began in obstacle miss latch1--4",
+      "estimated speed is more than target plus0.5 so the inherited supplemental curve-brake branch is active"
+    ],
+    "formula": "candidate_brake = max(inherited_base_brake, clip(0.04 + 0.012 * (speed - target), 0.04, 0.18))",
+    "registered_examples": {
+      "speed_32": {"control": 0.087, "candidate": 0.058},
+      "speed_36": {"control": 0.159, "candidate": 0.106},
+      "speed_40": {"control": 0.231, "candidate": 0.154},
+      "speed_45": {"control": 0.28, "candidate": 0.18},
+      "speed_50": {"control": 0.28, "candidate": 0.24},
+      "speed_55": {"control": 0.28, "candidate": 0.28}
+    }
+  },
+  "frozen": [
+    "compound target30 and the straight-obstacle targets47/40",
+    "base distance/speed brake returned by inherited longitudinal control",
+    "obstacle detector, obstacle side, four-frame miss latch and fifth-frame clearing behavior",
+    "all steering, road perception, recovery, target selection and gas commands",
+    "settled clear-straight double throttle and every noncompound curve/obstacle state",
+    "model.pt and every non-bare inference route",
+    "official environment, reward, termination, frame skip and action contract"
+  ],
+  "rejected_alternatives": [
+    "Do not raise compound target30 because the closest Track2 rendered center distance is only23.8 pixels and prior extreme-seed evidence showed road loss at speed29--30 after steering unwound.",
+    "Do not weaken or remove the inherited base brake; it reaches0.28 at very high overspeed and is the safety floor for close or fast approaches.",
+    "Do not change global obstacle or clear-curve braking because submission11 completed all three tracks and the observed deficit is localized.",
+    "Do not repeat the target30-to24 diagnostic, which was slower without fixing the seed21 failure."
+  ],
+  "static_acceptance": [
+    "Only the brake component differs from control inside the registered compound gate; target, gas, steering and shared inherited state remain exact.",
+    "The candidate brake never exceeds control, never falls below the inherited base safety brake, remains finite/in bounds and never overlaps positive gas.",
+    "Current recognized compound obstacles and miss-latch frames1--4 are eligible; the fifth clearing frame, reacquired noncompound obstacle and all noncompound states remain control-exact.",
+    "Both turn directions and the sweep boundary immediately below/at6 receive symmetric, exact coverage.",
+    "The target-plus0.5 trigger and high-overspeed base-brake saturation boundaries remain exact.",
+    "Randomized differential coverage proves every difference is registered and brake-only.",
+    "Affected controller, inference, local-contract and submission suites pass.",
+    "An isolated package passes exact-file import, reset, finite-action, bounds and latency smoke without modifying root submission.zip."
+  ],
+  "rollback": [
+    "Any action or shared-state difference outside the registered brake component and compound gate.",
+    "Any candidate brake below the inherited base safety brake or above the control brake.",
+    "Any target, gas, steering, detector, latch, state, reset, invalid-input, recovery, dependency, packaging, bounds, NaN or latency regression."
+  ],
+  "future_environment_gate": {
+    "authorized_now": false,
+    "reason": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "design_after_restoration": "Freeze paired control and candidate package hashes, then run fresh geometry seeds spanning gentle tracks and compound hairpin-obstacle layouts. Rank valid finish first, then progress/collision/crash/off-track, minimum clearance and only then paired lap time.",
+    "safety_rollback": "Reject on any new DNF, lower finish count, added collision/crash/off-track, materially lower minimum clearance or operational failure.",
+    "pace_gate": "Only after safety non-regression, require lower paired lap time and faster compound-obstacle sectors."
+  },
+  "evidence_limits": [
+    "Submission11 video is user-attributed and lacks action/speed/source/package telemetry, so it does not bind this candidate or prove the compound gate fired at each visual obstacle.",
+    "Same-input static tests cannot prove future closed-loop observations or trajectory clearance after braking changes.",
+    "All three submission11 tracks finished, and the closest rendered obstacle encounter was tight; this makes a global brake reduction unsupported.",
+    "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
+  ]
+}

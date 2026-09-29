@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "evidence": "video-4-11-compound-brake-evidence-v1",
+  "status": "CONSUMED_USER_ATTRIBUTED_DIAGNOSTIC",
+  "recorded_at": "2026-09-30T04:32:17+09:00",
+  "branch": "feature/DG-Codex",
+  "videos": [
+    {
+      "track": 1,
+      "path": "evaluation_videos/video_track-01_4_11.mp4",
+      "sha256": "32890265a3bbb59872433a3ff04dcc416ee9f090b50c692fd9bdfcc6762c74cf",
+      "result": "FINISHED",
+      "lap_seconds": 23.86,
+      "submission_7_lap_seconds": 27.18,
+      "delta_seconds": -3.32,
+      "delta_percent": -12.2,
+      "obstacle_post_pre_speed_proxy_ratios": [0.70, 0.81, 0.80, 0.66, 0.81, 1.18],
+      "ratio_median": 0.80,
+      "minimum_screen_center_distance_pixels": 31.8
+    },
+    {
+      "track": 2,
+      "path": "evaluation_videos/video_track-02_4_11.mp4",
+      "sha256": "b0f448b5cd2c592660efc9464010bb2c9d2f41b660c85e959573dde5b0e74841",
+      "result": "FINISHED",
+      "lap_seconds": 29.14,
+      "submission_7_lap_seconds": 33.22,
+      "delta_seconds": -4.08,
+      "delta_percent": -12.3,
+      "obstacle_post_pre_speed_proxy_ratios": [2.90, 0.74, 0.95, 1.19, 0.71, 0.68],
+      "ratio_median": 0.84,
+      "minimum_screen_center_distance_pixels": 23.8
+    },
+    {
+      "track": 3,
+      "path": "evaluation_videos/video_track-03_4_11.mp4",
+      "sha256": "4a824a56f4a4de37b561a474cc1692a86a7d4efb0d69129b93170c36f1dac3ed",
+      "result": "FINISHED",
+      "lap_seconds": 25.82,
+      "submission_7_lap_seconds": 30.58,
+      "delta_seconds": -4.76,
+      "delta_percent": -15.6,
+      "obstacle_post_pre_speed_proxy_ratios": [1.05, 0.83, 1.24, 0.68, 0.62, 0.93],
+      "ratio_median": 0.88,
+      "minimum_screen_center_distance_pixels": 39.5
+    }
+  ],
+  "aggregate": {
+    "obstacle_encounters": 18,
+    "post_pre_speed_proxy_ratio_median": 0.81,
+    "encounters_below_0_90": 11,
+    "interpretation": "All three videos finish and are materially faster than the user-attributed submission-7 videos, but most obstacle encounters still show a local post-pass slowdown. This supports a localized obstacle-curve braking hypothesis rather than a global speed or braking change."
+  },
+  "method": {
+    "obstacle_detection": "HSV orange connected components constrained to plausible circular obstacle area",
+    "vehicle_detection": "HSV blue vehicle component",
+    "speed_proxy": "median Lucas-Kanade optical flow of the background after subtracting camera motion",
+    "windows": "ten frames from 1.6 to 0.8 race-seconds before the closest approach versus ten frames from 0.08 to 0.88 race-seconds after it",
+    "race_timer_step_seconds": 0.08
+  },
+  "code_corroboration": {
+    "active_control": "agent._DoubleClearStraightThrottleController",
+    "compound_gate": "recognized obstacle with road sweep at least 6.0",
+    "compound_target_speed": 30.0,
+    "miss_latch_frames": 4,
+    "current_extra_brake": "clip(0.06 + 0.018 * excess_speed, 0.06, 0.28)",
+    "example": "At target30 and estimated speed40, base safety brake is0.12 but the curve augmentation raises final brake to0.231."
+  },
+  "limitations": [
+    "The videos expose no physical speed, action, policy-camera, seed, source commit, model hash, package hash or official submission receipt.",
+    "Optical flow is a relative video speed proxy, not physical telemetry; camera transitions, compression, curvature and launch acceleration can perturb individual ratios.",
+    "Screen-center distance is not vehicle-body clearance and does not prove safety margin.",
+    "Submission7 and submission11 appear to use the same evaluation layouts, but intermediate changes mean their time difference cannot be attributed to one code factor.",
+    "The current compound sweep gate cannot be reconstructed exactly from the rendered replay video.",
+    "The evidence motivates a candidate change but cannot validate its closed-loop trajectory behavior."
+  ]
+}
