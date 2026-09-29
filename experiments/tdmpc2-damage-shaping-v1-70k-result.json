@@ -1,0 +1,149 @@
+{
+  "format": "haic-tdmpc2-damage-intermediate-result-v1",
+  "status": "sealed_70k_checkpoint_with_two_on_policy_train_finishes",
+  "partition": "same four already-consumed obstacle-enabled track-1 TRAIN roads, evolving-policy source data only",
+  "protocol": "experiments/tdmpc2-damage-shaping-v1.json",
+  "protocol_sha256": "4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8",
+  "run_dir": "runs/tdmpc2-damage-20260928-v1",
+  "runner_source_sha256": "f4fa47ec724ccf27ee25b9ac78380b7171ed2c2ecd8ac34b69935700759847f2",
+  "reward_source_sha256": "c2681fc9d789c356b308334f044c6eefd02f6965825ea05400dbe03ed388bcd3",
+  "source_map_verification": "All 19 protocol source hashes matched current files and the run start receipt; all four protocol-pinned baseline references matched their bytes.",
+  "checkpoint_target": 70000,
+  "decisions": 70481,
+  "updates": 70481,
+  "completed_train_episodes": 203,
+  "checkpoint": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-070000-step-070481.pt",
+  "checkpoint_sha256": "ff3827bf8f1daf58c25d43236e4c9b921bd46921c91c85fbdcda162800223be1",
+  "training_ledger_checkpoint_line": 613,
+  "training_ledger_prefix_before_checkpoint_sha256": "3b8eaa23567419a4402898c1871a343197e192598b75c5c9747d254846c7309f",
+  "training_ledger_prefix_through_checkpoint_sha256": "6c2f766550e7453c9775f5558b7a4bf9dad656d7ebde42b5b58ab6abc94ada06",
+  "step_ledger_prefix_sha256": "9b8dde996586e384ecca734afd7f6b2bdf8c5e8fba68266607bee4752f165f17",
+  "previous_checkpoint_result": "experiments/tdmpc2-damage-shaping-v1-40k-result.json",
+  "previous_checkpoint_result_sha256": "a5ad1c2dc94d85a92a7f871051135209adcc67b052d1711c7bcb691acab32ef4",
+  "first_checkpoint_result": "experiments/tdmpc2-damage-shaping-v1-20k-result.json",
+  "first_checkpoint_result_sha256": "5a28f95bfa47aa3f0d4c221a393b419e4df0728bd2b71c17b3dc40f74c05345b",
+  "reward_target": {
+    "kind": "cumulative_damage_increment",
+    "coefficient": 5.0,
+    "replay_reward": "training_reward",
+    "environment_reward": "raw"
+  },
+  "primary_ledger_verification": "Exactly the first 70481 step rows and 203 complete episode rows matched the checkpoint receipt, road schedule, per-episode lengths, raw and training reward sums, final progress/damage/semantic flags, and applied/native action-trace hashes. Subsequent live rows were excluded.",
+  "treatment_exposure_through_checkpoint": {
+    "step_decisions": 70481,
+    "first_positive_damage_decision": 22123,
+    "first_positive_damage_delta": 0.2,
+    "first_positive_raw_reward": -0.4000000000000057,
+    "first_positive_training_reward": -1.4000000000000057,
+    "positive_damage_increment_steps": 207,
+    "positive_damage_increment_sum": 41.400000000000006,
+    "raw_step_reward_sum": 15339.351315915854,
+    "training_step_reward_sum": 15132.351315915854,
+    "raw_minus_training_reward_sum": 207.0,
+    "expected_penalty": 207.0,
+    "max_cumulative_damage": 1.0,
+    "through_20k": {
+      "decisions": 20149,
+      "positive_damage_steps": 0,
+      "damage_increment_sum": 0.0,
+      "raw_minus_training_reward_sum": 0.0
+    },
+    "through_40k": {
+      "decisions": 40154,
+      "positive_damage_steps": 65,
+      "damage_increment_sum": 13.0,
+      "raw_minus_training_reward_sum": 65.0
+    },
+    "since_40k": {
+      "decisions": 30327,
+      "positive_damage_steps": 142,
+      "damage_increment_sum": 28.400000000000002,
+      "raw_step_reward_sum": 16342.50653720525,
+      "training_step_reward_sum": 16200.50653720525,
+      "raw_minus_training_reward_sum": 142.0
+    },
+    "summation": "Reward sums use math.fsum over the sealed step rows; 207.0 equals 5 * 41.4 within floating-point tolerance. Environment raw rewards and episode raw returns were not shaped."
+  },
+  "train_episodes_cumulative": {
+    "n": 203,
+    "finishes": 2,
+    "distinct_finish_geometries": 1,
+    "nonfinish_time_limit_censored": 0,
+    "mean_progress": 0.2207152338171569,
+    "mean_raw_return": 75.56330697495494,
+    "mean_training_return": 74.5436025414574,
+    "mean_damage": 0.2039408866995074,
+    "mean_steps": 347.1970443349754,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 51, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.22509803921568627, "mean_raw_return": 86.28235294117258, "mean_damage": 0.2862745098039216, "mean_steps": 330.37254901960785},
+      {"geometry_seed": 3910800004, "n": 51, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.20662733178377735, "mean_raw_return": 59.709088741877615, "mean_damage": 0.16862745098039214, "mean_steps": 352.0980392156863},
+      {"geometry_seed": 3910800034, "n": 51, "finishes": 2, "nonfinish_time_limit_censored": 0, "mean_progress": 0.2280701754385965, "mean_raw_return": 89.91279669762356, "mean_damage": 0.24313725490196078, "mean_steps": 328.96078431372547},
+      {"geometry_seed": 3910800085, "n": 50, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.22311239193083574, "mean_raw_return": 66.16470317002984, "mean_damage": 0.11600000000000002, "mean_steps": 377.96}
+    ]
+  },
+  "train_episodes_since_40k": {
+    "previous_boundary_decisions": 40154,
+    "decisions": 30327,
+    "n": 72,
+    "finishes": 2,
+    "distinct_finish_geometries": 1,
+    "nonfinish_time_limit_censored": 0,
+    "mean_progress": 0.4017305066657368,
+    "mean_raw_return": 226.97925746118403,
+    "mean_training_return": 225.0070352389618,
+    "mean_damage": 0.3944444444444445,
+    "mean_steps": 421.2083333333333,
+    "max_progress": 0.9901315789473685,
+    "at_least_half_progress": 24,
+    "at_least_three_quarters_progress": 8,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 18, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.4040740740740741, "mean_raw_return": 246.42962962961863, "mean_damage": 0.4555555555555556, "mean_steps": 377.44444444444446},
+      {"geometry_seed": 3910800004, "n": 18, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.3817966903073286, "mean_raw_return": 213.0065518405876, "mean_damage": 0.4, "mean_steps": 406.77777777777777},
+      {"geometry_seed": 3910800034, "n": 18, "finishes": 2, "nonfinish_time_limit_censored": 0, "mean_progress": 0.4073464912280702, "mean_raw_return": 239.96198830408463, "mean_damage": 0.4222222222222223, "mean_steps": 402.05555555555554},
+      {"geometry_seed": 3910800085, "n": 18, "finishes": 0, "nonfinish_time_limit_censored": 0, "mean_progress": 0.41370477105347425, "mean_raw_return": 208.51886007044524, "mean_damage": 0.30000000000000004, "mean_steps": 498.55555555555554}
+    ],
+    "finish_events": [
+      {"episode": 142, "decisions": 44190, "geometry_seed": 3910800034, "length": 638, "raw_return": 728.6526315789064, "damage": 0.4, "finished": true, "truncated": true, "semantic_terminal": true},
+      {"episode": 186, "decisions": 63173, "geometry_seed": 3910800034, "length": 802, "raw_return": 629.8578947367874, "damage": 0.0, "finished": true, "truncated": true, "semantic_terminal": true}
+    ],
+    "limitation": "All 72 episodes were collected while the learner kept updating on only four repeatedly consumed roads. Two finishes on one geometry do not give the frozen 70k actor a 2/72 success rate or show a replicated-road improvement."
+  },
+  "rolling_optimizer_means_over_30327_updates": {
+    "consistency_loss": 0.0035534164699685487,
+    "training_reward_loss": 0.42010867560295434,
+    "value_loss": 0.5227033371129682,
+    "termination_loss": 0.0018956057254586594,
+    "q_scale_at_checkpoint": 107.52011108398438,
+    "policy_differential_entropy_mean": -27.306473514857387,
+    "same_observation_prior_vs_mppi_weighted_elite_center_actions": 30327,
+    "same_observation_mean_model_delta_l2": 1.520261243379563,
+    "same_observation_mean_applied_noised_delta_l2": 1.5418102177439925,
+    "interpretation": "These are evolving in-replay/pre-update training metrics; reward and value losses are categorical, termination is BCE, and q_scale is an EMA of the Q 5th-to-95th-percentile spread, not an absolute Q value. The planner gap compares actions at the same observation, not independent policy returns."
+  },
+  "frozen_train_probe": {
+    "sample_count": 256,
+    "distinct_seed_episode_count": 28,
+    "terminal_transition_labels": 768,
+    "positive_terminal_labels": 0,
+    "training_reward_mae": 0.04899603873491287,
+    "constant_training_reward_mae": 0.37949177622795105,
+    "latent_mse": 0.004577891901135445,
+    "termination_bce": 1.3806812603434082e-05,
+    "limitation": "The fixed windows come from the 10000-decision zero-damage seed prefix, so their shaped targets equal raw targets and contain no positive terminal labels. This is an in-replay fit proxy, not a penalized-state test, positive-event recall, frozen-policy evaluation, or held-out evidence."
+  },
+  "raw_baseline_descriptive_only": {
+    "result": "experiments/tdmpc2-long-reused-train-v2-70k-result.json",
+    "result_sha256": "01a7a49e354c43d88f5cb67da0d489771cc86ea0c94c676f55830101d87ecd95",
+    "checkpoint_decisions": 70361,
+    "cumulative_episodes": 220,
+    "cumulative_finishes": 0,
+    "since_40k_episodes": 96,
+    "since_40k_finishes": 0,
+    "since_40k_mean_progress": 0.3463000500091295,
+    "since_40k_mean_raw_return": 213.62380080457947,
+    "since_40k_mean_damage": 0.3979166666666667,
+    "since_40k_mean_steps": 316.0104166666667,
+    "limitation": "This is a descriptive comparison of different evolving TRAIN trajectories, not a matched or causal treatment effect. The very first planned action at decision 10001 already differed before the first damage penalty at decision 22123; the seed-boundary model/RNG state was not saved. The raw-target H3 raw-return branch ranking is not a like-for-like metric for this shaped reward head."
+  },
+  "decision": "Preserve and continue the source-frozen single-axis 5M/H3/default-MPPI TRAIN run unchanged toward its first whole-episode >=100k boundary. The observed 2/72 on-policy TRAIN finishes are neither a frozen-model full-episode result nor the local >=50% gate; the >=100k treatment source/result and separately frozen raw-metric CPU evaluation protocol are not available at this checkpoint. Do not infer unseen-road generalization, a causal shaping benefit, official ranking, model promotion, or permission to open protected cells."
+}
