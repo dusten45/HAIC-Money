@@ -210,23 +210,24 @@ about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The current bare route is `_FastCornerCarryController` at commit `7bdf9b2`. It
-inherits the target68 straight envelope, steering, perception and obstacle state
-machine, but replaces only obstacle-free curve speed control. Clear curves use
-`clip(68/sqrt(1+0.10*raw_sweep),40,64)`, steering-budgeted gas0.14/0.11/0.07,
-and a delayed, capped0.18 brake. At sweep6 this changes target34 to53.76, speed60
-brake0.28 to0.091, and speed45 brake0.249 to gas0.138 in synthetic observations.
-Current obstacle targets47/40, obstacle+sweep>=6 target30, miss-latch pedals and
-all steering remain parent-exact through the latch-clearing frame. The change
-passed13 focused and189 affected/local/submission tests, isolated exact-file package
-smoke and independent review. No environment run measured completion or pace, so
-the low-20-second target remains unverified and status is `INCOMPARABLE`; see
-`experiments/fast-corner-carry-v1-result.json`.
+The current bare route is `_TranslationInvariantExitController` at commit
+`5f9af82`. It retains the clear-curve speed envelope from `_FastCornerCarryController`
+but fixes its exit classification: the historical sweep substitutes image center
+for unsampled rows, so a perfectly parallel corridor displaced6px was misread as
+sweep6, target53.76 and brake0.091 at speed60. The new gate requires every sampled
+row30--54 to align relative to actual row54, offset<=6, mild steering and no
+obstacle/latch; it then uses target68 and straight gas while inherited recentering
+steering remains bit-exact. In the same synthetic offset6 case the action changes
+from brake0.091 to gas0.135, while real curves, a rows46/50 S-kink, obstacles and
+all latch frames remain control-exact. The change passed20 focused and196 affected/
+local/submission tests, isolated exact-file package smoke and final independent
+review. No environment run measured completion or pace, so status remains
+`INCOMPARABLE`; see `experiments/translation-invariant-clear-exit-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `af07d66d...` and must not be submitted as the new candidate.
+candidate agent SHA `89fce198...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

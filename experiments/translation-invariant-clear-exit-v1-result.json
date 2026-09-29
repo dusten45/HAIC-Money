@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "experiment": "translation-invariant-clear-exit-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T02:42:44.5937643+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["486837c", "df9d3ef"],
+  "implementation_commit": "5f9af82526b116e3eecf16c147de7f7249148423",
+  "decision": "Keep as the current statically validated bare-model candidate. It corrects a confirmed exit-classification defect without changing steering or hazard behavior; do not claim faster laps, preserved completion, SOTA or submission readiness until an authorized controlled multi-track evaluation passes the stability-first gate.",
+  "implementation": [
+    "Route only bare state-dict inference through _TranslationInvariantExitController; explicit export, DrQ and HAIC routes remain unchanged.",
+    "Recognize a clear aligned exit from every actually sampled center row30,34,38,42,46,50,54, measuring all row deviations relative to sampled near row54 rather than substituting IMAGE_CENTER for nonexistent rows.",
+    "Require shape sweep<=1.5, heading<=1.5, center offset<=6, inherited steering request<=0.28, no current obstacle and no active/frame-start latch.",
+    "On that gate only, use target68 and the existing straight gas branches0.18/0.135/0.09 plus the existing strict speed>69 brake boundary.",
+    "Preserve every steering value, true-curve action, obstacle action, active-latch action and latch-clearing-frame action exactly."
+  ],
+  "synthetic_observations": {
+    "control_parallel_offset6_speed60": {"raw_sweep": 6.0, "target": 53.75872022286245, "action": [0.07000000029802322, 0.0, 0.09089535474777222]},
+    "candidate_parallel_offset6_speed60": {"raw_sweep": 6.0, "shape_sweep": 0.0, "target": 68.0, "action": [0.07000000029802322, 0.13500000536441803, 0.0]},
+    "candidate_parallel_offset6_speed45": {"shape_sweep": 0.0, "target": 68.0, "action": [0.07000000029802322, 0.18000000715255737, 0.0]},
+    "candidate_true_curve_sweep6_speed45": {"shape_sweep": 6.0, "target": 53.75872022286245, "action": [0.07000000029802322, 0.13783958554267883, 0.0]},
+    "near_rows46_50_kink": {"shape_sweep": 3.0, "clear_exit": false, "candidate_equals_control": true}
+  },
+  "validation": {
+    "focused_exit_and_predecessor_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k 'translation_invariant_exit or fast_corner_carry or high_speed_preview' -q",
+      "result": "20 passed,86 deselected"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "196 passed,4 warnings"
+    },
+    "independent_static_review": "The initial review found a blocking omission of sampled near rows46/50. After the committed protocol amendment, implementation and a near-kink regression test included every sampled row; final review found no blocking defect.",
+    "temporary_package": {
+      "path": ".haic-artifacts/translation-invariant-clear-exit-v1/20260929T174213258799Z_translation-invariant-clear-exit-v1/submission.zip",
+      "agent_sha256": "89fce1987188d012f2833f953c7610ff2aeca4eb80485f274c57531897a82f6f",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "cc42f55610fb75c5ff1da39d47e5d1652d8a665379b289b9d2cdeb0b00727ae7",
+      "bytes": 6280696,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.031774800037965,
+      "act_seconds": 0.002642699982970953,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "No authorized driving run measured whether earlier clear-exit acceleration preserves completion on unseen tracks.",
+    "The camera-row gate is an image-space alignment proxy and cannot measure physical edge clearance or tire force.",
+    "The videos contain no policy-camera, speed or pedal telemetry and include counterexamples, so they do not establish how frequently the new gate will activate.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, and the competition website is inaccessible; official evaluation, promotion and submission remain blocked."
+  ]
+}
