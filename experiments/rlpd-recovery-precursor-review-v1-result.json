@@ -1,0 +1,1870 @@
+{
+  "environment_resets": 0,
+  "episodes": 24,
+  "episodes_reviewed": [
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1042279303073883,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.10418685717520848,
+            "lateral_m": 1.025175006388969,
+            "speed_m_s": 27.092464136450747,
+            "steering": 0.6744363307952881,
+            "sustained_decisions": 1,
+            "throttle": 0.9518449306488037
+          },
+          "heading-error": {
+            "brake": 0.12466683983802795,
+            "decision_index_zero_based": 99,
+            "heading_error_rad": -0.7649727787716097,
+            "lateral_m": 2.615620713056217,
+            "speed_m_s": 32.46056939815061,
+            "steering": -0.5882617831230164,
+            "sustained_decisions": 3,
+            "throttle": 0.9508931636810303
+          },
+          "large-steering": {
+            "brake": 0.032987385988235474,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004847571309782418,
+            "lateral_m": 0.29593625389442313,
+            "speed_m_s": 4.971993770056671,
+            "steering": 0.7310323119163513,
+            "sustained_decisions": 1,
+            "throttle": 0.9609202742576599
+          },
+          "lateral-excursion": {
+            "brake": 0.10594859719276428,
+            "decision_index_zero_based": 102,
+            "heading_error_rad": -0.41450628897973946,
+            "lateral_m": 6.550614431560019,
+            "speed_m_s": 36.195750253471715,
+            "steering": -0.46288061141967773,
+            "sustained_decisions": 2,
+            "throttle": 0.9161731600761414
+          },
+          "speed-threshold": {
+            "brake": 0.057792067527770996,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16271143401028973,
+            "lateral_m": 0.5400813610489101,
+            "speed_m_s": 15.399663375853402,
+            "steering": -0.4979284703731537,
+            "sustained_decisions": 1,
+            "throttle": 0.9441614747047424
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000001,
+      "road_centerline_sha256": "53624705e6645b2f7b8297f5065aa3855c85829c212edfa7328d9779a93e3758",
+      "steps": 531,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-00.npz",
+      "trace_sha256": "78356574088339dc035b65893c483e27502067b1fc4e16590daa8cc193bd3956",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1127287745475769,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.1743402406013237,
+            "lateral_m": 1.9022244757566003,
+            "speed_m_s": 15.2169493238724,
+            "steering": -0.8468807935714722,
+            "sustained_decisions": 1,
+            "throttle": 0.9487228393554688
+          },
+          "heading-error": {
+            "brake": 0.13086426258087158,
+            "decision_index_zero_based": 40,
+            "heading_error_rad": -0.5725113006866192,
+            "lateral_m": 6.350923784488541,
+            "speed_m_s": 22.477643836717984,
+            "steering": -0.8753013014793396,
+            "sustained_decisions": 3,
+            "throttle": 0.947950005531311
+          },
+          "large-steering": {
+            "brake": 0.06803220510482788,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.005521178301550299,
+            "lateral_m": 0.28710798733192605,
+            "speed_m_s": 4.6830730189872005,
+            "steering": 0.8547337055206299,
+            "sustained_decisions": 1,
+            "throttle": 0.9533370733261108
+          },
+          "lateral-excursion": {
+            "brake": 0.1337835192680359,
+            "decision_index_zero_based": 39,
+            "heading_error_rad": 0.08697191869852783,
+            "lateral_m": 6.440670911501215,
+            "speed_m_s": 21.639238463780806,
+            "steering": -0.7632090449333191,
+            "sustained_decisions": 2,
+            "throttle": 0.9352184534072876
+          },
+          "speed-threshold": {
+            "brake": 0.1127287745475769,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.1743402406013237,
+            "lateral_m": 1.9022244757566003,
+            "speed_m_s": 15.2169493238724,
+            "steering": -0.8468807935714722,
+            "sustained_decisions": 1,
+            "throttle": 0.9487228393554688
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000001,
+      "road_centerline_sha256": "53624705e6645b2f7b8297f5065aa3855c85829c212edfa7328d9779a93e3758",
+      "steps": 602,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-01.npz",
+      "trace_sha256": "53817c139aca0c427a8a813037456296b6865b98f8a07380366049bf728ac549",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10494974255561829,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.11269688297158154,
+            "lateral_m": 1.0706095273951213,
+            "speed_m_s": 27.705996267898698,
+            "steering": 0.6747424006462097,
+            "sustained_decisions": 1,
+            "throttle": 0.9512649178504944
+          },
+          "heading-error": {
+            "brake": 0.03701263666152954,
+            "decision_index_zero_based": 69,
+            "heading_error_rad": -0.6177033584496994,
+            "lateral_m": 2.096767451359238,
+            "speed_m_s": 10.060313200927034,
+            "steering": 0.714354932308197,
+            "sustained_decisions": 3,
+            "throttle": 0.9547911882400513
+          },
+          "large-steering": {
+            "brake": 0.03353968262672424,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.00434639694264205,
+            "lateral_m": 0.29580534209718784,
+            "speed_m_s": 4.96752151980783,
+            "steering": 0.6853683590888977,
+            "sustained_decisions": 1,
+            "throttle": 0.9586300849914551
+          },
+          "lateral-excursion": {
+            "brake": 0.01721838116645813,
+            "decision_index_zero_based": 75,
+            "heading_error_rad": -0.23603002242064663,
+            "lateral_m": 6.413433193276236,
+            "speed_m_s": 26.089445544125255,
+            "steering": -0.6946748495101929,
+            "sustained_decisions": 2,
+            "throttle": 0.9680649042129517
+          },
+          "speed-threshold": {
+            "brake": 0.052263885736465454,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16389235464760987,
+            "lateral_m": 0.5474756932272402,
+            "speed_m_s": 15.557321955132098,
+            "steering": -0.4814748167991638,
+            "sustained_decisions": 1,
+            "throttle": 0.9458307027816772
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000002,
+      "road_centerline_sha256": "12d6083ebcbfe22b91c05a3072f568e9ca147cb2294b1a1624efe1d81a7292cd",
+      "steps": 445,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-02.npz",
+      "trace_sha256": "e316e929fc98e4edd7db6e1c7569e5b24fd9c2513c2d461383059a3d0ea5322c",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10573092103004456,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.1765335759324762,
+            "lateral_m": 1.873521641886798,
+            "speed_m_s": 15.47860556938789,
+            "steering": -0.8490201234817505,
+            "sustained_decisions": 1,
+            "throttle": 0.9478943347930908
+          },
+          "heading-error": {
+            "brake": 0.2946907877922058,
+            "decision_index_zero_based": 39,
+            "heading_error_rad": 0.7294709792928975,
+            "lateral_m": 2.385671810503198,
+            "speed_m_s": 20.961928312268558,
+            "steering": -0.5655632019042969,
+            "sustained_decisions": 3,
+            "throttle": 0.9646427631378174
+          },
+          "large-steering": {
+            "brake": 0.06610831618309021,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004969153721835928,
+            "lateral_m": 0.2878936971333808,
+            "speed_m_s": 4.701473152098735,
+            "steering": 0.8628209829330444,
+            "sustained_decisions": 1,
+            "throttle": 0.9529833793640137
+          },
+          "lateral-excursion": {
+            "brake": 0.04823267459869385,
+            "decision_index_zero_based": 21,
+            "heading_error_rad": -0.29041844217011653,
+            "lateral_m": 6.14367997938698,
+            "speed_m_s": 27.436572535118717,
+            "steering": -0.9347209930419922,
+            "sustained_decisions": 2,
+            "throttle": 0.9646744132041931
+          },
+          "speed-threshold": {
+            "brake": 0.0802258849143982,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.19208937493989198,
+            "lateral_m": 0.8789754370920385,
+            "speed_m_s": 14.110639790932158,
+            "steering": -0.8893407583236694,
+            "sustained_decisions": 1,
+            "throttle": 0.9474542737007141
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000002,
+      "road_centerline_sha256": "12d6083ebcbfe22b91c05a3072f568e9ca147cb2294b1a1624efe1d81a7292cd",
+      "steps": 216,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-03.npz",
+      "trace_sha256": "d8528a0cc37f6821c6984c47311b346fece941ed449acaa7fe22ff1792634864",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10627037286758423,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.10895371785727348,
+            "lateral_m": 1.0634119907131043,
+            "speed_m_s": 27.462319833201523,
+            "steering": 0.6835247278213501,
+            "sustained_decisions": 1,
+            "throttle": 0.9516826272010803
+          },
+          "heading-error": {
+            "brake": 0.21237748861312866,
+            "decision_index_zero_based": 113,
+            "heading_error_rad": -0.703405066798972,
+            "lateral_m": 2.5357209366328823,
+            "speed_m_s": 35.335219900236176,
+            "steering": -0.8374752402305603,
+            "sustained_decisions": 3,
+            "throttle": 0.9222758412361145
+          },
+          "large-steering": {
+            "brake": 0.03363466262817383,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004015461011929622,
+            "lateral_m": 0.29577616286139613,
+            "speed_m_s": 4.966752854872611,
+            "steering": 0.7111905217170715,
+            "sustained_decisions": 1,
+            "throttle": 0.9589405059814453
+          },
+          "lateral-excursion": {
+            "brake": 0.012072712182998657,
+            "decision_index_zero_based": 116,
+            "heading_error_rad": -0.7247955884671671,
+            "lateral_m": 7.155796223701022,
+            "speed_m_s": 21.87664611708427,
+            "steering": -0.9537752866744995,
+            "sustained_decisions": 2,
+            "throttle": 0.9760745763778687
+          },
+          "speed-threshold": {
+            "brake": 0.053531646728515625,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16437432129760257,
+            "lateral_m": 0.5491259118557557,
+            "speed_m_s": 15.5385587527233,
+            "steering": -0.48869839310646057,
+            "sustained_decisions": 1,
+            "throttle": 0.9454114437103271
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000003,
+      "road_centerline_sha256": "a4dae0d6846cbafa7d60a49e23bda0ec71eda4e19fc6d0a86440eb0e438c57e7",
+      "steps": 234,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-04.npz",
+      "trace_sha256": "9620faa2143d59904ac95b118ebdf7fb9fe8543bac69e16b5b2635f73245e22a",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.11113560199737549,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.1759428377904462,
+            "lateral_m": 1.8935340775959284,
+            "speed_m_s": 15.301265114960035,
+            "steering": -0.8437902927398682,
+            "sustained_decisions": 1,
+            "throttle": 0.9484632611274719
+          },
+          "heading-error": {
+            "brake": 0.20531493425369263,
+            "decision_index_zero_based": 166,
+            "heading_error_rad": 0.5835462764898016,
+            "lateral_m": 3.0207282455147624,
+            "speed_m_s": 31.93274361785353,
+            "steering": 0.7754774689674377,
+            "sustained_decisions": 3,
+            "throttle": 0.9195162653923035
+          },
+          "large-steering": {
+            "brake": 0.06667888164520264,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004648521944089046,
+            "lateral_m": 0.28765318444679056,
+            "speed_m_s": 4.696015545443063,
+            "steering": 0.8657839298248291,
+            "sustained_decisions": 1,
+            "throttle": 0.9535547494888306
+          },
+          "lateral-excursion": {
+            "brake": 0.05414551496505737,
+            "decision_index_zero_based": 114,
+            "heading_error_rad": -0.2665109197025153,
+            "lateral_m": 6.379234935899357,
+            "speed_m_s": 24.123595787468776,
+            "steering": -0.9272313117980957,
+            "sustained_decisions": 2,
+            "throttle": 0.9735710620880127
+          },
+          "speed-threshold": {
+            "brake": 0.08179035782814026,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.19111499150176514,
+            "lateral_m": 0.8670867028053493,
+            "speed_m_s": 14.021869072505611,
+            "steering": -0.8881130814552307,
+            "sustained_decisions": 1,
+            "throttle": 0.947830855846405
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000003,
+      "road_centerline_sha256": "a4dae0d6846cbafa7d60a49e23bda0ec71eda4e19fc6d0a86440eb0e438c57e7",
+      "steps": 270,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-05.npz",
+      "trace_sha256": "967af0f3557b48cc57157e1ed2812d467dc70c5ba7c6b99f9ab12ec6f6f0426b",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.13089784979820251,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.1652652070910131,
+            "lateral_m": 0.24339667060032502,
+            "speed_m_s": 27.01149147173516,
+            "steering": 0.7795147895812988,
+            "sustained_decisions": 1,
+            "throttle": 0.9637981653213501
+          },
+          "heading-error": null,
+          "large-steering": {
+            "brake": 0.13089784979820251,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.1652652070910131,
+            "lateral_m": 0.24339667060032502,
+            "speed_m_s": 27.01149147173516,
+            "steering": 0.7795147895812988,
+            "sustained_decisions": 1,
+            "throttle": 0.9637981653213501
+          },
+          "lateral-excursion": null,
+          "speed-threshold": {
+            "brake": 0.055044472217559814,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.10442554493840585,
+            "lateral_m": 0.3148701116003079,
+            "speed_m_s": 14.720958477393225,
+            "steering": -0.3285754323005676,
+            "sustained_decisions": 1,
+            "throttle": 0.9469526410102844
+          }
+        },
+        "first_risk_type": "unclassified",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000004,
+      "road_centerline_sha256": "a38bf5b2124cf99d8b83b0068d23dca6d7cbde302f9f3b3711f0a55925fb6404",
+      "steps": 147,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-06.npz",
+      "trace_sha256": "fb2f062bebcdceb788969e0cda5104c002ef87ba44f36e629e7cd9a29b20e2b9",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10945150256156921,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.1372435047238673,
+            "lateral_m": 1.47511361985948,
+            "speed_m_s": 16.321695301164798,
+            "steering": -0.8496960401535034,
+            "sustained_decisions": 1,
+            "throttle": 0.9492109417915344
+          },
+          "heading-error": {
+            "brake": 0.06548228859901428,
+            "decision_index_zero_based": 56,
+            "heading_error_rad": 0.5538663909823099,
+            "lateral_m": 2.8132790472050493,
+            "speed_m_s": 26.32214135852475,
+            "steering": -0.05977759137749672,
+            "sustained_decisions": 3,
+            "throttle": 0.9154502153396606
+          },
+          "large-steering": {
+            "brake": 0.06631267070770264,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.046936635771433026,
+            "lateral_m": 0.2883651901095046,
+            "speed_m_s": 4.699518776472414,
+            "steering": 0.8169745802879333,
+            "sustained_decisions": 1,
+            "throttle": 0.9482975006103516
+          },
+          "lateral-excursion": {
+            "brake": 0.18728584051132202,
+            "decision_index_zero_based": 59,
+            "heading_error_rad": 1.031864230433146,
+            "lateral_m": 7.183874498821964,
+            "speed_m_s": 29.45833278764473,
+            "steering": -0.2118426114320755,
+            "sustained_decisions": 2,
+            "throttle": 0.9511644840240479
+          },
+          "speed-threshold": {
+            "brake": 0.09838402271270752,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.13173090954717048,
+            "lateral_m": 0.9195526966940252,
+            "speed_m_s": 14.923211253727368,
+            "steering": -0.8084216713905334,
+            "sustained_decisions": 1,
+            "throttle": 0.9473504424095154
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000004,
+      "road_centerline_sha256": "a38bf5b2124cf99d8b83b0068d23dca6d7cbde302f9f3b3711f0a55925fb6404",
+      "steps": 458,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-07.npz",
+      "trace_sha256": "e65a75afe7222acd31f3ec26237200dee1743ec0167da8943c4d645f0d01f714",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10549339652061462,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.10984779481837846,
+            "lateral_m": 1.0581961486908147,
+            "speed_m_s": 27.52020543615095,
+            "steering": 0.6830518841743469,
+            "sustained_decisions": 1,
+            "throttle": 0.9515883922576904
+          },
+          "heading-error": {
+            "brake": 0.11767661571502686,
+            "decision_index_zero_based": 117,
+            "heading_error_rad": -0.5517834571317748,
+            "lateral_m": 2.328292073265192,
+            "speed_m_s": 26.175321126657664,
+            "steering": -0.018269803375005722,
+            "sustained_decisions": 3,
+            "throttle": 0.9721522331237793
+          },
+          "large-steering": {
+            "brake": 0.03331786394119263,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004588072719670322,
+            "lateral_m": 0.29585546618362357,
+            "speed_m_s": 4.969316317254872,
+            "steering": 0.7073214054107666,
+            "sustained_decisions": 1,
+            "throttle": 0.9588789343833923
+          },
+          "lateral-excursion": {
+            "brake": 0.05321177840232849,
+            "decision_index_zero_based": 81,
+            "heading_error_rad": -0.14204658834525974,
+            "lateral_m": 6.0084021974162525,
+            "speed_m_s": 36.7789968458764,
+            "steering": -0.5680964589118958,
+            "sustained_decisions": 2,
+            "throttle": 0.9106842279434204
+          },
+          "speed-threshold": {
+            "brake": 0.05401664972305298,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16374748426427743,
+            "lateral_m": 0.5467124735209029,
+            "speed_m_s": 15.524405272980808,
+            "steering": -0.5085069537162781,
+            "sustained_decisions": 1,
+            "throttle": 0.9447846412658691
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000005,
+      "road_centerline_sha256": "ad7b5a07979cb385f43340ca1daa063f7c7b461fe9b3a53a3da56cd03611eb59",
+      "steps": 370,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-08.npz",
+      "trace_sha256": "1b0c31b4dcefb27d764a30280c3ca2adc33352181656023ec400575ab0513a90",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10739541053771973,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.17417495923986337,
+            "lateral_m": 1.8886437091909791,
+            "speed_m_s": 15.397113615870607,
+            "steering": -0.836527407169342,
+            "sustained_decisions": 1,
+            "throttle": 0.9475722312927246
+          },
+          "heading-error": {
+            "brake": 0.1614648699760437,
+            "decision_index_zero_based": 29,
+            "heading_error_rad": 0.5757388822461138,
+            "lateral_m": 3.0784675916425726,
+            "speed_m_s": 29.144206637233086,
+            "steering": -0.7748162150382996,
+            "sustained_decisions": 3,
+            "throttle": 0.9508980512619019
+          },
+          "large-steering": {
+            "brake": 0.06763437390327454,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.005246979715920475,
+            "lateral_m": 0.28726945988716057,
+            "speed_m_s": 4.686877367589597,
+            "steering": 0.8616055250167847,
+            "sustained_decisions": 1,
+            "throttle": 0.9530503749847412
+          },
+          "lateral-excursion": {
+            "brake": 0.4135274887084961,
+            "decision_index_zero_based": 32,
+            "heading_error_rad": 0.3988897280121806,
+            "lateral_m": 7.273562058666473,
+            "speed_m_s": 29.941328981247054,
+            "steering": -0.5342934727668762,
+            "sustained_decisions": 2,
+            "throttle": 0.9526283740997314
+          },
+          "speed-threshold": {
+            "brake": 0.08025872707366943,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.18970560508718393,
+            "lateral_m": 0.8606236906886217,
+            "speed_m_s": 14.056183804838287,
+            "steering": -0.8855869770050049,
+            "sustained_decisions": 1,
+            "throttle": 0.9476139545440674
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000005,
+      "road_centerline_sha256": "ad7b5a07979cb385f43340ca1daa063f7c7b461fe9b3a53a3da56cd03611eb59",
+      "steps": 240,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-09.npz",
+      "trace_sha256": "5943bb29bea87fa714acf68115a7045f38aa6a7ddfef5204b2a16a35502e3006",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.19964471459388733,
+            "decision_index_zero_based": 9,
+            "heading_error_rad": -0.25794679948908444,
+            "lateral_m": 1.6609841897024766,
+            "speed_m_s": 24.36675406683433,
+            "steering": -0.795645534992218,
+            "sustained_decisions": 1,
+            "throttle": 0.926728367805481
+          },
+          "heading-error": {
+            "brake": 0.024010777473449707,
+            "decision_index_zero_based": 48,
+            "heading_error_rad": -0.9121711260996471,
+            "lateral_m": 7.053831637907396,
+            "speed_m_s": 29.10939177336775,
+            "steering": -0.8234462738037109,
+            "sustained_decisions": 3,
+            "throttle": 0.9777410626411438
+          },
+          "large-steering": {
+            "brake": 0.040700435638427734,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.04507594278233795,
+            "lateral_m": 0.2946088604899604,
+            "speed_m_s": 4.9095481939355325,
+            "steering": 0.6001394987106323,
+            "sustained_decisions": 1,
+            "throttle": 0.9613375663757324
+          },
+          "lateral-excursion": {
+            "brake": 0.15270254015922546,
+            "decision_index_zero_based": 44,
+            "heading_error_rad": 0.34187786748784416,
+            "lateral_m": 6.099658892990083,
+            "speed_m_s": 27.799785727271434,
+            "steering": -0.14256593585014343,
+            "sustained_decisions": 2,
+            "throttle": 0.9688427448272705
+          },
+          "speed-threshold": {
+            "brake": 0.06015127897262573,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.11096162626368161,
+            "lateral_m": 0.3387933342002418,
+            "speed_m_s": 14.848309593013866,
+            "steering": -0.3291206955909729,
+            "sustained_decisions": 1,
+            "throttle": 0.9447134137153625
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000006,
+      "road_centerline_sha256": "1404c263f26d5425974cc500c139839902f8e5e45bfd871731ebd0482c3cbbd9",
+      "steps": 448,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-10.npz",
+      "trace_sha256": "9fe134c4e8aadb1b0674ab78a9da7d86128f5008ebe7493c9ec0d4a7f2e14390",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1078137755393982,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.1347718937121069,
+            "lateral_m": 0.8116744848927269,
+            "speed_m_s": 14.050440660135585,
+            "steering": -0.7749696373939514,
+            "sustained_decisions": 1,
+            "throttle": 0.9455637335777283
+          },
+          "heading-error": {
+            "brake": 0.32650452852249146,
+            "decision_index_zero_based": 44,
+            "heading_error_rad": 0.5610769884862268,
+            "lateral_m": 1.303291088787978,
+            "speed_m_s": 16.55514424464996,
+            "steering": 0.2388625591993332,
+            "sustained_decisions": 3,
+            "throttle": 0.9388526678085327
+          },
+          "large-steering": {
+            "brake": 0.06069841980934143,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.045456220416004944,
+            "lateral_m": 0.28995121852803535,
+            "speed_m_s": 4.747702689870255,
+            "steering": 0.8493630290031433,
+            "sustained_decisions": 1,
+            "throttle": 0.9497922658920288
+          },
+          "lateral-excursion": {
+            "brake": 0.05245453119277954,
+            "decision_index_zero_based": 55,
+            "heading_error_rad": 0.11277215888875392,
+            "lateral_m": 6.788119288448808,
+            "speed_m_s": 28.390913170361188,
+            "steering": -0.675370991230011,
+            "sustained_decisions": 2,
+            "throttle": 0.9428877830505371
+          },
+          "speed-threshold": {
+            "brake": 0.1078137755393982,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.1347718937121069,
+            "lateral_m": 0.8116744848927269,
+            "speed_m_s": 14.050440660135585,
+            "steering": -0.7749696373939514,
+            "sustained_decisions": 1,
+            "throttle": 0.9455637335777283
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000006,
+      "road_centerline_sha256": "1404c263f26d5425974cc500c139839902f8e5e45bfd871731ebd0482c3cbbd9",
+      "steps": 425,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-11.npz",
+      "trace_sha256": "3afe673e9c80175f8f8759e015646e6727a684c4fedffdb50ce7412a30b70771",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.12473845481872559,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.16952802453811175,
+            "lateral_m": 0.19384065929253763,
+            "speed_m_s": 27.104344330165112,
+            "steering": 0.7702761292457581,
+            "sustained_decisions": 1,
+            "throttle": 0.9641562104225159
+          },
+          "heading-error": {
+            "brake": 0.033864736557006836,
+            "decision_index_zero_based": 59,
+            "heading_error_rad": -0.5948514672679167,
+            "lateral_m": 4.203074314295389,
+            "speed_m_s": 23.28049205860405,
+            "steering": -0.763716459274292,
+            "sustained_decisions": 3,
+            "throttle": 0.968146562576294
+          },
+          "large-steering": {
+            "brake": 0.12473845481872559,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.16952802453811175,
+            "lateral_m": 0.19384065929253763,
+            "speed_m_s": 27.104344330165112,
+            "steering": 0.7702761292457581,
+            "sustained_decisions": 1,
+            "throttle": 0.9641562104225159
+          },
+          "lateral-excursion": {
+            "brake": 0.006852656602859497,
+            "decision_index_zero_based": 40,
+            "heading_error_rad": -0.2744225093287703,
+            "lateral_m": 6.783337373233216,
+            "speed_m_s": 31.11312169946344,
+            "steering": -0.9191098809242249,
+            "sustained_decisions": 2,
+            "throttle": 0.9627710580825806
+          },
+          "speed-threshold": {
+            "brake": 0.04868370294570923,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.10432134355728621,
+            "lateral_m": 0.3148027735754739,
+            "speed_m_s": 14.85835256384753,
+            "steering": -0.18195489048957825,
+            "sustained_decisions": 1,
+            "throttle": 0.949319064617157
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000007,
+      "road_centerline_sha256": "033072424226988e51a082aa7b9a40158fa1dba7d6163bfe4d536d5e1d8b3ced",
+      "steps": 346,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-12.npz",
+      "trace_sha256": "80c329e4af47e8862e787c3f8b1cf27d0eedb15879f36b0e222db78cafdaaf98",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.12615960836410522,
+            "decision_index_zero_based": 7,
+            "heading_error_rad": -0.2296488114756822,
+            "lateral_m": 0.8998898873970227,
+            "speed_m_s": 17.841205809190402,
+            "steering": -0.9147000312805176,
+            "sustained_decisions": 1,
+            "throttle": 0.9525469541549683
+          },
+          "heading-error": {
+            "brake": 0.06482043862342834,
+            "decision_index_zero_based": 58,
+            "heading_error_rad": -0.5571368762416119,
+            "lateral_m": 1.956968348142022,
+            "speed_m_s": 12.746542900601328,
+            "steering": 0.9870167374610901,
+            "sustained_decisions": 3,
+            "throttle": 0.9687163829803467
+          },
+          "large-steering": {
+            "brake": 0.06237378716468811,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.04696680818374163,
+            "lateral_m": 0.2896198869799339,
+            "speed_m_s": 4.734149220333324,
+            "steering": 0.8281182646751404,
+            "sustained_decisions": 1,
+            "throttle": 0.9482721090316772
+          },
+          "lateral-excursion": {
+            "brake": 0.849458634853363,
+            "decision_index_zero_based": 101,
+            "heading_error_rad": 1.450896548374248,
+            "lateral_m": 6.012603677434126,
+            "speed_m_s": 12.05893134820661,
+            "steering": -0.8668472170829773,
+            "sustained_decisions": 2,
+            "throttle": 0.9832166433334351
+          },
+          "speed-threshold": {
+            "brake": 0.08055949211120605,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.12796161855881208,
+            "lateral_m": 0.9243464285365202,
+            "speed_m_s": 15.048887966457361,
+            "steering": 0.3125547170639038,
+            "sustained_decisions": 1,
+            "throttle": 0.936699390411377
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000007,
+      "road_centerline_sha256": "033072424226988e51a082aa7b9a40158fa1dba7d6163bfe4d536d5e1d8b3ced",
+      "steps": 659,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-13.npz",
+      "trace_sha256": "3afb2d5c8c798b06e241815e1864e8b32b37dda15b4ae450963db01ed7935156",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10510087013244629,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.10644259708137827,
+            "lateral_m": 1.0451479273915008,
+            "speed_m_s": 27.28986412608394,
+            "steering": 0.680229663848877,
+            "sustained_decisions": 1,
+            "throttle": 0.9517043828964233
+          },
+          "heading-error": {
+            "brake": 0.42808637022972107,
+            "decision_index_zero_based": 69,
+            "heading_error_rad": -0.5632184983741144,
+            "lateral_m": 0.9573794037119984,
+            "speed_m_s": 31.600407659122205,
+            "steering": -0.3701018989086151,
+            "sustained_decisions": 3,
+            "throttle": 0.9510366916656494
+          },
+          "large-steering": {
+            "brake": 0.03299182653427124,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.004590576832607551,
+            "lateral_m": 0.29592350130444445,
+            "speed_m_s": 4.971956931873322,
+            "steering": 0.7279265522956848,
+            "sustained_decisions": 1,
+            "throttle": 0.9600421190261841
+          },
+          "lateral-excursion": {
+            "brake": 0.05058729648590088,
+            "decision_index_zero_based": 74,
+            "heading_error_rad": 0.036352848862517106,
+            "lateral_m": 6.337864327909787,
+            "speed_m_s": 34.486715361339535,
+            "steering": -0.6029216051101685,
+            "sustained_decisions": 2,
+            "throttle": 0.9342533349990845
+          },
+          "speed-threshold": {
+            "brake": 0.05562448501586914,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.1636674196073262,
+            "lateral_m": 0.5456225565563246,
+            "speed_m_s": 15.475822465029893,
+            "steering": -0.49015673995018005,
+            "sustained_decisions": 1,
+            "throttle": 0.9450084567070007
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000008,
+      "road_centerline_sha256": "19c420d200fa50f784ad07b55856a84e232e3c0c8d99ffda2083b989984a5b99",
+      "steps": 489,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-14.npz",
+      "trace_sha256": "c7c83c6be7ec66cde08505449987d101fa8e5605c8cb7759495e0ec958c99d16",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.11375892162322998,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.17466337388245745,
+            "lateral_m": 1.896852380317408,
+            "speed_m_s": 15.258875671991227,
+            "steering": -0.841255247592926,
+            "sustained_decisions": 1,
+            "throttle": 0.9479529857635498
+          },
+          "heading-error": {
+            "brake": 0.12194645404815674,
+            "decision_index_zero_based": 38,
+            "heading_error_rad": -0.7894365782090835,
+            "lateral_m": 7.516943366352594,
+            "speed_m_s": 24.623142079677315,
+            "steering": -0.818122923374176,
+            "sustained_decisions": 3,
+            "throttle": 0.9384781122207642
+          },
+          "large-steering": {
+            "brake": 0.06776341795921326,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.005258685295894905,
+            "lateral_m": 0.28721625316518884,
+            "speed_m_s": 4.685643047127831,
+            "steering": 0.8619890809059143,
+            "sustained_decisions": 1,
+            "throttle": 0.953449010848999
+          },
+          "lateral-excursion": {
+            "brake": 0.4757494628429413,
+            "decision_index_zero_based": 34,
+            "heading_error_rad": 0.4646591752222329,
+            "lateral_m": 6.5322801154037125,
+            "speed_m_s": 24.56210831400975,
+            "steering": -0.5845672488212585,
+            "sustained_decisions": 2,
+            "throttle": 0.9398787021636963
+          },
+          "speed-threshold": {
+            "brake": 0.08252343535423279,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.1897378951856343,
+            "lateral_m": 0.8597061023776069,
+            "speed_m_s": 14.02200063539461,
+            "steering": -0.8853447437286377,
+            "sustained_decisions": 1,
+            "throttle": 0.9482650756835938
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000008,
+      "road_centerline_sha256": "19c420d200fa50f784ad07b55856a84e232e3c0c8d99ffda2083b989984a5b99",
+      "steps": 523,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-15.npz",
+      "trace_sha256": "71eb20e143d309933e17b5390de969e6a5d3bdcbb1216c76905e536ced203636",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1056966483592987,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.10808307320555553,
+            "lateral_m": 1.0563145766690916,
+            "speed_m_s": 27.41243843405886,
+            "steering": 0.6797344088554382,
+            "sustained_decisions": 1,
+            "throttle": 0.9515749216079712
+          },
+          "heading-error": {
+            "brake": 0.027112126350402832,
+            "decision_index_zero_based": 156,
+            "heading_error_rad": -0.554011646830519,
+            "lateral_m": 5.408978895680838,
+            "speed_m_s": 30.085624292596858,
+            "steering": -0.8658152222633362,
+            "sustained_decisions": 3,
+            "throttle": 0.9714795351028442
+          },
+          "large-steering": {
+            "brake": 0.03308296203613281,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.0045507896386633995,
+            "lateral_m": 0.2959022536854343,
+            "speed_m_s": 4.971218963767492,
+            "steering": 0.7232341766357422,
+            "sustained_decisions": 1,
+            "throttle": 0.9595365524291992
+          },
+          "lateral-excursion": {
+            "brake": 0.3487895131111145,
+            "decision_index_zero_based": 244,
+            "heading_error_rad": 0.24236060763830444,
+            "lateral_m": 6.078848790341027,
+            "speed_m_s": 23.56657972760052,
+            "steering": 0.29555079340934753,
+            "sustained_decisions": 2,
+            "throttle": 0.9689052104949951
+          },
+          "speed-threshold": {
+            "brake": 0.054299771785736084,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16398266966709985,
+            "lateral_m": 0.5477419632774533,
+            "speed_m_s": 15.517420540916865,
+            "steering": -0.49949678778648376,
+            "sustained_decisions": 1,
+            "throttle": 0.9451191425323486
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000009,
+      "road_centerline_sha256": "807007cf38db6dc40feff607de6be5dd98c6cd1b80078ecb2543d46e3089c77c",
+      "steps": 503,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-16.npz",
+      "trace_sha256": "7c79598ae8cc183f176a5138978f78b8aa762756abd7d86b4e3c5e02a18506f3",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.110178142786026,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.17425347383389367,
+            "lateral_m": 1.893377942623448,
+            "speed_m_s": 15.333826173023516,
+            "steering": -0.8429380655288696,
+            "sustained_decisions": 1,
+            "throttle": 0.9477996826171875
+          },
+          "heading-error": {
+            "brake": 0.3258577585220337,
+            "decision_index_zero_based": 33,
+            "heading_error_rad": 0.593260903998519,
+            "lateral_m": 2.312897080593532,
+            "speed_m_s": 23.335202475513213,
+            "steering": -0.9288988709449768,
+            "sustained_decisions": 3,
+            "throttle": 0.9546676278114319
+          },
+          "large-steering": {
+            "brake": 0.06792625784873962,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.0052205148779402855,
+            "lateral_m": 0.2871448208960703,
+            "speed_m_s": 4.684086072097127,
+            "steering": 0.8612769842147827,
+            "sustained_decisions": 1,
+            "throttle": 0.9532484412193298
+          },
+          "lateral-excursion": {
+            "brake": 0.5391075015068054,
+            "decision_index_zero_based": 173,
+            "heading_error_rad": 1.3716368862753303,
+            "lateral_m": 6.746873318740829,
+            "speed_m_s": 25.399158050664106,
+            "steering": -0.6861123442649841,
+            "sustained_decisions": 2,
+            "throttle": 0.9775111675262451
+          },
+          "speed-threshold": {
+            "brake": 0.08128765225410461,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.18958924229512106,
+            "lateral_m": 0.858899346988757,
+            "speed_m_s": 14.038509837008231,
+            "steering": -0.8844230771064758,
+            "sustained_decisions": 1,
+            "throttle": 0.9479106664657593
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000009,
+      "road_centerline_sha256": "807007cf38db6dc40feff607de6be5dd98c6cd1b80078ecb2543d46e3089c77c",
+      "steps": 572,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-17.npz",
+      "trace_sha256": "1e711110e7d4e7085289d83019dd27645a4455967e85bb094bea0b721243aa87",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.11975228786468506,
+            "decision_index_zero_based": 11,
+            "heading_error_rad": 0.14655677525153388,
+            "lateral_m": 1.4363362839383649,
+            "speed_m_s": 28.605704354141672,
+            "steering": 0.7860939502716064,
+            "sustained_decisions": 1,
+            "throttle": 0.9540798664093018
+          },
+          "heading-error": {
+            "brake": 0.03924289345741272,
+            "decision_index_zero_based": 56,
+            "heading_error_rad": -0.583768976053092,
+            "lateral_m": 4.67696182596,
+            "speed_m_s": 28.946309853365527,
+            "steering": -0.8412927985191345,
+            "sustained_decisions": 3,
+            "throttle": 0.9709998369216919
+          },
+          "large-steering": {
+            "brake": 0.07862895727157593,
+            "decision_index_zero_based": 9,
+            "heading_error_rad": -0.0068066910112835055,
+            "lateral_m": 1.3095612691770069,
+            "speed_m_s": 25.550064356265747,
+            "steering": -0.6477934718132019,
+            "sustained_decisions": 1,
+            "throttle": 0.9330849647521973
+          },
+          "lateral-excursion": {
+            "brake": 0.5438454151153564,
+            "decision_index_zero_based": 76,
+            "heading_error_rad": 1.8473782403535877,
+            "lateral_m": 7.123887261102613,
+            "speed_m_s": 25.29383562767424,
+            "steering": 0.06860121339559555,
+            "sustained_decisions": 2,
+            "throttle": 0.9722997546195984
+          },
+          "speed-threshold": {
+            "brake": 0.05192476511001587,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.09977765830406915,
+            "lateral_m": 0.30208635660031774,
+            "speed_m_s": 14.763995849188726,
+            "steering": -0.2674969434738159,
+            "sustained_decisions": 1,
+            "throttle": 0.9478083252906799
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000010,
+      "road_centerline_sha256": "af3b9c482810b8427ef1190fbe805d2cfeb67ed45de6e53b5f84b4fca35dfe49",
+      "steps": 329,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-18.npz",
+      "trace_sha256": "af09ac63d223d7d042f54094325cc8d13402d90b1e67d32dd68ae55a7254f5e9",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1123313307762146,
+            "decision_index_zero_based": 11,
+            "heading_error_rad": 0.01351265160193671,
+            "lateral_m": 0.7796233099552572,
+            "speed_m_s": 24.900743880150188,
+            "steering": -0.47816380858421326,
+            "sustained_decisions": 1,
+            "throttle": 0.9424793720245361
+          },
+          "heading-error": {
+            "brake": 0.05972862243652344,
+            "decision_index_zero_based": 56,
+            "heading_error_rad": 0.8015299841558005,
+            "lateral_m": 4.056327994557028,
+            "speed_m_s": 28.727159725557918,
+            "steering": 0.4297564625740051,
+            "sustained_decisions": 3,
+            "throttle": 0.9224928617477417
+          },
+          "large-steering": {
+            "brake": 0.06252461671829224,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.04707769600501288,
+            "lateral_m": 0.28959175045137975,
+            "speed_m_s": 4.732927353128064,
+            "steering": 0.8334652185440063,
+            "sustained_decisions": 1,
+            "throttle": 0.9486734867095947
+          },
+          "lateral-excursion": {
+            "brake": 0.1853145956993103,
+            "decision_index_zero_based": 58,
+            "heading_error_rad": 1.0460292801057365,
+            "lateral_m": 7.457123144324292,
+            "speed_m_s": 30.185098399869158,
+            "steering": 0.10386653989553452,
+            "sustained_decisions": 2,
+            "throttle": 0.9651692509651184
+          },
+          "speed-threshold": {
+            "brake": 0.07455778121948242,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.09376545699486505,
+            "lateral_m": 0.9122474392621723,
+            "speed_m_s": 15.29800407149106,
+            "steering": 0.2246801257133484,
+            "sustained_decisions": 1,
+            "throttle": 0.9349758625030518
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000010,
+      "road_centerline_sha256": "af3b9c482810b8427ef1190fbe805d2cfeb67ed45de6e53b5f84b4fca35dfe49",
+      "steps": 166,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-19.npz",
+      "trace_sha256": "3b44442754036405a71bf3f58c0225bef6dd02ad9806c66f5175cb1c2a0c8026",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10485386848449707,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.1006559175341668,
+            "lateral_m": 1.0035226662667591,
+            "speed_m_s": 26.75766781260743,
+            "steering": 0.674856960773468,
+            "sustained_decisions": 1,
+            "throttle": 0.9523358345031738
+          },
+          "heading-error": {
+            "brake": 0.21002733707427979,
+            "decision_index_zero_based": 198,
+            "heading_error_rad": 0.6181719642195096,
+            "lateral_m": 2.1231728326083177,
+            "speed_m_s": 15.2985980748831,
+            "steering": -0.783233642578125,
+            "sustained_decisions": 3,
+            "throttle": 0.9567499160766602
+          },
+          "large-steering": {
+            "brake": 0.03324487805366516,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.005073100784355633,
+            "lateral_m": 0.2958764881435587,
+            "speed_m_s": 4.969907923141059,
+            "steering": 0.7215718626976013,
+            "sustained_decisions": 1,
+            "throttle": 0.9618339538574219
+          },
+          "lateral-excursion": {
+            "brake": 0.12652021646499634,
+            "decision_index_zero_based": 210,
+            "heading_error_rad": 0.4487980418714901,
+            "lateral_m": 6.029558955027188,
+            "speed_m_s": 16.17069681370045,
+            "steering": 0.2262285053730011,
+            "sustained_decisions": 2,
+            "throttle": 0.9623873233795166
+          },
+          "speed-threshold": {
+            "brake": 0.05984482169151306,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.16137215449518538,
+            "lateral_m": 0.5322031581586666,
+            "speed_m_s": 15.298843519959696,
+            "steering": -0.48614126443862915,
+            "sustained_decisions": 1,
+            "throttle": 0.9438388347625732
+          }
+        },
+        "first_risk_type": "heading-error",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000011,
+      "road_centerline_sha256": "c8e9ffc95e62c3667b2634092f2e7656fc2475ec820f7f1faab52078f66d3be7",
+      "steps": 338,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-20.npz",
+      "trace_sha256": "f3e5b3a6dd176da37100dc34d4039c8115ad2182b2d51357930dc0ce72840686",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.1152556836605072,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.17416152312464095,
+            "lateral_m": 1.898991983495514,
+            "speed_m_s": 15.07276827357854,
+            "steering": -0.8539422154426575,
+            "sustained_decisions": 1,
+            "throttle": 0.9497479200363159
+          },
+          "heading-error": {
+            "brake": 0.24568280577659607,
+            "decision_index_zero_based": 90,
+            "heading_error_rad": 0.5669020428000091,
+            "lateral_m": 12.460625494175856,
+            "speed_m_s": 23.968012176424867,
+            "steering": 0.1434822678565979,
+            "sustained_decisions": 3,
+            "throttle": 0.9624444246292114
+          },
+          "large-steering": {
+            "brake": 0.06708729267120361,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.005721718528801434,
+            "lateral_m": 0.28749746788419595,
+            "speed_m_s": 4.69211063936053,
+            "steering": 0.8567013144493103,
+            "sustained_decisions": 1,
+            "throttle": 0.9539213180541992
+          },
+          "lateral-excursion": {
+            "brake": 0.5547726154327393,
+            "decision_index_zero_based": 77,
+            "heading_error_rad": -0.40051257473844126,
+            "lateral_m": 6.4425976764477655,
+            "speed_m_s": 24.6945822251221,
+            "steering": -0.9405390620231628,
+            "sustained_decisions": 2,
+            "throttle": 0.9678043127059937
+          },
+          "speed-threshold": {
+            "brake": 0.1152556836605072,
+            "decision_index_zero_based": 6,
+            "heading_error_rad": -0.17416152312464095,
+            "lateral_m": 1.898991983495514,
+            "speed_m_s": 15.07276827357854,
+            "steering": -0.8539422154426575,
+            "sustained_decisions": 1,
+            "throttle": 0.9497479200363159
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000011,
+      "road_centerline_sha256": "c8e9ffc95e62c3667b2634092f2e7656fc2475ec820f7f1faab52078f66d3be7",
+      "steps": 303,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-21.npz",
+      "trace_sha256": "40c5e5f37e20ac35c5fc40851140147984ca297f86303c1fab672ec76a46b705",
+      "track_id": 1
+    },
+    {
+      "actor_id": "entropy-v5-author-seed50",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.13482284545898438,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.16639721470801838,
+            "lateral_m": 0.24003433405595714,
+            "speed_m_s": 26.945484593966103,
+            "steering": 0.7784385085105896,
+            "sustained_decisions": 1,
+            "throttle": 0.9641998410224915
+          },
+          "heading-error": {
+            "brake": 0.02747732400894165,
+            "decision_index_zero_based": 55,
+            "heading_error_rad": -0.9522232882407442,
+            "lateral_m": 5.531040981631278,
+            "speed_m_s": 32.122836008132694,
+            "steering": -0.8846878409385681,
+            "sustained_decisions": 3,
+            "throttle": 0.9750484228134155
+          },
+          "large-steering": {
+            "brake": 0.13482284545898438,
+            "decision_index_zero_based": 10,
+            "heading_error_rad": 0.16639721470801838,
+            "lateral_m": 0.24003433405595714,
+            "speed_m_s": 26.945484593966103,
+            "steering": 0.7784385085105896,
+            "sustained_decisions": 1,
+            "throttle": 0.9641998410224915
+          },
+          "lateral-excursion": {
+            "brake": 0.09423673152923584,
+            "decision_index_zero_based": 52,
+            "heading_error_rad": 0.3645289548012497,
+            "lateral_m": 6.334718424135823,
+            "speed_m_s": 31.79972986571276,
+            "steering": -0.5042008757591248,
+            "sustained_decisions": 2,
+            "throttle": 0.9663696885108948
+          },
+          "speed-threshold": {
+            "brake": 0.053234487771987915,
+            "decision_index_zero_based": 4,
+            "heading_error_rad": -0.10393118781120769,
+            "lateral_m": 0.31337445284367205,
+            "speed_m_s": 14.739214097692013,
+            "steering": -0.2970162332057953,
+            "sustained_decisions": 1,
+            "throttle": 0.9476343393325806
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": true,
+      "geometry_seed": 4272000012,
+      "road_centerline_sha256": "4e7b34833d60a6f2d1930d1f127f0395018fe2e902dfa5929a96d1d8381e404f",
+      "steps": 490,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-22.npz",
+      "trace_sha256": "b92b392b5f55b7f43200e3c665357c5e2739626de84edb0758d3e9022166b785",
+      "track_id": 1
+    },
+    {
+      "actor_id": "newhost-seed52-final",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "events": {
+        "causal": false,
+        "first_events": {
+          "brake-request": {
+            "brake": 0.10350874066352844,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.1442577831176042,
+            "lateral_m": 0.9254218068706882,
+            "speed_m_s": 14.776156647337098,
+            "steering": -0.8238488435745239,
+            "sustained_decisions": 1,
+            "throttle": 0.946722686290741
+          },
+          "heading-error": {
+            "brake": 0.1317441463470459,
+            "decision_index_zero_based": 60,
+            "heading_error_rad": -0.8398830763724581,
+            "lateral_m": 6.438718427329537,
+            "speed_m_s": 36.35400960374815,
+            "steering": -0.9389482140541077,
+            "sustained_decisions": 3,
+            "throttle": 0.9796227812767029
+          },
+          "large-steering": {
+            "brake": 0.06534036993980408,
+            "decision_index_zero_based": 0,
+            "heading_error_rad": 0.046959400949168284,
+            "lateral_m": 0.28878793974927325,
+            "speed_m_s": 4.708817618218891,
+            "steering": 0.8205574750900269,
+            "sustained_decisions": 1,
+            "throttle": 0.9482941627502441
+          },
+          "lateral-excursion": {
+            "brake": 0.34234488010406494,
+            "decision_index_zero_based": 57,
+            "heading_error_rad": 0.35602945166556854,
+            "lateral_m": 6.6816485132112025,
+            "speed_m_s": 36.077941644306414,
+            "steering": -0.4498266875743866,
+            "sustained_decisions": 2,
+            "throttle": 0.9633065462112427
+          },
+          "speed-threshold": {
+            "brake": 0.10350874066352844,
+            "decision_index_zero_based": 5,
+            "heading_error_rad": -0.1442577831176042,
+            "lateral_m": 0.9254218068706882,
+            "speed_m_s": 14.776156647337098,
+            "steering": -0.8238488435745239,
+            "sustained_decisions": 1,
+            "throttle": 0.946722686290741
+          }
+        },
+        "first_risk_type": "lateral-excursion",
+        "lateral_signed": false,
+        "state_timing": "post-decision",
+        "unassessed": [
+          "curve-entry-overspeed",
+          "steering-opposition"
+        ]
+      },
+      "finished": false,
+      "geometry_seed": 4272000012,
+      "road_centerline_sha256": "4e7b34833d60a6f2d1930d1f127f0395018fe2e902dfa5929a96d1d8381e404f",
+      "steps": 345,
+      "trace_path": "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-23.npz",
+      "trace_sha256": "31e77d492710d0fab1465d3f883c33881e4284538747c8c51bf28d427cd1e6c1",
+      "track_id": 1
+    }
+  ],
+  "format": "haic-rlpd-recovery-precursor-review-v1",
+  "limitations": [
+    "No curvature or same-state Oracle actions exist in these archives; curve-entry overspeed and steering opposition are unassessed.",
+    "Post-step speed/heading/unsigned nearest-centerline distance are descriptive proxies, not causal precursors or Oracle geometry.",
+    "First-event thresholds also occur in successful controls; no fresh generalization or official performance claim."
+  ],
+  "per_actor": {
+    "entropy-v5-author-seed50": {
+      "nonfinishes": {
+        "denominator": 7,
+        "event_episode_counts": {
+          "brake-request": 7,
+          "heading-error": 6,
+          "large-steering": 7,
+          "lateral-excursion": 6,
+          "speed-threshold": 7
+        },
+        "first_risk_types": {
+          "heading-error": 4,
+          "lateral-excursion": 2,
+          "unclassified": 1
+        }
+      },
+      "successful_controls": {
+        "denominator": 5,
+        "event_episode_counts": {
+          "brake-request": 5,
+          "heading-error": 5,
+          "large-steering": 5,
+          "lateral-excursion": 5,
+          "speed-threshold": 5
+        },
+        "first_risk_types": {
+          "heading-error": 3,
+          "lateral-excursion": 2
+        }
+      }
+    },
+    "newhost-seed52-final": {
+      "nonfinishes": {
+        "denominator": 11,
+        "event_episode_counts": {
+          "brake-request": 11,
+          "heading-error": 11,
+          "large-steering": 11,
+          "lateral-excursion": 11,
+          "speed-threshold": 11
+        },
+        "first_risk_types": {
+          "heading-error": 6,
+          "lateral-excursion": 5
+        }
+      },
+      "successful_controls": {
+        "denominator": 1,
+        "event_episode_counts": {
+          "brake-request": 1,
+          "heading-error": 1,
+          "large-steering": 1,
+          "lateral-excursion": 1,
+          "speed-threshold": 1
+        },
+        "first_risk_types": {
+          "lateral-excursion": 1
+        }
+      }
+    }
+  },
+  "source_artifacts_sha256": {
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-00.json": "92e6f0ebcb1f448ee2404dc602e6436985b1d92555693fbb56b425b80ac4d475",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-01.json": "f1cac1998f672958d1fe20c1eb50113fc27c118739b6250cd04bc8c853b3140b",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-02.json": "624cec61cb60d54cb58a8aef6a5dd00d6038d2e747831c51985f1414aed57e47",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-03.json": "e31c640c4976743440ed77657b0a93151f1d34364be3d5c4acb21d7cad7f95c4",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-04.json": "38a7650c11781046cd852abf98be32ffa7778db2c2ede56600c992cf58f896d5",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-05.json": "93173eed7825b41f7d62a75b0c97a0638657e3b2cc25060d2c4872dbf585147c",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-06.json": "aedbd59a01359e9f2d3dece1c5036f8cd44b4ab06e22e0c061fd486520ffda12",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-07.json": "f401a14cdc8e07561a434aeb9f118a8f5cab71d16507e4956a1dc61aa466befd",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-08.json": "b20bf20be5eecd6d4f9bfbf44927ca2ed021459fe626c9823f4a02cad9dbabd3",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-09.json": "b33adca9fdd4a9c4fd9601d95035d27f7b265c0da16ef3d484b963e6497fd3f2",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-10.json": "06ad318f16d906ba6308cbd930c331bcee237a1786066608bb3a14c29402b41f",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-11.json": "14f08e179e6fcb26efc8540d90396f3c764ab5e94ee9a0514efdcfa758c05d34",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-12.json": "8cc1594bbabc06295916968cc193aa10aacacd7edd79e6bc179f6e92f2e41368",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-13.json": "d03a1d49c2b87e6821cbc50e4ff3e8c9d60c4463e77f2bdada6aa9e4209618d0",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-14.json": "30618e3f9440e33c2a2a8ed37254ec9e4a5d5b5220fa5283076c25b19cb3845b",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-15.json": "8b7aa4498f7dd8d2660588748da6a833ed5c03ef578596b9c345d3f08d58a8a5",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-16.json": "6bf74df1d319a607d70a597cac54ae519670537868b2a7659fb974e9b03c7ede",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-17.json": "bbaf51e4741561e485b5c424d493c419cc6403f4fa446d3a4e71c4837abe9b01",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-18.json": "8a503b1ba3e5849bb289c027a0158d91692aa4293ad5c8aaad8f1ca36027411a",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-19.json": "10e84e9542ca11cf1e7e62fad810cbcc4ec0dd508952d89df34ab899123ba71d",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-20.json": "ca9051f590070f7f2e95bf996401e028550f2e36b6640b9a0cbbd69384c04770",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-21.json": "0786611c57c181473ffea98401f1557df704e538dafb5a922048ba98220117c5",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-22.json": "c6c2b07b1e955938d5cd9f3e7106804f1c3e83ce8d81e7ab46ca8f0bb22ef353",
+    "runs/20260929-rlpd-newhost-train-screen-v1/cells/slot-23.json": "7326350eb8bb076262fbcaae5657cc9f8f330de1694d644c8c42f871689f7bde",
+    "runs/20260929-rlpd-newhost-train-screen-v1/manifest.json": "bb6d151bdab8e14cf191bd48ccf77d1a1f643368c3ebb75349c67f3243fcc009",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-00.npz": "78356574088339dc035b65893c483e27502067b1fc4e16590daa8cc193bd3956",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-01.npz": "53817c139aca0c427a8a813037456296b6865b98f8a07380366049bf728ac549",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-02.npz": "e316e929fc98e4edd7db6e1c7569e5b24fd9c2513c2d461383059a3d0ea5322c",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-03.npz": "d8528a0cc37f6821c6984c47311b346fece941ed449acaa7fe22ff1792634864",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-04.npz": "9620faa2143d59904ac95b118ebdf7fb9fe8543bac69e16b5b2635f73245e22a",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-05.npz": "967af0f3557b48cc57157e1ed2812d467dc70c5ba7c6b99f9ab12ec6f6f0426b",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-06.npz": "fb2f062bebcdceb788969e0cda5104c002ef87ba44f36e629e7cd9a29b20e2b9",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-07.npz": "e65a75afe7222acd31f3ec26237200dee1743ec0167da8943c4d645f0d01f714",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-08.npz": "1b0c31b4dcefb27d764a30280c3ca2adc33352181656023ec400575ab0513a90",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-09.npz": "5943bb29bea87fa714acf68115a7045f38aa6a7ddfef5204b2a16a35502e3006",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-10.npz": "9fe134c4e8aadb1b0674ab78a9da7d86128f5008ebe7493c9ec0d4a7f2e14390",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-11.npz": "3afe673e9c80175f8f8759e015646e6727a684c4fedffdb50ce7412a30b70771",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-12.npz": "80c329e4af47e8862e787c3f8b1cf27d0eedb15879f36b0e222db78cafdaaf98",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-13.npz": "3afb2d5c8c798b06e241815e1864e8b32b37dda15b4ae450963db01ed7935156",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-14.npz": "c7c83c6be7ec66cde08505449987d101fa8e5605c8cb7759495e0ec958c99d16",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-15.npz": "71eb20e143d309933e17b5390de969e6a5d3bdcbb1216c76905e536ced203636",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-16.npz": "7c79598ae8cc183f176a5138978f78b8aa762756abd7d86b4e3c5e02a18506f3",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-17.npz": "1e711110e7d4e7085289d83019dd27645a4455967e85bb094bea0b721243aa87",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-18.npz": "af09ac63d223d7d042f54094325cc8d13402d90b1e67d32dd68ae55a7254f5e9",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-19.npz": "3b44442754036405a71bf3f58c0225bef6dd02ad9806c66f5175cb1c2a0c8026",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-20.npz": "f3e5b3a6dd176da37100dc34d4039c8115ad2182b2d51357930dc0ce72840686",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-21.npz": "40c5e5f37e20ac35c5fc40851140147984ca297f86303c1fab672ec76a46b705",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-22.npz": "b92b392b5f55b7f43200e3c665357c5e2739626de84edb0758d3e9022166b785",
+    "runs/20260929-rlpd-newhost-train-screen-v1/traces/slot-23.npz": "31e77d492710d0fab1465d3f883c33881e4284538747c8c51bf28d427cd1e6c1"
+  },
+  "thresholds": {
+    "brake": 0.1,
+    "curvature_abs": 0.025,
+    "heading_abs_rad": 0.55,
+    "heading_sustained": 3,
+    "lateral_m": 6.0,
+    "lateral_sustained": 2,
+    "opposition_delta": 0.6,
+    "speed_m_s": 14.0,
+    "steering_abs": 0.6
+  }
+}
