@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "name": "fast-corner-carry-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T02:13:25.1196434+09:00",
+  "purpose": "remove discontinuous over-braking and sustain more speed through obstacle-free curves without weakening the proven obstacle-plus-hairpin safety envelope",
+  "source_commit": "b2e74440d737e5e2d8963c6123f87ba1a963bb15",
+  "branch": "feature/DG-Codex",
+  "control": {
+    "controller": "agent._HighSpeedPreviewBrakeController",
+    "agent_sha256": "60f52af2da6ae300be4746d90c7a57bf2a63733048a53642c3717837f1a83307",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "video_ledger": "experiments/video-4-7-evidence-ledger-v1.json",
+    "latest_visible_results_seconds": {
+      "track1": 27.18,
+      "track2": 33.22,
+      "track3": 30.58
+    },
+    "video_finding": "Track2 loses visible progress in its long U-turn and track3 slows in its S-curve and obstacle-adjacent bend. The videos contain no speed or pedal telemetry, so they motivate a curve-speed experiment but cannot prove braking causality.",
+    "code_finding": "The control drops from target68 to at most48 on any non-straight frame; at sweep6 it commands target34 and brake0.28 at speed60. This is direct evidence of a discontinuous and conservative curve envelope.",
+    "prior_safety_finding": "Lowering the obstacle-plus-hairpin cap from30 to24 did not fix the seed21 failure and added low-speed lap loss on seed42. Historical seed11,17,21 failures involved obstacle-bearing hairpins, so that cap and its miss latch remain frozen.",
+    "official_source_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "official_source_checked_at": "2026-09-30",
+    "research": [
+      "https://github.com/2026-HAIC/Participants",
+      "https://arxiv.org/abs/1902.00606",
+      "https://arxiv.org/abs/1711.07300",
+      "https://github.com/TUMFTM/velocity_optimization"
+    ],
+    "interpretation": "Primary-source racing control work supports curvature-conditioned velocity and a shared longitudinal/lateral tire-force budget. The camera sweep is only a bounded image-space proxy, so this experiment uses a monotone inverse-square-root schedule and attenuates throttle as requested steering approaches its limit."
+  },
+  "single_factor": {
+    "name": "friction-aware obstacle-free curve speed envelope",
+    "candidate_controller": "agent._FastCornerCarryController",
+    "target_formula": "clip(68/sqrt(1+0.10*sweep),40,64) only when the inherited exact-straight predicate is false and both current obstacle and obstacle miss latch are clear",
+    "normal_curve_gas": {
+      "speed_below_target_minus_8": 0.14,
+      "speed_below_target_minus_3": 0.11,
+      "speed_below_target": 0.07,
+      "steering_factor": "sqrt(max(0.25,1-(abs(pre-clipped steering request)/0.48)^2))"
+    },
+    "normal_curve_brake": {
+      "trigger": "speed > effective_target + 2.0",
+      "formula": "clip(0.04+0.012*(speed-effective_target-2.0),0.04,0.18)"
+    },
+    "effective_target": "the final target after the inherited abs(steering)>0.28 cap, so strong steering continues to impose target44",
+    "unchanged": [
+      "straight target68 and straight gas0.18/0.135/0.09",
+      "current obstacle targets47/40, obstacle+sweep>=6 target30, miss-latch target and all associated parent pedals",
+      "road and obstacle perception, steering law, steering limits and steering slew",
+      "lost-road behavior, observation/action interface and official environment files",
+      "model.pt, DrQ, explicit-export and HAIC policy routes",
+      "all track-id, seed, coordinate, elapsed-time and progress independence"
+    ]
+  },
+  "acceptance": {
+    "static_and_synthetic": [
+      "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
+      "Obstacle-free curve targets match the registered inverse-square-root formula and are monotone within40..64; sweep6 target is approximately53.7587 rather than34.",
+      "Obstacle-free curve throttle follows the three registered branches and steering attenuation; gas and brake never overlap.",
+      "Obstacle-free curve braking begins strictly above effective target+2, is monotone and never exceeds0.18.",
+      "The post-adjustment strong-steering cap44 is honored by pedal control rather than bypassed by the earlier command target.",
+      "Current obstacle, every miss-latch frame and reacquisition remain action-identical to the control for identical controller state and observation.",
+      "Steering remains exactly equal to the control across directed and randomized tests; invalid input, road loss and reset remain inherited.",
+      "Affected/local/submission contract tests and an isolated exact-file package smoke pass."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, compare candidate and exact control on preregistered unused multi-track geometry seeds. Completion rate, DNF, collision and worst progress may not regress before lap time is considered.",
+      "objective": "Reduce curve time and move each evaluation track toward the low-20-second range; no static implementation or consumed video can establish a lap-time result."
+    },
+    "classification": "preregistered / INCOMPARABLE"
+  },
+  "abort": [
+    "Any runtime condition uses track id, seed, map identity, coordinate, time, progress or evaluation filename.",
+    "Any current-obstacle or miss-latch target, pedal, steering or pass-side behavior differs from the control.",
+    "Any action is non-finite/out of range, gas and brake overlap, steering differs from control, package/interface gate fails, or relevant regression fails.",
+    "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
+    "Any frozen environment/model/DrQ/active-study artifact, user video or root submission.zip changes."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible; the official participant repository remains available and unchanged.",
+    "Only source, synthetic, unit and isolated package validation is authorized."
+  ]
+}
