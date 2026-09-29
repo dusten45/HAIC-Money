@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "name": "compound-obstacle-continuity-evidence-v1",
+  "status": "recorded-consumed-unbound",
+  "recorded_at": "2026-09-30T04:28:00+09:00",
+  "purpose": "separate a recent seed42 obstacle-collision regression from the earlier seed11/17/21 post-obstacle hairpin unwind before changing the active controller",
+  "official_source": {
+    "repository": "https://github.com/2026-HAIC/Participants",
+    "head": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "checked_at": "2026-09-30",
+    "finding": "The official generator uses seed for geometry and track_id together with seed for obstacle placement. Seed42 is an installation example, not a published evaluation seed; seeds11/17/21 are also local official-generator inputs rather than published hidden evaluation seeds."
+  },
+  "seed42_same_map_runs": [
+    {
+      "path": ".haic-artifacts/runs/run-360f902af4214b158c1d63fc084edd0b.json",
+      "sha256": "fb7412164c982900b593b9379e3bd0174d04e3fcde515d5897511ce74ee18736",
+      "created_at": "2026-09-29T17:26:28.594976+00:00",
+      "map_fingerprint": "908e599dfe5a46e5",
+      "result": "finished25.90s, progress0.9964664311, zero damage and zero collisions",
+      "transition": "At progress0.346290 steer was+0.134; it crossed near zero at progress0.356890 with steer-0.004 and reached the obstacle location at progress0.378092 with position[34.41,121.06], steer-0.246 and no collision."
+    },
+    {
+      "path": ".haic-artifacts/runs/run-6a7d8c1fe21a4b02b894a32bcf26a724.json",
+      "sha256": "95d4edeb1db73964a8328ebdc0fecf3008f5a18ca526606b4868ef764bde1549",
+      "created_at": "2026-09-29T17:46:10.373302+00:00",
+      "map_fingerprint": "908e599dfe5a46e5",
+      "result": "DNF crash at progress0.3780918728 with five collisions and damage1.0",
+      "transition": "At progress0.346290 steer was+0.162; the first negative steer-0.018 appeared at progress0.360424. The first collision occurred at step117, position[34.67,122.77], after reaching steer-0.32."
+    },
+    {
+      "path": ".haic-artifacts/runs/run-d7e63ff882a044f2855196bfe9f88bc6.json",
+      "sha256": "3dd09428c75bbb333afbc1cb01503b7cf95e75eea7116a7e20f28fc3e0f055cf",
+      "created_at": "2026-09-29T18:20:51.873105+00:00",
+      "map_fingerprint": "908e599dfe5a46e5",
+      "result": "DNF off_track at progress0.3780918728 with four collisions and damage0.8",
+      "transition": "At progress0.346290 steer was+0.194; the first negative steer-0.016 appeared at progress0.360424. The first collision occurred at step117, position[34.67,123.28], after six frames at or approaching the-0.32 obstacle cap."
+    }
+  ],
+  "cross_seed_evidence": {
+    "source": "experiments/official-seed-compound-hairpin-evidence-v1.json",
+    "finding": "Consumed seed11/17/21 runs left the road after an outside obstacle pass into a continuing hairpin. Final valid steering unwound to-0.027/+0.014/-0.012 even though the final valid speed was already29--30; collision was not the common terminal cause.",
+    "constraint": "Any repair should preserve the pre-obstacle path and current-obstacle arbitration that previously completed seed42, while retaining same-direction steering only after a detected obstacle disappears into a continuing curve."
+  },
+  "controller_audit": [
+    "The current coherent gain is allowed on every obstacle-free coherent curve, including frames before any obstacle is detected and frames during an obstacle miss latch.",
+    "The current detector accepts compact bright components only in rows22--61 and the miss latch preserves side and speed target but does not itself replay the prior lateral obstacle bias.",
+    "Commit/run chronology separates two regressions: the FastCornerCarry route at02:23 preceded the02:26 finisher; the TranslationInvariantExit route at02:41 preceded the02:46 five-collision DNF; the CoherentCurveAttack route at03:18 preceded the03:20 four-collision/off-track DNF. The smallest evidenced recovery baseline is therefore FastCornerCarry, not TranslationInvariantExit."
+  ],
+  "binding_limitations": [
+    "Run files contain map, policy name and telemetry but no source commit, agent hash, model hash or package hash. Commit/run chronology and action signatures make the regression plausible but not cryptographically causal.",
+    "All four seeds are consumed adaptive development evidence and cannot confirm a new candidate or support a SOTA claim.",
+    "Top-down replay frames do not expose the policy's four grayscale camera frames, detected obstacle tuple or controller state."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "name": "post-obstacle-curve-retention-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T04:28:00+09:00",
+  "purpose": "recover the last seed42-finishing FastCornerCarry baseline and add one bounded steering-retention factor only through a detected obstacle's same-side miss latch into a continuing curve",
+  "source_commit": "fdf5d65632cb9ae3350e5bfbf898537bda8d06a7",
+  "branch": "feature/DG-Codex",
+  "control": {
+    "controller": "agent._FastCornerCarryController",
+    "source_commit": "7bdf9b2a6ac80866eaf0f9682d6d3721cd275ad4",
+    "agent_git_blob": "dfcb1c24631fe463d064c3fe599c5987fd627753",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "ledger": "experiments/compound-obstacle-continuity-evidence-v1.json",
+    "seed42_interpretation": "The02:26 unbound same-map run immediately after FastCornerCarry finished with zero collisions. The02:46 run after TranslationInvariantExit and the03:20 run after CoherentCurveAttack both collide at the identical37.81-percent obstacle with a later path-space reversal. Recover FastCornerCarry as the static control; treat chronology as strong adaptive evidence, not a bound comparison.",
+    "extreme_seed_interpretation": "Consumed seed11/17/21 failures share post-obstacle same-direction steering unwind and off-track retirement, not terminal collision. Restricting retention to a detected obstacle's matching avoidance-side latch targets this phase without changing the approach line.",
+    "official_source_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31"
+  },
+  "single_factor": {
+    "name": "coherent attack activation gate",
+    "candidate_controller": "agent._PostObstacleCurveRetentionController",
+    "change": "Starting from _FastCornerCarryController, add the prior20-percent/0.06/0.48 coherent gain formula only on miss frames1--4 when the coherent curve direction equals the stored obstacle avoidance side.",
+    "active_gate": [
+      "no current obstacle is detected",
+      "_carry_latched_at_frame_start is true, _obstacle_side is nonzero and _obstacle_missing<OBSTACLE_MISS_LIMIT so only miss frames1--4 qualify",
+      "coherent curve direction equals _obstacle_side",
+      "all sampled rows30,34,38,42,46,50,54 exist and are coherent relative to row54",
+      "the inherited request has the same sign and the closed0.07 reversal-protection gate passes"
+    ],
+    "unchanged": [
+      "current-obstacle perception, urgency, pass-side selection, curve/obstacle arbitration, cap0.32 and target30/40/47",
+      "obstacle-free steering outside a miss latch, including distant preview and ordinary clear curves, which stays exact _FastCornerCarryController behavior",
+      "the20-percent gain,0.06 maximum request increment,0.48 cap,0.07 emitted slew and closed reversal-protection interval when the new gate is active",
+      "all FastCornerCarry longitudinal formulas, reset, lost-road recovery, model.pt and non-bare inference routes; the later TranslationInvariantExit acceleration is deliberately absent from the recovery baseline",
+      "all track-id, seed, map, coordinate, elapsed-time and progress independence"
+    ]
+  },
+  "acceptance": {
+    "static_and_synthetic": [
+      "Bare state-dict inference routes only to the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
+      "Obstacle-free coherent curves, straights, parallel offsets and distant previews are action and shared inherited-state exact to _FastCornerCarryController; candidate-only diagnostic state remains inactive/zero.",
+      "From identical state, every current-obstacle action and shared inherited state remains exact to _FastCornerCarryController.",
+      "On miss frames1--4 only, a coherent curve matching the stored avoidance side applies the bounded gain, preserves0.07 slew and continues to use the inherited latched longitudinal target.",
+      "A miss-latch curve opposite the stored avoidance side is action/shared-state exact to _FastCornerCarryController and cannot steer back toward the last obstacle because of this factor.",
+      "The fifth clearing frame and all later frames are exact to _FastCornerCarryController; reset or road loss leaves no stale retention.",
+      "Exact direction, zero-side, first/final latch,0.07 reversal interval and mirrored boundaries are covered.",
+      "Affected local/submission tests and an isolated exact-file package smoke pass."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, compare the frozen candidate and _FastCornerCarryController control on a preregistered fresh seed-by-track_id matrix. Completion/collision/off-track/worst-progress may not regress before completed lap time is considered. Keep11/17/21/42 as consumed regression diagnostics only.",
+      "objective": "Recover compound obstacle continuity without the clear-curve approach-line regression; source and synthetic validation cannot establish this outcome."
+    },
+    "classification": "preregistered / INCOMPARABLE"
+  },
+  "abort": [
+    "Any action/shared inherited state differs from _FastCornerCarryController outside miss frames1--4 with a same-sign coherent curve.",
+    "Any current-obstacle or fifth-clearing-frame action differs from _FastCornerCarryController, or any opposite-side miss-latch curve receives gain.",
+    "Any steering delta exceeds0.07, request increment exceeds0.06, request exceeds0.48, or stale retention survives latch expiry/reset/road loss.",
+    "Any runtime condition uses track id, seed, map identity, coordinate, elapsed time, progress or evaluation filename.",
+    "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
+    "Any frozen environment/model/DrQ artifact, user video or root submission.zip changes."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible; the official participant repository is available at the recorded commit.",
+    "Only existing-run analysis, source inspection, synthetic/unit validation and isolated package smoke are authorized."
+  ]
+}
