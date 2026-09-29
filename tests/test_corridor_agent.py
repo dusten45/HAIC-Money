@@ -4065,6 +4065,693 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(changed, 0)
         self.assertGreater(exact, 0)
 
+    def test_adaptive_compound_target_matches_registered_surface(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def act_with(
+            controller,
+            *,
+            obstacle_y,
+            sweep,
+            direction=1.0,
+            obstacle_side=1.0,
+            speed=30.0,
+        ):
+            centers = {
+                30: 42.0 + direction * sweep,
+                34: 42.0,
+                38: 42.0,
+                42: 42.0,
+                54: 42.0,
+                58: 42.0,
+                62: 42.0,
+            }
+            obstacle = (
+                obstacle_y,
+                35.0 if obstacle_side > 0.0 else 49.0,
+                42.0,
+            )
+            with patch.object(
+                controller, "_road_centers", return_value=centers
+            ), patch.object(
+                controller, "_nearest_obstacle", return_value=obstacle
+            ), patch.object(
+                controller, "_estimate_speed", return_value=speed
+            ):
+                return controller.act(frame)
+
+        far_expected = {6.0: 36.0, 7.0: 35.0, 8.0: 34.0, 9.0: 33.0,
+                        10.0: 32.0, 11.0: 31.0, 12.0: 30.0}
+        for direction in (-1.0, 1.0):
+            for obstacle_side in (-1.0, 1.0):
+                previous = np.inf
+                for sweep, expected_target in far_expected.items():
+                    control = _CompoundObstacleLatchReleaseController()
+                    candidate = _AdaptiveCompoundTargetController()
+                    control_action = act_with(
+                        control,
+                        obstacle_y=32.0,
+                        sweep=sweep,
+                        direction=direction,
+                        obstacle_side=obstacle_side,
+                    )
+                    candidate_action = act_with(
+                        candidate,
+                        obstacle_y=32.0,
+                        sweep=sweep,
+                        direction=direction,
+                        obstacle_side=obstacle_side,
+                    )
+                    with self.subTest(
+                        direction=direction,
+                        obstacle_side=obstacle_side,
+                        sweep=sweep,
+                    ):
+                        self.assertAlmostEqual(
+                            candidate._pace_command_target,
+                            expected_target,
+                            places=7,
+                        )
+                        self.assertEqual(candidate._pace_latched_target, 30.0)
+                        self.assertLessEqual(
+                            candidate._pace_command_target, previous
+                        )
+                        self.assertGreaterEqual(
+                            candidate._pace_command_target, 30.0
+                        )
+                        self.assertLessEqual(
+                            candidate._pace_command_target, 36.0
+                        )
+                        np.testing.assert_array_equal(
+                            candidate_action[:1], control_action[:1]
+                        )
+                        previous = candidate._pace_command_target
+
+        distance_expected = {32.0: 36.0, 36.0: 34.0, 40.0: 32.0,
+                             43.0: 30.5, 44.0: 30.0}
+        previous = np.inf
+        for obstacle_y, expected_target in distance_expected.items():
+            candidate = _AdaptiveCompoundTargetController()
+            act_with(candidate, obstacle_y=obstacle_y, sweep=6.0)
+            with self.subTest(obstacle_y=obstacle_y):
+                self.assertAlmostEqual(
+                    candidate._pace_command_target, expected_target, places=7
+                )
+                self.assertLessEqual(candidate._pace_command_target, previous)
+                previous = candidate._pace_command_target
+
+    def test_adaptive_compound_target_closes_distance_and_sweep_boundaries(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def pair(*, obstacle_y, sweep):
+            centers = {30: 42.0 + sweep, 34: 42.0, 38: 42.0, 42: 42.0,
+                       54: 42.0, 58: 42.0, 62: 42.0}
+            obstacle = (obstacle_y, 35.0, 42.0)
+            controllers = (
+                _CompoundObstacleLatchReleaseController(),
+                _AdaptiveCompoundTargetController(),
+            )
+            actions = []
+            for controller in controllers:
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=40.0
+                ):
+                    actions.append(controller.act(frame))
+            return controllers, actions
+
+        cases = (
+            (32.0, 6.0 - 1e-6, False),
+            (32.0, 6.0, True),
+            (32.0, np.nextafter(6.0, np.inf), True),
+            (32.0, 12.0 - 1e-6, True),
+            (32.0, 12.0, False),
+            (32.0, 12.0 + 1e-6, False),
+            (np.nextafter(32.0, -np.inf), 6.0, True),
+            (32.0, 6.0, True),
+            (np.nextafter(32.0, np.inf), 6.0, True),
+            (np.nextafter(44.0, -np.inf), 6.0, True),
+            (44.0, 6.0, False),
+            (np.nextafter(44.0, np.inf), 6.0, False),
+        )
+        for obstacle_y, sweep, eligible in cases:
+            controllers, actions = pair(obstacle_y=obstacle_y, sweep=sweep)
+            control, candidate = controllers
+            with self.subTest(obstacle_y=obstacle_y, sweep=sweep):
+                np.testing.assert_array_equal(actions[1][:1], actions[0][:1])
+                if eligible:
+                    self.assertGreater(candidate._pace_command_target, 30.0)
+                    self.assertLessEqual(candidate._pace_command_target, 36.0)
+                    self.assertEqual(candidate._pace_latched_target, 30.0)
+                else:
+                    np.testing.assert_array_equal(actions[1], actions[0])
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_adaptive_compound_target_uses_soft_brake_and_higher_gas(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+        centers = {30: 48.0, 34: 42.0, 38: 42.0, 42: 42.0,
+                   54: 42.0, 58: 42.0, 62: 42.0}
+        obstacle = (32.0, 35.0, 42.0)
+        expected_candidate = {
+            30.0: (0.08 * (2.0 / 3.0), 0.0),
+            32.0: (0.08 * (2.0 / 3.0), 0.0),
+            36.0: (0.08 * (5.0 / 12.0), 0.0),
+            36.5: (0.08 * (5.0 / 12.0), 0.0),
+            np.nextafter(36.5, np.inf): (0.0, 0.04),
+            40.0: (0.0, 0.082),
+            48.0: (0.0, 0.178),
+            60.0: (0.0, np.nextafter(np.float32(0.28), np.float32(0.0))),
+        }
+        for speed, (expected_gas, expected_brake) in expected_candidate.items():
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=speed
+                ):
+                    actions.append(controller.act(frame))
+            with self.subTest(speed=speed):
+                self.assertEqual(candidate._pace_command_target, 36.0)
+                self.assertEqual(candidate._pace_latched_target, 30.0)
+                np.testing.assert_array_equal(actions[1][:1], actions[0][:1])
+                self.assertAlmostEqual(float(actions[1][1]), expected_gas, places=6)
+                self.assertAlmostEqual(
+                    float(actions[1][2]), float(expected_brake), places=6
+                )
+                self.assertEqual(float(actions[1][1]) * float(actions[1][2]), 0.0)
+                self.assertTrue(np.all(np.isfinite(actions[1])))
+
+        intermediate_obstacle = (40.0, 35.0, 42.0)
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        intermediate_actions = []
+        for controller in (control, candidate):
+            with patch.object(
+                controller, "_road_centers", return_value=centers
+            ), patch.object(
+                controller,
+                "_nearest_obstacle",
+                return_value=intermediate_obstacle,
+            ), patch.object(
+                controller, "_estimate_speed", return_value=40.0
+            ):
+                intermediate_actions.append(controller.act(frame))
+        self.assertEqual(candidate._pace_command_target, 32.0)
+        self.assertAlmostEqual(float(intermediate_actions[0][2]), 0.154, places=6)
+        self.assertAlmostEqual(float(intermediate_actions[1][2]), 0.13, places=6)
+        self.assertLess(
+            float(intermediate_actions[1][2]),
+            float(intermediate_actions[0][2]),
+        )
+        self.assertGreaterEqual(float(intermediate_actions[1][2]), 0.096)
+        self.assertEqual(
+            float(intermediate_actions[1][1])
+            * float(intermediate_actions[1][2]),
+            0.0,
+        )
+
+    def test_adaptive_compound_target_returns_to30_on_first_miss_and_flicker(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+        centers = {30: 48.0, 34: 42.0, 38: 42.0, 42: 42.0,
+                   54: 42.0, 58: 42.0, 62: 42.0}
+        current_obstacle = (32.0, 35.0, 42.0)
+
+        def act_pair(control, candidate, obstacle):
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=40.0
+                ):
+                    actions.append(controller.act(frame))
+            np.testing.assert_array_equal(actions[1][:1], actions[0][:1])
+            return actions
+
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        raised = act_pair(control, candidate, current_obstacle)
+        self.assertEqual(candidate._pace_command_target, 36.0)
+        self.assertLess(float(raised[1][2]), float(raised[0][2]))
+        for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 1):
+            actions = act_pair(control, candidate, None)
+            with self.subTest(miss=miss):
+                np.testing.assert_array_equal(actions[1], actions[0])
+                self.assertEqual(candidate._pace_command_target, 30.0)
+                self.assertEqual(candidate._pace_latched_target, 30.0)
+        clearing = act_pair(control, candidate, None)
+        np.testing.assert_array_equal(clearing[1], clearing[0])
+        released = act_pair(control, candidate, None)
+        np.testing.assert_array_equal(released[1], released[0])
+
+        for misses_before_reacquire in range(1, 5):
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            act_pair(control, candidate, current_obstacle)
+            for _ in range(misses_before_reacquire):
+                miss_actions = act_pair(control, candidate, None)
+                np.testing.assert_array_equal(miss_actions[1], miss_actions[0])
+            reacquired = act_pair(control, candidate, current_obstacle)
+            self.assertEqual(candidate._obstacle_missing, 0)
+            self.assertEqual(candidate._pace_command_target, 36.0)
+            self.assertLess(float(reacquired[1][2]), float(reacquired[0][2]))
+
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        for _ in range(3):
+            act_pair(control, candidate, current_obstacle)
+            self.assertEqual(candidate._pace_command_target, 36.0)
+            missed = act_pair(control, candidate, None)
+            np.testing.assert_array_equal(missed[1], missed[0])
+            self.assertEqual(candidate._pace_command_target, 30.0)
+
+    def test_adaptive_compound_target_preserves_noneligible_and_recovery(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        cases = (
+            _observation(speed=45.0),
+            _observation(curve=0.75, speed=45.0),
+            _observation(curve=0.25, obstacle_x=35, obstacle_y=50, speed=40.0),
+            _observation(curve=0.75, obstacle_x=35, obstacle_y=32, speed=40.0),
+            _observation(curve=0.10, obstacle_x=35, obstacle_y=32, speed=40.0),
+        )
+        # The fourth rendered case has extreme sweep and the fifth is noncompound.
+        for observation in cases:
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            np.testing.assert_array_equal(
+                candidate.act(observation), control.act(observation)
+            )
+            self.assertEqual(candidate.__dict__, control.__dict__)
+
+        road = _observation(speed=0.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        np.testing.assert_array_equal(candidate.act(road), control.act(road))
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+        candidate.reset(None)
+        self.assertEqual(candidate.__dict__, _AdaptiveCompoundTargetController().__dict__)
+        for invalid in (None, np.zeros((84, 84), dtype=np.float32)):
+            reset_control = _CompoundObstacleLatchReleaseController()
+            reset_candidate = _AdaptiveCompoundTargetController()
+            np.testing.assert_array_equal(
+                reset_candidate.act(invalid), reset_control.act(invalid)
+            )
+            self.assertEqual(reset_candidate.__dict__, reset_control.__dict__)
+
+    def test_adaptive_compound_target_vetoes_strong_final_steering_request(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def act_with(controller, *, direction, requested_magnitude):
+            centers = {
+                30: 42.0 + direction * 6.0,
+                34: 42.0,
+                38: 42.0,
+                42: 42.0,
+                54: 42.0,
+                58: 42.0,
+                62: 42.0,
+            }
+            obstacle = (
+                32.0,
+                35.0 if direction > 0.0 else 49.0,
+                42.0,
+            )
+            with patch.object(
+                controller, "_road_centers", return_value=centers
+            ), patch.object(
+                controller, "_nearest_obstacle", return_value=obstacle
+            ), patch.object(
+                controller,
+                "_adjust_obstacle_steering",
+                return_value=direction * requested_magnitude,
+            ), patch.object(
+                controller, "_estimate_speed", return_value=40.0
+            ):
+                return controller.act(frame)
+
+        for direction in (-1.0, 1.0):
+            for boundary, requested_magnitude in (
+                ("below", 0.28 - 1e-7),
+                ("exact", 0.28),
+            ):
+                control = _CompoundObstacleLatchReleaseController()
+                candidate = _AdaptiveCompoundTargetController()
+                eligible_actions = (
+                    act_with(
+                        control,
+                        direction=direction,
+                        requested_magnitude=requested_magnitude,
+                    ),
+                    act_with(
+                        candidate,
+                        direction=direction,
+                        requested_magnitude=requested_magnitude,
+                    ),
+                )
+                with self.subTest(direction=direction, boundary=boundary):
+                    self.assertEqual(candidate._pace_command_target, 36.0)
+                    np.testing.assert_array_equal(
+                        eligible_actions[1][:1], eligible_actions[0][:1]
+                    )
+                    self.assertLess(
+                        float(eligible_actions[1][2]),
+                        float(eligible_actions[0][2]),
+                    )
+
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            above_actions = (
+                act_with(
+                    control,
+                    direction=direction,
+                    requested_magnitude=0.28 + 1e-7,
+                ),
+                act_with(
+                    candidate,
+                    direction=direction,
+                    requested_magnitude=0.28 + 1e-7,
+                ),
+            )
+            with self.subTest(direction=direction, boundary="above"):
+                self.assertEqual(candidate._pace_command_target, 30.0)
+                np.testing.assert_array_equal(above_actions[1], above_actions[0])
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            act_with(
+                control,
+                direction=direction,
+                requested_magnitude=0.28 - 1e-7,
+            )
+            act_with(
+                candidate,
+                direction=direction,
+                requested_magnitude=0.28 - 1e-7,
+            )
+            self.assertEqual(candidate._pace_command_target, 36.0)
+            transitioned_actions = (
+                act_with(
+                    control,
+                    direction=direction,
+                    requested_magnitude=0.28 + 1e-7,
+                ),
+                act_with(
+                    candidate,
+                    direction=direction,
+                    requested_magnitude=0.28 + 1e-7,
+                ),
+            )
+            with self.subTest(direction=direction, boundary="stateful_above"):
+                self.assertEqual(candidate._pace_command_target, 30.0)
+                np.testing.assert_array_equal(
+                    transitioned_actions[1], transitioned_actions[0]
+                )
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_adaptive_compound_target_stateful_boundary_progressions(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def act_pair(control, candidate, *, obstacle_y, sweep):
+            centers = {
+                30: 42.0 + sweep,
+                34: 42.0,
+                38: 42.0,
+                42: 42.0,
+                54: 42.0,
+                58: 42.0,
+                62: 42.0,
+            }
+            obstacle = (obstacle_y, 35.0, 42.0)
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=40.0
+                ):
+                    actions.append(controller.act(frame))
+            return actions
+
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        for obstacle_y, sweep, expected_target in (
+            (32.0, 6.0, 36.0),
+            (44.0, 6.0, 30.0),
+            (32.0, 6.0, 36.0),
+            (32.0, 12.0, 30.0),
+            (32.0, 6.0, 36.0),
+        ):
+            actions = act_pair(
+                control,
+                candidate,
+                obstacle_y=obstacle_y,
+                sweep=sweep,
+            )
+            with self.subTest(obstacle_y=obstacle_y, sweep=sweep):
+                self.assertEqual(candidate._pace_command_target, expected_target)
+                if expected_target == 30.0:
+                    np.testing.assert_array_equal(actions[1], actions[0])
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+                else:
+                    self.assertLess(float(actions[1][2]), float(actions[0][2]))
+
+        control = _CompoundObstacleLatchReleaseController()
+        candidate = _AdaptiveCompoundTargetController()
+        observed_targets = []
+        for sweep in (6.0, 8.0, 10.0, 12.0):
+            act_pair(control, candidate, obstacle_y=32.0, sweep=sweep)
+            observed_targets.append(candidate._pace_command_target)
+        self.assertEqual(observed_targets, [36.0, 34.0, 32.0, 30.0])
+
+    def test_adaptive_compound_target_randomized_stateful_sequences(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        rng = np.random.default_rng(2026093005)
+        frame = _observation(speed=0.0)
+        allowed_state_differences = {
+            "_pace_command_target",
+            "_pace_effective_target",
+        }
+        raised = exact = resets = 0
+        scripted = (
+            (32.0, 6.0),
+            (44.0, 6.0),
+            (32.0, 6.0),
+            (32.0, 12.0),
+            (32.0, 6.0),
+            (None, 6.0),
+            (32.0, 8.0),
+            (None, 8.0),
+        )
+        for _ in range(32):
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            events = list(scripted)
+            for _ in range(32):
+                event = int(rng.integers(0, 6))
+                if event == 0:
+                    events.append((float(rng.uniform(22.0, 43.9)),
+                                   float(rng.uniform(6.0, 11.9))))
+                elif event == 1:
+                    events.append((float(rng.uniform(44.0, 61.0)),
+                                   float(rng.uniform(6.0, 11.9))))
+                elif event == 2:
+                    events.append((float(rng.uniform(22.0, 43.9)),
+                                   float(rng.uniform(12.0, 16.0))))
+                elif event == 3:
+                    events.append((float(rng.uniform(22.0, 61.0)),
+                                   float(rng.uniform(0.0, 6.0))))
+                elif event == 4:
+                    events.append((None, float(rng.uniform(0.0, 16.0))))
+                else:
+                    events.append(("reset", 0.0))
+
+            for obstacle_y, sweep in events:
+                if obstacle_y == "reset":
+                    control.reset(None)
+                    candidate.reset(None)
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+                    resets += 1
+                    continue
+                direction = float(rng.choice((-1.0, 1.0)))
+                obstacle_side = float(rng.choice((-1.0, 1.0)))
+                centers = {
+                    30: 42.0 + direction * sweep,
+                    34: 42.0,
+                    38: 42.0,
+                    42: 42.0,
+                    54: 42.0,
+                    58: 42.0,
+                    62: 42.0,
+                }
+                obstacle = None
+                if obstacle_y is not None:
+                    obstacle = (
+                        float(obstacle_y),
+                        35.0 if obstacle_side > 0.0 else 49.0,
+                        42.0,
+                    )
+                speed = float(rng.uniform(0.0, 80.0))
+                actions = []
+                for controller in (control, candidate):
+                    with patch.object(
+                        controller, "_road_centers", return_value=centers
+                    ), patch.object(
+                        controller, "_nearest_obstacle", return_value=obstacle
+                    ), patch.object(
+                        controller, "_estimate_speed", return_value=speed
+                    ):
+                        actions.append(controller.act(frame))
+                differing_state = {
+                    key
+                    for key in candidate.__dict__
+                    if candidate.__dict__[key] != control.__dict__[key]
+                }
+                self.assertTrue(np.all(np.isfinite(actions[1])))
+                self.assertTrue(np.all(actions[1] >= (-1.0, 0.0, 0.0)))
+                self.assertTrue(np.all(actions[1] <= 1.0))
+                self.assertEqual(
+                    float(actions[1][1]) * float(actions[1][2]), 0.0
+                )
+                if candidate._pace_command_target != control._pace_command_target:
+                    raised += 1
+                    self.assertIsNotNone(obstacle)
+                    self.assertLess(float(obstacle_y), 44.0)
+                    self.assertGreaterEqual(candidate._pace_sweep, 6.0)
+                    self.assertLess(candidate._pace_sweep, 12.0)
+                    self.assertGreater(candidate._pace_command_target, 30.0)
+                    self.assertLessEqual(candidate._pace_command_target, 36.0)
+                    self.assertTrue(
+                        differing_state <= allowed_state_differences
+                    )
+                    np.testing.assert_array_equal(actions[1][:1], actions[0][:1])
+                else:
+                    exact += 1
+                    np.testing.assert_array_equal(actions[1], actions[0])
+                    self.assertFalse(differing_state)
+        self.assertGreater(raised, 0)
+        self.assertGreater(exact, 0)
+        self.assertGreater(resets, 0)
+
+    def test_adaptive_compound_target_randomized_differential(self):
+        from agent import (
+            _AdaptiveCompoundTargetController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        rng = np.random.default_rng(2026093004)
+        frame = _observation(speed=0.0)
+        changed = 0
+        exact = 0
+        allowed_state_differences = {"_pace_command_target", "_pace_effective_target"}
+        for _ in range(384):
+            direction = float(rng.choice((-1.0, 1.0)))
+            sweep = float(rng.uniform(0.0, 16.0))
+            obstacle_y = float(rng.uniform(22.0, 61.0))
+            speed = float(rng.uniform(0.0, 80.0))
+            centers = {30: 42.0 + direction * sweep, 34: 42.0, 38: 42.0,
+                       42: 42.0, 54: 42.0, 58: 42.0, 62: 42.0}
+            obstacle = (
+                obstacle_y,
+                35.0 if direction > 0.0 else 49.0,
+                42.0,
+            )
+            control = _CompoundObstacleLatchReleaseController()
+            candidate = _AdaptiveCompoundTargetController()
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=speed
+                ):
+                    actions.append(controller.act(frame))
+            np.testing.assert_array_equal(actions[1][:1], actions[0][:1])
+            self.assertTrue(np.all(np.isfinite(actions[1])))
+            self.assertTrue(np.all(actions[1] >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(actions[1] <= 1.0))
+            self.assertEqual(float(actions[1][1]) * float(actions[1][2]), 0.0)
+            differing_state = {
+                key
+                for key in candidate.__dict__
+                if candidate.__dict__[key] != control.__dict__[key]
+            }
+            eligible = (
+                obstacle_y < 44.0
+                and candidate._pace_sweep >= 6.0
+                and candidate._pace_sweep < 12.0
+            )
+            if not eligible:
+                exact += 1
+                np.testing.assert_array_equal(actions[1], actions[0])
+                self.assertFalse(differing_state)
+                continue
+            changed += 1
+            self.assertTrue(differing_state <= allowed_state_differences)
+            expected = 30.0 + 6.0 * np.clip(
+                (44.0 - obstacle_y) / 12.0, 0.0, 1.0
+            ) * np.clip((12.0 - candidate._pace_sweep) / 6.0, 0.0, 1.0)
+            self.assertAlmostEqual(candidate._pace_command_target, expected, places=7)
+            self.assertEqual(candidate._pace_latched_target, 30.0)
+            self.assertGreater(candidate._pace_command_target, 30.0)
+            self.assertLessEqual(candidate._pace_command_target, 36.0)
+        self.assertGreater(changed, 0)
+        self.assertGreater(exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,

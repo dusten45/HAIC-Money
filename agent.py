@@ -1178,6 +1178,18 @@ class _StableCompletionController:
         del curve_target_speed, obstacle
         return target_speed
 
+    def _adjust_target_speed_for_steering(
+        self,
+        *,
+        target_speed: float,
+        steering: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        """Extension point after the final obstacle steering request exists."""
+        del steering, straight, obstacle
+        return target_speed
+
     def _adjust_pedals(
         self,
         *,
@@ -1268,6 +1280,12 @@ class _StableCompletionController:
         target_speed = self._adjust_target_speed(
             target_speed=target_speed,
             curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
+        target_speed = self._adjust_target_speed_for_steering(
+            target_speed=target_speed,
+            steering=steering,
+            straight=straight,
             obstacle=obstacle,
         )
         if not straight and abs(steering) > 0.28:
@@ -2284,13 +2302,8 @@ class _CompoundObstacleBrakeCarryController(
     COMPOUND_CARRY_BRAKE_GAIN = 0.012
     COMPOUND_CARRY_BRAKE_MAX = 0.18
 
-    def _curve_brake_envelope(
-        self,
-        *,
-        excess: float,
-        base_brake: float,
-    ) -> float:
-        compound_latched = (
+    def _compound_carry_active(self) -> bool:
+        return bool(
             self._pace_latched_target == self.COMPOUND_TARGET_SPEED
             and self._pace_command_target == self.COMPOUND_TARGET_SPEED
             and (
@@ -2298,7 +2311,14 @@ class _CompoundObstacleBrakeCarryController(
                 or self._carry_latched_at_frame_start
             )
         )
-        if not compound_latched:
+
+    def _curve_brake_envelope(
+        self,
+        *,
+        excess: float,
+        base_brake: float,
+    ) -> float:
+        if not self._compound_carry_active():
             return super()._curve_brake_envelope(
                 excess=excess,
                 base_brake=base_brake,
@@ -2343,6 +2363,126 @@ class _CompoundObstacleLatchReleaseController(
         return super()._curve_brake_envelope(
             excess=excess,
             base_brake=base_brake,
+        )
+
+
+class _AdaptiveCompoundTargetController(
+    _CompoundObstacleLatchReleaseController
+):
+    """Raise only far, moderate compound targets with continuous safeguards.
+
+    Near obstacles, extreme hairpins and every detector-miss latch retain the
+    exact target30 policy.  The current command can rise to36, but the stored
+    latch remains30 so a single missed detection restores the safety target.
+    """
+
+    ADAPTIVE_COMPOUND_MAX_TARGET = 36.0
+    ADAPTIVE_COMPOUND_FAR_ROW = 32.0
+    ADAPTIVE_COMPOUND_NEAR_ROW = 44.0
+    ADAPTIVE_COMPOUND_EXTREME_SWEEP = 12.0
+    ADAPTIVE_COMPOUND_MAX_STEER_REQUEST = 0.28
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed(
+            target_speed=target_speed,
+            curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
+        if (
+            obstacle is None
+            or self._pace_latched_target != self.COMPOUND_TARGET_SPEED
+            or self._pace_sweep < self.COMPOUND_SWEEP_THRESHOLD
+            or self._pace_sweep >= self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+        ):
+            return inherited
+
+        obstacle_y = float(obstacle[0])
+        if obstacle_y >= self.ADAPTIVE_COMPOUND_NEAR_ROW:
+            return inherited
+
+        distance_factor = float(
+            np.clip(
+                (self.ADAPTIVE_COMPOUND_NEAR_ROW - obstacle_y)
+                / (
+                    self.ADAPTIVE_COMPOUND_NEAR_ROW
+                    - self.ADAPTIVE_COMPOUND_FAR_ROW
+                ),
+                0.0,
+                1.0,
+            )
+        )
+        severity_factor = float(
+            np.clip(
+                (
+                    self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+                    - self._pace_sweep
+                )
+                / (
+                    self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+                    - self.COMPOUND_SWEEP_THRESHOLD
+                ),
+                0.0,
+                1.0,
+            )
+        )
+        command_target = float(
+            self.COMPOUND_TARGET_SPEED
+            + (
+                self.ADAPTIVE_COMPOUND_MAX_TARGET
+                - self.COMPOUND_TARGET_SPEED
+            )
+            * distance_factor
+            * severity_factor
+        )
+        self._pace_command_target = command_target
+        return command_target
+
+    def _adjust_target_speed_for_steering(
+        self,
+        *,
+        target_speed: float,
+        steering: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed_for_steering(
+            target_speed=target_speed,
+            steering=steering,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if (
+            obstacle is not None
+            and not straight
+            and abs(steering) > self.ADAPTIVE_COMPOUND_MAX_STEER_REQUEST
+            and self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target is not None
+            and self._pace_command_target > self.COMPOUND_TARGET_SPEED
+        ):
+            self._pace_command_target = self.COMPOUND_TARGET_SPEED
+            return self.COMPOUND_TARGET_SPEED
+        return inherited
+
+    def _compound_carry_active(self) -> bool:
+        if super()._compound_carry_active():
+            return True
+        return bool(
+            self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target is not None
+            and self.COMPOUND_TARGET_SPEED
+            < self._pace_command_target
+            <= self.ADAPTIVE_COMPOUND_MAX_TARGET
+            and self._obstacle_side != 0.0
+            and self._obstacle_missing == 0
+            and self.COMPOUND_SWEEP_THRESHOLD
+            <= self._pace_sweep
+            < self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
         )
 
 
@@ -2847,7 +2987,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _CompoundObstacleLatchReleaseController()
+            _AdaptiveCompoundTargetController()
             if use_forward_controller
             else None
         )
