@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "experiment": "post-obstacle-curve-retention-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T05:47:00+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["178efbb", "f6da904", "a2f4f04", "82ad6ea"],
+  "implementation_commit": "61df0b6649735b3ea856a22a10c3fe09f7c30339",
+  "decision": "Keep as the current statically validated bare-model candidate. Recover the last seed42-finishing FastCornerCarry baseline and add only bounded same-side steering retention during obstacle miss frames1--4. Do not claim that seeds11/17/21/42 are fixed, that completion or lap time improved, or that the candidate is submission-ready until an authorized fresh seed-by-track_id evaluation passes the stability-first gate.",
+  "failure_analysis": {
+    "seed11_17_21": "All three consumed runs were already near speed29--30 when steering unwound by the inherited0.07-per-frame slew and road visibility was lost after an obstacle pass into a continuing hairpin. A later unbound seed11 finisher held steering around-0.221 to-0.320 at the same progress instead of releasing to-0.027.",
+    "seed42": "On map fingerprint908e599dfe5a46e5, the02:26 run immediately after FastCornerCarry finished25.90s with zero collisions. The02:46 run after TranslationInvariantExit retired at progress0.378092 with five collisions, and the03:20 run after CoherentCurveAttack retired at the same progress with four collisions. The finisher began negative avoidance one progress tile earlier and reached that location only0.724 from centerline; the two failures were3.505 and4.207 away despite similar speed.",
+    "contact_deadlock": "The latest seed42 trace remained below speed0.3 for94 frames/7.52s while emitting approximately[-0.32,0.04,0], showing no dedicated low-speed contact escape state.",
+    "causal_limit": "Run timestamps and action signatures align with commit order but run files contain no source, agent, model or package hash. All four seeds are consumed adaptive evidence, not confirmation."
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _PostObstacleCurveRetentionController, directly based on _FastCornerCarryController; explicit export, DrQ and HAIC routes remain unchanged.",
+    "Remove the later TranslationInvariantExit clear-exit acceleration and global CoherentCurveAttack gain from the active route, recovering the last seed42-finishing static baseline.",
+    "Allow the existing20-percent gain only when no current obstacle exists, obstacle miss frame1--4 is active, stored avoidance side equals the coherent road direction, all sampled rows30--54 agree and the inherited request has that sign.",
+    "Keep the0.06 request increment,0.48 cap,0.07 emitted slew and closed0.07 reversal-protection interval.",
+    "Current-obstacle actions are matched-state exact to FastCornerCarry. Opposite/straight/reacquired transitions apply no new gain and preserve the control sign with at most the registered0.06 immediate carryover.",
+    "The fifth clearing frame disables new gain; reset and road loss clear candidate-only diagnostic state."
+  ],
+  "synthetic_validation": {
+    "clear_curve_without_latch": "action and every shared inherited state exact to FastCornerCarry",
+    "matching_curve_after_obstacle": {
+      "control_request": 0.084,
+      "candidate_request": 0.1008,
+      "active_by_miss_frame": [true, true, true, true, false, false],
+      "effective_target_first_four": 30.0
+    },
+    "opposite_curve_after_active_retention": "no new gain, gas/brake exact, control sign preserved, steering delta0.0168 in the representative case and bounded by0.06",
+    "latched_preview_then_opposing_obstacle": "candidate preview plus/minus0.06; next obstacle action exact to control at opposite minus/plus0.07",
+    "reversal_lower_boundary": "exact0.07/1.20 remains inactive and mirrored next-opposing-obstacle action is control exact"
+  },
+  "validation": {
+    "focused_candidate_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k post_obstacle_retention -q",
+      "result": "7 passed,115 deselected"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "212 passed,4 warnings"
+    },
+    "full_collection_limitation": "The Windows interpreter cannot collect tests/test_drqv2_matched.py because run_drqv2_matched.py imports POSIX-only fcntl; the affected controller, inference, local and submission suites were run explicitly instead.",
+    "independent_static_review": "Independent audits separated the seed42 approach-line regression from the seed11/17/21 post-obstacle unwind, found the miss5 clearing boundary and sequential carryover contract defects, and required abrupt transition, preview-marker and reversal-boundary tests. Final re-audit found no blocking defect.",
+    "isolated_package": {
+      "path": ".haic-artifacts/post-obstacle-curve-retention-v1/20260929T184553671852Z_post-obstacle-curve-retention-v1/submission.zip",
+      "agent_sha256": "1afafbbb0cec2130b6f696742ff101a311ec0879c4f81bda98da90783640da6a",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "858e33796d8496e337c3311fb1a5d7812b9f7687e204a3d2414d3e7889e97099",
+      "bytes": 6281388,
+      "windows_python": "3.11.15",
+      "init_seconds": 1.7162799999350682,
+      "act_seconds": 0.0022439000895246863,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": [],
+    "existing_consumed_diagnostics": [11, 17, 21, 42]
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "No authorized driving run confirmed the candidate. Seed11/17/21 may require more than the base four-frame miss latch, while extending it without fresh tests could create new obstacle conflicts.",
+    "The compact obstacle detector discards components outside rows22--61 or above its size limits, and the inherited latch stores side/speed but does not replay lateral obstacle bias.",
+    "The inherited inside-obstacle arbitration can retain half the road-turn request against an opposing avoidance request; this single-factor candidate intentionally does not alter it.",
+    "There is no dedicated low-speed contact escape state, as exposed by the latest seed42 deadlock.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so new environment evaluation, promotion and submission remain blocked."
+  ]
+}

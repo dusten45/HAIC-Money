@@ -221,23 +221,30 @@ steering remains bit-exact. In the same synthetic offset6 case the action change
 from brake0.091 to gas0.135, while real curves, a rows46/50 S-kink, obstacles and
 all latch frames remain control-exact. The change passed20 focused and196 affected/
 local/submission tests, isolated exact-file package smoke and final independent
-review. The current bare route is `_CoherentCurveAttackController` at commit
-`42e8226`. On obstacle-free curves only, it requires every sampled row30--54 to
-agree on the turn direction and increases the inherited steering request by20%,
-bounded by +0.06, cap0.48 and the existing0.07/frame slew. It deliberately
-suppresses gain across the closed0.07 reversal-protection interval, preserves
-current-obstacle logic, synchronizes distant-preview priority, and leaves the
-target/gas/brake formulas unchanged; the inherited target44 and throttle
-attenuation react to the final stronger request. Exact boundary, mirrored
-transition and hazard regressions passed9 focused and205 affected tests; isolated
-package smoke and final independent review also passed. No environment run
-measured completion or pace, so status remains `INCOMPARABLE`; see
-`experiments/coherent-curve-steering-gain-v1-result.json`.
+review. `_CoherentCurveAttackController` at commit `42e8226` subsequently applied
+a20% steering gain on every coherent obstacle-free curve. Consumed same-map run
+chronology then exposed a seed42 regression: FastCornerCarry immediately preceded
+a25.90s zero-collision finish, while TranslationInvariantExit and CoherentCurveAttack
+immediately preceded five- and four-collision DNFs at the identical37.81% obstacle.
+The failures began avoidance one progress tile later and arrived2.8--3.5 farther
+from centerline despite similar speed. Separately, seeds11/17/21 lost the road at
+speed29--30 only after post-obstacle steering unwound almost to zero.
+
+The current bare route is `_PostObstacleCurveRetentionController` at commit
+`61df0b6`. It restores `_FastCornerCarryController` as the recovery baseline and
+adds the same20%/+0.06 bounded gain only on obstacle miss frames1--4 when stored
+avoidance side, inherited steering and every sampled road row agree on turn
+direction. Current obstacles, latch-free curves, opposite/S geometry and the fifth
+clearing frame receive no new gain; the0.48 cap,0.07 slew and reversal protections
+remain. Seven focused and212 affected tests, isolated package smoke and final
+independent audit passed. Existing seed runs are consumed/unbound and no new
+environment run was authorized, so the candidate remains `INCOMPARABLE`; see
+`experiments/post-obstacle-curve-retention-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `5829d375...` and must not be submitted as the new candidate.
+candidate agent SHA `1afafbbb...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 
