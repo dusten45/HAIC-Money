@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "name": "coherent-curve-steering-gain-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T02:52:43.1672919+09:00",
+  "purpose": "hold a more decisive steering request through visually coherent curves while preserving current-obstacle avoidance, steering slew and the existing high-speed longitudinal envelope",
+  "source_commit": "6c43e6bb24f2a0af402b0936e065b3e671a236a0",
+  "branch": "feature/DG-Codex",
+  "control": {
+    "controller": "agent._TranslationInvariantExitController",
+    "agent_sha256": "89fce1987188d012f2833f953c7610ff2aeca4eb80485f274c57531897a82f6f",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "consumed_run_ledger": "experiments/official-seed-compound-hairpin-evidence-v1.json",
+    "run_finding": "The consumed seed11,17,21 runs all left the road after an outside obstacle pass into a continuing hairpin. Peak emitted steering was only0.173/0.196/0.218 and the final valid steering unwound to -0.027/+0.014/-0.012 at exactly the inherited0.07-per-frame slew, far below obstacle cap0.32 and global cap0.48.",
+    "interpretation": "Raising only the cap cannot affect those traces. A bounded same-direction request gain can keep the emitted request above the0.07 slew-down trajectory for several frames without changing the slew itself. These runs are consumed and cryptographically unbound, so this is mechanism motivation rather than confirmation.",
+    "video_finding": "The latest 4_7 videos finish all tracks and support coherent U-turn/hairpin sections as plausible use cases, but the earlier Track3 obstacle collision shows that globally increasing obstacle or inside bias is unsafe. Videos expose neither policy-camera frames nor actions and are not bound to this candidate.",
+    "official_source_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "official_source_checked_at": "2026-09-30",
+    "physics_constraint": "The existing curvature-conditioned target, strong-steer target44, compound target30 and steering-based throttle attenuation remain active so additional lateral request does not bypass the shared longitudinal/lateral force budget."
+  },
+  "single_factor": {
+    "name": "coherent curve steering request gain",
+    "candidate_controller": "agent._CoherentCurveAttackController",
+    "gate": [
+      "inherited exact-straight predicate is false",
+      "no current obstacle is detected",
+      "translation-invariant clear-exit gate is false",
+      "sampled centers30,34,42,54 all exist",
+      "abs(center30-center54)>1.5 and abs(center34-center54)>1.5",
+      "the row30 and row34 deltas have the same sign",
+      "the inherited steering request has that same sign"
+    ],
+    "formula": "candidate=sign(inherited)*min(0.48,1.20*abs(inherited),abs(inherited)+0.06)",
+    "state_update": "overwrite _carry_steer_request with the final candidate request so inherited target44 and steering-based throttle attenuation see the actual lateral demand",
+    "unchanged": [
+      "MAX_STEER_STEP0.07, sign-reversal zero crossing, global steer cap0.48 and current-obstacle cap0.32",
+      "every current-obstacle steering/action/pass-side/urgency transition, including opposing avoidance",
+      "straight, translated-straight, clear-exit, missing-row and incoherent/S-curve steering",
+      "all target-speed, gas and brake formulas; only their already-existing steering-dependent safety gates may respond to the stronger request",
+      "obstacle targets47/40, obstacle+sweep>=6 target30 and miss-latch longitudinal behavior",
+      "lost-road behavior, observation/action interface, model.pt, official environment, DrQ, explicit-export and HAIC routes",
+      "all track-id, seed, coordinate, elapsed-time and progress independence"
+    ]
+  },
+  "acceptance": {
+    "static_and_synthetic": [
+      "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
+      "Mirrored coherent curves produce symmetric requests and exactly the registered20-percent/0.06/0.48 envelope; repeated actions retain the inherited0.07 slew bound.",
+      "The exact1.5 far-row boundaries, gain-versus-increment intersection at abs(request)=0.30, cap, sign and missing-row boundaries are closed.",
+      "Current obstacle actions and all state are exactly equal to control, while the first obstacle-miss latch frame may apply the registered same-direction curve gain without changing its longitudinal action.",
+      "Reacquisition is immediately current-obstacle exact; opposite-direction S-curves, parallel offsets, aligned exits, road loss and reset never retain stale attack state.",
+      "Final _carry_steer_request equals the actual amplified preclip request, so strong-steer target44 and friction-aware gas attenuation remain active at exact0.28 plus/minus nextafter boundaries.",
+      "Randomized actions are finite/bounded, never overlap gas and brake, preserve current-obstacle actions exactly and differ in steering only under the registered gate.",
+      "Affected/local/submission contract tests and an isolated exact-file package smoke pass."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, compare candidate and exact control on preregistered unused multi-track geometry seeds. Completion rate, DNF, collision and worst progress may not regress before lap time is considered.",
+      "objective": "Hold speed through coherent curves by reducing premature steering release; source and synthetic validation cannot establish completion or lap-time improvement."
+    },
+    "classification": "preregistered / INCOMPARABLE"
+  },
+  "abort": [
+    "Any runtime condition uses track id, seed, map identity, coordinate, time, progress or evaluation filename.",
+    "Any current-obstacle action/state differs from control, or any steering difference appears on straight, clear-exit, incoherent/opposite-sign or missing-row geometry.",
+    "Any steering delta exceeds0.07, candidate request exceeds0.48, final carry request does not match the actual amplified request, or a stale attack state survives reset/road loss.",
+    "Any target/gas/brake formula is explicitly changed, any action is non-finite/out of range, gas and brake overlap, package/interface gate fails, or relevant regression fails.",
+    "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
+    "Any frozen environment/model/DrQ/active-study artifact, user video or root submission.zip changes."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible; the official participant repository remains available and unchanged.",
+    "Only source, synthetic, unit and isolated package validation is authorized."
+  ]
+}
