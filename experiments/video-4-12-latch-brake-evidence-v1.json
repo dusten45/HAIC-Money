@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "evidence": "video-4-12-latch-brake-evidence-v1",
+  "status": "CONSUMED_USER_ATTRIBUTED_DIAGNOSTIC",
+  "recorded_at": "2026-09-30T05:12:06+09:00",
+  "branch": "feature/DG-Codex",
+  "videos": [
+    {
+      "track": 1,
+      "path": "evaluation_videos/video_track-01_4_12.mp4",
+      "sha256": "fdf03e51fac64043df643d6a70ac427a536f7deb698342e77e66dfdc67e221b2",
+      "result": "FINISHED",
+      "lap_seconds": 23.60,
+      "submission_11_lap_seconds": 23.86,
+      "delta_seconds": -0.26,
+      "delta_percent": -1.09
+    },
+    {
+      "track": 2,
+      "path": "evaluation_videos/video_track-02_4_12.mp4",
+      "sha256": "c8c16a8bc353314d41aeb2731ca7503cff6ff8a2e244dc9beb9b462a9f78a11f",
+      "result": "FINISHED",
+      "lap_seconds": 28.18,
+      "submission_11_lap_seconds": 29.14,
+      "delta_seconds": -0.96,
+      "delta_percent": -3.29
+    },
+    {
+      "track": 3,
+      "path": "evaluation_videos/video_track-03_4_12.mp4",
+      "sha256": "bfbfdce0cce0c1b74a09a44d2798a9e822167fae40408b30d58733a458c016ca",
+      "result": "FINISHED",
+      "lap_seconds": 25.44,
+      "submission_11_lap_seconds": 25.82,
+      "delta_seconds": -0.38,
+      "delta_percent": -1.47
+    }
+  ],
+  "aggregate": {
+    "submission_11_mean_lap_seconds": 26.27,
+    "submission_12_mean_lap_seconds": 25.74,
+    "mean_delta_seconds": -0.53,
+    "mean_delta_percent": -2.03,
+    "detected_obstacle_encounters": 26,
+    "post_pre_speed_proxy_ratio_median": 0.88,
+    "encounters_below_0_90": 13,
+    "interpretation": "All three tracks remain finishes and all three become faster after the compound supplemental-brake reduction. This directionally supports selective removal of redundant braking, but the modest mean gain and prior tight rendered clearance do not support raising target30, removing the base brake or weakening current-obstacle approach braking."
+  },
+  "obstacle_diagnostics": {
+    "method": "HSV obstacle/vehicle masks plus Lucas-Kanade background flow with RANSAC camera-motion correction",
+    "largest_post_pass_speed_proxy_losses": {
+      "track1": "approximately40/33/41/32/28 percent at progress13.6/31.1/74.3/82.5/90.0",
+      "track2": "approximately38/19/41/21 percent at progress20.5/41.7/77.1/86.6",
+      "track3": "approximately26/38/19 percent at progress30.1/60.5/85.4"
+    },
+    "minimum_hsv_mask_gap_pixels": {
+      "track1": 20.0,
+      "track2": 8.0,
+      "track3": 12.2
+    },
+    "same_order_track1_submission11_to12": "Six-pass median0.8-second post/pre progress-rate ratio remained approximately0.69, so residual obstacle-local slowdown persists despite the faster lap."
+  },
+  "code_corroboration": {
+    "active_control": "agent._CompoundObstacleBrakeCarryController",
+    "current_visible_compound": "target30 plus inherited base brake plus softened supplemental curve brake",
+    "compound_miss_frames_1_to_4": "the same target30, base brake and supplemental curve brake remain after the obstacle detector stops returning a component",
+    "fifth_miss": "the obstacle side is cleared before target selection; the compound latch no longer applies",
+    "remaining_isolated_redundancy": "On miss frames1--4 only, supplemental curve brake remains layered above the base target30 speed brake even though no current obstacle component is visible."
+  },
+  "limitations": [
+    "The filenames and user attribution identify submission12, but the MP4 files expose no source commit, model hash, package hash or official receipt.",
+    "The rendered replay exposes no policy84x84 observation, estimated physical speed, steering, gas, brake, detector state or miss-latch phase.",
+    "Lap-time improvement across successive submissions is chronological evidence, not a controlled single-factor causal estimate.",
+    "Top-down screen-space motion and progress are only relative proxies and cannot prove physical speed or vehicle-body clearance.",
+    "The prior submission11 minimum rendered vehicle/obstacle center distance was23.8 pixels, so current-obstacle braking must remain unchanged without paired clearance telemetry.",
+    "The evidence motivates a static candidate but cannot validate its future closed-loop trajectory behavior."
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-obstacle-latch-release-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T05:12:06+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "Submission12 preserved three finishes and improved every lap after reducing redundant compound braking, but the active controller still applies the supplemental curve-brake envelope for four detector-miss frames after a compound obstacle disappears. Removing only that supplement during miss1--4, while retaining target30 and the inherited base speed brake, should reduce post-pass speed loss without weakening any current-visible-obstacle approach or high-speed base braking.",
+  "scope": {
+    "control_commit": "fa59b11056345683b9cca754f7f858a845a44cc3",
+    "control_class": "agent._CompoundObstacleBrakeCarryController",
+    "control_agent_git_blob": "620da0cd6263a6a8981aa0c4b25fd66270706fa6",
+    "control_agent_sha256": "413afda362c52b82df1fece445363720966ee6ddd357562d16808dfc268eb9b0",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._CompoundObstacleLatchReleaseController",
+    "single_factor": "During compound detector-miss latch frames1--4 only, return the inherited base brake instead of taking max(base brake, the supplemental compound curve-brake envelope)."
+  },
+  "eligibility_gate": {
+    "requirements": [
+      "the active pace-latched target is exactly30",
+      "the active command target is exactly30",
+      "the frame began with a nonzero obstacle-side latch",
+      "the obstacle side remains nonzero after detector processing",
+      "the detector miss count is in1--4",
+      "the inherited nonstraight overspeed branch is active above target plus0.5"
+    ],
+    "formula": "emitted_candidate_brake = min(inherited_base_brake, nextafter(float32(MAX_BRAKE),0)); gas remains zero because the inherited overspeed branch is active",
+    "registered_examples": {
+      "speed_just_above_30_5_to_31": {"control": "approximately0.04", "candidate": 0.0},
+      "speed_32": {"control": 0.058, "candidate": 0.04},
+      "speed_36": {"control": 0.106, "candidate": 0.072},
+      "speed_40": {"control": 0.154, "candidate": 0.12},
+      "speed_45": {"control": 0.18, "candidate": 0.18},
+      "speed_48": {"control": 0.216, "candidate": 0.216},
+      "base_saturation": {"control": "same emitted near0.28 clamp", "candidate": "same emitted near0.28 clamp"}
+    }
+  },
+  "frozen": [
+    "all current-visible obstacles, including current compound obstacles at every distance and speed",
+    "compound target30, straight-obstacle targets47/40 and every target-selection formula",
+    "the inherited base speed brake and final float32 maximum-brake clamp",
+    "obstacle detector, obstacle side, four-frame miss latch and fifth-frame clearing behavior",
+    "all steering, road perception, post-obstacle curve retention, gas and recovery logic",
+    "settled clear-straight double throttle and every noncompound state",
+    "model.pt and every non-bare inference route",
+    "official environment, reward, termination, frame skip and action contract"
+  ],
+  "rejected_alternatives": [
+    "Do not raise compound target30: prior extreme-seed failures lost the road around speed29--30, and rendered videos do not expose internal clearance or detector state.",
+    "Do not remove or weaken the inherited base brake: it is the remaining closed-loop target30 safety envelope and dominates at speed45 or above.",
+    "Do not remove the supplement while an obstacle is currently visible: submission11 contained a rendered23.8-pixel center-distance pass and submission12 provides no policy-camera clearance proof.",
+    "Do not shorten the obstacle-side latch or change steering in this experiment because detector flicker and post-obstacle curve retention are separate safety factors."
+  ],
+  "static_acceptance": [
+    "Current compound obstacles at all registered speed boundaries remain action- and state-exact to control.",
+    "Only brake differs on compound miss frames1--4 above target plus0.5; target, gas, steering and shared inherited state remain exact.",
+    "Every changed candidate brake equals the inherited emitted base-brake envelope, never exceeds control, remains finite/in bounds and never overlaps positive gas.",
+    "Both turn directions, sweep immediately below/at6 and obstacle rows32/50 receive directed coverage.",
+    "The target-plus0.5, base-brake onset, supplemental/base crossover and final base-saturation boundaries receive directed coverage.",
+    "The fifth clearing frame, sixth released frame, current compound reacquisition, noncompound reacquisition, straight latch, clear curve/straight, invalid input, road loss and reset remain control-exact.",
+    "Randomized sequence differential coverage proves every difference is registered and brake-only.",
+    "Affected controller, inference, local-contract and submission suites pass.",
+    "An isolated package passes exact-file import, reset, finite-action, bounds and latency smoke without modifying root submission.zip."
+  ],
+  "rollback": [
+    "Any action or shared-state difference outside the registered brake component and compound miss1--4 gate.",
+    "Any current-visible-obstacle, target, gas, steering, detector, latch-duration, reset, invalid-input, recovery, dependency, packaging, bounds, NaN or latency regression.",
+    "Any candidate brake below the inherited emitted base-brake envelope or above the control brake."
+  ],
+  "future_environment_gate": {
+    "authorized_now": false,
+    "reason": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "design_after_restoration": "Freeze paired control and candidate package hashes, then run fresh gentle and compound-hairpin obstacle seeds. Rank valid finish first, then progress/collision/crash/off-track/minimum clearance and only then paired lap and obstacle-sector time.",
+    "safety_rollback": "Reject on any new DNF, lower finish count, added collision/crash/off-track, materially lower minimum clearance or operational failure.",
+    "pace_gate": "Only after safety non-regression, require lower paired lap or post-obstacle sector time."
+  },
+  "evidence_limits": [
+    "Submission12 videos are user-attributed and lack action/speed/source/package telemetry, so they cannot bind the candidate or identify exact miss-latch frames.",
+    "A detector miss can be a transient false negative before the vehicle has fully cleared the obstacle; retaining target30, obstacle-side steering and base braking mitigates but does not eliminate this risk.",
+    "Same-input static tests cannot prove future closed-loop observations, trajectory clearance, completion or lap time.",
+    "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
+  ]
+}
