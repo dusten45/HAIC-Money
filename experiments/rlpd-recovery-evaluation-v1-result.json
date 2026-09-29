@@ -1,0 +1,99 @@
+{
+  "environment_resets": 0,
+  "episodes": 36,
+  "format": "haic-rlpd-recovery-evaluation-audit-v1",
+  "limitations": [
+    "Consumed TRAIN and one learner seed; no fresh generalization or official score.",
+    "Curve-associated terminal failure is a prospective temporal proxy, not causal attribution.",
+    "Retained earlier failed evaluation attempts are additional interaction cost, not fresh cells."
+  ],
+  "manifest_sha256": "13ab192252078e78a3cec7897505cb0ea4331fa136de828cbc5404bb35d55612",
+  "pairs": {
+    "control->recovery": {
+      "causal_training_effect": false,
+      "censored_pairs": 0,
+      "denominator": 12,
+      "full_finish_comparison_valid": true,
+      "gained": 1,
+      "kept": 0,
+      "lost": 4,
+      "matched_cells_not_same_state": true,
+      "neither": 7
+    },
+    "v5->control": {
+      "causal_training_effect": false,
+      "censored_pairs": 0,
+      "denominator": 12,
+      "full_finish_comparison_valid": true,
+      "gained": 2,
+      "kept": 2,
+      "lost": 3,
+      "matched_cells_not_same_state": true,
+      "neither": 5
+    },
+    "v5->recovery": {
+      "causal_training_effect": false,
+      "censored_pairs": 0,
+      "denominator": 12,
+      "full_finish_comparison_valid": true,
+      "gained": 1,
+      "kept": 0,
+      "lost": 5,
+      "matched_cells_not_same_state": true,
+      "neither": 6
+    }
+  },
+  "per_actor": {
+    "control": {
+      "actor_sha256": "b9578515343642061cabba4411a1dce5fac310813a2008a6dd24a93424e343d5",
+      "censored": 0,
+      "curve_entry_associated_terminal_failures": 0,
+      "decisions": 4773,
+      "denominator": 12,
+      "finished": 4,
+      "finished_geometries": [
+        4272000001,
+        4272000006,
+        4272000007,
+        4272000011
+      ],
+      "mean_final_damage": 0.20000000000000004,
+      "mean_final_progress": 0.5809005158188334
+    },
+    "recovery": {
+      "actor_sha256": "5a0186c61a61ae75cf30ae5ebe4efdcca098025a57e84aea0ac74163d11873f3",
+      "censored": 0,
+      "curve_entry_associated_terminal_failures": 1,
+      "decisions": 4924,
+      "denominator": 12,
+      "finished": 1,
+      "finished_geometries": [
+        4272000003
+      ],
+      "mean_final_damage": 0.2333333333333334,
+      "mean_final_progress": 0.64067889398137
+    },
+    "v5": {
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "censored": 0,
+      "curve_entry_associated_terminal_failures": 1,
+      "decisions": 4670,
+      "denominator": 12,
+      "finished": 5,
+      "finished_geometries": [
+        4272000001,
+        4272000006,
+        4272000008,
+        4272000009,
+        4272000012
+      ],
+      "mean_final_damage": 0.19999999999999998,
+      "mean_final_progress": 0.6943797195373035
+    }
+  },
+  "primary_directory": "runs/rlpd-recovery-evaluation-r2",
+  "result_sha256": "c903ef863a3f6814c0e9771b1cc288db9b9c1ddcae64c228e07981728f8011d3",
+  "source_code_sha256": "5e5c9139a842584e5a05c3c374950c871d349e6e51cd989a1a4c863e64139b27",
+  "status": "complete",
+  "verified_artifact_hashes": 111
+}
