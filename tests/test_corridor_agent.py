@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
@@ -957,6 +958,155 @@ class TestVisionCorridorAgent(unittest.TestCase):
             np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
             self.assertEqual(candidate._target_speed, control._target_speed)
             self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+
+    def test_launch_throttle_only_changes_the_full_gas_clear_straight_branch(self):
+        from agent import _LaunchThrottleController, _ObstaclePriorityController
+
+        control = _ObstaclePriorityController()
+        candidate = _LaunchThrottleController()
+        pedal_cases = (
+            (control.MAX_GAS, 0.0, 0.10, 0.11),
+            (
+                control.MAX_GAS * (2.0 / 3.0),
+                0.0,
+                0.06666666666666667,
+                0.06666666666666667,
+            ),
+            (
+                control.MAX_GAS * (5.0 / 12.0),
+                0.0,
+                0.04166666666666667,
+                0.04166666666666667,
+            ),
+            (0.0, 0.04, 0.0, 0.0),
+        )
+        for gas, brake, expected_control, expected_candidate in pedal_cases:
+            with self.subTest(gas=gas, brake=brake):
+                control_output = control._adjust_pedals(
+                    gas=gas, brake=brake, straight=True, obstacle=None
+                )
+                candidate_output = candidate._adjust_pedals(
+                    gas=gas, brake=brake, straight=True, obstacle=None
+                )
+                self.assertAlmostEqual(control_output[0], expected_control)
+                self.assertAlmostEqual(candidate_output[0], expected_candidate)
+                self.assertEqual(candidate_output[1], control_output[1])
+
+    def test_launch_throttle_preserves_targets_and_all_nonlaunch_actions(self):
+        from agent import _LaunchThrottleController, _ObstaclePriorityController
+
+        launch_control = _ObstaclePriorityController()
+        launch_candidate = _LaunchThrottleController()
+        control_action = launch_control.act(_observation(speed=0.0))
+        candidate_action = launch_candidate.act(_observation(speed=0.0))
+        np.testing.assert_array_equal(candidate_action[[0, 2]], control_action[[0, 2]])
+        self.assertAlmostEqual(float(control_action[1]), 0.10, places=7)
+        self.assertAlmostEqual(float(candidate_action[1]), 0.11, places=7)
+        self.assertEqual(launch_candidate._target_speed, launch_control._target_speed)
+
+        observations = (
+            _observation(speed=40.0),
+            _observation(speed=45.0),
+            _observation(speed=49.0),
+            _observation(speed=55.0),
+            _observation(curve=0.75, speed=0.0),
+            _distant_bend_observation(direction=1.0, speed=0.0),
+            _compact_obstacle_observation(
+                obstacle_x=35, obstacle_top=22, speed=0.0
+            ),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        )
+        for observation in observations:
+            with self.subTest(observation_shape=observation.shape):
+                control = _ObstaclePriorityController()
+                candidate = _LaunchThrottleController()
+                np.testing.assert_array_equal(
+                    candidate.act(observation), control.act(observation)
+                )
+                self.assertEqual(candidate._target_speed, control._target_speed)
+                self.assertEqual(candidate._last_steer, control._last_steer)
+                self.assertEqual(candidate._obstacle_side, control._obstacle_side)
+
+    def test_launch_throttle_does_not_persist_into_an_obstacle_or_reset(self):
+        from agent import _LaunchThrottleController, _ObstaclePriorityController
+
+        control = _ObstaclePriorityController()
+        candidate = _LaunchThrottleController()
+        for _ in range(4):
+            control.act(_observation(speed=0.0))
+            candidate.act(_observation(speed=0.0))
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=46, obstacle_top=22, speed=24.0
+        )
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        candidate.reset(None)
+        fresh = _LaunchThrottleController()
+        np.testing.assert_array_equal(
+            candidate.act(_observation(speed=0.0)),
+            fresh.act(_observation(speed=0.0)),
+        )
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+
+    def test_launch_throttle_closes_the_exact_speed_and_steering_boundaries(self):
+        from agent import _LaunchThrottleController, _ObstaclePriorityController
+
+        target = 48.0
+        boundary = target - 8.0
+        for speed in (
+            np.nextafter(boundary, -np.inf),
+            boundary,
+            np.nextafter(boundary, np.inf),
+        ):
+            control = _ObstaclePriorityController()
+            candidate = _LaunchThrottleController()
+            with patch.object(control, "_estimate_speed", return_value=float(speed)):
+                control_action = control.act(_observation(speed=0.0))
+            with patch.object(candidate, "_estimate_speed", return_value=float(speed)):
+                candidate_action = candidate.act(_observation(speed=0.0))
+            if speed < boundary:
+                np.testing.assert_array_equal(
+                    candidate_action[[0, 2]], control_action[[0, 2]]
+                )
+                self.assertAlmostEqual(float(candidate_action[1]), 0.11, places=7)
+                self.assertAlmostEqual(float(control_action[1]), 0.10, places=7)
+            else:
+                np.testing.assert_array_equal(candidate_action, control_action)
+            self.assertEqual(candidate._target_speed, control._target_speed)
+
+        for steering, expected_gas in (
+            (_LaunchThrottleController.MAX_STEER_STEP, 0.11),
+            (
+                np.nextafter(_LaunchThrottleController.MAX_STEER_STEP, np.inf),
+                _LaunchThrottleController.MAX_GAS,
+            ),
+        ):
+            candidate = _LaunchThrottleController()
+            candidate._last_steer = float(steering)
+            gas, brake = candidate._adjust_pedals(
+                gas=candidate.MAX_GAS,
+                brake=0.0,
+                straight=True,
+                obstacle=None,
+            )
+            self.assertAlmostEqual(gas, expected_gas)
+            self.assertEqual(brake, 0.0)
+
+    def test_launch_throttle_preserves_preview_to_opposing_obstacle_transition(self):
+        from agent import _LaunchThrottleController, _ObstaclePriorityController
+
+        for direction, obstacle_x in ((1.0, 46), (-1.0, 35)):
+            control = _ObstaclePriorityController()
+            candidate = _LaunchThrottleController()
+            preview = _distant_bend_observation(direction=direction, speed=0.0)
+            np.testing.assert_array_equal(candidate.act(preview), control.act(preview))
+
+            obstacle = _compact_obstacle_observation(
+                obstacle_x=obstacle_x, obstacle_top=22, speed=0.0
+            )
+            np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+            self.assertEqual(candidate.__dict__, control.__dict__)
 
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent

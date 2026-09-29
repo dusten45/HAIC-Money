@@ -1490,6 +1490,34 @@ class _ObstaclePriorityController(_AnticipatoryCompletionController):
         return adjusted
 
 
+class _LaunchThrottleController(_ObstaclePriorityController):
+    """Add a small launch-only gain without moving the braking boundary."""
+
+    CLEAR_STRAIGHT_LAUNCH_GAS = 0.11
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        adjusted_gas, adjusted_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if (
+            gas == self.MAX_GAS
+            and adjusted_gas == self.CLEAR_STRAIGHT_MAX_GAS
+            and adjusted_brake == 0.0
+        ):
+            adjusted_gas = self.CLEAR_STRAIGHT_LAUNCH_GAS
+        return adjusted_gas, adjusted_brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -1991,7 +2019,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _ObstaclePriorityController() if use_forward_controller else None
+            _LaunchThrottleController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None
