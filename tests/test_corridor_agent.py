@@ -1108,6 +1108,208 @@ class TestVisionCorridorAgent(unittest.TestCase):
             np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
             self.assertEqual(candidate.__dict__, control.__dict__)
 
+    def test_latched_sustain_changes_only_mid_and_low_clear_gas(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        control = _LaunchThrottleController()
+        candidate = _LatchedClearStraightSustainController()
+        cases = (
+            (control.MAX_GAS, 0.11, 0.11),
+            (control.MAX_GAS * (2.0 / 3.0), 0.06666666666666667, 0.07333333333333333),
+            (control.MAX_GAS * (5.0 / 12.0), 0.04166666666666667, 0.04583333333333334),
+        )
+        for gas, expected_control, expected_candidate in cases:
+            with self.subTest(gas=gas):
+                control_action = control._adjust_pedals(
+                    gas=gas, brake=0.0, straight=True, obstacle=None
+                )
+                candidate_action = candidate._adjust_pedals(
+                    gas=gas, brake=0.0, straight=True, obstacle=None
+                )
+                self.assertAlmostEqual(control_action[0], expected_control)
+                self.assertAlmostEqual(candidate_action[0], expected_candidate)
+                self.assertEqual(control_action[1], candidate_action[1])
+
+    def test_latched_sustain_closes_speed_boundaries(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        speeds = (
+            np.nextafter(40.0, -np.inf),
+            40.0,
+            np.nextafter(40.0, np.inf),
+            np.nextafter(45.0, -np.inf),
+            45.0,
+            np.nextafter(45.0, np.inf),
+            np.nextafter(49.0, -np.inf),
+            49.0,
+            np.nextafter(49.0, np.inf),
+        )
+        for speed in speeds:
+            control = _LaunchThrottleController()
+            candidate = _LatchedClearStraightSustainController()
+            with patch.object(control, "_estimate_speed", return_value=float(speed)):
+                control_action = control.act(_observation(speed=0.0))
+            with patch.object(candidate, "_estimate_speed", return_value=float(speed)):
+                candidate_action = candidate.act(_observation(speed=0.0))
+            with self.subTest(speed=speed):
+                np.testing.assert_array_equal(candidate_action[[0, 2]], control_action[[0, 2]])
+                if speed < 40.0 or speed > 49.0:
+                    np.testing.assert_array_equal(candidate_action, control_action)
+                else:
+                    self.assertGreater(float(candidate_action[1]), float(control_action[1]))
+                    self.assertLessEqual(float(candidate_action[1]), 0.11)
+                self.assertEqual(float(candidate_action[1]) * float(candidate_action[2]), 0.0)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_latched_sustain_closes_both_steering_boundaries_through_act(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        for sign in (-1.0, 1.0):
+            for magnitude, should_apply in (
+                (_LaunchThrottleController.MAX_STEER_STEP, True),
+                (np.nextafter(_LaunchThrottleController.MAX_STEER_STEP, np.inf), False),
+            ):
+                control = _LaunchThrottleController()
+                candidate = _LatchedClearStraightSustainController()
+                control._last_steer = sign * float(magnitude)
+                candidate._last_steer = sign * float(magnitude)
+                with patch.object(control, "_estimate_speed", return_value=45.0):
+                    control_action = control.act(_observation(speed=0.0))
+                with patch.object(candidate, "_estimate_speed", return_value=45.0):
+                    candidate_action = candidate.act(_observation(speed=0.0))
+                with self.subTest(sign=sign, magnitude=magnitude):
+                    np.testing.assert_array_equal(
+                        candidate_action[[0, 2]], control_action[[0, 2]]
+                    )
+                    if should_apply:
+                        self.assertGreater(float(candidate_action[1]), float(control_action[1]))
+                    else:
+                        np.testing.assert_array_equal(candidate_action, control_action)
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_latched_sustain_waits_for_all_obstacle_misses_and_reacquisition(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        straight = _observation(speed=45.0)
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=42, obstacle_top=32, speed=45.0
+        )
+        control = _LaunchThrottleController()
+        candidate = _LatchedClearStraightSustainController()
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        self.assertNotEqual(candidate._obstacle_side, 0.0)
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        for miss_index in range(candidate.OBSTACLE_MISS_LIMIT):
+            with self.subTest(miss=miss_index + 1):
+                np.testing.assert_array_equal(candidate.act(straight), control.act(straight))
+                self.assertNotEqual(candidate._obstacle_side, 0.0)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+        for _ in range(candidate.OBSTACLE_MISS_LIMIT):
+            np.testing.assert_array_equal(candidate.act(straight), control.act(straight))
+        released_control = control.act(straight)
+        released_candidate = candidate.act(straight)
+        self.assertEqual(candidate._obstacle_side, 0.0)
+        self.assertGreater(float(released_candidate[1]), float(released_control[1]))
+        np.testing.assert_array_equal(released_candidate[[0, 2]], released_control[[0, 2]])
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_latched_sustain_preserves_hazards_lost_road_and_reset(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        observations = (
+            _observation(curve=0.75, speed=45.0),
+            _distant_bend_observation(direction=1.0, speed=45.0),
+            _compact_obstacle_observation(obstacle_x=42, obstacle_top=22, speed=45.0),
+            _observation(curve=-0.75, obstacle_x=35, obstacle_y=50, speed=48.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        )
+        for observation in observations:
+            control = _LaunchThrottleController()
+            candidate = _LatchedClearStraightSustainController()
+            with self.subTest(shape=observation.shape):
+                np.testing.assert_array_equal(candidate.act(observation), control.act(observation))
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+        road = _observation(speed=45.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        control = _LaunchThrottleController()
+        candidate = _LatchedClearStraightSustainController()
+        control.act(road)
+        candidate.act(road)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        candidate.reset(None)
+        fresh = _LatchedClearStraightSustainController()
+        np.testing.assert_array_equal(candidate.act(road), fresh.act(road))
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+
+    def test_latched_sustain_randomized_differential_is_gas_only(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _LaunchThrottleController,
+        )
+
+        rng = np.random.default_rng(20260929)
+        changed = 0
+        for _ in range(192):
+            speed = float(rng.uniform(0.0, 60.0))
+            curve = float(rng.choice((0.0, -0.10, 0.10, -0.75, 0.75)))
+            obstacle = bool(rng.integers(0, 2))
+            latched = bool(rng.integers(0, 2))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=42 if obstacle else None,
+                obstacle_y=32,
+                speed=0.0,
+            )
+            control = _LaunchThrottleController()
+            candidate = _LatchedClearStraightSustainController()
+            if latched:
+                control._obstacle_side = candidate._obstacle_side = 1.0
+                control._obstacle_missing = candidate._obstacle_missing = 1
+                control._last_obstacle_side_offset = (
+                    candidate._last_obstacle_side_offset
+                ) = -2.0
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(candidate.__dict__, control.__dict__)
+            np.testing.assert_array_equal(candidate_action[[0, 2]], control_action[[0, 2]])
+            if np.array_equal(candidate_action, control_action):
+                continue
+            changed += 1
+            self.assertEqual(curve, 0.0)
+            self.assertFalse(obstacle)
+            self.assertFalse(latched)
+            self.assertGreaterEqual(speed, 40.0)
+            self.assertLessEqual(speed, 49.0)
+            self.assertGreater(float(candidate_action[1]), float(control_action[1]))
+            self.assertLessEqual(float(candidate_action[1]), 0.11)
+            self.assertEqual(float(candidate_action[2]), 0.0)
+        self.assertGreater(changed, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,

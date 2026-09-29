@@ -1524,6 +1524,39 @@ class _CompoundSpeedMarginController(_LaunchThrottleController):
     COMPOUND_TARGET_SPEED = 24.0
 
 
+class _LatchedClearStraightSustainController(_LaunchThrottleController):
+    """Sustain launch gas only after obstacle avoidance has fully cleared."""
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        adjusted_gas, adjusted_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if (
+            self._obstacle_side == 0.0
+            and straight
+            and obstacle is None
+            and gas > 0.0
+            and brake == 0.0
+            and abs(self._last_steer) <= self.MAX_STEER_STEP
+        ):
+            sustained_gas = min(
+                gas * (self.CLEAR_STRAIGHT_LAUNCH_GAS / self.MAX_GAS),
+                self.CLEAR_STRAIGHT_LAUNCH_GAS,
+            )
+            adjusted_gas = max(adjusted_gas, sustained_gas)
+        return adjusted_gas, adjusted_brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2025,7 +2058,9 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _LaunchThrottleController() if use_forward_controller else None
+            _LatchedClearStraightSustainController()
+            if use_forward_controller
+            else None
         )
         self._runtime_mode = "baseline"
         self.format = None

@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_launch_throttle_controller_on_visible_road(self):
+    def test_packaged_bare_model_uses_latched_straight_sustain_controller(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,14 +87,37 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _LaunchThrottleController
+from agent import Agent, _LatchedClearStraightSustainController, _LaunchThrottleController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _LaunchThrottleController
+assert type(agent._forward_controller) is _LatchedClearStraightSustainController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.11, 0.0], dtype=np.float32))
+
+frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0
+speed_45 = np.tile(frame[None, :, :], (4, 1, 1))
+agent.reset(None)
+sustain_action = agent.act(speed_45)
+np.testing.assert_allclose(
+    sustain_action,
+    np.array([0.0, 0.11 * (5.0 / 12.0), 0.0], dtype=np.float32),
+    rtol=0.0,
+    atol=1e-7,
+)
+
+obstacle = frame.copy()
+obstacle[32:36, 40:43] = 0.68
+obstacle_observation = np.tile(obstacle[None, :, :], (4, 1, 1))
+candidate = _LatchedClearStraightSustainController()
+control = _LaunchThrottleController()
+np.testing.assert_array_equal(candidate.act(obstacle_observation), control.act(obstacle_observation))
+for _ in range(candidate.OBSTACLE_MISS_LIMIT):
+    np.testing.assert_array_equal(candidate.act(speed_45), control.act(speed_45))
+released_candidate = candidate.act(speed_45)
+released_control = control.act(speed_45)
+assert released_candidate[1] > released_control[1]
 
 compound = np.full((84, 84), 0.1, dtype=np.float32)
 for row in range(20, 63):
