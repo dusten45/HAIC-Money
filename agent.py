@@ -1736,6 +1736,164 @@ class _HighSpeedPreviewBrakeController(_LatchedClearStraightSustainController):
         return adjusted_gas, adjusted_brake
 
 
+class _FastCornerCarryController(_HighSpeedPreviewBrakeController):
+    """Carry speed through clear curves without weakening hazard handling.
+
+    The parent remains the exact safety controller whenever an obstacle is
+    visible or its miss latch is active.  On obstacle-free curves only, this
+    layer replaces the abrupt linear speed drop with a bounded inverse-square-
+    root envelope and reserves some of the shared tire-force budget for the
+    requested steering angle.
+    """
+
+    CARRY_CURVATURE_GAIN = 0.10
+    CARRY_TARGET_FLOOR = 40.0
+    CARRY_TARGET_CEILING = 64.0
+    CARRY_GAS_FULL = 0.14
+    CARRY_GAS_MID = 0.11
+    CARRY_GAS_HOLD = 0.07
+    CARRY_BRAKE_TRIGGER_DELTA = 2.0
+    CARRY_BRAKE_BASE = 0.04
+    CARRY_BRAKE_GAIN = 0.012
+    CARRY_BRAKE_MAX = 0.18
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._carry_steer_request = 0.0
+        self._carry_sweep = 0.0
+        self._carry_latched_at_frame_start = False
+        self._pace_effective_target = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._carry_steer_request = 0.0
+        self._carry_sweep = 0.0
+        self._carry_latched_at_frame_start = False
+        self._pace_effective_target = None
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        adjusted = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        self._carry_steer_request = float(adjusted)
+        self._carry_sweep = float(self._road_sweep(centers))
+        # act() updates the miss counter after this hook.  Remember the entry
+        # state so the frame that clears a latch still uses the parent policy.
+        self._carry_latched_at_frame_start = self._obstacle_side != 0.0
+        return adjusted
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed(
+            target_speed=target_speed,
+            curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
+        if (
+            obstacle is not None
+            or self._obstacle_side != 0.0
+            or self._carry_latched_at_frame_start
+            or self._pace_straight
+        ):
+            return inherited
+
+        command_target = float(
+            np.clip(
+                self.STRAIGHT_TARGET_SPEED
+                / np.sqrt(
+                    1.0 + self.CARRY_CURVATURE_GAIN * self._carry_sweep
+                ),
+                self.CARRY_TARGET_FLOOR,
+                self.CARRY_TARGET_CEILING,
+            )
+        )
+        self._pace_command_target = command_target
+        return command_target
+
+    def _pedals(self, speed: float, target_speed: float) -> tuple[float, float]:
+        # This receives the strong-steering cap applied by act() after the
+        # preview target hook, so longitudinal control cannot bypass target44.
+        self._pace_effective_target = float(target_speed)
+        return super()._pedals(speed, target_speed)
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        inherited_gas, inherited_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if (
+            obstacle is not None
+            or self._obstacle_side != 0.0
+            or self._carry_latched_at_frame_start
+            or self._pace_straight
+            or self._pace_effective_target is None
+        ):
+            return inherited_gas, inherited_brake
+
+        target = self._pace_effective_target
+        if self._pace_speed > target + self.CARRY_BRAKE_TRIGGER_DELTA:
+            excess = (
+                self._pace_speed
+                - target
+                - self.CARRY_BRAKE_TRIGGER_DELTA
+            )
+            curve_brake = float(
+                np.clip(
+                    self.CARRY_BRAKE_BASE
+                    + self.CARRY_BRAKE_GAIN * excess,
+                    self.CARRY_BRAKE_BASE,
+                    self.CARRY_BRAKE_MAX,
+                )
+            )
+            curve_brake = min(
+                curve_brake,
+                float(
+                    np.nextafter(
+                        np.float32(self.CARRY_BRAKE_MAX), np.float32(0.0)
+                    )
+                ),
+            )
+            return 0.0, curve_brake
+        if self._pace_speed >= target:
+            return 0.0, 0.0
+
+        steering_ratio = abs(self._carry_steer_request) / self.MAX_STEER
+        steering_factor = float(
+            np.sqrt(max(0.25, 1.0 - steering_ratio * steering_ratio))
+        )
+        if self._pace_speed < target - 8.0:
+            curve_gas = self.CARRY_GAS_FULL
+        elif self._pace_speed < target - 3.0:
+            curve_gas = self.CARRY_GAS_MID
+        else:
+            curve_gas = self.CARRY_GAS_HOLD
+        return curve_gas * steering_factor, 0.0
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2237,7 +2395,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _HighSpeedPreviewBrakeController()
+            _FastCornerCarryController()
             if use_forward_controller
             else None
         )

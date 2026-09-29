@@ -22,6 +22,7 @@ from agent import (
     Agent,
     Baseline1Actor,
     DRQ_ACTOR_FORMAT,
+    _FastCornerCarryController,
     _HighSpeedPreviewBrakeController,
 )
 from export_policy import export_payload, source_action_smoothing
@@ -52,7 +53,7 @@ class TestSubmissionPolicy(unittest.TestCase):
 
         self.assertTrue(torch.equal(actions, torch.tensor([[1.0, 0.0, 1.0]]).repeat(2, 1)))
 
-    def test_bare_baseline_routes_only_to_high_speed_preview_brake_controller(self):
+    def test_bare_baseline_routes_only_to_fast_corner_carry_controller(self):
         actor = Baseline1Actor()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bare-model.pt"
@@ -60,7 +61,7 @@ class TestSubmissionPolicy(unittest.TestCase):
 
             bare = Agent(path)
             self.assertIs(
-                type(bare._forward_controller), _HighSpeedPreviewBrakeController
+                type(bare._forward_controller), _FastCornerCarryController
             )
 
             explicit_path = Path(directory) / "explicit-model.pt"

@@ -1618,6 +1618,258 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(fast, 0)
         self.assertGreater(braking, 0)
 
+    def test_fast_corner_carry_uses_registered_curve_target(self):
+        from agent import _FastCornerCarryController
+
+        controller = _FastCornerCarryController()
+        controller._pace_straight = False
+        for sweep in (0.0, 1.5, 6.0, 10.0, 16.0, 80.0):
+            curve_target = controller.cruise_speed - 2.0 * sweep
+            controller._carry_sweep = sweep
+            target = controller._adjust_target_speed(
+                target_speed=curve_target,
+                curve_target_speed=curve_target,
+                obstacle=None,
+            )
+            expected = float(
+                np.clip(68.0 / np.sqrt(1.0 + 0.10 * sweep), 40.0, 64.0)
+            )
+            with self.subTest(sweep=sweep):
+                self.assertAlmostEqual(target, expected, places=12)
+                self.assertEqual(controller._pace_command_target, target)
+
+        high_sweep = _FastCornerCarryController()
+        high_curve = _observation(curve=0.75, speed=45.0)
+        high_sweep.act(high_curve)
+        self.assertGreater(high_sweep._carry_sweep, 16.0)
+        self.assertEqual(high_sweep._pace_sweep, 16.0)
+        self.assertAlmostEqual(
+            high_sweep._pace_command_target,
+            float(
+                np.clip(
+                    68.0 / np.sqrt(1.0 + 0.10 * high_sweep._carry_sweep),
+                    40.0,
+                    64.0,
+                )
+            ),
+            places=12,
+        )
+
+        controller._pace_straight = True
+        self.assertEqual(
+            controller._adjust_target_speed(
+                target_speed=68.0,
+                curve_target_speed=68.0,
+                obstacle=None,
+            ),
+            68.0,
+        )
+
+    def test_fast_corner_carry_closes_registered_pedal_boundaries(self):
+        from agent import _FastCornerCarryController
+
+        target = 68.0 / np.sqrt(1.0 + 0.10 * 6.0)
+
+        def adjusted(speed, steering=0.0):
+            controller = _FastCornerCarryController()
+            controller._pace_straight = False
+            controller._pace_sweep = 6.0
+            controller._pace_command_target = target
+            controller._carry_steer_request = steering
+            gas, brake = controller._pedals(speed, target)
+            return controller._adjust_pedals(
+                gas=gas,
+                brake=brake,
+                straight=False,
+                obstacle=None,
+            )
+
+        cases = (
+            (np.nextafter(target - 8.0, -np.inf), 0.14, 0.0),
+            (target - 8.0, 0.11, 0.0),
+            (np.nextafter(target - 3.0, -np.inf), 0.11, 0.0),
+            (target - 3.0, 0.07, 0.0),
+            (np.nextafter(target, -np.inf), 0.07, 0.0),
+            (target, 0.0, 0.0),
+            (target + 2.0, 0.0, 0.0),
+            (np.nextafter(target + 2.0, np.inf), 0.0, 0.04),
+            (target + 12.0, 0.0, 0.16),
+            (target + 80.0, 0.0, np.nextafter(np.float32(0.18), np.float32(0.0))),
+        )
+        for speed, expected_gas, expected_brake in cases:
+            gas, brake = adjusted(speed)
+            with self.subTest(speed=speed):
+                self.assertAlmostEqual(gas, expected_gas, places=6)
+                self.assertAlmostEqual(brake, expected_brake, places=6)
+                self.assertEqual(gas * brake, 0.0)
+
+        gas, brake = adjusted(target - 9.0, steering=0.48)
+        self.assertAlmostEqual(gas, 0.07, places=6)
+        self.assertEqual(brake, 0.0)
+
+    def test_fast_corner_carry_honors_final_strong_steering_target(self):
+        from agent import _FastCornerCarryController
+
+        controller = _FastCornerCarryController()
+        controller._pace_straight = False
+        controller._pace_sweep = 1.5
+        controller._pace_command_target = 64.0
+        controller._carry_steer_request = 0.30
+        gas, brake = controller._pedals(50.0, 44.0)
+        gas, brake = controller._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=False,
+            obstacle=None,
+        )
+        self.assertEqual(controller._pace_effective_target, 44.0)
+        self.assertEqual(gas, 0.0)
+        self.assertAlmostEqual(brake, 0.088, places=6)
+
+        observation = _observation(curve=0.25, speed=0.0)
+        for request, capped in (
+            (np.nextafter(0.28, -np.inf), False),
+            (0.28, False),
+            (np.nextafter(0.28, np.inf), True),
+        ):
+            boundary = _FastCornerCarryController()
+
+            def requested_steering(**kwargs):
+                boundary._pace_straight = bool(kwargs["straight"])
+                boundary._carry_sweep = boundary._road_sweep(kwargs["centers"])
+                boundary._carry_steer_request = float(request)
+                boundary._carry_latched_at_frame_start = False
+                return float(request)
+
+            with patch.object(
+                boundary,
+                "_adjust_road_steering",
+                side_effect=requested_steering,
+            ), patch.object(boundary, "_estimate_speed", return_value=50.0):
+                action = boundary.act(observation)
+            with self.subTest(request=request):
+                if capped:
+                    self.assertEqual(boundary._pace_effective_target, 44.0)
+                    self.assertEqual(float(action[1]), 0.0)
+                    self.assertGreater(float(action[2]), 0.0)
+                else:
+                    self.assertEqual(
+                        boundary._pace_effective_target,
+                        boundary._pace_command_target,
+                    )
+                    self.assertGreater(float(action[1]), 0.0)
+                    self.assertEqual(float(action[2]), 0.0)
+
+    def test_fast_corner_carry_preserves_obstacle_and_latch_actions(self):
+        from agent import (
+            _FastCornerCarryController,
+            _HighSpeedPreviewBrakeController,
+        )
+
+        control = _HighSpeedPreviewBrakeController()
+        candidate = _FastCornerCarryController()
+        sequence = [
+            _observation(curve=0.25, speed=60.0),
+            _observation(
+                curve=0.25,
+                obstacle_x=42,
+                obstacle_y=50,
+                speed=60.0,
+            ),
+            _observation(curve=0.25, speed=45.0),
+            _observation(curve=0.25, speed=45.0),
+            _observation(
+                curve=0.25,
+                obstacle_x=42,
+                obstacle_y=50,
+                speed=45.0,
+            ),
+        ]
+        for index, observation in enumerate(sequence):
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+            with self.subTest(index=index):
+                self.assertEqual(
+                    float(candidate_action[0]), float(control_action[0])
+                )
+                if index > 0:
+                    np.testing.assert_array_equal(
+                        candidate_action, control_action
+                    )
+
+        clear_curve = _observation(curve=0.25, speed=45.0)
+        for miss in range(candidate.OBSTACLE_MISS_LIMIT + 1):
+            control_action = control.act(clear_curve)
+            candidate_action = candidate.act(clear_curve)
+            with self.subTest(clearance_miss=miss + 1):
+                np.testing.assert_array_equal(candidate_action, control_action)
+        self.assertEqual(candidate._obstacle_side, 0.0)
+        self.assertTrue(candidate._carry_latched_at_frame_start)
+
+        control_clear = control.act(clear_curve)
+        candidate_clear = candidate.act(clear_curve)
+        self.assertFalse(candidate._carry_latched_at_frame_start)
+        self.assertEqual(float(candidate_clear[0]), float(control_clear[0]))
+        self.assertFalse(np.array_equal(candidate_clear, control_clear))
+
+    def test_fast_corner_carry_preserves_recovery_and_reset(self):
+        from agent import (
+            _FastCornerCarryController,
+            _HighSpeedPreviewBrakeController,
+        )
+
+        candidate = _FastCornerCarryController()
+        control = _HighSpeedPreviewBrakeController()
+        curve = _observation(curve=0.25, speed=45.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        candidate.act(curve)
+        control.act(curve)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+
+        candidate.reset(None)
+        fresh = _FastCornerCarryController()
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+        np.testing.assert_array_equal(candidate.act(curve), fresh.act(curve))
+
+    def test_fast_corner_carry_changes_only_clear_curve_longitudinal_action(self):
+        from agent import (
+            _FastCornerCarryController,
+            _HighSpeedPreviewBrakeController,
+        )
+
+        rng = np.random.default_rng(20260930)
+        changed = 0
+        obstacle_equal = 0
+        for _ in range(256):
+            speed = float(rng.uniform(0.0, 80.0))
+            curve = float(rng.choice((-0.75, -0.25, -0.10, 0.10, 0.25, 0.75)))
+            obstacle = bool(rng.integers(0, 2))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=42 if obstacle else None,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            control = _HighSpeedPreviewBrakeController()
+            candidate = _FastCornerCarryController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(float(candidate_action[0]), float(control_action[0]))
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(float(candidate_action[1]) * float(candidate_action[2]), 0.0)
+            if obstacle:
+                obstacle_equal += 1
+                np.testing.assert_array_equal(candidate_action, control_action)
+            elif not np.array_equal(candidate_action, control_action):
+                changed += 1
+        self.assertGreater(changed, 0)
+        self.assertGreater(obstacle_equal, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,

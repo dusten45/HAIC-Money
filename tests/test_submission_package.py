@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_high_speed_preview_brake_controller(self):
+    def test_packaged_bare_model_uses_fast_corner_carry_controller(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,13 +87,13 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _HighSpeedPreviewBrakeController
+from agent import Agent, _FastCornerCarryController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _HighSpeedPreviewBrakeController
+assert type(agent._forward_controller) is _FastCornerCarryController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.18, 0.0], dtype=np.float32))
 
 frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0
@@ -111,7 +111,7 @@ obstacle = frame.copy()
 obstacle[32:36, 40:43] = 0.68
 obstacle[77:83, 10:13] = (0.27 + 0.085 * 60.0) / 18.0
 obstacle_observation = np.tile(obstacle[None, :, :], (4, 1, 1))
-candidate = _HighSpeedPreviewBrakeController()
+candidate = _FastCornerCarryController()
 detected = candidate.act(obstacle_observation)
 assert detected[1] == 0.0
 assert detected[2] > 0.0
