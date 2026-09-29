@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "name": "video-4-7-racing-line-audit-v1",
+  "recorded_at": "2026-09-29T23:05:00+09:00",
+  "classification": "consumed-unbound-top-down-video-diagnostic",
+  "videos": [
+    {
+      "path": "evaluation_videos/video_track-01_4_7.mp4",
+      "sha256": "c8330c32d128f97b65549dd8008f9b621839858997423c3c2c76158100753472",
+      "width": 1920,
+      "height": 1080,
+      "fps": 10
+    },
+    {
+      "path": "evaluation_videos/video_track-02_4_7.mp4",
+      "sha256": "377e1eaf40a16e46ac5139f93cda6832bb0287d38b11d4ec4bdb4c4c7400cd88",
+      "width": 1920,
+      "height": 1080,
+      "fps": 10
+    },
+    {
+      "path": "evaluation_videos/video_track-03_4_7.mp4",
+      "sha256": "ad5a86d5dde35d4f5cdee670b1fdc2141ee786ae160f9ee534ac0d37718a2ae6",
+      "width": 1920,
+      "height": 1080,
+      "fps": 10
+    }
+  ],
+  "method": {
+    "coordinate": "At the detected blue vehicle center, intersect the asphalt edges along the axis perpendicular to vehicle heading and normalize vehicle position as0=outside edge,0.5=road center,1=inside edge for the signed turn direction.",
+    "time_alignment": "Video frame20 corresponds to HUD race time0; displayed race time advances about0.08 seconds per video frame.",
+    "robustness": "Report selected frames and five-frame medians; representative headings and asphalt widths were checked around each sample."
+  },
+  "measurements": [
+    {
+      "track": 1,
+      "turn": "representative left curve",
+      "samples": [
+        {"phase": "entry", "frame": 49, "video_seconds": 4.90, "race_seconds": 2.32, "inside_score": 0.527},
+        {"phase": "apex", "frame": 57, "video_seconds": 5.70, "race_seconds": 2.96, "inside_score": 0.626},
+        {"phase": "exit", "frame": 65, "video_seconds": 6.50, "race_seconds": 3.60, "inside_score": 0.469}
+      ],
+      "five_frame_median": [0.527, 0.626, 0.469],
+      "interpretation": "Approximately center-in-out, not in-in-in."
+    },
+    {
+      "track": 2,
+      "turn": "representative right curve",
+      "samples": [
+        {"phase": "entry", "frame": 108, "video_seconds": 10.80, "race_seconds": 7.04, "inside_score": 0.438},
+        {"phase": "apex", "frame": 116, "video_seconds": 11.60, "race_seconds": 7.68, "inside_score": 0.411},
+        {"phase": "exit", "frame": 124, "video_seconds": 12.40, "race_seconds": 8.32, "inside_score": 0.450}
+      ],
+      "five_frame_median": [0.331, 0.411, 0.454],
+      "inside_outside_clearance_pixels": [[68.2, 24.5], [60.5, 36.5], [56.5, 41.0]],
+      "interpretation": "Outside-biased throughout, an out-out-out counterexample to the in-in-in hypothesis."
+    },
+    {
+      "track": 2,
+      "turn": "second large right curve",
+      "samples": [
+        {"phase": "entry", "frame": 237, "video_seconds": 23.70, "race_seconds": 17.36, "inside_score": 0.538},
+        {"phase": "apex", "frame": 245, "video_seconds": 24.50, "race_seconds": 18.00, "inside_score": 0.547},
+        {"phase": "exit", "frame": 257, "video_seconds": 25.70, "race_seconds": 18.96, "inside_score": 0.477}
+      ],
+      "five_frame_median": [0.546, 0.547, 0.477],
+      "interpretation": "Slightly inside-biased entry/apex followed by an outside exit, not in-in-in."
+    }
+  ],
+  "conclusion": {
+    "rejected": "The latest agent always follows an in-in-in line.",
+    "supported": "Corner phase and lateral placement are inconsistent across curves, so a symmetric observation-conditioned phase reference is a testable hypothesis.",
+    "not_supported": "The replay cannot identify an optimal line, prove a steering cause, establish a minimum-time path, or predict a lap-time effect."
+  },
+  "limitations": [
+    "Top-down replay pixels do not expose the agent's four84x84 observations, actions, speed, tire contact patches or physical lateral acceleration.",
+    "Vehicle/edge thresholding and video compression introduce several pixels of measurement uncertainty.",
+    "The files contain no seed, source commit, agent/model/package hash or official receipt; attribution to any exact runtime remains plausible-only.",
+    "The untracked root submission.zip is stale relative to the working candidate and is not treated as the video's bound package."
+  ],
+  "governance": {
+    "consumed": true,
+    "may_select_hypothesis": true,
+    "may_confirm_performance": false,
+    "environment_execution": false,
+    "submission": false,
+    "sota_promotion": false
+  }
+}
