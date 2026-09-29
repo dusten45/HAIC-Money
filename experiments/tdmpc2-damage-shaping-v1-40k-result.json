@@ -1,0 +1,81 @@
+{
+  "format": "haic-tdmpc2-damage-intermediate-result-v1",
+  "status": "sealed_40k_checkpoint_with_positive_treatment_dose",
+  "partition": "same four already-consumed obstacle-enabled track-1 TRAIN roads, evolving-policy source data only",
+  "protocol": "experiments/tdmpc2-damage-shaping-v1.json",
+  "protocol_sha256": "4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8",
+  "run_dir": "runs/tdmpc2-damage-20260928-v1",
+  "runner_source_sha256": "f4fa47ec724ccf27ee25b9ac78380b7171ed2c2ecd8ac34b69935700759847f2",
+  "reward_source_sha256": "c2681fc9d789c356b308334f044c6eefd02f6965825ea05400dbe03ed388bcd3",
+  "checkpoint_target": 40000,
+  "decisions": 40154,
+  "updates": 40154,
+  "completed_train_episodes": 131,
+  "checkpoint": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-040000-step-040154.pt",
+  "checkpoint_sha256": "79ea4cfdb9730c8ad2c024c99ff9b47d2c325b2ce3c1f2fb9af4710c084eeb1f",
+  "step_ledger_prefix_sha256": "8555a0f581c3d8f12e9b2f34a65578aed99e1262fe7bea337185101ef9ce61cc",
+  "previous_checkpoint_result": "experiments/tdmpc2-damage-shaping-v1-20k-result.json",
+  "previous_checkpoint_result_sha256": "5a28f95bfa47aa3f0d4c221a393b419e4df0728bd2b71c17b3dc40f74c05345b",
+  "reward_target": {"kind": "cumulative_damage_increment", "coefficient": 5.0,
+                    "replay_reward": "training_reward", "environment_reward": "raw"},
+  "treatment_exposure_through_checkpoint": {
+    "step_decisions": 40154,
+    "first_positive_damage_decision": 22123,
+    "positive_damage_increment_steps": 65,
+    "positive_damage_increment_sum": 12.999999999999988,
+    "raw_step_reward_sum": -1003.155221287609,
+    "training_step_reward_sum": -1068.1552212876227,
+    "raw_minus_training_reward_sum": 65.00000000001364,
+    "expected_penalty": 65.0,
+    "max_cumulative_damage": 1.0,
+    "since_20k": {"decisions": 20005, "positive_damage_steps": 65,
+                  "damage_increment_sum": 12.999999999999988,
+                  "raw_minus_training_reward_sum": 64.99999999999454},
+    "interpretation": "The reward penalty first fired after the zero-dose 20k checkpoint; it subtracts five times positive damage increment only from replay training rewards. Raw environment rewards and their original step/episode sums are unchanged. Float summation differs from the exact 65.0 expectation by <2e-11."
+  },
+  "train_episodes_cumulative": {
+    "n": 131,
+    "finishes": 0,
+    "mean_progress": 0.12122592354923517,
+    "mean_raw_return": -7.657673444957239,
+    "mean_training_return": -8.153856651064109,
+    "mean_damage": 0.09923664122137406
+  },
+  "train_episodes_since_20k": {
+    "n": 63,
+    "finishes": 0,
+    "mean_progress": 0.18049642809327138,
+    "mean_raw_return": 47.2004027970273,
+    "mean_training_return": 46.16865676528126,
+    "mean_damage": 0.20634920634920637,
+    "mean_steps": 317.53968253968253,
+    "max_progress": 0.46381578947368424,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 16, "finishes": 0, "mean_progress": 0.1908333333333333, "mean_raw_return": 55.36666666666717, "mean_damage": 0.4},
+      {"geometry_seed": 3910800004, "n": 16, "finishes": 0, "mean_progress": 0.1487462006079027, "mean_raw_return": 19.042173252280506, "mean_damage": 0.0875},
+      {"geometry_seed": 3910800034, "n": 16, "finishes": 0, "mean_progress": 0.19983552631578944, "mean_raw_return": 73.8815789473699, "mean_damage": 0.30000000000000004},
+      {"geometry_seed": 3910800085, "n": 15, "finishes": 0, "mean_progress": 0.18270893371757924, "mean_raw_return": 40.06524495677588, "mean_damage": 0.02666666666666667}
+    ],
+    "limitation": "Road/reset conditions match the original raw baseline, but the very first planned action diverged before any penalty and these trajectories are not action/transition matched. Raw differences or 0/63 finishes cannot be causally assigned to the penalty from this one run."
+  },
+  "rolling_optimizer_means_over_20005_updates": {
+    "consistency_loss": 0.0048162571599712125,
+    "training_reward_loss": 0.410103847889029,
+    "value_loss": 0.6613171135297689,
+    "termination_loss": 0.0027084358701331673,
+    "q_scale_at_checkpoint": 41.71626663208008,
+    "policy_differential_entropy_mean": -26.47782688136102,
+    "same_observation_prior_vs_mppi_weighted_elite_center_actions": 20005,
+    "same_observation_mean_model_delta_l2": 1.4753647552885794,
+    "same_observation_mean_applied_noised_delta_l2": 1.505748550377727
+  },
+  "frozen_train_probe": {
+    "sample_count": 256,
+    "positive_terminal_labels": 0,
+    "training_reward_mae": 0.04874076321721077,
+    "constant_training_reward_mae": 0.37949177622795105,
+    "latent_mse": 0.005868096835911274,
+    "limitation": "The fixed seed probe derives from 10k seed data with zero damage and thus equals RAW targets on these same windows. It is an in-replay shaped-head fit proxy, not held-out prediction or direct evidence that damage shaping improves the raw-world model. Zero positive terminal labels preclude event-recall inference."
+  },
+  "decision": "Continue the sole H3/default-MPPI/5M damage-target treatment unchanged through 70k and 100k. The target now has a real, SHA-bound 65-reward-unit dose but no observed full-episode finish through 40k; do not stack horizon/sample/BC changes or promote a model. A source-bound new shaped-model CPU evaluator exists as dormant code, but cannot reset until a complete >=100k treatment checkpoint/result and separately frozen raw-metric evaluation protocol pass preflight. The fresh multi-track allocation auditor remains BLOCKED and its uncommitted extension remains on safety HOLD."
+}
