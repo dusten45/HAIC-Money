@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "experiment": "adaptive-compound-target-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T05:33:54+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "The hard target30 switch at compound sweep6 causes avoidable braking even when the recognized obstacle is distant and curvature is only moderately above the compound threshold. A continuous distance-and-severity target capped at36 should carry more speed through that bounded entry regime while restoring target30 before close or extreme geometry and immediately on detector miss.",
+  "scope": {
+    "control_commit": "2f8c916e55b2db1489e62a75011359441a499131",
+    "control_class": "agent._CompoundObstacleLatchReleaseController",
+    "control_agent_git_blob": "d83f329440c02ada096f8deb679bad1ea4fbcce7",
+    "control_agent_sha256": "ffc3c0bb1e1c783b0fa2cdbf6196f02d98cb2e1b5e6bcfc504f88e400de59f70",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._AdaptiveCompoundTargetController",
+    "single_factor": "Replace the hard target30 only on current-visible far moderate compound frames with a bounded continuous target derived from existing obstacle row and road sweep."
+  },
+  "eligibility_gate": {
+    "requirements": [
+      "a current detector-recognized obstacle is present",
+      "the inherited compound latch target is exactly30",
+      "obstacle center row y is below44",
+      "image-space sweep is at least6 and below12"
+    ],
+    "distance_factor": "d = clip((44-y)/12,0,1)",
+    "severity_factor": "m = clip((12-sweep)/6,0,1)",
+    "formula": "candidate_target = 30 + 6*d*m",
+    "bounds": "30 < candidate_target <= 36",
+    "far_y_at_or_below32_table": {
+      "sweep6": 36,
+      "sweep7": 35,
+      "sweep8": 34,
+      "sweep9": 33,
+      "sweep10": 32,
+      "sweep11": 31,
+      "sweep12": 30
+    },
+    "distance_examples_at_sweep6": {
+      "y32": 36,
+      "y36": 34,
+      "y40": 32,
+      "y43": 30.5,
+      "y44": 30
+    }
+  },
+  "brake_consistency": {
+    "requirement": "A raised compound target must retain the current softened compound brake envelope clip(0.04+0.012*excess,0.04,0.18) with inherited base brake as floor; falling back to the generic0.06+0.018 envelope could paradoxically increase braking.",
+    "implementation_constraint": "Extend the existing compound-carry predicate only to reachable current-visible adaptive targets. Preserve the exact existing predicate for target30 and every nonadaptive state."
+  },
+  "latch_safety": {
+    "rule": "Keep _pace_latched_target at30 even while the current visible command target is raised. The first detector miss therefore immediately returns command target to30.",
+    "reason": "A detector miss can be flicker or an oversized close component, not proof the obstacle is behind the vehicle."
+  },
+  "frozen": [
+    "near current obstacles y>=44 at target30",
+    "extreme current compound sweep>=12 at target30",
+    "all detector-miss latch frames1--4 at target30 and the existing base-only brake release",
+    "all sweep<6 noncompound obstacle targets47/40",
+    "all clear-curve40--64 and settled-straight68 targets",
+    "all obstacle detection, steering, obstacle-side state, latch duration and recovery",
+    "the compound brake formula itself and the inherited base brake/final float32 clamp",
+    "model.pt and every non-bare inference route",
+    "official environment, reward, termination, frame skip and action contract"
+  ],
+  "static_acceptance": [
+    "The exact target table, monotonic distance/severity behavior and boundaries immediately around y32/y44 and sweep6/sweep12 match the registered formula and remain within30--36.",
+    "Only current-visible frames satisfying y<44 and6<=sweep<12 may differ; steering and shared inherited state other than _pace_command_target remain exact.",
+    "The existing softened compound brake envelope is used for every adaptive target, with finite bounded actions and no gas/brake overlap.",
+    "Near, extreme, noncompound, obstacle-free, straight, strong-steer, fifth-clear, invalid-input, road-loss and reset behavior remain control-exact.",
+    "After any raised current command, detector miss1 immediately returns target30; miss1--4, fifth clear, sixth release and reacquisition at every miss phase match their registered control semantics.",
+    "Far-to-near progression, increasing severity and alternating detector flicker never preserve an uplift outside the current qualifying frame.",
+    "Both turn directions and obstacle sides receive symmetric coverage.",
+    "Randomized sequence differential coverage proves every action/target difference is eligible and all outputs/states remain finite and bounded.",
+    "Affected controller, inference, local-contract and submission suites pass.",
+    "An isolated package passes exact-file import, reset, finite-action, bounds and latency smoke without modifying root submission.zip."
+  ],
+  "rollback": [
+    "Any target above36 or below the control target, or any uplift at y>=44, sweep<6, sweep>=12, detector miss or no-current-obstacle state.",
+    "Any steering, detector, obstacle-side, latch-duration, reset, invalid-input, recovery, dependency, packaging, bounds, NaN or latency regression.",
+    "Any use of the generic stronger curve-brake envelope on an adaptive target."
+  ],
+  "future_environment_gate": {
+    "authorized_now": false,
+    "reason": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "design_after_restoration": "Freeze paired control and candidate package hashes and evaluate fresh gentle, moderate-compound and extreme-hairpin obstacle seeds. Rank valid finish first, then progress/collision/crash/off-track/minimum clearance and only then paired lap/sector time.",
+    "safety_rollback": "Reject on any new DNF, lower finish count, added collision/crash/off-track, materially lower minimum clearance or operational failure.",
+    "pace_gate": "Only after safety non-regression, require lower paired compound-entry sector and lap time."
+  },
+  "evidence_limits": [
+    "Submission videos cannot reconstruct internal sweep/row timing or prove which encounters qualify.",
+    "Raising target changes both braking and gas branches and therefore future observations even when same-input steering is exact.",
+    "The maximum36, row44 and sweep12 safeguards are conservative engineering choices, not validated physical-optimum thresholds.",
+    "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
+  ]
+}

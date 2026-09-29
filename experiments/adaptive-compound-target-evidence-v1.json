@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "evidence": "adaptive-compound-target-evidence-v1",
+  "status": "CONSUMED_DIAGNOSTIC_SYNTHESIS",
+  "recorded_at": "2026-09-30T05:33:54+09:00",
+  "branch": "feature/DG-Codex",
+  "observations": {
+    "submission12": {
+      "laps_seconds": [23.60, 28.18, 25.44],
+      "all_finished": true,
+      "obstacle_encounters": 26,
+      "post_pre_speed_proxy_ratio_median": 0.88,
+      "encounters_below_0_90": 13,
+      "minimum_hsv_mask_gap_pixels": [20.0, 8.0, 12.2]
+    },
+    "submission11_to12": {
+      "mean_lap_seconds": [26.27, 25.74],
+      "mean_delta_seconds": -0.53,
+      "mean_delta_percent": -2.03,
+      "interpretation": "Selective compound-brake relief improved every user-attributed evaluation lap, supporting more pace in the same localized regime without proving causality."
+    },
+    "historical_target24": "Lowering compound target30 to24 did not repair the source-unbound seed21 terminal point and cost1.34s on the source-unbound same-map seed42 finisher, with6.4s below speed28.",
+    "historical_extreme_seeds": "Source-unbound seeds11/17/21 left the road around physical speed29--30 after steering unwound near zero; this does not prove target30 is necessary, but it rejects a blanket increase on extreme hairpins."
+  },
+  "static_bottleneck": {
+    "discontinuity": "At current-obstacle sweep immediately below6 the inherited target is up to47 far/40 close; at sweep6 it hard-switches to30.",
+    "existing_targets": {
+      "settled_clear_straight": 68,
+      "obstacle_free_curve": "40--64",
+      "noncompound_obstacle_far_close": "47/40",
+      "compound_obstacle": 30
+    },
+    "target30_brake_examples": {
+      "speed36": 0.106,
+      "speed40": 0.154,
+      "speed45": 0.18
+    },
+    "target36_brake_examples_using_existing_compound_envelope": {
+      "speed36": 0.0,
+      "speed40": 0.082,
+      "speed45": 0.142
+    },
+    "opportunity_scale": "Removing a0.12 proxy loss over a fixed0.8-second post window is at most0.096s for that observed distance; across the observed encounter count this suggests roughly0.4--0.8s/lap scale, not a prediction."
+  },
+  "design_conclusion": {
+    "accepted": "Raise only a currently visible, far, moderate-severity compound target continuously from30 up to36 using obstacle row and image-space sweep.",
+    "formula": "target = 30 + 6 * clip((44-y)/12,0,1) * clip((12-sweep)/6,0,1), only for y<44 and6<=sweep<12",
+    "far_table_by_sweep_6_to12": [36, 35, 34, 33, 32, 31, 30],
+    "frozen": "Near y>=44, extreme sweep>=12, detector miss1--4, noncompound obstacles, clear curves and straights retain their existing targets."
+  },
+  "rejected": [
+    "Global compound30-to36/40: submission12 includes8--12.2px rendered mask gaps and no policy-camera clearance telemetry.",
+    "Raise detector-miss latch targets: a miss can mean a close component exceeded detector size bounds rather than true clearance.",
+    "Raise extreme sweep>=12: prior hairpin failures were steering-limited even around speed29--30.",
+    "Raise straight68, clear-curve40--64 or noncompound47/40: these are already high and are not the localized discontinuity.",
+    "Maximum40 far target: an existing normal-obstacle40 upper bound is suggestive but not enough to justify a33-percent compound increase without paired telemetry; maximum36 is the bounded compromise."
+  ],
+  "limitations": [
+    "Videos lack physical speed, actions, internal84x84 input, sweep, detector state and source/package receipt binding.",
+    "The sweep12 and row44 boundaries are engineering safeguards grounded in existing controller/detector geometry, not video-calibrated physical limits.",
+    "HUD target is not physical speed; lateral-demand comparisons are directional only.",
+    "Static calculations cannot establish future closed-loop clearance, completion or lap-time improvement."
+  ]
+}
