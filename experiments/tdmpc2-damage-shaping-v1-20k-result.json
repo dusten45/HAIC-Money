@@ -1,0 +1,64 @@
+{
+  "format": "haic-tdmpc2-damage-intermediate-result-v1",
+  "status": "sealed_20k_checkpoint_zero_treatment_dose",
+  "partition": "four already-consumed obstacle-enabled track-1 TRAIN roads, evolving-policy on-training episodes only",
+  "protocol": "experiments/tdmpc2-damage-shaping-v1.json",
+  "protocol_sha256": "4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8",
+  "run_dir": "runs/tdmpc2-damage-20260928-v1",
+  "source_runner_sha256": "f4fa47ec724ccf27ee25b9ac78380b7171ed2c2ecd8ac34b69935700759847f2",
+  "reward_helper_sha256": "c2681fc9d789c356b308334f044c6eefd02f6965825ea05400dbe03ed388bcd3",
+  "checkpoint_target": 20000,
+  "decisions": 20149,
+  "updates": 20149,
+  "completed_train_episodes": 68,
+  "checkpoint": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-020000-step-020149.pt",
+  "checkpoint_sha256": "a32fabd204c0e3379e972430902f9f0776017c2789281a88db386b65694d2b4b",
+  "step_ledger_prefix_sha256": "698b41a9e9e765f620139d2c0328a738adc2a5c9095287870c2d1874a2c78476",
+  "reward_target": {"kind": "cumulative_damage_increment", "coefficient": 5.0,
+                    "replay_reward": "training_reward", "environment_reward": "raw"},
+  "applied_treatment_exposure_through_checkpoint": {
+    "decisions": 20149,
+    "positive_damage_increment_steps": 0,
+    "total_positive_damage_increment": 0.0,
+    "raw_step_reward_sum": -3976.78059750336,
+    "training_step_reward_sum": -3976.78059750336,
+    "raw_minus_training_reward_sum": 0.0,
+    "maximum_step_cumulative_damage": 0.0,
+    "interpretation": "The selected training-target penalty has not fired once in the complete 20k prefix; even the first 10k random/pretrain replay contains no damage. The treatment code and baseline match seed road/action/raw outcome data for 28 completed episodes but their first planned action forks at decision 10001 before any observed penalty; model/RNG state at that boundary was not captured. This checkpoint cannot test a damage-penalty effect or support causal attribution from raw-baseline differences."
+  },
+  "train_episodes_cumulative": {
+    "n": 68,
+    "finishes": 0,
+    "mean_progress": 0.06631354433931921,
+    "mean_raw_return": -58.48206761032524,
+    "mean_training_return": -58.48206761032524,
+    "mean_damage": 0.0,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 17, "finishes": 0, "mean_progress": 0.06784313725490197, "mean_raw_return": -54.18823529411816, "mean_damage": 0.0},
+      {"geometry_seed": 3910800004, "n": 17, "finishes": 0, "mean_progress": 0.07563025210084033, "mean_raw_return": -64.33112819595922, "mean_damage": 0.0},
+      {"geometry_seed": 3910800034, "n": 17, "finishes": 0, "mean_progress": 0.0648219814241486, "mean_raw_return": -53.87461300309644, "mean_damage": 0.0},
+      {"geometry_seed": 3910800085, "n": 17, "finishes": 0, "mean_progress": 0.056958806577385994, "mean_raw_return": -61.53429394812711, "mean_damage": 0.0}
+    ],
+    "limitation": "First 28 completed episodes were seed-only and 40 episodes ended after the seed boundary, including a mixed episode. They are not a frozen policy evaluation or matched raw-run trajectories."
+  },
+  "rolling_optimizer_means_over_20149_updates": {
+    "consistency_loss": 0.005086391072537346,
+    "training_reward_loss": 0.4203950720712786,
+    "value_loss": 0.6185815497449659,
+    "termination_loss": 0.002937719484749034,
+    "q_scale_at_checkpoint": 40.12939453125,
+    "policy_differential_entropy_mean": -20.976681674240872,
+    "same_observation_prior_vs_mppi_weighted_elite_center_actions": 10149,
+    "same_observation_mean_model_delta_l2": 1.4024661860061645,
+    "same_observation_mean_applied_noised_delta_l2": 1.4370506906498597
+  },
+  "frozen_train_probe": {
+    "sample_count": 256,
+    "terminal_positive_transitions": 0,
+    "training_reward_mae": 0.06312000751495361,
+    "constant_training_reward_mae": 0.37949177622795105,
+    "latent_mse": 0.00852692499756813,
+    "limitation": "Probe labels are training-target rewards. Their numerical equality to raw rewards here is caused by zero damage in this source prefix, not permission to compare subsequent shaped reward-head fit to the raw baseline's raw-return ranking. Zero terminal positives preclude positive-event inference."
+  },
+  "next_gate": "Continue unchanged H3/5M/default-MPPI source to 40k/70k/100k, record the first real positive damage increment and total raw-versus-training reward dose. Full raw environment reward/progress/damage/finish evaluation is separately predeclared for the first completed >=100k treatment model, MPPI primary, but no such model or CPU protocol exists at 20k. No fresh/blind/confirmation or official result is claimed."
+}
