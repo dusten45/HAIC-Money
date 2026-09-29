@@ -38,7 +38,7 @@
       "straight_gas_full": 0.18,
       "straight_gas_mid": 0.135,
       "straight_gas_hold": 0.09,
-      "curve_target_formula": "clip(52.0 - 3.0*sweep,30.0,48.0) for sweep>1.5",
+      "curve_target_formula": "clip(52.0 - 3.0*sweep,30.0,48.0) whenever the inherited exact-straight predicate is false or sweep>1.5",
       "curve_brake_trigger_delta": 0.5,
       "curve_brake_formula": "clip(0.06 + 0.018*(speed-target-0.5),0.06,0.28)",
       "far_obstacle_target": 47.0,
@@ -67,6 +67,7 @@
     "static_and_synthetic": [
       "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
       "On settled, obstacle-free clear straights, speed branches emit exactly0.18/0.135/0.09 gas and use target68; gas above0.11 is impossible outside the registered gate.",
+      "After curve exit or latch release, target68 returns immediately but gas above0.11 waits until inherited steering has settled to abs(previous steering)<=0.07.",
       "A distant bend following repeated fast-straight frames immediately lowers the command target and brakes; a sustained/mid curve continues braking while overspeed; mirrored curves have identical longitudinal actions.",
       "Curve target exact and nextafter boundaries at sweep1.5, the30/48 clips, speed target+0.5 and pedal branch transitions are closed.",
       "Current obstacle, all miss-latch frames, reacquisition, invalid input, road loss and reset never receive fast gas; obstacle caps and compound cap apply immediately.",
