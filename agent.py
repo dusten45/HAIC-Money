@@ -1666,6 +1666,22 @@ class _HighSpeedPreviewBrakeController(_LatchedClearStraightSustainController):
         self._pace_speed = float(speed)
         return super()._pedals(speed, target_speed)
 
+    def _curve_brake_envelope(
+        self,
+        *,
+        excess: float,
+        base_brake: float,
+    ) -> float:
+        """Return the curve overspeed brake without weakening the base brake."""
+        curve_brake = float(
+            np.clip(
+                self.CURVE_BRAKE_BASE + self.CURVE_BRAKE_GAIN * excess,
+                self.CURVE_BRAKE_BASE,
+                self.MAX_BRAKE,
+            )
+        )
+        return max(base_brake, curve_brake)
+
     def _adjust_pedals(
         self,
         *,
@@ -1711,15 +1727,12 @@ class _HighSpeedPreviewBrakeController(_LatchedClearStraightSustainController):
                 - self._pace_command_target
                 - self.CURVE_BRAKE_TRIGGER_DELTA
             )
-            curve_brake = float(
-                np.clip(
-                    self.CURVE_BRAKE_BASE + self.CURVE_BRAKE_GAIN * excess,
-                    self.CURVE_BRAKE_BASE,
-                    self.MAX_BRAKE,
-                )
+            requested_brake = self._curve_brake_envelope(
+                excess=excess,
+                base_brake=adjusted_brake,
             )
             bounded_brake = min(
-                max(adjusted_brake, curve_brake),
+                requested_brake,
                 float(
                     np.nextafter(
                         np.float32(self.MAX_BRAKE), np.float32(0.0)
@@ -2256,6 +2269,52 @@ class _DoubleClearStraightThrottleController(
         return inherited_gas, inherited_brake
 
 
+class _CompoundObstacleBrakeCarryController(
+    _DoubleClearStraightThrottleController
+):
+    """Reduce only redundant curve braking in a latched compound hazard.
+
+    The target30 speed envelope, obstacle detector, four-frame miss latch,
+    steering, gas, and inherited distance/speed brake all remain unchanged.
+    At moderate overspeed the supplemental curve brake uses the already-tested
+    clear-corner slope; at high overspeed the inherited base brake is the floor.
+    """
+
+    COMPOUND_CARRY_BRAKE_BASE = 0.04
+    COMPOUND_CARRY_BRAKE_GAIN = 0.012
+    COMPOUND_CARRY_BRAKE_MAX = 0.18
+
+    def _curve_brake_envelope(
+        self,
+        *,
+        excess: float,
+        base_brake: float,
+    ) -> float:
+        compound_latched = (
+            self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target == self.COMPOUND_TARGET_SPEED
+            and (
+                self._obstacle_side != 0.0
+                or self._carry_latched_at_frame_start
+            )
+        )
+        if not compound_latched:
+            return super()._curve_brake_envelope(
+                excess=excess,
+                base_brake=base_brake,
+            )
+
+        carry_brake = float(
+            np.clip(
+                self.COMPOUND_CARRY_BRAKE_BASE
+                + self.COMPOUND_CARRY_BRAKE_GAIN * excess,
+                self.COMPOUND_CARRY_BRAKE_BASE,
+                self.COMPOUND_CARRY_BRAKE_MAX,
+            )
+        )
+        return max(base_brake, carry_brake)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2757,7 +2816,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _DoubleClearStraightThrottleController()
+            _CompoundObstacleBrakeCarryController()
             if use_forward_controller
             else None
         )

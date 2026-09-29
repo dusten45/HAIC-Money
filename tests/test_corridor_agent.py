@@ -3388,6 +3388,290 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(changed, 0)
         self.assertGreater(exact, 0)
 
+    def test_compound_brake_carry_changes_only_registered_brake_envelope(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        expected = {
+            30.5: None,
+            np.nextafter(30.5, np.inf): 0.04,
+            32.0: 0.058,
+            36.0: 0.106,
+            40.0: 0.154,
+            45.0: 0.18,
+            48.0: 0.216,
+            50.0: 0.24,
+            55.0: np.nextafter(np.float32(0.28), np.float32(0.0)),
+        }
+        observation = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        for speed, expected_brake in expected.items():
+            control = _DoubleClearStraightThrottleController()
+            candidate = _CompoundObstacleBrakeCarryController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+            with self.subTest(speed=speed):
+                self.assertEqual(candidate.__dict__, control.__dict__)
+                self.assertEqual(candidate._pace_command_target, 30.0)
+                self.assertEqual(candidate._pace_latched_target, 30.0)
+                np.testing.assert_array_equal(
+                    candidate_action[:2], control_action[:2]
+                )
+                if expected_brake is None:
+                    np.testing.assert_array_equal(candidate_action, control_action)
+                else:
+                    self.assertAlmostEqual(
+                        float(candidate_action[2]), float(expected_brake), places=6
+                    )
+                    self.assertLessEqual(
+                        float(candidate_action[2]), float(control_action[2])
+                    )
+                self.assertEqual(
+                    float(candidate_action[1]) * float(candidate_action[2]), 0.0
+                )
+                self.assertTrue(np.all(np.isfinite(candidate_action)))
+
+    def test_compound_brake_carry_closes_sweep_gate_and_mirrors(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        frame = _observation(speed=0.0)
+        for direction in (-1.0, 1.0):
+            for sweep, eligible in (
+                (6.0 - 1e-6, False),
+                (6.0, True),
+            ):
+                centers = {
+                    30: 42.0 + direction * sweep,
+                    34: 42.0,
+                    38: 42.0,
+                    42: 42.0,
+                    54: 42.0,
+                    58: 42.0,
+                    62: 42.0,
+                }
+                obstacle = (50.0, 35.0 if direction > 0.0 else 49.0, 42.0)
+                actions = []
+                controllers = (
+                    _DoubleClearStraightThrottleController(),
+                    _CompoundObstacleBrakeCarryController(),
+                )
+                for controller in controllers:
+                    with patch.object(
+                        controller, "_road_centers", return_value=centers
+                    ), patch.object(
+                        controller, "_nearest_obstacle", return_value=obstacle
+                    ), patch.object(
+                        controller, "_estimate_speed", return_value=40.0
+                    ):
+                        actions.append(controller.act(frame))
+                with self.subTest(direction=direction, sweep=sweep):
+                    self.assertEqual(controllers[1].__dict__, controllers[0].__dict__)
+                    np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+                    if eligible:
+                        self.assertAlmostEqual(float(actions[1][2]), 0.154, places=6)
+                        self.assertLess(float(actions[1][2]), float(actions[0][2]))
+                    else:
+                        np.testing.assert_array_equal(actions[1], actions[0])
+
+    def test_compound_brake_carry_follows_current_and_miss_latch_only(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        compound = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        curve = _observation(curve=0.75, speed=0.0)
+        control = _DoubleClearStraightThrottleController()
+        candidate = _CompoundObstacleBrakeCarryController()
+
+        def act_pair(observation):
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_estimate_speed", return_value=40.0
+                ):
+                    actions.append(controller.act(observation))
+            self.assertEqual(candidate.__dict__, control.__dict__)
+            np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+            return actions
+
+        detected = act_pair(compound)
+        self.assertLess(float(detected[1][2]), float(detected[0][2]))
+        for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 1):
+            actions = act_pair(curve)
+            with self.subTest(miss=miss):
+                self.assertLess(float(actions[1][2]), float(actions[0][2]))
+
+        clearing = act_pair(curve)
+        np.testing.assert_array_equal(clearing[1], clearing[0])
+        released = act_pair(curve)
+        np.testing.assert_array_equal(released[1], released[0])
+
+        control = _DoubleClearStraightThrottleController()
+        candidate = _CompoundObstacleBrakeCarryController()
+        act_pair(compound)
+        act_pair(curve)
+        reacquired = act_pair(compound)
+        self.assertLess(float(reacquired[1][2]), float(reacquired[0][2]))
+
+        control = _DoubleClearStraightThrottleController()
+        candidate = _CompoundObstacleBrakeCarryController()
+        act_pair(compound)
+        act_pair(curve)
+        mild_obstacle = _observation(
+            curve=0.10,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        reacquired_noncompound = act_pair(mild_obstacle)
+        np.testing.assert_array_equal(
+            reacquired_noncompound[1], reacquired_noncompound[0]
+        )
+
+    def test_compound_brake_carry_preserves_base_brake_saturation_boundary(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        compound = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        maximum = np.nextafter(np.float32(0.28), np.float32(0.0))
+        boundary = 30.0 + float(maximum) / 0.012
+        for speed, saturated in (
+            (boundary - 1e-5, False),
+            (boundary, True),
+            (boundary + 1e-5, True),
+        ):
+            actions = []
+            controllers = (
+                _DoubleClearStraightThrottleController(),
+                _CompoundObstacleBrakeCarryController(),
+            )
+            for controller in controllers:
+                with patch.object(
+                    controller, "_estimate_speed", return_value=speed
+                ):
+                    actions.append(controller.act(compound))
+            with self.subTest(speed=speed):
+                self.assertEqual(controllers[1].__dict__, controllers[0].__dict__)
+                np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+                self.assertEqual(float(actions[0][2]), float(maximum))
+                if saturated:
+                    self.assertEqual(float(actions[1][2]), float(maximum))
+                else:
+                    self.assertLess(float(actions[1][2]), float(maximum))
+
+    def test_compound_brake_carry_preserves_recovery_invalid_and_reset(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        control = _DoubleClearStraightThrottleController()
+        candidate = _CompoundObstacleBrakeCarryController()
+        road = _observation(speed=0.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        np.testing.assert_array_equal(candidate.act(road), control.act(road))
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        candidate.reset(None)
+        self.assertEqual(
+            candidate.__dict__,
+            _CompoundObstacleBrakeCarryController().__dict__,
+        )
+        for invalid in (None, np.zeros((84, 84), dtype=np.float32)):
+            reset_candidate = _CompoundObstacleBrakeCarryController()
+            reset_control = _DoubleClearStraightThrottleController()
+            np.testing.assert_array_equal(
+                reset_candidate.act(invalid), reset_control.act(invalid)
+            )
+            self.assertEqual(reset_candidate.__dict__, reset_control.__dict__)
+
+    def test_compound_brake_carry_randomized_differential_is_brake_only(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _DoubleClearStraightThrottleController,
+        )
+
+        rng = np.random.default_rng(2026093002)
+        changed = 0
+        exact = 0
+        for _ in range(384):
+            speed = float(rng.uniform(0.0, 80.0))
+            curve = float(
+                rng.choice((0.0, -0.10, 0.10, -0.25, 0.25, -0.75, 0.75))
+            )
+            obstacle = bool(rng.integers(0, 2))
+            latched = bool(rng.integers(0, 2))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=(35 if curve >= 0.0 else 49) if obstacle else None,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            control = _DoubleClearStraightThrottleController()
+            candidate = _CompoundObstacleBrakeCarryController()
+            if latched:
+                control._obstacle_side = candidate._obstacle_side = 1.0
+                control._obstacle_missing = candidate._obstacle_missing = 1
+                control._last_obstacle_side_offset = (
+                    candidate._last_obstacle_side_offset
+                ) = -2.0
+                control._pace_latched_target = candidate._pace_latched_target = 30.0
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(candidate.__dict__, control.__dict__)
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(
+                float(candidate_action[1]) * float(candidate_action[2]), 0.0
+            )
+            np.testing.assert_array_equal(
+                candidate_action[:2], control_action[:2]
+            )
+            if np.array_equal(candidate_action, control_action):
+                exact += 1
+                continue
+            changed += 1
+            self.assertEqual(candidate._pace_command_target, 30.0)
+            self.assertEqual(candidate._pace_latched_target, 30.0)
+            self.assertTrue(obstacle or latched)
+            self.assertGreater(speed, 30.5)
+            base_brake = min(max((speed - 30.0) * 0.012, 0.04), 0.28)
+            self.assertGreaterEqual(
+                float(candidate_action[2]) + 1e-7, base_brake
+            )
+            self.assertLess(float(candidate_action[2]), float(control_action[2]))
+        self.assertGreater(changed, 0)
+        self.assertGreater(exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,
