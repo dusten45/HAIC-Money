@@ -1557,6 +1557,185 @@ class _LatchedClearStraightSustainController(_LaunchThrottleController):
         return adjusted_gas, adjusted_brake
 
 
+class _HighSpeedPreviewBrakeController(_LatchedClearStraightSustainController):
+    """Accelerate hard only on clear straights and brake from curve preview.
+
+    The lateral controller and its obstacle state machine remain inherited.
+    This layer owns only the emitted longitudinal speed envelope: a high clear
+    straight target, an immediate sweep-based corner target, and stronger
+    overspeed feedback while a curve remains visible.
+    """
+
+    STRAIGHT_TARGET_SPEED = 68.0
+    STRAIGHT_GAS_FULL = 0.18
+    STRAIGHT_GAS_MID = 0.135
+    STRAIGHT_GAS_HOLD = 0.09
+    CURVE_SWEEP_THRESHOLD = 1.5
+    CURVE_TARGET_INTERCEPT = 52.0
+    CURVE_TARGET_SLOPE = 3.0
+    CURVE_TARGET_FLOOR = 30.0
+    CURVE_TARGET_CEILING = 48.0
+    CURVE_BRAKE_TRIGGER_DELTA = 0.5
+    CURVE_BRAKE_BASE = 0.06
+    CURVE_BRAKE_GAIN = 0.018
+    COMPOUND_SWEEP_THRESHOLD = 6.0
+
+    def __init__(self, *, cruise_speed: float = STRAIGHT_TARGET_SPEED) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._pace_straight = False
+        self._pace_sweep = 0.0
+        self._pace_speed = 0.0
+        self._pace_command_target = None
+        self._pace_latched_target = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._pace_straight = False
+        self._pace_sweep = 0.0
+        self._pace_speed = 0.0
+        self._pace_command_target = None
+        self._pace_latched_target = None
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        self._pace_straight = bool(straight)
+        return super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+
+    def _adjust_target_speed(
+        self,
+        *,
+        target_speed: float,
+        curve_target_speed: float,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed(
+            target_speed=target_speed,
+            curve_target_speed=curve_target_speed,
+            obstacle=obstacle,
+        )
+        # The raw inherited curve target is cruise-2*sweep before its EMA.
+        # Recover that generic image-space sweep so falling targets can bypass
+        # stale straight-speed memory without changing road perception.
+        sweep = max(0.0, 0.5 * (self.cruise_speed - curve_target_speed))
+        self._pace_sweep = sweep
+
+        if obstacle is not None:
+            obstacle_y = float(obstacle[0])
+            obstacle_target = 47.0 if obstacle_y < 44.0 else 40.0
+            if sweep >= self.COMPOUND_SWEEP_THRESHOLD:
+                obstacle_target = min(
+                    obstacle_target, self.COMPOUND_TARGET_SPEED
+                )
+            self._pace_latched_target = obstacle_target
+            command_target = min(inherited, obstacle_target)
+        elif self._obstacle_side != 0.0:
+            latch_target = (
+                self._pace_latched_target
+                if self._pace_latched_target is not None
+                else self.COMPOUND_TARGET_SPEED
+            )
+            command_target = min(inherited, latch_target)
+        else:
+            self._pace_latched_target = None
+            if self._pace_straight and sweep <= self.CURVE_SWEEP_THRESHOLD:
+                command_target = self.STRAIGHT_TARGET_SPEED
+            else:
+                command_target = float(
+                    np.clip(
+                        self.CURVE_TARGET_INTERCEPT
+                        - self.CURVE_TARGET_SLOPE * sweep,
+                        self.CURVE_TARGET_FLOOR,
+                        self.CURVE_TARGET_CEILING,
+                    )
+                )
+        self._pace_command_target = float(command_target)
+        return float(command_target)
+
+    def _pedals(self, speed: float, target_speed: float) -> tuple[float, float]:
+        self._pace_speed = float(speed)
+        return super()._pedals(speed, target_speed)
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        adjusted_gas, adjusted_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        fast_straight = (
+            self._obstacle_side == 0.0
+            and self._pace_straight
+            and self._pace_sweep <= self.CURVE_SWEEP_THRESHOLD
+            and obstacle is None
+            and gas > 0.0
+            and brake == 0.0
+            and adjusted_brake == 0.0
+            and abs(self._last_steer) <= self.MAX_STEER_STEP
+        )
+        if fast_straight:
+            if gas >= self.MAX_GAS - 1e-12:
+                adjusted_gas = self.STRAIGHT_GAS_FULL
+            elif gas >= self.MAX_GAS * (2.0 / 3.0) - 1e-12:
+                adjusted_gas = self.STRAIGHT_GAS_MID
+            else:
+                adjusted_gas = self.STRAIGHT_GAS_HOLD
+            return adjusted_gas, 0.0
+
+        curve_overspeed = (
+            not self._pace_straight
+            and self._pace_command_target is not None
+            and self._pace_speed
+            > self._pace_command_target + self.CURVE_BRAKE_TRIGGER_DELTA
+        )
+        if curve_overspeed:
+            excess = (
+                self._pace_speed
+                - self._pace_command_target
+                - self.CURVE_BRAKE_TRIGGER_DELTA
+            )
+            curve_brake = float(
+                np.clip(
+                    self.CURVE_BRAKE_BASE + self.CURVE_BRAKE_GAIN * excess,
+                    self.CURVE_BRAKE_BASE,
+                    self.MAX_BRAKE,
+                )
+            )
+            bounded_brake = min(
+                max(adjusted_brake, curve_brake),
+                float(
+                    np.nextafter(
+                        np.float32(self.MAX_BRAKE), np.float32(0.0)
+                    )
+                ),
+            )
+            return 0.0, bounded_brake
+        adjusted_brake = min(
+            adjusted_brake,
+            float(
+                np.nextafter(np.float32(self.MAX_BRAKE), np.float32(0.0))
+            ),
+        )
+        return adjusted_gas, adjusted_brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2058,7 +2237,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _LatchedClearStraightSustainController()
+            _HighSpeedPreviewBrakeController()
             if use_forward_controller
             else None
         )

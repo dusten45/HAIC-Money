@@ -1310,6 +1310,314 @@ class TestVisionCorridorAgent(unittest.TestCase):
             self.assertEqual(float(candidate_action[2]), 0.0)
         self.assertGreater(changed, 0)
 
+    def test_high_speed_preview_controller_uses_registered_straight_branches(self):
+        from agent import _HighSpeedPreviewBrakeController
+
+        cases = (
+            (np.nextafter(60.0, -np.inf), 0.18, 0.0),
+            (60.0, 0.135, 0.0),
+            (np.nextafter(65.0, -np.inf), 0.135, 0.0),
+            (65.0, 0.09, 0.0),
+            (69.0, 0.09, 0.0),
+            (np.nextafter(69.0, np.inf), 0.0, 0.04),
+        )
+        for speed, expected_gas, expected_brake in cases:
+            controller = _HighSpeedPreviewBrakeController()
+            with patch.object(controller, "_estimate_speed", return_value=speed):
+                action = controller.act(_observation(speed=0.0))
+            with self.subTest(speed=speed):
+                self.assertEqual(controller._pace_command_target, 68.0)
+                self.assertAlmostEqual(float(action[1]), expected_gas, places=6)
+                self.assertAlmostEqual(
+                    float(action[2]), expected_brake, places=6
+                )
+                self.assertEqual(float(action[1]) * float(action[2]), 0.0)
+
+    def test_high_speed_preview_controller_brakes_early_and_through_curve(self):
+        from agent import (
+            _HighSpeedPreviewBrakeController,
+            _LatchedClearStraightSustainController,
+        )
+
+        for direction in (-1.0, 1.0):
+            control = _LatchedClearStraightSustainController()
+            candidate = _HighSpeedPreviewBrakeController()
+            for _ in range(3):
+                straight = _observation(speed=60.0)
+                control.act(straight)
+                candidate.act(straight)
+
+            distant = _distant_bend_observation(
+                direction=direction, speed=60.0
+            )
+            control_distant = control.act(distant)
+            candidate_distant = candidate.act(distant)
+            with self.subTest(direction=direction, phase="entry"):
+                self.assertEqual(candidate._pace_sweep, 6.0)
+                self.assertEqual(candidate._pace_command_target, 34.0)
+                self.assertEqual(
+                    float(candidate_distant[0]), float(control_distant[0])
+                )
+                self.assertEqual(float(candidate_distant[1]), 0.0)
+                self.assertAlmostEqual(
+                    float(candidate_distant[2]), candidate.MAX_BRAKE, places=6
+                )
+                self.assertLessEqual(
+                    float(candidate_distant[2]), candidate.MAX_BRAKE
+                )
+
+            middle = _observation(curve=direction * 0.25, speed=45.0)
+            control_middle = control.act(middle)
+            candidate_middle = candidate.act(middle)
+            with self.subTest(direction=direction, phase="middle"):
+                self.assertEqual(candidate._pace_command_target, 34.0)
+                self.assertEqual(
+                    float(candidate_middle[0]), float(control_middle[0])
+                )
+                self.assertEqual(float(candidate_middle[1]), 0.0)
+                self.assertAlmostEqual(float(candidate_middle[2]), 0.249, places=6)
+
+            exit_action = candidate.act(_observation(speed=40.0))
+            with self.subTest(direction=direction, phase="exit"):
+                self.assertEqual(candidate._pace_command_target, 68.0)
+                self.assertLessEqual(float(exit_action[1]), 0.11)
+                self.assertEqual(float(exit_action[2]), 0.0)
+            settled_exit = candidate.act(_observation(speed=40.0))
+            self.assertAlmostEqual(float(settled_exit[1]), 0.18, places=6)
+            self.assertEqual(float(settled_exit[2]), 0.0)
+
+    def test_high_speed_preview_controller_closes_curve_target_boundaries(self):
+        from agent import _HighSpeedPreviewBrakeController
+
+        controller = _HighSpeedPreviewBrakeController()
+        controller._pace_straight = False
+        cases = (
+            (0.0, 48.0),
+            (4.0 / 3.0, 48.0),
+            (np.nextafter(4.0 / 3.0, np.inf), 47.99999999999999),
+            (np.nextafter(1.5, -np.inf), 47.50000000000001),
+            (1.5, 47.5),
+            (np.nextafter(1.5, np.inf), 47.49999999999999),
+            (6.0, 34.0),
+            (np.nextafter(22.0 / 3.0, -np.inf), 30.000000000000004),
+            (22.0 / 3.0, 30.0),
+            (16.0, 30.0),
+        )
+        for sweep, expected in cases:
+            curve_target = controller.cruise_speed - 2.0 * sweep
+            target = controller._adjust_target_speed(
+                target_speed=curve_target,
+                curve_target_speed=curve_target,
+                obstacle=None,
+            )
+            with self.subTest(sweep=sweep):
+                self.assertAlmostEqual(target, expected, places=12)
+
+        controller._pace_straight = True
+        self.assertEqual(
+            controller._adjust_target_speed(
+                target_speed=65.0,
+                curve_target_speed=65.0,
+                obstacle=None,
+            ),
+            68.0,
+        )
+
+        curve = _observation(curve=0.25, speed=0.0)
+        for speed, expected_gas, expected_brake in (
+            (np.nextafter(34.5, -np.inf), 1.0 / 30.0, 0.0),
+            (34.5, 1.0 / 30.0, 0.0),
+            (np.nextafter(34.5, np.inf), 0.0, 0.06),
+        ):
+            bounded = _HighSpeedPreviewBrakeController()
+            with patch.object(bounded, "_estimate_speed", return_value=speed):
+                action = bounded.act(curve)
+            with self.subTest(brake_boundary_speed=speed):
+                self.assertEqual(bounded._pace_command_target, 34.0)
+                self.assertAlmostEqual(float(action[1]), expected_gas, places=6)
+                self.assertAlmostEqual(
+                    float(action[2]), expected_brake, places=6
+                )
+
+    def test_high_speed_preview_controller_keeps_fast_gas_out_of_obstacle_latch(self):
+        from agent import (
+            _HighSpeedPreviewBrakeController,
+            _LatchedClearStraightSustainController,
+        )
+
+        controller = _HighSpeedPreviewBrakeController()
+        control = _LatchedClearStraightSustainController()
+        straight = _observation(speed=60.0)
+        controller.act(straight)
+        control.act(straight)
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=42,
+            obstacle_top=32,
+            speed=60.0,
+        )
+        detected = controller.act(obstacle)
+        control_detected = control.act(obstacle)
+        self.assertEqual(controller._pace_command_target, 47.0)
+        self.assertEqual(float(detected[0]), float(control_detected[0]))
+        self.assertEqual(float(detected[1]), 0.0)
+        self.assertLessEqual(float(detected[2]), controller.MAX_BRAKE)
+
+        for miss in range(2):
+            action = controller.act(straight)
+            control_action = control.act(straight)
+            with self.subTest(miss=miss + 1):
+                self.assertNotEqual(controller._obstacle_side, 0.0)
+                self.assertEqual(controller._pace_command_target, 47.0)
+                self.assertEqual(float(action[0]), float(control_action[0]))
+                self.assertLessEqual(float(action[1]), 0.11)
+                self.assertEqual(float(action[1]) * float(action[2]), 0.0)
+
+        reacquired = controller.act(obstacle)
+        control_reacquired = control.act(obstacle)
+        self.assertEqual(float(reacquired[0]), float(control_reacquired[0]))
+        self.assertEqual(controller._obstacle_missing, 0)
+        for miss in range(controller.OBSTACLE_MISS_LIMIT):
+            action = controller.act(straight)
+            control_action = control.act(straight)
+            with self.subTest(after_reacquire_miss=miss + 1):
+                self.assertNotEqual(controller._obstacle_side, 0.0)
+                self.assertEqual(controller._pace_command_target, 47.0)
+                self.assertEqual(float(action[0]), float(control_action[0]))
+                self.assertLessEqual(float(action[1]), 0.11)
+                self.assertEqual(float(action[1]) * float(action[2]), 0.0)
+
+        released = controller.act(straight)
+        control_released = control.act(straight)
+        self.assertEqual(controller._obstacle_side, 0.0)
+        self.assertEqual(controller._pace_command_target, 68.0)
+        self.assertEqual(float(released[0]), float(control_released[0]))
+        self.assertGreater(float(released[1]), 0.11)
+
+    def test_high_speed_preview_controller_applies_close_and_compound_caps(self):
+        from agent import _HighSpeedPreviewBrakeController
+
+        close = _HighSpeedPreviewBrakeController()
+        close_action = close.act(
+            _compact_obstacle_observation(
+                obstacle_x=42,
+                obstacle_top=50,
+                speed=60.0,
+            )
+        )
+        self.assertEqual(close._pace_command_target, 40.0)
+        self.assertEqual(float(close_action[1]), 0.0)
+
+        compound = _HighSpeedPreviewBrakeController()
+        compound_action = compound.act(
+            _observation(
+                curve=0.25,
+                obstacle_x=42,
+                obstacle_y=50,
+                speed=60.0,
+            )
+        )
+        self.assertEqual(compound._pace_sweep, 6.0)
+        self.assertEqual(compound._pace_command_target, 30.0)
+        self.assertEqual(float(compound_action[1]), 0.0)
+        self.assertGreater(float(compound_action[2]), 0.0)
+
+        compound_curve = _observation(
+            curve=0.25,
+            obstacle_x=42,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        for speed, expected_gas, expected_brake in (
+            (30.5, 1.0 / 30.0, 0.0),
+            (np.nextafter(30.5, np.inf), 0.0, 0.06),
+        ):
+            boundary = _HighSpeedPreviewBrakeController()
+            with patch.object(boundary, "_estimate_speed", return_value=speed):
+                action = boundary.act(compound_curve)
+            with self.subTest(compound_boundary_speed=speed):
+                self.assertEqual(boundary._pace_command_target, 30.0)
+                self.assertAlmostEqual(float(action[1]), expected_gas, places=6)
+                self.assertAlmostEqual(
+                    float(action[2]), expected_brake, places=6
+                )
+
+        latched = _HighSpeedPreviewBrakeController()
+        with patch.object(latched, "_estimate_speed", return_value=30.5):
+            latched.act(compound_curve)
+        compound_without_detection = _observation(curve=0.25, speed=0.0)
+        with patch.object(
+            latched,
+            "_estimate_speed",
+            return_value=np.nextafter(30.5, np.inf),
+        ):
+            latch_action = latched.act(compound_without_detection)
+        self.assertNotEqual(latched._obstacle_side, 0.0)
+        self.assertEqual(latched._pace_command_target, 30.0)
+        self.assertEqual(float(latch_action[1]), 0.0)
+        self.assertAlmostEqual(float(latch_action[2]), 0.06, places=6)
+
+    def test_high_speed_preview_controller_preserves_recovery_and_reset(self):
+        from agent import (
+            _HighSpeedPreviewBrakeController,
+            _LatchedClearStraightSustainController,
+        )
+
+        candidate = _HighSpeedPreviewBrakeController()
+        control = _LatchedClearStraightSustainController()
+        road = _observation(speed=45.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        candidate.act(road)
+        control.act(road)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+
+        candidate.reset(None)
+        fresh = _HighSpeedPreviewBrakeController()
+        np.testing.assert_array_equal(candidate.act(road), fresh.act(road))
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+
+    def test_high_speed_preview_controller_randomized_longitudinal_only(self):
+        from agent import (
+            _HighSpeedPreviewBrakeController,
+            _LatchedClearStraightSustainController,
+        )
+
+        rng = np.random.default_rng(20260930)
+        fast = 0
+        braking = 0
+        for _ in range(256):
+            speed = float(rng.uniform(0.0, 80.0))
+            curve = float(rng.choice((0.0, -0.10, 0.10, -0.25, 0.25, -0.75, 0.75)))
+            obstacle = bool(rng.integers(0, 2))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=42 if obstacle else None,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            control = _LatchedClearStraightSustainController()
+            candidate = _HighSpeedPreviewBrakeController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(float(candidate_action[0]), float(control_action[0]))
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(float(candidate_action[1]) * float(candidate_action[2]), 0.0)
+            if float(candidate_action[1]) > 0.11:
+                fast += 1
+                self.assertEqual(curve, 0.0)
+                self.assertFalse(obstacle)
+                self.assertTrue(candidate._pace_straight)
+                self.assertEqual(candidate._obstacle_side, 0.0)
+            if float(candidate_action[2]) > float(control_action[2]):
+                braking += 1
+                self.assertNotEqual(curve, 0.0)
+        self.assertGreater(fast, 0)
+        self.assertGreater(braking, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,
