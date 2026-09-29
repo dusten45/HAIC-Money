@@ -8,9 +8,10 @@ camera-only, diagnostic safety/pace layer over the completion-first controller
 recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
 paths are unchanged. Submission videos motivated bounded early obstacle and
 distant-bend responses plus a reviewed obstacle-priority transition guard and a
-launch-only clear-straight throttle diagnostic. Consumed official seed logs now
-motivate a single compound-hazard speed-margin diagnostic at commit `ae77e3a`;
-fixed inside-line, global top-speed and seed-specific changes were rejected. Required
+launch-only clear-straight throttle diagnostic. A failed compound-speed diagnostic
+was retired, and the current candidate cautiously sustains that same maximum gas
+only after obstacle avoidance fully clears. Fixed inside-line, global target-speed
+and seed-specific changes were rejected. Required
 competition documents are missing, so environment
 evaluation, submission, performance claims and SOTA promotion remain blocked.
 
@@ -28,8 +29,9 @@ evaluation, submission, performance claims and SOTA promotion remain blocked.
   then completed lap time. Freeze actor hashes before confirmation; never select
   on confirmation/blind. Diagnostic receipts cannot promote or unlock blind.
 - CPU gate: Python 3.11, Torch 2.1 CPU, NumPy 1.26; init10s, reset/action5s,
-  process1,024MB, ZIP500MB. Participant reference commit
-  `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`. No trainer/SB3/prohibited imports in
+  process1,024MB, ZIP500MB. Latest official participant commit checked on
+  2026-09-29 is `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; environment files remain
+  identical to the prior frozen reference. No trainer/SB3/prohibited imports in
   submission inference. Official submission-container execution remains separate.
 
 ## Completed L2 Study
@@ -194,25 +196,36 @@ smoke. No environment run measured performance, so the result is `INCOMPARABLE`.
 See `experiments/video-4-7-evidence-ledger-v1.json` and
 `experiments/clear-straight-launch-throttle-v1-result.json`.
 
-The current bare route is `_CompoundSpeedMarginController` at commit `ae77e3a`.
-Consumed runs for official seeds11,17 and21 all ended off-track after an outside
-obstacle pass into a continuing hairpin: speed had fallen to about29--30, but
+The `_CompoundSpeedMarginController` diagnostic at commit `ae77e3a` lowered the
+compound transient target from30 to24. Newer user-attributed logs subsequently
+showed seed21 retiring at the identical progress despite lower hairpin speed, while
+a same-map seed42 finish was1.34s slower and contained five speed-below-28 segments.
+Because those logs lack source/model/package hashes, this is adaptive development
+evidence rather than a controlled comparison. The target24 route was retired at
+`f7b4743`; the historical class and tests remain for auditability.
+
+Consumed official-generator runs for local seeds11,17 and21 all ended off-track
+after an outside obstacle pass into a continuing hairpin: speed had fallen to
+about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The only candidate factor lowers the transient target from30 to24 when the current
-detector already sees an obstacle and raw curve target is at most36; parent values,
-stored target EMA, steering, perception, recovery, model and other runtime routes
-remain unchanged. Synthetic boundaries, mirrored transitions and a temporary
-package passed141 related tests plus direct import/reset/action checks. No
-environment run measured completion or pace, so this remains `INCOMPARABLE`; see
+The current bare route is `_LatchedClearStraightSustainController` at commit
+`9249f2c`. It retains cruise48, parent compound target30, maximum emitted gas0.11,
+the speed49 brake boundary and all steering/perception/state. Only on an exact
+straight, with no current obstacle, settled steering and a fully cleared inherited
+obstacle latch, mid/low gas changes from0.06667/0.04167 to0.07333/0.04583. A simpler
+constant override was rejected before commit because it accelerated during detector
+miss frames. The latch-gated implementation passed147 related tests and an isolated
+package static/import/reset/action/latch smoke. No environment run measured
+completion or pace, so it remains `INCOMPARABLE`; see
 `experiments/official-seed-compound-hairpin-evidence-v1.json` and
-`experiments/sharp-curve-obstacle-speed-margin-v1-result.json`.
+`experiments/latched-clear-straight-sustain-v2-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `1128404c...` and must not be submitted as the new candidate.
+candidate agent SHA `b77f0167...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

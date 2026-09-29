@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "experiment": "latched-clear-straight-sustain-v2",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_SYNTHETIC_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-29T20:16:13.1212794+09:00",
+  "final_protocol_sha256": "a8a56564c65dd910ec343608c944ac73d6ce6ea772ed58f6b38a2a50392373e4",
+  "protocol_history": {
+    "v1_protocol_commit": "995f200",
+    "v1_result": "rejected-static-review before implementation commit because detector-miss latch frames accelerated above control",
+    "v2_protocol_commit": "9635787",
+    "implementation_commit": "9249f2cf3f382a458db43862671c76d7a541c136"
+  },
+  "lineage": {
+    "control_commit": "f7b4743ae0beae1c13f16ab0c850b8b0ecb494a2",
+    "candidate_commit": "9249f2cf3f382a458db43862671c76d7a541c136",
+    "candidate_agent_git_blob": "2701f8c745010b59869c30c9f1e6371b7bb31b4a",
+    "candidate_agent_sha256": "b77f01672e32b34e7a936b50bcba2936d9cf4c1c49c5aa59a71c71daed820c59",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._LaunchThrottleController",
+    "candidate_class": "agent._LatchedClearStraightSustainController"
+  },
+  "synthetic_result": {
+    "launch_full_gas_exact": 0.11,
+    "mid_gas_control": 0.06666666666666667,
+    "mid_gas_candidate": 0.07333333333333333,
+    "low_gas_control": 0.04166666666666667,
+    "low_gas_candidate": 0.04583333333333334,
+    "maximum_emitted_gas_unchanged": 0.11,
+    "brake_boundary_unchanged": 49.0,
+    "four_latched_miss_frames_complete_action_exact": true,
+    "fifth_miss_enables_sustain_after_latch_clear": true,
+    "reacquisition_complete_action_exact": true,
+    "steering_brake_target_and_all_state_exact": true,
+    "new_instance_state": false,
+    "randomized_differential_pass": true,
+    "reset_deterministic": true
+  },
+  "validation": {
+    "affected_and_local_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py",
+      "result": "147 passed, 4 warnings"
+    },
+    "temporary_package": {
+      "files": ["action_representation.py", "action_smoothing.py", "agent.py", "model.pt"],
+      "bytes": 6271602,
+      "archive_sha256": "136f6599dce946bd1cc222ad49b3cfcdc41090df70b356c28744d5ef40ea4775",
+      "embedded_agent_sha256": "b77f01672e32b34e7a936b50bcba2936d9cf4c1c49c5aa59a71c71daed820c59",
+      "embedded_model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "controller": "_LatchedClearStraightSustainController",
+      "launch_action": [0.0, 0.11, 0.0],
+      "sustain_action": [0.0, 0.0458333343, 0.0],
+      "latched_miss_action": [0.0, 0.0416666679, 0.0],
+      "released_candidate_action": [0.0, 0.0458333343, 0.0],
+      "released_control_action": [0.0, 0.0416666679, 0.0],
+      "static_scan": true,
+      "finite": true,
+      "state_exact": true,
+      "reset_matches": true,
+      "init_seconds": 0.03423130000010133,
+      "latch_sequence_seconds": 0.0030809000600129366,
+      "root_submission_zip_overwritten": false
+    },
+    "collection_limitation": "The host's pandas native extension is blocked by Windows application-control policy, so submission policy/package pytest modules cannot collect through their unrelated stable_baselines3 import. Equivalent isolated routing, static scan, package import, reset, action and latch-sequence checks passed."
+  },
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "target_speed_changed": false,
+    "maximum_gas_changed": false,
+    "brake_or_steering_changed": false,
+    "model_changed": false,
+    "official_environment_changed": false,
+    "root_submission_zip_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The factor is deliberately narrow and cannot by itself support a low-20-second claim.",
+    "No environment execution measured completion, lap time, collision, damage, off-track behavior or unseen-map generalization.",
+    "The active controller still has known unverified steering-retention and road-loss recovery limitations on consumed sharp hairpins.",
+    "The official repository provides procedural generation but no fixed official map list, public evaluation seeds or official target time.",
+    "Required governance documents are absent, so the candidate remains INCOMPARABLE and was not submitted."
+  ]
+}
