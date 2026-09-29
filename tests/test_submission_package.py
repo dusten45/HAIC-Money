@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_launch_throttle_controller_on_visible_road(self):
+    def test_packaged_bare_model_uses_compound_speed_margin_controller_on_visible_road(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,14 +87,27 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _LaunchThrottleController
+from agent import Agent, _CompoundSpeedMarginController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _LaunchThrottleController
+assert type(agent._forward_controller) is _CompoundSpeedMarginController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.11, 0.0], dtype=np.float32))
+
+compound = np.full((84, 84), 0.1, dtype=np.float32)
+for row in range(20, 63):
+    center = 42.0 + 0.75 * (54 - row)
+    left = int(round(center - 11))
+    right = int(round(center + 11))
+    compound[row, left:right] = 0.4
+compound[50:54, 35:38] = 0.68
+compound[77:83, 10:13] = (0.27 + 0.085 * 48.0) / 18.0
+agent.reset(None)
+compound_action = agent.act(np.tile(compound[None, :, :], (4, 1, 1)))
+assert compound_action[1] == 0.0
+np.testing.assert_allclose(compound_action[2], 0.28, rtol=0.0, atol=1e-7)
 """
             subprocess.run(
                 [sys.executable, "-c", code],

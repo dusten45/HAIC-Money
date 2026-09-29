@@ -1518,6 +1518,12 @@ class _LaunchThrottleController(_ObstaclePriorityController):
         return adjusted_gas, adjusted_brake
 
 
+class _CompoundSpeedMarginController(_LaunchThrottleController):
+    """Reduce speed only for an already detected obstacle in a sharp bend."""
+
+    COMPOUND_TARGET_SPEED = 24.0
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2019,7 +2025,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _LaunchThrottleController() if use_forward_controller else None
+            _CompoundSpeedMarginController() if use_forward_controller else None
         )
         self._runtime_mode = "baseline"
         self.format = None

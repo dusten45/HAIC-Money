@@ -1108,6 +1108,333 @@ class TestVisionCorridorAgent(unittest.TestCase):
             np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
             self.assertEqual(candidate.__dict__, control.__dict__)
 
+    def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
+        from agent import (
+            _CompoundHazardController,
+            _CompoundSpeedMarginController,
+            _LaunchThrottleController,
+        )
+
+        self.assertEqual(_CompoundHazardController.COMPOUND_TARGET_SPEED, 30.0)
+        self.assertEqual(_LaunchThrottleController.COMPOUND_TARGET_SPEED, 30.0)
+        self.assertEqual(_CompoundSpeedMarginController.COMPOUND_TARGET_SPEED, 24.0)
+        obstacle = (50.0, 35.0, 42.0)
+        control = _LaunchThrottleController()
+        candidate = _CompoundSpeedMarginController()
+
+        self.assertEqual(
+            control._adjust_target_speed(
+                target_speed=36.0,
+                curve_target_speed=36.0,
+                obstacle=obstacle,
+            ),
+            30.0,
+        )
+        self.assertEqual(
+            candidate._adjust_target_speed(
+                target_speed=36.0,
+                curve_target_speed=36.0,
+                obstacle=obstacle,
+            ),
+            24.0,
+        )
+        exact_cases = (
+            (36.0, np.nextafter(36.0, np.inf), obstacle),
+            (36.0, 36.0, None),
+            (38.0, 38.0, obstacle),
+            (20.0, 36.0, obstacle),
+        )
+        for target_speed, curve_target_speed, detected in exact_cases:
+            with self.subTest(
+                target_speed=target_speed,
+                curve_target_speed=curve_target_speed,
+                obstacle=detected,
+            ):
+                self.assertEqual(
+                    candidate._adjust_target_speed(
+                        target_speed=target_speed,
+                        curve_target_speed=curve_target_speed,
+                        obstacle=detected,
+                    ),
+                    control._adjust_target_speed(
+                        target_speed=target_speed,
+                        curve_target_speed=curve_target_speed,
+                        obstacle=detected,
+                    ),
+                )
+
+    def test_compound_speed_margin_preserves_steering_and_state(self):
+        from agent import _CompoundSpeedMarginController, _LaunchThrottleController
+
+        for curve in (-0.75, 0.75):
+            for obstacle_y in (30, 50):
+                obstacle_center = 42.0 + curve * (54.0 - (obstacle_y + 1.5))
+                for side_offset in (-6.0, 6.0):
+                    obstacle_x = int(round(obstacle_center + side_offset - 1.0))
+                    with self.subTest(
+                        curve=curve,
+                        obstacle_x=obstacle_x,
+                        obstacle_y=obstacle_y,
+                    ):
+                        observation = _observation(
+                            curve=curve,
+                            obstacle_x=obstacle_x,
+                            obstacle_y=obstacle_y,
+                            speed=48.0,
+                        )
+                        control = _LaunchThrottleController()
+                        candidate = _CompoundSpeedMarginController()
+                        control_action = control.act(observation)
+                        candidate_action = candidate.act(observation)
+
+                        self.assertEqual(candidate_action[0], control_action[0])
+                        self.assertEqual(float(control_action[1]), 0.0)
+                        self.assertAlmostEqual(float(control_action[2]), 0.216)
+                        self.assertEqual(float(candidate_action[1]), 0.0)
+                        self.assertAlmostEqual(
+                            float(candidate_action[2]), candidate.MAX_BRAKE
+                        )
+                        self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_compound_speed_margin_act_path_passes_only_the_registered_target(self):
+        from agent import _CompoundSpeedMarginController, _LaunchThrottleController
+
+        cases = (
+            (
+                "compound",
+                _observation(
+                    curve=0.75,
+                    obstacle_x=35,
+                    obstacle_y=50,
+                    speed=48.0,
+                ),
+                30.0,
+                24.0,
+                False,
+            ),
+            (
+                "weak_curve_obstacle",
+                _observation(
+                    curve=0.10,
+                    obstacle_x=40,
+                    obstacle_y=50,
+                    speed=24.0,
+                ),
+                None,
+                None,
+                True,
+            ),
+            (
+                "sharp_curve_clear",
+                _observation(curve=0.75, speed=24.0),
+                None,
+                None,
+                True,
+            ),
+            (
+                "straight_obstacle",
+                _observation(obstacle_x=40, obstacle_y=50, speed=24.0),
+                None,
+                None,
+                True,
+            ),
+        )
+        for name, observation, control_target, candidate_target, action_exact in cases:
+            with self.subTest(case=name):
+                control = _LaunchThrottleController()
+                candidate = _CompoundSpeedMarginController()
+                with patch.object(
+                    control, "_pedals", wraps=control._pedals
+                ) as control_spy:
+                    control_action = control.act(observation)
+                with patch.object(
+                    candidate, "_pedals", wraps=candidate._pedals
+                ) as candidate_spy:
+                    candidate_action = candidate.act(observation)
+
+                observed_control_target = control_spy.call_args.args[1]
+                observed_candidate_target = candidate_spy.call_args.args[1]
+                if action_exact:
+                    self.assertEqual(
+                        observed_candidate_target, observed_control_target
+                    )
+                    np.testing.assert_array_equal(candidate_action, control_action)
+                else:
+                    self.assertEqual(observed_control_target, control_target)
+                    self.assertEqual(observed_candidate_target, candidate_target)
+                    self.assertEqual(candidate_action[0], control_action[0])
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_compound_speed_margin_closes_pedal_boundaries(self):
+        from agent import _CompoundSpeedMarginController, _LaunchThrottleController
+
+        boundaries = (16.0, 21.0, 22.0, 25.0, 27.0, 31.0)
+        speeds = sorted(
+            {
+                value
+                for boundary in boundaries
+                for value in (
+                    np.nextafter(boundary, -np.inf),
+                    boundary,
+                    np.nextafter(boundary, np.inf),
+                )
+            }
+            | {29.0, 30.0, 48.0}
+        )
+        observation = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+
+        def expected_pedals(speed, target):
+            if speed > target + 1.0:
+                return 0.0, float(
+                    np.clip(
+                        (speed - target) * 0.012,
+                        0.04,
+                        _LaunchThrottleController.MAX_BRAKE,
+                    )
+                )
+            if speed < target - 8.0:
+                return _LaunchThrottleController.MAX_GAS, 0.0
+            if speed < target - 3.0:
+                return _LaunchThrottleController.MAX_GAS * (2.0 / 3.0), 0.0
+            return _LaunchThrottleController.MAX_GAS * (5.0 / 12.0), 0.0
+
+        for speed in speeds:
+            with self.subTest(speed=speed):
+                control = _LaunchThrottleController()
+                candidate = _CompoundSpeedMarginController()
+                np.testing.assert_array_equal(
+                    np.asarray(control._pedals(speed, 30.0), dtype=np.float32),
+                    np.asarray(expected_pedals(speed, 30.0), dtype=np.float32),
+                )
+                np.testing.assert_array_equal(
+                    np.asarray(candidate._pedals(speed, 24.0), dtype=np.float32),
+                    np.asarray(expected_pedals(speed, 24.0), dtype=np.float32),
+                )
+                for gas, brake in (
+                    control._pedals(speed, 30.0),
+                    candidate._pedals(speed, 24.0),
+                ):
+                    self.assertTrue(np.isfinite(gas))
+                    self.assertTrue(np.isfinite(brake))
+                    self.assertEqual(gas * brake, 0.0)
+
+        for speed, expected_control_gas, expected_candidate_brake in (
+            (29.0, 1.0 / 30.0, 0.060),
+            (30.0, 1.0 / 30.0, 0.072),
+        ):
+            control = _LaunchThrottleController()
+            candidate = _CompoundSpeedMarginController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+            self.assertAlmostEqual(float(control_action[1]), expected_control_gas)
+            self.assertEqual(float(control_action[2]), 0.0)
+            self.assertEqual(float(candidate_action[1]), 0.0)
+            self.assertAlmostEqual(
+                float(candidate_action[2]), expected_candidate_brake
+            )
+
+    def test_compound_speed_margin_is_nonpersistent_and_outside_exact(self):
+        from agent import _CompoundSpeedMarginController, _LaunchThrottleController
+
+        exact_observations = (
+            _observation(speed=0.0),
+            _observation(obstacle_x=35, obstacle_y=50, speed=24.0),
+            _observation(curve=0.75, speed=24.0),
+            _observation(curve=0.10, obstacle_x=35, obstacle_y=50, speed=24.0),
+            _distant_bend_observation(direction=1.0, speed=24.0),
+            np.zeros((3, 84, 84), dtype=np.float32),
+        )
+        for observation in exact_observations:
+            with self.subTest(shape=observation.shape):
+                control = _LaunchThrottleController()
+                candidate = _CompoundSpeedMarginController()
+                np.testing.assert_array_equal(
+                    candidate.act(observation), control.act(observation)
+                )
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+        compound = _observation(
+            curve=-0.75,
+            obstacle_x=46,
+            obstacle_y=50,
+            speed=30.0,
+        )
+        miss = _observation(curve=-0.75, speed=30.0)
+        control = _LaunchThrottleController()
+        candidate = _CompoundSpeedMarginController()
+        candidate_compound = candidate.act(compound)
+        control_compound = control.act(compound)
+        self.assertEqual(candidate_compound[0], control_compound[0])
+        self.assertEqual(candidate.__dict__, control.__dict__)
+        np.testing.assert_array_equal(candidate.act(miss), control.act(miss))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+        candidate_reacquire = candidate.act(compound)
+        control_reacquire = control.act(compound)
+        self.assertEqual(candidate_reacquire[0], control_reacquire[0])
+        self.assertNotEqual(candidate_reacquire[2], control_reacquire[2])
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        roadless = np.zeros((3, 84, 84), dtype=np.float32)
+        np.testing.assert_array_equal(candidate.act(roadless), control.act(roadless))
+        candidate.reset(None)
+        control.reset(None)
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_compound_speed_margin_preserves_priority_and_curve_transitions(self):
+        from agent import _CompoundSpeedMarginController, _LaunchThrottleController
+
+        for preview_direction, first_curve, second_curve, obstacle_x in (
+            (1.0, -0.75, 0.75, 25),
+            (-1.0, 0.75, -0.75, 56),
+        ):
+            with self.subTest(preview_direction=preview_direction):
+                control = _LaunchThrottleController()
+                candidate = _CompoundSpeedMarginController()
+                preview = _distant_bend_observation(
+                    direction=preview_direction,
+                    speed=24.0,
+                )
+                np.testing.assert_array_equal(
+                    candidate.act(preview), control.act(preview)
+                )
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+                first_frame = _observation(curve=first_curve, speed=48.0)[-1].copy()
+                first_frame[50:54, obstacle_x : obstacle_x + 3] = 0.68
+                first_compound = np.tile(first_frame[None, :, :], (4, 1, 1))
+                for _ in range(3):
+                    control_action = control.act(first_compound)
+                    candidate_action = candidate.act(first_compound)
+                    self.assertEqual(candidate_action[0], control_action[0])
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+                    self.assertEqual(float(candidate_action[1]), 0.0)
+                    self.assertGreaterEqual(
+                        float(candidate_action[2]), float(control_action[2])
+                    )
+
+                mirrored_x = 84 - obstacle_x - 3
+                second_frame = _observation(curve=second_curve, speed=48.0)[-1].copy()
+                second_frame[50:54, mirrored_x : mirrored_x + 3] = 0.68
+                second_compound = np.tile(second_frame[None, :, :], (4, 1, 1))
+                control_action = control.act(second_compound)
+                candidate_action = candidate.act(second_compound)
+                self.assertEqual(candidate_action[0], control_action[0])
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+                candidate.reset(None)
+                control.reset(None)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+                np.testing.assert_array_equal(
+                    candidate.act(preview), control.act(preview)
+                )
+
     def test_training_pipeline_uses_the_speed_aware_corridor_teacher(self):
         from training.vision_teacher import VisionCorridorAgent
 
