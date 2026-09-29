@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-obstacle-brake-carry-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T04:43:18+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": [
+    "162d23d8edfb766860aa95a7b6af31f5f8ee864d",
+    "5410c47620f654bd0bdf54933a97d40c8ce44b29",
+    "c24890b5479e9dba1e46f782d1c3795f38ba9031"
+  ],
+  "implementation_commit": "a27bc510c7e4b136b654a7fe19dabd9d5464c875",
+  "decision": "Keep as the current statically validated bare-model candidate. It reduces only the supplemental curve-brake envelope while a recognized obstacle or miss latch remains bound to the existing target30 compound state. It does not establish a lap-time, clearance, completion, submission or SOTA improvement without an authorized paired driving evaluation.",
+  "video_evidence": {
+    "attribution": "user-attributed submission11 replay videos without source/model/package receipt binding",
+    "results": {
+      "track1": {"status": "FINISHED", "lap_seconds": 23.86},
+      "track2": {"status": "FINISHED", "lap_seconds": 29.14},
+      "track3": {"status": "FINISHED", "lap_seconds": 25.82}
+    },
+    "submission7_comparison": {
+      "track1_delta_seconds": -3.32,
+      "track2_delta_seconds": -4.08,
+      "track3_delta_seconds": -4.76,
+      "mean_lap_seconds": {"submission7": 30.33, "submission11": 26.27},
+      "mean_delta_percent": -13.4,
+      "causality_limit": "Intermediate candidate changes and missing package receipts prevent attribution to one factor."
+    },
+    "obstacle_speed_proxy": {
+      "method": "background-motion-corrected Lucas-Kanade video optical flow around HSV-detected vehicle/obstacle closest approaches",
+      "encounters": 18,
+      "overall_post_pre_ratio_median": 0.81,
+      "encounters_below_0_90": 11,
+      "track_ratio_medians": {"track1": 0.80, "track2": 0.84, "track3": 0.88},
+      "interpretation": "The user's localized over-braking feedback is directionally supported, but this is a relative rendered-video proxy rather than physical speed or action telemetry."
+    },
+    "minimum_rendered_center_distance_pixels": {
+      "track1": 31.8,
+      "track2": 23.8,
+      "track3": 39.5,
+      "limitation": "Screen-center distance is not vehicle-body clearance."
+    }
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _CompoundObstacleBrakeCarryController; explicit export, DrQ and HAIC paths remain unchanged.",
+    "Refactor the existing HighSpeed supplemental curve-brake computation behind an algebraically identical hook.",
+    "Qualify only when the current command and pace-latched targets are both exactly30 and a current obstacle side or frame-start miss latch is active.",
+    "Replace supplemental clip(0.06 + 0.018*excess,0.06,0.28) with clip(0.04 + 0.012*excess,0.04,0.18), where excess=speed-target-0.5.",
+    "Take max with the inherited base brake before the unchanged final nextafter(float32(0.28),0) clamp.",
+    "Keep target30, detector, obstacle side, four-frame latch, fifth-frame release, steering, gas, recovery, clear-straight double throttle and every noncompound state unchanged.",
+    "Add no mutable candidate state and no seed, track, coordinate, progress or time condition."
+  ],
+  "registered_examples": {
+    "target30_speed32": {"control_brake": 0.087, "candidate_brake": 0.058},
+    "target30_speed36": {"control_brake": 0.159, "candidate_brake": 0.106},
+    "target30_speed40": {"control_brake": 0.231, "candidate_brake": 0.154},
+    "target30_speed45": {"control_brake": 0.28, "candidate_brake": 0.18},
+    "target30_speed48": {"control_brake": 0.28, "candidate_brake": 0.216},
+    "target30_speed55": {"control_brake": 0.28, "candidate_brake": 0.28}
+  },
+  "static_validation": {
+    "directed_and_randomized": "Current compound obstacles, both turn directions, sweep below/at6, target-plus0.5 trigger, current and miss frames1--4, fifth clearing, compound/noncompound reacquisition, emitted base-brake saturation, brake-only randomized differences, invalid input, road loss and reset passed.",
+    "focused_candidate_suite": "6 passed,127 deselected",
+    "controller_policy_package_suite": "151 passed,4 warnings",
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "223 passed,4 warnings"
+    },
+    "independent_audit": "Two read-only audits found no blocking code/protocol defect after excess, float-clamp, noncompound reacquisition, saturation, recovery and reset clarifications.",
+    "isolated_package": {
+      "path": ".haic-artifacts/compound-obstacle-brake-carry-v1/20260929T194253703802Z_compound-obstacle-brake-carry-v1/submission.zip",
+      "source_commit": "a27bc510c7e4b136b654a7fe19dabd9d5464c875",
+      "agent_git_blob": "620da0cd6263a6a8981aa0c4b25fd66270706fa6",
+      "agent_sha256": "413afda362c52b82df1fece445363720966ee6ddd357562d16808dfc268eb9b0",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "3ac70e3a5ac12ce2a63a7b39f4e7a112ca004dd4d96391c1094a834150be0e06",
+      "bytes": 6282034,
+      "windows_python": "3.11.15",
+      "init_seconds": 1.9282165999757126,
+      "act_seconds": 0.008938199956901371,
+      "result": "exact-file build/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "becfb97a056f5f0d3d425d74f9e25407d0cd1f91284e41eef817b78ced1a06a5",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "Rendered video does not expose the internal84x84 policy observation, sweep, estimated speed or emitted actions, so it cannot prove which visual obstacles entered the new gate.",
+    "At target30 and speed40 the candidate emits0.154 rather than0.231 brake; future closed-loop trajectory and clearance can change even though target, steering and base brake remain fixed.",
+    "The closest Track2 encounter appears visually straight and likely noncompound, but the rendered replay cannot prove the internal sweep remained below6.",
+    "Same-input static tests cannot establish completion, collision/off-track non-regression or lap-time improvement.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so environment evaluation, promotion and submission remain blocked."
+  ]
+}
