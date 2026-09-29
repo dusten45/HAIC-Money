@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "name": "clear-straight-sustain-pace-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-29T20:05:50.1429939+09:00",
+  "purpose": "seed-agnostic conservative clear-straight pace diagnostic",
+  "source_commit": "f7b4743ae0beae1c13f16ab0c850b8b0ecb494a2",
+  "evidence_ledger": "experiments/procedural-map-pace-evidence-v1.json",
+  "control": {
+    "controller": "agent._LaunchThrottleController",
+    "agent_git_blob": "de1b6bff193ec511516a4095b94b0cf46e1628c7",
+    "agent_sha256": "7afde5fd71d1657c113c4021cc922d03f5719806bc501f77501ca3d39f40d749",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "factor": {
+    "candidate_controller": "agent._ClearStraightSustainController",
+    "implementation": "subclass _LaunchThrottleController and override only CLEAR_STRAIGHT_MAX_GAS from0.10 to0.11; route only bare state-dict inference to the subclass",
+    "parameters_changed": 1,
+    "exact_predicate": "the inherited action is gas-positive and brake-zero, the exact straight classifier is true, the current obstacle detector returns None, and abs(previous steer) is at most MAX_STEER_STEP0.07",
+    "control_scaling": "min(base_gas*(0.10/0.08),0.10), followed by the existing launch-only0.11 override for base full gas",
+    "candidate_scaling": "min(base_gas*(0.11/0.08),0.11), followed by the unchanged launch-only0.11 override",
+    "persistent_state": false,
+    "seed_or_track_condition": false,
+    "tuning_grid": false
+  },
+  "expected_actions_at_target48": {
+    "speed_below40_full_gas_branch": "control and candidate both0.11",
+    "speed40_to_below45_mid_gas_branch": "control0.0666666667, candidate0.0733333333",
+    "speed45_through49_low_gas_branch": "control0.0416666667, candidate0.0458333333",
+    "speed_above49_brake_branch": "complete action exact to control"
+  },
+  "frozen": [
+    "cruise48, all target speed values, target EMA, curve formula/floor, obstacle targets and parent compound target30",
+    "MAX_GAS0.08, launch maximum emitted gas0.11, MAX_BRAKE0.28 and every pedal threshold",
+    "straight classifier, road/obstacle perception, steering, slew, pass-side, urgency, preview and obstacle-priority state",
+    "invalid/lost-road behavior, model.pt, DrQ, explicit export, HAIC policy, official environment, active padding study, user artifacts and root submission.zip"
+  ],
+  "acceptance": {
+    "synthetic": [
+      "Close exact and nextafter speed boundaries40,45 and49 on settled obstacle-free straight frames.",
+      "Full-gas launch remains exactly0.11; only mid and low gas branches rise to the preregistered values; overspeed brake remains complete-action exact.",
+      "Exact residual previous-steer boundary0.07 applies and nextafter above is complete-action exact.",
+      "For every intentional delta, steering, brake, target speed and all controller state remain exact; gas is finite, at most0.11 and mutually exclusive with brake.",
+      "Curves, previews, straight and curved obstacles, raw36 compound hazards at inherited target30, detector miss/reacquire, invalid input, road loss and reset remain complete-action/state exact.",
+      "Randomized differential frames permit differences only under the exact registered predicate and only in gas."
+    ],
+    "regression": [
+      "All prior corridor, inference and local contract tests pass.",
+      "Bare state-dict routing selects only the new final subclass; explicit export, DrQ and HAIC routes remain unchanged.",
+      "A temporary package with exact candidate agent.py and unchanged model.pt passes static interface/import, initialization, reset, action, latency and size smoke without overwriting root submission.zip."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, preregister unused geometry seeds across multiple track IDs and compare against the exact frozen control. Require no completion-rate, DNF, collision or worst-progress regression before considering lap time.",
+      "target_metric": "For valid finishes only, low-20-second range is an internal objective; report the full per-cell distribution and do not represent this factor alone as sufficient to reach it."
+    },
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "rejected_alternatives": [
+    "Clear-straight transient target64 was rejected because it moved braking from speed49 to above65, amplified detector misses and bypassed target smoothing.",
+    "Global cruise speed, curve floor/penalty, MAX_GAS, steering gain/slew and inside-line changes were rejected because they alter curve or obstacle safety and confound the active DNF mechanism."
+  ],
+  "abort": [
+    "Any track ID, seed, coordinate, time, progress or memorized map condition is introduced.",
+    "Any target speed, brake, steering, perception, state, curve, obstacle or non-bare route changes.",
+    "Emitted gas exceeds0.11 or any difference occurs on full-gas launch, overspeed brake, curve, detected obstacle, invalid or roadless frames.",
+    "The value0.11 is retuned after synthetic or consumed-run feedback.",
+    "Any frozen environment/model/DrQ/active-study artifact or user evidence changes, or an interface/package gate fails.",
+    "Any environment execution, training, completion/lap-time claim, submission or SOTA action occurs while governance documents remain absent."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible and the official repository provides no fixed map list, public evaluation seeds or official target time.",
+    "Only static and synthetic diagnostic validation is authorized; the candidate must remain INCOMPARABLE."
+  ]
+}
