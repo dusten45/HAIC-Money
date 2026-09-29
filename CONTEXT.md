@@ -230,21 +230,31 @@ The failures began avoidance one progress tile later and arrived2.8--3.5 farther
 from centerline despite similar speed. Separately, seeds11/17/21 lost the road at
 speed29--30 only after post-obstacle steering unwound almost to zero.
 
-The current bare route is `_PostObstacleCurveRetentionController` at commit
-`61df0b6`. It restores `_FastCornerCarryController` as the recovery baseline and
-adds the same20%/+0.06 bounded gain only on obstacle miss frames1--4 when stored
+`_PostObstacleCurveRetentionController` at commit `61df0b6` restored
+`_FastCornerCarryController` as the recovery baseline and added the same20%/+0.06
+bounded gain only on obstacle miss frames1--4 when stored
 avoidance side, inherited steering and every sampled road row agree on turn
 direction. Current obstacles, latch-free curves, opposite/S geometry and the fifth
 clearing frame receive no new gain; the0.48 cap,0.07 slew and reversal protections
-remain. Seven focused and212 affected tests, isolated package smoke and final
-independent audit passed. Existing seed runs are consumed/unbound and no new
-environment run was authorized, so the candidate remains `INCOMPARABLE`; see
+remain. Seven focused and212 affected tests, isolated package smoke and independent
+audit passed; see
 `experiments/post-obstacle-curve-retention-v1-result.json`.
+
+The current bare route is `_DoubleClearStraightThrottleController` at commit
+`bda34b3`. It changes exactly one factor above that controller: only the inherited
+settled-straight gas branches0.18/0.135/0.09 become0.36/0.27/0.18 when no obstacle
+is detected, no latch exists, brake is zero, sweep<=1.5 and prior steering<=0.07.
+Target68, all curve/strong-steer, detected-obstacle/latch, brake, steering and
+recovery behavior remain unchanged. Five focused and217 affected tests, replay of
+324 consumed same-map frames with101 gas-only differences, and isolated package
+smoke passed. Detector blind spots and changed future dynamics remain unmeasured;
+no environment run was authorized, so the candidate remains `INCOMPARABLE`; see
+`experiments/double-clear-straight-throttle-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `1afafbbb...` and must not be submitted as the new candidate.
+candidate agent SHA `a509f75e...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

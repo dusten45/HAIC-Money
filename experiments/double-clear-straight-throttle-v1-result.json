@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "experiment": "double-clear-straight-throttle-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T04:08:44+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["df11531", "32afd26", "748208c"],
+  "protocol_timeline": "Git commit times prove preregistration df11531 at03:59:10+09:00, perception-limit amendment32afd26 at04:04:44 and implementation bda34b3 at04:06:46. The protocol's original manually entered06:30 recorded_at value was corrected as metadata only after final audit in748208c; the correction did not change the hypothesis, factor, gates or implementation.",
+  "implementation_commit": "bda34b3cc33019a9f4a6e7649cd069fcd5595ab4",
+  "decision": "Keep as the current statically validated bare-model candidate. It doubles requested acceleration only inside the inherited settled clear-straight predicate while preserving the existing closed-loop target68, braking, curves, recognized obstacles, miss latch, steering and recovery. Do not claim doubled physical speed, improved lap time, preserved completion, SOTA or submission readiness until an authorized paired multi-track driving evaluation passes the stability-first gate.",
+  "limitation_analysis": {
+    "active_controller": "The prior _PostObstacleCurveRetentionController inherits straight gas branches0.18/0.135/0.09 and clear-curve gas0.14/0.11/0.07 further reduced by a steering tire-budget factor. Recognized obstacles retain targets47/40 or compound30 through the detector miss latch, and strong steering retains target44.",
+    "consumed_seed42": "The fastest source-unbound same-map trace finished25.90s with zero damage/collisions, mean physical speed38.32 and maximum60.20. Reaching23s on its994-unit centerline would require about12.6 percent higher mean speed, while a literal two-times pace would require about76.8 mean speed, above the observed60.2 maximum.",
+    "sector_localization": "Compared with a29.10s same-map trace, launch was nearly identical. The faster trace spent11.28s at speed at least40 versus5.36s and carried more speed under medium/hard steering. Six post-launch speed-below35 clusters totaled8.88s and may align with six obstacle regions, but that association is an inference because obstacle coordinates and source hashes are absent.",
+    "closed_loop_constraint": "The camera speed estimator clips at80. Doubling target speed above that range would create unobservable open-loop acceleration, so the candidate keeps target68 and every existing brake boundary rather than doubling the target.",
+    "evidence_binding": "Existing run logs bind map metadata but not source, agent, model or package hashes. They motivate the acceleration hypothesis only. The apparent second25.90s run has identical steps and frames and is not an independent confirmation."
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _DoubleClearStraightThrottleController, directly above _PostObstacleCurveRetentionController; explicit export, DrQ and HAIC paths remain unchanged.",
+    "After inherited longitudinal control, scale positive gas by exactly2.0 with cap0.36 only when inherited brake is zero, the current frame is classified straight, sweep is no more than1.5, no obstacle is detected, obstacle side and frame-start latch are clear, and prior emitted steering magnitude is no more than0.07.",
+    "Map registered straight gas0.18/0.135/0.09 to0.36/0.27/0.18. Leave target68, all curve gas/targets, strong-steering cap, detected obstacle and compound targets, latch behavior, brakes, steering, model and recovery exact.",
+    "Add no mutable candidate state and no seed, track, coordinate, progress or time condition."
+  ],
+  "static_validation": {
+    "registered_branches": {
+      "control": [0.18, 0.135, 0.09],
+      "candidate": [0.36, 0.27, 0.18],
+      "brake_boundary": "speed69 remains gas0.18 at equality; immediately above69 remains inherited brake0.04"
+    },
+    "differential_guards": "Targets and shared inherited state are exact. Clear curves in both directions, distant bends in both directions, previous steer immediately outside plus/minus0.07, current straight/compound obstacles, same-direction curve miss frames1--4, latch-clearing frame, reacquisition, invalid observations, road loss and reset remain control-exact.",
+    "consumed_frame_replay": "JPEG-derived same-input replay of the source-unbound25.90s seed42 trace changed gas only on101 of324 frames; steering, brake and all shared state were exact. Its apparent repeat produced the same count but is byte-identical trajectory evidence, not a second sample or dynamic evaluation.",
+    "focused_candidate_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests\\test_corridor_agent.py -k double_straight_throttle",
+      "result": "5 passed,122 deselected"
+    },
+    "route_package_focus": {
+      "result": "2 passed,18 deselected,4 warnings"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "217 passed,4 warnings"
+    },
+    "isolated_package": {
+      "path": ".haic-artifacts/double-clear-straight-throttle-v1/20260929T190703640029Z_double-clear-straight-throttle-v1/submission.zip",
+      "source_commit": "bda34b3cc33019a9f4a6e7649cd069fcd5595ab4",
+      "agent_sha256": "a509f75eda58ab7382f558ea03393bacc83ad910d583fa94a35d39d4fab86105",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "becfb97a056f5f0d3d425d74f9e25407d0cd1f91284e41eef817b78ced1a06a5",
+      "bytes": 6281645,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.1831115999957547,
+      "act_seconds": 0.002470599953085184,
+      "result": "exact-file build/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "The compact detector ignores bright components outside rows22--61 and outside its area/width/height limits. An undetected, merged or very close obstacle is indistinguishable from clear road and may receive gas0.36.",
+    "A bend not yet visible in sampled rows30--54 can be classified straight. Higher gas changes future observations, so static same-input parity cannot prove trajectory-level safety.",
+    "The five-frame longitudinal obstacle miss behavior remains conservative and clear-curve gas is unchanged. These may still dominate the eight-to-nine seconds of low-speed exposure, but relaxing either without paired driving evidence is unsafe.",
+    "No authorized dynamic run measured completion, collisions, off-track behavior, physical speed or lap time. The candidate remains INCOMPARABLE.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so environment evaluation, promotion and submission remain blocked."
+  ]
+}
