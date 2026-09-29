@@ -7,8 +7,10 @@ padding study and its frozen artifacts. The bare `model.pt` path now composes a
 camera-only, video-diagnostic safety/pace layer over the completion-first controller
 recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
 paths are unchanged. Submission-5 video analysis led to bounded early obstacle and
-distant-bend responses plus a reviewed obstacle-priority transition guard at source
-commit `8a3428d`. Required competition documents are missing, so environment
+distant-bend responses plus a reviewed obstacle-priority transition guard. New 4_7
+videos then motivated a launch-only clear-straight throttle diagnostic at commit
+`a920139`; fixed inside-line and top-speed changes were rejected. Required
+competition documents are missing, so environment
 evaluation, submission, performance claims and SOTA promotion remain blocked.
 
 ## Frozen Contract
@@ -172,10 +174,29 @@ was386 passed,10 skipped. Track execution was intentionally not performed, so
 completion, lap-time and unseen-track improvement are not established. See the
 three `guarded-distant-*-v1-result.json` / `anticipatory-*-v1-result.json` records.
 
-The untracked root `submission.zip` (SHA `1232f763...`, embedded agent SHA
-`fbac3fda...`) plausibly corresponds to the submission-5 guarded control but lacks
-an official receipt binding it to the videos. It is now stale relative to candidate
-agent SHA `ed079457...` and must not be submitted as the new candidate.
+The new unbound 4_7 videos visibly finish Track1 in27.18s, Track2 in33.22s and
+Track3 in30.58s. Versus submission5, Track1 improves0.32s, Track2 regresses0.26s,
+and Track3 changes from a19.4% collision-limit DNF to a finish. Matching T3 frames
+show the same approach progress but a safe pass instead of contact, rotation and
+stall. The replay does not expose policy-camera frames, actions or speed; therefore
+it does not establish low top speed or an optimal apex line. A global inside bias
+would also lack clearance calibration and can oppose obstacle avoidance.
+
+The routed bare controller is now `_LaunchThrottleController` at commit `a920139`.
+Only when the inherited policy already classifies a valid, obstacle-free, settled
+straight and requests its full-gas branch (estimated speed strictly below transient
+target minus8) does emitted gas change from0.10 to0.11. Target speed, stored EMA,
+braking boundary, curves, previews, obstacles, steering, model and other runtime
+paths are unchanged. Exact-boundary and transition tests plus the affected local
+suite passed135 tests; an isolated temporary package passed route/action/reset
+smoke. No environment run measured performance, so the result is `INCOMPARABLE`.
+See `experiments/video-4-7-evidence-ledger-v1.json` and
+`experiments/clear-straight-launch-throttle-v1-result.json`.
+
+The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
+SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
+4_7 videos but has no official receipt binding. It is stale relative to candidate
+agent SHA `09148338...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "experiment": "clear-straight-launch-throttle-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_SYNTHETIC_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-29T18:00:54.3124579+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "95c48b60431054d76b39b9077d246b1d8b4c612fd275f643f5f93ce7feb75a91",
+  "protocol_history": {
+    "registration_commit": "9bea2d7",
+    "implementation_commit": "a920139bbe64d722beab16c3330a799beda07d54",
+    "review_clarification": "The preregistered exact predicate is authoritative. Transition and recovery frames are bit-exact only while they remain outside that predicate; a later valid, clear, straight, settled, low-speed frame intentionally receives the registered launch delta. This resolves ambiguous sequence wording without changing a threshold, parameter, call order, or runtime condition."
+  },
+  "lineage": {
+    "control_commit": "70f9b475de9554642c7d77067b5a490df57d3bfb",
+    "candidate_commit": "a920139bbe64d722beab16c3330a799beda07d54",
+    "candidate_agent_git_blob": "68c24684e8735e7bfaecb44dd8bb3f5e7e5a1c2b",
+    "candidate_agent_sha256": "09148338271548044ae47b5f93a18f0b0e3e5c2e512082d57c63e6759869e91e",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._ObstaclePriorityController",
+    "candidate_class": "agent._LaunchThrottleController"
+  },
+  "synthetic_result": {
+    "registered_launch_output": {"control_gas": 0.10, "candidate_gas": 0.11},
+    "target_minus_8_nextafter_below_applies": true,
+    "target_minus_8_exact_is_control_exact": true,
+    "target_minus_8_nextafter_above_is_control_exact": true,
+    "max_steer_step_exact_applies": true,
+    "max_steer_step_nextafter_above_is_control_exact": true,
+    "mid_and_near_target_gas_exact": true,
+    "overspeed_brake_exact": true,
+    "curve_preview_obstacle_and_invalid_exact": true,
+    "preview_to_opposing_obstacle_action_and_state_exact": true,
+    "target_speed_and_controller_state_exact": true,
+    "reset_deterministic": true,
+    "new_persistent_state": false
+  },
+  "validation": {
+    "affected_and_local_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py",
+      "result": "135 passed"
+    },
+    "temporary_package": {
+      "files": ["action_representation.py", "action_smoothing.py", "agent.py", "model.pt"],
+      "bytes": 6271387,
+      "archive_sha256": "b59540a436c5793878acfab7d20ffff285c03ff761968764b04645cda62832e0",
+      "embedded_agent_sha256": "09148338271548044ae47b5f93a18f0b0e3e5c2e512082d57c63e6759869e91e",
+      "embedded_model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "shape": [3],
+      "finite": true,
+      "reset_matches_first": true,
+      "visible_clear_launch_action": [0.0, 0.11, 0.0],
+      "root_submission_zip_overwritten": false
+    },
+    "collection_limitation": "The host's pandas native extension is blocked by Windows application-control policy, so tests/test_submission_policy.py and tests/test_submission_package.py could not collect through their unrelated stable_baselines3 import. Equivalent bare-route and isolated temporary-package smoke checks passed directly; the committed tests retain the expected routing assertions for a compatible host."
+  },
+  "independent_review": {
+    "predicate_or_routing_leak_found": false,
+    "requested_repairs": [
+      "close exact target-minus-8 and nextafter boundaries",
+      "close exact residual-steering boundary",
+      "verify full preview-to-opposing-obstacle transition",
+      "clarify transition/recovery sequence wording against the exact factor predicate"
+    ],
+    "repairs_completed": true
+  },
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "target_speed_changed": false,
+    "brake_boundary_or_value_changed": false,
+    "steering_or_perception_changed": false,
+    "model_changed": false,
+    "official_environment_changed": false,
+    "user_video_or_root_zip_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "The top-down videos do not establish low maximum speed, an optimal apex line, or causal action telemetry.",
+    "The factor can only improve acceleration while estimated speed is below target minus 8 on a clear settled straight; it deliberately does not increase top speed or corner speed.",
+    "No environment execution measured completion, collision, off-track, or lap-time effects, so the implementation remains INCOMPARABLE.",
+    "The untracked root submission.zip contains the pre-change control and is stale relative to this candidate."
+  ]
+}
