@@ -1,0 +1,41 @@
+{
+  "format": "haic-rlpd-recovery-foundation-check-v1",
+  "status": "passed_no_environment_interaction",
+  "environment_resets": 0,
+  "learner_updates": 0,
+  "runtime": {
+    "python": "3.11.14",
+    "torch": "2.1.0+cu121",
+    "numpy": "1.26.0",
+    "gpu": "NVIDIA GeForce RTX 4060 Ti"
+  },
+  "core_tests": {
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_rlpd_prefix_parity.py tests/test_rlpd_recorded_prefix.py",
+    "passed": 62,
+    "subtests_passed": 98
+  },
+  "collector_evaluation_audit_tests": {
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py",
+    "passed": 32
+  },
+  "integrated_synthetic_tests": {
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py",
+    "passed": 80,
+    "subtests_passed": 21
+  },
+  "actual_v5_checkpoint_actor_check": {
+    "checkpoint": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/checkpoint.pt",
+    "export": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt",
+    "source_environment_steps": 131072,
+    "source_gradient_steps": 130072,
+    "method": "Load checkpoint config and actor state into CPU PixelRLPDAgent; compare deterministic native-to-official actions against root Agent loading the immutable export.",
+    "fixtures": "zero CHW4x84x84 float32 stack and default_rng(60) uint8 CHW4x84x84 random stack divided by 255",
+    "fixture_count": 2,
+    "maximum_official_action_error": 0.0,
+    "tolerance": 0.000001
+  },
+  "limitations": [
+    "Synthetic tests and checkpoint/export parity are engineering feasibility, not driving or recovery evidence.",
+    "This does not reproduce historical GPU trajectories, RNG or an exact continuation of the old learner."
+  ]
+}
