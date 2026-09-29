@@ -29,10 +29,16 @@ controls. The data window includes the executed intervention and first 63 actor
 decisions after handoff, not unexecuted Oracle proposals. Strict preparation
 produced 665 accepted rows (653 unique), including 339 unique failure-support
 rows across three geometries. Matched 8,192-decision raw-SAC fine-tuning of two
-V5-seed50 learner-state copies is running under the
+V5-seed50 learner-state copies completed under the
 [frozen learning protocol](../../experiments/rlpd-recovery-learning-v1.json):
 32online/32prior control versus 32online/16prior/16recovery. Contemporary
-pixel-only finish/curve-entry evaluation remains pending; there is no learned
+pixel-only finish/curve-entry evaluation is running in a corrected r2 after a
+summary-field error stopped the retained first attempt. All three current
+critics still prefer their own actor on the 87 Oracle failure-support images;
+this is a ranking diagnostic, not evidence that the teacher is optimal or that
+driving performance failed. See the
+[action comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json).
+There is no learned
 improvement or candidate promotion yet. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
 
