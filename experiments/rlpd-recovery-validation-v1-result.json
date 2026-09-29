@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "closed_loop_data_validated_learning_complete_evaluation_in_progress",
+  "status": "data_validated_q_only_intervention_rejected_guided_iteration_pending",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -81,7 +81,7 @@
     "objective": "Unchanged raw-reward SAC; no behavior cloning",
     "control_output": "runs/rlpd-recovery-control-v1",
     "treatment_output": "runs/rlpd-recovery-treatment-v1",
-    "status": "both_exports_complete_not_yet_evaluated",
+    "status": "both_exports_complete_evaluated_q_only_rejected",
     "control_actor_sha256": "b9578515343642061cabba4411a1dce5fac310813a2008a6dd24a93424e343d5",
     "control_checkpoint_sha256": "c360cc3a2c14e2dc85f9328dc01740dcec051a5a1aac185e6465bb55573296ca",
     "treatment_actor_sha256": "5a0186c61a61ae75cf30ae5ebe4efdcca098025a57e84aea0ac74163d11873f3",
@@ -91,19 +91,37 @@
   "post_handoff_temporal_diagnosis": "experiments/rlpd-recovery-handoff-v2-result.json",
   "contemporary_evaluation": {
     "output": "runs/rlpd-recovery-evaluation-r2",
-    "status": "running_after_zero_reset_three_export_preflight",
+    "status": "complete_36_uncensored_episodes",
     "actors": ["v5", "control", "recovery"],
     "cells_per_actor": 12,
     "prospective_curve_failure_endpoint": "Genuine crash/off-track/out-of-bounds within 63 decisions of overspeed, with sustained lane loss or added damage; temporal association, not causal proof.",
     "retained_failed_attempt": "runs/rlpd-recovery-evaluation-v1",
     "failed_attempt_reason": "Endpoint helper used retire_reason instead of the shared collector summary reason field; stopped after one completed receipt and the next saved trace, then corrected and tested in a new output directory.",
-    "reattempts_are_fresh": false
+    "reattempts_are_fresh": false,
+    "verified_result": "experiments/rlpd-recovery-evaluation-v1-result.json",
+    "finish_counts": {"v5": 5, "control": 4, "recovery": 1},
+    "denominator_per_actor": 12,
+    "censored_per_actor": 0,
+    "curve_entry_associated_terminal_failures": {"v5": 1, "control": 0, "recovery": 1},
+    "v5_to_recovery": {"kept": 0, "lost": 5, "gained": 1, "neither": 6},
+    "control_to_recovery": {"kept": 0, "lost": 4, "gained": 1, "neither": 7},
+    "decision": "Reject data-only Q-learning intervention: no completion or prospective curve-terminal improvement. Sparse curve-terminal proxy does not explain all 11 recovery failures."
+  },
+  "next_intervention": {
+    "status": "implementing_not_run",
+    "objective": "Unchanged raw SAC plus joint native deterministic-mean guidance only on 87 locally qualified, paired-finish-proven failure Oracle rows, and frozen-original-mean retention on ordinary prior plus recovery handoff/preserved-control rows.",
+    "guidance_weight": 1.0,
+    "retention_weight": 0.1,
+    "extra_actor_optimizer_steps_reported_separately": true,
+    "old_run_sources_unchanged": true,
+    "mechanisms_are_hypotheses": "One-step Q policy bootstrapping/sequence credit, representation drift and changed state visitation are alternatives; Q rankings are not causal proof or expert-optimality guarantees."
   },
   "interpretation": [
     "Full-vector feedback can actually rescue specific visited failures, but unconditional recovery also harms finished-parent controls.",
     "Five-second safety alone is not proof of rescue because unchanged baselines can pass it and fail later.",
     "The retained positive windows are privileged training-data upper bounds, not a deployable branch selector.",
     "Branch menu repeats and two actors on some geometries are correlated; denominators are actor-road anchors, not independent roads.",
+    "The first data-only learner worsened finish rate and lost all five original finishes; a proven recovery dataset is not proof that replay alone learns a safe visual recovery policy.",
     "No learned improvement, fresh-road performance, official submission or model promotion exists yet."
   ]
 }
