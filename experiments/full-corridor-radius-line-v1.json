@@ -16,6 +16,7 @@
     "name": "persistent full-safe-envelope lateral anchors",
     "changes": [
       "At row54, recover the complete contiguous asphalt run associated with the tracked road center, without the prior center+/-17 clipping, and use its actual midpoint and half-width as the lateral coordinate. The association window remains perception-only and is not treated as a wall.",
+      "Apply the same complete-run association at rows30,34 and42 only to correct the bend-phase geometry; otherwise a wide road can fill each center+/-17 window and falsely appear straight. If any tracked row is split so that its tracked center belongs to no unique asphalt run, do not substitute a corrected center for that row.",
       "For the detected turn direction, set entry and exit targets to the outside safe limit and the apex target to the opposite inside safe limit. The safe limit is max(0,(right-left)/2-7.0), so the target never requests less than7.0 pixels of geometric center-to-edge clearance.",
       "Increase only the racing-line correction cap from0.035 to the inherited per-frame steering step0.07; keep gain0.016 and all final inherited steering limits/slew rules.",
       "After a confirmed end of the bend, retain the exit outside target on the clear straight until a newly visible bend selects its own entry/apex direction. A renewed or opposite coherent apex always overrides exit hold. Missing/ambiguous geometry, invalid road, current obstacle or obstacle miss latch still clears the line immediately.",
@@ -40,6 +41,7 @@
       "For mirrored left/right profiles, entry requests the outside edge, apex requests the inside edge and confirmed exit plus subsequent clear-straight frames request the original outside edge.",
       "For span(31,52), the signed lateral targets are exactly+3.5,-3.5,+3.5 pixels and are farther apart than v2's+1.89,-1.05,+1.89 targets.",
       "A wide or laterally shifted contiguous road span returns its real edges rather than center+/-17 pseudo-edges; disconnected asphalt not containing the tracked road center is rejected.",
+      "A wide synthetic bend whose clipped centers appear straight is still classified from the complete runs at rows30,34,42 and54 and receives the registered safe-envelope target.",
       "At exact7-pixel clearance the correction is zero toward that edge; nextafter beyond the boundary suppresses the line rather than steering farther outward.",
       "Apex clear confirmation is consecutive, continuing hairpins do not unwind, and a newly visible opposite bend replaces the retained exit with the correct outside entry target.",
       "Apex geometry switches entry to inward tracking even when the outside position was not reached, preventing setup from delaying a sharp turn.",
