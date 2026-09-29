@@ -2027,6 +2027,94 @@ class _TranslationInvariantExitController(_FastCornerCarryController):
         return self.STRAIGHT_GAS_HOLD, 0.0
 
 
+class _CoherentCurveAttackController(_TranslationInvariantExitController):
+    """Strengthen only a visually coherent, obstacle-free curve request."""
+
+    ATTACK_GAIN = 1.20
+    ATTACK_MAX_INCREMENT = 0.06
+    ATTACK_DELTA_MIN = 1.5
+    ATTACK_ROWS = (30, 34, 38, 42, 46, 50, 54)
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._curve_attack_active = False
+        self._curve_attack_direction = 0.0
+        self._curve_attack_control_request = 0.0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._curve_attack_active = False
+        self._curve_attack_direction = 0.0
+        self._curve_attack_control_request = 0.0
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._curve_attack_active = False
+        self._curve_attack_direction = 0.0
+        self._curve_attack_control_request = 0.0
+        return super()._lost_road_action()
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        self._curve_attack_active = False
+        self._curve_attack_direction = 0.0
+        self._curve_attack_control_request = float(inherited)
+
+        if (
+            straight
+            or obstacle is not None
+            or self._clear_exit
+            or any(row not in centers for row in self.ATTACK_ROWS)
+        ):
+            return inherited
+
+        near = float(centers[54])
+        delta30 = float(centers[30]) - near
+        delta34 = float(centers[34]) - near
+        if (
+            abs(delta30) <= self.ATTACK_DELTA_MIN
+            or abs(delta34) <= self.ATTACK_DELTA_MIN
+            or delta30 * delta34 <= 0.0
+        ):
+            return inherited
+
+        direction = 1.0 if delta30 > 0.0 else -1.0
+        if (
+            inherited * direction <= 0.0
+            or any(
+                (float(centers[row]) - near) * direction < 0.0
+                for row in self.ATTACK_ROWS[:-1]
+            )
+        ):
+            return inherited
+
+        magnitude = min(
+            self.MAX_STEER,
+            self.ATTACK_GAIN * abs(inherited),
+            abs(inherited) + self.ATTACK_MAX_INCREMENT,
+        )
+        if abs(inherited) <= self.MAX_STEER_STEP <= magnitude:
+            return inherited
+        candidate = direction * magnitude
+        self._curve_attack_active = True
+        self._curve_attack_direction = direction
+        self._carry_steer_request = candidate
+        if self._preview_requested != 0.0 and self._preview_requested == inherited:
+            self._preview_requested = candidate
+        return candidate
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2528,7 +2616,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _TranslationInvariantExitController()
+            _CoherentCurveAttackController()
             if use_forward_controller
             else None
         )

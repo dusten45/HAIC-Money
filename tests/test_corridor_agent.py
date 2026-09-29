@@ -2144,6 +2144,554 @@ class TestVisionCorridorAgent(unittest.TestCase):
             self.assertEqual(candidate._pace_command_target, 68.0)
         self.assertGreater(changed, 0)
 
+    def test_coherent_curve_attack_closes_registered_gain_boundaries(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        coherent = {
+            30: 53.5,
+            34: 51.5,
+            38: 49.5,
+            42: 47.5,
+            46: 45.5,
+            50: 43.5,
+            54: 41.5,
+        }
+
+        def adjusted(request, centers=coherent):
+            controller = _CoherentCurveAttackController()
+            with patch.object(
+                _TranslationInvariantExitController,
+                "_adjust_road_steering",
+                return_value=request,
+            ):
+                result = controller._adjust_road_steering(
+                    steering=request,
+                    straight=False,
+                    centers=centers,
+                    obstacle=None,
+                )
+            return controller, result
+
+        for request, expected in (
+            (0.05, 0.06),
+            (0.084, 0.1008),
+            (0.30, 0.36),
+            (0.40, 0.46),
+            (0.45, 0.48),
+        ):
+            controller, result = adjusted(request)
+            with self.subTest(request=request):
+                self.assertTrue(controller._curve_attack_active)
+                self.assertAlmostEqual(result, expected, places=12)
+                self.assertEqual(controller._carry_steer_request, result)
+                self.assertLessEqual(abs(result) - abs(request), 0.06 + 1e-12)
+
+        at_boundary = dict(coherent)
+        at_boundary[30] = 43.0
+        at_boundary[34] = 43.0
+        controller, result = adjusted(0.05, at_boundary)
+        self.assertFalse(controller._curve_attack_active)
+        self.assertEqual(result, 0.05)
+
+        above_boundary = dict(coherent)
+        above_boundary[30] = np.nextafter(43.0, np.inf)
+        above_boundary[34] = np.nextafter(43.0, np.inf)
+        controller, result = adjusted(0.05, above_boundary)
+        self.assertTrue(controller._curve_attack_active)
+        self.assertEqual(result, 0.06)
+
+        mirrored = {row: 83.0 - center for row, center in coherent.items()}
+        controller, result = adjusted(-0.084, mirrored)
+        self.assertTrue(controller._curve_attack_active)
+        self.assertAlmostEqual(result, -0.1008, places=12)
+
+        lower = 0.07 / 1.20
+        for request, active in (
+            (np.nextafter(lower, -np.inf), True),
+            (lower, False),
+            (np.nextafter(lower, np.inf), False),
+            (np.nextafter(0.07, -np.inf), False),
+            (0.07, False),
+            (np.nextafter(0.07, np.inf), True),
+        ):
+            for direction, centers in ((1.0, coherent), (-1.0, mirrored)):
+                signed_request = direction * request
+                controller, result = adjusted(signed_request, centers)
+                with self.subTest(
+                    reversal_request=signed_request,
+                    active=active,
+                ):
+                    self.assertEqual(controller._curve_attack_active, active)
+                    expected = (
+                        direction
+                        * min(0.48, 1.20 * request, request + 0.06)
+                        if active
+                        else signed_request
+                    )
+                    self.assertAlmostEqual(result, expected, places=15)
+
+        for request in (
+            np.nextafter(0.30, -np.inf),
+            0.30,
+            np.nextafter(0.30, np.inf),
+            np.nextafter(0.42, -np.inf),
+            0.42,
+            np.nextafter(0.42, np.inf),
+        ):
+            controller, result = adjusted(request)
+            expected = min(0.48, 1.20 * request, request + 0.06)
+            with self.subTest(intersection_request=request):
+                self.assertTrue(controller._curve_attack_active)
+                self.assertAlmostEqual(result, expected, places=12)
+
+    def test_coherent_curve_attack_strengthens_repeated_curve_with_same_slew(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        for direction in (-1.0, 1.0):
+            observation = _observation(curve=direction * 0.25, speed=45.0)
+            control = _TranslationInvariantExitController()
+            candidate = _CoherentCurveAttackController()
+            control_actions = []
+            candidate_actions = []
+            for _ in range(4):
+                control_actions.append(control.act(observation))
+                candidate_actions.append(candidate.act(observation))
+
+            control_actions = np.asarray(control_actions)
+            candidate_actions = np.asarray(candidate_actions)
+            with self.subTest(direction=direction):
+                self.assertTrue(candidate._curve_attack_active)
+                self.assertAlmostEqual(
+                    candidate._curve_attack_control_request,
+                    direction * 0.084,
+                    places=12,
+                )
+                self.assertAlmostEqual(
+                    candidate._carry_steer_request,
+                    direction * 0.1008,
+                    places=12,
+                )
+                self.assertEqual(
+                    float(candidate_actions[0, 0]),
+                    float(control_actions[0, 0]),
+                )
+                self.assertGreater(
+                    abs(float(candidate_actions[-1, 0])),
+                    abs(float(control_actions[-1, 0])),
+                )
+                self.assertTrue(
+                    np.all(np.abs(np.diff(candidate_actions[:, 0])) <= 0.07000001)
+                )
+                self.assertTrue(
+                    np.all(
+                        np.sign(candidate_actions[:, 0])
+                        == np.sign(control_actions[:, 0])
+                    )
+                )
+
+    def test_coherent_curve_attack_preserves_geometry_exclusions(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        cases = (
+            _parallel_offset_observation(offset=6.0, speed=45.0),
+            _observation(curve=0.0, speed=45.0),
+            np.full((4, 84, 84), 0.1, dtype=np.float32),
+        )
+        for index, observation in enumerate(cases):
+            control = _TranslationInvariantExitController()
+            candidate = _CoherentCurveAttackController()
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+            with self.subTest(index=index):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertFalse(candidate._curve_attack_active)
+
+        controller = _CoherentCurveAttackController()
+        opposing = {
+            30: 53.5,
+            34: 51.5,
+            38: 49.5,
+            42: 35.5,
+            46: 39.5,
+            50: 40.5,
+            54: 41.5,
+        }
+        with patch.object(
+            _TranslationInvariantExitController,
+            "_adjust_road_steering",
+            return_value=-0.10,
+        ):
+            result = controller._adjust_road_steering(
+                steering=-0.10,
+                straight=False,
+                centers=opposing,
+                obstacle=None,
+            )
+        self.assertEqual(result, -0.10)
+        self.assertFalse(controller._curve_attack_active)
+
+        coherent = {
+            30: 53.5,
+            34: 51.5,
+            38: 49.5,
+            42: 47.5,
+            46: 45.5,
+            50: 43.5,
+            54: 41.5,
+        }
+        for missing_row in controller.ATTACK_ROWS:
+            missing = dict(coherent)
+            del missing[missing_row]
+            with patch.object(
+                _TranslationInvariantExitController,
+                "_adjust_road_steering",
+                return_value=0.10,
+            ):
+                result = controller._adjust_road_steering(
+                    steering=0.10,
+                    straight=False,
+                    centers=missing,
+                    obstacle=None,
+                )
+            with self.subTest(missing_row=missing_row):
+                self.assertEqual(result, 0.10)
+                self.assertFalse(controller._curve_attack_active)
+
+        near_kink = dict(coherent)
+        near_kink[46] = 38.5
+        near_kink[50] = 38.5
+        with patch.object(
+            _TranslationInvariantExitController,
+            "_adjust_road_steering",
+            return_value=0.084,
+        ):
+            result = controller._adjust_road_steering(
+                steering=0.084,
+                straight=False,
+                centers=near_kink,
+                obstacle=None,
+            )
+        self.assertEqual(result, 0.084)
+        self.assertFalse(controller._curve_attack_active)
+
+    def test_coherent_curve_attack_preserves_preview_obstacle_priority(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        for direction, obstacle_x in ((1.0, 46), (-1.0, 35)):
+            control = _TranslationInvariantExitController()
+            candidate = _CoherentCurveAttackController()
+            preview = _distant_bend_observation(direction=direction, speed=0.0)
+            control_preview = control.act(preview)
+            candidate_preview = candidate.act(preview)
+            with self.subTest(direction=direction, phase="preview"):
+                self.assertAlmostEqual(
+                    float(control_preview[0]), direction * 0.05, places=6
+                )
+                self.assertAlmostEqual(
+                    float(candidate_preview[0]), direction * 0.06, places=6
+                )
+                self.assertTrue(candidate._previous_action_was_preview)
+                self.assertEqual(
+                    candidate._preview_requested, direction * 0.06
+                )
+
+            obstacle = _compact_obstacle_observation(
+                obstacle_x=obstacle_x,
+                obstacle_top=22,
+                speed=0.0,
+            )
+            control_obstacle = control.act(obstacle)
+            candidate_obstacle = candidate.act(obstacle)
+            with self.subTest(direction=direction, phase="obstacle"):
+                np.testing.assert_array_equal(
+                    candidate_obstacle, control_obstacle
+                )
+                self.assertAlmostEqual(
+                    float(candidate_obstacle[0]),
+                    -direction * 0.07,
+                    places=6,
+                )
+                self.assertFalse(candidate._curve_attack_active)
+
+    def test_coherent_curve_attack_preserves_obstacle_logic_and_bounds_transition(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        obstacle = _observation(
+            curve=0.25,
+            obstacle_x=42,
+            obstacle_y=50,
+            speed=45.0,
+        )
+        matched_control = _TranslationInvariantExitController()
+        matched_candidate = _CoherentCurveAttackController()
+        np.testing.assert_array_equal(
+            matched_candidate.act(obstacle), matched_control.act(obstacle)
+        )
+        self.assertFalse(matched_candidate._curve_attack_active)
+        for name in (
+            "_obstacle_side",
+            "_obstacle_missing",
+            "_last_obstacle_side_offset",
+            "_last_steer",
+            "_target_speed",
+        ):
+            self.assertEqual(
+                getattr(matched_candidate, name), getattr(matched_control, name)
+            )
+
+        curve = _observation(curve=0.25, speed=45.0)
+        control = _TranslationInvariantExitController()
+        candidate = _CoherentCurveAttackController()
+        for _ in range(4):
+            control.act(curve)
+            candidate.act(curve)
+        previous_candidate = candidate._last_steer
+        control_obstacle = control.act(obstacle)
+        candidate_obstacle = candidate.act(obstacle)
+        self.assertFalse(candidate._curve_attack_active)
+        self.assertEqual(
+            np.sign(float(candidate_obstacle[0])),
+            np.sign(float(control_obstacle[0])),
+        )
+        self.assertLessEqual(
+            abs(float(candidate_obstacle[0]) - float(control_obstacle[0])),
+            0.06000001,
+        )
+        self.assertLessEqual(
+            abs(float(candidate_obstacle[0]) - previous_candidate),
+            0.07000001,
+        )
+
+        control_latch = control.act(curve)
+        candidate_latch = candidate.act(curve)
+        self.assertTrue(candidate._curve_attack_active)
+        np.testing.assert_array_equal(
+            candidate_latch[1:], control_latch[1:]
+        )
+
+        control_reacquired = control.act(obstacle)
+        candidate_reacquired = candidate.act(obstacle)
+        self.assertFalse(candidate._curve_attack_active)
+        self.assertEqual(
+            np.sign(float(candidate_reacquired[0])),
+            np.sign(float(control_reacquired[0])),
+        )
+        self.assertLessEqual(
+            abs(float(candidate_reacquired[0]) - float(control_reacquired[0])),
+            0.06000001,
+        )
+
+    def test_coherent_curve_attack_preserves_reversal_class_before_opposing_obstacle(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        frame = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        coherent = {
+            30: 50.0,
+            34: 48.0,
+            38: 46.0,
+            42: 41.5 + (0.07 / 1.20) / 0.028,
+            46: 42.8,
+            50: 42.0,
+            54: 41.5,
+        }
+        opposing = {
+            30: 33.0,
+            34: 35.0,
+            38: 37.0,
+            42: 39.0,
+            46: 40.0,
+            50: 41.0,
+            54: 41.5,
+        }
+
+        for mirror in (False, True):
+            def mirrored(centers):
+                if not mirror:
+                    return centers
+                return {row: 83.0 - value for row, value in centers.items()}
+
+            control = _TranslationInvariantExitController()
+            candidate = _CoherentCurveAttackController()
+            for controller in (control, candidate):
+                with patch.object(
+                    controller,
+                    "_road_centers",
+                    return_value=mirrored(coherent),
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=None
+                ), patch.object(controller, "_estimate_speed", return_value=45.0):
+                    controller.act(frame)
+                    action = controller.act(frame)
+                with self.subTest(mirror=mirror, phase="curve"):
+                    self.assertAlmostEqual(
+                        abs(float(action[0])), 0.07 / 1.20, places=6
+                    )
+
+            self.assertFalse(candidate._curve_attack_active)
+            self.assertAlmostEqual(
+                candidate._carry_steer_request,
+                control._carry_steer_request,
+                places=15,
+            )
+
+            obstacle = (50.0, 41.0 if mirror else 42.0, 41.5)
+            obstacle_actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller,
+                    "_road_centers",
+                    return_value=mirrored(opposing),
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(controller, "_estimate_speed", return_value=45.0):
+                    obstacle_actions.append(controller.act(frame))
+            with self.subTest(mirror=mirror, phase="opposing_obstacle"):
+                np.testing.assert_array_equal(
+                    obstacle_actions[1], obstacle_actions[0]
+                )
+                self.assertEqual(
+                    np.sign(float(obstacle_actions[1][0])),
+                    1.0 if mirror else -1.0,
+                )
+                self.assertFalse(candidate._curve_attack_active)
+
+    def test_coherent_curve_attack_keeps_strong_steer_safety_boundary(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        observation = _observation(curve=0.25, speed=0.0)
+        for request, capped in (
+            (np.nextafter(0.28 / 1.20, -np.inf), False),
+            (0.28 / 1.20, False),
+            (np.nextafter(0.28 / 1.20, np.inf), True),
+        ):
+            controller = _CoherentCurveAttackController()
+
+            def inherited_request(**kwargs):
+                controller._pace_straight = bool(kwargs["straight"])
+                controller._carry_sweep = 6.0
+                controller._carry_latched_at_frame_start = False
+                controller._clear_exit = False
+                controller._carry_steer_request = float(request)
+                return float(request)
+
+            with patch.object(
+                _TranslationInvariantExitController,
+                "_adjust_road_steering",
+                side_effect=inherited_request,
+            ), patch.object(controller, "_estimate_speed", return_value=50.0):
+                action = controller.act(observation)
+            with self.subTest(request=request):
+                self.assertTrue(controller._curve_attack_active)
+                self.assertEqual(
+                    controller._pace_effective_target == 44.0,
+                    capped,
+                )
+                if capped:
+                    self.assertEqual(float(action[1]), 0.0)
+                    self.assertGreater(float(action[2]), 0.0)
+                else:
+                    self.assertGreater(float(action[1]), 0.0)
+                    self.assertEqual(float(action[2]), 0.0)
+
+    def test_coherent_curve_attack_preserves_recovery_and_reset(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        candidate = _CoherentCurveAttackController()
+        control = _TranslationInvariantExitController()
+        curve = _observation(curve=0.25, speed=45.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        candidate.act(curve)
+        control.act(curve)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertFalse(candidate._curve_attack_active)
+
+        candidate.reset(None)
+        fresh = _CoherentCurveAttackController()
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+        np.testing.assert_array_equal(candidate.act(curve), fresh.act(curve))
+
+    def test_coherent_curve_attack_randomized_gate_and_obstacle_priority(self):
+        from agent import (
+            _CoherentCurveAttackController,
+            _TranslationInvariantExitController,
+        )
+
+        rng = np.random.default_rng(20260930)
+        changed = 0
+        obstacle_exact = 0
+        for _ in range(256):
+            speed = float(rng.uniform(0.0, 80.0))
+            curve = float(
+                rng.choice((0.0, -0.10, 0.10, -0.25, 0.25, -0.50, 0.50, -0.75, 0.75))
+            )
+            obstacle = bool(rng.integers(0, 2))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=42 if obstacle else None,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            control = _TranslationInvariantExitController()
+            candidate = _CoherentCurveAttackController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(
+                float(candidate_action[1]) * float(candidate_action[2]), 0.0
+            )
+            self.assertLessEqual(abs(float(candidate_action[0])), 0.48)
+            self.assertLessEqual(abs(float(candidate_action[0])), 0.07000001)
+            if obstacle:
+                obstacle_exact += 1
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertFalse(candidate._curve_attack_active)
+                continue
+            if np.array_equal(candidate_action, control_action):
+                continue
+            changed += 1
+            self.assertTrue(candidate._curve_attack_active)
+            self.assertNotEqual(curve, 0.0)
+            self.assertEqual(
+                np.sign(candidate._carry_steer_request),
+                np.sign(candidate._curve_attack_control_request),
+            )
+            self.assertLessEqual(
+                abs(candidate._carry_steer_request)
+                - abs(candidate._curve_attack_control_request),
+                0.06000001,
+            )
+        self.assertGreater(changed, 0)
+        self.assertGreater(obstacle_exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,
