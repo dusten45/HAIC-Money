@@ -4,7 +4,7 @@
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T06:30:00+09:00",
   "branch": "feature/DG-Codex",
-  "hypothesis": "The current bare controller is acceleration-limited on fully settled obstacle-free straights because its positive gas branches are only 0.18, 0.135 and 0.09. Doubling only those already-eligible propulsion commands should reduce time spent accelerating while the unchanged target-speed and braking controller continues to bound speed before bends.",
+  "hypothesis": "The current bare controller is acceleration-limited on fully settled straights with no detector-recognized obstacle or active latch because its positive gas branches are only 0.18, 0.135 and 0.09. Doubling only those already-eligible propulsion commands should reduce time spent accelerating while the unchanged target-speed and braking controller continues to bound speed before detected bends.",
   "scope": {
     "control_commit": "d596ec0b515055a86916383f5636e0e40315cf01",
     "control_class": "agent._PostObstacleCurveRetentionController",
@@ -66,6 +66,8 @@
   "evidence_limits": [
     "The consumed seed42 FastCorner finisher averaged physical speed38.32 and reached60.20, but its run file is not bound to source/model/package hashes and is hypothesis evidence only.",
     "Doubling a propulsion command does not prove doubled physical velocity or halved lap time because target-speed feedback, drag, corners, braking and traction remain in the loop.",
+    "The compact detector ignores bright components outside rows22--61 and outside its area/width/height bounds, so no detected obstacle is not a ground-truth obstacle-free claim; an undetected or merged close obstacle can still receive doubled gas.",
+    "A physical bend not yet expressed in sampled camera rows30--54 can be classified straight. Same-input tests cannot prove trajectory-level safety after the higher gas changes future observations.",
     "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
   ]
 }
