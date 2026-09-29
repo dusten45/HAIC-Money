@@ -15,10 +15,10 @@
   "single_factor": {
     "name": "persistent full-safe-envelope lateral anchors",
     "changes": [
-      "At row54, use the midpoint and half-width of the contiguous visible asphalt span as the lateral coordinate rather than assuming the inherited road center is the span midpoint.",
+      "At row54, recover the complete contiguous asphalt run associated with the tracked road center, without the prior center+/-17 clipping, and use its actual midpoint and half-width as the lateral coordinate. The association window remains perception-only and is not treated as a wall.",
       "For the detected turn direction, set entry and exit targets to the outside safe limit and the apex target to the opposite inside safe limit. The safe limit is max(0,(right-left)/2-7.0), so the target never requests less than7.0 pixels of geometric center-to-edge clearance.",
       "Increase only the racing-line correction cap from0.035 to the inherited per-frame steering step0.07; keep gain0.016 and all final inherited steering limits/slew rules.",
-      "After a confirmed end of the bend, retain the exit outside target on the clear straight until a newly visible bend selects its own entry/apex direction. Missing/ambiguous geometry, invalid road, current obstacle or obstacle miss latch still clears the line immediately.",
+      "After a confirmed end of the bend, retain the exit outside target on the clear straight until a newly visible bend selects its own entry/apex direction. A renewed or opposite coherent apex always overrides exit hold. Missing/ambiguous geometry, invalid road, current obstacle or obstacle miss latch still clears the line immediately.",
       "Apex-to-clear requires two consecutive clear reads before changing to exit; a continuing apex cancels that confirmation. Entry-to-clear remains a false-preview rejection and returns idle after two consecutive clear reads."
     ],
     "unchanged": [
@@ -30,6 +30,7 @@
   },
   "safety_priority": [
     "Track visibility and the7-pixel safe envelope are hard gates; any breach suppresses the racing-line target.",
+    "A near/apex geometry observation always takes priority over reaching the entry outside target, so an incomplete setup cannot delay turn-in on a sharp bend.",
     "Current obstacle and miss-latch actions must remain bit-exact to the reset-synchronized completion controller in every phase, and line state must clear.",
     "The full-envelope target is a secondary objective only; inherited clipping, slew, lost-road recovery and longitudinal behavior remain authoritative.",
     "No target is keyed to track id, seed, elapsed time, progress, memorized coordinate or evaluation result."
@@ -38,8 +39,10 @@
     "static": [
       "For mirrored left/right profiles, entry requests the outside edge, apex requests the inside edge and confirmed exit plus subsequent clear-straight frames request the original outside edge.",
       "For span(31,52), the signed lateral targets are exactly+3.5,-3.5,+3.5 pixels and are farther apart than v2's+1.89,-1.05,+1.89 targets.",
+      "A wide or laterally shifted contiguous road span returns its real edges rather than center+/-17 pseudo-edges; disconnected asphalt not containing the tracked road center is rejected.",
       "At exact7-pixel clearance the correction is zero toward that edge; nextafter beyond the boundary suppresses the line rather than steering farther outward.",
       "Apex clear confirmation is consecutive, continuing hairpins do not unwind, and a newly visible opposite bend replaces the retained exit with the correct outside entry target.",
+      "Apex geometry switches entry to inward tracking even when the outside position was not reached, preventing setup from delaying a sharp turn.",
       "All current-obstacle and miss-latch actions, pedals and steering state remain exact to the natural completion-control shadow from entry, apex, exit and clear-straight states.",
       "Random mirrored actions remain finite, bounded, slew-limited on non-hazard frames and gas/brake exact to control.",
       "All affected/local-contract/submission-contract tests and an isolated exact-file package smoke pass."
