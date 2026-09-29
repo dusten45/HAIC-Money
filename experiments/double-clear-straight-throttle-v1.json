@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "experiment": "double-clear-straight-throttle-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T06:30:00+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "The current bare controller is acceleration-limited on fully settled obstacle-free straights because its positive gas branches are only 0.18, 0.135 and 0.09. Doubling only those already-eligible propulsion commands should reduce time spent accelerating while the unchanged target-speed and braking controller continues to bound speed before bends.",
+  "scope": {
+    "control_commit": "d596ec0b515055a86916383f5636e0e40315cf01",
+    "control_class": "agent._PostObstacleCurveRetentionController",
+    "control_agent_git_blob": "ab83ae808fad6c2e8343f2d574e2e01e4c040b43",
+    "control_agent_sha256": "1afafbbb0cec2130b6f696742ff101a311ec0879c4f81bda98da90783640da6a",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._DoubleClearStraightThrottleController",
+    "single_factor": "Multiply the inherited positive gas command by exactly 2.0 only inside the existing fully settled clear-straight propulsion gate, capped at 0.36.",
+    "frozen": [
+      "straight target 68 and every curve, strong-steering, obstacle and latch target",
+      "all braking thresholds and magnitudes",
+      "all perception, steering, retention, obstacle-side and recovery logic",
+      "model.pt and every non-bare inference route",
+      "official environment, reward, termination, frame skip and action contract"
+    ]
+  },
+  "eligibility_gate": {
+    "requirements": [
+      "the inherited action requests positive gas and zero brake",
+      "the current frame is classified straight and _pace_straight is true",
+      "_pace_sweep is no greater than CURVE_SWEEP_THRESHOLD",
+      "no current obstacle is detected",
+      "_obstacle_side is zero",
+      "the frame did not begin with an obstacle miss latch",
+      "absolute previous emitted steering is no greater than MAX_STEER_STEP"
+    ],
+    "formula": "candidate_gas = min(0.36, 2.0 * inherited_gas)",
+    "registered_branch_mapping": {
+      "0.18": 0.36,
+      "0.135": 0.27,
+      "0.09": 0.18
+    }
+  },
+  "rejected_alternatives": [
+    "Do not double target speed: the camera speed estimator clips at 80, so a target above 80 would remove observable closed-loop overspeed regulation.",
+    "Do not scale obstacle or miss-latch gas: seeds11/17/21/42 exposed compound-corner and obstacle-transition failures that require exact preservation.",
+    "Do not scale clear-curve gas in this experiment: it would spend additional longitudinal tire demand while steering and confound the isolated straight-acceleration hypothesis."
+  ],
+  "static_acceptance": [
+    "The three eligible straight branches emit 0.36, 0.27 and 0.18 with finite float32 actions inside official bounds and no gas/brake overlap.",
+    "Targets, steering, brakes and all shared inherited state remain exact to control.",
+    "Distant-bend entry, every clear curve, strong or unsettled steering, current obstacle, miss frames1--4, latch-clearing frame, reacquisition, opposite transition, reset, invalid observation and lost-road behavior remain action-exact to control.",
+    "Randomized differential coverage proves every candidate/control action difference is eligible and gas-only with the registered formula.",
+    "Affected controller, inference, local-contract and submission suites pass.",
+    "An isolated package passes import, reset, finite-action, bounds and latency smoke without modifying the root submission.zip."
+  ],
+  "rollback": [
+    "Any action or shared-state difference outside the eligible gas component.",
+    "Any gas increase on an obstacle, detector-miss latch, curve, unsettled-steering, braking, invalid-input or recovery frame.",
+    "Any interface, package, dependency, latency, bounds, NaN or reset regression."
+  ],
+  "future_environment_gate": {
+    "authorized_now": false,
+    "reason": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "design_after_restoration": "Freeze paired control and candidate package hashes before using fresh geometry seeds across multiple track_ids. Rank valid finish first, then progress, collisions/crash/off-track and only then paired completed lap time.",
+    "safety_rollback": "Reject on any new paired DNF, lower per-track finish count, additional collision/crash/off-track, materially lower worst progress or operational failure.",
+    "pace_gate": "Only after safety non-regression, require a preregistered meaningful paired lap-time improvement; treat the low-20-second objective separately from physical-speed claims."
+  },
+  "evidence_limits": [
+    "The consumed seed42 FastCorner finisher averaged physical speed38.32 and reached60.20, but its run file is not bound to source/model/package hashes and is hypothesis evidence only.",
+    "Doubling a propulsion command does not prove doubled physical velocity or halved lap time because target-speed feedback, drag, corners, braking and traction remain in the loop.",
+    "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
+  ]
+}
