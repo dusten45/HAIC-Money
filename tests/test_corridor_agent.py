@@ -89,6 +89,30 @@ def _distant_bend_observation(
     return np.tile(frame[None, :, :], (4, 1, 1))
 
 
+def _profile_observation(
+    row_centers,
+    *,
+    road_width=22,
+    speed=24.0,
+    obstacle_x=None,
+    obstacle_top=26,
+):
+    """Render a road with explicit observed centers at selected image rows."""
+    frame = np.full((84, 84), 0.1, dtype=np.float32)
+    rows = np.asarray(sorted(row_centers), dtype=np.float32)
+    centers = np.asarray([row_centers[int(row)] for row in rows], dtype=np.float32)
+    half_span = 0.5 * (road_width - 1)
+    for y in range(20, 63):
+        center = float(np.interp(y, rows, centers))
+        left = int(round(center - half_span))
+        right = left + int(road_width)
+        frame[y, max(0, left) : min(frame.shape[1], right)] = 0.4
+    if obstacle_x is not None:
+        frame[obstacle_top : obstacle_top + 2, obstacle_x : obstacle_x + 3] = 0.68
+    frame[77:83, 10:13] = (0.27 + 0.085 * speed) / 18.0
+    return np.tile(frame[None, :, :], (4, 1, 1))
+
+
 class TestVisionCorridorAgent(unittest.TestCase):
     def test_stable_completion_controller_matches_frozen_reference_trace(self):
         from agent import _StableCompletionController
@@ -1309,6 +1333,322 @@ class TestVisionCorridorAgent(unittest.TestCase):
             self.assertLessEqual(float(candidate_action[1]), 0.11)
             self.assertEqual(float(candidate_action[2]), 0.0)
         self.assertGreater(changed, 0)
+
+    def test_phase_aware_line_is_mirrored_out_in_out_with_confirmed_exit(self):
+        from agent import _PhaseAwareRacingLineController
+
+        phase_requests = []
+        action_sequences = []
+        for direction in (-1.0, 1.0):
+            def centers(offsets):
+                return {
+                    row: 41.5 + direction * offset
+                    for row, offset in offsets.items()
+                }
+
+            controller = _PhaseAwareRacingLineController()
+            controller._line_near_span = (31.0, 52.0)
+            entry = controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=centers({30: 6.0, 34: 4.0, 42: 0.0, 54: 0.0}),
+                obstacle=None,
+            )
+            apex = controller._adjust_road_steering(
+                steering=direction * 0.20,
+                straight=False,
+                centers=centers({30: 14.0, 34: 11.0, 42: 8.0, 54: 0.0}),
+                obstacle=None,
+            )
+            first_exit_read = controller._adjust_road_steering(
+                steering=direction * 0.20,
+                straight=False,
+                centers=centers({30: 8.0, 34: 8.0, 42: 8.0, 54: 0.0}),
+                obstacle=None,
+            )
+            confirmed_exit = controller._adjust_road_steering(
+                steering=direction * 0.20,
+                straight=False,
+                centers=centers({30: 8.0, 34: 8.0, 42: 8.0, 54: 0.0}),
+                obstacle=None,
+            )
+            self.assertLess(direction * entry, 0.0)
+            self.assertGreater(direction * apex, 0.20)
+            self.assertGreater(direction * first_exit_read, 0.20)
+            self.assertLess(direction * confirmed_exit, 0.20)
+            self.assertEqual(controller._line_phase, "exit")
+            phase_requests.append(
+                np.asarray([entry, apex, first_exit_read, confirmed_exit])
+            )
+
+            observations = [
+                _profile_observation(centers({30: 6.0, 34: 4.0, 42: 0.0, 54: 0.0})),
+                _profile_observation(centers({30: 14.0, 34: 11.0, 42: 8.0, 54: 0.0})),
+                _profile_observation(centers({30: 8.0, 34: 8.0, 42: 8.0, 54: 0.0})),
+                _profile_observation(centers({30: 8.0, 34: 8.0, 42: 8.0, 54: 0.0})),
+            ]
+            full_controller = _PhaseAwareRacingLineController()
+            action_sequences.append(
+                np.asarray([full_controller.act(item) for item in observations])
+            )
+
+        np.testing.assert_allclose(phase_requests[0], -phase_requests[1], atol=1e-12)
+        np.testing.assert_allclose(
+            action_sequences[0][:, 0], -action_sequences[1][:, 0], atol=1e-7
+        )
+        np.testing.assert_array_equal(
+            action_sequences[0][:, 1:], action_sequences[1][:, 1:]
+        )
+
+    def test_phase_aware_line_does_not_unwind_a_continuing_hairpin(self):
+        from agent import _PhaseAwareRacingLineController
+
+        controller = _PhaseAwareRacingLineController()
+        controller._line_near_span = (31.0, 52.0)
+        entry = {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+        apex = {30: 55.5, 34: 52.5, 42: 49.5, 54: 41.5}
+        exit_like = {30: 49.5, 34: 49.5, 42: 49.5, 54: 41.5}
+        controller._adjust_road_steering(
+            steering=0.0, straight=False, centers=entry, obstacle=None
+        )
+        controller._adjust_road_steering(
+            steering=0.20, straight=False, centers=apex, obstacle=None
+        )
+
+        first = controller._adjust_road_steering(
+            steering=0.20, straight=False, centers=exit_like, obstacle=None
+        )
+        self.assertEqual(controller._line_phase, "apex")
+        self.assertEqual(controller._line_exit_count, 1)
+        self.assertGreater(first, 0.20)
+
+        continuing = controller._adjust_road_steering(
+            steering=0.027, straight=False, centers=apex, obstacle=None
+        )
+        self.assertEqual(controller._line_phase, "apex")
+        self.assertEqual(controller._line_exit_count, 0)
+        self.assertGreater(continuing, 0.027)
+
+        controller._adjust_road_steering(
+            steering=0.20, straight=False, centers=exit_like, obstacle=None
+        )
+        opened = controller._adjust_road_steering(
+            steering=0.20, straight=False, centers=exit_like, obstacle=None
+        )
+        self.assertEqual(controller._line_phase, "exit")
+        self.assertLess(opened, 0.20)
+
+    def test_phase_aware_line_switches_only_on_a_coherent_opposite_curve(self):
+        from agent import _PhaseAwareRacingLineController
+
+        controller = _PhaseAwareRacingLineController()
+        controller._line_near_span = (31.0, 52.0)
+        right_apex = {30: 55.5, 34: 52.5, 42: 49.5, 54: 41.5}
+        mixed_rows = {30: 35.5, 34: 38.5, 42: 49.5, 54: 41.5}
+        left_apex = {30: 27.5, 34: 30.5, 42: 33.5, 54: 41.5}
+
+        controller._adjust_road_steering(
+            steering=0.20,
+            straight=False,
+            centers=right_apex,
+            obstacle=None,
+        )
+        self.assertEqual(controller._line_direction, 1.0)
+        mixed = controller._adjust_road_steering(
+            steering=0.0,
+            straight=False,
+            centers=mixed_rows,
+            obstacle=None,
+        )
+        self.assertEqual(mixed, 0.0)
+        self.assertEqual(controller._line_phase, "idle")
+        self.assertEqual(controller._line_direction, 0.0)
+
+        switched = controller._adjust_road_steering(
+            steering=-0.20,
+            straight=False,
+            centers=left_apex,
+            obstacle=None,
+        )
+        self.assertLess(switched, -0.20)
+        self.assertEqual(controller._line_phase, "apex")
+        self.assertEqual(controller._line_direction, -1.0)
+
+    def test_phase_aware_line_clears_for_obstacles_latches_and_bad_clearance(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _PhaseAwareRacingLineController,
+        )
+
+        entry_centers = {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+        controller = _PhaseAwareRacingLineController()
+        controller._line_near_span = (31.0, 52.0)
+        controller._adjust_road_steering(
+            steering=0.0,
+            straight=False,
+            centers=entry_centers,
+            obstacle=None,
+        )
+        self.assertEqual(controller._line_phase, "entry")
+
+        obstacle = (30.0, 35.0, 41.5)
+        inherited = super(_PhaseAwareRacingLineController, controller)._adjust_road_steering(
+            steering=0.0,
+            straight=False,
+            centers=entry_centers,
+            obstacle=obstacle,
+        )
+        actual = controller._adjust_road_steering(
+            steering=0.0,
+            straight=False,
+            centers=entry_centers,
+            obstacle=obstacle,
+        )
+        self.assertEqual(actual, inherited)
+        self.assertEqual(controller._line_phase, "idle")
+
+        controller._line_near_span = (31.0, 52.0)
+        controller._obstacle_side = 1.0
+        self.assertEqual(
+            controller._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=entry_centers,
+                obstacle=None,
+            ),
+            super(_PhaseAwareRacingLineController, controller)._adjust_road_steering(
+                steering=0.0,
+                straight=False,
+                centers=entry_centers,
+                obstacle=None,
+            ),
+        )
+        self.assertEqual(controller._line_phase, "idle")
+
+        for span in ((36.0, 57.0), (38.0, 45.0)):
+            candidate = _PhaseAwareRacingLineController()
+            candidate._line_near_span = span
+            control = _LatchedClearStraightSustainController()
+            self.assertEqual(
+                candidate._adjust_road_steering(
+                    steering=0.0,
+                    straight=False,
+                    centers=entry_centers,
+                    obstacle=None,
+                ),
+                control._adjust_road_steering(
+                    steering=0.0,
+                    straight=False,
+                    centers=entry_centers,
+                    obstacle=None,
+                ),
+            )
+            self.assertEqual(candidate._line_phase, "idle")
+
+    def test_phase_aware_line_prioritizes_opposing_obstacle_and_resets(self):
+        from agent import _PhaseAwareRacingLineController
+
+        controller = _PhaseAwareRacingLineController()
+        entry = _profile_observation(
+            {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+        )
+        entry_action = controller.act(entry)
+        self.assertLess(float(entry_action[0]), 0.0)
+        self.assertTrue(controller._previous_action_used_line)
+
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=35, obstacle_top=22, speed=24.0
+        )
+        obstacle_action = controller.act(obstacle)
+        self.assertGreater(float(obstacle_action[0]), 0.0)
+        self.assertLessEqual(
+            abs(float(obstacle_action[0])), controller.MAX_STEER_STEP + 1e-7
+        )
+        self.assertEqual(controller._line_phase, "idle")
+        self.assertFalse(controller._previous_action_used_line)
+
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        lost = controller.act(missing)
+        self.assertEqual(controller._line_phase, "idle")
+        self.assertIsNone(controller._line_near_span)
+        self.assertGreaterEqual(float(lost[2]), 0.0)
+
+        controller.reset(None)
+        fresh = _PhaseAwareRacingLineController()
+        self.assertEqual(controller.__dict__, fresh.__dict__)
+
+    def test_phase_aware_line_waits_until_the_obstacle_latch_is_clear(self):
+        from agent import (
+            _LatchedClearStraightSustainController,
+            _PhaseAwareRacingLineController,
+        )
+
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=35, obstacle_top=22, speed=24.0
+        )
+        entry = _profile_observation(
+            {30: 47.5, 34: 45.5, 42: 41.5, 54: 41.5}
+        )
+        control = _LatchedClearStraightSustainController()
+        candidate = _PhaseAwareRacingLineController()
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+
+        for _ in range(candidate.OBSTACLE_MISS_LIMIT):
+            np.testing.assert_array_equal(candidate.act(entry), control.act(entry))
+            self.assertEqual(candidate._line_phase, "idle")
+            self.assertNotEqual(candidate._obstacle_side, 0.0)
+
+        # The inherited detector clears its latch after computing this frame,
+        # so the racing line may arm only on the following observation.
+        clearing_candidate = candidate.act(entry)
+        clearing_control = control.act(entry)
+        np.testing.assert_array_equal(clearing_candidate, clearing_control)
+        self.assertEqual(candidate._obstacle_side, 0.0)
+        armed = candidate.act(entry)
+        inherited = control.act(entry)
+        self.assertLess(float(armed[0]), 0.0)
+        self.assertGreater(float(inherited[0]), 0.0)
+        np.testing.assert_array_equal(armed[1:], inherited[1:])
+
+    def test_phase_aware_line_randomized_requests_are_bounded_and_mirrored(self):
+        from agent import _PhaseAwareRacingLineController
+
+        rng = np.random.default_rng(2026092901)
+        for _ in range(256):
+            distal = float(rng.uniform(1.51, 9.0))
+            proximal = float(rng.uniform(1.51, 9.0))
+            near_offset = float(rng.uniform(-1.0, 3.0))
+            raw = float(rng.uniform(0.04, 0.28))
+            requests = []
+            for direction in (-1.0, 1.0):
+                centers = {
+                    54: 41.5 + direction * near_offset,
+                    42: 41.5 + direction * (near_offset + proximal),
+                    34: 41.5 + direction * (near_offset + proximal + distal),
+                    30: 41.5 + direction * (near_offset + proximal + distal + 0.5),
+                }
+                controller = _PhaseAwareRacingLineController()
+                controller._line_near_span = (31.0, 52.0)
+                inherited = super(
+                    _PhaseAwareRacingLineController, controller
+                )._adjust_road_steering(
+                    steering=direction * raw,
+                    straight=False,
+                    centers=centers,
+                    obstacle=None,
+                )
+                adjusted = controller._adjust_road_steering(
+                    steering=direction * raw,
+                    straight=False,
+                    centers=centers,
+                    obstacle=None,
+                )
+                self.assertLessEqual(
+                    abs(adjusted - inherited),
+                    controller.LINE_MAX_STEER_DELTA + 1e-12,
+                )
+                requests.append(adjusted)
+            self.assertAlmostEqual(requests[0], -requests[1], places=12)
 
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (

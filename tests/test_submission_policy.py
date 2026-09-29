@@ -22,7 +22,7 @@ from agent import (
     Agent,
     Baseline1Actor,
     DRQ_ACTOR_FORMAT,
-    _LatchedClearStraightSustainController,
+    _PhaseAwareRacingLineController,
 )
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
@@ -52,7 +52,7 @@ class TestSubmissionPolicy(unittest.TestCase):
 
         self.assertTrue(torch.equal(actions, torch.tensor([[1.0, 0.0, 1.0]]).repeat(2, 1)))
 
-    def test_bare_baseline_routes_only_to_latched_straight_sustain_controller(self):
+    def test_bare_baseline_routes_only_to_phase_aware_racing_line_controller(self):
         actor = Baseline1Actor()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bare-model.pt"
@@ -60,7 +60,7 @@ class TestSubmissionPolicy(unittest.TestCase):
 
             bare = Agent(path)
             self.assertIs(
-                type(bare._forward_controller), _LatchedClearStraightSustainController
+                type(bare._forward_controller), _PhaseAwareRacingLineController
             )
 
             explicit_path = Path(directory) / "explicit-model.pt"

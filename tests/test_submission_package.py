@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_latched_straight_sustain_controller(self):
+    def test_packaged_bare_model_uses_phase_aware_racing_line_controller(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,13 +87,13 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _LatchedClearStraightSustainController, _LaunchThrottleController
+from agent import Agent, _LatchedClearStraightSustainController, _LaunchThrottleController, _PhaseAwareRacingLineController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _LatchedClearStraightSustainController
+assert type(agent._forward_controller) is _PhaseAwareRacingLineController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.11, 0.0], dtype=np.float32))
 
 frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0

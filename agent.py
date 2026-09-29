@@ -1557,6 +1557,306 @@ class _LatchedClearStraightSustainController(_LaunchThrottleController):
         return adjusted_gas, adjusted_brake
 
 
+class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
+    """Track a bounded outside-inside-outside line from visible road geometry.
+
+    This is deliberately a local camera-space approximation, not a global
+    minimum-time planner.  It changes only the lateral reference used by the
+    completion controller: entry prepares outside, a coherent bend targets a
+    small inside offset, and the line opens again only after two agreeing exit
+    observations.  Every line request is clipped to the currently visible
+    near-road envelope and obstacle avoidance always takes priority.
+    """
+
+    LINE_ROWS = (30, 34, 42, 54)
+    LINE_BEND_THRESHOLD = _StableCompletionController.STRAIGHT_SWEEP_DEADBAND
+    LINE_ENTRY_FRACTION = 0.18
+    LINE_APEX_FRACTION = -0.10
+    LINE_EXIT_FRACTION = 0.18
+    LINE_MIN_EDGE_CLEARANCE = 7.0
+    LINE_STEER_GAIN = 0.016
+    LINE_MAX_STEER_DELTA = 0.035
+    LINE_EXIT_CONFIRM_FRAMES = 2
+    LINE_CLEAR_CONFIRM_FRAMES = 2
+
+    def __init__(self, *, cruise_speed: float = 48.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._line_phase = "idle"
+        self._line_direction = 0.0
+        self._line_exit_count = 0
+        self._line_clear_count = 0
+        self._line_near_span = None
+        self._line_requested = None
+        self._previous_action_used_line = False
+        self._line_transition_pending = False
+
+    def _clear_line_state(self) -> None:
+        self._line_phase = "idle"
+        self._line_direction = 0.0
+        self._line_exit_count = 0
+        self._line_clear_count = 0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._clear_line_state()
+        self._line_near_span = None
+        self._line_requested = None
+        self._previous_action_used_line = False
+        self._line_transition_pending = False
+
+    def _visible_near_span(
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+    ) -> tuple[float, float] | None:
+        """Measure the contiguous row-54 asphalt run used for clearance."""
+        if 54 not in centers:
+            return None
+        asphalt = (frame[54] >= self.ROAD_LOW) & (frame[54] <= self.ROAD_HIGH)
+        horizontal = np.arange(frame.shape[1], dtype=np.float32)
+        locations = np.flatnonzero(
+            asphalt & (np.abs(horizontal - centers[54]) <= 17.0)
+        )
+        if len(locations) < 4:
+            return None
+        breaks = np.flatnonzero(np.diff(locations) > 1) + 1
+        runs = [run for run in np.split(locations, breaks) if len(run) >= 4]
+        if not runs:
+            return None
+        run = min(
+            runs,
+            key=lambda candidate: abs(float(candidate.mean()) - centers[54]),
+        )
+        return float(run[0]), float(run[-1])
+
+    def act(self, observation) -> np.ndarray:
+        self._line_transition_pending = self._previous_action_used_line
+        self._line_requested = None
+        frame = self._frame(observation)
+        self._line_near_span = None
+        if frame is None:
+            self._clear_line_state()
+        else:
+            centers = self._road_centers(frame)
+            if len(centers) < 3:
+                self._clear_line_state()
+            else:
+                self._line_near_span = self._visible_near_span(frame, centers)
+        action = super().act(observation)
+        self._previous_action_used_line = self._line_requested is not None
+        self._line_transition_pending = False
+        return action
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._clear_line_state()
+        self._line_near_span = None
+        return super()._lost_road_action()
+
+    @staticmethod
+    def _line_sign(value: float) -> float:
+        return 1.0 if value > 0.0 else -1.0
+
+    def _line_geometry(
+        self,
+        centers: dict[int, float],
+    ) -> tuple[float, float, float | None, float | None, bool]:
+        distal = 0.5 * (centers[30] + centers[34]) - centers[42]
+        proximal = centers[42] - centers[54]
+        threshold = self.LINE_BEND_THRESHOLD
+        entry_direction = (
+            self._line_sign(distal)
+            if abs(distal) > threshold and abs(proximal) <= threshold
+            else None
+        )
+        apex_direction = (
+            self._line_sign(distal)
+            if (
+                abs(distal) > threshold
+                and abs(proximal) > threshold
+                and distal * proximal > 0.0
+            )
+            else None
+        )
+        clear = abs(distal) <= threshold and abs(proximal) <= threshold
+        return distal, proximal, entry_direction, apex_direction, clear
+
+    def _update_line_phase(
+        self,
+        *,
+        centers: dict[int, float],
+    ) -> str | None:
+        distal, proximal, entry_direction, apex_direction, clear = (
+            self._line_geometry(centers)
+        )
+        threshold = self.LINE_BEND_THRESHOLD
+        exit_candidate = (
+            self._line_direction != 0.0
+            and self._line_direction * proximal > threshold
+            and abs(centers[30] - centers[42]) <= threshold
+            and abs(centers[34] - centers[42]) <= threshold
+        )
+
+        if self._line_direction != 0.0:
+            coherent_opposite = (
+                self._line_direction * distal < -threshold
+                and self._line_direction * proximal < -threshold
+            )
+            if coherent_opposite:
+                self._line_phase = "apex"
+                self._line_direction *= -1.0
+                self._line_exit_count = 0
+                self._line_clear_count = 0
+
+        if self._line_phase == "idle":
+            if entry_direction is not None:
+                self._line_phase = "entry"
+                self._line_direction = entry_direction
+            elif apex_direction is not None:
+                self._line_phase = "apex"
+                self._line_direction = apex_direction
+        elif self._line_phase == "entry":
+            if apex_direction == self._line_direction:
+                self._line_phase = "apex"
+                self._line_exit_count = 0
+            elif (
+                entry_direction is not None
+                and entry_direction != self._line_direction
+            ):
+                self._line_direction = entry_direction
+            elif clear:
+                self._line_clear_count += 1
+                if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
+                    self._clear_line_state()
+            else:
+                self._clear_line_state()
+        elif self._line_phase == "apex":
+            if exit_candidate:
+                self._line_exit_count += 1
+                self._line_clear_count = 0
+                if self._line_exit_count >= self.LINE_EXIT_CONFIRM_FRAMES:
+                    self._line_phase = "exit"
+            elif apex_direction == self._line_direction:
+                self._line_exit_count = 0
+                self._line_clear_count = 0
+            elif clear:
+                self._line_exit_count = 0
+                self._line_clear_count += 1
+                if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
+                    self._clear_line_state()
+            else:
+                self._clear_line_state()
+        elif self._line_phase == "exit":
+            if apex_direction == self._line_direction:
+                self._line_phase = "apex"
+                self._line_exit_count = 0
+                self._line_clear_count = 0
+            elif clear:
+                self._line_clear_count += 1
+                if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
+                    self._clear_line_state()
+            elif exit_candidate:
+                self._line_clear_count = 0
+            else:
+                self._clear_line_state()
+
+        if self._line_phase == "entry":
+            return "entry" if entry_direction == self._line_direction else None
+        if self._line_phase == "apex":
+            # Keep the apex reference for the first unconfirmed exit frame so
+            # a continuing hairpin cannot unwind on one noisy distant read.
+            if apex_direction == self._line_direction or self._line_exit_count == 1:
+                return "apex"
+            return None
+        if self._line_phase == "exit":
+            return "exit" if exit_candidate else None
+        return None
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+        if (
+            obstacle is not None
+            or self._obstacle_side != 0.0
+            or any(row not in centers for row in self.LINE_ROWS)
+            or self._line_near_span is None
+        ):
+            self._clear_line_state()
+            return inherited
+
+        left, right = self._line_near_span
+        if not (
+            left + self.LINE_MIN_EDGE_CLEARANCE
+            <= self.IMAGE_CENTER
+            <= right - self.LINE_MIN_EDGE_CLEARANCE
+        ):
+            self._clear_line_state()
+            return inherited
+
+        active_phase = self._update_line_phase(centers=centers)
+        if active_phase is None or self._line_direction == 0.0:
+            return inherited
+
+        half_width = 0.5 * (right - left + 1.0)
+        maximum_offset = max(0.0, half_width - self.LINE_MIN_EDGE_CLEARANCE)
+        fraction = {
+            "entry": self.LINE_ENTRY_FRACTION,
+            "apex": self.LINE_APEX_FRACTION,
+            "exit": self.LINE_EXIT_FRACTION,
+        }[active_phase]
+        desired = float(
+            np.clip(fraction * half_width, -maximum_offset, maximum_offset)
+        )
+        signed_lateral = self._line_direction * (
+            centers[54] - self.IMAGE_CENTER
+        )
+        signed_correction = float(
+            np.clip(
+                self.LINE_STEER_GAIN * (signed_lateral - desired),
+                -self.LINE_MAX_STEER_DELTA,
+                self.LINE_MAX_STEER_DELTA,
+            )
+        )
+        correction = self._line_direction * signed_correction
+        # Entry intentionally replaces the inherited inward preview; apex and
+        # exit retain the established road command and add only the bounded
+        # lateral-reference correction.
+        base = steering if active_phase == "entry" else inherited
+        adjusted = float(base + correction)
+        if adjusted != inherited:
+            self._line_requested = adjusted
+            # Reuse the existing preview-to-obstacle zero-crossing guard for
+            # any line action that is actually emitted after the slew limit.
+            self._preview_requested = adjusted
+        return adjusted
+
+    def _adjust_obstacle_steering(
+        self,
+        *,
+        base_steering: float,
+        obstacle_bias: float,
+        straight: bool,
+    ) -> float:
+        adjusted = super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+        if self._line_transition_pending and adjusted * self._last_steer < 0.0:
+            self._last_steer = 0.0
+        return adjusted
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2058,7 +2358,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _LatchedClearStraightSustainController()
+            _PhaseAwareRacingLineController()
             if use_forward_controller
             else None
         )
