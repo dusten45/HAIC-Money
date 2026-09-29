@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "experiment": "phase-aware-out-in-out-v2",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T00:30:07.2905512+09:00",
+  "branch": "codex/out-in-out-racing-line",
+  "protocol_commits": [
+    "cf2be34",
+    "7deed5b",
+    "84aa6e5",
+    "3245d6c"
+  ],
+  "implementation_commit": "734eadf3c8b54edd4b348cfda0ed7b20a61a741d",
+  "decision": "Keep as a statically validated candidate; do not claim faster laps, completion improvement, SOTA or submission readiness without an authorized controlled environment evaluation.",
+  "implementation": [
+    "Infer entry, apex and confirmed exit phases only from generic visible road geometry at rows30,34,42 and54; no track, seed, elapsed-time or coordinate condition is used.",
+    "Use bounded outside/inside/outside lateral references0.18/-0.10/0.18 with a0.035 correction cap and at least7.0 pixels of predicted geometric edge clearance.",
+    "Require consecutive confirmation for exit and clear transitions, reset ambiguous state, and preserve left/right mirror symmetry.",
+    "Copy gas and brake from a reset-synchronized frozen completion controller on every frame. During a current obstacle or its miss latch, copy that controller's complete action and synchronize steering state so the racing line cannot weaken obstacle avoidance."
+  ],
+  "evidence": {
+    "video_ledger": "experiments/video-4-7-racing-line-audit-v1.json",
+    "finding": "The latest videos do not support a universal in-in-in diagnosis: sampled track1 is approximately center-in-out, one track2 corner is out-out-out, and another is in-ish-in-ish-out. The factor is therefore a generic bounded geometry hypothesis, not a correction asserted from all observed turns.",
+    "research": [
+      "https://arxiv.org/abs/1902.00606",
+      "https://arxiv.org/abs/2309.09186",
+      "https://github.com/TUMFTM/global_racetrajectory_optimization"
+    ],
+    "interpretation": "Minimum-curvature racing-line results motivate enlarging turn radius, but do not establish that a local camera-space out-in-out heuristic is globally minimum-time without track bounds and vehicle dynamics."
+  },
+  "validation": {
+    "focused_phase_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k phase_aware -q",
+      "result": "12 passed,86 deselected"
+    },
+    "affected_and_local_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py",
+      "result": "159 passed,4 warnings"
+    },
+    "submission_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "29 passed,4 warnings"
+    },
+    "independent_static_review": "No blocking defect found in reset/shadow synchronization, hazard fallback, latch release, longitudinal exactness,7-pixel clearance or mirrored phase state machine.",
+    "temporary_package": {
+      "path": ".haic-artifacts/phase-aware-out-in-out-v2/20260929T152846408600Z_static-smoke-734eadf/submission.zip",
+      "agent_sha256": "254b2f00a40d465915dd9a5c12f1dc305c86bc4822245320ec069c7e16056bc9",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "0062634e5a7b148322d445bd31b42a0c0b7d31de17019f1a31f7f09b2606ddfd",
+      "bytes": 6279846,
+      "windows_python": "3.11.15",
+      "init_seconds": 1.9619359000353143,
+      "act_seconds": 0.005526300054043531,
+      "result": "static exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "video_track_01_4_7_sha256": "c8330c32d128f97b65549dd8008f9b621839858997423c3c2c76158100753472",
+    "video_track_02_4_7_sha256": "377e1eaf40a16e46ac5139f93cda6832bb0287d38b11d4ec4bdb4c4c7400cd88",
+    "video_track_03_4_7_sha256": "ad5a86d5dde35d4f5cdee670b1fdc2141ee786ae160f9ee534ac0d37718a2ae6"
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "residual_risks": [
+    "No authorized environment run has measured completion, lap time or generalization.",
+    "The controller sees only local camera geometry and cannot optimize a globally known trajectory or friction-limited dynamics.",
+    "The synchronized shadow approximately doubles deterministic vision-controller work, although the Windows smoke act time remained5.5ms.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent, so promotion, official execution and submission remain blocked."
+  ]
+}

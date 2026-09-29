@@ -210,22 +210,23 @@ about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The current bare route is `_LatchedClearStraightSustainController` at commit
-`9249f2c`. It retains cruise48, parent compound target30, maximum emitted gas0.11,
-the speed49 brake boundary and all steering/perception/state. Only on an exact
-straight, with no current obstacle, settled steering and a fully cleared inherited
-obstacle latch, mid/low gas changes from0.06667/0.04167 to0.07333/0.04583. A simpler
-constant override was rejected before commit because it accelerated during detector
-miss frames. The latch-gated implementation passed147 related tests and an isolated
-package static/import/reset/action/latch smoke. No environment run measured
-completion or pace, so it remains `INCOMPARABLE`; see
-`experiments/official-seed-compound-hairpin-evidence-v1.json` and
-`experiments/latched-clear-straight-sustain-v2-result.json`.
+The current bare route is `_PhaseAwareRacingLineController` at commit `734eadf` on
+`codex/out-in-out-racing-line`. It retains the latched completion controller's
+longitudinal and obstacle behavior, while generic visible geometry selects bounded
+outside/inside/outside references with7-pixel predicted edge clearance. A synchronized
+control shadow supplies every gas/brake action and the complete current-obstacle or
+miss-latch action. The first implementation was rejected statically; repaired v2
+passed12 focused,159 affected/local-contract and29 submission-contract tests plus an
+isolated package smoke and independent static review. Latest-video measurements also
+disprove a universal `in-in-in` premise, so this remains a cautious geometry
+hypothesis. No environment run measured completion or pace; status is `INCOMPARABLE`.
+See `experiments/video-4-7-racing-line-audit-v1.json` and
+`experiments/phase-aware-out-in-out-v2-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `b77f0167...` and must not be submitted as the new candidate.
+candidate agent SHA `254b2f00...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 
