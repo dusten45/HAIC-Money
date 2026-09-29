@@ -36,7 +36,7 @@
     "state_update": "overwrite _carry_steer_request with the final candidate request so inherited target44 and steering-based throttle attenuation see the actual lateral demand",
     "unchanged": [
       "MAX_STEER_STEP0.07, sign-reversal zero crossing, global steer cap0.48 and current-obstacle cap0.32",
-      "every current-obstacle steering/action/pass-side/urgency transition, including opposing avoidance",
+      "the current-obstacle geometric request, pass-side, urgency,0.32 cap and arbitration formula; emitted slew may retain at most the registered0.06 prior attack increment",
       "straight, translated-straight, clear-exit, missing-row and incoherent/S-curve steering",
       "all target-speed, gas and brake formulas; only their already-existing steering-dependent safety gates may respond to the stronger request",
       "obstacle targets47/40, obstacle+sweep>=6 target30 and miss-latch longitudinal behavior",
@@ -49,7 +49,7 @@
       "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
       "Mirrored coherent curves produce symmetric requests and exactly the registered20-percent/0.06/0.48 envelope; repeated actions retain the inherited0.07 slew bound.",
       "The exact1.5 far-row boundaries, gain-versus-increment intersection at abs(request)=0.30, cap, sign and missing-row boundaries are closed.",
-      "Current obstacle actions and all state are exactly equal to control, while the first obstacle-miss latch frame may apply the registered same-direction curve gain without changing its longitudinal action.",
+      "From identical pre-frame state, current-obstacle actions and inherited state are exactly equal to control. In a sequential attack-to-obstacle transition, steering keeps the control sign, stays within0.06 of control, respects0.07 slew and immediately disables any new gain; the first obstacle-miss latch frame may reapply the registered same-direction gain.",
       "Reacquisition is immediately current-obstacle exact; opposite-direction S-curves, parallel offsets, aligned exits, road loss and reset never retain stale attack state.",
       "Final _carry_steer_request equals the actual amplified preclip request, so strong-steer target44 and friction-aware gas attenuation remain active at exact0.28 plus/minus nextafter boundaries.",
       "Randomized actions are finite/bounded, never overlap gas and brake, preserve current-obstacle actions exactly and differ in steering only under the registered gate.",
@@ -64,7 +64,7 @@
   },
   "abort": [
     "Any runtime condition uses track id, seed, map identity, coordinate, time, progress or evaluation filename.",
-    "Any current-obstacle action/state differs from control, or any steering difference appears on straight, clear-exit, incoherent/opposite-sign or missing-row geometry.",
+    "From identical pre-frame state any current-obstacle action/inherited state differs from control; or a sequential attack-to-obstacle transition changes sign, differs by more than0.06, violates0.07 slew, or applies a new gain; or any steering difference appears on straight, clear-exit, incoherent/opposite-sign or missing-row geometry.",
     "Any steering delta exceeds0.07, candidate request exceeds0.48, final carry request does not match the actual amplified request, or a stale attack state survives reset/road loss.",
     "Any target/gas/brake formula is explicitly changed, any action is non-finite/out of range, gas and brake overlap, package/interface gate fails, or relevant regression fails.",
     "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
@@ -74,5 +74,11 @@
     "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
     "The competition website is inaccessible; the official participant repository remains available and unchanged.",
     "Only source, synthetic, unit and isolated package validation is authorized."
+  ],
+  "amendments": [
+    {
+      "recorded_at": "2026-09-30T02:55:00+09:00",
+      "reason": "Pre-implementation transition audit clarified that an obstacle frame cannot erase the prior frame's bounded steering-state difference without violating the inherited0.07 slew. Require identical current-obstacle logic from matched state and explicitly bound sequential attack-to-obstacle carryover by the registered0.06 increment instead of incorrectly requiring counterfactual emitted-action identity."
+    }
   ]
 }
