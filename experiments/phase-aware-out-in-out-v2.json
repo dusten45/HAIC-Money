@@ -36,7 +36,7 @@
       "Clear-entry/apex-clear and other interrupted sequences require consecutive clear confirmations; ambiguous geometry clears stale direction immediately.",
       "Entry correction relative to raw steering is<=0.035 and candidate-control request delta is<=0.085; apex/exit candidate-control deltas remain<=0.035.",
       "At inherited steering values immediately below, equal to and above0.28, candidate gas/brake/target state is exact to control while final lateral action follows the registered line and slew.",
-      "Line-to-current-obstacle transitions never mutate _last_steer before final clipping/slew, never exceed0.07 action-to-action steering change, and preserve the inherited obstacle request, target, gas, brake, detector and latch behavior from matched state.",
+      "Line-to-current-obstacle transitions never mutate _last_steer before final clipping/slew, do not worsen the inherited action-to-action steering change from an identical emitted last steer, and preserve the inherited obstacle request, target, gas, brake, detector and latch behavior from matched state. The inherited obstacle steer-limit clip can itself exceed0.07 when an artificially preloaded prior action is above0.39, so absolute0.07 is not asserted outside the inherited envelope.",
       "The inherited _previous_action_was_preview and _preview_requested fields are never armed by a non-preview line request.",
       "The exact7.0 geometric clearance boundary passes without requesting less than7.0; nextafter-inside/outside and narrower/edge-breached spans suppress safely.",
       "Mirrored entry/apex/exit, coherent opposite turns, continuing hairpins, missing rows, current obstacles, miss latch, invalid/lost/reset and randomized action bounds pass.",
@@ -47,7 +47,7 @@
   "abort": [
     "Any environment execution, training, submission, completion/lap-time claim or SOTA promotion occurs.",
     "Any target fraction, threshold, gain, correction cap, phase definition, speed value, detector or obstacle parameter changes beyond the listed static repairs.",
-    "Any action-to-action steering change caused by the candidate exceeds0.07, any longitudinal action/state differs from matched control solely because of line steering, or any preview marker is polluted.",
+    "Any line-to-obstacle transition differs from matched control initialized with the identical emitted last steer, any longitudinal action/state differs from matched control solely because of line steering, or any preview marker is polluted.",
     "Any predicted geometric clearance is below7.0 pixels or any stale phase survives ambiguous/missing/obstacle/lost-road input.",
     "Any frozen model, official environment, DrQ artifact, user video or root submission.zip changes, or any relevant test fails."
   ],
