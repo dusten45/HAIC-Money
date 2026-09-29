@@ -89,15 +89,17 @@ def summarize(dataset: Path) -> dict:
     return {"format": "haic-rlpd-coupled-recovery-audit-v1",
             "manifest_sha256": _sha(dataset / "manifest.json"), "verified_episode_hashes": len(rows),
             "unique_accepted_transitions_by_stratum": {key: len(value) for key, value in unique.items()},
-            "data_gate": {"minimum_unique_failure_transitions": 128, "minimum_failure_geometries": 3,
+            "local_support_gate_not_training_gate": {
+                          "minimum_unique_failure_transitions": 128, "minimum_failure_geometries": 3,
                           "unique_failure_transitions": len(unique["failure"]),
                           "failure_geometries": len({r["geometry_seed"] for r in rows
                                                      if r["stratum"] == "failure" and r["accepted_transitions"]}),
                           "passed": len(unique["failure"]) >= 128 and len({r["geometry_seed"] for r in rows
                               if r["stratum"] == "failure" and r["accepted_transitions"]}) >= 3},
             "finish_tables_by_horizon": finish_tables, "branches": rows,
+            "training_authorized": False,
             "limitations": ["Repeated TRAIN upper bound, not a deployable privileged controller.",
-                             "Local five-second recovery is not full-episode completion.",
+                             "Local five-second recovery is not full-episode completion or the prepared paired-finish training gate.",
                              "Telemetry delta medians exclude pairs ending before the common assessment time.",
                              "Menu branches and repeated actor/road pairs are correlated, not independent geometries."]}
 
@@ -110,7 +112,7 @@ def main():
     result = summarize(args.dataset)
     _write(args.output, result, exclusive=True)
     print(json.dumps({key: result[key] for key in (
-        "verified_episode_hashes", "data_gate", "finish_tables_by_horizon")}, sort_keys=True))
+        "verified_episode_hashes", "local_support_gate_not_training_gate", "finish_tables_by_horizon")}, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
   "format": "haic-rlpd-recovery-foundation-check-v1",
   "status": "passed_no_environment_interaction",
   "environment_resets": 0,
-  "learner_updates": 0,
+  "real_environment_learner_updates": 0,
   "runtime": {
     "python": "3.11.14",
     "torch": "2.1.0+cu121",
@@ -22,6 +22,36 @@
     "command": "python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py",
     "passed": 80,
     "subtests_passed": 21
+  },
+  "strict_finish_continuation_tests": {
+    "command": "python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_resume_rlpd_coupled_recovery.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py",
+    "passed": 95,
+    "subtests_passed": 33
+  },
+  "full_pipeline_tests": {
+    "command": "env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_resume_rlpd_coupled_recovery.py tests/test_prepare_rlpd_recovery_training_data.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py",
+    "passed": 119,
+    "subtests_passed": 33
+  },
+  "actual_v5_cuda_optimizer_probe": {
+    "successful_synthetic_updates": 1,
+    "source_environment_steps": 131072,
+    "source_gradient_steps": 130072,
+    "rng_reset_seed": 60,
+    "model_and_three_optimizers_imported": true,
+    "critic_loss": 459.60064697265625,
+    "actor_loss": -78.76438903808594,
+    "alpha": 0.10444163531064987,
+    "all_metrics_finite": true,
+    "cuda_peak_allocated_bytes": 124877824,
+    "source_checkpoint_modified": false,
+    "model_exported": false,
+    "failed_utility_attempts": [
+      "Wrong helper import name before model initialization.",
+      "Wrong observation dictionary keys before updating.",
+      "Missing proposed_action metric key after one ephemeral synthetic update; object discarded."
+    ],
+    "limitations": "Random synthetic batch is a CUDA feasibility probe only; neither ephemeral update used environment data or changed the saved source model."
   },
   "actual_v5_checkpoint_actor_check": {
     "checkpoint": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/checkpoint.pt",

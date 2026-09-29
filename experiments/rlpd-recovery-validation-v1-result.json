@@ -1,0 +1,93 @@
+{
+  "format": "haic-rlpd-recovery-validation-v1",
+  "status": "closed_loop_data_validated_learning_in_progress",
+  "partition": "consumed TRAIN",
+  "official_score": false,
+  "fresh_generalization": false,
+  "track_id": 1,
+  "geometry_seed_range": [4272000001, 4272000012],
+  "raw_dataset": "runs/rlpd-coupled-recovery-r2",
+  "raw_manifest_sha256": "753e992093f0efb5a681eafdd910f4f2cfe99a0dbc3515757a71b8feda188286",
+  "continuation_protocol": "experiments/rlpd-coupled-recovery-r2.json",
+  "continuation_protocol_sha256": "5976745b759221ebb6c3d70f65cd22f1af57902cc33995f8264b39acf1693eeb",
+  "same_time_telemetry_audit": "experiments/rlpd-coupled-recovery-r2-audit-result.json",
+  "collection": {
+    "failure_anchors": 10,
+    "finished_parent_controls": 4,
+    "episodes": 42,
+    "completed_decisions": 18411,
+    "included_repeated_prefix_decisions": 3105,
+    "reset_intents_including_interrupted_attempt": 43,
+    "unknown_interrupted_decisions": [0, 2000],
+    "byte_identical_completed_v1_traces_reused": 28,
+    "new_continuation_episodes": 14,
+    "censored_finish_pairs": 0,
+    "exact_simulator_resume": false,
+    "runtime": "CPU Torch 2.1.0+cu121, frame skip 4, 50 raw warmup noops, original max 2000 decisions"
+  },
+  "closed_loop_protocol": {
+    "interventions": "Full steering/throttle/brake Oracle feedback for fixed 12 or 25 decisions, then original RLPD actor recomputed at every branch observation to real episode end.",
+    "followup_actor_decisions": 63,
+    "followup_seconds": 5.04,
+    "local_guards": "Alive at assessment, abs lateral error <=6m, progress gain>=0.02, no added damage from anchor through assessment.",
+    "policy_at_anchor": "Current-runtime executed prefix and accessible simulator/observation parity; historical archive divergence not repaired.",
+    "horizon_12": {
+      "failure_anchor_pairs": 10,
+      "local_qualified_failure_branches": 9,
+      "full_finish_rescues": 2,
+      "locally_qualified_full_finish_rescues": 1,
+      "finished_parent_control_pairs": 4,
+      "finishes_retained": 2,
+      "finishes_lost": 2,
+      "net_rescues_minus_harms": 0
+    },
+    "horizon_25": {
+      "failure_anchor_pairs": 10,
+      "local_qualified_failure_branches": 8,
+      "full_finish_rescues": 3,
+      "locally_qualified_full_finish_rescues": 3,
+      "finished_parent_control_pairs": 4,
+      "finishes_retained": 2,
+      "finishes_lost": 2,
+      "net_rescues_minus_harms": 1
+    }
+  },
+  "training_dataset": {
+    "path": "runs/rlpd-recovery-training-data-v1",
+    "manifest_sha256": "40ee39ac4ba6cab2b46ada76c028806d1d476903e5a912bb0108e5ba317c350d",
+    "eligibility_policy": "paired-finish-recovery-plus-handoff-v1",
+    "accepted_window": "Only locally qualified paired full-finish rescues or preserved finishes; actual intervention plus first 63 actor handoff decisions, retaining original action roles and raw rewards.",
+    "all_source_episodes_retained": 42,
+    "qualified_branches": 8,
+    "accepted_transitions": 665,
+    "unique_accepted_transitions": 653,
+    "unique_failure_support_transitions": 339,
+    "failure_support_geometries": [4272000003, 4272000010, 4272000011],
+    "finish_control_transitions": 326,
+    "unique_finish_control_transitions": 314,
+    "minimum_unique_failure_transitions": 128,
+    "minimum_failure_geometries": 3,
+    "sufficiency_gate_passed": true
+  },
+  "first_learning_treatment": {
+    "protocol": "experiments/rlpd-recovery-learning-v1.json",
+    "protocol_sha256": "19efa2c357da708778b6d6cec3366aab94c56ad050a3751ffdd4975201b52264",
+    "preflight": "passed: 15915 ordinary prior rows plus 665 recovery rows, zero resets",
+    "source": "V5 seed50 final model/target critic/temperature/three optimizers, fresh online replay and reset RNG seed60; not exact historical continuation",
+    "decisions_per_arm": 8192,
+    "updates_per_arm": 8191,
+    "control_batch": {"online": 32, "ordinary_prior": 32},
+    "treatment_batch": {"online": 32, "ordinary_prior": 16, "recovery": 16},
+    "objective": "Unchanged raw-reward SAC; no behavior cloning",
+    "control_output": "runs/rlpd-recovery-control-v1",
+    "treatment_output": "runs/rlpd-recovery-treatment-v1",
+    "status": "running_not_evaluated"
+  },
+  "interpretation": [
+    "Full-vector feedback can actually rescue specific visited failures, but unconditional recovery also harms finished-parent controls.",
+    "Five-second safety alone is not proof of rescue because unchanged baselines can pass it and fail later.",
+    "The retained positive windows are privileged training-data upper bounds, not a deployable branch selector.",
+    "Branch menu repeats and two actors on some geometries are correlated; denominators are actor-road anchors, not independent roads.",
+    "No learned improvement, fresh-road performance, official submission or model promotion exists yet."
+  ]
+}
