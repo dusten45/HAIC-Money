@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "name": "high-speed-preview-braking-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T01:44:48.6483640+09:00",
+  "purpose": "replace the conservative clear-straight pace with a generic preview-conditioned longitudinal speed envelope that accelerates hard on verified straights and brakes before and through visible curves",
+  "source_commit": "27192d92014265e419c1c97bbbd6cc1d37bddd86",
+  "branch": "feature/DG-Codex",
+  "control": {
+    "controller": "agent._LatchedClearStraightSustainController",
+    "agent_sha256": "920374f1a010596ec36c3a8e3f04cd122f194c88b981bff88ce5b131d01a22ca",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "video_ledger": "experiments/video-4-7-evidence-ledger-v1.json",
+    "latest_visible_results_seconds": {
+      "track1": 27.18,
+      "track2": 33.22,
+      "track3": 30.58
+    },
+    "finding": "All three latest videos finish without a visible progress plateau, but launch and general progress are slow. The routed controller confirms a conservative cruise target48 and clear-straight gas ceiling0.11. Reaching23.0 seconds would require reductions of15.4,30.8 and24.8 percent respectively, so the low-20-second range is an objective rather than an established outcome.",
+    "official_source_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "official_source_checked_at": "2026-09-30",
+    "research": [
+      "https://arxiv.org/abs/1902.00606",
+      "https://ddl.stanford.edu/sites/g/files/sbiybj25996/files/media/file/laurense2018_speed_control_for_robust_path-tracking_for_automated_vehicles_at_the_tire-road_friction_limit_0.pdf",
+      "https://ddl.stanford.edu/sites/g/files/sbiybj25996/files/media/file/2012_thesis_kritayakirana_autonomous_vehicle_control_at_the_limits_of_handling_0.pdf",
+      "https://github.com/TUMFTM/velocity_optimization"
+    ],
+    "interpretation": "Primary sources support a curvature-limited speed profile with forward acceleration and backward braking logic. Camera-row sweep is not metric curvature or distance, so the implementation is a bounded proxy and not a physics-optimal velocity solution."
+  },
+  "single_factor": {
+    "name": "preview-conditioned longitudinal speed envelope",
+    "bundling_reason": "Raising straight speed without moving braking earlier is predictably unsafe; straight acceleration, curve target and braking feedback form one longitudinal envelope. Steering, perception and obstacle routing remain frozen so the factor stays longitudinal-only.",
+    "candidate_controller": "agent._HighSpeedPreviewBrakeController",
+    "parameters": {
+      "straight_target_speed": 68.0,
+      "straight_gas_full": 0.18,
+      "straight_gas_mid": 0.135,
+      "straight_gas_hold": 0.09,
+      "curve_target_formula": "clip(52.0 - 3.0*sweep,30.0,48.0) for sweep>1.5",
+      "curve_brake_trigger_delta": 0.5,
+      "curve_brake_formula": "clip(0.06 + 0.018*(speed-target-0.5),0.06,0.28)",
+      "far_obstacle_target": 47.0,
+      "near_obstacle_target": 40.0,
+      "compound_sweep_threshold": 6.0,
+      "compound_target": 30.0
+    },
+    "fast_gas_gate": "exact inherited straight; no current obstacle; obstacle miss latch fully clear; brake zero; abs(previous steering)<=0.07",
+    "curve_proxy": "derive sweep from the raw inherited curve target before EMA as max(0,(68-curve_target_speed)/2); this is algebraically identical to the frozen generic visible-road sweep and uses no track or seed identity",
+    "unchanged": [
+      "road and obstacle perception, steering law, steering limits and slew",
+      "obstacle side, urgency, curve-retention, distant preview and preview-to-obstacle priority state",
+      "lost-road behavior, observation/action interface and official environment files",
+      "model.pt, DrQ, explicit-export and HAIC policy routes",
+      "all track-id, seed, coordinate, elapsed-time and progress independence"
+    ]
+  },
+  "safety_priority": [
+    "Current obstacle and obstacle miss latch always veto high-speed straight gas.",
+    "A visible curve immediately bypasses the stale-target EMA for the emitted longitudinal command; its target never exceeds48 and reaches30 by sweep7.34.",
+    "A current obstacle is immediately capped at47 or40 by image distance, and obstacle plus sweep>=6 is capped at30; the cap persists through the miss latch.",
+    "Gas and brake are mutually exclusive, brake remains at most0.28, and invalid/lost-road behavior remains inherited.",
+    "Steering must be bit-exact to the control for identical observations and state."
+  ],
+  "acceptance": {
+    "static_and_synthetic": [
+      "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
+      "On settled, obstacle-free clear straights, speed branches emit exactly0.18/0.135/0.09 gas and use target68; gas above0.11 is impossible outside the registered gate.",
+      "A distant bend following repeated fast-straight frames immediately lowers the command target and brakes; a sustained/mid curve continues braking while overspeed; mirrored curves have identical longitudinal actions.",
+      "Curve target exact and nextafter boundaries at sweep1.5, the30/48 clips, speed target+0.5 and pedal branch transitions are closed.",
+      "Current obstacle, all miss-latch frames, reacquisition, invalid input, road loss and reset never receive fast gas; obstacle caps and compound cap apply immediately.",
+      "Randomized actions are finite and bounded, never combine gas and brake, keep steering exact to control and differ longitudinally only under the registered envelope.",
+      "Affected/local/submission contract tests and an isolated exact-file package smoke pass."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, preregister unused multi-track geometry seeds and compare to the exact control. Completion rate, DNF, collision and worst-progress may not regress before lap time is considered.",
+      "objective": "Move each evaluation-video track toward the low-20-second range; no static implementation or consumed video can establish that result."
+    },
+    "classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any runtime condition uses track id, seed, map identity, coordinate, time, progress or evaluation filename.",
+    "Any steering/perception/obstacle pass-side behavior changes or any fast gas appears during a curve, obstacle, latch, invalid input or road loss.",
+    "Any action is non-finite/out of range, gas and brake overlap, package/interface gate fails, or relevant regression fails.",
+    "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
+    "Any frozen environment/model/DrQ/active-study artifact, user video or root submission.zip changes."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible; the official participant repository remains available and unchanged.",
+    "Only source, synthetic, unit and isolated package validation is authorized."
+  ]
+}
