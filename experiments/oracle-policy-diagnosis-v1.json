@@ -1,0 +1,142 @@
+{
+  "format": "haic-oracle-policy-diagnosis-protocol-v1",
+  "study_id": "oracle-policy-diagnosis-v1",
+  "created_at_utc": "2026-09-29T15:32:00Z",
+  "purpose": "descriptive matched-cell failure diagnosis before selecting one follow-up intervention",
+  "fresh_access": "none",
+  "oracle_policy": "haic/oracle_v1/ is read-only and immutable; local privileged controller only",
+  "cohort": {
+    "drq-r6": {
+      "ledger": "runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/episodes.jsonl",
+      "arm": "unchanged-source",
+      "canonical_repeat": 0,
+      "selection": "historically failed episodes only",
+      "episodes": 21,
+      "historical_failures": 21
+    },
+    "rlpd-g0": {
+      "ledger": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+      "actors": [
+        "long-horizon-seed11",
+        "entropy-v5-author-seed50"
+      ],
+      "selection": "all stored same-cell episodes, preserving six finishes as controls",
+      "episodes": 24,
+      "historical_failures": 18
+    },
+    "total_policy_episodes": 45,
+    "historical_failures": 39,
+    "unique_track_seed_cells": 26,
+    "allowed_partition": "previously consumed TRAIN or TRAIN-DIAGNOSTIC only"
+  },
+  "environment": {
+    "track_ids": [
+      1
+    ],
+    "frame_skip": 4,
+    "raw_noop_warmup": 50,
+    "obstacles": true,
+    "collision_penalty": 0.0,
+    "decision_caps": {
+      "drq-r6": 1200,
+      "rlpd-g0": 2000
+    },
+    "reset": "seed=geometry_seed, options={track_id: 1}; policy and oracle initial observation and road-coordinate SHA must match"
+  },
+  "oracle": {
+    "source": "haic/oracle_v1/controller.py",
+    "target_speed_m_s": 12.0,
+    "avoid_obstacles": true,
+    "agent_submission_eligible": false
+  },
+  "replay": {
+    "policy_weights": "frozen actor.pt inference exports; no checkpoint resume or learner updates",
+    "policy_action": "root Agent deterministic exported actor; official action executed",
+    "rollout_order": "serial policies then one oracle rollout for each unique (track_id, geometry_seed, decision cap)",
+    "stored_policy_trace_role": "source selection and archived outcome only; current-runtime actor is rerun to collect dense telemetry",
+    "historical_and_current_outcomes": "reported separately; do not relabel an archived failure if its current replay finishes"
+  },
+  "analysis_contract": {
+    "oracle": {
+      "target_speed_m_s": 12.0,
+      "avoid_obstacles": true
+    },
+    "environment": {
+      "track_ids": [
+        1
+      ],
+      "frame_skip": 4,
+      "warmup_raw_noops": 50,
+      "obstacles": true,
+      "collision_penalty": 0.0,
+      "decision_caps": {
+        "drq-r6": 1200,
+        "rlpd-g0": 2000
+      }
+    },
+    "material_divergence": {
+      "position_gap_m": 2.0,
+      "heading_gap_rad": 0.3,
+      "speed_gap_m_s": 2.0,
+      "same_signal_for_decisions": 3
+    },
+    "first_precursor": {
+      "curve_abs_curvature_min": 0.025,
+      "curve_speed_m_s_min": 14.0,
+      "heading_error_abs_rad_min": 0.55,
+      "centerline_offset_abs_m_min": 6.0,
+      "low_speed_m_s_max": 1.5,
+      "low_speed_window_decisions": 20,
+      "opposed_steering_min_abs_delta": 0.6
+    },
+    "taxonomy_is_causal": false,
+    "control_conditioning": "same initial observation and exact road hash; no hidden-state equivalence after action divergence"
+  },
+  "resource_contract": {
+    "learner_updates": 0,
+    "device": "cpu",
+    "torch_threads": 1,
+    "parallel_rollouts": 1,
+    "launch_priority": "nice -n 19",
+    "intended_rollouts": 71,
+    "active-training-overlap": "RLPD uses previously consumed G0 TRAIN cells; run one thread at lowest priority and do not alter that learner's files"
+  },
+  "command": "nice -n 19 env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m scripts.diagnose_oracle_policy_failures --output runs/oracle-policy-diagnosis-v1",
+  "result_path": "experiments/oracle-policy-diagnosis-v1-result.json",
+  "report_path": "docs/experiments/oracle-policy-diagnosis-v1.md",
+  "run_output_path": "runs/oracle-policy-diagnosis-v1/",
+  "code_sha256": {
+    "runner": "b6cbbdf9d740b4993eac52dd6510d76f71ed2539e003a13b2a023a3ddd3eb0ff"
+  },
+  "source_sha256": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "experiments/drqv2-geometry-augmentation-v1.json": "be6d1d1c3b1b16f6b56fd4720097ca8fea8b64c5c962d07183961cdfa0d87294",
+    "experiments/drqv2-geometry-mix-v1-r6.json": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+    "experiments/rlpd-g0-completion-v1-seed-audit.json": "5187bf7457ebdf08c8458be2c714c83ccb92feb3ec07e97b4a82d47d4ea3d93f",
+    "experiments/rlpd-g0-completion-v1-result.json": "fead3801625a03b049e9036d4d74d75f7e4555dd54f1f062b71e4db2a0dae1a4",
+    "experiments/rlpd-g0-completion-v1.json": "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b",
+    "haic/oracle_v1/PROVENANCE.json": "f56a53a769a9b104fee35cd64d686e4fd7dd428d84f81ea8d0095383d376a61c",
+    "haic/oracle_v1/__init__.py": "a03c8bb2a4b8096c4d9318540a62dc548fe9f111354e6d969a2fd0cce79fea91",
+    "haic/oracle_v1/controller.py": "a447aa7559a9f2fdddfc65202c739dd1228dd607b8cc40aa9b8f9bb82a28d839",
+    "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/checkpoints/step-000131072/actor.pt": "433115ce01f6261373571de1c7bd8a6dc0b74f8e2714cb8e16f820dae4c4ad37",
+    "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+    "runs/20260924-pixel-rlpd-long-horizon-followup-v1/rlpd-seed11/checkpoints/step-000131072/actor.pt": "f5c048d9cff711705c55887a433d433b3f7eed13ed104f3f370d750a2fba17e1",
+    "runs/20260925-drqv2-geometry-augmentation-v1/catalog/catalog.json": "a8cbe5d2445563f9065a944254f6410486135b20eb8574ec1cf9eb611ebbf00b",
+    "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+    "runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/episodes.jsonl": "aee2ae9b85172feb0e9a09697bdd92a34b29631cfc094586364f7c0b9f283441",
+    "runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/manifest.json": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+    "runs/20260926-rlpd-g0-completion-v1/cells.jsonl": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+    "runs/20260926-rlpd-g0-completion-v1/manifest.json": "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358",
+    "scripts/diagnose_drq_geometry_mix.py": "8243ca4215ebd57dd50fdb92067024ea5fb83b21bac621b6d3a2d802fe40c6a3",
+    "scripts/diagnose_rlpd_g0.py": "76a124d125e7ef31bf51626ad3c0b3f5976b4cba115f45bf64861d225e63c65f",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  }
+}

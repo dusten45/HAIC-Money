@@ -1,0 +1,1436 @@
+{
+  "branch_protocol_sha256": "930da7ab8fe8ace4441f273477e94ce78936bd9c0045aa1acbb4cbcbf2ed88d5",
+  "damage_guard_passes": 10,
+  "format": "haic-oracle-action-branch-result-v1",
+  "fresh_access": "none",
+  "hypothesis": "The leading RLPD curve-entry precursor is an action-side speed/braking mismatch; replacing only the first qualifying policy action with the fixed Oracle action improves short-horizon speed control without worsening lane error or damage.",
+  "hypothesis_supported": false,
+  "lane_guard_passes": 7,
+  "median_speed_delta_m_s": -4.406810347498499,
+  "next_step": "reject the simple speed-action repair hypothesis; do not add Oracle action imitation based on this result",
+  "oracle_mutated": false,
+  "paired_interventions": 10,
+  "pairs": [
+    {
+      "damage_guard_pass": true,
+      "event_step": 43,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": -0.24049666245048285,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -0.5459124700517535
+      },
+      "geometry_seed": 4272000001,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 43,
+        "geometry_seed": 4272000001,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "5715c977dde09c1cc9366172f0a9ce5403ae9088649c2c0e91203bbb408de5d5",
+        "state_after_four_decisions": {
+          "arc_length": 83.69929430347727,
+          "center_error": 0.42607888941888816,
+          "curvature": 0.0,
+          "damage": 0.0,
+          "heading": 1.2714192867279053,
+          "heading_error": 0.007321628545016658,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.017987435683608055,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.42607888941888816,
+          "position": [
+            208.05433654785156,
+            19.97776222229004
+          ],
+          "progress": 0.09219858156028368,
+          "speed": 21.21843527744148
+        },
+        "state_at_event": {
+          "arc_length": 76.87663149676206,
+          "center_error": 0.4614662998502187,
+          "curvature": 0.04577517626732864,
+          "damage": 0.0,
+          "heading": 1.3260549306869507,
+          "heading_error": -0.05147458416682433,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.0460406057536602,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.4614662998502187,
+          "position": [
+            214.57591247558594,
+            17.979549407958984
+          ],
+          "progress": 0.0851063829787234,
+          "speed": 21.539527323368663
+        },
+        "substituted_action": [
+          0.0460406057536602,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000001-step43-oracle.npz",
+      "oracle_trace_sha256": "01739e6e3791d179d62390c14507b57a32f61fa4041f331c957e990604728285",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 43,
+        "geometry_seed": 4272000001,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "5715c977dde09c1cc9366172f0a9ce5403ae9088649c2c0e91203bbb408de5d5",
+        "state_after_four_decisions": {
+          "arc_length": 83.7391204194663,
+          "center_error": -0.666575551869371,
+          "curvature": 0.0,
+          "damage": 0.0,
+          "heading": 0.9084875583648682,
+          "heading_error": 0.37025335690805383,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.20537517964839935,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.666575551869371,
+          "position": [
+            208.33079528808594,
+            21.035614013671875
+          ],
+          "progress": 0.09219858156028368,
+          "speed": 21.764347747493233
+        },
+        "state_at_event": {
+          "arc_length": 76.87663149676206,
+          "center_error": 0.4614662998502187,
+          "curvature": 0.04577517626732864,
+          "damage": 0.0,
+          "heading": 1.3260549306869507,
+          "heading_error": -0.05147458416682433,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.0460406057536602,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.4614662998502187,
+          "position": [
+            214.57591247558594,
+            17.979549407958984
+          ],
+          "progress": 0.0851063829787234,
+          "speed": 21.539527323368663
+        },
+        "substituted_action": [
+          0.9144284725189209,
+          0.9633115530014038,
+          0.04336845874786377
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000001-step43-policy.npz",
+      "policy_trace_sha256": "18e8351111e22973ac5714a7c1b6a0f5fcd4c18309c9e30f4353add2afb22bd7",
+      "source_trace_sha256": "5715c977dde09c1cc9366172f0a9ce5403ae9088649c2c0e91203bbb408de5d5",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 40,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 0.4983525220278042,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -1.4470923457598985
+      },
+      "geometry_seed": 4272000003,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 40,
+        "geometry_seed": 4272000003,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "d67bf290b4e7476df6f49e707326afc70d72b796bb646f2c32b4d56927fa530b",
+        "state_after_four_decisions": {
+          "arc_length": 73.99385970329996,
+          "center_error": 2.1882053628883025,
+          "curvature": 0.0012080904514584286,
+          "damage": 0.0,
+          "heading": 0.8337816596031189,
+          "heading_error": 0.19576926626013308,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.01152249239385128,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.1882053628883025,
+          "position": [
+            216.11959838867188,
+            14.647557258605957
+          ],
+          "progress": 0.08712121212121213,
+          "speed": 21.63399603657373
+        },
+        "state_at_event": {
+          "arc_length": 65.71050150136533,
+          "center_error": 2.477668157856687,
+          "curvature": 0.08857142857142859,
+          "damage": 0.0,
+          "heading": 0.891413688659668,
+          "heading_error": -0.379490917130512,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.11334923654794693,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.477668157856687,
+          "position": [
+            221.45262145996094,
+            10.16784381866455
+          ],
+          "progress": 0.07954545454545454,
+          "speed": 22.209845308206326
+        },
+        "substituted_action": [
+          0.11334923654794693,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000003-step40-oracle.npz",
+      "oracle_trace_sha256": "bf03b48c7534d12a93f9e7fa129061f40b58f61a7902e6cba24cff916a9541bd",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 40,
+        "geometry_seed": 4272000003,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "d67bf290b4e7476df6f49e707326afc70d72b796bb646f2c32b4d56927fa530b",
+        "state_after_four_decisions": {
+          "arc_length": 74.1374193484911,
+          "center_error": 1.6898528408604983,
+          "curvature": 0.0012080904514584286,
+          "damage": 0.0,
+          "heading": 0.6429513692855835,
+          "heading_error": 0.3865995565776685,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.10322833061218262,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.6898528408604983,
+          "position": [
+            216.25331115722656,
+            15.148641586303711
+          ],
+          "progress": 0.08712121212121213,
+          "speed": 23.08108838233363
+        },
+        "state_at_event": {
+          "arc_length": 65.71050150136533,
+          "center_error": 2.477668157856687,
+          "curvature": 0.08857142857142859,
+          "damage": 0.0,
+          "heading": 0.891413688659668,
+          "heading_error": -0.379490917130512,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.11334923654794693,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.477668157856687,
+          "position": [
+            221.45262145996094,
+            10.16784381866455
+          ],
+          "progress": 0.07954545454545454,
+          "speed": 22.209845308206326
+        },
+        "substituted_action": [
+          0.8056302070617676,
+          0.9631252288818359,
+          0.045001477003097534
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000003-step40-policy.npz",
+      "policy_trace_sha256": "afb1ec954467971c625011b8b305793d1ee04b918275d0ea5834354c192b07b9",
+      "source_trace_sha256": "d67bf290b4e7476df6f49e707326afc70d72b796bb646f2c32b4d56927fa530b",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 40,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": -0.18624709427090202,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -2.005552855358868
+      },
+      "geometry_seed": 4272000005,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 40,
+        "geometry_seed": 4272000005,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "c4c0647cfc581ca6efcd5e403954c3172672eabbd6a2b80006b2723dbce15e5a",
+        "state_after_four_decisions": {
+          "arc_length": 74.40754631353747,
+          "center_error": 1.2460407943076977,
+          "curvature": 0.0018186568429122362,
+          "damage": 0.0,
+          "heading": 0.7918776869773865,
+          "heading_error": 0.2783865508277122,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.07323556393384933,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.2460407943076977,
+          "position": [
+            216.4093780517578,
+            15.687177658081055
+          ],
+          "progress": 0.08745247148288973,
+          "speed": 22.362233290743877
+        },
+        "state_at_event": {
+          "arc_length": 66.11770344601514,
+          "center_error": 2.112636561289126,
+          "curvature": 0.088571428571429,
+          "damage": 0.0,
+          "heading": 0.832700788974762,
+          "heading_error": -0.33282346529016354,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.03975078463554382,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.112636561289126,
+          "position": [
+            221.72726440429688,
+            10.884004592895508
+          ],
+          "progress": 0.07984790874524715,
+          "speed": 22.960121839067366
+        },
+        "substituted_action": [
+          0.03975078463554382,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000005-step40-oracle.npz",
+      "oracle_trace_sha256": "84fedf32d55a29adda024817fde7e68273f26824d71b21235a3b1983a1be0810",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 40,
+        "geometry_seed": 4272000005,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "c4c0647cfc581ca6efcd5e403954c3172672eabbd6a2b80006b2723dbce15e5a",
+        "state_after_four_decisions": {
+          "arc_length": 74.68454542252276,
+          "center_error": 1.4322878885785997,
+          "curvature": 0.0018186568429122362,
+          "damage": 0.0,
+          "heading": 0.8763675093650818,
+          "heading_error": 0.19389672844001696,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.02662009745836258,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.4322878885785997,
+          "position": [
+            216.0769805908203,
+            15.656707763671875
+          ],
+          "progress": 0.08745247148288973,
+          "speed": 24.367786146102745
+        },
+        "state_at_event": {
+          "arc_length": 66.11770344601514,
+          "center_error": 2.112636561289126,
+          "curvature": 0.088571428571429,
+          "damage": 0.0,
+          "heading": 0.832700788974762,
+          "heading_error": -0.33282346529016354,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.03975078463554382,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.112636561289126,
+          "position": [
+            221.72726440429688,
+            10.884004592895508
+          ],
+          "progress": 0.07984790874524715,
+          "speed": 22.960121839067366
+        },
+        "substituted_action": [
+          0.6015393137931824,
+          0.9643361568450928,
+          0.04922106862068176
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000005-step40-policy.npz",
+      "policy_trace_sha256": "58d4441292a040e5a625f6adf67fedb7813e11b941d15c350b975e3a7fb90205",
+      "source_trace_sha256": "c4c0647cfc581ca6efcd5e403954c3172672eabbd6a2b80006b2723dbce15e5a",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 41,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 1.009493464821172,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -0.7579294942380166
+      },
+      "geometry_seed": 4272000008,
+      "lane_guard_pass": false,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 41,
+        "geometry_seed": 4272000008,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "628b3a2f1e6d6e61f76883adc3d5000e17463e4b3dea3a227e8b0fa54769595d",
+        "state_after_four_decisions": {
+          "arc_length": 79.73387077420524,
+          "center_error": 2.1108872514630317,
+          "curvature": -0.007872717974594564,
+          "damage": 0.0,
+          "heading": 1.2347332239151,
+          "heading_error": 0.16239419883817527,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.023406008258461952,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.1108872514630317,
+          "position": [
+            211.2720947265625,
+            15.728408813476562
+          ],
+          "progress": 0.08333333333333333,
+          "speed": 21.467678110500053
+        },
+        "state_at_event": {
+          "arc_length": 72.06187533951122,
+          "center_error": 2.9978586593074734,
+          "curvature": 0.08857142857142912,
+          "damage": 0.0,
+          "heading": 1.2613253593444824,
+          "heading_error": -0.14161568934233845,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.1021488606929779,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.9978586593074734,
+          "position": [
+            217.77967834472656,
+            13.500618934631348
+          ],
+          "progress": 0.07666666666666666,
+          "speed": 21.67442217241785
+        },
+        "substituted_action": [
+          0.1021488606929779,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000008-step41-oracle.npz",
+      "oracle_trace_sha256": "1f1005d93f998ae570555b017ee62011a78f8e95bf609335f2c531edab2c82aa",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 41,
+        "geometry_seed": 4272000008,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "628b3a2f1e6d6e61f76883adc3d5000e17463e4b3dea3a227e8b0fa54769595d",
+        "state_after_four_decisions": {
+          "arc_length": 79.66231320308663,
+          "center_error": 1.1013937866418597,
+          "curvature": -0.007872717974594564,
+          "damage": 0.0,
+          "heading": 0.906946063041687,
+          "heading_error": 0.4901813597115883,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.1781502366065979,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.1013937866418597,
+          "position": [
+            211.5170135498047,
+            16.710351943969727
+          ],
+          "progress": 0.08333333333333333,
+          "speed": 22.22560760473807
+        },
+        "state_at_event": {
+          "arc_length": 72.06187533951122,
+          "center_error": 2.9978586593074734,
+          "curvature": 0.08857142857142912,
+          "damage": 0.0,
+          "heading": 1.2613253593444824,
+          "heading_error": -0.14161568934233845,
+          "off_track_counter": 0,
+          "oracle_action": [
+            0.1021488606929779,
+            0.0,
+            0.5
+          ],
+          "path_error": 2.9978586593074734,
+          "position": [
+            217.77967834472656,
+            13.500618934631348
+          ],
+          "progress": 0.07666666666666666,
+          "speed": 21.67442217241785
+        },
+        "substituted_action": [
+          0.8792099952697754,
+          0.9611234664916992,
+          0.04259413480758667
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000008-step41-policy.npz",
+      "policy_trace_sha256": "8653ca93d120178f2385cac276bd1c9863a717e2fc73283c0864c529e8a56042",
+      "source_trace_sha256": "628b3a2f1e6d6e61f76883adc3d5000e17463e4b3dea3a227e8b0fa54769595d",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 42,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 1.412927415178807,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -3.6682155482795764
+      },
+      "geometry_seed": 4272000009,
+      "lane_guard_pass": false,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 42,
+        "geometry_seed": 4272000009,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "bd5fc4d847e8e1876dccff029d97537f08b4e9f91645954892d7f774981053ed",
+        "state_after_four_decisions": {
+          "arc_length": 80.33547775390647,
+          "center_error": 3.262450634416584,
+          "curvature": -0.005106000255252645,
+          "damage": 0.0,
+          "heading": 1.386487364768982,
+          "heading_error": -0.009632058226408044,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.1635553240776062,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.262450634416584,
+          "position": [
+            210.37879943847656,
+            14.524175643920898
+          ],
+          "progress": 0.07936507936507936,
+          "speed": 19.962669246313645
+        },
+        "state_at_event": {
+          "arc_length": 73.98488933054597,
+          "center_error": 3.2521546814516333,
+          "curvature": 0.07831583723807195,
+          "damage": 0.0,
+          "heading": 1.4611848592758179,
+          "heading_error": -0.06645855183985964,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.21203649044036865,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.2521546814516333,
+          "position": [
+            216.67935180664062,
+            13.352617263793945
+          ],
+          "progress": 0.07301587301587302,
+          "speed": 20.733470894880977
+        },
+        "substituted_action": [
+          0.21203649044036865,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000009-step42-oracle.npz",
+      "oracle_trace_sha256": "2679c4747bd88872794c9df6fc11a79d854c8776a20b73dfb88ebedf07c214f5",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 42,
+        "geometry_seed": 4272000009,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "bd5fc4d847e8e1876dccff029d97537f08b4e9f91645954892d7f774981053ed",
+        "state_after_four_decisions": {
+          "arc_length": 80.98763609175941,
+          "center_error": 1.849523219237777,
+          "curvature": 0.00028232564580302623,
+          "damage": 0.0,
+          "heading": 1.0930254459381104,
+          "heading_error": 0.2848180003647741,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.04965562745928764,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.849523219237777,
+          "position": [
+            210.01287841796875,
+            16.035478591918945
+          ],
+          "progress": 0.07936507936507936,
+          "speed": 23.63088479459322
+        },
+        "state_at_event": {
+          "arc_length": 73.98488933054597,
+          "center_error": 3.2521546814516333,
+          "curvature": 0.07831583723807195,
+          "damage": 0.0,
+          "heading": 1.4611848592758179,
+          "heading_error": -0.06645855183985964,
+          "off_track_counter": 1,
+          "oracle_action": [
+            0.21203649044036865,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.2521546814516333,
+          "position": [
+            216.67935180664062,
+            13.352617263793945
+          ],
+          "progress": 0.07301587301587302,
+          "speed": 20.733470894880977
+        },
+        "substituted_action": [
+          0.9252819418907166,
+          0.9645793437957764,
+          0.04587298631668091
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000009-step42-policy.npz",
+      "policy_trace_sha256": "9c23b762bc6eb773b5b4f2bc824d991d71bae1327d978d34e48927c52fefa6d7",
+      "source_trace_sha256": "bd5fc4d847e8e1876dccff029d97537f08b4e9f91645954892d7f774981053ed",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 68,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 0.3700477603804456,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -5.4405321409475285
+      },
+      "geometry_seed": 4272000010,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 68,
+        "geometry_seed": 4272000010,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "fe662173d4cc01e506d18bfc41155125bd55b287571f90b9644df16c840f6c9c",
+        "state_after_four_decisions": {
+          "arc_length": 132.1820898065155,
+          "center_error": 0.4274575898662063,
+          "curvature": 0.0885714285714293,
+          "damage": 0.0,
+          "heading": -0.6936360001564026,
+          "heading_error": 0.6025724509562013,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.500420093536377,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.37147029249622165,
+          "position": [
+            236.2112579345703,
+            11.544087409973145
+          ],
+          "progress": 0.14084507042253522,
+          "speed": 20.9195445563576
+        },
+        "state_at_event": {
+          "arc_length": 124.34407953106168,
+          "center_error": 3.545907694512807,
+          "curvature": 0.08857142857142748,
+          "damage": 0.0,
+          "heading": -0.8505329489707947,
+          "heading_error": 0.13946939977058875,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.10290547460317612,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.545907694512807,
+          "position": [
+            231.25930786132812,
+            6.671539306640625
+          ],
+          "progress": 0.13380281690140844,
+          "speed": 25.672621272759564
+        },
+        "substituted_action": [
+          -0.10290547460317612,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed11-seed4272000010-step68-oracle.npz",
+      "oracle_trace_sha256": "759ace0b1f719fa66d44b53109baca03181ccf9dbf606952c829a90eb0af8ba2",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 68,
+        "geometry_seed": 4272000010,
+        "mode": "policy",
+        "policy_id": "rlpd-seed11",
+        "source_trace_sha256": "fe662173d4cc01e506d18bfc41155125bd55b287571f90b9644df16c840f6c9c",
+        "state_after_four_decisions": {
+          "arc_length": 133.58950115901462,
+          "center_error": -0.05740982948576065,
+          "curvature": 0.08857142857142722,
+          "damage": 0.0,
+          "heading": -0.42336708307266235,
+          "heading_error": 0.642303533872456,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.44470536708831787,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.15788441404339618,
+          "position": [
+            236.6393280029297,
+            12.907634735107422
+          ],
+          "progress": 0.14084507042253522,
+          "speed": 26.36007669730513
+        },
+        "state_at_event": {
+          "arc_length": 124.34407953106168,
+          "center_error": 3.545907694512807,
+          "curvature": 0.08857142857142748,
+          "damage": 0.0,
+          "heading": -0.8505329489707947,
+          "heading_error": 0.13946939977058875,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.10290547460317612,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.545907694512807,
+          "position": [
+            231.25930786132812,
+            6.671539306640625
+          ],
+          "progress": 0.13380281690140844,
+          "speed": 25.672621272759564
+        },
+        "substituted_action": [
+          -0.9555591344833374,
+          0.9497486352920532,
+          0.042984187602996826
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed11",
+      "policy_trace_path": "rlpd-seed11-seed4272000010-step68-policy.npz",
+      "policy_trace_sha256": "0d010c7b88551281c468e7baf10378f1a836db957eef707827c8752658e689a8",
+      "source_trace_sha256": "fe662173d4cc01e506d18bfc41155125bd55b287571f90b9644df16c840f6c9c",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 32,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 0.4199238624362017,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -5.145405146717422
+      },
+      "geometry_seed": 4272000003,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 32,
+        "geometry_seed": 4272000003,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "3e23be3310382362b9879a6bbbd3cb2f85b2b51c4cb4938c2fd2b0bcccb8c172",
+        "state_after_four_decisions": {
+          "arc_length": 72.0030339080817,
+          "center_error": -0.6469921178649125,
+          "curvature": 0.058114239358282874,
+          "damage": 0.0,
+          "heading": 0.3591545522212982,
+          "heading_error": 0.6661680570618492,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.31323087215423584,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.6469921178649125,
+          "position": [
+            219.28564453125,
+            16.045000076293945
+          ],
+          "progress": 0.08712121212121213,
+          "speed": 23.688497035360832
+        },
+        "state_at_event": {
+          "arc_length": 64.13431117056865,
+          "center_error": 3.162465484824877,
+          "curvature": 0.08857142857142859,
+          "damage": 0.0,
+          "heading": 0.23764073848724365,
+          "heading_error": 0.2742820330419124,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.14165423810482025,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.162465484824877,
+          "position": [
+            221.62771606445312,
+            8.458263397216797
+          ],
+          "progress": 0.07954545454545454,
+          "speed": 28.669059019750904
+        },
+        "substituted_action": [
+          -0.14165423810482025,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed50-seed4272000003-step32-oracle.npz",
+      "oracle_trace_sha256": "0c717da2451dbd2ccb9c7a02e1ed158b964e54f1cc00d5503ee8120dfb84bed8",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 32,
+        "geometry_seed": 4272000003,
+        "mode": "policy",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "3e23be3310382362b9879a6bbbd3cb2f85b2b51c4cb4938c2fd2b0bcccb8c172",
+        "state_after_four_decisions": {
+          "arc_length": 73.7909223213813,
+          "center_error": -0.22706825542871079,
+          "curvature": 0.0012080904514584286,
+          "damage": 0.0,
+          "heading": 0.8925742506980896,
+          "heading_error": 0.13697667516516243,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.06700452417135239,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.22706825542871079,
+          "position": [
+            217.5378875732422,
+            16.613056182861328
+          ],
+          "progress": 0.08712121212121213,
+          "speed": 28.833902182078255
+        },
+        "state_at_event": {
+          "arc_length": 64.13431117056865,
+          "center_error": 3.162465484824877,
+          "curvature": 0.08857142857142859,
+          "damage": 0.0,
+          "heading": 0.23764073848724365,
+          "heading_error": 0.2742820330419124,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.14165423810482025,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.162465484824877,
+          "position": [
+            221.62771606445312,
+            8.458263397216797
+          ],
+          "progress": 0.07954545454545454,
+          "speed": 28.669059019750904
+        },
+        "substituted_action": [
+          -0.7823644876480103,
+          0.9344676733016968,
+          0.0434211790561676
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed50",
+      "policy_trace_path": "rlpd-seed50-seed4272000003-step32-policy.npz",
+      "policy_trace_sha256": "87908c3355c7343b64e36314b958da91583ad10724570a4b17282aeff2d2f06e",
+      "source_trace_sha256": "3e23be3310382362b9879a6bbbd3cb2f85b2b51c4cb4938c2fd2b0bcccb8c172",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 31,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 0.03416462820717858,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -6.007445685294748
+      },
+      "geometry_seed": 4272000005,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 31,
+        "geometry_seed": 4272000005,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "58f44f5c379cc6214e1bb06845b119185b28058bc981ac4e6cf685d3e0b14b36",
+        "state_after_four_decisions": {
+          "arc_length": 70.40138688400114,
+          "center_error": 0.5503781708837472,
+          "curvature": 0.07257760433437364,
+          "damage": 0.0,
+          "heading": 0.3293154835700989,
+          "heading_error": 0.7345834552848071,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.30328047275543213,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.5503781708837472,
+          "position": [
+            220.24534606933594,
+            14.359393119812012
+          ],
+          "progress": 0.08365019011406843,
+          "speed": 23.61867597123079
+        },
+        "state_at_event": {
+          "arc_length": 61.10438065169423,
+          "center_error": 3.1887191577737903,
+          "curvature": 0.08857142857142883,
+          "damage": 0.0,
+          "heading": 0.20333947241306305,
+          "heading_error": -0.013462148728466253,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.06442348659038544,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.1887191577737903,
+          "position": [
+            222.30213928222656,
+            6.697019577026367
+          ],
+          "progress": 0.07604562737642585,
+          "speed": 29.368885504922606
+        },
+        "substituted_action": [
+          -0.06442348659038544,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed50-seed4272000005-step31-oracle.npz",
+      "oracle_trace_sha256": "ca2f4775eea52137934af6dbcd04aa766c8bdcc7f953bf386b6d1d35558e31c4",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 31,
+        "geometry_seed": 4272000005,
+        "mode": "policy",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "58f44f5c379cc6214e1bb06845b119185b28058bc981ac4e6cf685d3e0b14b36",
+        "state_after_four_decisions": {
+          "arc_length": 72.28688552640085,
+          "center_error": 0.5162135426765686,
+          "curvature": 0.07257760433437364,
+          "damage": 0.0,
+          "heading": 0.7873320579528809,
+          "heading_error": 0.27656688090202497,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.1001046746969223,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.5162135426765686,
+          "position": [
+            218.613525390625,
+            15.304609298706055
+          ],
+          "progress": 0.08745247148288973,
+          "speed": 29.626121656525537
+        },
+        "state_at_event": {
+          "arc_length": 61.10438065169423,
+          "center_error": 3.1887191577737903,
+          "curvature": 0.08857142857142883,
+          "damage": 0.0,
+          "heading": 0.20333947241306305,
+          "heading_error": -0.013462148728466253,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.06442348659038544,
+            0.0,
+            0.5
+          ],
+          "path_error": 3.1887191577737903,
+          "position": [
+            222.30213928222656,
+            6.697019577026367
+          ],
+          "progress": 0.07604562737642585,
+          "speed": 29.368885504922606
+        },
+        "substituted_action": [
+          -0.798947274684906,
+          0.9292193651199341,
+          0.04970961809158325
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed50",
+      "policy_trace_path": "rlpd-seed50-seed4272000005-step31-policy.npz",
+      "policy_trace_sha256": "be050db2c2cf088287636fbe43ee345041e39525c1d301db5fe08e4659169948",
+      "source_trace_sha256": "58f44f5c379cc6214e1bb06845b119185b28058bc981ac4e6cf685d3e0b14b36",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 56,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 1.4417477689279279,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -8.233326432321803
+      },
+      "geometry_seed": 4272000010,
+      "lane_guard_pass": false,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 56,
+        "geometry_seed": 4272000010,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "24678e8a17f1520a68a2a5e276d153eeab909295a1498fb0f101b6525f8534f3",
+        "state_after_four_decisions": {
+          "arc_length": 131.71093285569302,
+          "center_error": 1.5526496385100086,
+          "curvature": 0.0885714285714293,
+          "damage": 0.0,
+          "heading": -0.8362472057342529,
+          "heading_error": 0.7451836565340515,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.5110266208648682,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.506045284296365,
+          "position": [
+            235.04788208007812,
+            11.177205085754395
+          ],
+          "progress": 0.14084507042253522,
+          "speed": 21.259140144936342
+        },
+        "state_at_event": {
+          "arc_length": 121.62309308770274,
+          "center_error": 5.271534411875352,
+          "curvature": 0.08857142857142895,
+          "damage": 0.0,
+          "heading": -1.0034973621368408,
+          "heading_error": -0.01756618706336193,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.04012270271778107,
+            0.0,
+            0.5
+          ],
+          "path_error": 5.271534411875352,
+          "position": [
+            229.24053955078125,
+            6.996838092803955
+          ],
+          "progress": 0.13380281690140844,
+          "speed": 28.928623133537155
+        },
+        "substituted_action": [
+          -0.04012270271778107,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed50-seed4272000010-step56-oracle.npz",
+      "oracle_trace_sha256": "9775005ca4447b7c6f73683784a9efe941a529ceec6c25c6ac9508ae7324a8da",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 56,
+        "geometry_seed": 4272000010,
+        "mode": "policy",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "24678e8a17f1520a68a2a5e276d153eeab909295a1498fb0f101b6525f8534f3",
+        "state_after_four_decisions": {
+          "arc_length": 133.48768997129042,
+          "center_error": 0.1109018695820808,
+          "curvature": 0.08857142857142722,
+          "damage": 0.0,
+          "heading": -0.6549400687217712,
+          "heading_error": 0.8738765195215648,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.4801727533340454,
+            0.0,
+            0.5
+          ],
+          "path_error": 0.01520096355679722,
+          "position": [
+            236.4971466064453,
+            12.771697998046875
+          ],
+          "progress": 0.14084507042253522,
+          "speed": 29.492466577258146
+        },
+        "state_at_event": {
+          "arc_length": 121.62309308770274,
+          "center_error": 5.271534411875352,
+          "curvature": 0.08857142857142895,
+          "damage": 0.0,
+          "heading": -1.0034973621368408,
+          "heading_error": -0.01756618706336193,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.04012270271778107,
+            0.0,
+            0.5
+          ],
+          "path_error": 5.271534411875352,
+          "position": [
+            229.24053955078125,
+            6.996838092803955
+          ],
+          "progress": 0.13380281690140844,
+          "speed": 28.928623133537155
+        },
+        "substituted_action": [
+          -0.8412927985191345,
+          0.9709998369216919,
+          0.03924289345741272
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed50",
+      "policy_trace_path": "rlpd-seed50-seed4272000010-step56-policy.npz",
+      "policy_trace_sha256": "8656763ec36e399aa2c301acd3d6e25bd03c986d68b7053697a626dcc80598f5",
+      "source_trace_sha256": "24678e8a17f1520a68a2a5e276d153eeab909295a1498fb0f101b6525f8534f3",
+      "speed_gate_pass": true,
+      "track_id": 1
+    },
+    {
+      "damage_guard_pass": true,
+      "event_step": 137,
+      "four_decision_delta": {
+        "abs_center_error_m_treatment_minus_control": 0.032388285647906745,
+        "damage_treatment_minus_control": 0.0,
+        "speed_m_s_treatment_minus_control": -8.730473902197414
+      },
+      "geometry_seed": 4272000011,
+      "lane_guard_pass": true,
+      "oracle_action_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 137,
+        "geometry_seed": 4272000011,
+        "mode": "oracle",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "b5aca22adc0721272e490d15157a7876292680298634508a92f27d56573b4184",
+        "state_after_four_decisions": {
+          "arc_length": 366.52272247444415,
+          "center_error": -0.8388963489323491,
+          "curvature": 0.0514011014235363,
+          "damage": 0.0,
+          "heading": 2.183824062347412,
+          "heading_error": 0.4149614787419395,
+          "off_track_counter": 0,
+          "oracle_action": [
+            -0.29768362641334534,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.783996051933335,
+          "position": [
+            -53.88188171386719,
+            93.44136047363281
+          ],
+          "progress": 0.38489208633093525,
+          "speed": 24.372797040645583
+        },
+        "state_at_event": {
+          "arc_length": 358.3439005489028,
+          "center_error": 1.7724118718913027,
+          "curvature": 0.07177626006972111,
+          "damage": 0.0,
+          "heading": 2.0413057804107666,
+          "heading_error": 0.1611866734016847,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.13312482833862305,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.7724937189787497,
+          "position": [
+            -46.75883865356445,
+            97.63602447509766
+          ],
+          "progress": 0.37410071942446044,
+          "speed": 32.700037559556975
+        },
+        "substituted_action": [
+          -0.13312482833862305,
+          0.0,
+          0.5
+        ],
+        "track_id": 1
+      },
+      "oracle_trace_path": "rlpd-seed50-seed4272000011-step137-oracle.npz",
+      "oracle_trace_sha256": "649fa063af304fd531dc6b80fed3ed1b860d5ecf11ce6af3a0ffdd60eaeb8894",
+      "policy_branch": {
+        "branch_state_match": {
+          "heading_rad": 0.0,
+          "oracle_action_linf": 0.0,
+          "position_m": 0.0,
+          "speed_m_s": 0.0
+        },
+        "event_step": 137,
+        "geometry_seed": 4272000011,
+        "mode": "policy",
+        "policy_id": "rlpd-seed50",
+        "source_trace_sha256": "b5aca22adc0721272e490d15157a7876292680298634508a92f27d56573b4184",
+        "state_after_four_decisions": {
+          "arc_length": 368.9095461575807,
+          "center_error": -0.8065080632844424,
+          "curvature": 0.0419584245151495,
+          "damage": 0.0,
+          "heading": 2.6205670833587646,
+          "heading_error": 0.12507294353361031,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.1332620084285736,
+            0.0,
+            0.5
+          ],
+          "path_error": -0.7106716419085919,
+          "position": [
+            -54.95612335205078,
+            91.18180084228516
+          ],
+          "progress": 0.38489208633093525,
+          "speed": 33.103270942843
+        },
+        "state_at_event": {
+          "arc_length": 358.3439005489028,
+          "center_error": 1.7724118718913027,
+          "curvature": 0.07177626006972111,
+          "damage": 0.0,
+          "heading": 2.0413057804107666,
+          "heading_error": 0.1611866734016847,
+          "off_track_counter": 1,
+          "oracle_action": [
+            -0.13312482833862305,
+            0.0,
+            0.5
+          ],
+          "path_error": 1.7724937189787497,
+          "position": [
+            -46.75883865356445,
+            97.63602447509766
+          ],
+          "progress": 0.37410071942446044,
+          "speed": 32.700037559556975
+        },
+        "substituted_action": [
+          -0.7272429466247559,
+          0.956453263759613,
+          0.03695172071456909
+        ],
+        "track_id": 1
+      },
+      "policy_id": "rlpd-seed50",
+      "policy_trace_path": "rlpd-seed50-seed4272000011-step137-policy.npz",
+      "policy_trace_sha256": "dc5683365a7de0100a27ff8da41194724abdb5725ee8ed1beee3da08c0c7c6e2",
+      "source_trace_sha256": "b5aca22adc0721272e490d15157a7876292680298634508a92f27d56573b4184",
+      "speed_gate_pass": true,
+      "track_id": 1
+    }
+  ],
+  "parent_result_sha256": "64854c9811a568fd2112dc998a35b3fe468d68095a06625552e4cf3c2a819fd8",
+  "predeclared_gate": {
+    "abs_center_error_delta_m_max": 0.5,
+    "damage_delta_max": 0.0,
+    "speed_improved_at_least_0_5_m_s_in": "8 of 10"
+  },
+  "primary_metric": "four-decision speed after one substituted action and three recorded policy actions",
+  "resource_use": "20 short deterministic prefixes/branches; no actor training or full-episode reruns",
+  "source_comparisons": 45,
+  "speed_gate_passes": 10,
+  "status": "complete_local_one_action_intervention"
+}

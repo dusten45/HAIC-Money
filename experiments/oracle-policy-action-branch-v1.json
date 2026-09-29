@@ -1,0 +1,80 @@
+{
+  "format": "haic-oracle-policy-action-branch-protocol-v1",
+  "study_id": "oracle-policy-action-branch-v1",
+  "created_at_utc": "2026-09-29T16:47:06Z",
+  "parent_protocol": "experiments/oracle-policy-diagnosis-v1.json",
+  "parent_result": "experiments/oracle-policy-diagnosis-v1-result.json",
+  "parent_result_sha256": "64854c9811a568fd2112dc998a35b3fe468d68095a06625552e4cf3c2a819fd8",
+  "research_line": "RLPD offline/recovery data action correction; no learner update in this falsification step",
+  "hypothesis": "The leading RLPD curve-entry precursor is an action-side speed/braking mismatch. Replacing only the first qualifying policy action with the immutable Oracle action on that exact policy state reduces short-horizon speed without worsening lateral error or damage.",
+  "branch_contract": {
+    "samples": [
+      ["rlpd-seed11", 4272000001],
+      ["rlpd-seed11", 4272000003],
+      ["rlpd-seed11", 4272000005],
+      ["rlpd-seed11", 4272000008],
+      ["rlpd-seed11", 4272000009],
+      ["rlpd-seed11", 4272000010],
+      ["rlpd-seed50", 4272000003],
+      ["rlpd-seed50", 4272000005],
+      ["rlpd-seed50", 4272000010],
+      ["rlpd-seed50", 4272000011]
+    ],
+    "event_rule": "current replay failed and first measured precursor is curve-entry-overspeed",
+    "intervention": "replace one action with Oracle action from identical policy state; replay the next three logged policy actions",
+    "prefix_state_tolerance": 0.00001,
+    "primary_speed_delta_m_s": -0.5,
+    "primary_pass_count": 8,
+    "lane_abs_center_error_delta_m_max": 0.5,
+    "damage_delta_max": 0.0
+  },
+  "measured_outcome": {
+    "primary": "treatment minus control speed after four decisions (one branch action plus three recorded policy actions)",
+    "primary_gate": "speed delta <= -0.5 m/s in at least 8 of the 10 pairs",
+    "safety_gates": [
+      "absolute centerline error increase <= 0.5 m in every pair",
+      "damage increase <= 0 in every pair"
+    ],
+    "decision_rule": "support the narrow action-side hypothesis only if all gates pass; otherwise reject this speed/braking repair and do not add Oracle action imitation based on this result"
+  },
+  "scope": {
+    "partition": "already consumed RLPD G0 TRAIN cells",
+    "unique_geometry_seeds": [
+      4272000001,
+      4272000003,
+      4272000005,
+      4272000008,
+      4272000009,
+      4272000010,
+      4272000011
+    ],
+    "branch_pairs": 10,
+    "simulator_prefix_replays": 20,
+    "learner_updates": 0,
+    "fresh_access": "none",
+    "oracle_mutation": "prohibited; none"
+  },
+  "resource_contract": {
+    "device": "cpu",
+    "parallelism": 1,
+    "learner_updates": 0,
+    "rollouts": "two short prefixes per sample; each branch ends four decisions after the event",
+    "launch_priority": "nice -n 19",
+    "active_training_overlap": "these G0 cells are already used by an active reused-TRAIN learner; preserve its outputs and use one low-priority thread"
+  },
+  "command": "nice -n 19 env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m scripts.branch_oracle_policy_action",
+  "preflight_command": "nice -n 19 python -m scripts.branch_oracle_policy_action --preflight-only",
+  "run_output_path": "runs/oracle-policy-action-branch-v1/",
+  "result_path": "experiments/oracle-policy-action-branch-v1-result.json",
+  "report_path": "docs/experiments/oracle-policy-diagnosis-v1.md",
+  "runner_sha256": "11b9071abec3d6a7be7b5f76c1c0b597274cd283f0394376581617e39d54b2f4",
+  "source_sha256": {
+    "diagnosis_result": "64854c9811a568fd2112dc998a35b3fe468d68095a06625552e4cf3c2a819fd8",
+    "scripts/diagnose_oracle_policy_failures.py": "b6cbbdf9d740b4993eac52dd6510d76f71ed2539e003a13b2a023a3ddd3eb0ff",
+    "haic/oracle_v1/controller.py": "a447aa7559a9f2fdddfc65202c739dd1228dd607b8cc40aa9b8f9bb82a28d839",
+    "haic/oracle_v1/PROVENANCE.json": "f56a53a769a9b104fee35cd64d686e4fd7dd428d84f81ea8d0095383d376a61c",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30"
+  }
+}

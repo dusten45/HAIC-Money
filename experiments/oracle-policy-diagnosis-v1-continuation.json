@@ -1,0 +1,72 @@
+{
+  "format": "haic-oracle-policy-diagnosis-continuation-protocol-v1",
+  "study_id": "oracle-policy-diagnosis-v1-continuation",
+  "created_at_utc": "2026-09-29T15:53:00Z",
+  "parent_protocol": "experiments/oracle-policy-diagnosis-v1.json",
+  "parent_protocol_sha256": "c4ab8ecfd3f1c9930bcc1d0839f57916baf6fa0fa176a258c8d81d05948a8186",
+  "parent_runner": "scripts/diagnose_oracle_policy_failures.py",
+  "parent_runner_sha256": "b6cbbdf9d740b4993eac52dd6510d76f71ed2539e003a13b2a023a3ddd3eb0ff",
+  "bootstrap_partial_run": "runs/oracle-policy-diagnosis-v1/",
+  "bootstrap_rollouts_sha256": "e323cd3e6f0112b56bfb8698b20bcac09f0c8e6641eb45756c0959ebc99ef2d9",
+  "bootstrap_rollout_census": {
+    "policy": 45,
+    "oracle": 7,
+    "oracle_cells_remaining": 19
+  },
+  "remaining_oracle_cells": {
+    "drq-r6_track1_geometry_seeds": [
+      3910800164,
+      3910800169,
+      3910800171,
+      3910800172,
+      3910800174,
+      3910800175,
+      3910800187
+    ],
+    "rlpd-g0_track1_geometry_seeds": [
+      4272000001,
+      4272000002,
+      4272000003,
+      4272000004,
+      4272000005,
+      4272000006,
+      4272000007,
+      4272000008,
+      4272000009,
+      4272000010,
+      4272000011,
+      4272000012
+    ],
+    "decision_cap_by_cohort": {
+      "drq-r6": 1200,
+      "rlpd-g0": 2000
+    }
+  },
+  "continuation_scope": {
+    "replay_policy_episodes": 0,
+    "learner_updates": 0,
+    "missing_oracle_rollouts_only": true,
+    "cell_partition": "same already-consumed TRAIN or TRAIN-DIAGNOSTIC cells; no new allocation/claim",
+    "resumption": "append each completed Oracle trace/receipt; if interrupted, validate receipts and resume only still-missing cells"
+  },
+  "resource_contract": {
+    "device": "cpu",
+    "torch_threads": 1,
+    "parallel_rollouts": 1,
+    "launch_priority": "nice -n 19",
+    "active_cpu_workload": "one low-priority continuation; preserve active TD-MPC2 training outputs"
+  },
+  "command": "nice -n 19 env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m scripts.resume_oracle_policy_diagnosis --output runs/oracle-policy-diagnosis-v1",
+  "preflight_command": "nice -n 19 env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m scripts.resume_oracle_policy_diagnosis --output runs/oracle-policy-diagnosis-v1 --preflight-only",
+  "run_result_path": "runs/oracle-policy-diagnosis-v1/result.json",
+  "experiment_result_path": "experiments/oracle-policy-diagnosis-v1-result.json",
+  "report_path": "docs/experiments/oracle-policy-diagnosis-v1.md",
+  "runner_sha256": "56fdddf898c78641201ccd85e2536e837448bb7cdd06797904cfe483a5778907",
+  "source_sha256": {
+    "experiments/oracle-policy-diagnosis-v1.json": "c4ab8ecfd3f1c9930bcc1d0839f57916baf6fa0fa176a258c8d81d05948a8186",
+    "haic/oracle_v1/PROVENANCE.json": "f56a53a769a9b104fee35cd64d686e4fd7dd428d84f81ea8d0095383d376a61c",
+    "haic/oracle_v1/controller.py": "a447aa7559a9f2fdddfc65202c739dd1228dd607b8cc40aa9b8f9bb82a28d839",
+    "scripts/diagnose_oracle_policy_failures.py": "b6cbbdf9d740b4993eac52dd6510d76f71ed2539e003a13b2a023a3ddd3eb0ff",
+    "scripts/resume_oracle_policy_diagnosis.py": "56fdddf898c78641201ccd85e2536e837448bb7cdd06797904cfe483a5778907"
+  }
+}

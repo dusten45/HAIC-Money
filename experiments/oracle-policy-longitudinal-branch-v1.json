@@ -1,0 +1,75 @@
+{
+  "format": "haic-oracle-longitudinal-branch-protocol-v1",
+  "study_id": "oracle-policy-longitudinal-branch-v1",
+  "created_at_utc": "2026-09-29T16:54:36Z",
+  "parent_action_branch_protocol": "experiments/oracle-policy-action-branch-v1.json",
+  "parent_action_branch_protocol_sha256": "930da7ab8fe8ace4441f273477e94ce78936bd9c0045aa1acbb4cbcbf2ed88d5",
+  "parent_action_branch_result": "experiments/oracle-policy-action-branch-v1-result.json",
+  "parent_action_branch_result_sha256": "889d808348665e4d14fa88bb044c02d1fa51aabc6fb7703dca5ee511e73c12c6",
+  "source_diagnosis_result": "experiments/oracle-policy-diagnosis-v1-result.json",
+  "source_diagnosis_result_sha256": "64854c9811a568fd2112dc998a35b3fe468d68095a06625552e4cf3c2a819fd8",
+  "reason_for_followup": "Full Oracle vector correction reduced speed in all ten pairs and caused no added damage, but three pairs exceeded the 0.5 m lateral-error guard. Isolate the longitudinal action dimensions rather than training a full action imitation target.",
+  "hypothesis": "Replacing only policy throttle/brake with the immutable Oracle throttle/brake, while retaining policy steering, preserves the speed improvement without worsening lateral error or damage.",
+  "samples": [
+    ["rlpd-seed11", 4272000001],
+    ["rlpd-seed11", 4272000003],
+    ["rlpd-seed11", 4272000005],
+    ["rlpd-seed11", 4272000008],
+    ["rlpd-seed11", 4272000009],
+    ["rlpd-seed11", 4272000010],
+    ["rlpd-seed50", 4272000003],
+    ["rlpd-seed50", 4272000005],
+    ["rlpd-seed50", 4272000010],
+    ["rlpd-seed50", 4272000011]
+  ],
+  "intervention": {
+    "branch_state": "replay exact current-runtime saved policy prefix; require observation hash, position, speed and Oracle action to match the saved precursor state within 1e-5",
+    "treatment_action_at_event": "[policy_steer, oracle_gas, oracle_brake]",
+    "control_action_at_event": "saved policy [steer, gas, brake]",
+    "after_event": "same three saved policy actions in both branches",
+    "horizon_decisions": 4
+  },
+  "measured_outcome": {
+    "primary": "treatment minus control speed after four decisions",
+    "speed_gate": "delta <= -0.5 m/s in at least 8 of 10 pairs",
+    "lane_guard": "absolute center-error increase <= 0.5 m in every pair",
+    "damage_guard": "damage increase <= 0 in every pair",
+    "decision_rule": "advance only to a masked throttle/brake Oracle-supervision pilot if all gates pass; otherwise reject longitudinal-only imitation and prioritize steering/heading-state diagnosis"
+  },
+  "scope": {
+    "track_id": 1,
+    "geometry_partition": "already consumed RLPD G0 TRAIN cells",
+    "branch_pairs": 10,
+    "short_branches": 20,
+    "learner_updates": 0,
+    "fresh_access": "none",
+    "oracle_mutation": "none"
+  },
+  "resource_contract": {
+    "device": "cpu",
+    "parallelism": 1,
+    "launch_priority": "nice -n 19",
+    "no full-episode evaluation": true,
+    "active_training_overlap": "these G0 cells are already used by the reused-TRAIN learner; preserve its outputs and use one low-priority thread"
+  },
+  "command": "nice -n 19 env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m scripts.branch_oracle_longitudinal_action",
+  "preflight_command": "nice -n 19 python -m scripts.branch_oracle_longitudinal_action --preflight-only",
+  "run_output_path": "runs/oracle-policy-longitudinal-branch-v1/",
+  "result_path": "experiments/oracle-policy-longitudinal-branch-v1-result.json",
+  "report_path": "docs/experiments/oracle-policy-diagnosis-v1.md",
+  "runner_sha256": "38ae40a85c5c623c803f6c16e33491dc7309f2d866967fc43506c218af4890cd",
+  "source_sha256": {
+    "diagnosis_result": "64854c9811a568fd2112dc998a35b3fe468d68095a06625552e4cf3c2a819fd8",
+    "experiments/oracle-policy-action-branch-v1.json": "930da7ab8fe8ace4441f273477e94ce78936bd9c0045aa1acbb4cbcbf2ed88d5",
+    "experiments/oracle-policy-action-branch-v1-result.json": "889d808348665e4d14fa88bb044c02d1fa51aabc6fb7703dca5ee511e73c12c6",
+    "experiments/oracle-policy-diagnosis-v1.json": "c4ab8ecfd3f1c9930bcc1d0839f57916baf6fa0fa176a258c8d81d05948a8186",
+    "haic/oracle_v1/PROVENANCE.json": "f56a53a769a9b104fee35cd64d686e4fd7dd428d84f81ea8d0095383d376a61c",
+    "haic/oracle_v1/controller.py": "a447aa7559a9f2fdddfc65202c739dd1228dd607b8cc40aa9b8f9bb82a28d839",
+    "scripts/branch_oracle_policy_action.py": "11b9071abec3d6a7be7b5f76c1c0b597274cd283f0394376581617e39d54b2f4",
+    "scripts/diagnose_oracle_policy_failures.py": "b6cbbdf9d740b4993eac52dd6510d76f71ed2539e003a13b2a023a3ddd3eb0ff",
+    "scripts/branch_oracle_longitudinal_action.py": "38ae40a85c5c623c803f6c16e33491dc7309f2d866967fc43506c218af4890cd",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30"
+  }
+}
