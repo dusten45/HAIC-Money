@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "experiment": "sharp-curve-obstacle-speed-margin-v1",
+  "status": "adaptive-diagnostic-rollback",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-29T20:00:03.6087669+09:00",
+  "implementation_commit": "ae77e3af0a01d1afdac1f36aad462c1c8f2ec8f3",
+  "development_decision": "REMOVE_TARGET24_FROM_ACTIVE_BARE_ROUTE",
+  "evidence": {
+    "newer_seed21": {
+      "path": ".haic-artifacts/runs/run-f887ccd649c240ec90b50261175f4b7e.json",
+      "sha256": "1f7cb979db8f1c677895ec6c3c99d02cfe2cf4a5aeaa0309148b3066febe88ea",
+      "result": "DNF off_track at progress0.3372781065, zero damage and zero collisions",
+      "comparison": "The earlier motivating run ended at the identical progress. The newer trace slowed the terminal hairpin to approximately24.5 but steering still unwound and road loss followed."
+    },
+    "newer_seed42": {
+      "path": ".haic-artifacts/runs/run-42e0f404cf4649c2a67b998efb746b4a.json",
+      "sha256": "cc309b0f66c18759d1d817b86faca401af34cc26dd1c863530f897b79ad26efa",
+      "result": "finished29.92s, zero damage and zero collisions",
+      "comparison": "An earlier same-map launch-controller run finished28.58s. The newer run contains five speed-below-28 compound segments totaling6.40s; approximately1.02s of the1.34s difference accumulated from progress70 percent onward."
+    }
+  },
+  "causal_limits": [
+    "The run logs do not contain source, agent, model or package hashes.",
+    "The runs and seeds are consumed adaptive evidence and were not a preregistered fresh comparison.",
+    "The decision retires an unconfirmed diagnostic from the active route; it does not establish that target30 is safe, faster on unseen maps, or SOTA."
+  ],
+  "frozen": [
+    "Keep _CompoundSpeedMarginController and its tests as a historical diagnostic implementation.",
+    "Route the bare model back to _LaunchThrottleController only; do not change steering, perception, target30, model.pt or other runtime paths.",
+    "Do not execute an environment, train, submit or update SOTA while required governance documents are absent."
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "name": "procedural-map-pace-evidence-v1",
+  "recorded_at": "2026-09-29T20:00:03.6087669+09:00",
+  "purpose": "consumed-local-run evidence for a seed-agnostic clear-straight pace hypothesis",
+  "official_source": {
+    "repository": "https://github.com/2026-HAIC/Participants",
+    "head": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "checked_at": "2026-09-29T20:00:03.6087669+09:00",
+    "environment_version": "variables-6",
+    "finding": "The official repository provides deterministic procedural geometry and six-obstacle placement from track_id and seed, but no fixed official map files, public evaluation seeds, or official low-20-second target.",
+    "local_environment_match": "core, env_wrapper.py, and damage.py match the latest official source; local_runner.py and README.md contain local extensions and are not official performance evidence."
+  },
+  "internal_objective": {
+    "target": "valid finishes in the low 20-second range without reducing completion reliability",
+    "official_threshold": false,
+    "ranking_priority": "valid finish first, then official simulated lap time",
+    "interpretation": "A design target only; it is not an achieved or organizer-published benchmark."
+  },
+  "consumed_runs": [
+    {
+      "path": ".haic-artifacts/runs/run-42e0f404cf4649c2a67b998efb746b4a.json",
+      "sha256": "cc309b0f66c18759d1d817b86faca401af34cc26dd1c863530f897b79ad26efa",
+      "bytes": 9823178,
+      "track_id": 1,
+      "seed": 42,
+      "map_fingerprint": "908e599dfe5a46e5",
+      "centerline_length": 994.0,
+      "finished": true,
+      "lap_time_ms": 29920,
+      "damage": 0.0,
+      "collisions": 0,
+      "mean_world_speed": 32.93769,
+      "max_world_speed": 45.40336
+    },
+    {
+      "path": ".haic-artifacts/runs/run-5c6cd3d3e9704ddea0648350f96e1265.json",
+      "sha256": "3901631990968828b441dcc3d64e8bf25a60e7d4de7729ef604e08b1dc51ba83",
+      "bytes": 9449084,
+      "track_id": 1,
+      "seed": 42,
+      "map_fingerprint": "908e599dfe5a46e5",
+      "centerline_length": 994.0,
+      "finished": true,
+      "lap_time_ms": 28580,
+      "damage": 0.0,
+      "collisions": 0,
+      "mean_world_speed": 34.633286,
+      "max_world_speed": 45.646118
+    },
+    {
+      "path": ".haic-artifacts/runs/run-87480d6a113a47fd9aef2540baa288a5.json",
+      "sha256": "4941941dee426201a7fe437ca6419b137780c20521d71bc7097c20707c259db8",
+      "bytes": 9604434,
+      "track_id": 1,
+      "seed": 35,
+      "map_fingerprint": "3b28e5f6e6c0b8e9",
+      "centerline_length": 1043.0,
+      "finished": true,
+      "lap_time_ms": 29340,
+      "damage": 0.4,
+      "collisions": 2,
+      "mean_world_speed": 35.446863,
+      "max_world_speed": 44.170596
+    },
+    {
+      "path": ".haic-artifacts/runs/run-f887ccd649c240ec90b50261175f4b7e.json",
+      "sha256": "1f7cb979db8f1c677895ec6c3c99d02cfe2cf4a5aeaa0309148b3066febe88ea",
+      "bytes": 5687753,
+      "track_id": 1,
+      "seed": 21,
+      "map_fingerprint": "7716b1dd48062fb7",
+      "centerline_length": 1186.500018,
+      "finished": false,
+      "progress": 0.33727810650887574,
+      "retire_reason": "off_track",
+      "damage": 0.0,
+      "collisions": 0,
+      "mean_world_speed": 20.584356,
+      "max_world_speed": 43.123984
+    }
+  ],
+  "pace_gap": {
+    "994_units_required_mean_speed_for_23_seconds": 43.217391,
+    "1043_units_required_mean_speed_for_23_seconds": 45.347826,
+    "1186_500018_units_required_mean_speed_for_23_seconds": 51.586957,
+    "rationale": "The candidate needs material pace improvement, but these centerline quotients ignore the actual racing line, HUD speed calibration and acceleration phases. They demonstrate the size of the gap and do not justify mapping a world-speed quotient to a policy target."
+  },
+  "latest_candidate_observation": {
+    "finding": "The post-implementation seed21 run reduced the terminal hairpin speed but retired at the same progress, and the newer seed42 finish was 1.34 seconds slower than an earlier same-map run.",
+    "causal_or_controlled": false,
+    "reason": "Run files do not embed source, agent, model, or package hashes; the runs are consumed adaptive evidence and cannot confirm or reject a candidate under the promotion protocol.",
+    "development_consequence": "The target24 diagnostic is removed from the active route because it did not change the consumed seed21 terminal progress and it introduced five speed-below-28 segments totaling 6.40 seconds on the newer seed42 run. This is a conservative development rollback, not a controlled performance rejection or SOTA decision."
+  },
+  "rejected_alternative": {
+    "proposal": "Raise the clear-straight transient target from48 to64.",
+    "decision": "REJECT_AT_STATIC_REVIEW",
+    "reasons": [
+      "It moves the brake boundary from speed49 to above65 and raises idealized squared-speed demand by about78 percent.",
+      "A single detector miss can switch the target from compound24 to64 while obstacle-side state remains latched.",
+      "It bypasses the stored target EMA and can command gas0.11 immediately after a hairpin.",
+      "The world-coordinate distance quotients cannot be calibrated directly to the camera HUD speed estimate."
+    ]
+  },
+  "literature": [
+    {
+      "url": "https://arxiv.org/abs/1902.00606",
+      "title": "A Sequential Two-Step Algorithm for Fast Generation of Vehicle Racing Trajectories",
+      "relevance": "Separates path optimization from a longitudinal speed profile constrained by tire friction; supports changing velocity policy by visible geometry rather than applying a global throttle increase.",
+      "transfer_limit": "Full-map trajectory optimization and a physical Audi differ from camera-only procedural CarRacing."
+    },
+    {
+      "url": "https://arxiv.org/abs/2502.03695",
+      "title": "Reduce Lap Time for Autonomous Racing with Curvature-Integrated MPCC Local Trajectory Planning Method",
+      "relevance": "Uses curvature-dependent reference velocity rather than one global maximum speed.",
+      "transfer_limit": "Its F1TENTH MPCC results do not establish an effect size or safe target for this environment."
+    }
+  ],
+  "limitations": [
+    "All listed runs and seeds are consumed hypothesis-generation evidence.",
+    "Seed42 is explicitly an installation example in the official README and is not an official evaluation seed.",
+    "The current competition website is inaccessible, and no fixed official map set could be verified.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "No performance, generalization, official-map or low-20-second claim is permitted from this ledger."
+  ]
+}
