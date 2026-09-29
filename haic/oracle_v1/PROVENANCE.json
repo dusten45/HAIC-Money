@@ -1,0 +1,51 @@
+{
+  "artifact": "oracle-v1",
+  "export_type": "one-time independent copy; no runtime or repository link",
+  "source_repository": "HAIC-2026-Fresh",
+  "source_head_commit": "a70b35950414a930d5ddaad4ac15733e65774345",
+  "validated_run_commit": "27d96562bb71dc32f7ff0c1b85bb01ac3555e10d",
+  "validated_run_worktree_was_dirty": true,
+  "validated_source_sha256": {
+    "controller": "a447aa7559a9f2fdddfc65202c739dd1228dd607b8cc40aa9b8f9bb82a28d839",
+    "runner_before_package_refactor": "8ee2eaa38f582533be3ca8850cba92e98cacbf9df5f5102a7ac3f34a84f20d4c",
+    "environment_wrapper": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage_model": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "car_racing_environment": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69"
+  },
+  "source_git_objects": {
+    "controller_blob": "6be697503de48f3db1deb0ac01d63ea26ddaabb0",
+    "current_runner_blob": "b210b79f246012379a8a1ec9f6e87b8d134d30bb",
+    "core_tree": "74fe7c3bf65447da7a82ba7c46d5fd126618997c",
+    "environment_wrapper_blob": "6de7aa0b08687b7670f21f95124cd491c1ce1a56",
+    "damage_model_blob": "86d6c6f84dee7c1363542fa8430d15ce2ac85578"
+  },
+  "haic_environment_match": {
+    "core_tree_identical": true,
+    "environment_wrapper_identical": true,
+    "damage_model_identical": true,
+    "copied_environment_sources": false
+  },
+  "runtime": {
+    "python": "3.11.14",
+    "numpy": "1.26.0",
+    "gymnasium": "0.29.1",
+    "opencv_python": "4.8.1.78",
+    "box2d_py": "2.3.5"
+  },
+  "validated_result": {
+    "track_ids": [1, 2, 3, 4, 5],
+    "geometry_seeds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "unique_track_seed_configurations": 50,
+    "repeats_per_configuration": 2,
+    "episodes": 100,
+    "finishes": 100,
+    "roads_with_both_finishes": 50,
+    "identical_repeat_trace_hashes": 50,
+    "damage_free_episodes": 98,
+    "collision_positive_actions": 2,
+    "collision_case": "track 5, seed 3, action 754 in each repeat; both episodes finished",
+    "action_range": [923, 1236],
+    "lap_time_seconds_range": [73.76, 98.8],
+    "scope": "exposed local development/evaluation cells; not a holdout or official result"
+  }
+}
