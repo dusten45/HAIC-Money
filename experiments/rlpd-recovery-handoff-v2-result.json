@@ -1,0 +1,2227 @@
+{
+  "environment_resets": 0,
+  "episodes": [
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 4.475517708004995,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 320,
+          "progress": 0.5815602836879432,
+          "seconds_after_handoff": 22.16,
+          "speed_m_s": 23.799620382658677
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.4614662998502187,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 43,
+          "progress": 0.0851063829787234,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 21.539527323368663
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.113942590784591,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 128,
+          "progress": 0.24822695035460993,
+          "seconds_after_handoff": 6.8,
+          "speed_m_s": 26.74951273034014
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 6.933010425562995,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 129,
+          "progress": 0.25177304964539005,
+          "seconds_after_handoff": 6.88,
+          "speed_m_s": 28.54858364015244
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 26.033171105087128,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 21.539527323368663,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 4.493643781718465,
+      "steps": 685,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 1.5831654517763667,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 200,
+          "progress": 0.36524822695035464,
+          "seconds_after_handoff": 11.6,
+          "speed_m_s": 13.35027233544336
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.7560513571336747,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 144,
+          "progress": 0.25177304964539005,
+          "seconds_after_handoff": 7.12,
+          "speed_m_s": 18.226174521688964
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.091712894457829,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 188,
+          "progress": 0.3333333333333333,
+          "seconds_after_handoff": 10.64,
+          "speed_m_s": 24.03142897668597
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.4753331399117044,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 335,
+          "progress": 0.5815602836879432,
+          "seconds_after_handoff": 22.400000000000002,
+          "speed_m_s": 17.916368338498177
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 24.43176200596752,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 12.753356690204475,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 11.678405315763046,
+      "steps": 359,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 10.056912423399353,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 148,
+          "progress": 0.24822695035460993,
+          "seconds_after_handoff": 6.4,
+          "speed_m_s": 28.54900819549173
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.018920084063565,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 145,
+          "progress": 0.24822695035460993,
+          "seconds_after_handoff": 6.16,
+          "speed_m_s": 24.198450120871534
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 0.1498532469583776,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 164,
+          "progress": 0.2624113475177305,
+          "seconds_after_handoff": 7.68,
+          "speed_m_s": 22.394833141645627
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 24.852427086068325,
+      "first_type": "lateral-excursion",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 11.262689357190794,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.58973772887753,
+      "steps": 640,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.477668157856687,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 40,
+          "progress": 0.07954545454545454,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 22.209845308206326
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.393364268370452,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 120,
+          "progress": 0.24621212121212122,
+          "seconds_after_handoff": 6.4,
+          "speed_m_s": 28.652533005060057
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 4.0894877002126035,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 163,
+          "progress": 0.3446969696969697,
+          "seconds_after_handoff": 9.84,
+          "speed_m_s": 31.82492505722414
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 27.093311836761913,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 22.209845308206326,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 4.883466528555587,
+      "steps": 265,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.570471158628425,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 153,
+          "progress": 0.2727272727272727,
+          "seconds_after_handoff": 8.08,
+          "speed_m_s": 22.50371038696097
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.200283037247242,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 135,
+          "progress": 0.24621212121212122,
+          "seconds_after_handoff": 6.640000000000001,
+          "speed_m_s": 22.193900570504553
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.9900944540127332,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 128,
+          "progress": 0.23484848484848486,
+          "seconds_after_handoff": 6.08,
+          "speed_m_s": 20.47730830807895
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 24.1103739460207,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 12.738479337507236,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 11.371894608513465,
+      "steps": 527,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 4.921331688989764,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 145,
+          "progress": 0.26515151515151514,
+          "seconds_after_handoff": 6.4,
+          "speed_m_s": 21.635655193068253
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.141506871001309,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 138,
+          "progress": 0.2537878787878788,
+          "seconds_after_handoff": 5.84,
+          "speed_m_s": 26.18180399697217
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.6420373000147934,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 129,
+          "progress": 0.23484848484848486,
+          "seconds_after_handoff": 5.12,
+          "speed_m_s": 24.867822267094464
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 25.976497790371663,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 11.275522619837655,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 14.700975170534008,
+      "steps": 297,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.112636561289126,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 40,
+          "progress": 0.07984790874524715,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 22.960121839067366
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.013839166403897,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 146,
+          "progress": 0.30038022813688214,
+          "seconds_after_handoff": 8.48,
+          "speed_m_s": 23.81154524204941
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 8.71476575406594,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 203,
+          "progress": 0.38783269961977185,
+          "seconds_after_handoff": 13.040000000000001,
+          "speed_m_s": 24.703492886685385
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 28.822794834445958,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 22.960121839067366,
+      "horizon": 0,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 5.862672995378592,
+      "steps": 575,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 0.815677191076825,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 237,
+          "progress": 0.467680608365019,
+          "seconds_after_handoff": 14.8,
+          "speed_m_s": 14.45821540287728
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 6.879500832537094,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 156,
+          "progress": 0.3193916349809886,
+          "seconds_after_handoff": 8.32,
+          "speed_m_s": 15.15683108233151
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.627834727859751,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 152,
+          "progress": 0.3041825095057034,
+          "seconds_after_handoff": 8.0,
+          "speed_m_s": 16.122673140332047
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 7.089863257018469,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 153,
+          "progress": 0.30798479087452474,
+          "seconds_after_handoff": 8.08,
+          "speed_m_s": 15.753088482256116
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 26.505320229276837,
+      "first_type": "lateral-excursion",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 12.668275370197108,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.837044859079729,
+      "steps": 726,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.0840757551653,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 158,
+          "progress": 0.2889733840304182,
+          "seconds_after_handoff": 7.44,
+          "speed_m_s": 21.192685505331482
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.456673347730158,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 233,
+          "progress": 0.4144486692015209,
+          "seconds_after_handoff": 13.44,
+          "speed_m_s": 20.50194023321633
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 3.943540005950374,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 166,
+          "progress": 0.30038022813688214,
+          "seconds_after_handoff": 8.08,
+          "speed_m_s": 8.213095387065628
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 25.67449557153305,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 11.328667251938022,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 14.345828319595029,
+      "steps": 594,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.9978586593074734,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 41,
+          "progress": 0.07666666666666666,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 21.67442217241785
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.028857602948406,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 130,
+          "progress": 0.26666666666666666,
+          "seconds_after_handoff": 7.12,
+          "speed_m_s": 29.34889179436507
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.7274013954846275,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 79,
+          "progress": 0.15333333333333332,
+          "seconds_after_handoff": 3.04,
+          "speed_m_s": 29.729046939922757
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 31.67028155406836,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000008,
+      "handoff_speed_m_s": 21.67442217241785,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 9.995859381650511,
+      "steps": 237,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.6338983206608417,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 152,
+          "progress": 0.25666666666666665,
+          "seconds_after_handoff": 7.92,
+          "speed_m_s": 22.759874627022594
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.161832188738121,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 193,
+          "progress": 0.33,
+          "seconds_after_handoff": 11.200000000000001,
+          "speed_m_s": 23.493580755177234
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 3.614923207615856,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 440,
+          "progress": 0.7566666666666667,
+          "seconds_after_handoff": 30.96,
+          "speed_m_s": 24.489015172994527
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 24.8395116171857,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000008,
+      "handoff_speed_m_s": 12.745254975070186,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 12.094256642115514,
+      "steps": 590,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.7440968528800314,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 156,
+          "progress": 0.26,
+          "seconds_after_handoff": 7.2,
+          "speed_m_s": 29.822221878386816
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.871489757875882,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 160,
+          "progress": 0.26666666666666666,
+          "seconds_after_handoff": 7.5200000000000005,
+          "speed_m_s": 31.512762756523223
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.7765854917878159,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 100,
+          "progress": 0.15333333333333332,
+          "seconds_after_handoff": 2.72,
+          "speed_m_s": 23.671464302589545
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 24.95056017535153,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000008,
+      "handoff_speed_m_s": 11.27012202670305,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.68043814864848,
+      "steps": 286,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 3.2521546814516333,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 42,
+          "progress": 0.07301587301587302,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 20.733470894880977
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.290059557915858,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 56,
+          "progress": 0.09523809523809523,
+          "seconds_after_handoff": 1.12,
+          "speed_m_s": 26.38887291114023
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 10.012044149500452,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 138,
+          "progress": 0.2222222222222222,
+          "seconds_after_handoff": 7.68,
+          "speed_m_s": 11.100493605648296
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 27.869905837473254,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000009,
+      "handoff_speed_m_s": 20.733470894880977,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 7.1364349425922775,
+      "steps": 387,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 7.134298674769939,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 201,
+          "progress": 0.34285714285714286,
+          "seconds_after_handoff": 11.76,
+          "speed_m_s": 21.407204787212844
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.134298674769939,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 201,
+          "progress": 0.34285714285714286,
+          "seconds_after_handoff": 11.76,
+          "speed_m_s": 21.407204787212844
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 5.6575728115812,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 292,
+          "progress": 0.4984126984126984,
+          "seconds_after_handoff": 19.04,
+          "speed_m_s": 11.02406766334562
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 25.641550265628833,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000009,
+      "handoff_speed_m_s": 11.691568871387794,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.94998139424104,
+      "steps": 394,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 1.3338496447957344,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 434,
+          "progress": 0.6730158730158731,
+          "seconds_after_handoff": 29.36,
+          "speed_m_s": 1.5841680841317811
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 13.298163544853061,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 152,
+          "progress": 0.2222222222222222,
+          "seconds_after_handoff": 6.8,
+          "speed_m_s": 19.68335827728012
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.144820876007708,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 143,
+          "progress": 0.2222222222222222,
+          "seconds_after_handoff": 6.08,
+          "speed_m_s": 26.924312023659535
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 13.609813770190561,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 149,
+          "progress": 0.2222222222222222,
+          "seconds_after_handoff": 6.5600000000000005,
+          "speed_m_s": 30.903883857435847
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 25.171181061171293,
+      "first_type": "lateral-excursion",
+      "geometry_seed": 4272000009,
+      "handoff_speed_m_s": 12.296541679484074,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 12.874639381687219,
+      "steps": 536,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 0.4340573484332168,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 88,
+          "progress": 0.15845070422535212,
+          "seconds_after_handoff": 1.6,
+          "speed_m_s": 4.286104680387938
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 3.545907694512807,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 68,
+          "progress": 0.13380281690140844,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 25.672621272759564
+        },
+        "lateral-excursion": null,
+        "steering-opposition": {
+          "abs_lateral_m": 0.4340573484332168,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 88,
+          "progress": 0.15845070422535212,
+          "seconds_after_handoff": 1.6,
+          "speed_m_s": 4.286104680387938
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 27.414714974679857,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 25.672621272759564,
+      "horizon": 0,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 1.7420937019202931,
+      "steps": 187,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 2.171531848868057,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 432,
+          "progress": 0.7323943661971831,
+          "seconds_after_handoff": 28.16,
+          "speed_m_s": 4.0219331164507
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.0663748831280555,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 81,
+          "progress": 0.14788732394366197,
+          "seconds_after_handoff": 0.08,
+          "speed_m_s": 14.363327254281959
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.013447502001856,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 91,
+          "progress": 0.15845070422535212,
+          "seconds_after_handoff": 0.88,
+          "speed_m_s": 20.97016771354999
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.6385065283849176,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 83,
+          "progress": 0.14788732394366197,
+          "seconds_after_handoff": 0.24,
+          "speed_m_s": 19.034921167953616
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 28.901058884313557,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 11.492919658720492,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 17.408139225593064,
+      "steps": 532,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 0.36812445905801894,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 95,
+          "progress": 0.15845070422535212,
+          "seconds_after_handoff": 0.16,
+          "speed_m_s": 13.088109584518584
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.251549086093582,
+          "beyond_five_second_followup": true,
+          "damage": 0.8,
+          "decision": 345,
+          "progress": 0.29225352112676056,
+          "seconds_after_handoff": 20.16,
+          "speed_m_s": 14.000647462488889
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.558728558171168,
+          "beyond_five_second_followup": false,
+          "damage": 0.8,
+          "decision": 134,
+          "progress": 0.2007042253521127,
+          "seconds_after_handoff": 3.2800000000000002,
+          "speed_m_s": 13.701519407708766
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 11.873952482067821,
+          "beyond_five_second_followup": true,
+          "damage": 0.8,
+          "decision": 159,
+          "progress": 0.2007042253521127,
+          "seconds_after_handoff": 5.28,
+          "speed_m_s": 10.06084905495342
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 19.90989459713645,
+      "first_type": "added-damage",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 12.431045088115766,
+      "horizon": 25,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 7.478849509020684,
+      "steps": 474,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 4.5198305088312125,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 135,
+          "progress": 0.32954545454545453,
+          "seconds_after_handoff": 8.24,
+          "speed_m_s": 5.379713854292414
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 3.162465484824877,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 32,
+          "progress": 0.07954545454545454,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 28.669059019750904
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.976215018239801,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 117,
+          "progress": 0.3181818181818182,
+          "seconds_after_handoff": 6.8,
+          "speed_m_s": 21.87664611708427
+        },
+        "steering-opposition": null
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 39.53489608279142,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 28.669059019750904,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 10.865837063040516,
+      "steps": 234,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": null,
+        "lateral-excursion": null,
+        "steering-opposition": {
+          "abs_lateral_m": 1.3670582209097637,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 140,
+          "progress": 0.3446969696969697,
+          "seconds_after_handoff": 7.68,
+          "speed_m_s": 14.527337059629652
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 36.810600995663044,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 11.22135482604236,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 25.589246169620687,
+      "steps": 241,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.1656116673259245,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 187,
+          "progress": 0.42803030303030304,
+          "seconds_after_handoff": 10.4,
+          "speed_m_s": 24.967612578795926
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.11734033776192,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 118,
+          "progress": 0.26515151515151514,
+          "seconds_after_handoff": 4.88,
+          "speed_m_s": 25.11617549197912
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 9.272632721138542,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 242,
+          "progress": 0.571969696969697,
+          "seconds_after_handoff": 14.8,
+          "speed_m_s": 37.04616691758058
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 39.111210939004174,
+      "first_type": "lateral-excursion",
+      "geometry_seed": 4272000003,
+      "handoff_speed_m_s": 12.625816769835904,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 26.48539416916827,
+      "steps": 493,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 3.1887191577737903,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 31,
+          "progress": 0.07604562737642585,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 29.368885504922606
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.356147455530681,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 121,
+          "progress": 0.3041825095057034,
+          "seconds_after_handoff": 7.2,
+          "speed_m_s": 27.68577981035946
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.995822242787841,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 118,
+          "progress": 0.30038022813688214,
+          "seconds_after_handoff": 6.96,
+          "speed_m_s": 26.175321126657664
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 38.30604740243492,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 29.368885504922606,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 8.937161897512315,
+      "steps": 370,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 2.3978189095100797,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 128,
+          "progress": 0.311787072243346,
+          "seconds_after_handoff": 6.8,
+          "speed_m_s": 2.222030941729139
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.5055990995262603,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 113,
+          "progress": 0.2737642585551331,
+          "seconds_after_handoff": 5.6000000000000005,
+          "speed_m_s": 29.93886852832594
+        },
+        "lateral-excursion": null,
+        "steering-opposition": {
+          "abs_lateral_m": 1.7181010033730892,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 131,
+          "progress": 0.311787072243346,
+          "seconds_after_handoff": 7.04,
+          "speed_m_s": 2.6894132180148533
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 38.1472137535244,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 11.19520317089777,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 26.952010582626627,
+      "steps": 229,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 1.476868900446824,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 100,
+          "progress": 0.20912547528517111,
+          "seconds_after_handoff": 3.52,
+          "speed_m_s": 23.116374693569373
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.2803881051603476,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 125,
+          "progress": 0.2661596958174905,
+          "seconds_after_handoff": 5.5200000000000005,
+          "speed_m_s": 27.23976734457179
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.320293179112908,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 147,
+          "progress": 0.3041825095057034,
+          "seconds_after_handoff": 7.28,
+          "speed_m_s": 20.93454773606239
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 0.21917321564630737,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 142,
+          "progress": 0.30038022813688214,
+          "seconds_after_handoff": 6.88,
+          "speed_m_s": 22.2894650019038
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 35.302922197819775,
+      "first_type": "added-damage",
+      "geometry_seed": 4272000005,
+      "handoff_speed_m_s": 12.634493250094883,
+      "horizon": 25,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 22.66842894772489,
+      "steps": 380,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 5.271534411875352,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 56,
+          "progress": 0.13380281690140844,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 28.928623133537155
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 7.035551767604983,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 77,
+          "progress": 0.15492957746478872,
+          "seconds_after_handoff": 1.68,
+          "speed_m_s": 25.29383562767424
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.3679109960387743,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 74,
+          "progress": 0.15140845070422534,
+          "seconds_after_handoff": 1.44,
+          "speed_m_s": 21.7440665411288
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 36.921713766576005,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 28.928623133537155,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 7.99309063303885,
+      "steps": 329,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.8562343054117558,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 69,
+          "progress": 0.14788732394366197,
+          "seconds_after_handoff": 0.08,
+          "speed_m_s": 14.919746836432257
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.158553228913517,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 77,
+          "progress": 0.15845070422535212,
+          "seconds_after_handoff": 0.72,
+          "speed_m_s": 28.107091856261903
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.172634813711158,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 72,
+          "progress": 0.15140845070422534,
+          "seconds_after_handoff": 0.32,
+          "speed_m_s": 19.814807573843428
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 37.940353642833934,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 12.230704218613084,
+      "horizon": 12,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 25.70964942422085,
+      "steps": 465,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.6450682476131973,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 182,
+          "progress": 0.3767605633802817,
+          "seconds_after_handoff": 8.08,
+          "speed_m_s": 34.97976393484983
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.381097901666025,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 115,
+          "progress": 0.2323943661971831,
+          "seconds_after_handoff": 2.72,
+          "speed_m_s": 33.8210607776424
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 5.9819676499975145,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 240,
+          "progress": 0.5246478873239436,
+          "seconds_after_handoff": 12.72,
+          "speed_m_s": 31.68555433484788
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 38.310195383728555,
+      "first_type": "lateral-excursion",
+      "geometry_seed": 4272000010,
+      "handoff_speed_m_s": 11.732791275510543,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 26.577404108218012,
+      "steps": 440,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 2.7634739369858843,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 186,
+          "progress": 0.5,
+          "seconds_after_handoff": 3.92,
+          "speed_m_s": 27.555182387893286
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.7724118718913027,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 137,
+          "progress": 0.37410071942446044,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 32.700037559556975
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.470680017418493,
+          "beyond_five_second_followup": true,
+          "damage": 0.6000000000000001,
+          "decision": 212,
+          "progress": 0.5287769784172662,
+          "seconds_after_handoff": 6.0,
+          "speed_m_s": 17.423033710942757
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 5.9412327859780705,
+          "beyond_five_second_followup": true,
+          "damage": 0.6000000000000001,
+          "decision": 211,
+          "progress": 0.5287769784172662,
+          "seconds_after_handoff": 5.92,
+          "speed_m_s": 16.17069681370045
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 34.407511337112155,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 32.700037559556975,
+      "horizon": 0,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 1.7074737775551796,
+      "steps": 338,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 4.999926506401482,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 242,
+          "progress": 0.5719424460431655,
+          "seconds_after_handoff": 7.44,
+          "speed_m_s": 26.387099707383083
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 8.732747084781714,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 208,
+          "progress": 0.5071942446043165,
+          "seconds_after_handoff": 4.72,
+          "speed_m_s": 29.64737678477605
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.870829877305089,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 171,
+          "progress": 0.4244604316546763,
+          "seconds_after_handoff": 1.76,
+          "speed_m_s": 28.624158195473157
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.778433831156635,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 166,
+          "progress": 0.41007194244604317,
+          "seconds_after_handoff": 1.36,
+          "speed_m_s": 26.198433064343888
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 29.64737678477605,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 11.695943861247278,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 17.95143292352877,
+      "steps": 450,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 7.793979527217351,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 212,
+          "progress": 0.5179856115107914,
+          "seconds_after_handoff": 4.0,
+          "speed_m_s": 31.070295497227896
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.984532965919544,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 210,
+          "progress": 0.5071942446043165,
+          "seconds_after_handoff": 3.84,
+          "speed_m_s": 30.694579129126417
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 5.650236219080143,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 176,
+          "progress": 0.4244604316546763,
+          "seconds_after_handoff": 1.12,
+          "speed_m_s": 20.87681867500242
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 36.17655149680019,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 12.296483065688703,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 23.880068431111482,
+      "steps": 427,
+      "stratum": "failure",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 3.925797399330725,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 80,
+          "progress": 0.12686567164179105,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 16.871858242983734
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.244007749235187,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 159,
+          "progress": 0.2947761194029851,
+          "seconds_after_handoff": 6.32,
+          "speed_m_s": 27.992088885317393
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 0.8009900844116603,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 83,
+          "progress": 0.12686567164179105,
+          "seconds_after_handoff": 0.24,
+          "speed_m_s": 24.680506643582394
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 26.9153676050623,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000004,
+      "handoff_speed_m_s": 16.871858242983734,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 10.043509362078566,
+      "steps": 523,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.6865594327335547,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 94,
+          "progress": 0.1417910447761194,
+          "seconds_after_handoff": 0.16,
+          "speed_m_s": 16.359794768070877
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.143953950683317,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 170,
+          "progress": 0.2947761194029851,
+          "seconds_after_handoff": 6.24,
+          "speed_m_s": 20.100762227462397
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.4489492621379017,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 162,
+          "progress": 0.2835820895522388,
+          "seconds_after_handoff": 5.6000000000000005,
+          "speed_m_s": 25.730379504183997
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 33.318398250704305,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000004,
+      "handoff_speed_m_s": 11.197638309390024,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 22.120759941314283,
+      "steps": 541,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 5.491110222679124,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 232,
+          "progress": 0.40298507462686567,
+          "seconds_after_handoff": 10.16,
+          "speed_m_s": 26.20675362488152
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.138968641428058,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 179,
+          "progress": 0.30223880597014924,
+          "seconds_after_handoff": 5.92,
+          "speed_m_s": 28.056095575835332
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.314012731119939,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 170,
+          "progress": 0.2798507462686567,
+          "seconds_after_handoff": 5.2,
+          "speed_m_s": 25.54476206118156
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 26.557563853077237,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000004,
+      "handoff_speed_m_s": 12.577556067630303,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.980007785446935,
+      "steps": 390,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 4.44557950423454,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 76,
+          "progress": 0.14285714285714285,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 17.426592028225947
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.1373072459874285,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 100,
+          "progress": 0.1984126984126984,
+          "seconds_after_handoff": 1.92,
+          "speed_m_s": 25.552427088601736
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 3.2261759661695573,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 151,
+          "progress": 0.30158730158730157,
+          "seconds_after_handoff": 6.0,
+          "speed_m_s": 24.569803678621497
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 27.270968604853135,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000006,
+      "handoff_speed_m_s": 17.426592028225947,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 9.844376576627187,
+      "steps": 489,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.5741846441439067,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 281,
+          "progress": 0.5198412698412699,
+          "seconds_after_handoff": 15.44,
+          "speed_m_s": 23.27650772597095
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.234814287984687,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 113,
+          "progress": 0.20238095238095238,
+          "seconds_after_handoff": 2.0,
+          "speed_m_s": 23.907618749836843
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.5381732592727397,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 102,
+          "progress": 0.18253968253968253,
+          "seconds_after_handoff": 1.12,
+          "speed_m_s": 19.031376984800108
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 24.327920851509965,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000006,
+      "handoff_speed_m_s": 12.767428876479276,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 11.56049197503069,
+      "steps": 493,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 0.7098638081112401,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 282,
+          "progress": 0.5198412698412699,
+          "seconds_after_handoff": 14.48,
+          "speed_m_s": 22.963175287541922
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.118582795898998,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 115,
+          "progress": 0.1984126984126984,
+          "seconds_after_handoff": 1.12,
+          "speed_m_s": 23.87080045641344
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.0783129757841077,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 110,
+          "progress": 0.19047619047619047,
+          "seconds_after_handoff": 0.72,
+          "speed_m_s": 23.43338025441082
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 28.45585778076503,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000006,
+      "handoff_speed_m_s": 11.276292014922651,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 17.179565765842376,
+      "steps": 505,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.943477420170701,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 213,
+          "progress": 0.4244604316546763,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 30.18539643438749
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.1419272679297965,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 296,
+          "progress": 0.5827338129496403,
+          "seconds_after_handoff": 6.640000000000001,
+          "speed_m_s": 23.461077844855076
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 2.1981829044014045,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 287,
+          "progress": 0.564748201438849,
+          "seconds_after_handoff": 5.92,
+          "speed_m_s": 22.1319156241319
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 36.89992234325819,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 30.18539643438749,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 6.714525908870701,
+      "steps": 508,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.142234850180587,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 226,
+          "progress": 0.43884892086330934,
+          "seconds_after_handoff": 0.08,
+          "speed_m_s": 15.62994430317348
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.611121851513788,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 273,
+          "progress": 0.5251798561151079,
+          "seconds_after_handoff": 3.84,
+          "speed_m_s": 21.21449589109377
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 0.9040859414116829,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 254,
+          "progress": 0.4892086330935252,
+          "seconds_after_handoff": 2.32,
+          "speed_m_s": 22.625797372312416
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 31.304978588696343,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 12.765704974997067,
+      "horizon": 12,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 18.539273613699276,
+      "steps": 516,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 2.0898484190997326,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 273,
+          "progress": 0.5,
+          "seconds_after_handoff": 2.8000000000000003,
+          "speed_m_s": 3.7090056523514106
+        },
+        "curve-entry-overspeed": null,
+        "lateral-excursion": null,
+        "steering-opposition": {
+          "abs_lateral_m": 0.5020902228457272,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 263,
+          "progress": 0.49280575539568344,
+          "seconds_after_handoff": 2.0,
+          "speed_m_s": 22.7610974989573
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 23.9260086407349,
+      "first_type": "steering-opposition",
+      "geometry_seed": 4272000011,
+      "handoff_speed_m_s": 11.277128259899925,
+      "horizon": 25,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed11",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 12.648880380834974,
+      "steps": 277,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.628300220641786,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 136,
+          "progress": 0.32269503546099293,
+          "seconds_after_handoff": 0.0,
+          "speed_m_s": 24.59341405261959
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.132889517650211,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 180,
+          "progress": 0.4078014184397163,
+          "seconds_after_handoff": 3.52,
+          "speed_m_s": 25.14335056733321
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 1.6174350476018278,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 356,
+          "progress": 0.75177304964539,
+          "seconds_after_handoff": 17.6,
+          "speed_m_s": 29.31466437924146
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 38.112614145631476,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 24.59341405261959,
+      "horizon": 0,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 13.519200093011886,
+      "steps": 531,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": {
+          "abs_lateral_m": 4.1139752824453035,
+          "beyond_five_second_followup": false,
+          "damage": 0.2,
+          "decision": 168,
+          "progress": 0.36524822695035464,
+          "seconds_after_handoff": 1.6,
+          "speed_m_s": 24.02478846871963
+        },
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 1.6165209585244518,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 150,
+          "progress": 0.33687943262411346,
+          "seconds_after_handoff": 0.16,
+          "speed_m_s": 16.744442669563853
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.945883601370228,
+          "beyond_five_second_followup": true,
+          "damage": 0.2,
+          "decision": 374,
+          "progress": 0.7836879432624113,
+          "seconds_after_handoff": 18.080000000000002,
+          "speed_m_s": 34.395978383137674
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 0.5848442040510804,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 161,
+          "progress": 0.3546099290780142,
+          "seconds_after_handoff": 1.04,
+          "speed_m_s": 20.848355096196396
+        }
+      },
+      "finished": false,
+      "first_five_seconds_max_speed_m_s": 30.212756772209598,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 11.188741682445267,
+      "horizon": 12,
+      "local_recovery_qualified": false,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 19.024015089764333,
+      "steps": 503,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    },
+    {
+      "causal": false,
+      "censored": false,
+      "events_after_handoff": {
+        "added-damage": null,
+        "curve-entry-overspeed": {
+          "abs_lateral_m": 2.265892197409078,
+          "beyond_five_second_followup": false,
+          "damage": 0.0,
+          "decision": 188,
+          "progress": 0.3900709219858156,
+          "seconds_after_handoff": 2.16,
+          "speed_m_s": 29.97170216074801
+        },
+        "lateral-excursion": {
+          "abs_lateral_m": 6.609418776064896,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 412,
+          "progress": 0.9326241134751773,
+          "seconds_after_handoff": 20.080000000000002,
+          "speed_m_s": 22.689129233365122
+        },
+        "steering-opposition": {
+          "abs_lateral_m": 8.739354241648607,
+          "beyond_five_second_followup": true,
+          "damage": 0.0,
+          "decision": 414,
+          "progress": 0.9361702127659575,
+          "seconds_after_handoff": 20.240000000000002,
+          "speed_m_s": 26.100974414490054
+        }
+      },
+      "finished": true,
+      "first_five_seconds_max_speed_m_s": 30.605662818952474,
+      "first_type": "curve-entry-overspeed",
+      "geometry_seed": 4272000001,
+      "handoff_speed_m_s": 12.54601043877244,
+      "horizon": 25,
+      "local_recovery_qualified": true,
+      "policy_id": "rlpd-seed50",
+      "post_step_damage_event_time_is_approximate": true,
+      "reacceleration_delta_m_s": 18.059652380180033,
+      "steps": 448,
+      "stratum": "finish-control",
+      "terminal_damage_observation_included": true
+    }
+  ],
+  "format": "haic-rlpd-recovery-handoff-diagnosis-v1",
+  "groups": {
+    "h0/failure/nonfinish": {
+      "episodes": 10,
+      "event_counts": {
+        "added-damage": 4,
+        "curve-entry-overspeed": 10,
+        "lateral-excursion": 9,
+        "steering-opposition": 9
+      },
+      "first_events_beyond_followup": {
+        "added-damage": 2,
+        "lateral-excursion": 7,
+        "steering-opposition": 6
+      },
+      "first_types": {
+        "curve-entry-overspeed": 10
+      },
+      "median_reacceleration_delta_m_s": 6.499553968985435
+    },
+    "h0/finish-control/finished": {
+      "episodes": 4,
+      "event_counts": {
+        "curve-entry-overspeed": 4,
+        "lateral-excursion": 4,
+        "steering-opposition": 4
+      },
+      "first_events_beyond_followup": {
+        "lateral-excursion": 2,
+        "steering-opposition": 3
+      },
+      "first_types": {
+        "curve-entry-overspeed": 4
+      },
+      "median_reacceleration_delta_m_s": 9.943942969352877
+    },
+    "h12/failure/finished": {
+      "episodes": 2,
+      "event_counts": {
+        "curve-entry-overspeed": 2,
+        "lateral-excursion": 2,
+        "steering-opposition": 2
+      },
+      "first_events_beyond_followup": {
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 1,
+        "steering-opposition": 1
+      },
+      "first_types": {
+        "curve-entry-overspeed": 1,
+        "steering-opposition": 1
+      },
+      "median_reacceleration_delta_m_s": 18.540772016367157
+    },
+    "h12/failure/nonfinish": {
+      "episodes": 8,
+      "event_counts": {
+        "added-damage": 5,
+        "curve-entry-overspeed": 7,
+        "lateral-excursion": 6,
+        "steering-opposition": 8
+      },
+      "first_events_beyond_followup": {
+        "added-damage": 5,
+        "curve-entry-overspeed": 5,
+        "lateral-excursion": 4,
+        "steering-opposition": 6
+      },
+      "first_types": {
+        "curve-entry-overspeed": 5,
+        "lateral-excursion": 1,
+        "steering-opposition": 2
+      },
+      "median_reacceleration_delta_m_s": 15.679060309917052
+    },
+    "h12/finish-control/finished": {
+      "episodes": 2,
+      "event_counts": {
+        "curve-entry-overspeed": 2,
+        "lateral-excursion": 2,
+        "steering-opposition": 2
+      },
+      "first_events_beyond_followup": {
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 1,
+        "steering-opposition": 1
+      },
+      "first_types": {
+        "curve-entry-overspeed": 1,
+        "steering-opposition": 1
+      },
+      "median_reacceleration_delta_m_s": 16.840625958172488
+    },
+    "h12/finish-control/nonfinish": {
+      "episodes": 2,
+      "event_counts": {
+        "added-damage": 1,
+        "curve-entry-overspeed": 2,
+        "lateral-excursion": 2,
+        "steering-opposition": 2
+      },
+      "first_events_beyond_followup": {
+        "lateral-excursion": 1
+      },
+      "first_types": {
+        "curve-entry-overspeed": 2
+      },
+      "median_reacceleration_delta_m_s": 18.781644351731806
+    },
+    "h25/failure/finished": {
+      "episodes": 3,
+      "event_counts": {
+        "curve-entry-overspeed": 3,
+        "lateral-excursion": 3,
+        "steering-opposition": 3
+      },
+      "first_events_beyond_followup": {
+        "curve-entry-overspeed": 2,
+        "steering-opposition": 2
+      },
+      "first_types": {
+        "lateral-excursion": 2,
+        "steering-opposition": 1
+      },
+      "median_reacceleration_delta_m_s": 26.48539416916827
+    },
+    "h25/failure/nonfinish": {
+      "episodes": 7,
+      "event_counts": {
+        "added-damage": 3,
+        "curve-entry-overspeed": 7,
+        "lateral-excursion": 7,
+        "steering-opposition": 7
+      },
+      "first_events_beyond_followup": {
+        "added-damage": 1,
+        "curve-entry-overspeed": 7,
+        "lateral-excursion": 6,
+        "steering-opposition": 6
+      },
+      "first_types": {
+        "added-damage": 2,
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 2,
+        "steering-opposition": 2
+      },
+      "median_reacceleration_delta_m_s": 13.68043814864848
+    },
+    "h25/finish-control/finished": {
+      "episodes": 2,
+      "event_counts": {
+        "curve-entry-overspeed": 2,
+        "lateral-excursion": 2,
+        "steering-opposition": 2
+      },
+      "first_events_beyond_followup": {
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 1,
+        "steering-opposition": 1
+      },
+      "first_types": {
+        "curve-entry-overspeed": 1,
+        "steering-opposition": 1
+      },
+      "median_reacceleration_delta_m_s": 17.619609073011205
+    },
+    "h25/finish-control/nonfinish": {
+      "episodes": 2,
+      "event_counts": {
+        "added-damage": 1,
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 1,
+        "steering-opposition": 2
+      },
+      "first_events_beyond_followup": {
+        "curve-entry-overspeed": 1,
+        "lateral-excursion": 1,
+        "steering-opposition": 1
+      },
+      "first_types": {
+        "steering-opposition": 2
+      },
+      "median_reacceleration_delta_m_s": 13.314444083140955
+    }
+  },
+  "limitations": [
+    "Post-handoff events are descriptive and may also occur on finishes; not a causal failure classifier.",
+    "Repeated menu/actor-road observations are correlated and all roads are consumed TRAIN.",
+    "Five-second maximum speeds use only observations before episode end and are not always a complete followup window."
+  ],
+  "manifest_sha256": "753e992093f0efb5a681eafdd910f4f2cfe99a0dbc3515757a71b8feda188286",
+  "source_code_sha256": "d471a5425271a9573cea47d1aff8e4a4ad71185804259e3beaf4dfa32c613544"
+}
