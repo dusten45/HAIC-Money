@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "contact-continuity-20260930",
+  "source_ref": "docs\\plans\\active\\contact-continuity-20260930-design.md",
+  "rule_or_requirement": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "observable_information": "Rendered pixels/HUD, previous road-center observations and own actions only. No simulator state.",
+  "allowed_action_or_state_change": "Four independent pixel contact/crossing mechanisms: impact classification override, propulsion release, side persistence, predictive crossing.",
+  "expected_success_endpoint": "Preserve or exceed current10/12 completion, lap time tiebreaker, no promotion without ZIP and broader validation",
+  "eligible_state": "TRAIN_SEARCH",
+  "control": "Unchanged historical preview_row_repair and current arrival_speed references",
+  "falsifier": "No actual action change, lower completion, slower tie, invalid actions or reference mismatch",
+  "smallest_decisive_experiment": "6arms x12 consumedTRAIN cells=72episodes",
+  "resource_and_risk_gate": "2CPU2GiB800seconds plus prior140.007<1200",
+  "source_paths": [
+    "docs\\plans\\active\\contact-continuity-20260930-design.md",
+    "haic_agent/contact_continuity_runtime.py",
+    "haic_agent/far_hazard_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fixed-high-speed-pursuit-repair-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-pursuit-repair-20260929.md",
+  "rule_or_requirement": "Maintain high target speed and remain on asphalt; slowing or course cutting does not qualify.",
+  "observable_information": "Four image frames, pixel road centers and HUD speed; evaluator-only raw road membership and speed are never agent inputs.",
+  "allowed_action_or_state_change": "Repair pursuit single saturation, preserve target60 and all road/speed gates; repeat this arm of four-direction batch on same consumed six TRAIN cells.",
+  "expected_success_endpoint": "Correct pursuit mechanism with identical frozen-control first-ten hashes; qualification unchanged.",
+  "eligible_state": "CONSUMED_TRAIN_REPAIR_38200_38201",
+  "control": "Unmodified corridor steering with exactly the same fixed-speed governor; diagnostic controller, not selected submission ZIP.",
+  "falsifier": "No qualified finish gain, target reduced, lost road constraint, unequal common prefixes, invalid actions or simulator state enters inference.",
+  "smallest_decisive_experiment": "Six corrected pursuit episodes compared to immutable first-batch control; no fresh scoring.",
+  "resource_and_risk_gate": "2 CPU 2 GiB 600s, six episodes, no external action.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-pursuit-repair-20260929.md",
+    "haic_agent/fixed_high_speed_pursuit_repair.py",
+    "training/fixed_high_speed_pursuit_repair.py"
+  ]
+}

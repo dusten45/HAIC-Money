@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-recovery-transition-train-5160-5161-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-recovery-transition-train-5160-5161-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "This TRAIN-only pulse and privileged teacher cannot enter a submission runtime; no pixel student ZIP or current official-site rule check exists.",
+      "evidence_paths": [
+        "training/recovery_perturbation_probe.py",
+        "artifacts/haic-research-v2/haic2-recovery-transition-train-5160-5161-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The preregistered >=4 distinct cells per direction floor passed 6/6 for left-pulse to positive teacher and 6/6 for right-pulse to negative teacher, each after at least three actual pulse decisions. All 18 episodes, 12 NPZ hashes and 248 finite labeled samples passed integrity checks; zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-recovery-transition-train-5160-5161-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Activation supports a separately registered TRAIN collection only; teacher-only trajectories are excluded from submission-candidate completion rates and no pixel student was driven.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-recovery-transition-train-5160-5161-20260929/report.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "haic2-segment-recovery-linux-20260929",
+  "source_ref": "docs/plans/haic2-segment-recovery-train-7400-7401-linux-20260929/design.md",
+  "rule_or_requirement": "A pixel-only driver needs valid finishes before lap-time optimization, including after temporary road visibility loss.",
+  "observable_information": "Four grayscale pixel frames, detected road rows, pixel-estimated speed, offcenter asphalt, inherited action and reset-local memory.",
+  "allowed_action_or_state_change": "Four separately registered low-visibility steering, speed, reacquisition or asphalt-boundary interventions around the frozen driver.",
+  "expected_success_endpoint": "At least one activated candidate preserves every control finish and improves completion-first matched TRAIN metrics on six fresh cells.",
+  "eligible_state": "FRESH_TRAIN_SEGMENT_RECOVERY_BATCH",
+  "control": "Exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49, evaluated on every same cell.",
+  "falsifier": "Any invalid action, fewer than three changed actions per mechanism, a candidate-only lost control finish, or no completion-first/time improvement.",
+  "smallest_decisive_experiment": "Five arms \u00d7 tracks 1\u20133 \u00d7 fresh TRAIN seeds 7400\u20137401, 30 closed-loop episodes.",
+  "resource_and_risk_gate": "Linux Docker CPU 1,200 seconds, two cores, 2 GiB, 650 decisions/episode; identical six fresh TRAIN cells, no reserved split or external action.",
+  "source_paths": [
+    "haic_agent/segment_recovery_runtime.py",
+    "training/segment_recovery_batch.py",
+    "docs/plans/haic2-recovery-offline-student-train-20260929/correction-20260929.md"
+  ]
+}

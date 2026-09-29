@@ -1,0 +1,5 @@
+# Long-range bright-object guard: REJECT
+
+On three already consumed TUNE cells, original and guarded student each finished 1/3 but on different identities. The guarded student repaired 3:5201 (19.18 s, no collision) while losing the original valid finish on 1:5200 (off-track near 99% progress); both failed 2:5205. The far detector produced 10 extra-gas suppressions in total. Only three occurred on 3:5201, at decisions 72, 151 and 180; none occurred within decisions 202–221 preceding the original student's collision at decision 222. The registered activation gate required at least three in that window and preserving 1:5200, so it failed. Zero invalid actions occurred. Formal outcome `REJECT`, with rule compliance `UNKNOWN`, mechanism activation `FAIL`, competitive outcome `NOT_APPLICABLE`, and no release. These consumed TUNE cells provide diagnostic evidence only.
+
+Frozen source and checkpoint: `tmp/haic2-long-range-obstacle-activation-frozen-20260929/`. The source SHA-256 entries in the run manifest refer to that snapshot.

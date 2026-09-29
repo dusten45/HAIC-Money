@@ -1,0 +1,7 @@
+# Six-decision pixel-motion correction: REJECT
+
+Plan hash `06301fe69a26632e3113cc604e77e33e43f205d33684120f25ba091a8896f6ba` ran six paired episodes on consumed TRAIN seed 5176 across tracks 1–3, under the exact bend-rebound control identity. The fixed candidate changed nine actions across tracks 1 and 3, with zero invalid actions and no collisions. It shortened the longest low-visibility runs from 23 to 3 decisions on track 1 and from 45 to 7 on track 3. Track 2 actions and 22.92 s lap were unchanged.
+
+The outcome gate fails. The candidate repaired the track-1 control's off-track nonfinish (candidate lap 24.30 s), but it lost the valid track-3 control finish (28.08 s), retiring off track near 95% progress. Thus completion tied 2/3 only by exchanging a failure, violating the preregistered no-lost-control-finish condition. Formal decision: `REJECT → GATE_REVIEW_REJECT → STOPPED`, no release, no fresh score or ZIP. Shortening road invisibility alone did not ensure a valid finish.
+
+Post hoc diagnostic: the candidate commanded -0.7 on track 3 for six decisions at steps 279–284. The earlier TRAIN privileged-teacher record on the same consumed cell has seven consecutive -0.7 labels at decision indices 278–284. This is a possible mechanism for the later trajectory divergence, not causal proof. No duration is retuned on these consumed cells. Any revised action horizon must use a new plan and fresh TRAIN cells.

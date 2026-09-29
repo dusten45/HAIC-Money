@@ -1,0 +1,7 @@
+# Road-relative commitment repair
+
+Keep acceleration unchanged. The four-direction fast avoidance batch shows commit_side finishes prior failed1:38302 in20.26s without collision, but fails1:38300. In1:38300 the first detected obstacle atdecision35 has baseline obstacleterm-.139 and newly committedterm+.139: camera-relative choice immediately contradicts road-relative choice. In1:38302 initialterm+.09 agrees with commit, then baselineflips atnextstep while commitment passes safely. This is evidence for preserving the initial road-relative side, not arbitrary gas reduction.
+
+Change initial commitment from obstacle relative to camera42 to current baseline obstacle side, which is selected relative to road center at obstacle. Retain it until two absentframes. Apply to commitment and passing-bearing directions; shock recovery and continuity remain frozen as negative/mechanism controls, fast_control and control unchanged. Four directions, four candidates, two controls;36episodes on same6consumedTRAINcells. No threshold sweep. Add observed obstacle and road-relative side diagnostics. Intermediate eligibility6/6 with lower matched median; fullhalf-timegoalstillpending.
+
+Falsifier: newlostfinish, first-direction inconsistencies, no actual commitment intervention, invalidactions or control replaydifference.2CPU2GiB1800s1200decisions. Localonly. Finish andintegrate precedingrun before codechanges; freshexacthashapprovals understandingauthorization. No external release.

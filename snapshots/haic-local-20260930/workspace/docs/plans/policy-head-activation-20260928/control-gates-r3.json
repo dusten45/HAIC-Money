@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local TRAIN-only profile completed with hash-bound inputs. Official site and package compliance were not established.",
+      "evidence_paths": ["runs/haic-research-v2/policy-head-activation-control-r3-20260928/run_manifest.json", "runs/haic-research-v2/policy-head-activation-control-r3-20260928/events.jsonl"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This arm is the pre-registered no-change control for the policy-head rate mechanism.",
+      "evidence_paths": ["artifacts/haic-research-v2/policy-head-activation-control-r3-20260928/training/policy.pt"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "TRAIN-only learning; no TUNE, held-out, confirmation, blind, or official scoring run was opened.",
+      "evidence_paths": ["docs/plans/2026-09-28-policy-head-activation-probe.md"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/policy-head-activation-control-r3-20260928/run_manifest.json", "artifacts/haic-research-v2/policy-head-activation-control-r3-20260928/training/policy.pt"]
+}

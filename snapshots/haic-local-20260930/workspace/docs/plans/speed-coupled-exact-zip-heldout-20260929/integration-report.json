@@ -1,0 +1,27 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/run_manifest.json",
+    "runs/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/events.jsonl",
+    "artifacts/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The exact ZIPs passed local static and runtime checks in Linux CPU, but current competition-site rule compliance was not independently verified in this diagnostic.",
+      "evidence_paths": ["artifacts/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The unchanged candidate ZIP hash matches the earlier tune package with recorded boost, early-steer, bend-brake and hazard-brake activations.",
+      "evidence_paths": ["artifacts/haic-research-v2/speed-coupled-preview-candidate-20260929/package_manifest.json", "runs/haic-research-v2/speed-coupled-preview-tune-20260929/integration_report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Candidate finished 11/12 matched held-out cells versus selected control 12/12; track 3 seed 2006 was a candidate-only off-track failure with two collisions and 0.4 damage. Faster median among finished candidate laps cannot override lower completion.",
+      "evidence_paths": ["artifacts/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/report.json"]
+    }
+  ]
+}

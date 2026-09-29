@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact ZIPs ran with zero invalid actions; measured import/create, reset, act latency, and RSS were within local limits.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Opening launch activated 120 times, early steering 105 times, bend braking zero, and straight boost zero.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Both exact ZIPs finished 12/12 reused diagnostic cells; candidate median 23.75 s versus control 23.85 s. Reused identities cannot establish independent improvement.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-diagnostic-2900-2903-20260929/report.json"
+      ]
+    }
+  ]
+}

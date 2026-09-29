@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/traction-path-20260929/report.json",
+    "artifacts/haic-research-v2/traction-path-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only action review; exact ZIP certification absent.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/traction-path-20260929/report.json",
+        "artifacts/haic-research-v2/traction-path-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Positive torque governor changes actual gas; diagnostic omega decoder is biased and excluded from actuation. Completion not established.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/traction-path-20260929/report.json",
+        "artifacts/haic-research-v2/traction-path-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Completion-first target not met; inspect full summary. Initial progress improves but failures remain.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/traction-path-20260929/report.json",
+        "artifacts/haic-research-v2/traction-path-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

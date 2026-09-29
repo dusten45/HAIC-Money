@@ -1,0 +1,9 @@
+# Anticipatory bend fresh confirmation diagnostic
+
+The prior anticipatory bend actor changes only steering when a consistent far-road bend is visible and the selected policy has not yet begun turning. Prior 300–303 tune and 308–311 package-confirmation identities collided with other registered work; they are consumed diagnostics, not independent confirmation. The untouched 304–307 held-out finished 11/12 in both arms with a shorter candidate median lap. This plan asks whether that completion and time relationship persists in a genuinely new set.
+
+Control: exact-hash selected full-road-guard historical checkpoint `3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199`, reconstructed by registered `benchmark_corridor_diagnostic`. Candidate: the same control wrapped with frozen `AnticipatoryBendAgent`; no changed policy weights or pedals. The runtime reads the 84×84 grayscale observation, its derived road centers, and the selected action only. It must not read map geometry, seed, simulator state or progress for inference.
+
+Register tracks 1–3 × seeds 312–315 as twelve previously unopened `confirmation` cells per arm. Check every v2 manifest and current plan before opening them. Use the same Linux Python 3.11 CPU image, 2,000-decision cap, and a 1,200-second run limit. The source and checkpoints are copied into a frozen local snapshot before plan registration so concurrent code changes do not alter the executable identity. The existing v2 run and artifact roots remain immutable.
+
+The candidate qualifies only if it finishes at least as many cells as control, has zero invalid actions and changes steering at least once. On equal completion it must have a shorter median finished lap; a completion gain outranks time. A diagnostic result can advance research but cannot release or promote SOTA. No website action is authorized.

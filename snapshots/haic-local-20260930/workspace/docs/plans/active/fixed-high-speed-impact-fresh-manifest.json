@@ -1,0 +1,67 @@
+{
+  "run_id": "fixed-high-speed-impact-fresh-20260929",
+  "cycle_id": "fixed-high-speed-impact-fresh-20260929-cycle",
+  "purpose": "Fresh matched original versus impact-clear exact-ZIP TRAIN comparison",
+  "hypothesis_hash": "1c1a89548199598d7ff0d42650acebd068326f9bedbaef0de846afaa43176577",
+  "candidate_revision": "fixed60-impact-clear-exact-zip",
+  "control_revision": "original-fixed60-damping",
+  "candidate_package_hash": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+  "control_package_hash": "b196cfb653a0ceeae0779e5e3832f879a27f24cc662b7202a1a0c39888d469f9",
+  "comparison_id": "fixed-high-speed-impact-fresh-20260929",
+  "seed_ids": [
+    "1:38210",
+    "1:38211",
+    "2:38210",
+    "2:38211",
+    "3:38210",
+    "3:38211"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-train-38210-38211"
+  ],
+  "map_ids": [
+    "official-track1-seed38210",
+    "official-track1-seed38211",
+    "official-track2-seed38210",
+    "official-track2-seed38211",
+    "official-track3-seed38210",
+    "official-track3-seed38211"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 2,
+    "episode_max_decisions": 1200,
+    "episodes_per_arm": 6,
+    "timeout_seconds": 1200,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fixed-high-speed-impact-fresh-20260929.md": "8b53981ebc7e7b2b1d5dc3181fa74864de1c403f89f33b8cb8d28fd1154ef200",
+    "training/confirm_fixed_high_speed_impact.py": "9bf4b4a8bb46b00e5aa603f13518dddee278b9eb58157d89812b416acb24c99b",
+    "training/package_fixed_high_speed_damping.py": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_research/config.py": "13ef63f7a4626678298450abd63652746fdbedb871b5d6be40542b79d989057f",
+    "harness.config.json": "93c9fc7c5bd2d8f2bc08a4818fc8ca040d4f6d2a6dc1ff14402837a61c526357",
+    "artifacts/haic-research-v2/fixed-high-speed-damping-package-20260929/submission-high-speed-damping.zip": "b196cfb653a0ceeae0779e5e3832f879a27f24cc662b7202a1a0c39888d469f9"
+  }
+}

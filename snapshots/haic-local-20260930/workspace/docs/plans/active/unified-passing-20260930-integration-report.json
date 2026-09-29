@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "artifacts\\haic-research-v2\\unified-passing-20260930\\report.json",
+    "artifacts\\haic-research-v2\\unified-passing-20260930\\batch_audit.json",
+    "docs/experiments/unified-passing-20260930.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local pixel-only evaluation; no exact candidate ZIP/current official validation, not released.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\report.json",
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\batch_audit.json",
+        "docs/experiments/unified-passing-20260930.md"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four independent mechanisms changed actual actions; replacement road and avoidance telemetry recorded. Physical-motion or beneficial-causality claims not made.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\report.json",
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\batch_audit.json",
+        "docs/experiments/unified-passing-20260930.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Gap10/12,prediction8/12; lateral12/12median20590 and speed12/12median23280 slower thanstable12/12median20520. Third comparable nonimprovement, pivot and preserve original checkpoint.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\report.json",
+        "artifacts\\haic-research-v2\\unified-passing-20260930\\batch_audit.json",
+        "docs/experiments/unified-passing-20260930.md"
+      ]
+    }
+  ]
+}

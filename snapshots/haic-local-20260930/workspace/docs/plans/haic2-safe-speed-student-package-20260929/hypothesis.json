@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-exact-pixel-speed-student-local-package-20260929",
+  "source_ref": "docs/plans/haic2-safe-speed-student-package-20260929/design.md",
+  "rule_or_requirement": "The held-out pixel-only speed policy must be represented by a static-checkable exact local ZIP before any independent package comparison.",
+  "observable_information": "Frozen control ZIP, frozen student runtime and stable wrapper source, exact safe student checkpoint, package inventory and hashes.",
+  "allowed_action_or_state_change": "Build a local ZIP that wraps the unchanged full-road-guard control with stable-risk and student runtime, adding only two modules and one safe checkpoint.",
+  "expected_success_endpoint": "One exact local ZIP with expected input hashes, allowed inventory, no static rule violations and complete member-hash manifest.",
+  "eligible_state": "LOCAL_PACKAGE_ONLY",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Input hash mismatch, changed control member, forbidden source or executable, invalid archive path, size violation or package error.",
+  "smallest_decisive_experiment": "Single deterministic local package build from frozen inputs.",
+  "resource_and_risk_gate": "One registered Linux CPU packaging operation, 180-second limit; no evaluation cell, site upload, model confirmation or official submission.",
+  "source_paths": [
+    "docs/plans/haic2-safe-speed-student-package-20260929/design.md",
+    "training/package_safe_speed_student.py",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/model_safe.pt",
+    "docs/plans/haic2-safe-speed-student-heldout-20260929/outcome.md"
+  ]
+}

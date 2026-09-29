@@ -1,0 +1,39 @@
+{
+  "source_sha256": "163b9121d3ee0ee574ba791fff9f89d1c0501d17495dc233109f4b00c8ca4367",
+  "first_collision_index": 121,
+  "scope": "same learner observations: queried raw teacher vs executed learner; no teacher counterfactual rollout",
+  "windows": {
+    "pre10": {
+      "n": 10,
+      "learner_mean_steer_gas_brake": [
+        -0.1405819207429886,
+        0.0481901690363884,
+        0.005163692869246006
+      ],
+      "teacher_raw_mean_steer_gas_brake": [
+        -0.06030667573213577,
+        0.08999999612569809,
+        0.003999999724328518
+      ],
+      "mean_abs_steer_disagreement": 0.08504661917686462,
+      "learner_brake_positive_count": 2,
+      "teacher_brake_positive_count": 1
+    },
+    "post": {
+      "n": 101,
+      "learner_mean_steer_gas_brake": [
+        0.18699972331523895,
+        0.07734137028455734,
+        0.0
+      ],
+      "teacher_raw_mean_steer_gas_brake": [
+        0.350577175617218,
+        0.11999990791082382,
+        0.0
+      ],
+      "mean_abs_steer_disagreement": 0.16357748210430145,
+      "learner_brake_positive_count": 0,
+      "teacher_brake_positive_count": 0
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "contact-package-20260930",
+  "source_ref": "docs\\plans\\active\\contact-package-20260930-design.md",
+  "rule_or_requirement": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "observable_information": "Rendered pixels/HUD, previous road-center observations and own actions only. No simulator state.",
+  "allowed_action_or_state_change": "No policy edits: exact frozen crossing ZIP and independent matched validation",
+  "expected_success_endpoint": "Exact replay and better matched completion-first outcome than current ZIP",
+  "eligible_state": "FROZEN_HELD_OUT_VALIDATION",
+  "control": "Current arrival ZIP and separately preserved original historical ZIP",
+  "falsifier": "No actual action change, lower completion, slower tie, invalid actions or reference mismatch",
+  "smallest_decisive_experiment": "12TRAIN replay + 3arms x12held_out cells=48episodes",
+  "resource_and_risk_gate": "2CPU2GiB550seconds; heartbeat total limit1117.813<1200",
+  "source_paths": [
+    "docs\\plans\\active\\contact-package-20260930-design.md",
+    "training/confirm_contact_continuity.py",
+    "haic_agent/contact_continuity_runtime.py"
+  ]
+}

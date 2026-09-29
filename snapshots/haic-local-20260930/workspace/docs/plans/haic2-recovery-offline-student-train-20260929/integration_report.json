@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-recovery-offline-student-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-recovery-offline-student-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "TRAIN-only offline teacher imitation produces no candidate package or current official-site validation.",
+      "evidence_paths": ["training/recovery_offline_student.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Exact source report and NPZ hashes matched; the fixed ridge and nine-neighbor visual models fit whole TRAIN cells and produced finite held-cell predictions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-recovery-offline-student-train-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Neither learned model met preregistered natural full-sequence sign accuracy. Ridge achieved 16/30 and nearest nine 16/30; fixed first-direction hold 22/30, below 75%. No student driving is authorized by this gate.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-recovery-offline-student-train-20260929/report.json"]
+    }
+  ]
+}

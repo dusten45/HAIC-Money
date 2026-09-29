@@ -1,0 +1,21 @@
+{
+  "hypothesis_id": "haic2-natural-recovery-chunk1-20260929",
+  "source_ref": "docs/plans/haic2-natural-recovery-chunk1-train-5292-5299-20260929/design.md",
+  "rule_or_requirement": "Whole-cell pixel student validation needs more independent naturally occurring TRAIN recovery labels than the two cells already completed.",
+  "observable_information": "Four-frame pixels and inherited action when the frozen pixel driver loses road visibility; simulator geometry only supplies TRAIN teacher labels.",
+  "allowed_action_or_state_change": "Collect and hash unpulsed natural recovery labels on one fixed fresh TRAIN block; do not train or drive a student in this run.",
+  "expected_success_endpoint": "24 episodes valid, four new natural recovery cells across two tracks with both steer signs, zero invalid actions, and exact hashes.",
+  "eligible_state": "TRAIN_ONLY_NATURAL_RECOVERY_CHUNK1",
+  "control": "Exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49 as inherited driver, no pulse.",
+  "falsifier": "Invalid episode/sample/hash/action, incomplete denominator, fewer than four natural cells, fewer than two tracks, or missing either steer sign.",
+  "smallest_decisive_experiment": "Fresh TRAIN tracks 1-3 x seeds 5292-5299, 24 unpulsed teacher-only episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,200 seconds, two cores, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-natural-recovery-chunk1-train-5292-5299-20260929/design.md",
+    "training/recovery_natural_chunk_collect.py",
+    "training/recovery_student_data_collect.py",
+    "training/recovery_teacher_probe.py",
+    "haic_agent/wide_speed_batch_runtime.py",
+    "docs/plans/haic2-balanced-recovery-data-train-5170-5177-20260929/outcome.md"
+  ]
+}

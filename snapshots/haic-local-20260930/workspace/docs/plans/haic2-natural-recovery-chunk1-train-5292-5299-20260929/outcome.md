@@ -1,0 +1,5 @@
+# Natural recovery chunk one: coverage ADVANCE
+
+Plan hash `8ecb60e8d9c1945c8569896ff5791b570edb67616bc0be2a9e4114739369d000` completed all 24 registered unpulsed TRAIN episodes on tracks 1–3 × seeds 5292–5299. Natural teacher intervention occurred in four distinct cells across tracks 1 and 2. Four hashed NPZ files contain 30 finite pixel/action/teacher-steer decisions; all shapes and SHA-256 values matched the report. Positive teacher steer occurred in one cell and negative steer in four. Zero invalid actions.
+
+The exact preregistered coverage floor of four new cells, two tracks and both steering signs passed. Together with two earlier completed natural cells from TRAIN 5170–5177, six independent natural recovery cells are available. The earlier Docker-interrupted partial files remain excluded. Outcome: `ADVANCE → GATE_REVIEW_ADVANCE → STOPPED`, no release because rule compliance remains UNKNOWN. Advance is limited to a separately registered whole-cell offline student feasibility study; teacher laps are not submission-candidate scores. Student driving must later be compared against the exact bend-rebound ZIP on fresh cells.

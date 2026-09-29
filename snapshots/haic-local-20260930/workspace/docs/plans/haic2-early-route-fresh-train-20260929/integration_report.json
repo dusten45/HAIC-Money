@@ -1,0 +1,32 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-early-route-fresh-train-20260929/run_manifest.json",
+    "runs/haic-research-v2/haic2-early-route-fresh-train-20260929/events.jsonl"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Runner stopped before any driving because frozen checkpoint files were omitted from this snapshot.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-early-route-fresh-train-20260929/events.jsonl"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "No episode executed.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-early-route-fresh-train-20260929/events.jsonl"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "No score observations. This is infrastructure-invalid and does not count toward non-improvement cycles.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-early-route-fresh-train-20260929/events.jsonl"
+      ]
+    }
+  ]
+}

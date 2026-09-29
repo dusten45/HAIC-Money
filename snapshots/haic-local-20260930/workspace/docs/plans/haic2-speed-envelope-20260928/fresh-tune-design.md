@@ -1,0 +1,7 @@
+# Four-direction fresh tune batch — 2026-09-28
+
+The consumed TRAIN 1/43 and 2/102 screen confirmed action changes for four independent one-change directions, each finishing 2/2. The previously selected `full_road_guard` is the primary safety control. The frozen `apex_line` is a second diagnostic control; its independent held-out 300–303 fell to 11/12 versus 12/12 for `full_road_guard`, so the apex family is not selected based on tune speed alone.
+
+Register tracks 1, 2, and 3 crossed with seeds 308–311 as twelve new TUNE cells. The four candidates are `speed_envelope`, `exit_burst`, `approach_brake`, and `outer_entry`. Two controls are `selected_full_road_guard` and `apex_line`. All six arms share the exact environment, checkpoint hashes, frozen source, and 2,000-decision cap. The 72-episode batch has a 1,800-second registered limit. Each arm records completion, lap time, progress, collisions, damage, invalid actions, action latency, and action traces.
+
+Select by finish count first, then median finished lap time and the remaining AGENTS.md criteria only on a tie. A candidate with fewer finishes than the selected safety control is rejected even when its completed laps are faster. On a matched tied completion, require a lower median lap time and no invalid actions. No threshold or weight is swept in this batch. This is local tune evidence only. Do not open held-out, confirmation, or blind until the batch is gated. No website action is authorized.

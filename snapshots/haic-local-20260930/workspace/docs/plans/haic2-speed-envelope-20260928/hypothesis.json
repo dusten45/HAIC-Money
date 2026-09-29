@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-pixel-speed-envelope-train-activation-20260928",
+  "source_ref": "docs/plans/haic2-speed-envelope-20260928/design.md",
+  "rule_or_requirement": "A pixel-only candidate must retain valid completion while reducing simulated lap time.",
+  "observable_information": "Current four grayscale frames, visible road centers and obstacle cues, and speed estimated from the rendered HUD; no simulator state enters inference.",
+  "allowed_action_or_state_change": "Raise gas to a fixed 0.28 floor only below a bend-conditioned speed target on fully visible unobstructed road with small inherited steering and no brake.",
+  "expected_success_endpoint": "TRAIN activation with changed gas and no new finish loss, then a separately registered fresh tune comparison of completion first and median finished lap time second.",
+  "eligible_state": "TRAIN_MECHANISM_ACTIVATION_ONLY",
+  "control": "Frozen apex_line actor with identical checkpoint hashes and the same two TRAIN cells.",
+  "falsifier": "No gas-action change, invalid action, or candidate noncompletion on a cell completed by the control.",
+  "smallest_decisive_experiment": "Paired official-environment TRAIN cells 1/43 and 2/102, two arms, at most 2000 decisions per cell, full action traces and envelope decision count.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU diagnostic within 1800 seconds; consumed TRAIN identities only, no tune/held-out/confirmation/blind access, no website action.",
+  "source_paths": ["docs/plans/haic2-speed-envelope-20260928/design.md", "haic_agent/speed_envelope_runtime.py", "haic_agent/apex_line_runtime.py", "training/benchmark_corridor.py", "harness.config.json"]
+}

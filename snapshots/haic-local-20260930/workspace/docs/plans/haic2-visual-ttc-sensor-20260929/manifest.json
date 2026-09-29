@@ -1,0 +1,59 @@
+{
+  "run_id": "haic2-visual-ttc-sensor-20260929",
+  "cycle_id": "haic2-visual-ttc-sensor-cycle-20260929",
+  "purpose": "Consumed TRAIN pixel obstacle time-to-contact sensor feasibility diagnostic",
+  "hypothesis_hash": "34edd093c3401375719e75b5f7d3d3f9ef8ded4702d28a7a68349479b2969dcd",
+  "candidate_revision": "sensor-only-pixel-ttc-v1",
+  "control_revision": "unchanged-coast-student-and-selected-pixel-control",
+  "candidate_package_hash": "f1afc4016f00ac699e8212f0007dde27f829831294f84b9fd3236a6cd0e3ab86",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-visual-ttc-consumed-train-5020-5021",
+  "seed_ids": [
+    "1:5020",
+    "2:5021"
+  ],
+  "comparison_episode_count": 2,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-sensor-5020-5021"
+  ],
+  "map_ids": [
+    "official-track1-seed5020",
+    "official-track2-seed5021"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 900,
+    "episode_max_decisions": 2000,
+    "episodes_total": 4,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/visual_ttc_sensor_probe.py": "ce020c9d83debced5c9330f371004ea7bb798a7e1835f047d38cdfaf6d0607e0",
+    "haic_agent/pixel_coast_student_runtime.py": "37049010a75483be52af1c0d97ea3ad51307e68ec50fbe1ee9594daadfb18491",
+    "haic_agent/pixel_speed_student_runtime.py": "4349ef067be4351fdfbf665cc3b05094385281a322a7cfbc5912c110ed857367",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "6aa98e8ceac996ffa61a09285ce1fa4d2303938d5c26813b9b947c8edb24686c",
+    "harness.config.json": "e63db34ffa7ed002fc67c4a8f6a26012af8bd075e157434b4239a38f8119aca8",
+    "artifacts/haic-research-v2/haic2-coast-class-train-20260929/model_safe.pt": "f1afc4016f00ac699e8212f0007dde27f829831294f84b9fd3236a6cd0e3ab86"
+  }
+}

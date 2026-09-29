@@ -1,0 +1,5 @@
+# Bounded pixel gas authority on fresh TRAIN
+
+On preregistered fresh TRAIN tracks 1-3 x seeds 5024-5027, the bounded-authority student validly finished **12/12** and the unchanged selected pixel controller **11/12**. It repaired selected's 3:5027 nonfinish. Both arms had zero collisions and zero invalid actions. Candidate made 700 low-base boost vetoes, 1,248 bounded boosts and 90 coasts. Across all finished laps, candidate median was 23.90 seconds versus selected 24.00 seconds. On the eleven jointly finished cells, candidate median was 23.74 versus selected 24.00 seconds; candidate was quicker on ten cells and slower on one. Median episode act p95 was 29.55 ms candidate versus 24.13 ms selected, below the 5-second action budget.
+
+The preregistered completion-first gate passed. Decision: **ADVANCE** to a separately registered fresh TUNE comparison with the same fixed source and checkpoint. This TRAIN diagnostic is not a submission-candidate official score or release. Exact ZIP compliance is still UNKNOWN; no model was confirmed or uploaded. Seeds 5024-5027 are now consumed TRAIN identities.

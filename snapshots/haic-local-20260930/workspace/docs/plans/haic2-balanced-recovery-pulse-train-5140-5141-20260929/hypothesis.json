@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-balanced-recovery-pulse-activation-20260929",
+  "source_ref": "docs/plans/haic2-balanced-recovery-pulse-train-5140-5141-20260929/design.md",
+  "rule_or_requirement": "A pixel-only recovery student needs real direction-diverse TRAIN recovery states under the strongest confirmed local controller.",
+  "observable_information": "Seven-row pixel road visibility, near-road pixel center, pixel obstacle flag, and decision index trigger a fixed pulse; four-frame pixels and inherited actions are saved at privileged teacher interventions.",
+  "allowed_action_or_state_change": "In TRAIN only, inject one fixed left or right steering pulse, then label low-visibility states with a simulator-privileged recovery teacher; no submission runtime changes.",
+  "expected_success_endpoint": "Across six fresh TRAIN cells, each pulse arm completes eight decisions on at least four cells, at least three left-pulse cells yield positive teacher steer and at least three right-pulse cells yield negative steer, with 18 attempted episodes and zero invalid actions.",
+  "eligible_state": "TRAIN_ONLY_BALANCED_RECOVERY_ACTIVATION",
+  "control": "Exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49, with an unpulsed arm on each cell.",
+  "falsifier": "Too few complete pulses, too few opposite-direction real teacher labels, invalid data/hash/action or incomplete 18-episode denominator.",
+  "smallest_decisive_experiment": "TRAIN tracks 1-3 x seeds 5140-5141, each with unpulsed, left-pulse and right-pulse arms; teacher-only activation diagnostic.",
+  "resource_and_risk_gate": "One SHA-registered Linux CPU local diagnostic capped at 1,800 seconds, two cores, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-balanced-recovery-pulse-train-5140-5141-20260929/design.md",
+    "training/recovery_perturbation_probe.py",
+    "training/recovery_teacher_probe.py",
+    "haic_agent/wide_speed_batch_runtime.py"
+  ]
+}

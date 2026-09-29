@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "anticipatory-bend-independent-confirmation-20260928",
+  "source_ref": "docs/plans/2026-09-28-anticipatory-fresh-confirmation.md",
+  "rule_or_requirement": "A pixel-only candidate must retain or improve registered finish-line crossing completion before lap time matters.",
+  "observable_information": "Current 84x84 grayscale road rows, pixel obstacle diagnostic, and the selected fixed-hash actor's action.",
+  "allowed_action_or_state_change": "Apply a bounded early steering cue toward a consistent far-road bend only while the selected actor's steering is near zero; leave gas and brake unchanged.",
+  "expected_success_endpoint": "At least the selected control's finished-cell count across twelve untouched matched confirmation cells, then lower median finished lap time on a tie.",
+  "eligible_state": "confirmation diagnostic, not SOTA release",
+  "control": "Selected full-road-guard exact-hash historical checkpoint, otherwise identical environment, map/seed cells, and decision cap.",
+  "falsifier": "Fewer actual finishes than control, invalid action, no preview activation, or equal finish count without lower median finished lap time.",
+  "smallest_decisive_experiment": "Tracks 1, 2, 3 crossed with unopened seeds 312-315; selected and anticipatory arms, twelve matched cells per arm, 2000 decisions per cell.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, 1200-second registered diagnostic limit, frozen source, no website action, no use of reserved blind cells.",
+  "source_paths": ["docs/plans/2026-09-28-anticipatory-fresh-confirmation.md", "haic_agent/anticipatory_bend_runtime.py", "training/benchmark_corridor.py", "harness.config.json", "docs/plans/2026-09-28-seed-300-303-identity-audit.md"]
+}

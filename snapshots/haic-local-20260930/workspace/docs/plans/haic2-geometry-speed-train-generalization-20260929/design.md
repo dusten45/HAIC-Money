@@ -1,0 +1,7 @@
+# Fixed teacher on twelve newly assigned TRAIN cells
+
+The fixed geometry-coast teacher passed its small consumed-TRAIN feasibility gate: 2/2 valid finishes and a 5.65% median lap improvement over the paired stable-risk pixel control. The teacher still has no submission eligibility. Before collecting supervised labels, assess whether its trajectory quality survives different TRAIN layouts.
+
+Assign tracks 1–3 × seeds 5000–5003 to TRAIN for this study. A project-wide v2 design/run manifest check found these identities unused at registration. They are not tune, held-out, confirmation, blind, or official cells. Keep the teacher source and checkpoint identical to the two-cell pass. Run teacher and stable-risk control on each of the twelve paired cells, 2,000 decisions maximum and 1,800 seconds Linux CPU limit. Record full per-action traces, completion, finished lap time, incomplete progress, collisions, damage, invalid actions, intervention counts and timing. This teacher-only comparison does not enter submission-candidate completion rates.
+
+The teacher generalization gate is 12/12 valid finishes and at least 3% lower median finished lap than its paired pixel control, with zero invalid actions. If it loses a finish or misses the time gate, preserve the failure and do not collect labels for a student. This is one fixed-mechanism evaluation after TRAIN activation, not a coefficient sweep. No external site action is included.

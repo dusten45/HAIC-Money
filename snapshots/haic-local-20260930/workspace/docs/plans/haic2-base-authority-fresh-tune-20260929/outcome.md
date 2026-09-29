@@ -1,0 +1,5 @@
+# Bounded pixel gas authority on fresh TUNE
+
+On preregistered fresh TUNE tracks 1-3 x seeds 5224-5227, the bounded-authority student validly finished **11/12** versus unchanged selected pixel control **8/12**. It repaired selected's 1:5227, 2:5225 and 3:5225 nonfinishes. Both arms failed 3:5227. Candidate had zero collisions and damage versus selected five collisions and 1.0 damage, and zero invalid actions in both arms. Candidate made 574 low-base vetoes, 1,149 bounded boosts and 89 coasts. Candidate median finished lap was 22.28 seconds versus selected 22.75 seconds. On the eight jointly finished cells, medians were 22.47 versus 22.75 seconds. The higher candidate completion passes the preregistered completion-first gate irrespective of the joint lap-time tie rule.
+
+Decision: **ADVANCE** to a separately registered untouched held-out comparison with the same checkpoint and fixed mechanism. The TUNE 5224-5227 identities are consumed. This is local TUNE evidence, not official score, exact ZIP compliance, model confirmation or release. No external action occurred.

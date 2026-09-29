@@ -1,0 +1,70 @@
+{
+  "run_id": "haic2-coast-class-driving-train-20260929",
+  "cycle_id": "haic2-coast-class-driving-train-cycle-20260929",
+  "purpose": "TRAIN-only closed-loop coast student versus selected stable pixel control",
+  "hypothesis_hash": "c01b0807f9d65752dd5f41ac788ac66d0d3e1ec9e03d2fa53c10fb9ca3dcca1c",
+  "candidate_revision": "pixel-coast-class-student-v1-f1afc401",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "f1afc4016f00ac699e8212f0007dde27f829831294f84b9fd3236a6cd0e3ab86",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-coast-class-driving-train-5020-5023",
+  "seed_ids": [
+    "1:5020",
+    "1:5021",
+    "1:5022",
+    "1:5023",
+    "2:5020",
+    "2:5021",
+    "2:5022",
+    "2:5023",
+    "3:5020",
+    "3:5021",
+    "3:5022",
+    "3:5023"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "newly-assigned-train-seeds5020-5023"
+  ],
+  "map_ids": [
+    "official-track1-seed5020-5023",
+    "official-track2-seed5020-5023",
+    "official-track3-seed5020-5023"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/coast_student_probe.py": "cd30f6107ed07648e6d86f1cf7815e0847a2e6c7013fd9f738d2f2717507a9f0",
+    "haic_agent/pixel_coast_student_runtime.py": "37049010a75483be52af1c0d97ea3ad51307e68ec50fbe1ee9594daadfb18491",
+    "haic_agent/pixel_speed_student_runtime.py": "4349ef067be4351fdfbf665cc3b05094385281a322a7cfbc5912c110ed857367",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "1de388cf1cb6e93b7ac1c284cffe473df4cbdeaf70fcacc56399ae066d114c27",
+    "harness.config.json": "b3808e2ee6342c4dd0febe0453bf2d3cc5c38fda38c8e9098fbe47fdfbc0ca74",
+    "artifacts/haic-research-v2/haic2-coast-class-train-20260929/model_safe.pt": "f1afc4016f00ac699e8212f0007dde27f829831294f84b9fd3236a6cd0e3ab86"
+  }
+}

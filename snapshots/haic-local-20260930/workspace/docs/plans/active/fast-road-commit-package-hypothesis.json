@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fast-road-commit-package-20260929",
+  "source_ref": "docs/plans/active/fast-road-commit-package-design-20260929.md",
+  "rule_or_requirement": "User requests higher completion and half lap time, high acceleration throughout; prior offset architecture failed.",
+  "observable_information": "Current rendered road/obstacle and HUD speed, own previous issued brake and internal state. No evaluator telemetry input.",
+  "allowed_action_or_state_change": "Freeze selected commit_side into standaloneZIP, exactreplay6 consumedcells, fixedcandidate/control comparison6additionalconsumedTRAINcells. No parameter changes.",
+  "expected_success_endpoint": "Exactreplay6/6; combined unique12/12 candidate preservingcontrolfinishes and lower paired finished median. Half-time objective separately unachieved unless measured.",
+  "eligible_state": "FIXED_CANDIDATE_PACKAGE_REPLAY_AND_BROADER_CONSUMED_TRAIN",
+  "control": "Preserved preview_row_repair ZIP hash7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835",
+  "falsifier": "Lost completion, no traction improvement or matched speed gain, invalid actions or simulator input leak.",
+  "smallest_decisive_experiment": "6 exact replay episodes plus6additionalcellsx2archives=18episodes; summary12uniquecells includesprior matchedsource evidence, no doublecountingreplay.",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; localonly, noexternalactions",
+  "source_paths": [
+    "docs/plans/active/fast-road-commit-package-design-20260929.md",
+    "training/confirm_fast_road_commit.py",
+    "artifacts/haic-research-v2/fast-road-commit-20260929/report.json"
+  ]
+}

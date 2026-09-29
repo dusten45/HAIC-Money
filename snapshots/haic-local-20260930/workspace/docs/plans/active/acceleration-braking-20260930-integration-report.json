@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "artifacts\\haic-research-v2\\acceleration-braking-20260930\\report.json",
+    "artifacts\\haic-research-v2\\acceleration-braking-20260930\\batch_audit.json",
+    "docs/experiments/acceleration-envelope-20260930.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "No exactZIP/current official validation; local only.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\batch_audit.json",
+        "docs/experiments/acceleration-envelope-20260930.md"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Propulsion and brake takeover alter actions, wheel-lock commands audited separately, control and nonlaunch prefixes verified.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\batch_audit.json",
+        "docs/experiments/acceleration-envelope-20260930.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "8/12,8/12,9/12,6/12 finishes versusstable12/12; harder braking worsens performance. High acceleration preserved but no overall improvement.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-braking-20260930\\batch_audit.json",
+        "docs/experiments/acceleration-envelope-20260930.md"
+      ]
+    }
+  ]
+}

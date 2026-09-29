@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-stable-risk-one-time-confirmation-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-20260928/confirmation-design.md",
+  "rule_or_requirement": "A faster pixel-only candidate should retain valid completion on a separately reserved confirmation set.",
+  "observable_information": "Four grayscale frames, visible asphalt clearance, road-center motion, obstacle pixels, rendered speed, and fixed stable actor action.",
+  "allowed_action_or_state_change": "Run the exact frozen stable road-clearance gas gate from tune and held-out without modification.",
+  "expected_success_endpoint": "At least selected control's finish count across twelve one-time confirmation cells and lower median finished lap time on tied completion, with no invalid actions.",
+  "eligible_state": "FROZEN_CONTROLLER_CONFIRMATION",
+  "control": "Exact-hash selected full-road-guard actor on each registered confirmation cell.",
+  "falsifier": "Lower finish count, invalid action, or tied completion without lower median finished lap time.",
+  "smallest_decisive_experiment": "Tracks 1–3 × seeds 332–335, two frozen arms and 24 episodes at 2000 decisions each.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, 1800-second registered limit, one-time confirmation only; no parameter change, blind use, package, or website action.",
+  "source_paths": ["docs/plans/haic2-stable-risk-20260928/confirmation-design.md", "haic_agent/stable_risk_envelope_runtime.py", "training/benchmark_corridor.py", "harness.config.json", "runs/haic-research-v2/haic2-stable-risk-heldout-20260928/integration_report.json"]
+}

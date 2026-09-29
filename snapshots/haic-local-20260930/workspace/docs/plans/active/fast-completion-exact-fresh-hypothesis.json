@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fast-completion-exact-fresh-20260929",
+  "source_ref": "docs/plans/active/fast-completion-exact-fresh-20260929.md",
+  "rule_or_requirement": "User requests fixed-high-speed road reacquisition and continued progress after collision, accepting brief road excursions.",
+  "observable_information": "Pixel road rows/full-width runs, last valid road direction and pixel speed drops. No simulator state enters policy.",
+  "allowed_action_or_state_change": "Package exact preview_action_aware source; isolated extracted ZIP matched fresh comparison; no tuning",
+  "expected_success_endpoint": "Candidate12/12 on fresh TRAIN, preserve every control finish, resource limits and exact prefix/hash checks",
+  "eligible_state": "FRESH_TRAIN_FROZEN_ZIP",
+  "control": "Previously delivered exact impact_clear ZIP f1eb42a4492e87f5d61641322cae3c0d5e335e895bef7ee4206ad1a570eda018",
+  "falsifier": "No activation, lost control finishes, no rescue, invalid actions, altered first10prefix, simulator-state leakage, or lowered normal straight target. Temporary cue-triggered targets are explicitly permitted.",
+  "smallest_decisive_experiment": "Two exact ZIPs times12 fresh cells=24episodes",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; no external action",
+  "source_paths": [
+    "docs/plans/active/fast-completion-exact-fresh-20260929.md",
+    "haic_agent/fast_completion_coordination.py",
+    "training/confirm_fast_completion.py"
+  ]
+}

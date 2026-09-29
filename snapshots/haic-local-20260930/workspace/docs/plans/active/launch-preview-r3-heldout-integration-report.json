@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact ZIPs ran with zero invalid actions; measured import/create, reset, act latency, and RSS were within local limits.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Launch activated 120 times, early steering 114 times, and extra gas/brake zero times on 12 held-out cells.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Candidate finished 12/12 held-out cells versus control 11/12, with candidate median 23.63 s versus control finished-lap median 23.70 s. One candidate lap was 4.52 s slower; unchanged-ZIP confirmation remains required.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json"
+      ]
+    }
+  ]
+}

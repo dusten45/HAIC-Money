@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-stable-risk-zip-exact-confirmation-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-zip-eval-20260928/design.md",
+  "rule_or_requirement": "The actual local ZIP must retain valid completion and lap-time gains under the submission-shaped runtime contract.",
+  "observable_information": "Only rendered frames enter each extracted ZIP agent; paired track and seed identities, finish flag, lap time, invalid action count and runtime resource measurements are recorded.",
+  "allowed_action_or_state_change": "Run the frozen control and candidate ZIPs locally on twelve new confirmation cells without updating weights, thresholds, sources, or archives.",
+  "expected_success_endpoint": "Candidate completion count exceeds control, or ties with lower median finished lap time, with no contract violation or candidate-only nonfinish.",
+  "eligible_state": "LOCAL_DIAGNOSTIC_CONFIRMATION",
+  "control": "Full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Candidate-only nonfinish, lower completion count, non-improving median on a tie, invalid action, archive mismatch, or local runtime limit failure.",
+  "smallest_decisive_experiment": "Twelve paired fresh confirmation cells: tracks 1-3, seeds 336-339, two exact ZIPs.",
+  "resource_and_risk_gate": "One local registered 1800-second diagnostic; 24 episodes maximum, no external site action, no model confirmation or submission.",
+  "source_paths": ["docs/plans/haic2-stable-risk-zip-eval-20260928/design.md", "training/evaluate_zip_pair.py", "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip", "artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/submission-stable-risk.zip"]
+}

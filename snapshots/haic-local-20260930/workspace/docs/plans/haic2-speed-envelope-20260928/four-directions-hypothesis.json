@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-four-independent-pixel-mechanisms-train-screen-20260928",
+  "source_ref": "docs/plans/haic2-speed-envelope-20260928/design.md",
+  "rule_or_requirement": "The pixel-only controller should preserve valid completion while finding faster driving actions.",
+  "observable_information": "Four grayscale frames, visible road centers and obstacles, pixel HUD speed, and fixed pixel actor actions; no simulator state or map geometry at inference.",
+  "allowed_action_or_state_change": "Compare four single-change directions against the frozen apex actor: bend-conditioned gas floor, exit throttle pulse, approach-rate brake, and mild-bend outer entry. Each direction has one candidate and no parameter sweep.",
+  "expected_success_endpoint": "At least one mechanism changes action on TRAIN without losing a control completion, qualifying it for a separately preregistered fresh tune batch.",
+  "eligible_state": "TRAIN_FOUR_DIRECTION_ACTIVATION_ONLY",
+  "control": "Frozen apex_line actor and exact checkpoint hashes on both registered TRAIN cells.",
+  "falsifier": "A direction makes no action changes, has invalid actions, or loses a completed control cell; later fresh tune also falsifies it if completion or tied-completion lap time declines.",
+  "smallest_decisive_experiment": "Four independent candidate profiles plus one common control on consumed TRAIN 1/43 and 2/102, ten episodes total, 2000 decisions per episode.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, 1800-second profile cap, TRAIN only; no tune, held-out, confirmation, blind, upload, or submission.",
+  "source_paths": ["docs/plans/haic2-speed-envelope-20260928/design.md", "haic_agent/speed_envelope_runtime.py", "haic_agent/phase_candidates_runtime.py", "training/benchmark_corridor.py", "harness.config.json"]
+}

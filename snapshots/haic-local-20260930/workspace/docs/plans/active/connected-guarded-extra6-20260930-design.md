@@ -1,0 +1,2 @@
+# Additional six consumed TRAIN cells
+Unchanged four directions and control from connected-guarded-full6-20260930. Tracks1-3 x seeds38301,38303, already consumed TRAIN not heldout.30episodes,2CPU2GiB600seconds. Completion first then matched median; aggregate disjoint six+six only. No ZIP promotion. Preserve original baseline. No source changes. Standing authorization, separate exact plan-hash design and execution events. Previous run301.5seconds plus this maximum600 remains below1200seconds.

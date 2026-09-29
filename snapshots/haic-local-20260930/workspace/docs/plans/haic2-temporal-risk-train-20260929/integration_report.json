@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-temporal-risk-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-temporal-risk-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local TRAIN-only frozen pixel runtimes with exact control ZIP hash checked; no new candidate ZIP or current official-site rule check.",
+      "evidence_paths": [
+        "training/temporal_pixel_risk_distill.py",
+        "haic_agent/pixel_temporal_risk_runtime.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Of 2,101 eligible training and 730 validation fast-policy states, zero had a registered 12-decision future hazard label. The minimum 40 and 10 positive labels was not met; no classifier checkpoint was trained.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-temporal-risk-train-20260929/report.json",
+        "docs/plans/haic2-temporal-risk-train-20260929/design.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This was a TRAIN-only feasibility run with two unchanged actors, not a learned candidate comparison. Fast-only finished 12/12 versus mode switch 9/12 on this one new TRAIN block; it is a local observation and not fresh candidate promotion evidence.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-temporal-risk-train-20260929/report.json"
+      ]
+    }
+  ]
+}

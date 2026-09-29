@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/connected-guarded-budget-20260929/report.json",
+    "artifacts/haic-research-v2/connected-guarded-budget-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local screen; new ZIP notvalidated.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/report.json",
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Bounded farpath residual and accepted pixel-supported temporal fusion activate. Counts in audit; fusion is not itself causal proof of improved action.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/report.json",
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Partial4cell dual-preview screen4/4 median21470ms vs matchedcontrol21680ms, no broad/ZIP verification. Prior failurecell2:38302 is not in reducedscreen, so cannot infer repair/generalization. Half-time unmet.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/report.json",
+        "artifacts/haic-research-v2/connected-guarded-budget-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-exact-pixel-speed-student-confirmation-20260929",
+  "source_ref": "docs/plans/haic2-safe-speed-student-exact-confirm-20260929/design.md",
+  "rule_or_requirement": "An actual extracted submission-format ZIP must satisfy runtime limits and improve valid completion and lap time on independent confirmation cells.",
+  "observable_information": "Exact ZIP hashes, isolated import/create/reset/act and RSS metrics, matched finish/lap/progress/collision/damage/intervention traces.",
+  "allowed_action_or_state_change": "Read-only extraction and local execution of the frozen candidate and selected control ZIPs on registered confirmation cells; no policy change or upload.",
+  "expected_success_endpoint": "Candidate completion at least control, zero invalid/runtime violations, gas activation, and at least 2% lower jointly completed median lap.",
+  "eligible_state": "LOCAL_EXACT_PACKAGE_CONFIRMATION",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Archive or runtime violation, fewer candidate finishes, invalid action, no gas activation or less than 2% paired median lap improvement.",
+  "smallest_decisive_experiment": "Twelve matched untouched confirmation cells, tracks 1–3 × seeds 5212–5215, two exact ZIPs.",
+  "resource_and_risk_gate": "One registered 1,800-second Linux CPU confirmation process, 2,000 decisions per episode; no site upload, official submission or model confirmation.",
+  "source_paths": [
+    "docs/plans/haic2-safe-speed-student-exact-confirm-20260929/design.md",
+    "training/confirm_safe_speed_student.py",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/submission.zip",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip",
+    "docs/plans/haic2-safe-speed-student-heldout-20260929/outcome.md"
+  ]
+}

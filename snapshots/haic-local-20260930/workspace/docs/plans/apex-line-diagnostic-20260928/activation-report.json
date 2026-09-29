@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local diagnostic used pixel-only inference and exact-hash checkpoints, but this candidate has not been packaged or checked on the official platform.",
+      "evidence_paths": ["runs/haic-research-v2/apex-line-consumed-tune-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-consumed-tune-activation-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The apex controller changed steering in 56 decisions on consumed tune 1/184; fixture tests confirm turn direction and obstacle abstention. It finished without invalid action or collision.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-consumed-tune-activation-20260928/report.json", "tests/test_apex_line_runtime.py"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "One consumed tune cell finished in 21.78 s versus fast-pedal 22.00 s and selected control 23.44 s; this is activation context and not fresh replicated evidence.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-consumed-tune-activation-20260928/report.json", "docs/plans/2026-09-28-apex-line-diagnostic.md"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/apex-line-consumed-tune-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-consumed-tune-activation-20260928/report.json"]
+}

@@ -1,0 +1,5 @@
+# Pixel bend-phase warnings: observability rejection
+
+The registered observation-only replay used already consumed TRAIN 1:5020 in selected and bounded-student arms, plus bounded-student successes 2:5021 and 3:5020. Original outcomes reproduced: selected 1:5020 and both reference bounded-student cells finished; bounded 1:5020 failed with one collision at decision 256. No actions changed and no invalid actions occurred.
+
+Neither preregistered pixel warning fired once across the three bounded-student episodes. In the failed 1:5020 run, the measured far-to-near road bend stayed at or below 2.5 pixels through decision 252, while speed rose to about 56.4. Bend jumped to 7.625 pixels at decision 253, three decisions before collision and after the bounded learned boost had ceased. The warning therefore cannot suppress the preceding acceleration with the required 5-20 decision lead. Decision: **REJECT**, mechanism activation FAIL, no fresh completion evidence, no release or external action. Do not sweep its thresholds on these consumed cells.

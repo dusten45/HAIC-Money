@@ -1,0 +1,3 @@
+# Fresh TRAIN fixed-prefix continuation: REJECT
+
+The repaired isolated run executed all 24 registered episodes on tracks 1-3 x seeds 5052-5055. Both arms completed 12/12 with zero collisions, damage and invalid actions. The candidate changed 1,164 actions after an exactly identical first-50-action prefix on every matched cell. The control median finished lap was 24.11 s; candidate 24.51 s. Candidate was slower on 11/12 cells; median paired slowdown 0.80 s. This fails the registered completion-tie speed gate. No TUNE or package promotion. Exact candidate ZIP and official-site compliance remain UNKNOWN. Prior infrastructure-invalid run remains separate.

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "connected-preview-20260929",
+  "source_ref": "docs/plans/active/connected-preview-design-20260929.md",
+  "rule_or_requirement": "User asks visible farther map and remembered observations to support early steering and acceleration, preserving original stable completion.",
+  "observable_information": "Current and prior images/HUD and own actions only; connected road components and optical flow.",
+  "allowed_action_or_state_change": "Four mechanisms: connected path pursuit, dual near/far feedforward, motion-compensated path memory, shared path steering and acceleration.",
+  "expected_success_endpoint": "6/6 control finishes preserved with lower finished median; target half time remains distinct.",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "Unchanged preview_row_repair on matched6 cells.",
+  "falsifier": "No farther path action activation, incorrect component/flow, lost completion, no time gain or invalid action.",
+  "smallest_decisive_experiment": "5arms x tracks1-3 x seeds38300,38302 =30episodes.",
+  "resource_and_risk_gate": "2CPU2GiB; heartbeat deadline14:45UTC;30episodes1200decisions; no external actions.",
+  "source_paths": [
+    "docs/plans/active/connected-preview-design-20260929.md",
+    "haic_agent/connected_preview_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

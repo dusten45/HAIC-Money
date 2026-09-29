@@ -1,0 +1,5 @@
+# Full consumed TRAIN completion check
+
+Conditional on a frozen coordination candidate achieving3/3 in the registered causal probe, compare that unchanged candidate with impact_clear on all12 consumed TRAIN cells: tracks1–3 × seeds38200,38201,38210,38211. Twenty-four complete episodes, rotated order, first10prefix equality,1200decision cap,2CPU2GiB1800s. This remains development evidence, not held-out confirmation. Exact selected mode is bound in the settings/manifest before execution; no source tuning during this run.
+
+Goal12/12, invalid0, preserve every control finish. Compare completion first, then median time; measure actual speed and temporary reduced-target fraction. Brief offroad excursions are accepted by user. Retain high target60 in ordinary driving, permit the previously announced temporary pedal coordination for completion. Fresh exact-ZIP comparison will have a separate plan only after12/12. Local standing authorization2026-09-29 covers design/execution; no official release/upload/confirmation. Three named gates; current official rule compliance remainsUNKNOWN.

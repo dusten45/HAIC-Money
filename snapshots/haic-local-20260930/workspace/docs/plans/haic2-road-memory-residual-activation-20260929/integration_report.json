@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-road-memory-residual-activation-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-road-memory-residual-activation-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Frozen pixel-only local steering diagnostic; no exact candidate ZIP or current official-site compliance check.",
+      "evidence_paths": [
+        "training/road_memory_probe.py",
+        "artifacts/haic-research-v2/haic2-road-memory-residual-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Residual candidate changed 60 steering actions and had zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-residual-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "On six consumed TRAIN activation cells candidate completed 3/6 versus control 6/6 and worsened all three target visibility-loss streaks to 101-103 decisions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-residual-activation-20260929/report.json"
+      ]
+    }
+  ]
+}

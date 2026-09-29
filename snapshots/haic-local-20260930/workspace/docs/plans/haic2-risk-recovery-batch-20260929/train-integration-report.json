@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The diagnostic used only four grayscale frames and produced zero invalid actions, but these wrappers have not been packed into an exact ZIP or checked on the official server.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-risk-recovery-four-direction-train-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "On two consumed TRAIN cells per arm, curve approach changed 22/23 actions, edge closure 7/10, lateral drift 11/9, and obstacle closing 11/13. Every arm and the fixed stable-risk control finished both cells.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-risk-recovery-four-direction-train-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Two consumed TRAIN cells show activation and no lost control finish, qualifying a fresh tune comparison; they are not independent promotion evidence.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-risk-recovery-four-direction-train-20260929/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-risk-recovery-four-direction-train-20260929/run_manifest.json", "artifacts/haic-research-v2/haic2-risk-recovery-four-direction-train-20260929/report.json"]
+}

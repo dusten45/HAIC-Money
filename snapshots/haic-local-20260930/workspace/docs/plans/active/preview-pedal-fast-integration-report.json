@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/preview-pedal-fast-20260929/report.json",
+    "artifacts/haic-research-v2/preview-pedal-fast-20260929/batch_audit.json",
+    "artifacts/haic-research-v2/preview-pedal-fast-20260929/metrics_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local evaluation, no new standalone ZIP validation.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/report.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/batch_audit.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/metrics_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Preview, memory, braking and acceleration activate; exact6controls, first10equal, hashesvalid, invalidactions0.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/report.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/batch_audit.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/metrics_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Steeringbudget6/6 but median23780ms vs original21590ms; otherarms5/6. No candidate eligible, speed peaks alone not improvement. Retain stableZIP.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/report.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/batch_audit.json",
+        "artifacts/haic-research-v2/preview-pedal-fast-20260929/metrics_audit.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "run_id": "fast-road-commit-package-20260929",
+  "cycle_id": "fast-road-commit-package-20260929-cycle",
+  "purpose": "ExactZIP replay and additionalconsumedTRAIN robustness of selected accelerated road commitment",
+  "hypothesis_hash": "5229faa6df09de283a3fb5edbc05be213e7ea7fa26bc4c75287775058fc0ddc9",
+  "candidate_revision": "fast-road-commit-r1-frozen-package",
+  "control_revision": "preview-row-repair-r3",
+  "candidate_package_hash": "7a52acc2d17134cd2055a3784d338a58c0d1b97ea99d0fa67366cebe146c07de",
+  "control_package_hash": "7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835",
+  "comparison_id": "fast-road-commit-package-20260929",
+  "seed_ids": [
+    "1:38300",
+    "1:38301",
+    "1:38302",
+    "1:38303",
+    "2:38300",
+    "2:38301",
+    "2:38302",
+    "2:38303",
+    "3:38300",
+    "3:38301",
+    "3:38302",
+    "3:38303"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38300-38303"
+  ],
+  "map_ids": [
+    "official-track1-seed38300",
+    "official-track1-seed38301",
+    "official-track1-seed38302",
+    "official-track1-seed38303",
+    "official-track2-seed38300",
+    "official-track2-seed38301",
+    "official-track2-seed38302",
+    "official-track2-seed38303",
+    "official-track3-seed38300",
+    "official-track3-seed38301",
+    "official-track3-seed38302",
+    "official-track3-seed38303"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2,
+    "total_executed_episodes": 18,
+    "replay_episodes": 6,
+    "additional_comparison_cells": 6,
+    "summary_unique_cells": 12
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/high_acceleration_path_runtime.py": "2105cf7b73fea0d291b45f94e0618837354b570505187536362d3b529fbe710d",
+    "training/fixed60_completion.py": "9d8f91c9711d3a3fec3bd450bf997e61dd18432eece67173f8a377d9190482ce",
+    "docs/plans/active/fixed60-completion-settings.json": "9a6928c108e18f997ff66b805f83fb375a3bcac5c5fd9d05ead5803185eb6fc5",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "67fafec3eecfa6dd12e86f999ba45a68c01fc762d5b829c072b81c197f38a4ea",
+    "harness.config.json": "cc63b6e16b74279b992ce4d5ea6bcd5089f0dde42ec75bcc685e6117d8f8522f",
+    "haic_agent/traction_path_runtime.py": "bb40d993edbc3e0ebe6e5c0557ad74fdd7f2d7fca60499073bf3b8a4474d3e03",
+    "haic_agent/geometric_passing_runtime.py": "4475b3380e4547b6f26421c514594cf26d8e7b50fc15e1f3d0744c15bab48a65",
+    "haic_agent/fast_committed_recovery_runtime.py": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec",
+    "docs/plans/active/fast-road-commit-design-20260929.md": "3d47275e9f4ca47a81985177d7bc91943079e3ef5ad4d4f778b93ecdfe13991d",
+    "haic_agent/fast_road_commit_runtime.py": "7a52acc2d17134cd2055a3784d338a58c0d1b97ea99d0fa67366cebe146c07de",
+    "docs/plans/active/fast-road-commit-package-design-20260929.md": "ba27d55f6db4a7a7f7fe13ea8e7dd48c62a33546252f9a1c4fe3630b16ae117e",
+    "training/confirm_fast_road_commit.py": "a286dd2e35a8c93f2e07b1b20c845a801bfdc2be1cfc900c1367d0da7992506b",
+    "artifacts/haic-research-v2/fast-road-commit-20260929/report.json": "8d2a82bb0a1f0c4b2c6d09a2ff7f8729481bef7ebd7b44e5df54a09012f3e0ff",
+    "training/confirm_fast_completion.py": "f81e0d166cf378d229878ca9aa7cd0310aebaa0db401acf437a28b0af7aa0a09",
+    "training/package_fixed_high_speed_damping.py": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0",
+    "training/confirm_stable_package.py": "e8713f14972bd974bf775093d56efa152a158093df7027fee37e24594b042d7b"
+  },
+  "checkpoint_ref": {
+    "path": "artifacts/haic-research-v2/fast-completion-row-repair-20260929/submission-fast-completion.zip",
+    "sha256": "7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "train-only-site-map-split": "training/maps/site/official_heavy_split.json",
+  "defer-tune": true,
+  "total-steps": 4096,
+  "updates": 4,
+  "seed": 8106,
+  "max-decisions": 800,
+  "learning-rate": 2E-06,
+  "enable-visual-features": true,
+  "throttle-expansion": 4.0,
+  "resume": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt",
+  "disable-hud-branch": true
+}

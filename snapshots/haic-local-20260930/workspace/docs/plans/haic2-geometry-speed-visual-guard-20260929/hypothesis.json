@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-geometry-speed-visual-obstacle-guard-train-20260929",
+  "source_ref": "docs/plans/haic2-geometry-speed-visual-guard-20260929/design.md",
+  "rule_or_requirement": "Before using privileged TRAIN actions as labels, a teacher must preserve matched valid completion and shorten finished laps on a separate TRAIN block.",
+  "observable_information": "Rendered pixel obstacle detection and a 20-decision lockout, plus paired TRAIN completion, lap, collision and latency records.",
+  "allowed_action_or_state_change": "A visual obstacle sighting returns all pedal and steering authority to the frozen pixel driver for 20 decisions; geometry-coast speed action remains on clear road.",
+  "expected_success_endpoint": "At least control valid completion, no candidate-only nonfinish or invalid action, and at least 3% faster paired finished-lap median.",
+  "eligible_state": "TRAIN_TEACHER_FEASIBILITY_ONLY",
+  "control": "Unchanged StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Any candidate-only nonfinish, fewer finishes, invalid action, absent obstacle guard activation, or less than 3% paired median improvement.",
+  "smallest_decisive_experiment": "Twelve paired new TRAIN cells on tracks 1–3 × seeds 5008–5011, twenty-four episodes.",
+  "resource_and_risk_gate": "One registered 1,800-second Linux CPU diagnostic, 2,000 decisions per episode; no fresh tune, held-out, confirmation, blind or official action.",
+  "source_paths": [
+    "docs/plans/haic2-geometry-speed-visual-guard-20260929/design.md",
+    "training/geometry_speed_teacher.py",
+    "training/geometry_speed_teacher_probe.py",
+    "haic_agent/pixel_features.py",
+    "docs/plans/haic2-geometry-speed-relative-train-20260929/outcome.md"
+  ]
+}

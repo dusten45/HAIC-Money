@@ -1,0 +1,1 @@
+Registered and approved but NEVER executed. Reviewer found clipping isolation defect before start. Immutable run history preserved; superseded by fast-committed-recovery-r2-20260929. Do not execute old plan. Source snapshot fast-committed-recovery-r1-unexecuted.py.snapshot preserves source hash. No measured outcome and no non-improving cycle count.

@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-fixed-geometry-speed-teacher-twelve-train-cells-20260929",
+  "source_ref": "docs/plans/haic2-geometry-speed-train-generalization-20260929/design.md",
+  "rule_or_requirement": "A privileged TRAIN teacher should repeatedly complete new TRAIN layouts faster before its actions are used as labels for a pixel-only student.",
+  "observable_information": "TRAIN track geometry and simulator speed for the teacher, frozen four-frame pixel action from the selected driver, and matched finish/lap metrics.",
+  "allowed_action_or_state_change": "Run the frozen geometry-coast teacher and selected pixel control on newly registered TRAIN seeds 5000–5003; do not alter the teacher or checkpoint.",
+  "expected_success_endpoint": "Teacher finishes all twelve new TRAIN cells with zero invalid actions and at least 3% lower median finished lap than paired control.",
+  "eligible_state": "TRAIN_TEACHER_GENERALIZATION_ONLY",
+  "control": "Unchanged StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Teacher-only nonfinish, invalid action, or less than 3% finished-lap median improvement across twelve paired TRAIN cells.",
+  "smallest_decisive_experiment": "Twelve paired TRAIN cells: tracks 1–3, seeds 5000–5003, twenty-four episodes total.",
+  "resource_and_risk_gate": "One registered 1,800-second Linux CPU diagnostic, 2,000 decisions per episode; no fresh tune or external action.",
+  "source_paths": ["docs/plans/haic2-geometry-speed-train-generalization-20260929/design.md", "training/geometry_speed_teacher.py", "training/geometry_speed_teacher_probe.py", "runs/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/integration_report.json"]
+}

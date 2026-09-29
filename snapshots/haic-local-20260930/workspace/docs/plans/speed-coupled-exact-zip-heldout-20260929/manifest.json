@@ -1,0 +1,69 @@
+{
+  "run_id": "speed-coupled-exact-zip-heldout-20260929",
+  "cycle_id": "speed-coupled-exact-zip-heldout-cycle-20260929",
+  "purpose": "Compare unchanged speed-coupled and selected control packages on twelve held-out finish-line cells with completion-first selection",
+  "hypothesis_hash": "a98f8b090540f9c6db4ca94f02fae845b280377c51007a9991ea69577149bf51",
+  "candidate_revision": "speed-coupled-preview-frozen-zip",
+  "control_revision": "selected-full-road-guard-frozen-zip",
+  "candidate_package_hash": "54c117287390704acc52505d680c31574fdcf53ac062cbb0ce5258a57058c324",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "speed-coupled-vs-full-road-guard-heldout-2004-2007",
+  "seed_ids": [
+    "1:2004",
+    "1:2005",
+    "1:2006",
+    "1:2007",
+    "2:2004",
+    "2:2005",
+    "2:2006",
+    "2:2007",
+    "3:2004",
+    "3:2005",
+    "3:2006",
+    "3:2007"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "official-three-track-heldout-seeds2004-2007"
+  ],
+  "map_ids": [
+    "official-track1-seed2004-2007",
+    "official-track2-seed2004-2007",
+    "official-track3-seed2004-2007"
+  ],
+  "split_ids": [
+    "held_out"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/confirm_speed_coupled_package.py": "c5aa39865dca0658f4e10bf04db122bbdfdf4a6abbae32b0acac984615e773cd",
+    "training/confirm_stable_package.py": "e8713f14972bd974bf775093d56efa152a158093df7027fee37e24594b042d7b",
+    "haic_research/config.py": "7f4bce0f93d028687feab890d2b1829d6e5f36021a8f7aebef5cd5702f41d06d",
+    "haic_research/commands.py": "9e6fd2ba20112630a8c7a4f8e2a5be43c05b5fea467222169d8df616325f8293",
+    "harness.config.json": "43972beb8b0dec66f12e800897adae2cffdde94d79e537cbf38b1b33c153b87f",
+    "artifacts/haic-research-v2/speed-coupled-preview-candidate-20260929/submission-speed-coupled-preview.zip": "54c117287390704acc52505d680c31574fdcf53ac062cbb0ce5258a57058c324",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40"
+  }
+}

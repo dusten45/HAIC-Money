@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact ZIP replay and evaluator-only instrumentation passed with zero invalid actions; candidate and selected control both completed consumed 3:7041.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Nine preview steering changes were recorded. Two early interventions at progress 0.051-0.054 occurred at image speed about 42.3, before the launch-only ZIP later failed at progress 0.29.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Consumed one-cell causal diagnostic only. Failure 3:7040 and rescue 3:7041 had overlapping visible bend sizes, but their decisive early/late intervention speeds differed; no generalization claim.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-7040-boundary-trace-20260929/report.json",
+        "artifacts/haic-research-v2/launch-preview-7041-rescue-boundary-trace-20260929/report.json"
+      ]
+    }
+  ]
+}

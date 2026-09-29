@@ -1,0 +1,7 @@
+# Fixed visual speed saturation on fresh TUNE cells
+
+The single preregistered HUD speed ceiling of 54 passed activation on consumed TUNE cells: 129 extra-gas decisions suppressed, 315 retained, original finish preserved and one former off-track failure repaired. Freeze that ceiling, safe student checkpoint SHA-256 `3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194`, selected stable pixel driver and evaluation procedure. The earlier consumed cells are diagnostic only.
+
+Compare selected pixel control, original student and speed-saturated student on fresh TUNE tracks 1–3 × seeds 5216–5219, twelve matched cells per arm. Check that these identities are unused before execution. Run at most 2,000 decisions per episode, Linux CPU, 1,800 seconds. Record all full traces and completion, finished lap, incomplete progress, collisions, damage, invalid actions, latency, gas interventions and suppression.
+
+Advance only if saturated student finishes at least as many cells as both selected control and original student, has zero invalid actions, at least 20 suppressed and 20 remaining extra-gas decisions, and is at least 2% faster than selected control by median lap on jointly completed cells if completion ties. If completion exceeds control, compare median lap next but do not impose the 2% hurdle. Do not sweep the threshold on these cells. This local TUNE result cannot release a model or count as official score. No external action.

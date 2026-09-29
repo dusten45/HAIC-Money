@@ -1,5 +1,9 @@
 # HAIC-Money
 
+## 전체 로컬 작업 보존
+
+[2026-09-30 작업 스냅샷과 원자료 복원 안내](snapshots/haic-local-20260930/README.md) — 코드·문서는 Git, 대용량 원자료는 같은 저장소의 GitHub Release에 보존합니다.
+
 ## 제출 후보 (2026-09-30)
 
 [Arrival-speed 제출 ZIP과 소스·검증 결과](releases/arrival-speed-20260930/README.md)

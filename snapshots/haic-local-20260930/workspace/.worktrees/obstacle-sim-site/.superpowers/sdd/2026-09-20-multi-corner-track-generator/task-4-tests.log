@@ -1,0 +1,106 @@
+test_custom_environment_has_track_and_expected_observation (test_custom_environment.TestCustomEnvironment.test_custom_environment_has_track_and_expected_observation) ... ok
+test_custom_map_snapshot_is_deterministic (test_custom_environment.TestCustomEnvironment.test_custom_map_snapshot_is_deterministic) ... ok
+test_custom_obstacle_is_attached_without_official_obstacles (test_custom_environment.TestCustomEnvironment.test_custom_obstacle_is_attached_without_official_obstacles) ... ok
+test_every_generated_template_runs_in_custom_environment (test_custom_environment.TestCustomEnvironment.test_every_generated_template_runs_in_custom_environment) ... ok
+test_safe_act_accepts_and_clips_valid_action (test_local_contract.TestAgentContract.test_safe_act_accepts_and_clips_valid_action) ... ok
+test_safe_act_replaces_invalid_results (test_local_contract.TestAgentContract.test_safe_act_replaces_invalid_results) ... ok
+test_safe_act_times_out (test_local_contract.TestAgentContract.test_safe_act_times_out) ... ok
+test_safe_reset_is_optional_and_propagates_errors (test_local_contract.TestAgentContract.test_safe_reset_is_optional_and_propagates_errors) ... ok
+test_fifth_collision_retires (test_local_contract.TestEnvironmentContract.test_fifth_collision_retires) ... ok
+test_frame_skip_stops_on_second_raw_finish_tick (test_local_contract.TestEnvironmentContract.test_frame_skip_stops_on_second_raw_finish_tick) ... ok
+test_preprocessing_returns_float32_unit_range (test_local_contract.TestEnvironmentContract.test_preprocessing_returns_float32_unit_range) ... ok
+test_wrapper_observation_matches_declared_space (test_local_contract.TestEnvironmentContract.test_wrapper_observation_matches_declared_space) ... ok
+test_below_qualification_does_not_finish (test_local_contract.TestFinishLineTracker.test_below_qualification_does_not_finish) ... ok
+test_finish_time_is_immutable (test_local_contract.TestFinishLineTracker.test_finish_time_is_immutable) ... ok
+test_forward_crossing_finishes_at_center_tick (test_local_contract.TestFinishLineTracker.test_forward_crossing_finishes_at_center_tick) ... ok
+test_initial_contact_does_not_finish (test_local_contract.TestFinishLineTracker.test_initial_contact_does_not_finish) ... ok
+test_lateral_departure_and_stationary_crossing_do_not_finish (test_local_contract.TestFinishLineTracker.test_lateral_departure_and_stationary_crossing_do_not_finish) ... ok
+test_qualification_without_crossing_does_not_finish (test_local_contract.TestFinishLineTracker.test_qualification_without_crossing_does_not_finish) ... ok
+test_reverse_crossing_does_not_finish (test_local_contract.TestFinishLineTracker.test_reverse_crossing_does_not_finish) ... ok
+test_baseline_auto_run_returns_and_saves_run_log (test_local_simulator_api.TestLocalSimulatorApi.test_baseline_auto_run_returns_and_saves_run_log) ... ok
+test_health_and_custom_map_generation (test_local_simulator_api.TestLocalSimulatorApi.test_health_and_custom_map_generation) ... ok
+test_manual_run_start_action_finish_writes_run (test_local_simulator_api.TestLocalSimulatorApi.test_manual_run_start_action_finish_writes_run) ... ok
+test_technical_map_generation (test_local_simulator_api.TestLocalSimulatorApi.test_technical_map_generation) ... ok
+test_unknown_session_returns_not_found (test_local_simulator_api.TestLocalSimulatorApi.test_unknown_session_returns_not_found) ... ok
+test_custom_design_seeds_write_different_centerlines (test_local_simulator_cli.TestSimulatorCli.test_custom_design_seeds_write_different_centerlines) ... ok
+test_custom_map_command_creates_geometry_preview (test_local_simulator_cli.TestSimulatorCli.test_custom_map_command_creates_geometry_preview) ... ok
+test_map_and_run_commands_create_artifacts (test_local_simulator_cli.TestSimulatorCli.test_map_and_run_commands_create_artifacts) ... ok
+test_map_command_accepts_custom_obstacles (test_local_simulator_cli.TestSimulatorCli.test_map_command_accepts_custom_obstacles) ... ok
+test_technical_custom_map_cli_writes_recipe_metadata (test_local_simulator_cli.TestSimulatorCli.test_technical_custom_map_cli_writes_recipe_metadata) ... ok
+test_custom_obstacle_is_attached_and_counted (test_local_simulator_environment.TestEnvironmentSetup.test_custom_obstacle_is_attached_and_counted) ... ok
+test_official_mode_has_six_obstacles (test_local_simulator_environment.TestEnvironmentSetup.test_official_mode_has_six_obstacles) ... ok
+test_same_map_has_same_track_snapshot (test_local_simulator_environment.TestEnvironmentSetup.test_same_map_has_same_track_snapshot) ... ok
+test_custom_map_can_be_reset_and_run (test_local_simulator_integration.TestLocalSimulatorIntegration.test_custom_map_can_be_reset_and_run) ... ok
+test_map_run_log_contains_replay_data (test_local_simulator_integration.TestLocalSimulatorIntegration.test_map_run_log_contains_replay_data) ... ok
+test_agent_policy_loads_agent_act (test_local_simulator_run.TestRunLog.test_agent_policy_loads_agent_act) ... ok
+test_baseline_run_has_schema_and_steps (test_local_simulator_run.TestRunLog.test_baseline_run_has_schema_and_steps) ... ok
+test_legacy_schema_one_log_still_loads (test_local_simulator_run.TestRunLog.test_legacy_schema_one_log_still_loads) ... ok
+test_log_round_trip (test_local_simulator_run.TestRunLog.test_log_round_trip) ... ok
+test_manual_session_records_explicit_action (test_local_simulator_run.TestRunLog.test_manual_session_records_explicit_action) ... ok
+test_custom_map_round_trip_preserves_geometry (test_local_simulator_schema.TestMapSchema.test_custom_map_round_trip_preserves_geometry) ... ok
+test_rejects_invalid_seed_and_obstacle (test_local_simulator_schema.TestMapSchema.test_rejects_invalid_seed_and_obstacle) ... ok
+test_round_trip_preserves_map (test_local_simulator_schema.TestMapSchema.test_round_trip_preserves_map) ... ok
+test_schema_one_payload_is_read_as_official_map (test_local_simulator_schema.TestMapSchema.test_schema_one_payload_is_read_as_official_map) ... ok
+test_shared_environment_files_match_server (test_server_parity.TestServerParity.test_shared_environment_files_match_server) ... skipped 'server repository is not available'
+test_all_templates_generate_valid_maps (test_track_generator.TestTrackGenerator.test_all_templates_generate_valid_maps) ... ok
+test_batch_generation_uses_distinct_ids (test_track_generator.TestTrackGenerator.test_batch_generation_uses_distinct_ids) ... ok
+test_boundary_seeds_are_repeatable_and_each_template_varies (test_track_generator.TestTrackGenerator.test_boundary_seeds_are_repeatable_and_each_template_varies) ... ok
+test_detects_overlapping_road_boundaries (test_track_generator.TestTrackGenerator.test_detects_overlapping_road_boundaries) ... ok
+test_different_design_seed_changes_geometry (test_track_generator.TestTrackGenerator.test_different_design_seed_changes_geometry) ... ok
+test_generated_profiles_validate_for_a_fixed_seed_range (test_track_generator.TestTrackGenerator.test_generated_profiles_validate_for_a_fixed_seed_range) ... ok
+test_generated_road_boundaries_do_not_intersect (test_track_generator.TestTrackGenerator.test_generated_road_boundaries_do_not_intersect) ... ok
+test_generation_v2_records_distinct_corner_profiles (test_track_generator.TestTrackGenerator.test_generation_v2_records_distinct_corner_profiles) ... ok
+test_generator_handles_width_limits_and_rejects_out_of_range_width (test_track_generator.TestTrackGenerator.test_generator_handles_width_limits_and_rejects_out_of_range_width) ... ok
+test_invalid_design_seeds_are_rejected (test_track_generator.TestTrackGenerator.test_invalid_design_seeds_are_rejected) ... ok
+test_rejects_turn_radius_smaller_than_track_half_width (test_track_generator.TestTrackGenerator.test_rejects_turn_radius_smaller_than_track_half_width) ... ok
+test_same_design_seed_has_same_geometry_and_fingerprint (test_track_generator.TestTrackGenerator.test_same_design_seed_has_same_geometry_and_fingerprint) ... ok
+test_sampled_centerline_respects_segment_limit (test_track_generator.TestTrackGenerator.test_sampled_centerline_respects_segment_limit) ... ok
+test_self_intersection_is_rejected (test_track_generator.TestTrackGenerator.test_self_intersection_is_rejected) ... ok
+test_unknown_template_is_rejected (test_track_generator.TestTrackGenerator.test_unknown_template_is_rejected) ... ok
+test_custom_geometry_rejects_non_finite_values (test_track_model.TestTrackModel.test_custom_geometry_rejects_non_finite_values) ... ok
+test_custom_map_rejects_non_custom_identifier (test_track_model.TestTrackModel.test_custom_map_rejects_non_custom_identifier) ... ok
+test_initial_track_summary_matches_the_official_default_map (test_web_simulator_assets.TestWebAssets.test_initial_track_summary_matches_the_official_default_map) ... ok
+test_map_renderer_has_default_empty_state_target (test_web_simulator_assets.TestWebAssets.test_map_renderer_has_default_empty_state_target) ... ok
+test_map_renderer_projects_track_world_coordinates (test_web_simulator_assets.TestWebAssets.test_map_renderer_projects_track_world_coordinates) ... ok
+test_script_contains_api_fallback_and_manual_action_names (test_web_simulator_assets.TestWebAssets.test_script_contains_api_fallback_and_manual_action_names) ... ok
+test_site_contains_custom_generator_and_run_controls (test_web_simulator_assets.TestWebAssets.test_site_contains_custom_generator_and_run_controls) ... ok
+test_site_has_local_assets_and_required_controls (test_web_simulator_assets.TestWebAssets.test_site_has_local_assets_and_required_controls) ... ok
+test_site_has_playback_and_metrics_controls (test_web_simulator_assets.TestWebAssets.test_site_has_playback_and_metrics_controls) ... ok
+test_browser_fallback_map_preserves_seed_and_custom_id (test_web_simulator_client.TestWebSimulatorClient.test_browser_fallback_map_preserves_seed_and_custom_id) ... ok
+test_browser_fallback_matches_python_at_width_limits (test_web_simulator_client.TestWebSimulatorClient.test_browser_fallback_matches_python_at_width_limits) ... ok
+test_browser_fallback_matches_python_generator (test_web_simulator_client.TestWebSimulatorClient.test_browser_fallback_matches_python_generator) ... ok
+test_browser_fallback_rejects_invalid_seed_and_width (test_web_simulator_client.TestWebSimulatorClient.test_browser_fallback_rejects_invalid_seed_and_width) ... ok
+test_browser_fallback_rejects_unknown_template (test_web_simulator_client.TestWebSimulatorClient.test_browser_fallback_rejects_unknown_template) ... ok
+test_legacy_map_and_run_payloads_remain_loadable (test_web_simulator_client.TestWebSimulatorClient.test_legacy_map_and_run_payloads_remain_loadable) ... ok
+test_manual_key_set_maps_to_steer_gas_brake_order (test_web_simulator_client.TestWebSimulatorClient.test_manual_key_set_maps_to_steer_gas_brake_order) ... ok
+
+----------------------------------------------------------------------
+Ran 75 tests in 39.645s
+
+OK (skipped=1)
+map: C:\Users\koi\AppData\Local\Temp\tmp18wn2mrh\first.json
+track points: 83
+official obstacles: 0
+custom obstacles: 0
+map: C:\Users\koi\AppData\Local\Temp\tmp18wn2mrh\second.json
+track points: 76
+official obstacles: 0
+custom obstacles: 0
+map: C:\Users\koi\AppData\Local\Temp\tmpmuykkpx5\custom-track-0001.json
+track points: 81
+official obstacles: 0
+custom obstacles: 0
+map: C:\Users\koi\AppData\Local\Temp\tmp0ih_26a4\map.json
+track points: 283
+official obstacles: 6
+custom obstacles: 0
+run: C:\Users\koi\AppData\Local\Temp\tmp0ih_26a4\run.json
+{"collision_count": 0, "damage": 0.0, "finished": false, "lap_time_ms": null, "progress": 0.007067137809187279, "retire_reason": "max_steps"}
+map: C:\Users\koi\AppData\Local\Temp\tmpy8m6__tz\custom-map.json
+track points: 283
+official obstacles: 0
+custom obstacles: 1
+map: C:\Users\koi\AppData\Local\Temp\tmpti5wtmzc\technical.json
+track points: 94
+official obstacles: 0
+custom obstacles: 0

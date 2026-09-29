@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "launch-preview-speed-gate-package-20260929",
+  "source_ref": "docs/plans/active/launch-preview-speed-gate-r4.md",
+  "rule_or_requirement": "A faster launch must preserve a pixel-only finite three-action package and retain the qualified-finish objective.",
+  "observable_information": "Four grayscale observation frames, pixel speed, visible road centers and inherited pixel-driver action; no simulator state at inference.",
+  "allowed_action_or_state_change": "Keep exact one-shot launch and inherited early steering at pixel speed at most 45; above 45 return inherited guard action without anticipatory steering.",
+  "expected_success_endpoint": "One immutable local ZIP containing the single high-speed preview gate while retaining opening launch.",
+  "eligible_state": "LOCAL_PACKAGE_AFTER_STANDING_DESIGN_AUTHORIZATION",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Package mismatch, forbidden content, missing wrapper, or changed base action outside the preview gate.",
+  "smallest_decisive_experiment": "Build one exact local ZIP and compare against exact launch-only ZIP on registered cells.",
+  "resource_and_risk_gate": "Local packaging profile with a 600-second limit and 500 MB ZIP limit; no driving, training, site upload, official submission, or model confirmation in this run.",
+  "source_paths": [
+    "docs/plans/active/launch-preview-speed-gate-r4.md",
+    "haic_agent/launch_preview_speed_gate_runtime.py",
+    "training/package_launch_preview_speed_gate.py"
+  ]
+}

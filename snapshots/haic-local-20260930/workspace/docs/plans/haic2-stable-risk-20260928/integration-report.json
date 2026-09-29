@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "This was a local Linux CPU pixel-only diagnostic with a fixed checkpoint; package and official server compatibility remain unverified.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-stable-risk-train-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-risk-train-activation-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The risk-gated gas floor changed 92 and 104 actions on the two registered consumed TRAIN cells. Mean gas rose from 0.063/0.063 to 0.092/0.099, with 2/2 completion in both arms and zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-train-activation-20260928/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "The candidate was 1.64 and 1.74 seconds faster on two consumed TRAIN cells, which does not establish fresh tune or held-out candidate performance.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-train-activation-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-stable-risk-train-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-risk-train-activation-20260928/report.json"]
+}

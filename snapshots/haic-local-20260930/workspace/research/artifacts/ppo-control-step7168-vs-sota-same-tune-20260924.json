@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "diagnostic_id": "ppo-control-step7168-vs-sota-same-tune-20260924",
+  "purpose": "Read-only paired closed-loop diagnostic of the initial actor and interrupted control checkpoint on the pilot tune split. This is not the completed preregistered paired pilot and is not generalization evidence.",
+  "source": {
+    "worktree": "C:/Users/koi/.codex/worktrees/strategy-a-curve-brake-reward/HAIC",
+    "runner": "artifacts/haic/curve-brake-reward-ppo-pilot-v1/run_pilot.py",
+    "source_manifest_sha256": "6D4B59F60FDA472B594ABC4CD804B53E974D0EE4C2224E2DBE73D84580A44ABF",
+    "split_sha256": "49E1774B2FF039FB601903070E2976951C974A02F16FC2542754260574BEA209",
+    "evaluation": "deterministic actor, max_decisions=600, same map and two fixed seeds, capture_trace=true"
+  },
+  "sample_scope": {
+    "unique_map_families": 1,
+    "map_id": "custom-track-haic-tune-20260922",
+    "seeds": [
+      20260922,
+      20260926
+    ],
+    "seed_rows_identical": true,
+    "held_out_materialized": false,
+    "official_geometry_used": false,
+    "tune_reused_for_checkpoint_selection": true
+  },
+  "initial_sota": {
+    "checkpoint_sha256": "3CEB5EBBE2A4BD96944649A693B8EF924C0252FA620B0FD547C7FB494AFFF199",
+    "episodes": [
+      {
+        "seed": 20260922,
+        "finished": true,
+        "lap_time_ms": 19880,
+        "mean_speed": 42.00465078709252,
+        "max_speed": 52.67213688300439,
+        "collisions": 1,
+        "final_damage": 0.2,
+        "steps": 249
+      },
+      {
+        "seed": 20260926,
+        "finished": true,
+        "lap_time_ms": 19880,
+        "mean_speed": 42.00465078709252,
+        "max_speed": 52.67213688300439,
+        "collisions": 1,
+        "final_damage": 0.2,
+        "steps": 249
+      }
+    ],
+    "summary": {
+      "finish_rate": 1.0,
+      "valid_under_13_fraction": 0.0,
+      "median_finished_lap_time_ms": 19880,
+      "p90_finished_lap_time_ms": 19880,
+      "collisions": 2,
+      "mean_speed": 42.00465078709252,
+      "all_actions": {
+        "steps": 498,
+        "mean_gas": 0.06374185483334174,
+        "mean_brake": 0.004200161502034549,
+        "brake_active_fraction": 0.06827309236947791
+      },
+      "clear_low_curve_actions": {
+        "steps": 252,
+        "mean_speed": 44.053082186009924,
+        "mean_gas": 0.08437946710794691,
+        "mean_brake": 0.0
+      },
+      "high_curve_actions": {
+        "steps": 4,
+        "mean_speed": 43.51684948414164,
+        "mean_gas": 0.0,
+        "mean_brake": 0.020935903885401785,
+        "brake_active_fraction": 0.5
+      },
+      "obstacle_not_visible_actions": {
+        "steps": 432,
+        "mean_speed": 41.35389131222207,
+        "mean_gas": 0.06830462419721126,
+        "mean_brake": 0.0024905332010584295,
+        "brake_active_fraction": 0.037037037037037035
+      }
+    }
+  },
+  "control_step7168": {
+    "checkpoint_sha256": "C5D08398E24F7235ACB696E17390073AD7EB8C9254C2F484897471A7C2392572",
+    "checkpoint_step": 7168,
+    "training_updates_completed": 7,
+    "training_updates_requested": 8,
+    "episodes": [
+      {
+        "seed": 20260922,
+        "finished": true,
+        "lap_time_ms": 19920,
+        "mean_speed": 41.972409400747466,
+        "max_speed": 52.461554767973986,
+        "collisions": 0,
+        "final_damage": 0.0,
+        "steps": 250
+      },
+      {
+        "seed": 20260926,
+        "finished": true,
+        "lap_time_ms": 19920,
+        "mean_speed": 41.972409400747466,
+        "max_speed": 52.461554767973986,
+        "collisions": 0,
+        "final_damage": 0.0,
+        "steps": 250
+      }
+    ],
+    "summary": {
+      "finish_rate": 1.0,
+      "valid_under_13_fraction": 0.0,
+      "median_finished_lap_time_ms": 19920,
+      "p90_finished_lap_time_ms": 19920,
+      "collisions": 0,
+      "mean_speed": 41.972409400747466,
+      "all_actions": {
+        "steps": 500,
+        "mean_gas": 0.06435757037997246,
+        "mean_brake": 0.004400761364850041,
+        "brake_active_fraction": 0.084
+      },
+      "clear_low_curve_actions": {
+        "steps": 248,
+        "mean_speed": 44.06248058813594,
+        "mean_gas": 0.08532911971692116,
+        "mean_brake": 0.0
+      },
+      "high_curve_actions": {
+        "steps": 10,
+        "mean_speed": 43.68306668106861,
+        "mean_gas": 0.0007038814947009087,
+        "mean_brake": 0.03300250507891178,
+        "brake_active_fraction": 0.6
+      },
+      "obstacle_not_visible_actions": {
+        "steps": 436,
+        "mean_speed": 41.31061276755987,
+        "mean_gas": 0.06878703179952919,
+        "mean_brake": 0.0026575469083840657,
+        "brake_active_fraction": 0.05504587155963303
+      }
+    },
+    "training_checkpoint_metadata": {
+      "training_steps_this_run": 7168,
+      "training_steps_requested": 8192,
+      "updates_completed": 7,
+      "updates_requested": 8,
+      "learning_rate": 2e-06,
+      "optimizer_initialization": "fresh",
+      "training_action_metrics": {
+        "throttle_limit": 0.12,
+        "gas_saturation_fraction": 0.0,
+        "mean_speed": 18.86624956030795,
+        "max_speed": 41.49466835191429,
+        "steer_mean": 0.021261081099510193,
+        "steer_std": 0.38292670249938965,
+        "mean_abs_steer": 0.3189546465873718,
+        "gas_mean": 0.06830506026744843,
+        "gas_max": 0.11703216284513474,
+        "brake_mean": 0.005329481791704893,
+        "brake_fraction": 0.0810546875,
+        "pedal_overlap_fraction": 0.0
+      },
+      "reward_config": {
+        "time_penalty": 0.05,
+        "speed_shortfall_penalty": 0.6,
+        "speed_target": 70.0,
+        "hazard_speed_relief": 0.5,
+        "obstacle_throttle_penalty": 8.0,
+        "obstacle_brake_reward": 6.0,
+        "curve_brake_reward": 0.0,
+        "obstacle_lateral_clearance_pixels": 12.0,
+        "obstacle_throttle_penalty_training_only": true,
+        "collision_penalty": 60.0,
+        "terminal_failure_penalty": 60.0,
+        "recovery_min_damage": 0.15,
+        "recovery_max_speed": 8.0,
+        "recovery_gas_reward": 5.0,
+        "recovery_steer_reward": 4.0
+      }
+    }
+  },
+  "paired_pilot_status": {
+    "control_training": "interrupted at persisted step 7168/8192 by operator Ctrl+C",
+    "treatment_started": false,
+    "control_run_record_exists": false,
+    "final_tune_trace_exists": false,
+    "paired_comparison_exists": false,
+    "sota_promoted": false
+  }
+}

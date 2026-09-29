@@ -1,0 +1,5 @@
+# ZIP-exact local paired confirmation
+
+Compare the frozen stable-risk ZIP SHA-256 `7f9ef05e1e3366969f2d751191e926ad4cd9a517b376c8218bc1fbe61cb111f4` with the frozen full-road-guard control ZIP SHA-256 `5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40`. Extract each archive into a clean directory and start a separate Python process for each arm and cell. Evaluate tracks 1, 2, 3 and fresh confirmation seeds 336–339, twelve cells per arm. Alternate arm order. Use 2,000 decision maximum and 4.5 second plan budget. Run on the fixed Linux CPU image; do not alter either archive.
+
+The selection endpoint is completion count first, then median finished lap time. Record every cell, invalid actions, import/create time, act latency, peak RSS, collisions and damage. Candidate-only nonfinishes are a failure signal even if aggregate completion ties. The local static ZIP contract and runtime limits are checked, but official server behavior and score remain unknown. No site upload, model confirmation, or official submission is authorized by this plan. The plan's narrow registered profile is diagnostic and not directly SOTA-eligible.

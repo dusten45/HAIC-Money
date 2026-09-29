@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact ZIPs ran with zero invalid actions; measured import/create, reset, act latency, and RSS were within local limits.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Launch activated 120 times, early steering 106 times, and extra gas and brake zero times across 12 fresh tune cells.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Both arms finished 12/12 new tune cells; candidate median 24.27 s versus control 24.32 s, with zero collisions or damage. Track 1 was slower in three of four paired cells; held-out remains untested.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json"
+      ]
+    }
+  ]
+}

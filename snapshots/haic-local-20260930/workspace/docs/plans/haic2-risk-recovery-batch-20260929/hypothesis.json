@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-four-pixel-risk-mechanisms-train-20260929",
+  "source_ref": "docs/plans/haic2-risk-recovery-batch-20260929/design.md",
+  "rule_or_requirement": "A faster pixel-only actor must retain valid finish-line crossings under risk; mechanism activation must precede fresh score comparison.",
+  "observable_information": "Rendered road center and edge motion across four grayscale frames, obstacle image motion, inherited action, and rendered speed.",
+  "allowed_action_or_state_change": "Four independent observation-action wrappers may suppress gas, apply mild brake, or adjust steering locally around the fixed stable-risk actor; checkpoint and environment remain unchanged.",
+  "expected_success_endpoint": "At least one direction visibly changes actions on consumed TRAIN cells without losing a control-completed cell, then qualifies for separately registered fresh tune comparison.",
+  "eligible_state": "TRAIN_DIAGNOSTIC_ONLY",
+  "control": "Frozen stable-risk envelope over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Zero action changes or candidate-only retirement on a control-completed TRAIN cell; any input beyond the four grayscale observations invalidates the direction.",
+  "smallest_decisive_experiment": "Five arms on consumed TRAIN 1:43 and 2:102 with 2,000 decision limit and full action traces.",
+  "resource_and_risk_gate": "One registered Linux CPU benchmark of ten episodes, at most 1,800 seconds; no fresh tune or official cell access in this run.",
+  "source_paths": ["docs/plans/haic2-risk-recovery-batch-20260929/design.md", "haic_agent/risk_recovery_candidates_runtime.py", "training/benchmark_corridor.py"]
+}

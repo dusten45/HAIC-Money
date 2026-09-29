@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-geometry-speed-teacher-relative-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-geometry-speed-teacher-relative-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This privileged geometry and speed teacher ran only on TRAIN cells and is not a submission candidate. A pixel-only student requires separate rule review.",
+      "evidence_paths": [
+        "training/geometry_speed_teacher.py",
+        "artifacts/haic-research-v2/haic2-geometry-speed-teacher-relative-train-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The fixed teacher added gas on 1541 decisions, coasted on 351, added no brakes, and produced zero invalid actions over twelve TRAIN cells.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-geometry-speed-teacher-relative-train-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Teacher and control each finished 11/12. The teacher alone failed track 1 seed 5005 at 73% progress after three obstacle collisions, while control finished; the preregistered no teacher-only nonfinish gate fails. On ten jointly completed cells, median lap was 21.28 versus 22.40 seconds (5.0% faster), which cannot override the completion failure.",
+      "evidence_paths": [
+        "docs/plans/haic2-geometry-speed-relative-train-20260929/design.md",
+        "artifacts/haic-research-v2/haic2-geometry-speed-teacher-relative-train-20260929/report.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "run_id": "far-hazard-package-20260930",
+  "cycle_id": "far-hazard-package-20260930-cycle",
+  "purpose": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "hypothesis_hash": "fab1ff237ccbba1fb7b8b52132b0baae17b5962756c4b73e12f574e5cfcd36c7",
+  "candidate_revision": "frozen-arrival-speed-package-r1",
+  "control_revision": "preview-row-repair-r3",
+  "candidate_package_hash": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+  "control_package_hash": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+  "comparison_id": "far-hazard-package-20260930",
+  "seed_ids": [
+    "1:49300",
+    "1:49301",
+    "1:49302",
+    "1:49303",
+    "2:49300",
+    "2:49301",
+    "2:49302",
+    "2:49303",
+    "3:49300",
+    "3:49301",
+    "3:49302",
+    "3:49303"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1",
+    "opencv": "4.8.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38300-38303",
+    "new-held-out-49300-49303"
+  ],
+  "map_ids": [
+    "official-track1",
+    "official-track2",
+    "official-track3"
+  ],
+  "split_ids": [
+    "train",
+    "held_out"
+  ],
+  "resource_limits": {
+    "arms": 2,
+    "episodes_per_arm": 12,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 650,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2,
+    "prefix_equality_required": true,
+    "total_episodes": 36,
+    "train_replay_cells": [
+      "1:38300",
+      "1:38301",
+      "1:38302",
+      "1:38303",
+      "2:38300",
+      "2:38301",
+      "2:38302",
+      "2:38303",
+      "3:38300",
+      "3:38301",
+      "3:38302",
+      "3:38303"
+    ]
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/high_acceleration_path_runtime.py": "2105cf7b73fea0d291b45f94e0618837354b570505187536362d3b529fbe710d",
+    "training/fixed60_completion.py": "04f0f425bb4ee67a08bfac8e3b3f2bbe212399050827dd0079461a86267c5dd0",
+    "docs/plans/active/fixed60-completion-settings.json": "08bab113faaac1e20a176bc72fae6b2550be390e9a88d82b24b28ecfdb0f861d",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "67fafec3eecfa6dd12e86f999ba45a68c01fc762d5b829c072b81c197f38a4ea",
+    "harness.config.json": "9d3756cb1fb6ee104b4fe7eba894036c44d925a3d274581d7648d3055baef70b",
+    "haic_agent/traction_path_runtime.py": "bb40d993edbc3e0ebe6e5c0557ad74fdd7f2d7fca60499073bf3b8a4474d3e03",
+    "haic_agent/geometric_passing_runtime.py": "4475b3380e4547b6f26421c514594cf26d8e7b50fc15e1f3d0744c15bab48a65",
+    "haic_agent/fast_committed_recovery_runtime.py": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec",
+    "docs/plans/active/fast-road-commit-design-20260929.md": "3d47275e9f4ca47a81985177d7bc91943079e3ef5ad4d4f778b93ecdfe13991d",
+    "haic_agent/fast_road_commit_runtime.py": "78c9f2d2098dfbe725098154124da16a208df9f79c46c8773051e04154861ea4",
+    "docs/plans/active/fast-clearance-cone-design-20260929.md": "460561dc9eee1f65bdf014d7bed69172d74b3b2ccef6f02ea46d6632552ba7a4",
+    "haic_agent/fast_clearance_cone_runtime.py": "ab7de84e5a9e8355eddd0a3fe0ddbd2b4cd18a334a909a83d18c9815f9ef7e14",
+    "haic_agent/preview_pedal_runtime.py": "8074c63d5a013d0d0ea0c6944e4c46f792f7c3d978fe28d5198b576a56cf20e5",
+    "docs/plans/active/preview-pedal-design-20260929.md": "54eb66352dffdfb9e64bf176aedd034424b0f32542cc013a6c30b5d3f7588e4c",
+    "haic_agent/preview_pedal_memory_runtime.py": "e7ef3432b9eb666c5775dc5a030d74df2ed81f93f2a36393a2b785843c95782d",
+    "docs/plans/active/preview-pedal-memory-design-20260929.md": "982c126b2be53156c16c0c7a1f0c2e2eec0cbdf3bc7f7720e5a46795be24cc1d",
+    "haic_agent/preview_pedal_fast_runtime.py": "4a08ab7b501ac5f144d871f63569a03b3f00ba929dd4ace29e552d6e50d1ad29",
+    "docs/plans/active/preview-pedal-fast-design-20260929.md": "6b3d8582eb4db81e9992b0e7d9effd2bebadac6ecd3d50ffc0372f4cc5a1ad00",
+    "haic_agent/connected_preview_runtime.py": "723d83e3e800bc09a9711f27fb177e8635987433c0bc93c101ab7035f3f8b62a",
+    "docs/plans/active/connected-preview-design-20260929.md": "c29c5e5454927cedb276ed6af6d34bd9791c593b6706b6783ef33013139af3ba",
+    "haic_agent/connected_guarded_preview_runtime.py": "9903d6eee51351af1421c4dfc60bc702fc12a42f8318c638d8c715af50641240",
+    "docs/plans/active/connected-guarded-design-20260929.md": "4b932e2e83543d91d9cec2303011aa97d53a931202c2aedd923e7a082db105be",
+    "docs/plans/active/connected-guarded-full6-20260930-design.md": "22639a4d0cd07c28d3c7a0b9d3fdc8270079ab0ceaf6182215be61a2f48a14c0",
+    "docs/plans/active/connected-guarded-extra6-20260930-design.md": "630a1018ce08f92785b64699c02d35908a2afb3e150a225b6eccaf4e1c0d99ee",
+    "docs/plans/active/handoff-path-20260930-design.md": "19ace15ea7e5736058304a66da437bfbe9ce4754979cecf6af515d83a78d6cb5",
+    "haic_agent/handoff_path_runtime.py": "870b38f6c85c757c1532251932e0e04ede476a941309e6e9a18b5cd675aea28b",
+    "docs/plans/active/unified-passing-20260930-design.md": "958799eb0e438b63396f1a59d321fa6d299bed4e5108be732f833b6e227ecefe",
+    "haic_agent/unified_passing_runtime.py": "8e94dfd95964243737a6385e03550fb2adee21b50edd350e60a49e9293f569f1",
+    "docs/plans/active/acceleration-envelope-20260930-design.md": "111dbf06117f05d38b72469f148626cca732a6383c5827623511c25351ec2693",
+    "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "docs/plans/active/acceleration-braking-20260930-design.md": "4e4e4e81a044a2fb18b2b328005ff40b930348bbe373a2cfc8aec1c1cfa8270d",
+    "haic_agent/acceleration_braking_runtime.py": "e720e876eddbd356f8a3ea1ab38cb81c7db7ae6ba45222602fe383584ef7b1b4",
+    "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "docs/plans/active/far-hazard-20260930-design.md": "ba8f3ca1283dee3e4936aef8a68981b05092178c9ed07204de0c2e1ef6c8b4d8",
+    "training/confirm_far_hazard.py": "333d51077b62a325037a507fe6f164941abf67ef6cab49ef5f3da35fc80632aa",
+    "docs/plans/active/far-hazard-package-20260930-design.md": "23096f682cc6192ec9191918f1535243aeb3699ba9326bc00592a9e66c35b2fa"
+  },
+  "checkpoint_ref": {
+    "path": "artifacts/haic-research-v2/fast-completion-row-repair-20260929/submission-fast-completion.zip",
+    "sha256": "7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835"
+  },
+  "predecessor_run_id": "far-hazard-20260930",
+  "predecessor_decision_ref": "be0519b5-2414-4e5a-b21d-d55122c1110a"
+}

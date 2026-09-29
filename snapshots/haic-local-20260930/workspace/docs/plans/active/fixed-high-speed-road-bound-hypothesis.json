@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fixed-high-speed-road-bound-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-road-bound-20260929.md",
+  "rule_or_requirement": "Maintain high target speed and remain on asphalt; slowing or course cutting does not qualify.",
+  "observable_information": "Four image frames, pixel road centers and HUD speed; evaluator-only raw road membership and speed are never agent inputs.",
+  "allowed_action_or_state_change": "Same high-speed damping plus pixel projected road-bound intervention removing outward obstacle steering only; target60 unchanged.",
+  "expected_success_endpoint": "More qualified finishes while preserving three original damping finishes; interventions activate; prefix hashes match.",
+  "eligible_state": "CONSUMED_TRAIN_REPAIR_38200_38201",
+  "control": "Original damping arm, same target60, same six consumed TRAIN cells; preserve source report hashes.",
+  "falsifier": "No intervention, lost prior finish, no qualified finish gain, collision, unequal prefix or leakage.",
+  "smallest_decisive_experiment": "Six road-bound diagnostic episodes, unchanged speed and road gates; no new score.",
+  "resource_and_risk_gate": "2 CPU 2 GiB 600s, six episodes, no external action.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-road-bound-20260929.md",
+    "haic_agent/fixed_high_speed_road_bound.py",
+    "training/fixed_high_speed_road_bound.py"
+  ]
+}

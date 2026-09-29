@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-road-memory-activation-20260929",
+  "source_ref": "docs/plans/haic2-road-memory-activation-20260929/design.md",
+  "rule_or_requirement": "Reduce costly pixel-road visibility excursions while preserving valid completion.",
+  "observable_information": "Current and last visible pixel-road centers, private count of consecutive low-visibility decisions, inherited pixel actions.",
+  "allowed_action_or_state_change": "For at most 20 low-visibility decisions, steer \u00b10.25 toward the last farthest visible road offset; inherit gas and brake.",
+  "expected_success_endpoint": "All six consumed reference finishes retained, >=20 changed actions, and longest low-visibility streak shortened by >=10 decisions on at least two of three slow-loss cells.",
+  "eligible_state": "CONSUMED_TRAIN_ROAD_MEMORY_ACTIVATION",
+  "control": "Frozen exact visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on six matched consumed TRAIN cells.",
+  "falsifier": "Lost finish, invalid action, insufficient changed actions, or fewer than two target streaks shortened by ten decisions.",
+  "smallest_decisive_experiment": "Two arms on six consumed TRAIN cells, 12 episodes.",
+  "resource_and_risk_gate": "One registered local Linux CPU diagnostic capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-road-memory-activation-20260929/design.md",
+    "training/road_memory_probe.py",
+    "haic_agent/hazard_flow_batch_runtime.py",
+    "docs/plans/haic2-road-loss-paired-diagnosis-20260929.md"
+  ]
+}

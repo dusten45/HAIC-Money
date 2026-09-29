@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-motion-recovery-consumed-activation-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-motion-recovery-consumed-activation-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "This was a consumed-TRAIN source-controller diagnostic; no exact candidate ZIP or current official-site rule validation exists.",
+      "evidence_paths": [
+        "training/motion_recovery_probe.py",
+        "artifacts/haic-research-v2/haic2-motion-recovery-consumed-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The fixed pixel-motion rule changed nine actions across two registered cells, with zero invalid actions; longest low-visibility streaks shortened 23 to 3 and 45 to 7 decisions on those cells.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-motion-recovery-consumed-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "The candidate repaired control failure 1:5176 but lost a valid control finish at 3:5176, retiring off track near 95% progress. The preregistered no-lost-control-finish gate fails; these consumed cells are diagnostic, not a promotion comparison.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-motion-recovery-consumed-activation-20260929/report.json"
+      ]
+    }
+  ]
+}

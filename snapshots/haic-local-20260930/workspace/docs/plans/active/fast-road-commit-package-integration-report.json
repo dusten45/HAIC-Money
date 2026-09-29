@@ -1,0 +1,31 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fast-road-commit-package-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Validated standalone9fileZIP, cold isolated imports, pixel-only source and preserved environment, zero invalid actions within resource limits; official source records in docs/sources/INDEX.md. No site action.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-package-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All6 exact ZIP source replays match complete action/trajectory/outcome; no replay doublecounting.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-package-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Additional candidate4/6 versuscontrol6/6; unique12candidate10/12 versuscontrol12/12. Faster surviving laps do not compensate lost finishes. Experimental ZIP not promoted.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-package-20260929/report.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local TRAIN-only execution succeeded and source inputs were hash-bound, but no official platform package/rule gate was run.",
+      "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/run_manifest.json", "runs/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/events.jsonl"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Final TRAIN stochastic action gas mean was 0.0674 and mean speed 30.32 despite a 0.48 throttle ceiling; the first update was gas mean 0.0651 and mean speed 32.11. More command range did not yield a higher-speed learned cruise.",
+      "evidence_paths": ["artifacts/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/training/policy.pt", "runs/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/events.jsonl"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "The TRAIN activation gate failed; reserved tune, held-out and confirmation cells were not opened. No official score was measured.",
+      "evidence_paths": ["docs/plans/2026-09-28-speed-state-ppo-continuation.md"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/run_manifest.json", "artifacts/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/training/policy.pt"]
+}

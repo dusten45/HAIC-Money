@@ -1,0 +1,108 @@
+{
+  "run_id": "haic2-road-memory-fresh-tune-20260929",
+  "cycle_id": "haic2-road-memory-fresh-tune-cycle-20260929",
+  "purpose": "Fresh TUNE completion-first road-direction memory comparison",
+  "hypothesis_hash": "1b464699e908151e81558444a0e59b26f84ea8112a513d41a01254dd161acbc4",
+  "candidate_revision": "road-direction-memory-steer025-max20-v1-fresh-tune",
+  "control_revision": "hazard-mode-switch-exact-zip-b0dc7a24",
+  "candidate_package_hash": "b65ceb257cbd6ed9da8d7195e0b27d5c797875348d4bea29340247a9fe5203c3",
+  "control_package_hash": "b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4",
+  "comparison_id": "haic2-road-memory-fresh-tune-5064-5071",
+  "seed_ids": [
+    "1:5064",
+    "1:5065",
+    "1:5066",
+    "1:5067",
+    "1:5068",
+    "1:5069",
+    "1:5070",
+    "1:5071",
+    "2:5064",
+    "2:5065",
+    "2:5066",
+    "2:5067",
+    "2:5068",
+    "2:5069",
+    "2:5070",
+    "2:5071",
+    "3:5064",
+    "3:5065",
+    "3:5066",
+    "3:5067",
+    "3:5068",
+    "3:5069",
+    "3:5070",
+    "3:5071"
+  ],
+  "comparison_episode_count": 24,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-tune-seeds5064-5071"
+  ],
+  "map_ids": [
+    "official-track1-seed5064",
+    "official-track1-seed5065",
+    "official-track1-seed5066",
+    "official-track1-seed5067",
+    "official-track1-seed5068",
+    "official-track1-seed5069",
+    "official-track1-seed5070",
+    "official-track1-seed5071",
+    "official-track2-seed5064",
+    "official-track2-seed5065",
+    "official-track2-seed5066",
+    "official-track2-seed5067",
+    "official-track2-seed5068",
+    "official-track2-seed5069",
+    "official-track2-seed5070",
+    "official-track2-seed5071",
+    "official-track3-seed5064",
+    "official-track3-seed5065",
+    "official-track3-seed5066",
+    "official-track3-seed5067",
+    "official-track3-seed5068",
+    "official-track3-seed5069",
+    "official-track3-seed5070",
+    "official-track3-seed5071"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1200,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 24,
+    "arms": 2,
+    "common_prefix_decisions": 0,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/hazard_flow_batch_runtime.py": "9262108356ca2e6329cd009f5a81011408c9a57621420cf856d3c0a2ec2f11d8",
+    "haic_agent/high_speed_pivot_runtime.py": "dbbc5316df627e133499e6b0f08467911c2f90550ff9cac44bd93ea2d401725c",
+    "haic_agent/speed_coupled_preview_runtime.py": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b",
+    "training/benchmark_corridor.py": "91729aef684d12a22b15636fef81a59518020afbfcddbbef3c0b959d5e299d1d",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "cda34af1d80604acd42d04367c1f5713d41bd2c2d96d42546f689364e59918d4",
+    "harness.config.json": "badc10259b9ed0a0a5f941db7c250bf5867dee429ee77563b6ddfce2d53ecdb7",
+    "artifacts/haic-research-v2/hazard-mode-switch-exact-package-20260929/submission.zip": "b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4",
+    "training/road_memory_probe.py": "b65ceb257cbd6ed9da8d7195e0b27d5c797875348d4bea29340247a9fe5203c3",
+    "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt": "3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199",
+    "artifacts/haic/ppo-speed-shortfall-0p6-vs-0p0-kl0p5-u8-20260924T133743Z/run/seed8104/penalty_0p6/policy.pt": "647fb7c831c0b61dc78bcc416867f9f7d6070b4fa6aad51c299f7c0ae48d145d"
+  }
+}

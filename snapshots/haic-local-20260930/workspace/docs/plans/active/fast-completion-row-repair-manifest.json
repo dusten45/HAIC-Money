@@ -1,0 +1,109 @@
+{
+  "run_id": "fast-completion-row-repair-20260929",
+  "cycle_id": "fast-completion-row-repair-20260929-cycle",
+  "purpose": "ExactZIP replay of isolated false-center correctness repair",
+  "hypothesis_hash": "96ade0ea06928f52d7fe0e7d456ec539e0a6d31901540f89b4fff34879f768fe",
+  "candidate_revision": "preview-row-correctness-r3",
+  "control_revision": "preview-action-aware-r2",
+  "candidate_package_hash": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+  "control_package_hash": "8a7e320ef80a0ce524e73519351dd0661889b97706a53ed536b1985a9301bd7f",
+  "comparison_id": "fast-completion-row-repair-20260929",
+  "seed_ids": [
+    "1:38200",
+    "1:38201",
+    "1:38210",
+    "1:38211",
+    "1:38300",
+    "1:38301",
+    "1:38302",
+    "1:38303",
+    "2:38200",
+    "2:38201",
+    "2:38210",
+    "2:38211",
+    "2:38300",
+    "2:38301",
+    "2:38302",
+    "2:38303",
+    "3:38200",
+    "3:38201",
+    "3:38210",
+    "3:38211",
+    "3:38300",
+    "3:38301",
+    "3:38302",
+    "3:38303"
+  ],
+  "comparison_episode_count": 24,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38200-38201-38210-38211-38300-38303"
+  ],
+  "map_ids": [
+    "official-track1-seed38200",
+    "official-track1-seed38201",
+    "official-track1-seed38210",
+    "official-track1-seed38211",
+    "official-track1-seed38300",
+    "official-track1-seed38301",
+    "official-track1-seed38302",
+    "official-track1-seed38303",
+    "official-track2-seed38200",
+    "official-track2-seed38201",
+    "official-track2-seed38210",
+    "official-track2-seed38211",
+    "official-track2-seed38300",
+    "official-track2-seed38301",
+    "official-track2-seed38302",
+    "official-track2-seed38303",
+    "official-track3-seed38200",
+    "official-track3-seed38201",
+    "official-track3-seed38210",
+    "official-track3-seed38211",
+    "official-track3-seed38300",
+    "official-track3-seed38301",
+    "official-track3-seed38302",
+    "official-track3-seed38303"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 1,
+    "episodes_per_arm": 24,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fast-completion-row-repair-20260929.md": "2a9a5479679970dd6c763f7fb4f89517e52f5d259f57270c77a88347287dc70c",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "training/repair_fast_completion.py": "d3a6dcc47212c0324f6467335a003af031b08db6e69c479026d06a815efd3538",
+    "training/confirm_fast_completion.py": "f81e0d166cf378d229878ca9aa7cd0310aebaa0db401acf437a28b0af7aa0a09",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/package_fixed_high_speed_damping.py": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0",
+    "haic_research/config.py": "c74acad3c6fd80c109d33843c14bbe82f63507044aa2ab219606b40047a64bf6",
+    "harness.config.json": "9fad993389c13d3a595c8af5ed907e32552d30792ad4af118c61fb351ba0e1d8",
+    "artifacts/haic-research-v2/fast-completion-causal-repair-train-20260929/report.json": "360d52e549562116a18be5189c94e9598763d7995f663b8c265c9d43dd8c3cf0",
+    "artifacts/haic-research-v2/fast-completion-exact-fresh-20260929/report.json": "b8daa7d394bc0ee5e5ff0b627da3d7e45f1a2691d09f593645f777a76664766f",
+    "artifacts/haic-research-v2/fast-completion-exact-fresh-20260929/submission-fast-completion.zip": "8a7e320ef80a0ce524e73519351dd0661889b97706a53ed536b1985a9301bd7f"
+  }
+}

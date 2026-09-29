@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This is a TRAIN-only privileged geometry teacher. It cannot be used for submission inference; only a later pixel-only student may be checked against submission rules.",
+      "evidence_paths": ["training/geometry_speed_teacher.py", "artifacts/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The teacher raised gas on 263 decisions and suppressed gas to coast on 42 decisions, with zero added brake decisions. The inherited pixel actor retained steering and braking. No invalid actions occurred.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Teacher and control each finished both consumed TRAIN cells. Paired laps were 22.34 versus 23.78 seconds and 21.38 versus 22.56 seconds; teacher median 21.86 versus control 23.17 seconds is a 5.65% improvement, exceeding the preregistered 3% feasibility gate. This is only a teacher feasibility pass, not candidate score evidence.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/run_manifest.json", "artifacts/haic-research-v2/haic2-geometry-speed-coast-train-feasibility-20260929/report.json"]
+}

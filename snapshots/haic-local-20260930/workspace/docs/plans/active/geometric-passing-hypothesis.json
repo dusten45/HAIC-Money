@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "geometric-passing-20260929",
+  "source_ref": "docs/plans/active/geometric-passing-design-20260929.md",
+  "rule_or_requirement": "User requests higher completion and half lap time, high acceleration throughout; prior offset architecture failed.",
+  "observable_information": "Rendered image and HUD speed only; wheel decoder is diagnostic and evaluator truth excluded from actor.",
+  "allowed_action_or_state_change": "Four steering directions with geometric passing and positive traction torque; second existing-steering candidate uses launch and eligible straight acceleration with baseline outside windows.",
+  "expected_success_endpoint": "6/6completionpreservingallcontrolfinishes; fulltargeteachmatchedlapratio<=0.5. Intermediate improvements explicitlypartial.",
+  "eligible_state": "CONSUMED_TRAIN_HIGH_ACCELERATION_ARCHITECTURE",
+  "control": "Unchanged preview_row_repair onidentical6track/seedresetconditions",
+  "falsifier": "Lost completion, no traction improvement or matched speed gain, invalid actions or simulator input leak.",
+  "smallest_decisive_experiment": "6 arms x6 consumed TRAIN cells=36 episodes, four directions and five candidates",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; localonly, noexternalactions",
+  "source_paths": [
+    "docs/plans/active/geometric-passing-design-20260929.md",
+    "haic_agent/geometric_passing_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

@@ -1,0 +1,3 @@
+# Frozen stable-risk held-out check
+
+Freeze the selected control and `stable_risk_envelope` candidate exactly as used in fresh tune 324–327. That tune yielded 12/12 valid finishes for both, and the candidate was faster in every paired cell. Use reserved held-out tracks 1–3 × seeds 328–331, twelve new cells, with the two frozen arms, 2,000 decisions per episode, and the registered 1,800-second Linux CPU limit. Compare completion rate first and median finished lap time only on a tie. Collect the same full trace, collision, damage, invalid-action, and latency fields. A lower candidate completion count rejects it; no tune result overrides held-out failure. No parameters or source change, package action, or website action.

@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-four-stable-base-directions-train-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-20260928/four-directions-design.md",
+  "rule_or_requirement": "A pixel-only candidate must preserve valid completion before lap-time gains can count.",
+  "observable_information": "Four grayscale frames, road and obstacle pixels, rendered speed, recent road-center change, and selected stable actor action.",
+  "allowed_action_or_state_change": "Compare four independent single-change stable-base directions: road-clearance gas floor, bend exit burst, centered-obstacle preview brake, and mild-bend outer entry.",
+  "expected_success_endpoint": "Each mechanism visibly changes actions on consumed TRAIN cells without invalid actions or lost completed cells, qualifying it for a separately registered fresh tune batch.",
+  "eligible_state": "TRAIN_FOUR_DIRECTION_ACTIVATION_ONLY",
+  "control": "Selected full-road-guard actor with exact checkpoint hash on the same two TRAIN cells.",
+  "falsifier": "No action change, invalid action, or new nonfinish relative to the control on a registered cell.",
+  "smallest_decisive_experiment": "Five profiles × consumed TRAIN 1/43 and 2/102, ten episodes and 2000 decisions per episode.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, registered 1800-second limit, TRAIN only and no external action.",
+  "source_paths": ["docs/plans/haic2-stable-risk-20260928/four-directions-design.md", "haic_agent/stable_risk_envelope_runtime.py", "haic_agent/stable_phase_candidates_runtime.py", "training/benchmark_corridor.py", "harness.config.json"]
+}

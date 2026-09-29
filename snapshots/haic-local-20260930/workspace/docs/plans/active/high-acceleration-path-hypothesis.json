@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "high-acceleration-path-20260929",
+  "source_ref": "docs/plans/active/high-acceleration-path-design-20260929.md",
+  "rule_or_requirement": "User requests higher completion and half lap time, high acceleration throughout; prior offset architecture failed.",
+  "observable_information": "Rendered road corridor, HUD speed bar without80clip, rendered obstacle, own steering history; fixed public camera and vehicle constants only.",
+  "allowed_action_or_state_change": "Four directions: gas1existingsteering, metricpursuit, tangentcurvaturefeedforward, predictedwheel/corridorrollout. Allcandidatesgas1brake0fromstart.",
+  "expected_success_endpoint": "6/6completionpreservingallcontrolfinishes; fulltargeteachmatchedlapratio<=0.5. Intermediate improvements explicitlypartial.",
+  "eligible_state": "CONSUMED_TRAIN_HIGH_ACCELERATION_ARCHITECTURE",
+  "control": "Unchanged preview_row_repair onidentical6track/seedresetconditions",
+  "falsifier": "No physical pathtracking, lostfinishes, no matchedspeedgain, invalidactions or privilegedinput. Maxpedalalone doesnotprovehalftime.",
+  "smallest_decisive_experiment": "5armsx6consumedTRAINcells=30episodes;initialpedaltreatmentdeliberatelydiffers",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; localonly, noexternalactions",
+  "source_paths": [
+    "docs/plans/active/high-acceleration-path-design-20260929.md",
+    "haic_agent/high_acceleration_path_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

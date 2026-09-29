@@ -1,0 +1,83 @@
+{
+  "run_id": "fast-completion-exact-fresh-20260929",
+  "cycle_id": "fast-completion-exact-fresh-20260929-cycle",
+  "purpose": "Exact frozen ZIP fresh12 completion comparison",
+  "hypothesis_hash": "954d106c950e34a5fee5dfab106233093e86c19b443bd5d9b26e8c0f566580ad",
+  "candidate_revision": "preview-action-aware-frozen-r2",
+  "control_revision": "fixed60-impact-clear",
+  "candidate_package_hash": "1b225a7e53c76a269fd0a00883ad34a6e0c6c816f9253a82ee2fa6cfafdc16e4",
+  "control_package_hash": "f1eb42a4492e87f5d61641322cae3c0d5e335e895bef7ee4206ad1a570eda018",
+  "comparison_id": "fast-completion-exact-fresh-20260929",
+  "seed_ids": [
+    "1:38300",
+    "1:38301",
+    "1:38302",
+    "1:38303",
+    "2:38300",
+    "2:38301",
+    "2:38302",
+    "2:38303",
+    "3:38300",
+    "3:38301",
+    "3:38302",
+    "3:38303"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-train-38300-38303"
+  ],
+  "map_ids": [
+    "official-track1-seed38300",
+    "official-track1-seed38301",
+    "official-track1-seed38302",
+    "official-track1-seed38303",
+    "official-track2-seed38300",
+    "official-track2-seed38301",
+    "official-track2-seed38302",
+    "official-track2-seed38303",
+    "official-track3-seed38300",
+    "official-track3-seed38301",
+    "official-track3-seed38302",
+    "official-track3-seed38303"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 2,
+    "episodes_per_arm": 12,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fast-completion-exact-fresh-20260929.md": "1940d848f258a041ce56159533d5208040892de8e10061e800e0b1713a04b687",
+    "haic_agent/fast_completion_coordination.py": "1b225a7e53c76a269fd0a00883ad34a6e0c6c816f9253a82ee2fa6cfafdc16e4",
+    "training/confirm_fast_completion.py": "f81e0d166cf378d229878ca9aa7cd0310aebaa0db401acf437a28b0af7aa0a09",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/package_fixed_high_speed_damping.py": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0",
+    "haic_research/config.py": "db7a95a71b2b1a9de8bfa655507fb7c734cca3022dee8c6ae4913041d9dcfda4",
+    "harness.config.json": "7c29b7175c086b9c62cc626fbdd75b169206c9480bb67377b5925faae7635735",
+    "artifacts/haic-research-v2/fast-completion-causal-repair-train-20260929/report.json": "360d52e549562116a18be5189c94e9598763d7995f663b8c265c9d43dd8c3cf0",
+    "artifacts/haic-research-v2/fixed-high-speed-impact-fresh-20260929/submission-high-speed-recovery.zip": "f1eb42a4492e87f5d61641322cae3c0d5e335e895bef7ee4206ad1a570eda018"
+  }
+}

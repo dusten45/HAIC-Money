@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact frozen ZIP hashes passed archive checks and all 24 episodes had zero invalid actions; local import, reset, act, and memory limits passed.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Candidate launch activated 120 times, raising mean first-10-percent gas to 0.175 versus selected control 0.086 and shortening median first-10-percent arrival to 2.96 s versus 3.92 s. The same exact candidate ZIP showed preview steering activation in prior confirmation.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/report.json",
+        "artifacts/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Candidate finished 11/12 fresh matched cells versus selected full-road-guard 12/12. Candidate-only track 3 seed 7040 retired off_track at progress 0.916 with two collisions, despite 1.11 s lower median among finished laps. Completion-first rejects replacement.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-selected-tune-7040-7043-20260929/report.json"
+      ]
+    }
+  ]
+}

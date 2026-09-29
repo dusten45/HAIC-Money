@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Training never began because the restored checkpoint has use_hud=false while the planned actor defaulted to true.",
+      "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-20260928/events.jsonl"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "The speed-state mechanism could not activate before the model configuration mismatch stopped execution.",
+      "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-20260928/events.jsonl"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "No local driving evaluation or official outcome was produced.",
+      "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-20260928/events.jsonl"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/speed-state-ppo-continuation-20260928/events.jsonl"]
+}

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HAIC Local Track Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">2026 HAIC · LOCAL TOOLING</p>
+      <h1>Track Lab</h1>
+      <p class="subtitle">맵을 만들고, 로컬 실행 로그를 브라우저에서 재생합니다.</p>
+    </div>
+    <div class="header-badge">브라우저 안에서 동작</div>
+  </header>
+
+  <main class="workspace">
+    <section class="panel map-panel" aria-labelledby="map-heading">
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">01 · MAP BUILDER</p>
+          <h2 id="map-heading">트랙과 장애물</h2>
+        </div>
+        <div class="status-cluster">
+          <span id="local-api-status" class="status-pill muted">로컬 실행기 확인 중</span>
+          <span id="map-status" class="status-pill">새 맵</span>
+        </div>
+      </div>
+
+      <form id="map-form" class="settings-grid">
+        <label>맵 종류
+          <select id="map-kind">
+            <option value="official">공식 seed 맵</option>
+            <option value="custom">자체 제작 맵</option>
+          </select>
+        </label>
+        <div id="official-map-fields" class="field-group">
+          <label>트랙 ID<input id="track-id" type="number" min="1" value="1"></label>
+          <label>Seed<input id="seed" type="number" min="0" max="4294967295" value="42"></label>
+          <label>장애물 모드
+            <select id="obstacle-mode">
+              <option value="official_plus_custom" selected>공식 + 사용자</option>
+              <option value="official">공식 장애물만</option>
+              <option value="custom_only">사용자 장애물만</option>
+            </select>
+          </label>
+        </div>
+        <label>최대 스텝<input id="max-steps" type="number" min="1" max="10000" value="2000"></label>
+        <label>프레임 스킵<input id="frame-skip" type="number" min="1" max="16" value="4"></label>
+      </form>
+
+      <div id="custom-builder" class="custom-builder" hidden>
+        <div class="custom-settings">
+          <label>자체 맵 ID<input id="custom-map-id" type="text" value="custom-track-0001" maxlength="64"></label>
+          <label>디자인 템플릿
+            <select id="custom-template">
+              <option value="oval">타원형</option>
+              <option value="s_curve">S 커브</option>
+              <option value="hairpin">헤어핀</option>
+              <option value="chicane">시케인</option>
+              <option value="technical">복합 기술형</option>
+              <option value="extreme_technical">극한 복합 기술형</option>
+            </select>
+          </label>
+          <label>디자인 Seed<input id="design-seed" type="number" min="0" max="4294967295" value="42"></label>
+          <label>도로 반폭(생성 최대 9)<input id="custom-width" type="number" min="0.5" max="9" step="0.5" value="8"></label>
+          <button id="generate-custom-map" type="button" class="button primary">새 트랙 생성</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="map-canvas" width="960" height="620" aria-label="트랙 미리보기"></canvas>
+        <div id="canvas-empty" class="canvas-empty">map.json을 불러오거나<br>장애물을 추가해 맵을 시작하세요.</div>
+      </div>
+      <div class="map-legend" aria-label="맵 표시 범례">
+        <span><i class="legend-road"></i>도로</span>
+        <span><i class="legend-start"></i>출발</span>
+        <span><i class="legend-official"></i>공식 장애물</span>
+        <span><i class="legend-custom"></i>사용자 장애물</span>
+      </div>
+      <p id="generated-track-summary" class="hint generated-track-summary">공식 트랙</p>
+
+      <div id="control-point-editor" class="custom-builder" hidden>
+        <div class="control-point-toolbar">
+          <div>
+            <p class="section-kicker">CENTERLINE EDITOR</p>
+            <p class="hint">아래 좌표를 직접 바꾸면 트랙 미리보기에 반영됩니다.</p>
+          </div>
+          <div class="toolbar-actions">
+            <button id="add-control-point" type="button" class="button secondary" disabled>점 추가</button>
+            <button id="remove-control-point" type="button" class="button ghost" disabled>마지막 점 삭제</button>
+          </div>
+        </div>
+        <div class="table-wrap control-point-wrap">
+          <table class="data-table control-point-table">
+            <thead><tr><th>점</th><th>X</th><th>Y</th></tr></thead>
+            <tbody id="control-point-table"><tr><td colspan="3" class="empty-cell">트랙을 생성하면 중심선을 편집할 수 있습니다.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="obstacle-toolbar">
+        <div>
+          <p class="section-kicker">CUSTOM OBSTACLE</p>
+          <h3>사용자 장애물 배치</h3>
+        </div>
+        <div class="toolbar-actions">
+          <label class="compact-label">개수<input id="random-count" type="number" min="1" max="64" value="5"></label>
+          <button id="random-obstacles" type="button" class="button secondary">Seed 랜덤 생성</button>
+          <button id="clear-obstacles" type="button" class="button ghost">전체 삭제</button>
+        </div>
+      </div>
+
+      <div class="obstacle-form">
+        <label>Progress<input id="obstacle-progress" type="number" min="0" max="1" step="0.01" value="0.42"></label>
+        <label>Lateral<input id="obstacle-lateral" type="number" min="-1" max="1" step="0.01" value="0"></label>
+        <label>Radius<input id="obstacle-radius" type="number" min="0.2" max="4" step="0.1" value="1.2"></label>
+        <button id="add-obstacle" type="button" class="button primary">장애물 추가</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table obstacle-table">
+          <thead><tr><th>#</th><th>Progress</th><th>Lateral</th><th>Radius</th><th></th></tr></thead>
+          <tbody id="obstacle-table"><tr><td colspan="5" class="empty-cell">아직 사용자 장애물이 없습니다.</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="panel-footer">
+        <span id="map-validation" class="hint">공식 맵과 자체 맵을 분리해 저장합니다.</span>
+        <div class="toolbar-actions">
+          <button id="download-map" type="button" class="button secondary">맵 저장</button>
+          <button id="download-map-file" type="button" class="button ghost">JSON 다운로드</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel replay-panel" aria-labelledby="replay-heading">
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">02 · LOG REPLAY</p>
+          <h2 id="replay-heading">실행 로그 시뮬레이터</h2>
+        </div>
+        <span id="run-status" class="status-pill muted">로그 대기 중</span>
+      </div>
+
+      <div id="file-drop" class="file-drop" tabindex="0">
+        <input id="map-file" type="file" accept="application/json,.json">
+        <label for="map-file" class="drop-label">
+          <span class="drop-icon">↥</span>
+          <span><strong>map.json 불러오기</strong><small>파일 선택 또는 이 영역에 놓기</small></span>
+        </label>
+        <input id="log-file" type="file" accept="application/json,.json" aria-label="run.json 선택">
+        <label for="log-file" class="drop-label log-label">
+          <span class="drop-icon">◫</span>
+          <span><strong>run.json 추가</strong><small>로컬 실행 로그를 읽습니다</small></span>
+        </label>
+      </div>
+      <p id="file-status" class="status-message" role="status">파일은 기본적으로 브라우저에서 읽습니다. 맵 저장과 실행 요청은 로컬 실행기에만 전송됩니다.</p>
+
+      <section class="run-panel" aria-labelledby="run-control-heading">
+        <div class="run-panel-heading">
+          <div>
+            <p class="section-kicker">LOCAL RUNNER</p>
+            <h3 id="run-control-heading">현재 맵 실행</h3>
+          </div>
+          <span id="live-run-status" class="hint">실행 대기 중</span>
+        </div>
+        <div class="run-toolbar">
+          <label>자동 주행 정책
+            <select id="run-policy">
+              <option value="agent">저장소 Agent</option>
+              <option value="baseline">기본 정책</option>
+            </select>
+          </label>
+          <label class="checkbox-label"><input id="record-frames" type="checkbox"> 카메라 프레임 기록</label>
+          <button id="start-agent-run" type="button" class="button primary">자동 주행</button>
+          <button id="start-manual-run" type="button" class="button secondary">수동 주행 시작</button>
+          <button id="pause-manual-run" type="button" class="button ghost" disabled>일시정지</button>
+          <button id="step-manual-run" type="button" class="button ghost" disabled>한 스텝</button>
+          <button id="finish-manual-run" type="button" class="button ghost" disabled>종료·로그 저장</button>
+        </div>
+        <div class="manual-help">
+          <span>키보드: ← / → 조향 · ↑ 가속 · Space 제동</span>
+          <span id="manual-action-status">조작 대기</span>
+        </div>
+      </section>
+
+      <div class="replay-controls">
+        <button id="play-button" type="button" class="button primary">▶ 재생</button>
+        <button id="pause-button" type="button" class="button secondary" disabled>Ⅱ 일시정지</button>
+        <button id="step-back" type="button" class="icon-button" title="이전 스텝" disabled>‹</button>
+        <button id="step-forward" type="button" class="icon-button" title="다음 스텝" disabled>›</button>
+        <button id="restart-button" type="button" class="button ghost" disabled>처음으로</button>
+        <label class="speed-label">속도
+          <select id="speed" disabled>
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4×</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="replay-stage">
+        <canvas id="replay-canvas" width="960" height="620" aria-label="주행 로그 재생"></canvas>
+        <div id="replay-empty" class="canvas-empty">run.json을 추가하면<br>주행 궤적이 여기에 표시됩니다.</div>
+        <img id="camera-frame" class="camera-frame" alt="선택한 주행 프레임" hidden>
+      </div>
+      <div class="timeline"><span id="current-step">0</span><input id="timeline" type="range" min="0" max="0" value="0" disabled><span id="total-steps">0</span></div>
+
+      <div class="metrics-grid">
+        <article class="metric-card"><span>결과</span><strong id="metric-result">—</strong></article>
+        <article class="metric-card"><span>Lap time</span><strong id="metric-lap-time">—</strong></article>
+        <article class="metric-card"><span>Progress</span><strong id="metric-progress">—</strong></article>
+        <article class="metric-card"><span>Damage</span><strong id="metric-damage">—</strong></article>
+        <article class="metric-card"><span>Collisions</span><strong id="metric-collisions">—</strong></article>
+        <article class="metric-card"><span>Track / Seed</span><strong id="metric-track">—</strong></article>
+      </div>
+
+      <div class="comparison-heading"><div><p class="section-kicker">RUN COMPARISON</p><h3>기록 비교</h3></div></div>
+      <div class="table-wrap">
+        <table class="data-table run-table">
+          <thead><tr><th>Run</th><th>결과</th><th>Lap time</th><th>Progress</th><th>Damage</th><th>충돌</th></tr></thead>
+          <tbody id="run-table"><tr><td colspan="6" class="empty-cell">로그를 추가하면 기록이 쌓입니다.</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">Local simulation log viewer · 공식 물리는 로컬 실행기에서만 수행됩니다.</footer>
+  <script src="app.js"></script>
+</body>
+</html>

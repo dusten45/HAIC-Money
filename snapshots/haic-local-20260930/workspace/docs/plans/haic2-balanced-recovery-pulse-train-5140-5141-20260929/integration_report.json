@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-balanced-recovery-pulse-train-5140-5141-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-balanced-recovery-pulse-train-5140-5141-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The steering pulses and simulator-privileged teacher are TRAIN-only diagnostics; no student ZIP or current official-site validation was performed.",
+      "evidence_paths": [
+        "training/recovery_perturbation_probe.py",
+        "artifacts/haic-research-v2/haic2-balanced-recovery-pulse-train-5140-5141-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "All 18 episodes completed with 304 valid teacher decisions, positive labels in 6/6 left-pulse cells and negative labels in 6/6 right-pulse cells. But the registered full eight-decision pulse floor failed: 0/6 left and 0/6 right because teacher takeover interrupted pulses after 4-6 decisions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-balanced-recovery-pulse-train-5140-5141-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "This teacher-only state-generation diagnostic has no submission-candidate completion comparison or pixel student.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-balanced-recovery-pulse-train-5140-5141-20260929/report.json"
+      ]
+    }
+  ]
+}

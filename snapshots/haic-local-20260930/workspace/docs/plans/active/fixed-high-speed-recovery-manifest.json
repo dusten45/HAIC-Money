@@ -1,0 +1,69 @@
+{
+  "run_id": "fixed-high-speed-recovery-train-20260929",
+  "cycle_id": "fixed-high-speed-recovery-train-20260929-cycle",
+  "purpose": "Four-direction recovery at unchanged high target on consumed TRAIN",
+  "hypothesis_hash": "96aa7483ff6b6ce907466edbca5e6ed4d2fbd0f22f2f9a078e897b98111e4297",
+  "candidate_revision": "fixed60-recovery-four-directions-r1",
+  "control_revision": "original-fixed60-damping",
+  "candidate_package_hash": "02c3ed0b87ce02201e13242293731ac7dc7500d8bc6f40406cbd6e76bde758ec",
+  "control_package_hash": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+  "comparison_id": "fixed-high-speed-recovery-train-20260929",
+  "seed_ids": [
+    "1:38200",
+    "1:38201",
+    "2:38200",
+    "2:38201",
+    "3:38200",
+    "3:38201"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38200-38201"
+  ],
+  "map_ids": [
+    "official-track1-seed38200",
+    "official-track1-seed38201",
+    "official-track2-seed38200",
+    "official-track2-seed38201",
+    "official-track3-seed38200",
+    "official-track3-seed38201"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 4,
+    "episode_max_decisions": 1200,
+    "episodes_per_arm": 6,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fixed-high-speed-recovery-20260929.md": "01c03f781077908131e69e35c1e7f4f67db9cf10f7baa6626b6a717ddaad37e5",
+    "haic_agent/fixed_high_speed_recovery.py": "02c3ed0b87ce02201e13242293731ac7dc7500d8bc6f40406cbd6e76bde758ec",
+    "training/fixed_high_speed_recovery.py": "965edeaf076fc2e4d5a606b947468c1207d4c4b22ebf3b7f2fe0ef032be22c7c",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "training/fixed_high_speed_steering.py": "6c43db04a08e909e330497eacf9583eec346039de37d6b1c88d5c5bf6a81251c",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "a92a817e54d188ac71d5382ede2c9cf78d0398ee8ee2d7ad9ec57a6500c18dfd",
+    "harness.config.json": "b8769bb149a3ea02cea3183c6f49032c037f6c49bcc2f1da104221c3d16e9dca",
+    "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json": "a0b911e59f2faee305576e1b2a44d7ba50649e5dba965c1145e95fc31bf0bd8f"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/report.json",
+    "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only reviewed runtime; exact package validation not performed.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/report.json",
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Four separate avoidance/recovery mechanisms executed; controls reproduce prior action/trajectory signatures.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/report.json",
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "No candidate retains all6finishes. Commitment recovers priorfailed1:38302 but introduces losses; initialside choice contradicts road-relative baseline in1:38300. Revise that mechanism.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/report.json",
+        "artifacts/haic-research-v2/fast-committed-recovery-r2-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

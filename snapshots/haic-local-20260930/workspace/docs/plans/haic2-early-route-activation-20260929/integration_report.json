@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-early-route-activation-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-early-route-activation-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local continuation with exact control ZIP hash checked; no exact candidate ZIP or current official-site compliance validation.",
+      "evidence_paths": [
+        "training/early_route_activation_probe.py",
+        "haic_agent/hazard_flow_batch_runtime.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All six cells had exactly identical first-50 steer/gas/brake actions. Candidate changed 557 post-prefix actions and had zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-early-route-activation-20260929/report.json",
+        "docs/plans/haic2-early-route-activation-20260929/design.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Consumed TRAIN activation only: fast continuation finished 6/6 versus unchanged mode switch 3/6, repairing all three 5044 failures and preserving all three 5047 successes. Candidate was slower on jointly completed 5047 cells. Fresh matched evidence is required.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-early-route-activation-20260929/report.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "speed-state-ppo-continuation-hudfix-20260928",
+  "source_ref": "docs/plans/2026-09-28-speed-state-ppo-continuation.md",
+  "rule_or_requirement": "Pixel-only inference must finish before lap time determines ranking; the selected policy is reliable but too slow for public third-place records.",
+  "observable_information": "Training-only speed, route alignment and simulator outcomes plus pixel observations; inference receives pixels only.",
+  "allowed_action_or_state_change": "Continue the fixed selected PPO checkpoint with a larger throttle action range and current speed-shortfall/curve shaping on TRAIN maps only.",
+  "expected_success_endpoint": "First, TRAIN rollout activates higher throttle and controlled corner speed; then fresh matched tune completes at least as often as full-road-guard and improves tied median finished lap time.",
+  "eligible_state": "TRAIN_ONLY_ACTIVATION_THEN_FRESH_TUNE",
+  "control": "Full-road-guard selected ZIP and its source checkpoint; identical fresh tune cells for any submission-candidate comparison.",
+  "falsifier": "No meaningful increase in learned throttle/speed, TRAIN completion collapse, or lower finish rate than the matched control on fresh tune.",
+  "smallest_decisive_experiment": "4096 TRAIN environment decisions, four PPO updates, then only if activated a 12-cell matched tune on tracks 1-3 seeds 284-287.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, 3600-second training limit; read-only exact legacy checkpoint hash; no tune geometry in learning; no website upload.",
+  "source_paths": [
+    "docs/plans/2026-09-28-speed-state-ppo-continuation.md",
+    "training/train_policy.py",
+    "haic_research/commands.py",
+    "harness.config.json"
+  ]
+}

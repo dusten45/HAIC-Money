@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-train-geometry-speed-coast-revision-20260929",
+  "source_ref": "docs/plans/haic2-geometry-speed-coast-20260929/design.md",
+  "rule_or_requirement": "A train-only privileged teacher must demonstrate faster valid finished trajectories before collecting labels for a pixel-only student.",
+  "observable_information": "Frozen track curvature speed ceiling, actual TRAIN speed, inherited pixel driver's action, and the prior run's late-lap speed deficit.",
+  "allowed_action_or_state_change": "Preserve pixel steering and inherited braking; the teacher may add gas under the geometry ceiling or coast when over it, but may not add braking.",
+  "expected_success_endpoint": "Both TRAIN cells finish and median finished lap time improves at least 3% versus the unchanged pixel control.",
+  "eligible_state": "TRAIN_TEACHER_FEASIBILITY_ONLY",
+  "control": "Unchanged StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Teacher-only nonfinish, invalid action, no action activation, or less than 3% median lap improvement on paired TRAIN cells.",
+  "smallest_decisive_experiment": "Four paired TRAIN episodes on 1:43 and 2:102, with the teacher's own added brake removed.",
+  "resource_and_risk_gate": "One registered 600-second Linux CPU local diagnostic; no fresh split or external site action.",
+  "source_paths": ["docs/plans/haic2-geometry-speed-coast-20260929/design.md", "training/geometry_speed_teacher.py", "training/geometry_speed_teacher_probe.py", "runs/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/integration_report.json"]
+}
