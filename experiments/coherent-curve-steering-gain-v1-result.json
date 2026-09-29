@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "experiment": "coherent-curve-steering-gain-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T03:45:00+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["be5d322", "69d2e91", "6ee9bb5", "577768e", "0dbd4ac"],
+  "implementation_commit": "42e822614d0ee863a70bd6f3e315f58cf8de47eb",
+  "decision": "Keep as the current statically validated bare-model candidate. It strengthens only coherent obstacle-free curve steering while preserving obstacle priority and the inherited speed/slew safety envelopes. Do not claim faster laps, completion improvement, SOTA or submission readiness until an authorized controlled multi-track evaluation passes the stability-first gate.",
+  "implementation": [
+    "Route only bare state-dict inference through _CoherentCurveAttackController; explicit export, DrQ and HAIC routes remain unchanged.",
+    "When every sampled road-center row30,34,38,42,46,50,54 agrees on the curve direction, no current obstacle exists and the clear-exit gate is false, amplify the inherited steering request by20 percent, bounded by a0.06 increment and the existing0.48 cap.",
+    "Suppress amplification across the closed inherited-reversal protection interval where the inherited request is at most0.07 and the amplified request reaches at least0.07.",
+    "Write the actual candidate request back to _carry_steer_request so the inherited strong-steer target44 and steering-dependent throttle attenuation see the increased lateral demand.",
+    "Synchronize amplified distant-preview state so an immediately opposing obstacle restores the exact control action; current-obstacle geometry, urgency, cap0.32, target speeds and miss-latch behavior are unchanged.",
+    "Preserve the existing0.07 emitted-steering slew limit, clear-exit acceleration, curve targets, obstacle+sharp-curve target30, reset and lost-road recovery."
+  ],
+  "synthetic_observations": {
+    "curve_plus0.25_speed45": {
+      "control_request": 0.084,
+      "candidate_request": 0.1008,
+      "control_settled_steer": 0.084,
+      "candidate_settled_steer": 0.1008,
+      "control_gas": 0.13783958554267883,
+      "candidate_gas": 0.13687819242477417
+    },
+    "curve_minus0.25_speed45": {
+      "control_request": -0.084,
+      "candidate_request": -0.1008,
+      "mirrored": true
+    },
+    "curve_plus0.50_speed45": {
+      "control_request": 0.168,
+      "candidate_request": 0.2016,
+      "control_settled_steer": 0.168,
+      "candidate_settled_steer": 0.2016
+    },
+    "curve_plus0.75_speed45": {
+      "control_request": 0.252,
+      "candidate_request": 0.3024,
+      "candidate_fourth_frame_steer": 0.28,
+      "brake_unchanged": 0.06834676861763
+    },
+    "distant_preview_then_opposing_obstacle": {
+      "control_preview": 0.05,
+      "candidate_preview": 0.06,
+      "next_control_obstacle": -0.07,
+      "next_candidate_obstacle": -0.07,
+      "mirrored_transition_also_exact": true
+    }
+  },
+  "validation": {
+    "focused_candidate_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k coherent_curve_attack -q",
+      "result": "9 passed,106 deselected"
+    },
+    "focused_candidate_and_predecessor_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k 'coherent_curve_attack or translation_invariant or fast_corner_carry or compound or hairpin' -q",
+      "result": "32 passed,83 deselected"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "205 passed,4 warnings"
+    },
+    "full_collection_limitation": "The Windows interpreter cannot collect tests/test_drqv2_matched.py because run_drqv2_matched.py imports POSIX-only fcntl; the affected controller, inference, local and submission suites were run explicitly instead.",
+    "independent_static_review": "Independent review found and closed three pre-commit transition defects: near-field S-kink admission, stale amplified preview markers, and both open and exact-lower cases around the inherited0.07 reversal threshold. Final re-audit found no blocking defects and independently ran11 relevant tests.",
+    "isolated_package": {
+      "path": ".haic-artifacts/coherent-curve-steering-gain-v1/20260929T181825727959Z_coherent-curve-steering-gain-v1/submission.zip",
+      "agent_sha256": "5829d37510180b5e052d61b74c7e3ee72aecf8e49fe2eb67ebffc5921854a20d",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "5661695fa6f6877362c434a3cb5d138d9e6fdfb34d5c2fe80fe9d03c27bfe38c",
+      "bytes": 6281164,
+      "windows_python": "3.11.15",
+      "init_seconds": 1.696936999913305,
+      "act_seconds": 0.0027574000414460897,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "No authorized driving run measured whether stronger coherent-curve steering improves pace or preserves completion on unseen tracks.",
+    "The all-row image-space coherence gate cannot measure physical tire force, slip angle or obstacle clearance.",
+    "The extra steering slightly reduces gas through the unchanged inherited steering attenuation; real net lap-time effect is unknown.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so official evaluation, promotion and submission remain blocked."
+  ]
+}

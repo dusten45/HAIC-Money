@@ -210,8 +210,8 @@ about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The current bare route is `_TranslationInvariantExitController` at commit
-`5f9af82`. It retains the clear-curve speed envelope from `_FastCornerCarryController`
+The prior bare route was `_TranslationInvariantExitController` at commit
+`5f9af82`. It retained the clear-curve speed envelope from `_FastCornerCarryController`
 but fixes its exit classification: the historical sweep substitutes image center
 for unsampled rows, so a perfectly parallel corridor displaced6px was misread as
 sweep6, target53.76 and brake0.091 at speed60. The new gate requires every sampled
@@ -221,13 +221,23 @@ steering remains bit-exact. In the same synthetic offset6 case the action change
 from brake0.091 to gas0.135, while real curves, a rows46/50 S-kink, obstacles and
 all latch frames remain control-exact. The change passed20 focused and196 affected/
 local/submission tests, isolated exact-file package smoke and final independent
-review. No environment run measured completion or pace, so status remains
-`INCOMPARABLE`; see `experiments/translation-invariant-clear-exit-v1-result.json`.
+review. The current bare route is `_CoherentCurveAttackController` at commit
+`42e8226`. On obstacle-free curves only, it requires every sampled row30--54 to
+agree on the turn direction and increases the inherited steering request by20%,
+bounded by +0.06, cap0.48 and the existing0.07/frame slew. It deliberately
+suppresses gain across the closed0.07 reversal-protection interval, preserves
+current-obstacle logic, synchronizes distant-preview priority, and leaves the
+target/gas/brake formulas unchanged; the inherited target44 and throttle
+attenuation react to the final stronger request. Exact boundary, mirrored
+transition and hazard regressions passed9 focused and205 affected tests; isolated
+package smoke and final independent review also passed. No environment run
+measured completion or pace, so status remains `INCOMPARABLE`; see
+`experiments/coherent-curve-steering-gain-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `89fce198...` and must not be submitted as the new candidate.
+candidate agent SHA `5829d375...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 
