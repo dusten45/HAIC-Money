@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment": "high-speed-preview-braking-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T01:59:32.8432203+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["e9502bf", "41318e8"],
+  "implementation_commit": "b0383f68dd9d0e430d8846a09d2317f627dc5c18",
+  "decision": "Keep as the current statically validated bare-model speed candidate. Do not claim a low-20-second lap, improved completion, SOTA or submission readiness until an authorized controlled multi-track evaluation passes the preregistered stability-first gate.",
+  "implementation": [
+    "Route only bare state-dict inference through _HighSpeedPreviewBrakeController; explicit export, DrQ and HAIC routes remain unchanged.",
+    "Raise verified clear-straight target from48 to68 and gas branches from0.11/0.0733/0.0458 to0.18/0.135/0.09 while requiring no obstacle, no miss latch, no brake and settled steering.",
+    "Use immediate visible-sweep curve target clip(52-3*sweep,30,48), bypassing stale high-speed EMA only for the emitted longitudinal command.",
+    "Apply curve overspeed brake from target+0.5 with clip(0.06+0.018*excess,0.06,0.28), including current-obstacle and miss-latch compound curves.",
+    "Cap current obstacles immediately at47/40 and obstacle plus sweep>=6 at30, retaining that cap through the miss latch. Steering and perception remain inherited."
+  ],
+  "synthetic_observations": {
+    "clear_straight_speed0": {"target": 68.0, "action": [0.0, 0.18, 0.0]},
+    "clear_straight_speed60": {"target": 68.0, "action": [0.0, 0.135, 0.0]},
+    "clear_straight_speed65": {"target": 68.0, "action": [0.0, 0.09, 0.0]},
+    "distant_sweep6_speed60": {"target": 34.0, "gas": 0.0, "brake": 0.2799999713897705},
+    "mid_curve_sweep6_speed45": {"target": 34.0, "gas": 0.0, "brake": 0.249},
+    "compound_target_plus_nextafter": {"target": 30.0, "gas": 0.0, "brake": 0.06}
+  },
+  "validation": {
+    "focused_speed_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k high_speed_preview -q",
+      "result": "7 passed,86 deselected"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "183 passed,4 warnings"
+    },
+    "independent_static_review": "No blocking defect remained after enforcing curve braking during current obstacle and miss latch, closing target+0.5 boundaries, adding sequential reacquisition steering parity and bounding float32 brake below0.28.",
+    "temporary_package": {
+      "path": ".haic-artifacts/high-speed-preview-braking-v1/20260929T165919175148Z_high-speed-preview-braking-v1/submission.zip",
+      "agent_sha256": "60f52af2da6ae300be4746d90c7a57bf2a63733048a53642c3717837f1a83307",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "b0eafc17762d7f079a728636dc6894ec91dee7d229e8713a6f577b44b6ffb131",
+      "bytes": 6279050,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.582175699993968,
+      "act_seconds": 0.0035920999944210052,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "No authorized driving run measured whether target68 and gas0.18 preserve completion on unseen tracks.",
+    "The visible-row sweep is an image-space curvature proxy and cannot calculate a metric braking distance or friction-optimal speed.",
+    "Track2 needs a30.8 percent reduction to reach23 seconds, so straight acceleration alone may not attain the objective.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, and the competition website is inaccessible; official evaluation, promotion and submission remain blocked."
+  ]
+}
