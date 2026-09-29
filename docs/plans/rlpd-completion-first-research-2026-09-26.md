@@ -64,6 +64,13 @@ changed state visitation are alternatives. This intervention must receive its
 own freeze, test and full-episode outcome, not be assumed effective from action
 alignment alone.
 
+The guided child is frozen and running under
+`experiments/rlpd-recovery-guided-learning-v1.json` after actual zero-reset
+preflight and independent correctness review. The full suite passed 164 tests
+plus 33 subtests. An additional 8,191 actor updates are explicitly unmatched
+compute, not a replay-only matched comparison. Old model, source code and data
+remain unchanged; no outcome or promotion is established yet.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 

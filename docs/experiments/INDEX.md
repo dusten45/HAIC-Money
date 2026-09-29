@@ -13,6 +13,11 @@
   1/12; all five original finishes lost. Prospective curve-terminal proxy counts
   are 1/0/1 respectively and do not explain every failure. Guided joint-mean
   recovery plus source-mean retention is the next isolated intervention.
+- [Guided child protocol](../../experiments/rlpd-recovery-guided-learning-v1.json)
+  and [actual-visit regression review](../../experiments/rlpd-recovery-regression-review-v1-result.json):
+  joint mean guidance on qualified failure Oracle rows with original-mean prior/
+  handoff retention; 8,192 decisions, 8,191 SAC updates plus separately reported
+  8,191 extra actor updates. Running, not evaluated or matched-compute with v1.
 - [Post-learning action/Q comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json)
   and [policy-handoff timeline](../../experiments/rlpd-recovery-handoff-v2-result.json):
   zero-reset diagnostics separate actual trajectory outcomes, action alignment,
