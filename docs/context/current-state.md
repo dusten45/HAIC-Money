@@ -32,14 +32,23 @@ rows across three geometries. Matched 8,192-decision raw-SAC fine-tuning of two
 V5-seed50 learner-state copies completed under the
 [frozen learning protocol](../../experiments/rlpd-recovery-learning-v1.json):
 32online/32prior control versus 32online/16prior/16recovery. Contemporary
-pixel-only finish/curve-entry evaluation is running in a corrected r2 after a
-summary-field error stopped the retained first attempt. All three current
+pixel-only finish/curve-entry evaluation completed 36 uncensored episodes in a
+corrected r2 after a summary-field error stopped the retained first attempt.
+Finishes are V5 5/12, matched control 4/12 and recovery replay 1/12. Recovery lost
+all five original finishes and gained one different road; its prospective
+curve-associated terminal failures are 1/12 versus source 1/12 and control 0/12.
+The Q-only replay intervention is rejected. See the
+[verified full evaluation](../../experiments/rlpd-recovery-evaluation-v1-result.json).
+All three current
 critics still prefer their own actor on the 87 Oracle failure-support images;
 this is a ranking diagnostic, not evidence that the teacher is optimal or that
 driving performance failed. See the
 [action comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json).
-There is no learned
-improvement or candidate promotion yet. See the
+The next isolated iteration adds joint native deterministic-mean guidance only
+on proven failure Oracle rows, plus frozen-original-mean retention on prior and
+handoff/preserved-control rows. It keeps raw SAC/environment reward unchanged
+and reports extra actor optimizer work separately; it is not yet run. There is
+no learned improvement or candidate promotion. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
 
 The [zero-reset precursor review](../../experiments/rlpd-recovery-precursor-review-v1-result.json)

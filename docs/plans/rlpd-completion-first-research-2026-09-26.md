@@ -47,8 +47,22 @@ each duration harms 2/4 finished-parent controls. One and three rescues
 respectively also meet local qualification. Strict preparation produced 665
 accepted rows, with 339 unique failure-support rows on three geometries. The
 first matched 8,192-decision fine-tunes completed with 8,191 updates per arm;
-the corrected r2 full-episode evaluation is running, not yet complete. See
+the corrected r2 full-episode evaluation completed all 36 episodes uncensored.
+Finishes are original 5/12, matched control 4/12 and recovery replay 1/12; the
+recovery model lost all five original finishes and gained one different road.
+Prospective curve-terminal proxy counts are 1/0/1, so the first Q-only treatment
+is rejected, not promoted. See
 [the primary summary](../../experiments/rlpd-recovery-validation-v1-result.json).
+
+**Next intervention:** Keep the existing source-bound runs unchanged. Add a
+separate actor-only joint native mean guidance term on the 87 proven failure
+Oracle rows, weight 1.0, plus frozen-original mean retention (weight 0.1) on
+ordinary prior and non-guidance recovery rows, including actor handoff. Extra
+actor optimizer work must be reported separately from the original SAC updates.
+The mechanism is a hypothesis: sequence credit/bootstrapping, feature drift and
+changed state visitation are alternatives. This intervention must receive its
+own freeze, test and full-episode outcome, not be assumed effective from action
+alignment alone.
 
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.

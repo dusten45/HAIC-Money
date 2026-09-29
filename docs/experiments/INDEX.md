@@ -6,8 +6,13 @@
   42 complete branches; 12/25-decision feedback rescued 2/10 and 3/10 failure
   finishes but each harmed 2/4 finished controls. Strict paired-finish preparation
   yielded 339 unique failure-support rows on three geometries, plus qualified
-  retained-finish rows. Both matched fine-tunes completed; corrected r2 full
-  evaluation is running, without a driving-performance verdict yet.
+  retained-finish rows. Both matched fine-tunes completed; the Q-only intervention
+  was rejected after full evaluation.
+- [Verified full evaluation](../../experiments/rlpd-recovery-evaluation-v1-result.json):
+  36 uncensored consumed-TRAIN episodes, finishes V5 5/12, control 4/12, recovery
+  1/12; all five original finishes lost. Prospective curve-terminal proxy counts
+  are 1/0/1 respectively and do not explain every failure. Guided joint-mean
+  recovery plus source-mean retention is the next isolated intervention.
 - [Post-learning action/Q comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json)
   and [policy-handoff timeline](../../experiments/rlpd-recovery-handoff-v2-result.json):
   zero-reset diagnostics separate actual trajectory outcomes, action alignment,
