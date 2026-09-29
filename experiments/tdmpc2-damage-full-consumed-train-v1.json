@@ -1,0 +1,54 @@
+{
+  "format": "haic-tdmpc2-damage-full-consumed-train-v1",
+  "purpose": "consumed-TRAIN-development",
+  "evaluation_source_sha256": "a405accf3d8546b80550407312d37f33e3c0af36b9be12a73e296760ededf120",
+  "baseline": {
+    "training_protocol": {
+      "path": "experiments/tdmpc2-long-reused-train-v2.json",
+      "sha256": "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec"
+    },
+    "training_result": {
+      "path": "experiments/tdmpc2-long-reused-train-v2-100k-result.json",
+      "sha256": "bacf4c7e7a53794ecec7797746388695bac01096287f7aff09b5feafc4e3b515"
+    },
+    "full_eval_protocol": {
+      "path": "experiments/tdmpc2-full-consumed-train-v1.json",
+      "sha256": "874d01d1396697efc9e4b119b0cd9ce8189fe36fa8d44773dcc13d30ab9ddbcd"
+    },
+    "full_eval_result": {
+      "path": "experiments/tdmpc2-full-consumed-train-v1-result.json",
+      "sha256": "3bc41dd2a35bfd488a6cd13a2778d9344f6929873edd77e701b067e31fd1366b"
+    }
+  },
+  "source": {
+    "protocol": {
+      "path": "experiments/tdmpc2-damage-shaping-v1.json",
+      "sha256": "4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8"
+    },
+    "result": {
+      "path": "runs/tdmpc2-damage-20260928-v1/result.json",
+      "sha256": "b7b5d1f0eaeaeb18baf71b264e38e46fcd017ba3bfee09a177658b1574555ca6"
+    },
+    "checkpoints": [
+      {
+        "target": 100000,
+        "path": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-100000-step-100186.pt",
+        "sha256": "469e018504ce00ad1b134c0b06c7f087da75b09cd9891375a96965c1ee7b2c1e",
+        "training_cursor_sha256": "5ef8dcc85f506ec3c87740168ae7f8aa14b090f0bf4ad0c82edaa554563b5a91",
+        "step_cursor_sha256": "2f49f2ef5655ab2812ad8a3954d20b85d2b66a1b1d70bb6c8cc8844f5a78cc13"
+      }
+    ]
+  },
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800001},
+    {"track_id": 1, "geometry_seed": 3910800004},
+    {"track_id": 1, "geometry_seed": 3910800034},
+    {"track_id": 1, "geometry_seed": 3910800085}
+  ],
+  "environment": {"track_id": 1, "obstacles": true, "frame_skip": 4, "reward": "raw"},
+  "modes": ["prior", "mppi"],
+  "repeats": 2,
+  "seed": 20260928,
+  "max_steps": 2000,
+  "output_dir": "runs/tdmpc2-damage-full-train-20260929-v1"
+}
