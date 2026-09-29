@@ -1,0 +1,107 @@
+{
+  "format": "haic-tdmpc2-damage-final-train-result-v1",
+  "status": "complete_training_and_separate_frozen_policy_evaluation",
+  "partition": "four repeatedly consumed obstacle-enabled track-1 TRAIN geometries, not a fresh/protected or official study",
+  "training_protocol": "experiments/tdmpc2-damage-shaping-v1.json",
+  "training_protocol_sha256": "4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8",
+  "run_dir": "runs/tdmpc2-damage-20260928-v1",
+  "run_result": "runs/tdmpc2-damage-20260928-v1/result.json",
+  "run_result_sha256": "b7b5d1f0eaeaeb18baf71b264e38e46fcd017ba3bfee09a177658b1574555ca6",
+  "runner_source_sha256": "f4fa47ec724ccf27ee25b9ac78380b7171ed2c2ecd8ac34b69935700759847f2",
+  "reward_helper_sha256": "c2681fc9d789c356b308334f044c6eefd02f6965825ea05400dbe03ed388bcd3",
+  "complete_training_ledger_sha256": "5ef8dcc85f506ec3c87740168ae7f8aa14b090f0bf4ad0c82edaa554563b5a91",
+  "complete_step_ledger_sha256": "2f49f2ef5655ab2812ad8a3954d20b85d2b66a1b1d70bb6c8cc8844f5a78cc13",
+  "run_status": "completed_boundary_at_least_100k",
+  "decisions": 100186,
+  "updates": 100186,
+  "seed_decisions": 10000,
+  "pretrain_updates": 10000,
+  "completed_train_episodes": 286,
+  "checkpoint_target": 100000,
+  "checkpoint": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-100000-step-100186.pt",
+  "checkpoint_sha256": "469e018504ce00ad1b134c0b06c7f087da75b09cd9891375a96965c1ee7b2c1e",
+  "earlier_checkpoints": [
+    {"target": 20000, "actual_decisions": 20149, "sha256": "a32fabd204c0e3379e972430902f9f0776017c2789281a88db386b65694d2b4b"},
+    {"target": 40000, "actual_decisions": 40154, "sha256": "79ea4cfdb9730c8ad2c024c99ff9b47d2c325b2ce3c1f2fb9af4710c084eeb1f"},
+    {"target": 70000, "actual_decisions": 70481, "sha256": "ff3827bf8f1daf58c25d43236e4c9b921bd46921c91c85fbdcda162800223be1"}
+  ],
+  "train_episodes_cumulative": {
+    "n": 286,
+    "finishes": 10,
+    "time_limit_censored_nonfinish": 0,
+    "mean_raw_progress": 0.306507752587,
+    "mean_raw_return": 160.122377990,
+    "mean_damage": 0.273426573427,
+    "mean_episode_decisions": 350.300699,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 72, "finishes": 1},
+      {"geometry_seed": 3910800004, "n": 72, "finishes": 0},
+      {"geometry_seed": 3910800034, "n": 71, "finishes": 5},
+      {"geometry_seed": 3910800085, "n": 71, "finishes": 4}
+    ]
+  },
+  "train_episodes_since_70k": {
+    "n": 83,
+    "finishes": 8,
+    "time_limit_censored_nonfinish": 0,
+    "mean_raw_progress": 0.516337647893,
+    "mean_raw_return": 366.935527582,
+    "mean_damage": 0.443373493976,
+    "mean_episode_decisions": 357.891566,
+    "per_road": [
+      {"geometry_seed": 3910800001, "n": 21, "finishes": 1},
+      {"geometry_seed": 3910800004, "n": 21, "finishes": 0},
+      {"geometry_seed": 3910800034, "n": 20, "finishes": 3},
+      {"geometry_seed": 3910800085, "n": 21, "finishes": 4}
+    ],
+    "limitation": "Eight training finishes on three repeatedly consumed roads came from continuously changing on-policy learner/planner/noise. This is NOT a final frozen-policy finish rate or independent generalization evidence."
+  },
+  "reward_target_exposure": {
+    "kind": "cumulative_damage_increment",
+    "coefficient": 5.0,
+    "positive_damage_increment_steps": 391,
+    "positive_damage_sum": 78.2,
+    "raw_step_reward_sum": 45795.00010523428,
+    "replay_training_reward_sum": 45404.00010523428,
+    "observed_raw_minus_training": 391.0,
+    "expected_penalty": 391.0,
+    "since_70k": {"positive_damage_steps": 184, "positive_damage_sum": 36.8,
+                  "observed_penalty": 184.0},
+    "limitation": "Only replay's training reward/Q target changed; the official environment and raw episode rewards were preserved. This verifies delivered intervention dose, not its causal driving effect."
+  },
+  "rolling_optimizer_means_over_29705_updates": {
+    "consistency_loss": 0.002970500410,
+    "shaped_training_reward_loss": 0.423785049385,
+    "value_loss": 0.521796169872,
+    "termination_loss": 0.001606653559,
+    "q_spread_scale_at_checkpoint": 132.909606934,
+    "policy_differential_entropy_mean": -27.7811591824,
+    "same_observation_prior_to_mppi_weighted_elite_centre_l2": 1.4389624286,
+    "same_observation_prior_to_applied_noised_action_l2": 1.4625610363
+  },
+  "fixed_seed_train_probe": {
+    "windows": 256,
+    "positive_terminal_labels": 0,
+    "damage_incidents": 0,
+    "shaped_training_reward_mae": 0.07144842297,
+    "constant_reward_mae": 0.37949177623,
+    "limitation": "Identical seed input windows lacked damage and positive terminals; this probe does not test model fit on penalized transitions or terminal-event recall. Never treat its shaped reward MAE as a like-for-like RAW H3 real-return ranking comparison."
+  },
+  "frozen_policy_comparison": {
+    "evaluation_protocol": "experiments/tdmpc2-damage-full-consumed-train-v1.json",
+    "evaluation_protocol_sha256": "b00e4715703392ad1bbdaa75c6d86e0fb3d3df4c4fed0e3487aef2616d0053c6",
+    "evaluation_result": "experiments/tdmpc2-damage-full-consumed-train-v1-result.json",
+    "evaluation_result_sha256": "be8d7149b384499a8a4de113b48a78b81ab448875ee9ae286134c0d47bd76a11",
+    "mppi_primary_finishes": 2,
+    "mppi_episodes": 8,
+    "prior_finishes": 0,
+    "prior_episodes": 8,
+    "baseline_raw_target_mppi_finishes": 0,
+    "baseline_raw_target_episodes": 8,
+    "local_predeclared_mppi_target_finishes": 4,
+    "met_local_target": false,
+    "limitation": "Both treatment MPPI finishes were repeats of one of four heavily used road geometries; 2/8 is below the local 4/8 descriptive goal and cannot establish fresh-road or official generalization. See independent evaluation receipt for all sixteen raw-outcome road/mode records."
+  },
+  "causal_comparison_limit": "RAW and DAMAGE first10k replay observations/actions/rewards/flags/probe match byte-for-byte, yet the very first planned action at decision10001 already differs before the first penalty at22123. Model/optimizer/RNG state at exactly10k was not frozen; a one-learner-seed difference between evolving trajectories is not an action/transition-matched treatment effect. Independent learner-seed and same-arm raw/raw controls would be required before causal attribution.",
+  "decision": "Preserve the complete single-axis source and raw full-episode result; no official model promotion or >=50% claim. Before a separately pinned planner-H5/source H5 single-axis study, check no-reset H5 reward/terminal/Q calibration on RAW 100k world model and validate actual H5 branch returns under a bounded consumed-TRAIN prefix protocol if appropriate. Do not stack damage shaping with H5 or MPPI sample changes, relabel raw H3 branch returns as shaped/H5 ground truth, or open reserved/protected evaluation cells. The fresh multi-track TRAIN-DIAGNOSTIC allocator remains BLOCKED; cross-lane-consumed reuse is a weaker future development target only after an exact-cell exposure audit."
+}
