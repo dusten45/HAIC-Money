@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "closed_loop_data_validated_learning_in_progress",
+  "status": "closed_loop_data_validated_learning_complete_evaluation_in_progress",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -81,7 +81,23 @@
     "objective": "Unchanged raw-reward SAC; no behavior cloning",
     "control_output": "runs/rlpd-recovery-control-v1",
     "treatment_output": "runs/rlpd-recovery-treatment-v1",
-    "status": "running_not_evaluated"
+    "status": "both_exports_complete_not_yet_evaluated",
+    "control_actor_sha256": "b9578515343642061cabba4411a1dce5fac310813a2008a6dd24a93424e343d5",
+    "control_checkpoint_sha256": "c360cc3a2c14e2dc85f9328dc01740dcec051a5a1aac185e6465bb55573296ca",
+    "treatment_actor_sha256": "5a0186c61a61ae75cf30ae5ebe4efdcca098025a57e84aea0ac74163d11873f3",
+    "treatment_checkpoint_sha256": "037720bb6df9ce4acbd4707ed0bb5138dac15580d4b9c4c917854dd403abca26"
+  },
+  "post_learning_action_diagnosis": "experiments/rlpd-recovery-action-comparison-v1-result.json",
+  "post_handoff_temporal_diagnosis": "experiments/rlpd-recovery-handoff-v2-result.json",
+  "contemporary_evaluation": {
+    "output": "runs/rlpd-recovery-evaluation-r2",
+    "status": "running_after_zero_reset_three_export_preflight",
+    "actors": ["v5", "control", "recovery"],
+    "cells_per_actor": 12,
+    "prospective_curve_failure_endpoint": "Genuine crash/off-track/out-of-bounds within 63 decisions of overspeed, with sustained lane loss or added damage; temporal association, not causal proof.",
+    "retained_failed_attempt": "runs/rlpd-recovery-evaluation-v1",
+    "failed_attempt_reason": "Endpoint helper used retire_reason instead of the shared collector summary reason field; stopped after one completed receipt and the next saved trace, then corrected and tested in a new output directory.",
+    "reattempts_are_fresh": false
   },
   "interpretation": [
     "Full-vector feedback can actually rescue specific visited failures, but unconditional recovery also harms finished-parent controls.",

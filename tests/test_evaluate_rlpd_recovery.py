@@ -41,6 +41,39 @@ def test_all_event_types_in_success_controls():
     assert counts["nonfinishes"]["denominator"] == 0
 
 
+def test_terminal_curve_endpoint_requires_actual_failure():
+    values = {**trace(), "damage": np.zeros(5)}
+    summary = {"finished": True, "reason": "finished", "terminated": False,
+               "truncated": True, "damage": 0.0}
+    assert not evaluator.terminal_curve_association(values, summary)["associated_terminal_failure"]
+    summary.update(finished=False, reason="off_track", terminated=True, truncated=False)
+    assert evaluator.terminal_curve_association(values, summary)["associated_terminal_failure"]
+
+
+def test_terminal_curve_endpoint_excludes_distant_entries():
+    values = {key: np.repeat(value, 20, axis=0) for key, value in trace().items()}
+    values["damage"] = np.zeros(100)
+    values["curvature"][:] = 0
+    values["curvature"][0] = .03
+    summary = {"finished": False, "reason": "off_track", "terminated": True,
+               "truncated": False, "damage": 0.0}
+    assert not evaluator.terminal_curve_association(values, summary)["associated_terminal_failure"]
+
+
+def test_terminal_damage_is_a_valid_curve_witness():
+    values = {**trace(), "center_error": np.zeros(5), "damage": np.zeros(5)}
+    summary = {"finished": False, "reason": "crash", "terminated": True,
+               "truncated": False, "damage": .8}
+    assert evaluator.terminal_curve_association(values, summary)["associated_terminal_failure"]
+
+
+def test_curve_endpoint_excludes_censored_caps():
+    values = {**trace(), "damage": np.zeros(5)}
+    summary = {"finished": False, "reason": "runner_max_steps", "terminated": False,
+               "truncated": False, "damage": 0.0}
+    assert not evaluator.terminal_curve_association(values, summary)["associated_terminal_failure"]
+
+
 def test_sustained_events_require_consecutive_decisions():
     values = trace()
     values["heading_error"] = np.array([.6, 0, .6, .6, .6])

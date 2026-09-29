@@ -1,0 +1,58 @@
+{
+  "format": "haic-rlpd-recovery-action-comparison-v1",
+  "environment_resets": 0,
+  "learner_updates": 0,
+  "primary_summary": "runs/rlpd-recovery-action-diagnosis-v1/summary.json",
+  "prediction_audit": "runs/rlpd-recovery-action-diagnosis-v1/predictions.npz",
+  "prediction_audit_sha256": "4db0f94a970c3ceaf5b004d2b1f86f58f0f9193e192bb5c5217c5e8a2aabe5c8",
+  "data_manifest_sha256": "40ee39ac4ba6cab2b46ada76c028806d1d476903e5a912bb0108e5ba317c350d",
+  "scope": "665 selected consumed-TRAIN recovery rows, 653 unique; report below uses 87 failure-stratum Oracle rows on paired finish-proven paths",
+  "coordinates": "Official action coordinates; error is deterministic actor minus actually executed target",
+  "source": {
+    "checkpoint_sha256": "2564f28eeb894d1db9d2b38f367f97f6d63b3c41cba5059243925ce351a5e0e2",
+    "oracle_rows": 87,
+    "target_preferred_mean_q": 0,
+    "target_preferred_min_q": 0,
+    "within_critic_mean_target_minus_actor_q": -2.8927009105682373,
+    "within_critic_min_target_minus_actor_q": -3.2123475074768066,
+    "joint_action_mse": 0.3759719431400299,
+    "steering_mae": 0.45620301365852356,
+    "gas_signed_error": 0.864148736000061,
+    "brake_signed_error": 0.0361507348716259
+  },
+  "control": {
+    "checkpoint_sha256": "c360cc3a2c14e2dc85f9328dc01740dcec051a5a1aac185e6465bb55573296ca",
+    "environment_decisions": 8192,
+    "sac_updates": 8191,
+    "oracle_rows": 87,
+    "target_preferred_mean_q": 0,
+    "target_preferred_min_q": 0,
+    "within_critic_mean_target_minus_actor_q": -2.420912504196167,
+    "within_critic_min_target_minus_actor_q": -2.7607309818267822,
+    "joint_action_mse": 0.42087891697883606,
+    "steering_mae": 0.6096163988113403,
+    "gas_signed_error": 0.8987551927566528,
+    "brake_signed_error": 0.010904538445174694
+  },
+  "recovery": {
+    "checkpoint_sha256": "037720bb6df9ce4acbd4707ed0bb5138dac15580d4b9c4c917854dd403abca26",
+    "environment_decisions": 8192,
+    "sac_updates": 8191,
+    "oracle_rows": 87,
+    "target_preferred_mean_q": 0,
+    "target_preferred_min_q": 0,
+    "within_critic_mean_target_minus_actor_q": -0.9297645092010498,
+    "within_critic_min_target_minus_actor_q": -0.9159353971481323,
+    "joint_action_mse": 0.3361397087574005,
+    "steering_mae": 0.42258957028388977,
+    "gas_signed_error": 0.8688834309577942,
+    "brake_signed_error": -0.018913425505161285
+  },
+  "limitations": [
+    "Current-critic action ranking is within each model at the same image; absolute values and gap scales do not establish cross-critic causal effects.",
+    "The Oracle target is selected from privileged successful sequences; it need not be the optimal one-action-then-current-policy Bellman action.",
+    "All three critics still prefer their own deterministic actor on all 87 Oracle failure rows; this is not proof of a particular learning failure mechanism.",
+    "Improved action alignment is not closed-loop finish performance; contemporary full-episode evaluation is running separately.",
+    "No fresh generalization, official score, model promotion or new data cell is claimed."
+  ]
+}

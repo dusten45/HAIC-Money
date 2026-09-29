@@ -37,7 +37,8 @@ CONTRACT = {"partition": "consumed TRAIN", "track_id": 1,
 THRESHOLDS = {"speed_m_s": 14.0, "steering_abs": 0.6, "brake": 0.1,
               "lateral_m": 6.0, "heading_abs_rad": 0.55,
               "heading_sustained": 3, "lateral_sustained": 2,
-              "curvature_abs": 0.025, "opposition_delta": 0.6}
+              "curvature_abs": 0.025, "opposition_delta": 0.6,
+              "terminal_curve_window_decisions": 63}
 
 
 def sha(path: Path) -> str:
@@ -138,6 +139,29 @@ def census(rows: list[dict[str, Any]]) -> dict[str, Any]:
                                                  if v is not None)),
         }
     return result
+
+
+def terminal_curve_association(trace: dict[str, np.ndarray], summary: dict[str, Any]) -> dict[str, Any]:
+    """A prospective temporal failure endpoint, not a claim about causation."""
+    n = len(trace["pre_speed"])
+    action, teacher = trace["policy_or_oracle_action"], trace["oracle_action_at_state"]
+    active = ((np.abs(trace["curvature"]) >= .025) & (trace["pre_speed"] >= 14)
+              & (action[:, 1] >= .35) & (action[:, 2] < .05) & (teacher[:, 2] >= .1))
+    indices = np.flatnonzero(active[max(0, n - 63):]) + max(0, n - 63)
+    failure = (not summary["finished"] and summary["reason"] in (
+        "crash", "off_track", "out_of_bounds") and (summary["terminated"] or summary["truncated"]))
+    witnesses = []
+    if failure:
+        for index in indices:
+            lane_loss = first(np.abs(trace["center_error"][index:]) >= 6, 2) is not None
+            damage_gain = float(summary["damage"]) > float(trace["damage"][index]) + 1e-6
+            if lane_loss or damage_gain:
+                witnesses.append(int(index))
+    return {"associated_terminal_failure": bool(witnesses),
+            "curve_entries_in_terminal_window": len(indices),
+            "witness_entry_indices": witnesses, "window_decisions": 63,
+            "maximum_entry_to_terminal_seconds": 5.04, "causal": False,
+            "definition": "Genuine crash/off-track/out-of-bounds within 63 decisions of overspeed, with sustained lane loss or added damage."}
 
 
 def archived_screen(root: Path = ROOT) -> tuple[list[dict[str, Any]], dict[str, str]]:
@@ -325,7 +349,8 @@ def evaluate(actors: dict[str, Path], output: str, *, preflight_only: bool = Fal
                 trace_path = target / f"{name}.npz"
                 trace_hash = diagnosis._write_trace(trace_path, trace)
                 row = {**summary, "actor_id": label, "actor_sha256": frozen["actors"][label]["sha256"],
-                       "events": events(trace), "trace_path": trace_path.name, "trace_sha256": trace_hash,
+                        "events": events(trace), "trace_path": trace_path.name, "trace_sha256": trace_hash,
+                        "terminal_curve_association": terminal_curve_association(trace, summary),
                        "censored": not summary["terminated"] and not summary["truncated"] and not summary["finished"]}
                 write_json(target / f"{name}-receipt.json", row)
                 rows.append(row)
@@ -342,7 +367,10 @@ def evaluate(actors: dict[str, Path], output: str, *, preflight_only: bool = Fal
         result = {"format": "haic-rlpd-recovery-evaluation-result-v1", "status": "complete",
                   "episodes": rows, "official_score": False, "fresh_generalization": False,
                   "per_actor": {k: {"finish_count": sum(r["finished"] for r in rows if r["actor_id"] == k),
-                                    "denominator": 12, "censored": sum(r["censored"] for r in rows if r["actor_id"] == k),
+                                     "denominator": 12, "censored": sum(r["censored"] for r in rows if r["actor_id"] == k),
+                                     "curve_entry_associated_terminal_failures": sum(
+                                         r["terminal_curve_association"]["associated_terminal_failure"]
+                                         for r in rows if r["actor_id"] == k),
                                     "precursors": census([r for r in rows if r["actor_id"] == k])}
                                 for k in actors},
                   "versus_archived_immutable_v5": {k: transition_table(baseline, [r for r in rows if r["actor_id"] == k]) for k in actors},
