@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "name": "full-corridor-radius-line-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T00:51:36.9778375+09:00",
+  "purpose": "replace the small steering bias with a persistent safe-envelope outside-inside-outside path that materially uses track width as a local minimum-curvature proxy",
+  "source_commit": "67bdcae55d99b415b429a9df47086c469b9f1357",
+  "branch": "codex/out-in-out-racing-line",
+  "control": {
+    "controller": "agent._PhaseAwareRacingLineController at734eadf",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "result": "experiments/phase-aware-out-in-out-v2-result.json"
+  },
+  "hypothesis": "On an obstacle-free bend, placing the vehicle at the safe outside limit before turn-in, crossing toward the safe inside limit through the sustained bend, and retaining the safe outside limit on the following straight will use more of the available corridor and locally reduce path-curvature magnitude relative to the v2 small-offset bias.",
+  "single_factor": {
+    "name": "persistent full-safe-envelope lateral anchors",
+    "changes": [
+      "At row54, use the midpoint and half-width of the contiguous visible asphalt span as the lateral coordinate rather than assuming the inherited road center is the span midpoint.",
+      "For the detected turn direction, set entry and exit targets to the outside safe limit and the apex target to the opposite inside safe limit. The safe limit is max(0,(right-left)/2-7.0), so the target never requests less than7.0 pixels of geometric center-to-edge clearance.",
+      "Increase only the racing-line correction cap from0.035 to the inherited per-frame steering step0.07; keep gain0.016 and all final inherited steering limits/slew rules.",
+      "After a confirmed end of the bend, retain the exit outside target on the clear straight until a newly visible bend selects its own entry/apex direction. Missing/ambiguous geometry, invalid road, current obstacle or obstacle miss latch still clears the line immediately.",
+      "Apex-to-clear requires two consecutive clear reads before changing to exit; a continuing apex cancels that confirmation. Entry-to-clear remains a false-preview rejection and returns idle after two consecutive clear reads."
+    ],
+    "unchanged": [
+      "rows30/34/42/54, bend threshold1.5, two-frame confirmations and generic camera-only geometry",
+      "cruise speed, target speed, gas, brake, obstacle detector, obstacle-side selection and miss-latch parameters",
+      "reset-synchronized longitudinal shadow and complete-action obstacle/latch fallback",
+      "model.pt, DrQ/export/HAIC paths, official environment files and all seed/track-independent routing"
+    ]
+  },
+  "safety_priority": [
+    "Track visibility and the7-pixel safe envelope are hard gates; any breach suppresses the racing-line target.",
+    "Current obstacle and miss-latch actions must remain bit-exact to the reset-synchronized completion controller in every phase, and line state must clear.",
+    "The full-envelope target is a secondary objective only; inherited clipping, slew, lost-road recovery and longitudinal behavior remain authoritative.",
+    "No target is keyed to track id, seed, elapsed time, progress, memorized coordinate or evaluation result."
+  ],
+  "acceptance": {
+    "static": [
+      "For mirrored left/right profiles, entry requests the outside edge, apex requests the inside edge and confirmed exit plus subsequent clear-straight frames request the original outside edge.",
+      "For span(31,52), the signed lateral targets are exactly+3.5,-3.5,+3.5 pixels and are farther apart than v2's+1.89,-1.05,+1.89 targets.",
+      "At exact7-pixel clearance the correction is zero toward that edge; nextafter beyond the boundary suppresses the line rather than steering farther outward.",
+      "Apex clear confirmation is consecutive, continuing hairpins do not unwind, and a newly visible opposite bend replaces the retained exit with the correct outside entry target.",
+      "All current-obstacle and miss-latch actions, pedals and steering state remain exact to the natural completion-control shadow from entry, apex, exit and clear-straight states.",
+      "Random mirrored actions remain finite, bounded, slew-limited on non-hazard frames and gas/brake exact to control.",
+      "All affected/local-contract/submission-contract tests and an isolated exact-file package smoke pass."
+    ],
+    "classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any environment execution, training, submission, lap-time/completion claim or SOTA promotion occurs.",
+    "Any obstacle or miss-latch action differs from the synchronized natural control or line state survives a hazard.",
+    "Any requested target has predicted geometric edge clearance below7.0 pixels, any line frame bypasses inherited final action bounds, or any relevant regression fails.",
+    "Any speed, pedal, detector, obstacle parameter, model, official environment, DrQ artifact, user video or root submission.zip changes."
+  ],
+  "evidence": {
+    "primary_sources": [
+      "https://arxiv.org/abs/1902.00606",
+      "https://doi.org/10.1080/00423114.2019.1631455",
+      "https://arxiv.org/abs/2309.09186",
+      "https://arxiv.org/abs/1711.07300",
+      "https://github.com/TUMFTM/global_racetrajectory_optimization"
+    ],
+    "scope": "These sources support minimizing curvature within track, vehicle and obstacle constraints. They do not prove that this perspective-camera heuristic is globally minimum-curvature or minimum-time; physical radius and performance require a later authorized controlled driving evaluation."
+  },
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent.",
+    "Only source, synthetic, unit and package validation is authorized; the result cannot be promoted or submitted."
+  ]
+}
