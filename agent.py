@@ -1562,20 +1562,21 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
 
     This is deliberately a local camera-space approximation, not a global
     minimum-time planner.  It changes only the lateral reference used by the
-    completion controller: entry prepares outside, a coherent bend targets a
-    small inside offset, and the line opens again only after two agreeing exit
-    observations.  Every line request is clipped to the currently visible
-    near-road envelope and obstacle avoidance always takes priority.
+    completion controller: entry prepares at the safe outside limit, a coherent
+    bend targets the safe inside limit, and exit holds the outside position on
+    the following straight.  Every line request uses the complete visible
+    near-road span and obstacle avoidance always takes priority.
     """
 
     LINE_ROWS = (30, 34, 42, 54)
     LINE_BEND_THRESHOLD = _StableCompletionController.STRAIGHT_SWEEP_DEADBAND
-    LINE_ENTRY_FRACTION = 0.18
-    LINE_APEX_FRACTION = -0.10
-    LINE_EXIT_FRACTION = 0.18
+    LINE_ENTRY_FRACTION = 1.0
+    LINE_APEX_FRACTION = -1.0
+    LINE_EXIT_FRACTION = 1.0
     LINE_MIN_EDGE_CLEARANCE = 7.0
     LINE_STEER_GAIN = 0.016
-    LINE_MAX_STEER_DELTA = 0.035
+    LINE_HEADING_GAIN = 0.012
+    LINE_POSITION_TOLERANCE = 0.5
     LINE_EXIT_CONFIRM_FRAMES = 2
     LINE_CLEAR_CONFIRM_FRAMES = 2
 
@@ -1585,8 +1586,14 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         self._line_direction = 0.0
         self._line_exit_count = 0
         self._line_clear_count = 0
+        self._line_spans = {}
         self._line_near_span = None
+        self._line_last_valid_span = None
         self._line_requested = None
+        self._line_position_signed = None
+        self._line_target_signed = None
+        self._line_far_target_signed = None
+        self._line_edge_hazard_guard = False
         self._longitudinal_control = _LatchedClearStraightSustainController(
             cruise_speed=cruise_speed
         )
@@ -1596,44 +1603,59 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         self._line_direction = 0.0
         self._line_exit_count = 0
         self._line_clear_count = 0
+        self._line_position_signed = None
+        self._line_target_signed = None
+        self._line_far_target_signed = None
 
     def reset(self, observation=None) -> None:
         super().reset(observation)
         self._clear_line_state()
+        self._line_spans = {}
         self._line_near_span = None
+        self._line_last_valid_span = None
         self._line_requested = None
+        self._line_edge_hazard_guard = False
         if hasattr(self, "_longitudinal_control"):
             self._longitudinal_control.reset(observation)
+
+    def _visible_road_span(
+        self,
+        frame: np.ndarray,
+        row: int,
+        tracked: float,
+    ) -> tuple[float, float] | None:
+        """Measure the complete asphalt run associated with a tracked row."""
+        asphalt = (frame[row] >= self.ROAD_LOW) & (frame[row] <= self.ROAD_HIGH)
+        locations = np.flatnonzero(asphalt)
+        if len(locations) < 4:
+            return None
+        breaks = np.flatnonzero(np.diff(locations) > 1) + 1
+        runs = [run for run in np.split(locations, breaks) if len(run) >= 4]
+        associated = [run for run in runs if run[0] <= tracked <= run[-1]]
+        if len(associated) != 1:
+            return None
+        run = associated[0]
+        return float(run[0]), float(run[-1])
 
     def _visible_near_span(
         self,
         frame: np.ndarray,
         centers: dict[int, float],
     ) -> tuple[float, float] | None:
-        """Measure the contiguous row-54 asphalt run used for clearance."""
+        """Measure the complete tracked row-54 asphalt run for clearance."""
         if 54 not in centers:
             return None
-        asphalt = (frame[54] >= self.ROAD_LOW) & (frame[54] <= self.ROAD_HIGH)
-        horizontal = np.arange(frame.shape[1], dtype=np.float32)
-        locations = np.flatnonzero(
-            asphalt & (np.abs(horizontal - centers[54]) <= 17.0)
-        )
-        if len(locations) < 4:
-            return None
-        breaks = np.flatnonzero(np.diff(locations) > 1) + 1
-        runs = [run for run in np.split(locations, breaks) if len(run) >= 4]
-        if not runs:
-            return None
-        run = min(
-            runs,
-            key=lambda candidate: abs(float(candidate.mean()) - centers[54]),
-        )
-        return float(run[0]), float(run[-1])
+        return self._visible_road_span(frame, 54, centers[54])
 
     def act(self, observation) -> np.ndarray:
+        prior_emitted_steer = self._last_steer
         longitudinal_action = self._longitudinal_control.act(observation)
         self._line_requested = None
+        self._line_position_signed = None
+        self._line_target_signed = None
+        self._line_far_target_signed = None
         frame = self._frame(observation)
+        self._line_spans = {}
         self._line_near_span = None
         if frame is None:
             self._clear_line_state()
@@ -1642,7 +1664,15 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             if len(centers) < 3:
                 self._clear_line_state()
             else:
-                self._line_near_span = self._visible_near_span(frame, centers)
+                for row in self.LINE_ROWS:
+                    if row not in centers:
+                        continue
+                    span = self._visible_road_span(frame, row, centers[row])
+                    if span is not None:
+                        self._line_spans[row] = span
+                self._line_near_span = self._line_spans.get(54)
+                if self._line_near_span is not None:
+                    self._line_last_valid_span = self._line_near_span
         action = super().act(observation)
         if self._obstacle_side != 0.0:
             # A racing-line entry can deliberately point away from the bend.
@@ -1650,24 +1680,101 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             # trajectory: during detection and its short miss latch, emit the
             # reset-synchronized completion controller's whole action.
             self._clear_line_state()
-            action[:] = longitudinal_action
+            if (
+                self._obstacle_missing == 0
+                and self._line_shadow_steers_through_edge(
+                    float(longitudinal_action[0])
+                )
+            ):
+                self._line_edge_hazard_guard = True
+            if self._line_edge_hazard_guard:
+                action[:] = self._line_edge_guard_action(
+                    prior_steer=prior_emitted_steer,
+                    template=longitudinal_action,
+                )
+            else:
+                action[:] = longitudinal_action
             self._last_steer = float(action[0])
-            self._previous_action_was_preview = (
-                self._longitudinal_control._previous_action_was_preview
-            )
-            self._preview_transition_pending = (
-                self._longitudinal_control._preview_transition_pending
-            )
-            self._preview_requested = (
-                self._longitudinal_control._preview_requested
-            )
+            if self._line_edge_hazard_guard:
+                self._previous_action_was_preview = False
+                self._preview_transition_pending = False
+                self._preview_requested = 0.0
+                # The shadow owns future obstacle/latch behavior.  Keep its
+                # steering origin aligned with the action that was actually
+                # emitted so release cannot jump back to a stale command.
+                self._longitudinal_control._last_steer = float(action[0])
+                self._longitudinal_control._previous_action_was_preview = False
+                self._longitudinal_control._preview_transition_pending = False
+                self._longitudinal_control._preview_requested = 0.0
+            else:
+                self._previous_action_was_preview = (
+                    self._longitudinal_control._previous_action_was_preview
+                )
+                self._preview_transition_pending = (
+                    self._longitudinal_control._preview_transition_pending
+                )
+                self._preview_requested = (
+                    self._longitudinal_control._preview_requested
+                )
         else:
+            self._line_edge_hazard_guard = False
             action[1:] = longitudinal_action[1:]
         return action
 
+    def _line_shadow_steers_through_edge(self, steering: float) -> bool:
+        span = self._line_near_span or self._line_last_valid_span
+        if span is None:
+            return False
+        left, right = span
+        at_left_edge = (
+            self.IMAGE_CENTER - left <= self.LINE_MIN_EDGE_CLEARANCE + 1e-6
+        )
+        at_right_edge = (
+            right - self.IMAGE_CENTER <= self.LINE_MIN_EDGE_CLEARANCE + 1e-6
+        )
+        return (steering < 0.0 and at_left_edge) or (
+            steering > 0.0 and at_right_edge
+        )
+
+    def _line_edge_guard_action(
+        self,
+        *,
+        prior_steer: float,
+        template: np.ndarray,
+    ) -> np.ndarray:
+        """Brake while unwinding an obstacle command that crosses a road edge."""
+        span = self._line_near_span or self._line_last_valid_span
+        center_target = 0.0
+        if span is not None:
+            span_center = 0.5 * (span[0] + span[1])
+            center_target = float(
+                np.clip(
+                    self.LINE_STEER_GAIN * (span_center - self.IMAGE_CENTER),
+                    -self.MAX_STEER,
+                    self.MAX_STEER,
+                )
+            )
+        steering = prior_steer + float(
+            np.clip(
+                center_target - prior_steer,
+                -self.MAX_STEER_STEP,
+                self.MAX_STEER_STEP,
+            )
+        )
+        guarded = np.asarray(template, dtype=np.float32).copy()
+        guarded[0] = np.float32(np.clip(steering, -self.MAX_STEER, self.MAX_STEER))
+        guarded[1] = np.float32(0.0)
+        guarded[2] = np.nextafter(
+            np.float32(self.MAX_BRAKE), np.float32(0.0)
+        )
+        return guarded
+
     def _lost_road_action(self) -> np.ndarray:
         self._clear_line_state()
+        self._line_spans = {}
         self._line_near_span = None
+        self._line_last_valid_span = None
+        self._line_edge_hazard_guard = False
         return super()._lost_road_action()
 
     @staticmethod
@@ -1702,6 +1809,7 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         self,
         *,
         centers: dict[int, float],
+        outside_reached: bool,
     ) -> str | None:
         distal, proximal, entry_direction, apex_direction, clear = (
             self._line_geometry(centers)
@@ -1770,7 +1878,8 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
                 self._line_exit_count = 0
                 self._line_clear_count += 1
                 if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
-                    self._clear_line_state()
+                    self._line_phase = "exit"
+                    self._line_clear_count = 0
             else:
                 self._clear_line_state()
         elif self._line_phase == "exit":
@@ -1778,10 +1887,19 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
                 self._line_phase = "apex"
                 self._line_exit_count = 0
                 self._line_clear_count = 0
+            elif entry_direction is not None:
+                self._line_phase = "entry"
+                self._line_direction = entry_direction
+                self._line_exit_count = 0
+                self._line_clear_count = 0
             elif clear:
-                self._line_clear_count += 1
-                if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
-                    self._clear_line_state()
+                self._line_exit_count = 0
+                if outside_reached:
+                    self._line_clear_count += 1
+                    if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
+                        self._clear_line_state()
+                else:
+                    self._line_clear_count = 0
             elif exit_candidate:
                 self._line_clear_count = 0
             else:
@@ -1792,11 +1910,15 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         if self._line_phase == "apex":
             # Keep the apex reference for the first unconfirmed exit frame so
             # a continuing hairpin cannot unwind on one noisy distant read.
-            if apex_direction == self._line_direction or self._line_exit_count == 1:
+            if (
+                apex_direction == self._line_direction
+                or self._line_exit_count == 1
+                or self._line_clear_count == 1
+            ):
                 return "apex"
             return None
         if self._line_phase == "exit":
-            return "exit" if exit_candidate else None
+            return "exit" if exit_candidate or clear else None
         return None
 
     def _adjust_road_steering(
@@ -1822,6 +1944,16 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             self._clear_line_state()
             return inherited
 
+        # ``act`` populates complete spans together.  Never combine complete
+        # near-road edges with clipped perspective centers if even one of the
+        # registered rows was ambiguous.  An empty mapping is retained only
+        # for direct geometry-unit calls that inject ``_line_near_span``.
+        if self._line_spans and any(
+            row not in self._line_spans for row in self.LINE_ROWS
+        ):
+            self._clear_line_state()
+            return inherited
+
         left, right = self._line_near_span
         if not (
             left + self.LINE_MIN_EDGE_CLEARANCE
@@ -1831,36 +1963,79 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             self._clear_line_state()
             return inherited
 
-        active_phase = self._update_line_phase(centers=centers)
-        if active_phase is None or self._line_direction == 0.0:
-            return inherited
+        geometry_centers = dict(centers)
+        if all(row in self._line_spans for row in self.LINE_ROWS):
+            for row in self.LINE_ROWS:
+                span_left, span_right = self._line_spans[row]
+                geometry_centers[row] = 0.5 * (span_left + span_right)
 
         half_width = 0.5 * (right - left)
         maximum_offset = max(0.0, half_width - self.LINE_MIN_EDGE_CLEARANCE)
+        span_center = 0.5 * (left + right)
+        current_signed_position = self._line_direction * (
+            span_center - self.IMAGE_CENTER
+        )
+        outside_reached = (
+            self._line_direction != 0.0
+            and current_signed_position
+            >= maximum_offset - self.LINE_POSITION_TOLERANCE
+        )
+        active_phase = self._update_line_phase(
+            centers=geometry_centers,
+            outside_reached=outside_reached,
+        )
+        if active_phase is None or self._line_direction == 0.0:
+            return inherited
+
         fraction = {
             "entry": self.LINE_ENTRY_FRACTION,
             "apex": self.LINE_APEX_FRACTION,
             "exit": self.LINE_EXIT_FRACTION,
         }[active_phase]
-        desired = float(
-            np.clip(fraction * half_width, -maximum_offset, maximum_offset)
-        )
-        signed_lateral = self._line_direction * (
-            centers[54] - self.IMAGE_CENTER
-        )
-        signed_correction = float(
-            np.clip(
-                self.LINE_STEER_GAIN * (signed_lateral - desired),
-                -self.LINE_MAX_STEER_DELTA,
-                self.LINE_MAX_STEER_DELTA,
+        desired = fraction * maximum_offset
+        far_maximum_offset = maximum_offset
+        if all(row in self._line_spans for row in self.LINE_ROWS):
+            far_left, far_right = self._line_spans[42]
+            far_half_width = 0.5 * (far_right - far_left)
+            far_maximum_offset = max(
+                0.0, far_half_width - self.LINE_MIN_EDGE_CLEARANCE
             )
+        far_desired = fraction * far_maximum_offset
+        self._line_position_signed = self._line_direction * (
+            span_center - self.IMAGE_CENTER
         )
-        correction = self._line_direction * signed_correction
-        # Entry intentionally replaces the inherited inward preview; apex and
-        # exit retain the established road command and add only the bounded
-        # lateral-reference correction.
-        base = steering if active_phase == "entry" else inherited
-        adjusted = float(base + correction)
+        self._line_target_signed = desired
+        self._line_far_target_signed = far_desired
+        reference_far = (
+            geometry_centers[42] - self._line_direction * far_desired
+        )
+        reference_near = (
+            geometry_centers[54] - self._line_direction * desired
+        )
+        if active_phase == "apex":
+            # A curved target still needs the inherited curvature command at
+            # its lateral anchor.  Add only the signed near-position error so
+            # moving toward the inside target strengthens turn-in without
+            # mistaking target attainment for a zero-steering condition.
+            adjusted = float(
+                inherited
+                + self._line_direction
+                * self.LINE_STEER_GAIN
+                * (current_signed_position - desired)
+            )
+        else:
+            # Track the translated entry/exit references using near-row
+            # lateral error plus their far-to-near heading error.  In signed
+            # coordinates this is 0.004*near_error + 0.012*far_error, so both
+            # perspective-scaled position-error coefficients remain positive.
+            # The straight anchor is therefore a convergent zero instead of a
+            # heading-dominated zero that can reverse direction when row42 is
+            # much narrower than row54.  The parent act method still owns final
+            # clipping and per-frame slew.
+            adjusted = float(
+                self.LINE_STEER_GAIN * (reference_near - self.IMAGE_CENTER)
+                + self.LINE_HEADING_GAIN * (reference_far - reference_near)
+            )
         if adjusted != inherited:
             self._line_requested = adjusted
             self._preview_requested = 0.0
