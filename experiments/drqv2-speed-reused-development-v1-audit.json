@@ -1,0 +1,76 @@
+{
+  "format": "haic-drq-speed-cell-audit-v1",
+  "checked_at_utc": "2026-09-29T10:58:09Z",
+  "status": "reuse_only",
+  "scope": "local speed development on track IDs 1, 2 and 3; not a fresh TRAIN allocation",
+  "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800153},
+    {"track_id": 1, "geometry_seed": 3910800045},
+    {"track_id": 1, "geometry_seed": 3910800148},
+    {"track_id": 1, "geometry_seed": 3910800124},
+    {"track_id": 1, "geometry_seed": 3910800134},
+    {"track_id": 1, "geometry_seed": 3910800160},
+    {"track_id": 1, "geometry_seed": 3910800163},
+    {"track_id": 1, "geometry_seed": 3910800171},
+    {"track_id": 1, "geometry_seed": 3910800187},
+    {"track_id": 1, "geometry_seed": 3910800172},
+    {"track_id": 1, "geometry_seed": 3910800175},
+    {"track_id": 1, "geometry_seed": 3910800182},
+    {"track_id": 1, "geometry_seed": 3910800169},
+    {"track_id": 1, "geometry_seed": 3910800162},
+    {"track_id": 1, "geometry_seed": 3910800174},
+    {"track_id": 1, "geometry_seed": 3910800164},
+    {"track_id": 2, "geometry_seed": 4000000001},
+    {"track_id": 2, "geometry_seed": 4000000002},
+    {"track_id": 2, "geometry_seed": 4000000003},
+    {"track_id": 2, "geometry_seed": 4000000004},
+    {"track_id": 2, "geometry_seed": 4000000005},
+    {"track_id": 2, "geometry_seed": 4000000006},
+    {"track_id": 2, "geometry_seed": 4000000007},
+    {"track_id": 2, "geometry_seed": 4000000008},
+    {"track_id": 3, "geometry_seed": 4000000001},
+    {"track_id": 3, "geometry_seed": 4000000002},
+    {"track_id": 3, "geometry_seed": 4000000003},
+    {"track_id": 3, "geometry_seed": 4000000004},
+    {"track_id": 3, "geometry_seed": 4000000005},
+    {"track_id": 3, "geometry_seed": 4000000006},
+    {"track_id": 3, "geometry_seed": 4000000007},
+    {"track_id": 3, "geometry_seed": 4000000008}
+  ],
+  "prior_exposure": {
+    "track1": {
+      "partition": "TRAIN-DIAGNOSTIC; repeatedly consumed",
+      "protocol": "experiments/drqv2-geometry-mix-v1-r6.json",
+      "protocol_sha256": "d257d242349f01ebf3ae8b1b741de7edc16d20c4523444a125928ab6aec2d5ab",
+      "manifest": "runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/manifest.json",
+      "manifest_sha256": "fb14fe9eab14f61cdecc45453b69e44d34fdb967368c44c255e827292804b380",
+      "episodes_sha256": "aee2ae9b85172feb0e9a09697bdd92a34b29631cfc094586364f7c0b9f283441",
+      "prior_max_steps": 1200
+    },
+    "tracks2_3": {
+      "partition": "development_screen; repeatedly consumed",
+      "protocol": "experiments/drqv2-residual-options-pilot-v1.json",
+      "protocol_sha256": "3fd1222a5c0833633d8c35bd3e765470556b23ae50ec03f33fe6496d907be56d",
+      "manifest": "runs/20260924-drqv2-residual-options-pilot/iteration-1-retry/manifest.completed.json",
+      "manifest_sha256": "5bb24edfe356aacef868c40cd26805dbe612e05fcb251d7421192378371ce3eb",
+      "evaluation_sha256": "9192e550e6de0545304c93a5d415b7c8d93aff0db83ab4e5151cb264c952d847",
+      "prior_max_steps": 2000
+    }
+  },
+  "protected_overlap": [],
+  "active_claim_overlap": [],
+  "partial_reset_overlap": [],
+  "concurrent_boundaries": {
+    "shared_train_claims_at_check": "seed-2800000001 through seed-2800000024; no candidate geometry seed",
+    "tdmpc2_h3_active_geometry_seeds": [3910800001, 3910800004, 3910800034, 3910800085],
+    "protected_exclusions": "DrQ promotion/L2/pad and teacher-replay grids, RLPD v5 screen/confirmation/blind: no chosen seed overlaps; RLPD v5 reserved_training_seeds excludes past DrQ development, not a foreign claim"
+  },
+  "limitations": [
+    "Cross-lane inventory is time-bounded; recheck claims and relevant partial ledgers immediately before any reset.",
+    "An earlier residual-pilot two-decision failed smoke lacks a logged seed. It is an ambiguous past interaction, not evidence of fresh geometry; all selected cells are independently proven previously consumed.",
+    "Track-1 historical diagnostics used a 1,200-decision cap; the proposed 2,000-decision comparison changes that condition.",
+    "Eight track-2/3 seed pairs share geometry and are not 16 independent road shapes.",
+    "No status here permits official submission, confirmation, blind, or a generalization claim."
+  ]
+}

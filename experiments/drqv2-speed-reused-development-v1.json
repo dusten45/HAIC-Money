@@ -1,0 +1,95 @@
+{
+  "format": "haic-drq-speed-reused-development-v1",
+  "schema_version": 1,
+  "created_at_utc": "2026-09-29T11:00:00Z",
+  "purpose": "speed-only inference pilot of unchanged pad4 seed1 DrQ on local track IDs 1, 2 and 3",
+  "hypothesis": "Reducing light competing brake to 25% when official |steer|<=0.20, gas>=0.80 and brake<=0.30 may shorten already-completed laps without losing an existing finish; all other actions remain unchanged.",
+  "status": "frozen-before-any-speed-study-reset; mixed reused development, not fresh TRAIN",
+  "source_revision": "ddf217b376230a0b6614524d6969acce9e9322d9",
+  "actor": {
+    "path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/checkpoints/step-000131072/actor.pt",
+    "sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954"
+  },
+  "source_sha256": {
+    "scripts/evaluate_drq_speed_train.py": "8a14b5c3b8b1675310970dd160989a5aba77968f0634547fcc305411b4846b67",
+    "haic/algorithms/drq_v2/speed_control.py": "753ba835b340259de67665c39acab04d19a474ee8fd63108e579627223f1c46a",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69"
+  },
+  "reuse_only": true,
+  "cell_audit": {
+    "path": "experiments/drqv2-speed-reused-development-v1-audit.json",
+    "sha256": "9113d533c44249814a5427e4aafe717dd242950067aa5679b66f3a6c303a5f0c"
+  },
+  "reuse_evidence": {
+    "diagnostic_track1": {
+      "path": "runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/episodes.jsonl",
+      "sha256": "aee2ae9b85172feb0e9a09697bdd92a34b29631cfc094586364f7c0b9f283441"
+    },
+    "residual_tracks2_3": {
+      "path": "evaluations/drqv2-residual-options-pilot-iteration-1.json",
+      "sha256": "9192e550e6de0545304c93a5d415b7c8d93aff0db83ab4e5151cb264c952d847"
+    }
+  },
+  "roles": ["control", "light_brake_release"],
+  "repeats": 2,
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "obstacles": true,
+  "reward_shaping": false,
+  "cells": [
+    {"track_id": 1, "geometry_seed": 3910800153},
+    {"track_id": 1, "geometry_seed": 3910800045},
+    {"track_id": 1, "geometry_seed": 3910800148},
+    {"track_id": 1, "geometry_seed": 3910800124},
+    {"track_id": 1, "geometry_seed": 3910800134},
+    {"track_id": 1, "geometry_seed": 3910800160},
+    {"track_id": 1, "geometry_seed": 3910800163},
+    {"track_id": 1, "geometry_seed": 3910800171},
+    {"track_id": 1, "geometry_seed": 3910800187},
+    {"track_id": 1, "geometry_seed": 3910800172},
+    {"track_id": 1, "geometry_seed": 3910800175},
+    {"track_id": 1, "geometry_seed": 3910800182},
+    {"track_id": 1, "geometry_seed": 3910800169},
+    {"track_id": 1, "geometry_seed": 3910800162},
+    {"track_id": 1, "geometry_seed": 3910800174},
+    {"track_id": 1, "geometry_seed": 3910800164},
+    {"track_id": 2, "geometry_seed": 4000000001},
+    {"track_id": 2, "geometry_seed": 4000000002},
+    {"track_id": 2, "geometry_seed": 4000000003},
+    {"track_id": 2, "geometry_seed": 4000000004},
+    {"track_id": 2, "geometry_seed": 4000000005},
+    {"track_id": 2, "geometry_seed": 4000000006},
+    {"track_id": 2, "geometry_seed": 4000000007},
+    {"track_id": 2, "geometry_seed": 4000000008},
+    {"track_id": 3, "geometry_seed": 4000000001},
+    {"track_id": 3, "geometry_seed": 4000000002},
+    {"track_id": 3, "geometry_seed": 4000000003},
+    {"track_id": 3, "geometry_seed": 4000000004},
+    {"track_id": 3, "geometry_seed": 4000000005},
+    {"track_id": 3, "geometry_seed": 4000000006},
+    {"track_id": 3, "geometry_seed": 4000000007},
+    {"track_id": 3, "geometry_seed": 4000000008}
+  ],
+  "acceptance": {
+    "max_lost_finishes_per_track": 0,
+    "min_control_finishes_per_track": 1,
+    "min_mutual_finishes_per_track": 1,
+    "min_total_mutual_finishes": 3,
+    "max_mean_paired_lap_delta_ms": -4000,
+    "max_track_mean_paired_lap_delta_ms": 0
+  },
+  "analysis": "Count finishes separately by track on all fixed roads. No lost canonical control finishes; compare lap time only on mutually completed identical cells. Two reloads establish reproducibility, not independent samples. Require nonpositive mean paired lap delta per target track, at least three mutual completions total, and at least 4000ms lower overall paired-lap mean for a preliminary speed signal. Even a positive signal cannot establish generalization without distinct audited cells.",
+  "limits": "Local mirror of public track IDs, not official private-map performance. Track1 previously consumed diagnostic cap was only 1200. Tracks2 and 3 share eight geometry seeds; prior outcome exposure makes this an explicitly biased development screen. No model promotion, official upload, confirmation, or blind run."
+}

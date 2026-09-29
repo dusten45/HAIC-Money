@@ -1,0 +1,72 @@
+{
+  "format": "haic-drq-speed-reused-development-v1-result",
+  "status": "complete_rejected_finish_retention",
+  "protocol": "experiments/drqv2-speed-reused-development-v1.json",
+  "protocol_sha256": "0400ec4b88973ab9b7658afedfe0cd06d432bb32b0cb4510131c336b92f15145",
+  "cell_audit": "experiments/drqv2-speed-reused-development-v1-audit.json",
+  "cell_audit_sha256": "9113d533c44249814a5427e4aafe717dd242950067aa5679b66f3a6c303a5f0c",
+  "actor_sha256": "c0ceab5e640f35d73694a76e75302b855179556e0bbc193f9e4a64e3d7992954",
+  "source": {
+    "result": "runs/20260929-drqv2-speed-reused-development-v1/result.json",
+    "result_sha256": "5ab36299593e89defc9f735341f8210ff8cbd794889a54faf16759cf80532fe9",
+    "episodes": "runs/20260929-drqv2-speed-reused-development-v1/episodes.jsonl",
+    "episodes_sha256": "5ce06d0b029caa5b836f8d5e4bc637c45050b2018f01f319b28a670005f0ba5d",
+    "reset_intents": "runs/20260929-drqv2-speed-reused-development-v1/reset-intents.jsonl",
+    "reset_intents_sha256": "2b199b8f6265f777e3c8585e653e113e90e17c0d46fe9809d531676eb2f3722d",
+    "action_trace_count": 128,
+    "episode_count": 128,
+    "distinct_cells": 32,
+    "reloads_per_arm": 2
+  },
+  "metric": "finish-only completed-lap milliseconds on mutually finished identical road cells; local mirror proxy, not official rank",
+  "canonical_per_track": {
+    "1": {
+      "cells": 16,
+      "control_finishes": 5,
+      "brake_release_finishes": 3,
+      "lost_baseline_finishes": 3,
+      "gained_finishes": 1,
+      "mutual_finishes": 2,
+      "paired_laps_ms": [
+        {"geometry_seed": 3910800134, "control": 35960, "brake_release": 34220, "delta": -1740},
+        {"geometry_seed": 3910800169, "control": 45600, "brake_release": 44320, "delta": -1280}
+      ]
+    },
+    "2": {
+      "cells": 8,
+      "control_finishes": 1,
+      "brake_release_finishes": 0,
+      "lost_baseline_finishes": 1,
+      "gained_finishes": 0,
+      "mutual_finishes": 0,
+      "paired_laps_ms": []
+    },
+    "3": {
+      "cells": 8,
+      "control_finishes": 0,
+      "brake_release_finishes": 0,
+      "lost_baseline_finishes": 0,
+      "gained_finishes": 0,
+      "mutual_finishes": 0,
+      "paired_laps_ms": []
+    }
+  },
+  "observed_mean_paired_lap_delta_ms": -1510,
+  "mean_paired_lap_delta_denominator": 2,
+  "gate": {
+    "no_lost_baseline_finish_per_track": false,
+    "control_and_mutual_finisher_on_each_target_track": false,
+    "min_three_mutual_finishes": false,
+    "mean_paired_delta_at_most_minus_4000_ms": false,
+    "speed_signal": false
+  },
+  "independent_verification": "Verified protocol/actor/ledger/reset-intent SHAs, all 128 NPZ file hashes and raw float32 action-array SHAs, 256 reset-intent/end events, 32 identical paired road/obstacle/initial-observation fingerprints and 64 exact two-reload action-trace pairs against primary files.",
+  "decision": "Reject brake-only inference change; leave the original DrQ actor and existing submission ZIP unchanged. Do not retune the threshold on these previously outcome-exposed development cells.",
+  "limitations": [
+    "All 32 roads were previously consumed development; outcomes are not fresh or independent generalization evidence.",
+    "Track 1 prior diagnostic cap was 1,200 steps, versus this experiment's fixed 2,000; track 2 and 3 share eight geometry seeds.",
+    "Track 3 had zero CPU21 control finishes, so its speed and finish preservation cannot be estimated from this matched comparison.",
+    "Two faster mutually completed track-1 laps are conditional on only two finishers and cannot offset four lost finishes across track 1/2.",
+    "No official submission, model confirmation, blind partition, official map score, or deployment was performed."
+  ]
+}
