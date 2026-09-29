@@ -3,6 +3,7 @@
   "experiment": "adaptive-compound-target-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T05:33:54+09:00",
+  "amended_at": "2026-09-30T05:42:01+09:00",
   "branch": "feature/DG-Codex",
   "hypothesis": "The hard target30 switch at compound sweep6 causes avoidable braking even when the recognized obstacle is distant and curvature is only moderately above the compound threshold. A continuous distance-and-severity target capped at36 should carry more speed through that bounded entry regime while restoring target30 before close or extreme geometry and immediately on detector miss.",
   "scope": {
@@ -19,12 +20,14 @@
       "a current detector-recognized obstacle is present",
       "the inherited compound latch target is exactly30",
       "obstacle center row y is below44",
-      "image-space sweep is at least6 and below12"
+      "image-space sweep is at least6 and below12",
+      "the final obstacle-adjusted steering request has absolute value at most0.28"
     ],
     "distance_factor": "d = clip((44-y)/12,0,1)",
     "severity_factor": "m = clip((12-sweep)/6,0,1)",
     "formula": "candidate_target = 30 + 6*d*m",
     "bounds": "30 < candidate_target <= 36",
+    "strong_steer_veto": "After the ordinary road and obstacle steering hooks have produced the final requested steering, any absolute request above0.28 restores the inherited target30 before pedal calculation. This is a safety-narrowing amendment and does not expand the registered target surface.",
     "far_y_at_or_below32_table": {
       "sweep6": 36,
       "sweep7": 35,
@@ -63,7 +66,7 @@
   ],
   "static_acceptance": [
     "The exact target table, monotonic distance/severity behavior and boundaries immediately around y32/y44 and sweep6/sweep12 match the registered formula and remain within30--36.",
-    "Only current-visible frames satisfying y<44 and6<=sweep<12 may differ; steering and shared inherited state other than _pace_command_target remain exact.",
+    "Only current-visible frames satisfying y<44,6<=sweep<12 and absolute final requested steering<=0.28 may differ; steering and shared inherited state other than _pace_command_target and its derived _pace_effective_target remain exact.",
     "The existing softened compound brake envelope is used for every adaptive target, with finite bounded actions and no gas/brake overlap.",
     "Near, extreme, noncompound, obstacle-free, straight, strong-steer, fifth-clear, invalid-input, road-loss and reset behavior remain control-exact.",
     "After any raised current command, detector miss1 immediately returns target30; miss1--4, fifth clear, sixth release and reacquisition at every miss phase match their registered control semantics.",
@@ -74,7 +77,7 @@
     "An isolated package passes exact-file import, reset, finite-action, bounds and latency smoke without modifying root submission.zip."
   ],
   "rollback": [
-    "Any target above36 or below the control target, or any uplift at y>=44, sweep<6, sweep>=12, detector miss or no-current-obstacle state.",
+    "Any target above36 or below the control target, or any uplift at y>=44, sweep<6, sweep>=12, absolute final requested steering>0.28, detector miss or no-current-obstacle state.",
     "Any steering, detector, obstacle-side, latch-duration, reset, invalid-input, recovery, dependency, packaging, bounds, NaN or latency regression.",
     "Any use of the generic stronger curve-brake envelope on an adaptive target."
   ],
@@ -90,5 +93,10 @@
     "Raising target changes both braking and gas branches and therefore future observations even when same-input steering is exact.",
     "The maximum36, row44 and sweep12 safeguards are conservative engineering choices, not validated physical-optimum thresholds.",
     "No environment cell, training run, official submission or SOTA comparison is authorized by this protocol."
+  ],
+  "amendment_rationale": [
+    "The steering veto resolves a preregistration ambiguity discovered during independent pre-implementation review: the existing downstream target44 cap does not constrain a raised target36.",
+    "Allowing _pace_effective_target documents the unavoidable derived copy made by the existing pedal controller; it does not authorize any additional mutable state difference.",
+    "Both amendments narrow or clarify acceptance before the candidate implementation is committed; the formula, maximum target and all other gates are unchanged."
   ]
 }
