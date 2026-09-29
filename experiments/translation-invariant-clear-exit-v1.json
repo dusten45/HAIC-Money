@@ -22,7 +22,7 @@
   "single_factor": {
     "name": "translation-invariant clear-exit longitudinal gate",
     "candidate_controller": "agent._TranslationInvariantExitController",
-    "shape_sweep": "max(abs(center[row]-center[54]) for row in (30,34,38,42)), requiring all five sampled rows",
+    "shape_sweep": "max(abs(center[row]-center[54]) for row in (30,34,38,42,46,50)), requiring every sampled center row30,34,38,42,46,50,54",
     "clear_exit_gate": [
       "inherited exact-straight predicate is false",
       "no current obstacle",
@@ -46,7 +46,7 @@
     "static_and_synthetic": [
       "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
       "Parallel clear corridors displaced by -6 through +6 pixels use target68 and never brake at speed60; mirrored observations have equal longitudinal actions.",
-      "At the exact shape, heading, center-offset and steering boundaries the gate is closed with nextafter tests; any value above a boundary uses the parent action exactly.",
+      "At the exact shape, heading, center-offset and steering boundaries the gate is closed with nextafter tests; any value above a boundary uses the parent action exactly. A bend confined to near rows46/50 is rejected.",
       "True diagonal/curved road profiles remain parent-exact and cannot receive the clear-exit boost.",
       "Current obstacle, every miss-latch frame, clearing frame and reacquisition remain action-identical to the control.",
       "Steering is bit-exact to the control across directed and randomized tests; invalid input, road loss and reset remain inherited.",
@@ -72,5 +72,11 @@
     "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
     "The competition website is inaccessible; the official participant repository remains available and unchanged.",
     "Only source, synthetic, unit and isolated package validation is authorized."
+  ],
+  "amendments": [
+    {
+      "recorded_at": "2026-09-30T02:42:00+09:00",
+      "reason": "Pre-implementation independent review found that rows46 and50 are real sampled centers and can contain a near-field S-bend even when rows30,34,38,42,54 align. Expand the translation-invariant shape gate to every sampled center row; constants and experiment scope are unchanged."
+    }
   ]
 }
