@@ -1,0 +1,3 @@
+# Privileged recovery teacher: REVISE gate design
+
+The TRAIN-only teacher retained all six control finishes and shortened the three long low-visibility streaks from 48, 38 and 46 to 3, 6 and 7 decisions. Those laps fell from 28.24/28.68/28.26 to 24.72/24.14/24.50 s. Ordinary three cells had identical actions/laps. Teacher changed 16 actions in total, below the preregistered minimum 20; thus the activation gate is FAIL and the cycle is REVISE, not ADVANCE or release. This absolute change-count requirement penalized fast recovery, so a new plan must use an outcome-linked activation criterion on new TRAIN identities. Do not retroactively pass these consumed cells. The privileged teacher itself is not a submission candidate and no pixel student has been trained.

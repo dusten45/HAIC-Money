@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-finish-view-observability-20260929",
+  "source_ref": "docs/plans/haic2-finish-view-observability-20260929/design.md",
+  "rule_or_requirement": "A pixel-only completion recovery action needs an observable warning before a missed finish without early false triggers on valid finishes.",
+  "observable_information": "Temporal similarity of rendered road pixels to the launch view; completion and progress are evaluation labels only.",
+  "allowed_action_or_state_change": "This sensor-only diagnostic records a revisit signal and leaves the underlying pixel driver's actions unchanged.",
+  "expected_success_endpoint": "Revisit signal at least fifteen decisions before failed 2:5205 termination and no signal earlier than fifteen decisions before either valid finish.",
+  "eligible_state": "CONSUMED_TUNE_SENSOR_FEASIBILITY_DIAGNOSTIC",
+  "control": "Unchanged original pixel student and selected stable-risk pixel driver on already consumed identities, compared to their recorded completion endpoints.",
+  "falsifier": "No advance warning in the missed-finish run or a premature signal in either valid finish run.",
+  "smallest_decisive_experiment": "Three unchanged diagnostic episodes: student 1:5200, selected control 2:5205 and student 2:5205.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 900 seconds and 2,000 decisions per episode; no action modification, fresh competitive or external action.",
+  "source_paths": ["docs/plans/haic2-finish-view-observability-20260929/design.md", "training/finish_view_observability_probe.py", "haic_agent/pixel_features.py", "haic_agent/pixel_speed_student_runtime.py"]
+}

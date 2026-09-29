@@ -1,0 +1,72 @@
+{
+  "run_id": "out-in-out-visibility-20260929",
+  "cycle_id": "out-in-out-visibility-20260929-cycle",
+  "purpose": "User-directed out-in-out racing line and faster pedals",
+  "hypothesis_hash": "f03a8e75f73cbfd5158e64200e684e8bb2d9f6aad044bddaeb3bf9135a48b857",
+  "candidate_revision": "out-in-out-visibility-r5",
+  "control_revision": "preview-row-repair-r3",
+  "candidate_package_hash": "169068e69317860576e28d6ffd7af84ca3d1a390f6704eee59266f06d9b76f34",
+  "control_package_hash": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+  "comparison_id": "out-in-out-visibility-20260929",
+  "seed_ids": [
+    "1:38300",
+    "1:38302",
+    "2:38300",
+    "2:38302",
+    "3:38300",
+    "3:38302"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38300-38302"
+  ],
+  "map_ids": [
+    "official-track1-seed38300",
+    "official-track1-seed38302",
+    "official-track2-seed38300",
+    "official-track2-seed38302",
+    "official-track3-seed38300",
+    "official-track3-seed38302"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 3,
+    "episodes_per_arm": 6,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/out_in_out_runtime.py": "fbbe9c88f53e3b878c2e68bff29c80537bd62a2641740fbf9125474574845919",
+    "training/fixed60_completion.py": "0d705603c818b41795e809cd1a144061bf4908893512dd54a10c1beecf7ae084",
+    "docs/plans/active/fixed60-completion-settings.json": "72dcdd45e5f69c19875be6255fae5bd85b61d69860df82ef8a15c4dd0fa028cb",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "c74acad3c6fd80c109d33843c14bbe82f63507044aa2ab219606b40047a64bf6",
+    "harness.config.json": "9fad993389c13d3a595c8af5ed907e32552d30792ad4af118c61fb351ba0e1d8",
+    "haic_agent/out_in_out_flow_runtime.py": "dc170820d6fcd25d8d39c6d7b98b620b0a5a73cd9f63431fe48d0c330ad99911",
+    "docs/plans/active/out-in-out-visibility-20260929.md": "891bd9ccaf1168943db2f5bc1cf0cf350263e26fd3bb3059f42257f1bcb6fd89",
+    "haic_agent/out_in_out_visibility_runtime.py": "169068e69317860576e28d6ffd7af84ca3d1a390f6704eee59266f06d9b76f34"
+  }
+}

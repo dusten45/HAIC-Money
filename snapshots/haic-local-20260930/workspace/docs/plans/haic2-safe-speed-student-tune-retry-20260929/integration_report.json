@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The student uses pixel-derived features at inference and loaded a weights-only compatible model, but no exact submission package has been checked.",
+      "evidence_paths": ["haic_agent/pixel_speed_student_runtime.py", "training/safe_speed_student_probe.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The student raised gas on 1614 decisions across twelve TUNE cells, with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Student valid completion was 11/12 versus control 10/12 and the student was 6.81% faster by median lap on nine jointly completed cells (19.42 versus 20.84 seconds). However student-only failure 3:5201 retired off track while control finished, violating the preregistered no candidate-only nonfinish gate. The stronger aggregate result motivates a new prospective completion-count-first comparison, but cannot change this run's failed gate.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-student-tune-retry-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/report.json"]
+    }
+  ]
+}

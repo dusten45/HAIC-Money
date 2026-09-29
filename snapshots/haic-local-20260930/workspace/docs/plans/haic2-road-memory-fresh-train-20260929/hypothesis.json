@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-road-memory-fresh-train-20260929",
+  "source_ref": "docs/plans/haic2-road-memory-fresh-train-20260929/design.md",
+  "rule_or_requirement": "Improve valid completion first and finished lap speed on newly registered matched cells.",
+  "observable_information": "Current/recent pixel-road centers, private low-visibility count and frozen inherited pixel actions.",
+  "allowed_action_or_state_change": "During first 20 low-visibility decisions, use stored pixel-road side for +/-0.25 steering; inherit gas and brake.",
+  "expected_success_endpoint": "At least 20 action changes, zero invalid actions, completion no lower, and on a completion tie median finished lap at least 0.20 s faster or, on exact median tie, P90 at least 0.50 s faster.",
+  "eligible_state": "FRESH_TRAIN_ROAD_MEMORY_COMPARISON",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on 24 matched fresh TRAIN cells.",
+  "falsifier": "Lower completion, invalid action, fewer than 20 changed actions, or no predeclared lap distribution improvement.",
+  "smallest_decisive_experiment": "Two pixel arms on tracks 1-3 x fresh TRAIN seeds 5056-5063, 48 episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU comparison capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-road-memory-fresh-train-20260929/design.md",
+    "training/road_memory_probe.py",
+    "haic_agent/hazard_flow_batch_runtime.py",
+    "docs/plans/haic2-road-memory-activation-20260929/outcome.md"
+  ]
+}

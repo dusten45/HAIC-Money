@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Local archive static contract, unique root agent.py, banned import/call scan, size limits, clean extracted imports, finite actions, import/create under 10 seconds, act under 5 seconds and RSS under 1024 MB all passed. This does not establish official server acceptance or score.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/report.json", "runs/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/run_manifest.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The candidate ZIP is the pinned stable-risk runtime; it changed driving and reduced lap time on all eleven jointly completed paired cells. Action-level causal attribution is limited because this diagnostic did not record a counterfactual action trace.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/report.json", "artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/package_manifest.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Candidate completed 11/12 versus control 12/12; candidate alone retired off_track on track 2 seed 336 at progress 0.5862. Completion-first selection rejects the candidate despite a 23.54 s versus 25.23 s finished-lap median and faster times on every jointly completed pair.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/report.json", "runs/haic-research-v2/haic2-stable-risk-zip-confirmation-20260928/run_manifest.json"]
+}

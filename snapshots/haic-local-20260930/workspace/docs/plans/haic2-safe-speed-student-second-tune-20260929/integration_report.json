@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-second-tune-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-second-tune-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Inference uses rendered pixels and inherited pixel-driver actions, but the exact submission ZIP and official runtime contract remain unchecked.",
+      "evidence_paths": ["haic_agent/pixel_speed_student_runtime.py", "training/safe_speed_student_probe.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The frozen student raised gas on 1902 decisions across twelve disjoint TUNE cells, with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-student-second-tune-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Student finished 10/12 versus control 8/12. On seven jointly completed cells, median lap was 21.70 versus 23.30 seconds, a 6.87% improvement. Student alone failed 2:5205; control alone failed 1:5205, 1:5207 and 3:5206. The prospectively registered gate compares aggregate completion first and does not veto a candidate-only failure.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-student-second-tune-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-student-second-tune-20260929/report.json"]
+    }
+  ]
+}

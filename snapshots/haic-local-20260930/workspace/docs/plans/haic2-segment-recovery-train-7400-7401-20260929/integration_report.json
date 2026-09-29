@@ -1,0 +1,8 @@
+{
+  "evidence_paths": ["runs/haic-research-v2/haic2-segment-recovery-train-7400-7401-20260929/run_manifest.json"],
+  "gate_results": [
+    {"name": "rule_compliance", "status": "UNKNOWN", "rationale": "No candidate driving occurred; official-site rules were not checked for a package.", "evidence_paths": ["docs/plans/haic2-segment-recovery-train-7400-7401-20260929/design.md"]},
+    {"name": "mechanism_activation", "status": "UNKNOWN", "rationale": "The Windows process failed while importing Box2D before any candidate action or episode.", "evidence_paths": ["runs/haic-research-v2/haic2-segment-recovery-train-7400-7401-20260929/events.jsonl"]},
+    {"name": "competitive_or_product_outcome", "status": "UNKNOWN", "rationale": "No matched episodes ran; TRAIN 7400–7401 are unconsumed by this attempt.", "evidence_paths": ["runs/haic-research-v2/haic2-segment-recovery-train-7400-7401-20260929/events.jsonl"]}
+  ]
+}

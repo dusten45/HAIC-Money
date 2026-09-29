@@ -1,0 +1,31 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/out-in-out-avoidance-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "No current official certification",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-avoidance-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "Avoidance commitment activates; full physical out-in-out sequence not established. Missing geometry impact suppression review issue not observed in2:38302.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-avoidance-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Line_only improves4to5/6, fast improves3to4/6 vsbaseline6/6. Continue mechanism using observed obstacle motion; retain checkpoint.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-avoidance-20260929/report.json"
+      ]
+    }
+  ]
+}

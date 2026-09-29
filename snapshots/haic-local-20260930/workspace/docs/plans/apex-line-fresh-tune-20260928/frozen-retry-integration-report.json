@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The frozen diagnostic used pixel-only observation and exact-hash checkpoints. Official package and platform validation remain unperformed.",
+      "evidence_paths": ["runs/haic-research-v2/apex-line-three-track-frozen-retry-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-three-track-frozen-retry-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Apex steering changed in 609 decisions across the twelve matched tune episodes; fixture tests confirm turn direction and obstacle abstention.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-three-track-frozen-retry-20260928/report.json", "tests/test_apex_line_runtime.py"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "On registered tune seeds 296-299 across all three tracks, apex and selected control both finished 12/12. Apex median finished lap was 21.70 s versus 23.39 s, with zero collisions, damage, and invalid actions. This is a local diagnostic result, not an official score or SOTA promotion.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-three-track-frozen-retry-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/apex-line-three-track-frozen-retry-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-three-track-frozen-retry-20260928/report.json"]
+}

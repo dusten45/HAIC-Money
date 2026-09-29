@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "speed-coupled-exact-zip-heldout-20260929",
+  "source_ref": "docs/plans/2026-09-29-speed-coupled-exact-zip-heldout.md",
+  "rule_or_requirement": "The exact pixel-only candidate must cross the qualified finish line at least as often as the selected control; compare finished lap time only after completion ties. Grass contact alone is diagnostic.",
+  "observable_information": "Frozen ZIP bytes, grayscale frame stacks, valid actions, qualified finish events, lap times, collisions, damage, and runtime measurements.",
+  "allowed_action_or_state_change": "Execute unchanged extracted ZIP agents on the same held-out tracks and seeds; candidate steers earlier from pixels and increases gas on visible stable road.",
+  "expected_success_endpoint": "At least as many qualified finish crossings as selected full-road-guard across twelve cells; shorter median finished lap if completion ties.",
+  "eligible_state": "HELD_OUT_EXACT_PACKAGE_DIAGNOSTIC",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Fewer candidate finishes, invalid action, ZIP/runtime limit breach, or equal finish count without shorter median finished lap; road contact is reported but is not an automatic veto.",
+  "smallest_decisive_experiment": "Twenty-four episodes: both immutable ZIPs on tracks 1–3 crossed with held-out seeds 2004–2007, at most 2,000 decisions per episode.",
+  "resource_and_risk_gate": "Registered Linux CPU profile, at most 2 CPUs, 2 GiB, 1,800 seconds; no parameter adjustment, website upload, official submission, or model confirmation.",
+  "source_paths": [
+    "docs/plans/2026-09-29-speed-coupled-exact-zip-heldout.md",
+    "runs/haic-research-v2/speed-coupled-preview-tune-20260929/integration_report.json",
+    "artifacts/haic-research-v2/speed-coupled-preview-candidate-20260929/package_manifest.json"
+  ]
+}

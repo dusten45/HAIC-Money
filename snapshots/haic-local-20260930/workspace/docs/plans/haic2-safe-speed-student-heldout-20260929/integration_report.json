@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-heldout-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The student uses rendered pixels and inherited pixel-driver actions in this diagnostic, but an exact submission ZIP has not been packaged or checked against the official runtime contract.",
+      "evidence_paths": ["haic_agent/pixel_speed_student_runtime.py", "training/safe_speed_student_probe.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The fixed student raised gas on 1620 decisions across twelve held-out cells, with zero invalid actions and a safe weights-only runtime checkpoint.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Both arms validly finished 12/12 untouched held-out cells. Candidate median lap was 22.20 seconds versus control 22.92 seconds, a 3.14% improvement above the registered 2% threshold. The candidate was slower on track 2 seeds 5209–5211 and had two collisions and 0.4 damage on 3:5211 versus zero control collisions; those risks remain in the full evidence and do not override the predeclared completion-then-median ordering.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-student-heldout-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/report.json"]
+    }
+  ]
+}

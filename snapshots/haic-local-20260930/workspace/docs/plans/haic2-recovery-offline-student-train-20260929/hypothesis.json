@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-recovery-offline-student-20260929",
+  "source_ref": "docs/plans/haic2-recovery-offline-student-train-20260929/design.md",
+  "rule_or_requirement": "The submission agent must recover from visual road loss using allowed pixels and actions, not simulator geometry.",
+  "observable_information": "Four grayscale frames and the inherited pixel driver's action at each teacher intervention.",
+  "allowed_action_or_state_change": "Fit fixed visual recovery models on completed TRAIN labels and evaluate without simulator driving on untouched whole TRAIN cells.",
+  "expected_success_endpoint": "A visual student exceeds inherited steering on full-sequence teacher imitation, including sign switches and independent natural cells.",
+  "eligible_state": "TRAIN_ONLY_OFFLINE_STUDENT_FEASIBILITY",
+  "control": "Inherited bend-rebound steering, with motion sign and fixed first-direction hold as additional diagnostic baselines.",
+  "falsifier": "Any missing/hash-invalid data, natural first sign below 3/4, natural full-sequence sign below 75%, sign switches below 60%, or mean cell MAE not below inherited in both validation groups.",
+  "smallest_decisive_experiment": "Fit 5170–5176 whole TRAIN cells, validate induced 5177 and four fresh natural 5292–5299 cells.",
+  "resource_and_risk_gate": "One local CPU offline run capped at 240 seconds; no driving, reserved split, external action, or raw data copy.",
+  "source_paths": ["training/recovery_offline_student.py", "artifacts/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/report.json", "artifacts/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/report.json"]
+}

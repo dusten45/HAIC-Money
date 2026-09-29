@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-road-memory-activation-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-road-memory-activation-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local pixel-only steering diagnostic and exact control ZIP hash checked; exact candidate ZIP and current official-site compliance remain unverified.",
+      "evidence_paths": [
+        "training/road_memory_probe.py",
+        "artifacts/haic-research-v2/haic2-road-memory-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Candidate changed 29 steering actions during pixel-road visibility loss, with zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-activation-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Consumed TRAIN activation only: all six reference finishes preserved and all three long low-visibility streaks shortened by 26\u201341 decisions; not fresh score evidence.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-activation-20260929/report.json"
+      ]
+    }
+  ]
+}

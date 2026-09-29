@@ -1,0 +1,7 @@
+# Untouched held-out comparison for bounded pixel gas authority
+
+The fixed pixel-only bounded-authority student passed fresh TRAIN (12/12 versus selected 11/12) and fresh TUNE (11/12 versus selected 8/12) completion-first gates. The trained checkpoint SHA-256 `f1afc4016f00ac699e8212f0007dde27f829831294f84b9fd3236a6cd0e3ab86` and runtime remain unchanged: boost acceptance 0.65, low-base veto 0.08, increment 0.04 and gas cap 0.28. Neither arm uses simulator state at inference.
+
+Compare selected stable pixel control and bounded-authority student on untouched held-out tracks 1-3 x seeds 5228-5231, twelve matched cells per arm, twenty-four episodes. Linux CPU, 2,000 decisions per episode, 1,800 seconds total. Record full traces, valid completion, finished lap distributions, incomplete progress, collisions, damage, action latency p50/p95/max, invalid actions, intervention counts, resource and duration fields. No retuning on these identities.
+
+Advance to local exact ZIP packaging and fresh extracted-ZIP confirmation only if candidate valid completion is at least selected completion, zero invalid actions, at least 100 bounded boosts and 20 vetoes, and on a completion tie at least 2% lower median finished lap both overall and jointly finished. Higher completion advances without the lap tie condition. Lower completion rejects this candidate. This is held-out local evidence, not official score, final model confirmation or release. No external action.

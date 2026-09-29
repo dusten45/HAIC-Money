@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fast-completion-row-repair-20260929",
+  "source_ref": "docs/plans/active/fast-completion-row-repair-20260929.md",
+  "rule_or_requirement": "User requests fixed-high-speed road reacquisition and continued progress after collision, accepting brief road excursions.",
+  "observable_information": "Pixel road rows/full-width runs, last valid road direction and pixel speed drops. No simulator state enters policy.",
+  "allowed_action_or_state_change": "Isolated missing42 correctness repair, exact ZIP all24 consumed replay; unchanged pedals/veto/other observations",
+  "expected_success_endpoint": "24/24 complete;22old successful full action/pose traces unchanged; first10prefix/resource/hash checks",
+  "eligible_state": "CONSUMED_TRAIN_CORRECTNESS_REPLAY",
+  "control": "Immutable preview_action_aware traces,22/24 and exact previous ZIP",
+  "falsifier": "No activation, lost control finishes, no rescue, invalid actions, altered first10prefix, simulator-state leakage, or lowered normal straight target. Temporary cue-triggered targets are explicitly permitted.",
+  "smallest_decisive_experiment": "One exact repaired ZIP times24 cells; matched immutable previous selected traces",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; no external action",
+  "source_paths": [
+    "docs/plans/active/fast-completion-row-repair-20260929.md",
+    "haic_agent/fast_completion_coordination.py",
+    "training/repair_fast_completion.py"
+  ]
+}

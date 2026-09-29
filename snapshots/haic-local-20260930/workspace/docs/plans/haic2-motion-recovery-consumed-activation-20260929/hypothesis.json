@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-short-pixel-motion-recovery-activation-20260929",
+  "source_ref": "docs/plans/haic2-motion-recovery-consumed-activation-20260929/design.md",
+  "rule_or_requirement": "Only pixel observations and prior runtime state may steer a submission candidate; local completion must not regress while lap time improves.",
+  "observable_information": "The last consecutive visible near-road-center change in the four-frame pixel stack, current road visibility and inherited pixel-driver action.",
+  "allowed_action_or_state_change": "For at most six low-visibility decisions, replace inherited steer by +/-0.7 in the observed road-motion direction; retain gas and brake.",
+  "expected_success_endpoint": "On three consumed TRAIN seed-5176 cells, at least two cells change actions, no valid control finish is lost, one cell shortens its longest low-visibility streak and none lengthens by more than ten decisions, with zero invalid actions.",
+  "eligible_state": "CONSUMED_TRAIN_SHORT_MOTION_RECOVERY_ACTIVATION_ONLY",
+  "control": "Unchanged exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49 represented by its frozen behaviorally identical source controller.",
+  "falsifier": "No actual action changes in two cells, lost control finish, no shorter low-visibility interval, >10-decision worsening or invalid action.",
+  "smallest_decisive_experiment": "Paired source-controller episodes on consumed TRAIN 1:5176, 2:5176, 3:5176; six episodes, not submission-candidate rate evidence.",
+  "resource_and_risk_gate": "Registered Linux CPU local diagnostic capped at 900 seconds, two cores, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-motion-recovery-consumed-activation-20260929/design.md",
+    "training/motion_recovery_probe.py",
+    "haic_agent/pixel_features.py",
+    "haic_agent/wide_speed_batch_runtime.py",
+    "docs/plans/haic2-recovery-student-observability-20260929.md"
+  ]
+}

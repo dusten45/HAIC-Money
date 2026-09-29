@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "far-hazard-20260930",
+  "source_ref": "docs/plans/active/far-hazard-20260930-design.md",
+  "rule_or_requirement": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "observable_information": "Rendered pixels/HUD, previous road-center observations and own actions only. No simulator state.",
+  "allowed_action_or_state_change": "Four independent earlier pixel obstacle interventions: pedal veto, temporal retention, lateral clearance preview, arrival speed envelope over frozen sprint.",
+  "expected_success_endpoint": "12/12 finishes and median below stable matched control, no promotion until exact ZIP and independent registered validation",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "Unchanged preview_row_repair stable source on same12cells",
+  "falsifier": "No farther path action activation, incorrect component/flow, lost completion, no time gain or invalid action.",
+  "smallest_decisive_experiment": "6 arms x12 consumed TRAIN cells =72 episodes",
+  "resource_and_risk_gate": "2CPU2GiB900seconds",
+  "source_paths": [
+    "docs/plans/active/far-hazard-20260930-design.md",
+    "haic_agent/far_hazard_runtime.py",
+    "haic_agent/acceleration_envelope_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

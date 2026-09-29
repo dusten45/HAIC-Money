@@ -1,0 +1,15 @@
+# Geometric passing under continuous positive acceleration
+
+Evidence: traction-path TRAIN1:38300 pursuit follows first curve and reaches74, then atdecision42 legacy obstacle term abruptly requests-.314 despite near-straight corridor. Decision44 lateral error grows; lost road follows. This supports a specific discrete steering defect, not proof all failures share it. Public steering limits and grip remain preserved.
+
+Repair all four existing directions under the same positive traction governor. Construct a road-bounded passing point beside each visible obstacle using 3m lateral clearance and1.2m road-edge margin. Choose feasible side with the shortest lateral displacement from the car, retain side until obstacle absent2frames. Offset the future road path smoothly around the obstacle along longitudinal distance, rather than adding a fixed .34steering command. Pursuit/tangent use this deformed future path; rollout also retains geometric obstacle-distance cost. Existing-steering direction replaces its obstacle steering term with the bounded passing-point bearing; road response remains inherited. Distinct four steering mechanisms, one candidate each; no threshold sweep.
+
+All candidates positive traction gas, zero brake, no fixed speed cap. Torque computed after final steering. Falsify if lost finishes or no clear actual geometry improvement. Goal6/6 plus each lapratio<=.5; progress improvements alone insufficient. Same consumed TRAIN6cells,5arms30episodes,2CPU2GiB1800s1200decisions. Control unchanged. No external actions. Preserve earlier sources; finish and integrate frozen traction batch before code edits.
+
+HUD rear-omega decoder is biased atzero; keep diagnostic only and exclude it from actuation. Evaluator true wheel telemetry remains disjoint from policy inputs. Add passing-point and actual action-change diagnostics. Reviewer checks algebra, state, clipping, control invariance before execution.
+
+## Additional paired existing-steering candidate
+
+Include launch_guarded as the second candidate in existing-steering direction (four directions, five candidates total,36episodes includingcontrol). This keeps preview_row_repair steering/pedals outside a visible straight: gas1 during first launch until HUD speed40, then gas floor.55 only when all seven original road rows are visible, spread<3px, near-centererror<2px, no obstacle, and speed<70. Brake zero only inside eligible acceleration windows; otherwise original pedals restored. This isolates high useful acceleration with completion-preserving control from the fully positive-gas architectural candidates. It is not the full half-time solution; any small gain must be labeled partial. Candidate may fail and is not selected by partial-finish times. Runtime clipping and every intervention logged.
+
+Review repair before freeze: reject proposed passing point if clipped clearance<2.9m. Report insufficient_clearance; keep undeformed road path for geometry arms, inherited avoidance for existing-steering fallback. No guarantee of obstacle avoidance in fallback. Log passing_applied separately from pedal/action changes.

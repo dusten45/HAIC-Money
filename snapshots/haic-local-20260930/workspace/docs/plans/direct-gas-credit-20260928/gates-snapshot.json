@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "A hash-bound TRAIN-only profile completed in an isolated Linux Python 3.11 CPU source snapshot, but official package and current website compliance were not established.",
+      "evidence_paths": ["runs/haic-research-v2/direct-gas-credit-train-snapshot-20260928/run_manifest.json", "docs/plans/direct-gas-credit-20260928/plan-snapshot-output.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Final TRAIN mean gas was 0.07098, below the matched zero-credit high-head-rate control 0.07198; the preregistered +0.02 action endpoint failed. Two of ten completed TRAIN episodes finished; eight were off-track retirements.",
+      "evidence_paths": ["docs/plans/direct-gas-credit-20260928/run-snapshot-output.json", "artifacts/haic-research-v2/direct-gas-credit-train-snapshot-20260928/training/policy.pt", "artifacts/haic-research-v2/policy-head-activation-candidate-r2-20260928/training/policy.pt"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "The TRAIN action activation failed. No TUNE, held-out, confirmation, blind, or official scoring cells were opened.",
+      "evidence_paths": ["docs/plans/2026-09-28-direct-gas-credit-probe.md"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/direct-gas-credit-train-snapshot-20260928/run_manifest.json", "docs/plans/direct-gas-credit-20260928/run-snapshot-output.json"]
+}

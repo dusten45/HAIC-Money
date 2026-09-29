@@ -1,0 +1,17 @@
+{
+  "hypothesis_id": "fixed-high-speed-impact-fresh-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-impact-fresh-20260929.md",
+  "rule_or_requirement": "User requests fixed-high-speed road reacquisition and continued progress after collision, accepting brief road excursions.",
+  "observable_information": "Pixel road rows/full-width runs, last valid road direction and pixel speed drops. No simulator state enters policy.",
+  "allowed_action_or_state_change": "Freeze impact_clear in minimal ZIP, compare extracted candidate and delivered original ZIP in12isolated episodes; target60 unchanged.",
+  "expected_success_endpoint": "Activation, preserve every control finish, completion no worse; median no worse on tie, no invalid actions, cold runtime limits pass.",
+  "eligible_state": "FRESH_TRAIN_38210_38211",
+  "control": "Exact delivered original ZIP SHA256 b196cfb653a0ceeae0779e5e3832f879a27f24cc662b7202a1a0c39888d469f9",
+  "falsifier": "No effective action change, no completion gain, lost prior finishes, unequal prefixes, lowered target or input leakage.",
+  "smallest_decisive_experiment": "Tracks1-3 times fresh seeds38210-38211, two frozen ZIPs,12episodes.",
+  "resource_and_risk_gate": "2CPU2GiB1200s1200decisions/episode; local package and evaluation only.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-impact-fresh-20260929.md",
+    "training/confirm_fixed_high_speed_impact.py"
+  ]
+}

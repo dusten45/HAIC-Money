@@ -1,0 +1,48 @@
+{
+  "run_id": "launch-preview-composite-package-20260929",
+  "cycle_id": "launch-preview-composite-package-cycle-20260929",
+  "purpose": "Package one fixed composition of opening acceleration and pixel bend preview",
+  "hypothesis_hash": "1174a1df0480cd270c50a4ec7485947914f17725b00b7d9c880a24c511c4d959",
+  "candidate_revision": "launch-preview-composite-v1",
+  "control_revision": "selected-full-road-guard-5c55670a",
+  "candidate_package_hash": "pending-local-build",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "tool_versions": {
+    "python": "3.11",
+    "numpy": "1.x"
+  },
+  "runtime_versions": {
+    "environment": "local-package-only",
+    "platform": "local CPU"
+  },
+  "data_ids": [
+    "frozen-control-zip-and-four-runtime-sources"
+  ],
+  "map_ids": [
+    "no-map-package-operation"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 600,
+    "archive_max_bytes": 500000000
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/launch-preview-composition-r1.md": "b70331fe440374514f2ced6e0791b75c9d837e095a0844688a13c431f515a694",
+    "haic_agent/launch_surge_runtime.py": "0895977971cb210c23b0574d143a456ddc9bdd64e684ab25e73ec7194a1282de",
+    "haic_agent/anticipatory_bend_runtime.py": "27459733edf6d845b61296f68fa82eb17af9672e2a6c88337ff8ab6d9a2f91d2",
+    "haic_agent/speed_coupled_preview_runtime.py": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b",
+    "haic_agent/launch_preview_runtime.py": "ef71da4afaed275a93fa7f56b9bc1a3aaa58ae63fbc09dad809f2dcae8be08cb",
+    "training/package_launch_preview.py": "487dd2318a89db006ad8e5036a3f7154924109a74a87f0034a27a73e216090f5",
+    "haic_research/config.py": "bb0a2dc7412422c199abd8d9551b239d98098ae697ff8c5991a2491ee1fa7a5e",
+    "haic_research/commands.py": "e5c8d79378646ecfadb3920a030da80cad3539313250fe760ddf1e996d24e59f",
+    "harness.config.json": "8801301a5bc7a84e7866fe993ac54b3590d17bf207a77875740f3641fb74db0a"
+  }
+}

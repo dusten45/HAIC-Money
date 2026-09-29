@@ -1,0 +1,3 @@
+# Segment recovery Windows import: infrastructure REVISE
+
+Plan hash `cde7cbf561f18dfc7e802b92b2da8e4e76f46628ad796351f60d8279cc2870f7` registered and received separate standing-authority design and execution records. Execution stopped at Python module import because the local Windows interpreter lacks `Box2D`. Zero episodes or candidate actions ran, and no result report was created. This is infrastructure-invalid `REVISE`, not a score comparison. TRAIN 7400–7401 remain unconsumed by this attempt. Re-register an exact Linux Docker plan with the unchanged candidate source and fresh approvals before running.

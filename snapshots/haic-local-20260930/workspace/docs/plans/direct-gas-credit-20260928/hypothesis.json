@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "direct-gas-credit-20260928",
+  "source_ref": "docs/plans/2026-09-28-direct-gas-credit-probe.md",
+  "rule_or_requirement": "The pixel policy must command more gas on safely aligned clear road before faster valid laps can be evaluated.",
+  "observable_information": "TRAIN-only pixel curve and hazard features, vehicle speed and road-alignment labels, sampled gas action, finish and off-track outcome.",
+  "allowed_action_or_state_change": "Add a fixed direct gas credit to TRAIN reward only on clear aligned low-speed road; inference still receives pixels only.",
+  "expected_success_endpoint": "Late TRAIN mean gas increases by at least 0.02 versus the matched high-head-learning-rate control without collapse of valid finishes.",
+  "eligible_state": "TRAIN_ONLY_ACTIVATION_DIAGNOSTIC_NOT_SUBMISSION_CANDIDATE",
+  "control": "policy-head-activation-candidate-r2-20260928, initialized from the same v2 actor with the same seed, steps, optimizer rates and TRAIN split but direct gas reward zero.",
+  "falsifier": "Late TRAIN mean gas does not rise by 0.02, or valid finishes collapse or off-track retirement rises materially.",
+  "smallest_decisive_experiment": "One 4096-decision, 4-update TRAIN run with direct gas coefficient fixed at 8.0 compared with the completed matched zero-credit control.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, 3600-second cap, no tune or protected split, no official site action, no reward-coefficient sweep before activation.",
+  "source_paths": ["docs/plans/2026-09-28-direct-gas-credit-probe.md", "training/train_policy.py", "harness.config.json"]
+}

@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/report.json",
+    "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json",
+    "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact frozen pixel-only ZIP passed static archive checks and 12 confirmation episodes with zero invalid actions; import/create max 1.41 s, reset under 1 ms, act max 42.4 ms, RSS under 302 MB.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/package_manifest.json",
+        "artifacts/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Launch activated 120 times and early steering 90 times in confirmation; no extra gas or brake. All source and ZIP hashes were frozen across tune, held-out and confirmation.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/package_manifest.json",
+        "artifacts/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Relative to exact launch-only control, candidate finished 12/12 vs 12/12 tune, 12/12 vs 11/12 held-out, and 12/12 vs 12/12 confirmation; confirmation median finished lap 24.18 s vs 24.38 s with zero collision/damage/invalid action. This local comparison does not establish the requested twofold speed or official rank.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-steer-only-tune-7024-7027-20260929/report.json",
+        "artifacts/haic-research-v2/launch-preview-steer-only-heldout-7028-7031-20260929/report.json",
+        "artifacts/haic-research-v2/launch-preview-steer-only-confirmation-7032-7035-20260929/report.json"
+      ]
+    }
+  ]
+}

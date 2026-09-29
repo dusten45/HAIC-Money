@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-common-prefix-fast-fresh-train-20260929",
+  "source_ref": "docs/plans/haic2-early-route-fresh-train-20260929/design.md",
+  "rule_or_requirement": "A route choice must preserve valid completion and faster lap time from a common visual state, not infer benefit from unmatched full-episode paths.",
+  "observable_information": "Frozen safe/fast pixel actions and private decision count; evaluation-only matched completion and trajectories.",
+  "allowed_action_or_state_change": "After 50 identical mode-switch decisions, select the fast pixel action for the remainder; no simulator or map/seed input.",
+  "expected_success_endpoint": "Fresh matched TRAIN completion rate exceeds unchanged visual mode switch; on a completion tie, median finished lap time improves by at least 2 percent.",
+  "eligible_state": "FRESH_TRAIN_COMMON_PREFIX_ROUTING",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on the same twelve fresh TRAIN cells.",
+  "falsifier": "Candidate completion lower than control; on tie, median finished lap not at least 2 percent faster; invalid actions, missing post-prefix action changes, or prefix mismatch.",
+  "smallest_decisive_experiment": "Two pixel arms on tracks 1-3 x fresh TRAIN seeds 5052-5055, twenty-four episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU local comparison capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-early-route-fresh-train-20260929/design.md",
+    "training/early_route_activation_probe.py",
+    "haic_agent/hazard_flow_batch_runtime.py",
+    "docs/plans/haic2-early-route-activation-20260929/outcome.md"
+  ]
+}

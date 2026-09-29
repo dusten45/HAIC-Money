@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "unified-passing-20260930",
+  "source_ref": "docs/plans/active/unified-passing-20260930-design.md",
+  "rule_or_requirement": "Preserve completion and reduce median lap time using legal image-only observations, no fixed method requirement.",
+  "observable_information": "Current and prior pixel road centers, visible object coordinates, rendered speed HUD, own actions only.",
+  "allowed_action_or_state_change": "Four independent mechanisms: exclusive passing-target ownership, obstacle-motion forecasting, temporal lateral-state prediction, distance-curvature speed planning.",
+  "expected_success_endpoint": "12/12 finishes and median below stable matched control, no promotion until exact ZIP and independent registered validation",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "Unchanged preview_row_repair stable source on same12cells",
+  "falsifier": "No farther path action activation, incorrect component/flow, lost completion, no time gain or invalid action.",
+  "smallest_decisive_experiment": "5arms x12 consumedTRAIN cells=60episodes",
+  "resource_and_risk_gate": "2CPU2GiB900seconds; noexternalactions",
+  "source_paths": [
+    "docs/plans/active/unified-passing-20260930-design.md",
+    "haic_agent/unified_passing_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

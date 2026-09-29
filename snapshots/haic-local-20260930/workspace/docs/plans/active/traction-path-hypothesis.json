@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "traction-path-20260929",
+  "source_ref": "docs/plans/active/traction-path-design-20260929.md",
+  "rule_or_requirement": "User requests higher completion and half lap time, high acceleration throughout; prior offset architecture failed.",
+  "observable_information": "Rendered image and HUD speed only; wheel decoder is diagnostic and evaluator truth excluded from actor.",
+  "allowed_action_or_state_change": "Four prior steering directions with common positive traction torque governor, no brake or fixed low speed target.",
+  "expected_success_endpoint": "6/6completionpreservingallcontrolfinishes; fulltargeteachmatchedlapratio<=0.5. Intermediate improvements explicitlypartial.",
+  "eligible_state": "CONSUMED_TRAIN_HIGH_ACCELERATION_ARCHITECTURE",
+  "control": "Unchanged preview_row_repair onidentical6track/seedresetconditions",
+  "falsifier": "Lost completion, no traction improvement or matched speed gain, invalid actions or simulator input leak.",
+  "smallest_decisive_experiment": "5armsx6consumedTRAINcells=30episodes;initialpedaltreatmentdeliberatelydiffers",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; localonly, noexternalactions",
+  "source_paths": [
+    "docs/plans/active/traction-path-design-20260929.md",
+    "haic_agent/traction_path_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

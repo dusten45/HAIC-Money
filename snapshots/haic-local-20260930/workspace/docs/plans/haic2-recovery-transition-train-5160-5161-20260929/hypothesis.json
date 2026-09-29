@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-recovery-pulse-teacher-transition-20260929",
+  "source_ref": "docs/plans/haic2-recovery-transition-train-5160-5161-20260929/design.md",
+  "rule_or_requirement": "Pixel student training needs both real recovery directions; the TRAIN-only teacher can label states reached by fixed pixel-triggered steering pulses.",
+  "observable_information": "Pixel road visibility, road center, obstacle flag, decision index, four-frame observations and inherited actions; privileged geometry only in TRAIN teacher labels.",
+  "allowed_action_or_state_change": "Inject one fixed steer pulse per TRAIN arm and count only actual pulse-to-teacher handoffs with opposite-sign teacher steering.",
+  "expected_success_endpoint": "18 valid TRAIN episodes, zero invalid actions, and at least four distinct cells per arm with >=3 pulse decisions then the appropriate opposite-sign teacher action.",
+  "eligible_state": "TRAIN_ONLY_PULSE_TEACHER_TRANSITION_ACTIVATION",
+  "control": "Exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49, with an unpulsed arm on each cell.",
+  "falsifier": "Missing or invalid episode data, any invalid action, or fewer than four verified pulse-to-opposite-teacher transitions in either arm.",
+  "smallest_decisive_experiment": "Fresh TRAIN tracks 1-3 x seeds 5160-5161, control/left/right arms per cell and immutable per-cell pixel labels.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,800 seconds, two cores, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-recovery-transition-train-5160-5161-20260929/design.md",
+    "training/recovery_perturbation_probe.py",
+    "training/recovery_teacher_probe.py",
+    "haic_agent/wide_speed_batch_runtime.py",
+    "docs/plans/haic2-balanced-recovery-pulse-train-5140-5141-20260929/outcome.md"
+  ]
+}

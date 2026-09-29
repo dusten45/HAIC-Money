@@ -1,0 +1,52 @@
+[
+  {
+    "id": "kahn-2017-uncertainty-collision-avoidance",
+    "title": "Uncertainty-Aware Reinforcement Learning for Collision Avoidance",
+    "authors": ["Gregory Kahn", "Adam Villaflor", "Vikash Pong", "Pieter Abbeel", "Sergey Levine"],
+    "year": 2017,
+    "url": "https://arxiv.org/abs/1702.01182",
+    "core_idea": "충돌 확률과 예측 불확실성을 함께 추정해 낯선 상황에서 보수적인 행동을 선택한다.",
+    "haic_hypothesis": "장애물 존재만 분류하는 대신 충돌 위험과 불확실성을 auxiliary target으로 학습하면 장애물 앞 감속 시점을 더 일관되게 만들 수 있다.",
+    "related_strategies": ["ppo_actor_only"]
+  },
+  {
+    "id": "kahn-2020-badgr",
+    "title": "BADGR: An Autonomous Self-Supervised Learning-Based Navigation System",
+    "authors": ["Gregory Kahn", "Pieter Abbeel", "Sergey Levine"],
+    "year": 2020,
+    "url": "https://arxiv.org/abs/2002.05700",
+    "core_idea": "주행 경험에서 미래 충돌과 위치 변화를 예측하고 행동을 선택한다.",
+    "haic_hypothesis": "현재 프레임의 위험 점수와 짧은 미래의 충돌 가능성을 분리해 기록하면 속도 조절 실패를 진단하기 쉬워진다.",
+    "related_strategies": ["ppo_actor_only", "ppo_cem"]
+  },
+  {
+    "id": "ebert-2018-visual-foresight",
+    "title": "Visual Foresight: Model-Based Deep Reinforcement Learning for Vision-Based Robotic Control",
+    "authors": ["Frederik Ebert", "Chelsea Finn", "Alexey X. Lee", "Sergey Levine"],
+    "year": 2018,
+    "url": "https://arxiv.org/abs/1812.00568",
+    "core_idea": "행동 조건부 영상 예측과 visual MPC를 결합해 시각 입력만으로 다음 상태를 계획한다.",
+    "haic_hypothesis": "CEM을 그대로 추가하기보다 짧은 위험 예측 보조 모델을 먼저 학습하면 planner가 실패한 원인을 분리해서 확인할 수 있다.",
+    "related_strategies": ["ppo_actor_only", "ppo_cem"]
+  },
+  {
+    "id": "cheng-2019-safe-rl-barrier",
+    "title": "End-to-End Safe Reinforcement Learning through Barrier Functions",
+    "authors": ["Richard Cheng et al."],
+    "year": 2019,
+    "url": "https://arxiv.org/abs/1903.08792",
+    "core_idea": "학습 정책 위에 안전 제약을 두어 위험한 행동을 제한한다.",
+    "haic_hypothesis": "PPO 행동 전체를 규칙으로 대체하지 않고 collision-risk가 높은 소수 후보만 거르는 안전 필터를 비교한다.",
+    "related_strategies": ["ppo_actor_only"]
+  },
+  {
+    "id": "evans-2023-high-speed-racing",
+    "title": "High-speed Autonomous Racing using Trajectory-aided Deep Reinforcement Learning",
+    "authors": ["Benjamin Evans", "Andries Engelbrecht", "Wynand Jordaan"],
+    "year": 2023,
+    "url": "https://arxiv.org/abs/2306.07003",
+    "core_idea": "주행 궤적과 속도 프로파일을 학습에 함께 넣어 고속 주행의 감속 구간을 안정화한다.",
+    "haic_hypothesis": "장애물 위험이 커질수록 목표 속도를 낮추고 위험 해소 후 회복 가속을 분리해 측정한다.",
+    "related_strategies": ["ppo_actor_only", "vision_corridor_teacher"]
+  }
+]

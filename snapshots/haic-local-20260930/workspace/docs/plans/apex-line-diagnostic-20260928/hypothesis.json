@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "apex-line-pixel-entry-20260928",
+  "source_ref": "docs/plans/2026-09-28-apex-line-diagnostic.md",
+  "rule_or_requirement": "Finish-line completion comes before lap time; pixels are the only permitted inference observations.",
+  "observable_information": "Current 84x84 grayscale road rows, near asphalt width, far road direction, bright obstacle cue, and actions from fixed historical pixel policies.",
+  "allowed_action_or_state_change": "On fully visible unobstructed road where fast pedal is already selected, shift steering modestly toward the inside of the visible bend; keep the existing pedal and obstacle controls.",
+  "expected_success_endpoint": "Visible inner-bend steering activation and no lost finish on the consumed activation cell, followed by no lower completion rate and shorter median finished lap on a separately registered fresh three-track tune.",
+  "eligible_state": "CONSUMED_TUNE_ACTIVATION_ONLY",
+  "control": "Exact-hash selected full-road-guard actor and exact-hash fast-pedal-stable-steer actor on identical 1/184 official environment cell.",
+  "falsifier": "No apex steering activation, invalid action, earlier retirement, or loss of finish on the consumed activation cell; later, lower matched fresh-tune finish rate than the selected control.",
+  "smallest_decisive_experiment": "Three registered pixel-runtime profiles on consumed tune track 1 seed 184, 2000 decisions per profile, including full per-decision action trace.",
+  "resource_and_risk_gate": "Linux/Python 3.11 CPU, 1800-second registered diagnostic limit; exact checkpoint hashes; no new tune or held-out use in this first step; no website action.",
+  "source_paths": [
+    "docs/plans/2026-09-28-apex-line-diagnostic.md",
+    "haic_agent/apex_line_runtime.py",
+    "training/benchmark_corridor.py",
+    "harness.config.json"
+  ]
+}

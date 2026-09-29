@@ -1,0 +1,7 @@
+# Offline pixel recovery feasibility
+
+Use only the completed hashed TRAIN 5170–5177 and TRAIN 5292–5299 labels. Fit on whole cells from 5170–5176. Hold out the three induced 5177 cells and all four fresh natural 5292–5299 cells. No TUNE, held-out, confirmation, blind, or official tracks are used. Check report SHA-256 and every NPZ SHA-256 before loading. The uncompleted 5120–5135 and 5260–5291 collections are excluded.
+
+Compare four recovery mechanisms against inherited steering: the last visible near-road motion, holding its first direction, a fixed-ridge visual regressor, and nine-neighbor visual matching. Hyperparameters and features are fixed before execution. Report each cell's first sign, all-decision sign, sign-switch accuracy, and steering MAE. The teacher's geometry is used only as offline labels. No student driving or ZIP is produced.
+
+The mechanism may advance to separately registered fresh TRAIN driving only if one learned model achieves at least 3/4 first-direction accuracy and 75% all-decision sign accuracy on the four natural cells, at least 60% sign-switch accuracy on all seven validation cells, and lower mean cell MAE than inherited steering on both held groups. If there are no sign switches in the validation cells, mark the switch gate unknown and revise. Any source mismatch or invalid sample revises as infrastructure-invalid. This is a feasibility gate, not an official score or completion comparison. Resource cap: local CPU 240 seconds and under 2 GiB input data.

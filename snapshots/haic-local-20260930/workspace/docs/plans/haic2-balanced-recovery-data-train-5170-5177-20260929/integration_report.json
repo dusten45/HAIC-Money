@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The collection uses simulator geometry only in a TRAIN teacher and has no runtime student or official-site rule validation.",
+      "evidence_paths": [
+        "training/recovery_perturbation_probe.py",
+        "artifacts/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All 24 independent TRAIN cells had recovery labels. Registered pulse-to-opposite-sign floors of 20 cells per direction passed 24/24 left and 22/24 right; 72 episodes, 917 finite samples, 48 matching NPZ hashes and zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Only 2/24 unpulsed control cells had natural recovery labels, below the preregistered minimum four. The data coverage gate for pixel-student fitting therefore fails; teacher-only laps are not candidate scores.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-balanced-recovery-data-train-5170-5177-20260929/report.json"
+      ]
+    }
+  ]
+}

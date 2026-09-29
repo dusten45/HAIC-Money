@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-exact-confirm-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-exact-confirm-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Both exact ZIPs passed local static archive checks. The candidate imported and created in at most 1.01 seconds, reset in under 0.001 seconds, acted in at most 63.20 ms, used at most 302.4 MB RSS and returned zero invalid actions, satisfying the current official Participants README runtime limits. No official site submission was attempted.",
+      "evidence_paths": ["training/confirm_safe_speed_student.py", "artifacts/haic-research-v2/haic2-safe-speed-student-exact-confirm-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The extracted candidate ZIP raised gas on 1553 decisions across twelve confirmation cells, with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-student-exact-confirm-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "The exact candidate ZIP validly finished 10/12 versus selected control ZIP 11/12. Candidate-only failures were 1:5215 off track and 2:5215 crash; control-only failure was 3:5214 off track. Candidate had eight collisions and 1.6 damage versus control zero, despite 12.74% faster paired median lap (22.32 versus 25.58 seconds) on nine jointly finished cells. The registered completion-first gate therefore fails.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-student-exact-confirm-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-student-exact-confirm-20260929/report.json"]
+    }
+  ]
+}

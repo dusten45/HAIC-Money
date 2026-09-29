@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "fast-clearance-cone-20260929",
+  "source_ref": "docs/plans/active/fast-clearance-cone-design-20260929.md",
+  "rule_or_requirement": "User requests higher completion and half lap time, high acceleration throughout; prior offset architecture failed.",
+  "observable_information": "Current rendered road/obstacle and HUD speed, own previous issued brake and internal state. No evaluator telemetry input.",
+  "allowed_action_or_state_change": "Four independent parentsteeringdirections with pixel-based side-specific passing bearing bound; high acceleration unchanged.",
+  "expected_success_endpoint": "Intermediate12/12preservingcontrolfinishesandlowerpairedfinishedmedian; fullhalf-timeobjective remains separate.",
+  "eligible_state": "CONSUMED_TRAIN_HIGH_ACCELERATION_ARCHITECTURE",
+  "control": "Original preview_row_repair and unchanged priorcommit_side behavior; same12consumedTRAINcells",
+  "falsifier": "Lost completion, no traction improvement or matched speed gain, invalid actions or simulator input leak.",
+  "smallest_decisive_experiment": "6armsx12consumedTRAINcells=72episodes;coneactivationseparatefrombaselineactiondifference",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; localonly, noexternalactions",
+  "source_paths": [
+    "docs/plans/active/fast-clearance-cone-design-20260929.md",
+    "haic_agent/fast_clearance_cone_runtime.py",
+    "haic_agent/fast_road_commit_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

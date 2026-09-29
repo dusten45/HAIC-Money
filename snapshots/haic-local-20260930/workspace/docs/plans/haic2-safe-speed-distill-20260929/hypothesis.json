@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-safe-trajectory-pixel-speed-distill-train-20260929",
+  "source_ref": "docs/plans/haic2-safe-speed-distill-20260929/design.md",
+  "rule_or_requirement": "A speed policy must preserve valid completion and use only rendered pixels and inherited pixel-driver actions at inference.",
+  "observable_information": "Successful stable-risk TRAIN observations and actions; shadow geometry teacher gas suggestions on those visited states.",
+  "allowed_action_or_state_change": "Fit a small feature model from successful control trajectories, then on clear low-steer pixel observations allow at most gas 0.28 without changing steering or braking.",
+  "expected_success_endpoint": "At least 100 positive finished-trajectory labels, finite train and validation losses, and at least 50 validation gas decisions above the fixed 0.8 posterior threshold.",
+  "eligible_state": "TRAIN_SHADOW_DISTILLATION_ONLY",
+  "control": "StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Too few positive labels, no learned action activation, nonfinite loss, or an input contract that includes privileged simulator state at student inference.",
+  "smallest_decisive_experiment": "Twelve control-only TRAIN rollouts, tracks 1–3 × seeds 5012–5015, with shadow teacher labels and within-TRAIN validation on seed 5015.",
+  "resource_and_risk_gate": "One registered Linux CPU run capped at 1,800 seconds; 2,000 decisions per episode; no TUNE, held-out, confirmation, blind, official or external action.",
+  "source_paths": [
+    "docs/plans/haic2-safe-speed-distill-20260929/design.md",
+    "training/safe_speed_distill.py",
+    "haic_agent/pixel_speed_student_runtime.py",
+    "training/geometry_speed_teacher.py",
+    "docs/plans/haic2-geometry-speed-visual-guard-20260929/outcome.md"
+  ]
+}

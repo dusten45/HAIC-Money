@@ -1,0 +1,47 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/far-hazard-package-20260930/report.json",
+    "artifacts/haic-research-v2/far-hazard-package-20260930/batch_audit.json",
+    "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json",
+    "docs/experiments/far-hazard-20260930.md",
+    "docs/sources/INDEX.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Current official repository fallback, ZIP static checks, CPU runtime limits, pixel-only isolated inference verified. Local qualification only; website/private official evaluation unknown and external actions not authorized.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/far-hazard-package-20260930/report.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/batch_audit.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json",
+        "docs/experiments/far-hazard-20260930.md",
+        "docs/sources/INDEX.md"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Actual arrival-envelope action changes and exact12TRAIN package replays verified; no claim that temporal memory activated or far-only contribution is isolated.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/far-hazard-package-20260930/report.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/batch_audit.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json",
+        "docs/experiments/far-hazard-20260930.md",
+        "docs/sources/INDEX.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Held-out both10/12 with identical failed cells; all10common finishes faster, median19.34 to18.46seconds. Completion-first matched local improvement.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/far-hazard-package-20260930/report.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/batch_audit.json",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json",
+        "docs/experiments/far-hazard-20260930.md",
+        "docs/sources/INDEX.md"
+      ]
+    }
+  ]
+}

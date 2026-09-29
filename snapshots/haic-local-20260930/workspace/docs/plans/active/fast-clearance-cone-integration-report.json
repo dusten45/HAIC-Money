@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fast-clearance-cone-20260929/report.json",
+    "artifacts/haic-research-v2/fast-clearance-cone-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local pixel-only controller evaluation; no new standalone candidate package validation or external submission.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/report.json",
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four cone variants changed steering, with explicit cone intervention counters. All 72 raw evidence hashes verified, zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/report.json",
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Control12/12, current10/12; cone variants9/12,4/12,8/12,8/12. No candidate preserves control completion. Half-time target not achieved.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/report.json",
+        "artifacts/haic-research-v2/fast-clearance-cone-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

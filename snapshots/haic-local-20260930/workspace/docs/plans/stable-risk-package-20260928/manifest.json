@@ -1,0 +1,24 @@
+{
+  "run_id": "stable-risk-frozen-package-20260928",
+  "cycle_id": "stable-risk-frozen-package-cycle-20260928",
+  "purpose": "Build an exact-byte local ZIP of the independently confirmed road-clearance controller",
+  "hypothesis_hash": "8a9e380e694a16e9747df1647352487c964d2aceaf3e2da4926af4575f2acd59",
+  "candidate_revision": "stable-road-clearance-speed-v1-package",
+  "control_revision": "selected-full-road-guard-3ceb5ebb",
+  "candidate_package_hash": "pending-local-build",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "tool_versions": {"python": "3.11", "torch": "2.1.0+cpu"},
+  "runtime_versions": {"environment": "codex-haic-dagger-confirmation:2026-09-27", "platform": "Linux CPU local packaging"},
+  "data_ids": ["frozen-controller-archive-inputs"],
+  "map_ids": ["no-map-package-operation"],
+  "split_ids": ["confirmation"],
+  "resource_limits": {"timeout_seconds": 600, "archive_max_bytes": 500000000},
+  "permission_limits": {"local_only": true, "site_upload": false, "official_submission": false, "model_confirmation": false},
+  "source_hashes": {
+    "training/package_stable_risk.py": "390efeec1066916dc9cd1a6adec7c8d2a8335059cb29df4976078cc5b404e195",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_research/config.py": "5be79ce45327442269923982391c3ed182bc222ba3485d6615c8c3fb395782d9",
+    "haic_research/commands.py": "9e6fd2ba20112630a8c7a4f8e2a5be43c05b5fea467222169d8df616325f8293",
+    "harness.config.json": "09375a71e0c047bd4358e3480e8900d42d0416c0369620dcde15248b705cc72b"
+  }
+}

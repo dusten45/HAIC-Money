@@ -1,0 +1,78 @@
+{
+  "run_id": "fast-committed-recovery-r2-20260929",
+  "cycle_id": "fast-committed-recovery-r2-20260929-cycle",
+  "purpose": "Retain acceleration improvement while fixing collision/avoidance state; partial advancement toward half time",
+  "hypothesis_hash": "7bb301c07f251cc9fe6d90b8f4a56295983d29742b120b58b2eee9ef2af312c6",
+  "candidate_revision": "fast-committed-recovery-r2",
+  "control_revision": "preview-row-repair-r3",
+  "candidate_package_hash": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec",
+  "control_package_hash": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+  "comparison_id": "fast-committed-recovery-r2-20260929",
+  "seed_ids": [
+    "1:38300",
+    "1:38302",
+    "2:38300",
+    "2:38302",
+    "3:38300",
+    "3:38302"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38300-38302"
+  ],
+  "map_ids": [
+    "official-track1-seed38300",
+    "official-track1-seed38302",
+    "official-track2-seed38300",
+    "official-track2-seed38302",
+    "official-track3-seed38300",
+    "official-track3-seed38302"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 6,
+    "episodes_per_arm": 6,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2,
+    "prefix_equality_required": false
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/high_acceleration_path_runtime.py": "2105cf7b73fea0d291b45f94e0618837354b570505187536362d3b529fbe710d",
+    "training/fixed60_completion.py": "f1a2e969edcbced99494f8dcb87149243603cf2a1a9771f10d86b1fcfa96140a",
+    "docs/plans/active/fixed60-completion-settings.json": "b189103b8f5bd340cafb6ccdbf2b61640b3675052e5d94816e06286b7e3bb502",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "c74acad3c6fd80c109d33843c14bbe82f63507044aa2ab219606b40047a64bf6",
+    "harness.config.json": "9fad993389c13d3a595c8af5ed907e32552d30792ad4af118c61fb351ba0e1d8",
+    "haic_agent/traction_path_runtime.py": "bb40d993edbc3e0ebe6e5c0557ad74fdd7f2d7fca60499073bf3b8a4474d3e03",
+    "haic_agent/geometric_passing_runtime.py": "4475b3380e4547b6f26421c514594cf26d8e7b50fc15e1f3d0744c15bab48a65",
+    "haic_agent/fast_committed_recovery_runtime.py": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec",
+    "docs/plans/active/fast-committed-recovery-r2-design-20260929.md": "7d553de5d1a776ded33f3ae5a8964db71c7cbc1f79118eb6ced1a10bbd9545b9"
+  },
+  "checkpoint_ref": {
+    "path": "artifacts/haic-research-v2/fast-completion-row-repair-20260929/submission-fast-completion.zip",
+    "sha256": "7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835"
+  }
+}

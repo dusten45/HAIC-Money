@@ -1,0 +1,72 @@
+{
+  "run_id": "haic2-recovery-teacher-feasibility-20260929",
+  "cycle_id": "haic2-recovery-teacher-feasibility-cycle-20260929",
+  "purpose": "TRAIN-only privileged road-recovery teacher feasibility diagnostic",
+  "hypothesis_hash": "82a97df8d64438d06c33c6a1d776d8fc021f21e686d64b0b1d7356cb586a1470",
+  "candidate_revision": "privileged-nearest-road-lookahead12m-v1",
+  "control_revision": "hazard-mode-switch-exact-zip-b0dc7a24",
+  "candidate_package_hash": "a2540e5bddaaca0d3016faeb5ed4765873394bf554b41a99d12c1efdbdc56363",
+  "control_package_hash": "b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4",
+  "comparison_id": "haic2-recovery-teacher-consumed-train",
+  "seed_ids": [
+    "1:5052",
+    "2:5052",
+    "2:5053",
+    "2:5054",
+    "3:5052",
+    "3:5055"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "already-consumed-train-5052-5055"
+  ],
+  "map_ids": [
+    "official-track1-seed5052",
+    "official-track2-seed5052",
+    "official-track2-seed5053",
+    "official-track2-seed5054",
+    "official-track3-seed5052",
+    "official-track3-seed5055"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1200,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 6,
+    "arms": 2,
+    "common_prefix_decisions": 0,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/hazard_flow_batch_runtime.py": "9262108356ca2e6329cd009f5a81011408c9a57621420cf856d3c0a2ec2f11d8",
+    "haic_agent/high_speed_pivot_runtime.py": "dbbc5316df627e133499e6b0f08467911c2f90550ff9cac44bd93ea2d401725c",
+    "haic_agent/speed_coupled_preview_runtime.py": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b",
+    "training/benchmark_corridor.py": "91729aef684d12a22b15636fef81a59518020afbfcddbbef3c0b959d5e299d1d",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "d2510bf927743b4050f449f20bc969179969ad795fcbf7d75c3cdd009fdae57a",
+    "harness.config.json": "41fc50d7aceafffe729585e6105417f9e8014b21f4c3adfdd3db761304cfc236",
+    "artifacts/haic-research-v2/hazard-mode-switch-exact-package-20260929/submission.zip": "b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4",
+    "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt": "3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199",
+    "artifacts/haic/ppo-speed-shortfall-0p6-vs-0p0-kl0p5-u8-20260924T133743Z/run/seed8104/penalty_0p6/policy.pt": "647fb7c831c0b61dc78bcc416867f9f7d6070b4fa6aad51c299f7c0ae48d145d",
+    "training/recovery_teacher_probe.py": "a2540e5bddaaca0d3016faeb5ed4765873394bf554b41a99d12c1efdbdc56363"
+  }
+}

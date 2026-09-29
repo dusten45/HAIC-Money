@@ -1,0 +1,5 @@
+# Exact local package of the confirmed stable road-clearance candidate
+
+Use the fixed full-road-guard control archive SHA-256 `5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40` and the confirmed road-clearance runtime source SHA-256 `31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b`. Copy the control archive payloads, replace only root `agent.py` with a wrapper that instantiates the same full-road-guard and road-clearance agent used in the local evaluations, and add the candidate runtime module. Produce a local ZIP and per-file hash manifest under a v2 artifact root using the registered `package_stable_risk` profile.
+
+This packaging step neither changes the checkpoint nor trains on tune, held-out, or confirmation cells. It does not release or submit the ZIP. The execution source remains frozen until its gate report is written. After packaging, read the archive contents and validate that it imports, acts, and reproduces results on separately registered cells without altering the package.

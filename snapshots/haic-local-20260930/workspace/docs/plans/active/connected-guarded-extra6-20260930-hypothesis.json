@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "connected-guarded-extra6-20260930",
+  "source_ref": "docs/plans/active/connected-guarded-extra6-20260930-design.md",
+  "rule_or_requirement": "User asks visible farther map and remembered observations to support early steering and acceleration, preserving original stable completion.",
+  "observable_information": "Current and prior images/HUD and own actions only; connected road components and optical flow.",
+  "allowed_action_or_state_change": "Four parent directions with bounded residual authority and obstacle veto; memory includes actual pixel-supported spatial fusion.",
+  "expected_success_endpoint": "6/6 completion and median below matched control",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "Unchanged preview_row_repair on all six matched cells",
+  "falsifier": "No farther path action activation, incorrect component/flow, lost completion, no time gain or invalid action.",
+  "smallest_decisive_experiment": "5 arms x six consumed TRAIN cells =30 episodes",
+  "resource_and_risk_gate": "2 CPU,2 GiB,600 seconds; local only",
+  "source_paths": [
+    "docs/plans/active/connected-guarded-design-20260929.md",
+    "haic_agent/connected_guarded_preview_runtime.py",
+    "training/fixed60_completion.py",
+    "docs/plans/active/connected-guarded-full6-20260930-design.md",
+    "docs/plans/active/connected-guarded-extra6-20260930-design.md"
+  ]
+}

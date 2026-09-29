@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/out-in-out-visibility-20260929/report.json",
+    "artifacts/haic-research-v2/out-in-out-visibility-20260929/batch_audit.json",
+    "docs/experiments/out-in-out-fast-20260929.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only implementation review and zero invalid actions, but no current official certification or exact ZIP validation",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/report.json",
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/batch_audit.json",
+        "docs/experiments/out-in-out-fast-20260929.md"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Phase offsets activate but physical outside-inside-outside trajectory is not consistently achieved. Need explicit feasible path tracking, retain runtime checkpoints.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/report.json",
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/batch_audit.json",
+        "docs/experiments/out-in-out-fast-20260929.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Latest4/6 versuscontrol6/6; common four finishes median250ms faster but two lost finishes. Five revisions126episodes do not meet completion and racing-line endpoint. Pivot architecture within requested out-in-out objective.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/report.json",
+        "artifacts/haic-research-v2/out-in-out-visibility-20260929/batch_audit.json",
+        "docs/experiments/out-in-out-fast-20260929.md"
+      ]
+    }
+  ]
+}

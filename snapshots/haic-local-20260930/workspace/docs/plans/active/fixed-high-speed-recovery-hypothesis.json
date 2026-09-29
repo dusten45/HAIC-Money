@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fixed-high-speed-recovery-train-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-recovery-20260929.md",
+  "rule_or_requirement": "User requests fixed-high-speed road reacquisition and continued progress after collision, accepting brief road excursions.",
+  "observable_information": "Pixel road rows/full-width runs, last valid road direction and pixel speed drops. No simulator state enters policy.",
+  "allowed_action_or_state_change": "Four recovery directions: partial-row geometry, bounded memory, wide search, post-impact slew; same target60 and first10 actions.",
+  "expected_success_endpoint": "Completion above3/6 while preserving all three original damping finishes; actual modifications and post-event progress; invalid0.",
+  "eligible_state": "CONSUMED_TRAIN_RECOVERY_38200_38201",
+  "control": "Original immutable damping, same six consumed TRAIN cells.",
+  "falsifier": "No effective action change, no completion gain, lost prior finishes, unequal prefixes, lowered target or input leakage.",
+  "smallest_decisive_experiment": "Four candidates times six consumed cells=24 full episodes; no fresh score.",
+  "resource_and_risk_gate": "2 CPU 2GiB 1800s 1200decisions/episode; no external action.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-recovery-20260929.md",
+    "haic_agent/fixed_high_speed_recovery.py",
+    "training/fixed_high_speed_recovery.py"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "evidence_paths": [
+    "artifacts\\haic-research-v2\\handoff-path-20260930\\report.json",
+    "artifacts\\haic-research-v2\\handoff-path-20260930\\batch_audit.json",
+    "docs/experiments/handoff-path-20260930.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local controller; no exact candidate ZIP and current official compliance review, no release.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\report.json",
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\batch_audit.json",
+        "docs/experiments/handoff-path-20260930.md"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "Three new mechanisms change actions, heading continuation has zero activation and exactly replays dual; cannot pass whole four-direction activation gate.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\report.json",
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\batch_audit.json",
+        "docs/experiments/handoff-path-20260930.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Control12/12 median20520ms. Handoff11/12,earlygap8/12,acceleration9/12; heading12/12 median20650 and inactive. None improves registered ranking.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\report.json",
+        "artifacts\\haic-research-v2\\handoff-path-20260930\\batch_audit.json",
+        "docs/experiments/handoff-path-20260930.md"
+      ]
+    }
+  ]
+}

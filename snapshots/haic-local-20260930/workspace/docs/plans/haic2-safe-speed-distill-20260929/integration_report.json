@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-distill-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-distill-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The student source accepts pixels and inherited pixel-driver actions only, but an exact submission package and official runtime contract have not yet been checked.",
+      "evidence_paths": ["haic_agent/pixel_speed_student_runtime.py", "training/safe_speed_distill.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Eleven validly finished control TRAIN runs yielded 1394 positive gas labels among 1567 eligible training examples. The fitted student exceeded the fixed 0.8 posterior threshold on 434 of 531 withheld TRAIN examples, with finite losses and a saved checkpoint.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-distill-train-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "NOT_APPLICABLE",
+      "rationale": "Only the stable control drove during collection. The shadow teacher and student have no matched closed-loop evaluation; the high positive-label share may amount to a broad gas increase. A new TUNE comparison is required.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-distill-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-distill-train-20260929/report.json"]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-bend-observability-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-bend-observability-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only observation sensor on a frozen local driver; exact ZIP compliance was not checked.",
+      "evidence_paths": [
+        "training/bend_phase_sensor_probe.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Both fixed pixel bend warnings fired zero times in three bounded-student replays, including the failed 1:5020 cell. On 1:5020 bend remained <=2.5 pixels through decision 252; large bend first appeared at 253, only three decisions before collision at 256 and after learned boost had ended.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-bend-observability-20260929/report.json",
+        "docs/plans/haic2-bend-observability-20260929/design.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "NOT_APPLICABLE",
+      "rationale": "No actions changed; four already consumed TRAIN replay episodes are observation-only, not fresh candidate completion evidence.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-bend-observability-20260929/report.json"
+      ]
+    }
+  ]
+}

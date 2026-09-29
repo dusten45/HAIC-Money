@@ -1,0 +1,65 @@
+{
+  "run_id": "haic2-risk-recovery-four-direction-tune-20260929",
+  "cycle_id": "haic2-risk-recovery-four-direction-tune-cycle-20260929",
+  "purpose": "Frozen four-direction pixel risk comparison against stable-risk control on twelve fresh tune cells",
+  "hypothesis_hash": "6089e5f34a453003b56f2663a9b02d5513ef622993a563801e7230bd477fcec5",
+  "candidate_revision": "risk-recovery-four-independent-directions-v1",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "none-train-diagnostic-four-direction-source",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-risk-recovery-four-direction-tune-344-347",
+  "seed_ids": [
+    "1:344",
+    "1:345",
+    "1:346",
+    "1:347",
+    "2:344",
+    "2:345",
+    "2:346",
+    "2:347",
+    "3:344",
+    "3:345",
+    "3:346",
+    "3:347"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-tune-cells-344-347"
+  ],
+  "map_ids": [
+    "official-track1-seed344-347",
+    "official-track2-seed344-347",
+    "official-track3-seed344-347"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 5
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/risk_recovery_candidates_runtime.py": "e71eff8174339fd1cc3964cac8d6f62fae5f6f1cfc1a259428de7cfe74ca4baa",
+    "training/benchmark_corridor.py": "1b8b2bb7425948e051e07fd157886143b00ae88d7443552b9516ecc85c9ac699",
+    "haic_research/config.py": "fcb1bfa6ef048300e390842e4b4ce1f84e667363446192164a9cc77332db5723",
+    "harness.config.json": "d28d2060916bafbedfdd9c79d29b2172d1bf6330c8a901842b79cad53ba90b1f"
+  }
+}

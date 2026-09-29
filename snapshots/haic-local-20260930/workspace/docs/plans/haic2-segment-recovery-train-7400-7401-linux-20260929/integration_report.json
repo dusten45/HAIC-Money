@@ -1,0 +1,27 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/report.json",
+    "artifacts/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/metric_analysis.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "TRAIN-only pixel runtime made no official submission or package; current competition-site rules were not revalidated for release.",
+      "evidence_paths": ["haic_agent/segment_recovery_runtime.py", "docs/plans/haic2-segment-recovery-train-7400-7401-linux-20260929/design.md"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All 30 registered Linux episodes completed with zero invalid actions. Motion guard changed 11 actions and edge seek nine, exceeding the three-action floor. The other arms are reported, including reacquisition coast with only one change.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "On six matched TRAIN cells, motion guard and control both finished 6/6 with identical 24,670 ms median and no candidate-only lost finish. The core evaluator's linear P90 method gives 24,890 versus 26,700 ms; motion guard wins the first non-tied registered metric and advances to independent fresh TUNE only. The source report's floor-index P90 summary is preserved and corrected in metric_analysis.json. The improvement occurs in one cell, so generalization remains unproven.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/report.json", "artifacts/haic-research-v2/haic2-segment-recovery-train-7400-7401-linux-20260929/metric_analysis.json"]
+    }
+  ]
+}

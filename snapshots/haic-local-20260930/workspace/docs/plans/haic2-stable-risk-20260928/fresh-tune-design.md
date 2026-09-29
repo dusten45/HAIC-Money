@@ -1,0 +1,5 @@
+# Stable-base four-direction fresh tune batch
+
+Four single-change mechanisms passed action activation on consumed TRAIN 1/43 and 2/102. Freeze the source and exact stable checkpoint. Compare selected full-road-guard control with road-clearance gas floor, bend-exit throttle pulse, centered-obstacle preview brake, and mild-bend outer entry on tracks 1–3 crossed with seeds 324–327. These twelve cells were not present in the checked v2 run and plan identities before registration; they become consumed TUNE after execution. Reserve 328–331 for a later held-out comparison if a tune candidate qualifies. Do not use those reserved cells to adjust a candidate.
+
+Use the registered Linux CPU benchmark profile, 2,000 decisions per episode, five arms × twelve cells, and 1,800-second limit. Record finish, lap time, incomplete progress, collisions, damage, invalid actions, latency, and full traces. Select by finish count first. Only on a tie compare median finished lap time, then the other AGENTS.md criteria. A faster but less reliable arm fails. No parameter sweep is part of this batch; no website action or package promotion is in scope.

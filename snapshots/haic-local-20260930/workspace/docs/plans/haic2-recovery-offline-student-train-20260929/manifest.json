@@ -1,0 +1,65 @@
+{
+  "run_id": "haic2-recovery-offline-student-train-20260929",
+  "cycle_id": "haic2-recovery-offline-student-cycle-20260929",
+  "purpose": "TRAIN-only whole-cell visual recovery student feasibility",
+  "hypothesis_hash": "32a524c0f5d35a482138a2e978870d6a47ce17d1f510f05b15d10625b81b7746",
+  "candidate_revision": "pixel-recovery-ridge-and-neighbor-v1",
+  "control_revision": "wide-bend-rebound-exact-zip-8f7e87c2",
+  "candidate_package_hash": "e1c5864bf5364216b3698116fa5ca6771d64610bae55e63c88e85be425ed1b89",
+  "control_package_hash": "8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49",
+  "comparison_id": "haic2-offline-recovery-student-whole-cell-train",
+  "seed_ids": [
+    "1:5177",
+    "2:5177",
+    "3:5177",
+    "1:5293",
+    "1:5298",
+    "2:5292",
+    "2:5299"
+  ],
+  "comparison_episode_count": 7,
+  "tool_versions": {
+    "python": "3.11",
+    "numpy": "2.4.1"
+  },
+  "runtime_versions": {
+    "environment": "local-offline-cpu",
+    "platform": "Windows CPU"
+  },
+  "data_ids": [
+    "completed-train-5170-5177-labels-sha5009f847",
+    "completed-train-5292-5299-labels-sha27b8c979"
+  ],
+  "map_ids": [
+    "official-train-track1-seed5177",
+    "official-train-track2-seed5177",
+    "official-train-track3-seed5177",
+    "official-train-track1-seed5293",
+    "official-train-track1-seed5298",
+    "official-train-track2-seed5292",
+    "official-train-track2-seed5299"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 240,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648,
+    "input_npz_files": 52,
+    "fit_seed_range": "5170-5176",
+    "validation_cells": 7
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/recovery_offline_student.py": "e1c5864bf5364216b3698116fa5ca6771d64610bae55e63c88e85be425ed1b89",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "4a481184aac0734fe8167c403f439100d2414e11e9e2a8305ef518121421ee39",
+    "harness.config.json": "9e5442da6939803b47a97d63454281996aa3cb234bf332d57f9bd63454eb6cd1"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts\\haic-research-v2\\contact-continuity-20260930\\report.json",
+    "artifacts\\haic-research-v2\\contact-continuity-20260930\\batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "New module not yet ZIP validated.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\report.json",
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four mechanisms change actions; both references reproduce exact24trajectories.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\report.json",
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Crossing and side persistence11/12 vs current10/12; crossing median18.86 vs side19.12 selects crossing for frozen validation, no release yet.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\report.json",
+        "artifacts\\haic-research-v2\\contact-continuity-20260930\\batch_audit.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The archive has a root agent.py, 17 unique payloads, and matching registered hashes, but clean extraction/import, runtime limits, and official server compatibility have not yet been measured.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-stable-risk-local-package-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/package_manifest.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The ZIP contains the exact confirmed candidate module SHA-256 31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b and a root wrapper that composes it with the unchanged control actor.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/submission-stable-risk.zip", "artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/package_manifest.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Packaging produced one local ZIP at SHA-256 7f9ef05e1e3366969f2d751191e926ad4cd9a517b376c8218bc1fbe61cb111f4, but no ZIP-exact driving comparison has been run.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/package_manifest.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-stable-risk-local-package-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-risk-local-package-20260928/package_manifest.json"]
+}

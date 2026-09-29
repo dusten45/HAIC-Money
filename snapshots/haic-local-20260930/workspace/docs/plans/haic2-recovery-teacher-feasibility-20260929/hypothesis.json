@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "haic2-recovery-teacher-feasibility-20260929",
+  "source_ref": "docs/plans/haic2-recovery-teacher-feasibility-20260929/design.md",
+  "rule_or_requirement": "Qualified finishes and shorter off-road excursions require a controllable recovery action.",
+  "observable_information": "TRAIN-only simulator track and car pose for teacher, plus pixel-road visibility; runtime candidate is not yet implemented.",
+  "allowed_action_or_state_change": "At fewer than three visible road-center rows, substitute teacher heading-error steer toward a 12-meter centerline lookahead; inherit gas/brake.",
+  "expected_success_endpoint": "All six control finishes retained, >=20 action changes, zero invalid actions and >=10-decision low-visibility reduction on at least two of three slow-loss cells.",
+  "eligible_state": "CONSUMED_TRAIN_PRIVILEGED_TEACHER_FEASIBILITY",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on six consumed TRAIN cells.",
+  "falsifier": "Lost qualified finish, invalid action, insufficient action change or fewer than two shortened low-visibility intervals.",
+  "smallest_decisive_experiment": "Two arms on six consumed TRAIN cells, twelve episodes; teacher-only diagnostic.",
+  "resource_and_risk_gate": "One registered Linux CPU teacher diagnostic capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-recovery-teacher-feasibility-20260929/design.md",
+    "training/recovery_teacher_probe.py",
+    "docs/plans/haic2-post-memory-recovery-pivot-20260929.md"
+  ]
+}

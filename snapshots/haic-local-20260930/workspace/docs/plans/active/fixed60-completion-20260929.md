@@ -1,0 +1,14 @@
+# Fixed60 completion batch
+
+Standing local authorization2026-09-29 and latest request to complete every run authorize design, implementation and local evaluation. Bounded extension of existing pixel controller. Target60 and original fixed pedals stay unchanged. No site action. Current goal: all12 previously observed TRAIN cells, then independent cells; no guarantee about unseen tracks.
+
+Evidence: fixed-high-speed-recovery-20260929 experiment report. Initial departure can follow opposing obstacle/road terms; missing rows produce false-center commands. Previous memory/search guesses did not restore completion. Four independent directions, one candidate each initially, maximum two per direction/eight total:
+
+1. Offset-path avoidance: replace additive steering by a bounded lateral target displacement proportional to obstacle proximity, allowing road heading control to remain intact.
+2. Near-field motion servo: regulate actual near-road lateral position and heading with frame-to-frame motion feedback, rather than relying only on a far-row correction.
+3. Continuous road perception: follow contiguous asphalt intervals with small gap filling and temporal association across the full image, preserving off-center geometry; use the existing damped controller on that geometry.
+4. Predictive boundary correction: estimate outward near-road motion and intervene before the road leaves the field of view, retaining the existing road/avoidance controller otherwise.
+
+Control is frozen impact_clear implementation. All candidates keep its post-impact behavior. First10 decisions must exactly match control. Register tracks1–3 × seeds38200,38201,38210,38211, all consumed TRAIN,12 cells per arm,60 episodes. No confirmation/held-out reuse. Freeze source hashes. At most1200 decisions,2CPU2GiB,1800s. Record full actions/poses, pixel diagnostics, progress, completion, collision/damage, latency, import/reset/RSS as available. Hash every episode. No strict offroad-percentage rejection; compare completion first, preserve control finishes, then lap median. A mechanism must cause action changes before a continuation is justified. No threshold sweep. A selected candidate must improve above the control while preserving finishes; target12/12. A fresh evaluation receives a separate registered plan. Four consecutive versions are not allowed: pivot after three comparable non-improving cycles.
+
+Implementation: isolated new runtime `haic_agent/fixed60_completion.py`, generic registered evaluator `training/fixed60_completion.py`, typed settings input for explicit cells/arms. No simulator input enters runtime. Read-only diagnostics may use frozen traces. Unit tests are not part of this request; driving comparison is the validation requested by the user. If a candidate fixes only part of the failures, inspect causal trace before its one allowed continuation. Report three gates with official certification UNKNOWN; no automatic release.

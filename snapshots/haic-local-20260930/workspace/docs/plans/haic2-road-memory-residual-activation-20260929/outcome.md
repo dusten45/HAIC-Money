@@ -1,0 +1,3 @@
+# Residual road-memory activation: REJECT
+
+The fixed halfway blend changed 60 steering actions and produced zero invalid actions. On the three ordinary consumed TRAIN cells it changed no actions and matched the control. On the three long visibility-loss cells, it lost all control finishes: 2:5053, 2:5054 and 3:5055 retired off track with longest low-visibility streaks of 103, 102 and 101 decisions, compared with control 48, 38 and 46. Completion was 3/6 versus control 6/6. This fails the preregistered activation gate; no fresh TRAIN, TUNE, held-out or package. No blend sweep on these consumed cells. Together with the hard memory TUNE rejection, this supports pivoting away from unconditional road-direction memory.

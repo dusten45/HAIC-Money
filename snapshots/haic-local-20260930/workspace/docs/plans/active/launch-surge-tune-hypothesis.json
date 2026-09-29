@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "launch-surge-matched-tune-20260929",
+  "source_ref": "docs/plans/active/launch-acceleration-batch-r1.md",
+  "rule_or_requirement": "Local candidates must finish the qualified line on at least as many matched cells as the selected control before a faster lap can justify advancement.",
+  "observable_information": "At inference only four grayscale frames and base pixel-controller actions; at evaluation, actual finish time, progress, collision and damage telemetry, per-step action and speed, and runtime limits.",
+  "allowed_action_or_state_change": "The frozen launch ZIP may raise gas to 0.45 on the opening clear straight for at most 18 decisions, permanently returning to selected full-road-guard control at the first registered exit signal; no code, ZIP, or threshold changes during comparison.",
+  "expected_success_endpoint": "At least 12/12 valid finishes if control finishes 12/12; otherwise candidate completion no lower than control, and on a tie shorter median finished lap time with lower first-10-percent arrival time. The roughly twofold speed target is reported separately against the 2026-09-29 public ranking snapshot.",
+  "eligible_state": "FRESH_TUNE_ONLY_TRACKS_1_2_3_SEEDS_2900_2903",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40 on exactly the same registered cells.",
+  "falsifier": "Candidate-only nonfinish, lower aggregate completion, invalid action or resource-limit violation; on a completion tie, no shorter median finished lap; zero launch activation or no first-10-percent change weakens the proposed causal mechanism.",
+  "smallest_decisive_experiment": "Exact extracted ZIPs, alternating order, tracks 1-3 times seeds 2900-2903, 12 paired cells and 24 episodes, 2000 decisions per episode. Record full step traces and separate finish and initial-speed summaries.",
+  "resource_and_risk_gate": "One registered local Linux Python 3.11 CPU profile, 2 CPUs, 2 GiB, 1800 seconds; preserve all episodes in V2 roots. No held-out/confirmation or official site action in this run.",
+  "source_paths": [
+    "docs/plans/active/launch-acceleration-batch-r1.md",
+    "runs/haic-research-v2/launch-surge-one-shot-package-20260929/integration_report.json",
+    "training/compare_launch_surge_package.py",
+    "artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/package_manifest.json"
+  ]
+}

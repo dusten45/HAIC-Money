@@ -1,0 +1,5 @@
+# Continuous half-strength boost fresh TUNE: REJECT
+
+On tracks 1–3 × fresh seeds 5220–5223, valid finishes were selected control 11/12, original student 10/12 and half-blended student 10/12. Median finished laps were 25.74 s, 25.08 s and 24.38 s, respectively. The half-blend was active on 2,067 decisions with zero invalid actions, but completion takes priority over time. It had three collisions and 0.6 damage; selected control had two collisions and 0.4 damage. Candidate-only failures versus selected were 1:5222 and 3:5220; selected failed 2:5220, which the half-blend finished. The preregistered valid-completion gate failed, so this cycle is `REJECT`: rule compliance `UNKNOWN`, mechanism activation `PASS`, competitive outcome `FAIL`, no release. Seeds 5220–5223 are consumed TUNE identities. Do not adjust the blend based on them. Previous exact ZIP student rejection also remains in force.
+
+Frozen source and checkpoint: `tmp/haic2-continuous-boost-fresh-tune-frozen-20260929/`. The source SHA-256 entries in the run manifest refer to that snapshot.

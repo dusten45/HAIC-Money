@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\report.json",
+    "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "No exact ZIP/current official review, local only.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four propulsion mechanisms alter actions; launch intentionally changes prefix, other prefixes verified.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Launch11/12,exit10/12,sprint10/12,horizon9/12 versusstable12/12. Faster finished subsets do not improve completion-first ranking.",
+      "evidence_paths": [
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\report.json",
+        "artifacts\\haic-research-v2\\acceleration-envelope-20260930\\batch_audit.json"
+      ]
+    }
+  ]
+}

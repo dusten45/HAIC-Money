@@ -1,0 +1,27 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Both frozen ZIP hashes and archive checks passed; all twelve candidate episodes had valid actions and local import/reset/act/RSS remained within the recorded limits. No inference-only privileged input was introduced.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The launch gate activated 120 times over twelve held-out episodes and all episodes exited at the image-speed limit. Median first-10-percent arrival improved from 3.76 to 2.80 seconds.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Candidate finished 10/12 matched held-out cells versus control 11/12. Candidate-only track 1 seed 2905 retired without a qualified finish at 99.25% progress. The candidate's faster completed-lap median cannot offset the lost finish under the registered completion-first rule.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-matched-heldout-2904-2907-20260929/report.json"]
+    }
+  ]
+}

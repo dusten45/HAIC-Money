@@ -1,0 +1,5 @@
+# Balanced recovery data: natural coverage REVISE
+
+Plan hash `82cea9ba34288718c3ce5278fc8494d9f0958f0fd2909423028b58c8a154301c` completed all 72 teacher-only TRAIN episodes across tracks 1–3 × seeds 5170–5177. The 48 NPZ files contain 917 finite labeled pixel decisions with exact matching SHA-256 hashes and zero invalid actions. Every one of 24 independent cells yielded recovery data. Pulse-to-opposite-sign coverage passed the registered 20-cell floors: left 24/24 and right 22/24.
+
+Unpulsed natural recovery appeared in **2/24** cells, below the preregistered minimum four. The result is therefore `REVISE → GATE_REVIEW_REVISE → STOPPED`, with no student fit, candidate driving claim or release. This is a data-coverage failure, not a negative submission-candidate completion comparison. The immutable induced and natural labels remain available as TRAIN data, but future fitting requires a separately registered natural-recovery supplement and whole-cell partitioning. The earlier Docker-interrupted partial labels remain quarantined.

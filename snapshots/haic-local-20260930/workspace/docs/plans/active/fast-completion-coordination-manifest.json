@@ -1,0 +1,65 @@
+{
+  "run_id": "fast-completion-coordination-probe-20260929",
+  "cycle_id": "fast-completion-coordination-probe-20260929-cycle",
+  "purpose": "Completion-first coordination pivot",
+  "hypothesis_hash": "1c17d0482d7b186a7f6ecb8c6782898f81b6010f5a68c31fea99dd0f0e827b27",
+  "candidate_revision": "fast-coordination-r1",
+  "control_revision": "fixed60-impact-clear",
+  "candidate_package_hash": "997035bda187ee3df4b0214ec9ec38c146943d979193b273ecb6687435576136",
+  "control_package_hash": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+  "comparison_id": "fast-completion-coordination-probe-20260929",
+  "seed_ids": [
+    "1:38200",
+    "1:38210",
+    "1:38211"
+  ],
+  "comparison_episode_count": 3,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38200-38201-38210-38211"
+  ],
+  "map_ids": [
+    "official-track1-seed38200",
+    "official-track1-seed38210",
+    "official-track1-seed38211"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 5,
+    "episodes_per_arm": 3,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fixed60-completion-20260929.md": "4f1b0d9515aa17ab237a6e7322722685bdb9106728c7ae913fb2522d4203a31d",
+    "haic_agent/fixed60_completion.py": "50379b8ade6dc0c7058ee24afae9a0afac3e687879f21cccfdedc76e68f78ca7",
+    "training/fixed60_completion.py": "7d97f7bae8ee3f83ca72fa8b0c29f0d2bf0aa40918c488e449d41c30c449527d",
+    "docs/plans/active/fixed60-completion-settings.json": "3ee4ef2ea956c2d237ef027a293b95de0257f8f3f4aa01cd4755b0c3ea60c9ba",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "87d0d419098c9cae9df034d6bfe529bef987502e7c38273b72953c5ca41bf9cb",
+    "harness.config.json": "cb3057904412482e296d8f88be4d7e3dd57f60547af33d3d201af349ead0fd8b",
+    "docs/plans/active/fast-completion-coordination-20260929.md": "4f06d1803bf7229d085dbe44522d4edd075d7e473e8293789877f1132d6cfcd5",
+    "haic_agent/fast_completion_coordination.py": "997035bda187ee3df4b0214ec9ec38c146943d979193b273ecb6687435576136"
+  }
+}

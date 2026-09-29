@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fast-road-commit-20260929/report.json",
+    "artifacts/haic-research-v2/fast-road-commit-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only reviewed runtime; exact ZIP validation is next, so no release yet.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-20260929/report.json",
+        "artifacts/haic-research-v2/fast-road-commit-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Road-relative side commitment changes passing while controls remain unchanged; failed first-side case now completes.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-20260929/report.json",
+        "artifacts/haic-research-v2/fast-road-commit-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Intermediate target met:commit_side6/6 vscontrol6/6, allsixfaster, median20.93vs21.59seconds. Fullhalf-timegoal NOT met and broader robustness unknown.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-road-commit-20260929/report.json",
+        "artifacts/haic-research-v2/fast-road-commit-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "high-speed-recovery-four-direction-train-20260929",
+  "source_ref": "docs/plans/2026-09-29-high-speed-recovery-pivot.md",
+  "rule_or_requirement": "Find pixel-only high-speed recovery mechanisms that visibly change steering or speed while preserving qualified finish-line crossing.",
+  "observable_information": "Current and recent 84x84 grayscale frames, rendered road centers, bright visible objects, pixel speed bar, inherited action, and TRAIN-only evaluation traces.",
+  "allowed_action_or_state_change": "Four frozen interventions respectively add road-loss memory, bend-exit target, obstacle-side passage, and curvature-coupled speed budget around the speed-coupled reference.",
+  "expected_success_endpoint": "Each direction activates on TRAIN and does not introduce invalid actions; completion of the two TRAIN cells is diagnostic only.",
+  "eligible_state": "TRAIN_ONLY_MECHANISM_ACTIVATION",
+  "control": "Exact selected full-road-guard checkpoint runtime in the registered benchmark.",
+  "falsifier": "Any direction never changes an action, emits an invalid action, or loses a control-completed TRAIN cell; no new tune cells are opened for failed directions.",
+  "smallest_decisive_experiment": "Five profiles on already designated TRAIN cells 1:43 and 2:102, ten episodes total, at most 2000 decisions per episode.",
+  "resource_and_risk_gate": "Registered local diagnostic profile in Linux Python 3.11 CPU, 2 CPUs, 2 GiB and 1800 seconds; no external action or SOTA promotion.",
+  "source_paths": [
+    "docs/plans/2026-09-29-high-speed-recovery-pivot.md",
+    "runs/haic-research-v2/speed-coupled-preview-road-excursion-trace-20260929/events.jsonl",
+    "artifacts/haic-research-v2/speed-coupled-exact-zip-heldout-20260929/report.json"
+  ]
+}

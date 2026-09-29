@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "haic2-recovery-teacher-fresh-train-20260929",
+  "source_ref": "docs/plans/haic2-recovery-teacher-fresh-train-20260929/design.md",
+  "rule_or_requirement": "Establish whether a privileged TRAIN teacher can recover long pixel-road visibility losses without destroying valid finishes.",
+  "observable_information": "TRAIN simulator track and car pose for teacher, pixel-road visibility and frozen inherited action; no runtime student yet.",
+  "allowed_action_or_state_change": "Same frozen 12-meter nearest-road teacher steering when fewer than three road-center rows remain; inherited gas/brake.",
+  "expected_success_endpoint": "At least three long-loss control cells, all control finishes preserved, total completion no lower, no invalid actions and >=10-decision streak reduction on at least two long-loss cells.",
+  "eligible_state": "FRESH_TRAIN_PRIVILEGED_TEACHER_FEASIBILITY",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on 24 matched fresh TRAIN cells.",
+  "falsifier": "Lost control finish, lower teacher completion, invalid action or fewer than two long-loss streaks shortened; under three long-loss controls is inconclusive.",
+  "smallest_decisive_experiment": "Two arms on tracks 1-3 x fresh TRAIN seeds 5072-5079, 48 episodes; teacher-only diagnostic.",
+  "resource_and_risk_gate": "One registered Linux CPU teacher diagnostic capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-recovery-teacher-fresh-train-20260929/design.md",
+    "training/recovery_teacher_probe.py",
+    "docs/plans/haic2-recovery-teacher-feasibility-20260929/outcome.md"
+  ]
+}

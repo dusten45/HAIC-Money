@@ -1,0 +1,26 @@
+{
+  "run_id": "haic2-stable-risk-train-activation-20260928",
+  "cycle_id": "haic2-stable-risk-train-cycle-20260928",
+  "purpose": "TRAIN-only action activation for road-clearance speed gating on the selected stable actor",
+  "hypothesis_hash": "8b152ab4e52e8064565234b655a38c6c2386d6f7c691cf15e47a9f6c6cae97f6",
+  "candidate_revision": "stable-road-clearance-speed-v1",
+  "control_revision": "selected-full-road-guard-3ceb5ebb",
+  "candidate_package_hash": "none-train-diagnostic",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-stable-risk-consumed-train-1-43-2-102",
+  "seed_ids": ["1:43", "2:102"],
+  "comparison_episode_count": 2,
+  "tool_versions": {"python": "3.11.15", "torch": "2.1.0+cpu", "gymnasium": "0.29.1"},
+  "runtime_versions": {"environment": "codex-haic-dagger-confirmation:2026-09-27", "platform": "Linux CPU"},
+  "data_ids": ["consumed-train-cells-1-43-2-102"],
+  "map_ids": ["official-track1-seed43", "official-track2-seed102"],
+  "split_ids": ["train"],
+  "resource_limits": {"timeout_seconds": 1800, "episode_max_decisions": 2000, "episodes_per_arm": 2, "arms": 2},
+  "permission_limits": {"local_only": true, "site_upload": false, "official_submission": false, "model_confirmation": false},
+  "source_hashes": {
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "training/benchmark_corridor.py": "faec24a24d4199c29d3b85fcef8853f183d668eedd3520a9b1b37dde3565724a",
+    "harness.config.json": "daf14db2e17051147c38234f3a5fc61ce3eedd2093526ae33d5e18f3569836c8",
+    "haic_research/config.py": "225a6d50e7b2caa1f37d99e069c33ea46699a5ae63723cc8f3c69505a7cc5c75"
+  }
+}

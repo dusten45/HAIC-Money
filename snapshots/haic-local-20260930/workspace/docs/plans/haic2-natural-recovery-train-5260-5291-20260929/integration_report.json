@@ -1,0 +1,32 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-natural-recovery-train-5260-5291-20260929/events.jsonl",
+    "artifacts/haic-research-v2/haic2-natural-recovery-train-5260-5291-20260929/pixel-recovery-labels"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The TRAIN-only teacher collection ended through infrastructure failure before a complete report; no student ZIP or current official-site validation exists.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-natural-recovery-train-5260-5291-20260929/events.jsonl"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "Only one partial natural-recovery NPZ exists; the registered 96-episode denominator and integrity report did not complete.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-natural-recovery-train-5260-5291-20260929/pixel-recovery-labels"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "The registered natural coverage endpoint cannot be evaluated after Docker Desktop exited; teacher-only trajectories are not submission-candidate scores.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-natural-recovery-train-5260-5291-20260929/events.jsonl"
+      ]
+    }
+  ]
+}

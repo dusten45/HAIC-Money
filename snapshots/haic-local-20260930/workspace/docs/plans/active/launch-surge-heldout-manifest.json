@@ -1,0 +1,68 @@
+{
+  "run_id": "launch-surge-matched-heldout-2904-2907-20260929",
+  "cycle_id": "launch-surge-matched-heldout-cycle-20260929",
+  "purpose": "Verify unchanged one-shot launch ZIP against selected control on twelve untouched held-out cells",
+  "hypothesis_hash": "2d794d2c744460cab7f555e92c025ce0ce7c83cfdbb04192eb01cec87a5e62aa",
+  "candidate_revision": "launch-surge-one-shot-v1-exact-zip",
+  "control_revision": "selected-full-road-guard-5c55670a",
+  "candidate_package_hash": "4043993d9901d58b126980b7bafe4f0154305c6a0bf01e1e7e5bc02aacec2389",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "launch-surge-heldout-tracks123-seeds2904-2907",
+  "seed_ids": [
+    "1:2904",
+    "1:2905",
+    "1:2906",
+    "1:2907",
+    "2:2904",
+    "2:2905",
+    "2:2906",
+    "2:2907",
+    "3:2904",
+    "3:2905",
+    "3:2906",
+    "3:2907"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "official-three-track-heldout-seeds2904-2907"
+  ],
+  "map_ids": [
+    "official-track1-seed2904-2907",
+    "official-track2-seed2904-2907",
+    "official-track3-seed2904-2907"
+  ],
+  "split_ids": [
+    "held_out"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2,
+    "cpu_count": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/compare_launch_surge_package.py": "642d90f9ac452780304521ee87edf7b9da172d3efa21e30e0ad87ae373ab388d",
+    "haic_agent/launch_surge_runtime.py": "0895977971cb210c23b0574d143a456ddc9bdd64e684ab25e73ec7194a1282de",
+    "haic_research/config.py": "0384264c43f154b37f5e255d211a8a3e72b30dabaa9cdd9b9f21e61807a19677",
+    "haic_research/commands.py": "e5c8d79378646ecfadb3920a030da80cad3539313250fe760ddf1e996d24e59f",
+    "harness.config.json": "8faa797a4a8e56edce90e5ec484780dd3e86260c0d633e966c5fd3410795fb0b",
+    "artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/submission.zip": "4043993d9901d58b126980b7bafe4f0154305c6a0bf01e1e7e5bc02aacec2389"
+  }
+}

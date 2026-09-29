@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-recovery-student-data-wide-coverage-20260929",
+  "source_ref": "docs/plans/haic2-recovery-student-data-wide-train-5120-5135-20260929/design.md",
+  "rule_or_requirement": "A pixel-only recovery student needs independent, direction-diverse labels under the strongest confirmed local controller.",
+  "observable_information": "TRAIN four-frame pixels and exact inherited actions at teacher intervention; privileged teacher steering only as label.",
+  "allowed_action_or_state_change": "Collect and hash per-cell pixel/teacher-label NPZ artifacts; no eligible runtime student yet.",
+  "expected_success_endpoint": "48 TRAIN episodes attempted, valid data, >=20 independent recovery episodes, >=5 naturally right-steer episodes and zero invalid actions.",
+  "eligible_state": "TRAIN_ONLY_WIDE_RECOVERY_STUDENT_DATA_COLLECTION",
+  "control": "Exact bend-rebound visual ZIP SHA 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49 as inherited driver and integrity anchor.",
+  "falsifier": "Invalid samples/action/label, missing hash, invalid actions, or insufficient independent/right-direction coverage.",
+  "smallest_decisive_experiment": "TRAIN tracks 1-3 x seeds 5120-5135, 48 teacher-only episodes; no submission-candidate comparison.",
+  "resource_and_risk_gate": "One registered Linux CPU local collection capped at 3,600 seconds, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-recovery-student-data-wide-train-5120-5135-20260929/design.md",
+    "training/recovery_student_data_collect.py",
+    "training/recovery_teacher_probe.py",
+    "haic_agent/wide_speed_batch_runtime.py",
+    "docs/plans/haic2-recovery-student-data-feasibility-20260929.md"
+  ]
+}

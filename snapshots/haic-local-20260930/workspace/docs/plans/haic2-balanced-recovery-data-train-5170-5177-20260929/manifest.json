@@ -1,0 +1,110 @@
+{
+  "run_id": "haic2-balanced-recovery-data-train-5170-5177-20260929",
+  "cycle_id": "haic2-balanced-recovery-data-cycle-20260929",
+  "purpose": "TRAIN-only natural and directional recovery pixel-label collection",
+  "hypothesis_hash": "96534c40ac26292395995e44eb58e4ac0afddbcdaa13d4605a192f1a78f001dc",
+  "candidate_revision": "balanced-recovery-data-collector-v3",
+  "control_revision": "wide-bend-rebound-exact-zip-8f7e87c2",
+  "candidate_package_hash": "ca1a8253a95d78401e277c4a704142f2a8b754f4cbb459888892622972c8665e",
+  "control_package_hash": "8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49",
+  "comparison_id": "haic2-balanced-recovery-data-train-5170-5177",
+  "seed_ids": [
+    "1:5170",
+    "1:5171",
+    "1:5172",
+    "1:5173",
+    "1:5174",
+    "1:5175",
+    "1:5176",
+    "1:5177",
+    "2:5170",
+    "2:5171",
+    "2:5172",
+    "2:5173",
+    "2:5174",
+    "2:5175",
+    "2:5176",
+    "2:5177",
+    "3:5170",
+    "3:5171",
+    "3:5172",
+    "3:5173",
+    "3:5174",
+    "3:5175",
+    "3:5176",
+    "3:5177"
+  ],
+  "comparison_episode_count": 72,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "train-seeds5170-5177-balanced-recovery-labels"
+  ],
+  "map_ids": [
+    "official-track1-seed5170",
+    "official-track1-seed5171",
+    "official-track1-seed5172",
+    "official-track1-seed5173",
+    "official-track1-seed5174",
+    "official-track1-seed5175",
+    "official-track1-seed5176",
+    "official-track1-seed5177",
+    "official-track2-seed5170",
+    "official-track2-seed5171",
+    "official-track2-seed5172",
+    "official-track2-seed5173",
+    "official-track2-seed5174",
+    "official-track2-seed5175",
+    "official-track2-seed5176",
+    "official-track2-seed5177",
+    "official-track3-seed5170",
+    "official-track3-seed5171",
+    "official-track3-seed5172",
+    "official-track3-seed5173",
+    "official-track3-seed5174",
+    "official-track3-seed5175",
+    "official-track3-seed5176",
+    "official-track3-seed5177"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 3600,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 24,
+    "arms": 3,
+    "common_prefix_decisions": 80,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/hazard_flow_batch_runtime.py": "9262108356ca2e6329cd009f5a81011408c9a57621420cf856d3c0a2ec2f11d8",
+    "haic_agent/high_speed_pivot_runtime.py": "dbbc5316df627e133499e6b0f08467911c2f90550ff9cac44bd93ea2d401725c",
+    "haic_agent/speed_coupled_preview_runtime.py": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b",
+    "training/benchmark_corridor.py": "91729aef684d12a22b15636fef81a59518020afbfcddbbef3c0b959d5e299d1d",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "769cfb06484b58dd04b31442215f0c25d68e3b95235b0c7023fe703e7b1db18b",
+    "harness.config.json": "ac7cbc49cbf90cffe7f9ea687523db182a88938c1b365e89dbceda9843c83c91",
+    "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt": "3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199",
+    "artifacts/haic/ppo-speed-shortfall-0p6-vs-0p0-kl0p5-u8-20260924T133743Z/run/seed8104/penalty_0p6/policy.pt": "647fb7c831c0b61dc78bcc416867f9f7d6070b4fa6aad51c299f7c0ae48d145d",
+    "training/recovery_teacher_probe.py": "65caee9d1908b214c32242d6788b63c481d33c375769e7a1729e43038427bd10",
+    "haic_agent/wide_speed_batch_runtime.py": "bc44e4678b895322408d0ff2e1b31ffa560f60636414697921bf8a6247b37cfe",
+    "artifacts/haic-research-v2/wide-bend-rebound-exact-package-20260929/submission.zip": "8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49",
+    "training/recovery_perturbation_probe.py": "ca1a8253a95d78401e277c4a704142f2a8b754f4cbb459888892622972c8665e"
+  }
+}

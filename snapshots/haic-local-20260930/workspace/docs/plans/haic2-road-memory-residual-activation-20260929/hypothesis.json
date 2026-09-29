@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "haic2-road-memory-residual-activation-20260929",
+  "source_ref": "docs/plans/haic2-road-memory-residual-activation-20260929/design.md",
+  "rule_or_requirement": "Preserve qualified finishes while recovering from prolonged pixel-road visibility loss.",
+  "observable_information": "Pixel-road center history, current inherited pixel action, private low-visibility count.",
+  "allowed_action_or_state_change": "For the first 20 low-visibility decisions blend inherited steer halfway with +/-0.25 toward remembered pixel-road side, keeping gas/brake.",
+  "expected_success_endpoint": "All six consumed control finishes retained, >=20 action changes, zero invalid actions and >=10-decision visibility-loss reduction on at least two of three slow-loss cells.",
+  "eligible_state": "CONSUMED_TRAIN_RESIDUAL_ROAD_MEMORY_ACTIVATION",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on six matched consumed TRAIN cells.",
+  "falsifier": "Any lost finish, invalid action, fewer than 20 action changes or fewer than two shortened slow-loss intervals.",
+  "smallest_decisive_experiment": "Two arms on six consumed TRAIN cells, twelve episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU local diagnostic capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-road-memory-residual-activation-20260929/design.md",
+    "training/road_memory_probe.py",
+    "docs/plans/haic2-road-memory-fresh-tune-20260929/outcome.md"
+  ]
+}

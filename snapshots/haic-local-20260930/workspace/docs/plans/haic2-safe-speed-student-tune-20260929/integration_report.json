@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-tune-20260929/run_manifest.json",
+    "runs/haic-research-v2/haic2-safe-speed-student-tune-20260929/events.jsonl"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The student failed to load its checkpoint before its first action; runtime behavior and exact package compliance were not evaluated.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-safe-speed-student-tune-20260929/events.jsonl"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "The safe weights-only loader rejected NumPy normalization arrays inside the frozen checkpoint, so the candidate never acted.",
+      "evidence_paths": ["haic_agent/pixel_speed_student_runtime.py", "runs/haic-research-v2/haic2-safe-speed-student-tune-20260929/events.jsonl"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Only control cell 1:5200 ran before the loader failure. No matched candidate/control completion or lap comparison exists from this attempt.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-safe-speed-student-tune-20260929/events.jsonl"]
+    }
+  ]
+}

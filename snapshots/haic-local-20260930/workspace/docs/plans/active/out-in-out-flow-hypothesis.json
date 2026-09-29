@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "out-in-out-flow-20260929",
+  "source_ref": "docs/plans/active/out-in-out-flow-20260929.md",
+  "rule_or_requirement": "User explicitly requests out-in-out steering and higher speed while preserving completion.",
+  "observable_information": "Pixel road centerline curvature, observed asphalt width, road motion, obstacles, own previous commands.",
+  "allowed_action_or_state_change": "Predict obstacle x at vehicle row63 from positive vertical optical motion, choose opposite side and commit; initial side relative roadcenter; keep r3 phase and pedals.",
+  "expected_success_endpoint": "Out-in-out candidate6/6, all control finishes retained, matched lap improvement and observed phase-dependent line behavior before full24 check.",
+  "eligible_state": "CONSUMED_TRAIN_USER_OUT_IN_OUT",
+  "control": "Frozen preview_row_repair on same cells",
+  "falsifier": "No real phase/line activation; lost finishes; no matched time gain; invalid actions or privileged inputs.",
+  "smallest_decisive_experiment": "Three arms x6 consumed TRAIN cells=18episodes, continuation of four-direction batch",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; no external action",
+  "source_paths": [
+    "docs/plans/active/out-in-out-flow-20260929.md",
+    "haic_agent/out_in_out_flow_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

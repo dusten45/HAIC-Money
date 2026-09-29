@@ -1,0 +1,55 @@
+{
+  "run_id": "haic2-geometry-speed-teacher-train-feasibility-20260929",
+  "cycle_id": "haic2-geometry-speed-teacher-train-cycle-20260929",
+  "purpose": "TRAIN-only privileged future-curvature speed teacher feasibility against frozen pixel steering control",
+  "hypothesis_hash": "34a85103e9ce00e67509112cd301ac0aa11ffa7d6710954236802d044549751d",
+  "candidate_revision": "geometry-speed-teacher-v1-train-only",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "none-train-only-teacher",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-geometry-speed-teacher-train-1-43-2-102",
+  "seed_ids": [
+    "1:43",
+    "2:102"
+  ],
+  "comparison_episode_count": 2,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-cells-1-43-2-102"
+  ],
+  "map_ids": [
+    "official-track1-seed43",
+    "official-track2-seed102"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 600,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 2,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/geometry_speed_teacher.py": "9099fbd8816dc5567f220939a48909e2982f8f388d1af61b1de3cf95f6b73845",
+    "training/geometry_speed_teacher_probe.py": "459feb16d012c38dd367e3905bc0abf519b9435ac5a32e2993eed90c2e9ba9bf",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_research/config.py": "e7ddab13a9eadaa8646c9beb264f25ea1148db8d623de55717377bbf90a458b2",
+    "harness.config.json": "bf710b8be3f66a5015c243e2c8d99ad3d11e24911c5616e309e3bc9718090227"
+  }
+}

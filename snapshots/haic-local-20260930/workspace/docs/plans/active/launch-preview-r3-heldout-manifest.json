@@ -1,0 +1,70 @@
+{
+  "run_id": "launch-preview-steer-only-heldout-7028-7031-20260929",
+  "cycle_id": "launch-preview-steer-only-heldout-cycle-20260929",
+  "purpose": "Unchanged exact ZIP matched held-out comparison after tune completion tie and small time gain",
+  "hypothesis_hash": "e9ab33d9e4dfa6a4a423ab2dd68fb3808326edacefe78d0ee7b333214d3e5119",
+  "candidate_revision": "launch-preview-steer-only-v3-exact-zip",
+  "control_revision": "launch-surge-one-shot-v1-exact-zip",
+  "candidate_package_hash": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7",
+  "control_package_hash": "4043993d9901d58b126980b7bafe4f0154305c6a0bf01e1e7e5bc02aacec2389",
+  "comparison_id": "launch-preview-steer-only-heldout-7028-7031",
+  "seed_ids": [
+    "1:7028",
+    "1:7029",
+    "1:7030",
+    "1:7031",
+    "2:7028",
+    "2:7029",
+    "2:7030",
+    "2:7031",
+    "3:7028",
+    "3:7029",
+    "3:7030",
+    "3:7031"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "heldout-seeds7028-7031"
+  ],
+  "map_ids": [
+    "official-track1-seed7028-7031",
+    "official-track2-seed7028-7031",
+    "official-track3-seed7028-7031"
+  ],
+  "split_ids": [
+    "held_out"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2,
+    "cpu_count": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/compare_launch_preview_package.py": "a6c62b06928492ea3ba5655f5997933da8d40a36e8957f21b1318599eb7b2b8f",
+    "haic_agent/launch_preview_runtime.py": "83294dd08cccd695b8c8fdd4b856be46a3729f6a4576c07b238abff17d8c2d9d",
+    "haic_research/config.py": "bb0a2dc7412422c199abd8d9551b239d98098ae697ff8c5991a2491ee1fa7a5e",
+    "haic_research/commands.py": "e5c8d79378646ecfadb3920a030da80cad3539313250fe760ddf1e996d24e59f",
+    "harness.config.json": "8801301a5bc7a84e7866fe993ac54b3590d17bf207a77875740f3641fb74db0a",
+    "artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/submission.zip": "4043993d9901d58b126980b7bafe4f0154305c6a0bf01e1e7e5bc02aacec2389",
+    "docs/plans/active/launch-preview-composition-r3.md": "c4be8089371a22a48334de09f83d042683e141d1a5231d44c176aaca4c39165d",
+    "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/submission.zip": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Both frozen ZIPs passed package and runtime checks with zero invalid actions on the consumed diagnostic block.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Launch-only candidate activated its opening gate 120 times across 12 repeated cells; all source and ZIP hashes were frozen.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "This is repeated consumed tune evidence. Launch-only finished 3:7040 while preview-plus-launch had failed it, but launch-only failed 3:7041 while preview-plus-launch had finished it; selected control finished both. The direction-dependent preview effect needs pixel-condition diagnosis.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-only-consumed-ablation-7040-7043-20260929/report.json"
+      ]
+    }
+  ]
+}

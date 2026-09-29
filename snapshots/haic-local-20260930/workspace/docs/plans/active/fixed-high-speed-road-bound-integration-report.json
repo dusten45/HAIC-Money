@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fixed-high-speed-road-bound-20260929/report.json",
+    "docs/plans/active/fixed-high-speed-road-bound-activation-audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local pixel-only TRAIN diagnostic, no current official certification or package.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-road-bound-20260929/report.json",
+        "docs/plans/active/fixed-high-speed-road-bound-activation-audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "57 effective steering changes from 58 triggers, identical six frozen-damping prefixes, final target60 governor unchanged.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-road-bound-20260929/report.json",
+        "docs/plans/active/fixed-high-speed-road-bound-activation-audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "0/6 qualified finishes; ordinary completion2/6 vs original damping3/6; only one of three original finishes retained. No threshold relaxation or speed reduction.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-road-bound-20260929/report.json",
+        "docs/plans/active/fixed-high-speed-road-bound-activation-audit.json"
+      ]
+    }
+  ]
+}

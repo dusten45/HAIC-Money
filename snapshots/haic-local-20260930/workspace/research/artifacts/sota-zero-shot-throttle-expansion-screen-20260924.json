@@ -1,0 +1,248 @@
+{
+  "diagnostic_id": "sota-zero-shot-throttle-expansion-screen-20260924",
+  "type": "zero-shot action-transform screen; no training or parameter updates",
+  "checkpoint_sha256": "3CEB5EBBE2A4BD96944649A693B8EF924C0252FA620B0FD547C7FB494AFFF199",
+  "source_manifest_sha256": "6D4B59F60FDA472B594ABC4CD804B53E974D0EE4C2224E2DBE73D84580A44ABF",
+  "split_sha256": "49E1774B2FF039FB601903070E2976951C974A02F16FC2542754260574BEA209",
+  "scope": {
+    "map_id": "custom-track-haic-tune-20260922",
+    "seeds": [
+      20260922,
+      20260926
+    ],
+    "unique_map_families": 1,
+    "held_out_materialized": false,
+    "official_geometry_used": false,
+    "same_seed_rows_are_identical_geometry_repeats": true,
+    "max_decisions": 600,
+    "deterministic": true
+  },
+  "expansion_1_0": {
+    "throttle_expansion": 1.0,
+    "brake_expansion": 1.0,
+    "actor_checkpoint_metadata_expansion": null,
+    "throttle_action_ceiling": 0.12,
+    "summary": {
+      "episodes": 2,
+      "completed_episodes": 2,
+      "finish_rate": 1.0,
+      "valid_under_13_fraction": 0.0,
+      "median_finished_lap_time_ms": 19880.0,
+      "p90_finished_lap_time_ms": 19880.0,
+      "collisions": 2,
+      "mean_final_damage": 0.2,
+      "mean_max_damage": 0.2,
+      "mean_progress": 1.0,
+      "mean_speed": 42.00465078709252,
+      "trace_rows": 498,
+      "pre_visible_hazard_actions": {
+        "steps": 432,
+        "mean_brake": 0.0024905332010584295,
+        "brake_active_fraction_gt_0_02": 0.037037037037037035,
+        "mean_gas": 0.06830462419721126,
+        "mean_speed": 41.35389131222207
+      },
+      "high_curvature_actions": {
+        "steps": 4,
+        "mean_brake": 0.020935903885401785,
+        "brake_active_fraction_gt_0_02": 0.5,
+        "mean_gas": 0.0,
+        "mean_speed": 43.51684948414164
+      },
+      "pre_visible_high_curvature_actions": {
+        "steps": 4,
+        "mean_brake": 0.020935903885401785,
+        "brake_active_fraction_gt_0_02": 0.5,
+        "mean_gas": 0.0,
+        "mean_speed": 43.51684948414164
+      },
+      "visible_urgent_hazard_actions": {
+        "steps": 48,
+        "mean_brake": 0.021161876774082582,
+        "brake_active_fraction_gt_0_02": 0.375,
+        "mean_gas": 0.024019819606716435,
+        "mean_speed": 45.901296217862914
+      },
+      "episodes_detail": [
+        {
+          "map_id": "custom-track-haic-tune-20260922",
+          "map_kind": "custom",
+          "seed": 20260922,
+          "finished": true,
+          "completed": true,
+          "progress": 1.0,
+          "reward": 892.3695473250918,
+          "lap_time_s": 19.879999999999644,
+          "lap_time_ms": 19880,
+          "auxiliary_mse": 0.4018790073782565,
+          "mean_speed": 42.00465078709252,
+          "max_speed": 52.67213688300439,
+          "collisions": 1,
+          "final_damage": 0.2,
+          "max_damage": 0.2,
+          "steps": 249,
+          "retire_reason": "finished"
+        },
+        {
+          "map_id": "custom-track-haic-tune-20260922",
+          "map_kind": "custom",
+          "seed": 20260926,
+          "finished": true,
+          "completed": true,
+          "progress": 1.0,
+          "reward": 892.3695473250918,
+          "lap_time_s": 19.879999999999644,
+          "lap_time_ms": 19880,
+          "auxiliary_mse": 0.4018790073782565,
+          "mean_speed": 42.00465078709252,
+          "max_speed": 52.67213688300439,
+          "collisions": 1,
+          "final_damage": 0.2,
+          "max_damage": 0.2,
+          "steps": 249,
+          "retire_reason": "finished"
+        }
+      ]
+    },
+    "action_groups": {
+      "all": {
+        "steps": 498,
+        "mean_speed": 42.00465078709253,
+        "mean_gas": 0.06374185483334174,
+        "max_gas": 0.08988093584775925,
+        "mean_brake": 0.004200161502034549,
+        "brake_active_fraction": 0.06827309236947791
+      },
+      "clear_low_curve": {
+        "steps": 252,
+        "mean_speed": 44.053082186009924,
+        "mean_gas": 0.08437946710794691,
+        "max_gas": 0.08988093584775925,
+        "mean_brake": 0.0,
+        "brake_active_fraction": 0.0
+      },
+      "high_curve": {
+        "steps": 4,
+        "mean_speed": 43.51684948414164,
+        "mean_gas": 0.0,
+        "max_gas": 0.0,
+        "mean_brake": 0.020935903885401785,
+        "brake_active_fraction": 0.5
+      }
+    }
+  },
+  "expansion_2_0": {
+    "throttle_expansion": 2.0,
+    "brake_expansion": 1.0,
+    "actor_checkpoint_metadata_expansion": null,
+    "throttle_action_ceiling": 0.24,
+    "summary": {
+      "episodes": 2,
+      "completed_episodes": 2,
+      "finish_rate": 1.0,
+      "valid_under_13_fraction": 0.0,
+      "median_finished_lap_time_ms": 19500.0,
+      "p90_finished_lap_time_ms": 19500.0,
+      "collisions": 6,
+      "mean_final_damage": 0.6000000000000001,
+      "mean_max_damage": 0.6000000000000001,
+      "mean_progress": 1.0,
+      "mean_speed": 42.73915719686224,
+      "trace_rows": 488,
+      "pre_visible_hazard_actions": {
+        "steps": 424,
+        "mean_brake": 0.003012439843381421,
+        "brake_active_fraction_gt_0_02": 0.06132075471698113,
+        "mean_gas": 0.07846499639159653,
+        "mean_speed": 42.139688880107684
+      },
+      "high_curvature_actions": {
+        "steps": 2,
+        "mean_brake": 0.008470489643514156,
+        "brake_active_fraction_gt_0_02": 0.0,
+        "mean_gas": 0.0,
+        "mean_speed": 42.21854394954088
+      },
+      "pre_visible_high_curvature_actions": {
+        "steps": 2,
+        "mean_brake": 0.008470489643514156,
+        "brake_active_fraction_gt_0_02": 0.0,
+        "mean_gas": 0.0,
+        "mean_speed": 42.21854394954088
+      },
+      "visible_urgent_hazard_actions": {
+        "steps": 48,
+        "mean_brake": 0.022958804896916263,
+        "brake_active_fraction_gt_0_02": 0.3333333333333333,
+        "mean_gas": 0.02437152313844611,
+        "mean_speed": 46.497775066320706
+      },
+      "episodes_detail": [
+        {
+          "map_id": "custom-track-haic-tune-20260922",
+          "map_kind": "custom",
+          "seed": 20260922,
+          "finished": true,
+          "completed": true,
+          "progress": 1.0,
+          "reward": 894.1695473250916,
+          "lap_time_s": 19.499999999999652,
+          "lap_time_ms": 19500,
+          "auxiliary_mse": 0.4129475989363721,
+          "mean_speed": 42.73915719686224,
+          "max_speed": 52.388816050142744,
+          "collisions": 3,
+          "final_damage": 0.6000000000000001,
+          "max_damage": 0.6000000000000001,
+          "steps": 244,
+          "retire_reason": "finished"
+        },
+        {
+          "map_id": "custom-track-haic-tune-20260922",
+          "map_kind": "custom",
+          "seed": 20260926,
+          "finished": true,
+          "completed": true,
+          "progress": 1.0,
+          "reward": 894.1695473250916,
+          "lap_time_s": 19.499999999999652,
+          "lap_time_ms": 19500,
+          "auxiliary_mse": 0.4129475989363721,
+          "mean_speed": 42.73915719686224,
+          "max_speed": 52.388816050142744,
+          "collisions": 3,
+          "final_damage": 0.6000000000000001,
+          "max_damage": 0.6000000000000001,
+          "steps": 244,
+          "retire_reason": "finished"
+        }
+      ]
+    },
+    "action_groups": {
+      "all": {
+        "steps": 488,
+        "mean_speed": 42.73915719686224,
+        "mean_gas": 0.07276810843940752,
+        "max_gas": 0.10808513313531876,
+        "mean_brake": 0.004875608870175622,
+        "brake_active_fraction": 0.0860655737704918
+      },
+      "clear_low_curve": {
+        "steps": 244,
+        "mean_speed": 45.08117343082111,
+        "mean_gas": 0.098398179792967,
+        "max_gas": 0.10780316591262817,
+        "mean_brake": 0.0,
+        "brake_active_fraction": 0.0
+      },
+      "high_curve": {
+        "steps": 2,
+        "mean_speed": 42.21854394954088,
+        "mean_gas": 0.0,
+        "max_gas": 0.0,
+        "mean_brake": 0.008470489643514156,
+        "brake_active_fraction": 0.0
+      }
+    }
+  }
+}

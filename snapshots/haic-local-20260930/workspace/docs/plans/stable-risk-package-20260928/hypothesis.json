@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "stable-risk-frozen-package-20260928",
+  "source_ref": "docs/plans/2026-09-28-stable-risk-package.md",
+  "rule_or_requirement": "A locally confirmed pixel-only speed controller must retain its measured behavior when built as a rule-compliant archive.",
+  "observable_information": "Four grayscale frames, visible road clearance, obstacle pixels, rendered speed, and the frozen full-road-guard actor action.",
+  "allowed_action_or_state_change": "Copy the exact selected control archive, replace only its entrypoint with a wrapper, and add the exact confirmed stable-risk runtime source.",
+  "expected_success_endpoint": "The ZIP has a valid root agent, exact frozen control bytes, finite three-value actions, and no prohibited imports or calls.",
+  "eligible_state": "LOCAL_PACKAGE_ONLY",
+  "control": "Existing selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Changed frozen bytes, invalid archive inventory, missing dependency, runtime-limit breach, or invalid action.",
+  "smallest_decisive_experiment": "Build the ZIP once, audit every member, and run a clean Linux CPU import/reset/act smoke before a separately registered fresh matched driving comparison.",
+  "resource_and_risk_gate": "Local packaging within 600 seconds; no site upload, official submission, model confirmation, or reuse of confirmation cells for tuning.",
+  "source_paths": ["docs/plans/2026-09-28-stable-risk-package.md", "haic_agent/stable_risk_envelope_runtime.py", "training/package_stable_risk.py", "runs/haic-research-v2/haic2-stable-risk-confirmation-20260928/integration_report.json"]
+}

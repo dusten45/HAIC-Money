@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-base-authority-fresh-tune-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-base-authority-fresh-tune-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local candidate, but exact submission ZIP static and runtime compliance remain unverified.",
+      "evidence_paths": [
+        "haic_agent/pixel_coast_student_runtime.py",
+        "training/base_authority_tune_probe.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "On fresh TUNE cells candidate made 574 low-base vetoes and 1,149 bounded boosts, above preregistered thresholds, with zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-fresh-tune-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Fresh matched TUNE: candidate finished 11/12 versus selected 8/12. Candidate zero collisions/damage versus selected five collisions and 1.0 damage. Candidate median finished lap 22.28 seconds versus selected 22.75. Candidate repaired three selected-only nonfinishes; both failed 3:5227. Completion-first gate passes. This is local TUNE, not official score or release.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-fresh-tune-20260929/report.json",
+        "docs/plans/haic2-base-authority-fresh-tune-20260929/design.md"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-train-only-geometry-speed-teacher-feasibility-20260929",
+  "source_ref": "docs/plans/haic2-geometry-speed-teacher-20260929/design.md",
+  "rule_or_requirement": "A teacher may use privileged TRAIN geometry, but the deployable actor must later use only grayscale pixel observations and must preserve valid completion.",
+  "observable_information": "TRAIN track centerline geometry, vehicle speed, and the frozen pixel driver's steering and obstacle response.",
+  "allowed_action_or_state_change": "Only the TRAIN teacher changes gas or brake using a future-curvature braking-distance speed ceiling; steering remains the pixel driver's action.",
+  "expected_success_endpoint": "The teacher validly finishes both consumed TRAIN cells and lowers paired median finished lap time by at least 3%, qualifying demonstration collection without counting as candidate score.",
+  "eligible_state": "TRAIN_TEACHER_FEASIBILITY_ONLY",
+  "control": "StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Teacher-only nonfinish, invalid action, no longitudinal intervention, or less than 3% median finished-lap improvement over control on the two TRAIN cells.",
+  "smallest_decisive_experiment": "Four paired TRAIN episodes: control and geometry-speed teacher on 1:43 and 2:102.",
+  "resource_and_risk_gate": "One registered 600-second local Linux CPU diagnostic with four episodes; no tune, held-out, confirmation, blind or official cells.",
+  "source_paths": ["docs/plans/haic2-geometry-speed-teacher-20260929/design.md", "training/geometry_speed_teacher.py", "training/geometry_speed_teacher_probe.py"]
+}

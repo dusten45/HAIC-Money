@@ -1,0 +1,9 @@
+# Frozen impact-clear ZIP: fresh matched check
+
+The consumed TRAIN screen advanced impact_clear:4/6 versus3/6, all3previous finishes preserved. At1:38201 the first100actions/poses including collision are identical; two subsequent steering changes recover a17.86s finish. Freeze this mechanism with target60 and unchanged pedals. No further tuning.
+
+Build minimal six-file candidate ZIP with Agent wrapping FixedHighSpeedRecoveryV2('impact_clear'), and compare the extracted ZIP against the exact user-delivered original ZIP SHA256 b196cfb653a0ceeae0779e5e3832f879a27f24cc662b7202a1a0c39888d469f9. Both archives execute isolated child processes. Cold import measurement starts before importing agent/NumPy. Record all actions, poses, collisions/damage, progress, latency and RSS.
+
+Fresh TRAIN tracks1–3 × seeds38210–38211, six matched cells, twelve episodes. These identities were not found in existing plan/manifest reservations before registration. No held-out or confirmation claim. Alternate order. Max1200decisions each,2CPU2GiB,1200seconds. First10action/pose prefix equality required; no invalid actions. Completion first: candidate must preserve every control finish and have at least as many finishes; on a tie median lap must not worsen to count as improvement. If no intervention activates, outcome is UNKNOWN, not improvement. No strict1%road rejection; user accepts brief departures. No private-track or official score claim.
+
+Package generation is local and user authorized. If fresh results support it, offer ZIP as an experimental recovery update; otherwise preserve old delivered ZIP and disclose regression. Do not overwrite either ZIP, auto-promote SOTA, upload or confirm a model. Three-gate review required; latest site-rule certification remains UNKNOWN. Standing local authorization2026-09-29 and current recovery implementation request cover execution.

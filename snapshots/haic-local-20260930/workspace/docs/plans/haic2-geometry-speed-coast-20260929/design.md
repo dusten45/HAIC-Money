@@ -1,0 +1,7 @@
+# TRAIN-only geometry teacher: coast instead of extra brake
+
+The previous frozen geometry-speed teacher finished both consumed TRAIN cells and shortened laps by 0.40 and 0.70 seconds, but missed its registered 3% median improvement gate at 2.37%. Its own 41 added brake decisions coincided with a marked late-lap speed deficit on track 1, where the teacher reached 30.2 speed units at progress 0.7 versus the pixel control's 39.3. This is a diagnostic association, not causal proof.
+
+Keep the exact pixel steering driver, checkpoint, geometry speed target and gas intervention unchanged. When the geometry target is exceeded, suppress gas and let the inherited pixel actor retain full brake authority; the teacher no longer adds a new brake command. This isolates whether forced braking created the late speed loss. It is a control mechanism revision rather than a coefficient sweep.
+
+Use the same already-consumed TRAIN cells 1:43 and 2:102, two arms, four episodes, 2,000 decisions and 600 seconds maximum. Record valid finishes, laps, intervention counts, collisions, damage, invalid actions, full traces and timing. Do not count these teacher cells as submission-candidate performance or open fresh tune cells. The revised teacher qualifies for demonstration collection only if it finishes both cells and improves median finished lap by at least 3% against the paired pixel control. If it loses completion, reject it. No site action is included.

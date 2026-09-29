@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local pixel-only diagnostic with frozen exact-hash checkpoints; no official package or platform validation was performed.",
+      "evidence_paths": ["runs/haic-research-v2/apex-line-three-track-heldout-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-three-track-heldout-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Apex steering changed on 651 decisions in twelve held-out cells, with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-three-track-heldout-20260928/report.json", "tests/test_apex_line_runtime.py"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "The apex candidate finished 11/12 versus selected control 12/12. Faster finished-lap median (23.26 versus 25.06 seconds) cannot overcome lower completion. Apex failed track 3 seed 303 off-track at progress 0.6078.",
+      "evidence_paths": ["artifacts/haic-research-v2/apex-line-three-track-heldout-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/apex-line-three-track-heldout-20260928/run_manifest.json", "artifacts/haic-research-v2/apex-line-three-track-heldout-20260928/report.json"]
+}

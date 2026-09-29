@@ -1,0 +1,5 @@
+# Consecutive extra-gas burst budget: REJECT
+
+On three already consumed TUNE cells, original and burst-limited students each finished 1/3 on different identities. The fixed 16-intervention / two-decision cooldown suppressed 19 extra-gas decisions, including steps 210–211 preceding the original 3:5201 collision at step 222. Burst-limited student repaired 3:5201 (18.74 s) but lost the original valid 1:5200 finish, departing the road after 335 decisions. It also suppressed the first launch burst at steps 17–18 on every cell. Both arms failed 2:5205; zero invalid actions occurred. The registered activation endpoint required preserving 1:5200, so this cycle is `REJECT`. Formal gates: rule compliance `UNKNOWN`, mechanism activation `FAIL`, competitive outcome `NOT_APPLICABLE`; no release. The consumed identities are diagnostic only and the burst size and cooldown must not be swept on them.
+
+Frozen source and checkpoint: `tmp/haic2-acceleration-burst-activation-frozen-20260929/`. The source SHA-256 entries in the run manifest refer to that snapshot.
