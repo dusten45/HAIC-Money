@@ -1587,8 +1587,9 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         self._line_clear_count = 0
         self._line_near_span = None
         self._line_requested = None
-        self._previous_action_used_line = False
-        self._line_transition_pending = False
+        self._longitudinal_control = _LatchedClearStraightSustainController(
+            cruise_speed=cruise_speed
+        )
 
     def _clear_line_state(self) -> None:
         self._line_phase = "idle"
@@ -1601,8 +1602,8 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         self._clear_line_state()
         self._line_near_span = None
         self._line_requested = None
-        self._previous_action_used_line = False
-        self._line_transition_pending = False
+        if hasattr(self, "_longitudinal_control"):
+            self._longitudinal_control.reset(observation)
 
     def _visible_near_span(
         self,
@@ -1630,7 +1631,7 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         return float(run[0]), float(run[-1])
 
     def act(self, observation) -> np.ndarray:
-        self._line_transition_pending = self._previous_action_used_line
+        longitudinal_action = self._longitudinal_control.act(observation)
         self._line_requested = None
         frame = self._frame(observation)
         self._line_near_span = None
@@ -1643,8 +1644,25 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             else:
                 self._line_near_span = self._visible_near_span(frame, centers)
         action = super().act(observation)
-        self._previous_action_used_line = self._line_requested is not None
-        self._line_transition_pending = False
+        if self._obstacle_side != 0.0:
+            # A racing-line entry can deliberately point away from the bend.
+            # Do not let that prior request weaken the established obstacle
+            # trajectory: during detection and its short miss latch, emit the
+            # reset-synchronized completion controller's whole action.
+            self._clear_line_state()
+            action[:] = longitudinal_action
+            self._last_steer = float(action[0])
+            self._previous_action_was_preview = (
+                self._longitudinal_control._previous_action_was_preview
+            )
+            self._preview_transition_pending = (
+                self._longitudinal_control._preview_transition_pending
+            )
+            self._preview_requested = (
+                self._longitudinal_control._preview_requested
+            )
+        else:
+            action[1:] = longitudinal_action[1:]
         return action
 
     def _lost_road_action(self) -> np.ndarray:
@@ -1711,18 +1729,28 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
             if entry_direction is not None:
                 self._line_phase = "entry"
                 self._line_direction = entry_direction
+                self._line_exit_count = 0
+                self._line_clear_count = 0
             elif apex_direction is not None:
                 self._line_phase = "apex"
                 self._line_direction = apex_direction
+                self._line_exit_count = 0
+                self._line_clear_count = 0
         elif self._line_phase == "entry":
             if apex_direction == self._line_direction:
                 self._line_phase = "apex"
                 self._line_exit_count = 0
+                self._line_clear_count = 0
+            elif entry_direction == self._line_direction:
+                self._line_exit_count = 0
+                self._line_clear_count = 0
             elif (
                 entry_direction is not None
                 and entry_direction != self._line_direction
             ):
                 self._line_direction = entry_direction
+                self._line_exit_count = 0
+                self._line_clear_count = 0
             elif clear:
                 self._line_clear_count += 1
                 if self._line_clear_count >= self.LINE_CLEAR_CONFIRM_FRAMES:
@@ -1807,7 +1835,7 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         if active_phase is None or self._line_direction == 0.0:
             return inherited
 
-        half_width = 0.5 * (right - left + 1.0)
+        half_width = 0.5 * (right - left)
         maximum_offset = max(0.0, half_width - self.LINE_MIN_EDGE_CLEARANCE)
         fraction = {
             "entry": self.LINE_ENTRY_FRACTION,
@@ -1835,25 +1863,7 @@ class _PhaseAwareRacingLineController(_LatchedClearStraightSustainController):
         adjusted = float(base + correction)
         if adjusted != inherited:
             self._line_requested = adjusted
-            # Reuse the existing preview-to-obstacle zero-crossing guard for
-            # any line action that is actually emitted after the slew limit.
-            self._preview_requested = adjusted
-        return adjusted
-
-    def _adjust_obstacle_steering(
-        self,
-        *,
-        base_steering: float,
-        obstacle_bias: float,
-        straight: bool,
-    ) -> float:
-        adjusted = super()._adjust_obstacle_steering(
-            base_steering=base_steering,
-            obstacle_bias=obstacle_bias,
-            straight=straight,
-        )
-        if self._line_transition_pending and adjusted * self._last_steer < 0.0:
-            self._last_steer = 0.0
+            self._preview_requested = 0.0
         return adjusted
 
 
