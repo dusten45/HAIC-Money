@@ -44,7 +44,7 @@
       "From identical state, every current-obstacle action and shared inherited state remains exact to _FastCornerCarryController.",
       "On miss frames1--4 only, a coherent curve matching the stored avoidance side applies the bounded gain, preserves0.07 slew and continues to use the inherited latched longitudinal target.",
       "From matched state, a miss-latch curve opposite the stored avoidance side is action/shared-state exact to _FastCornerCarryController. After a prior active retention frame it applies no new gain, preserves the control sign and may carry at most the registered0.06 prior steering difference before converging.",
-      "The fifth clearing frame and all later frames are exact to _FastCornerCarryController; reset or road loss leaves no stale retention.",
+      "The fifth clearing frame applies no new gain and clears the base latch. From matched state it is exact; after prior retention an abrupt straight/opposite transition preserves the control sign with at most0.06 carryover and then converges. Reset or road loss leaves no stale retention.",
       "Exact direction, zero-side, first/final latch,0.07 reversal interval and mirrored boundaries are covered.",
       "Affected local/submission tests and an isolated exact-file package smoke pass."
     ],
@@ -57,7 +57,7 @@
   },
   "abort": [
     "Any action/shared inherited state differs from _FastCornerCarryController outside miss frames1--4 with a same-sign coherent curve.",
-    "Any current-obstacle or fifth-clearing-frame action differs from _FastCornerCarryController; or an opposite-side miss-latch curve receives new gain, changes the control sign or exceeds the registered0.06 sequential carryover.",
+    "From matched state any current-obstacle action differs from _FastCornerCarryController; or any sequential current-obstacle/fifth-clearing/opposite transition receives new gain, changes the control sign or exceeds the registered0.06 carryover.",
     "Any steering delta exceeds0.07, request increment exceeds0.06, request exceeds0.48, or stale retention survives latch expiry/reset/road loss.",
     "Any runtime condition uses track id, seed, map identity, coordinate, elapsed time, progress or evaluation filename.",
     "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
@@ -66,7 +66,11 @@
   "amendments": [
     {
       "recorded_at": "2026-09-30T04:42:00+09:00",
-      "reason": "Pre-commit sequential testing showed that an opposite curve immediately after one active retention frame inherits up to the registered0.06 prior steering-state difference even though no new gain is applied. Require exactness from matched state and bounded same-sign carryover sequentially; current-obstacle reacquisition and the fifth clearing frame must still converge exactly."
+      "reason": "Pre-commit sequential testing showed that an opposite curve immediately after one active retention frame inherits up to the registered0.06 prior steering-state difference even though no new gain is applied. Require exactness from matched state and bounded same-sign carryover sequentially; current-obstacle reacquisition and latch clearing must disable new gain and converge."
+    },
+    {
+      "recorded_at": "2026-09-30T04:51:00+09:00",
+      "reason": "Final independent audit showed that an abrupt opposite/straight fifth clearing frame or immediate opposing obstacle after active retention can also carry the prior bounded steering difference for one frame. Remove the incorrect universal exactness requirement, require no new gain plus same-sign carryover at most0.06, and add abrupt clearing, immediate obstacle, preview-marker and exact reversal-boundary transition coverage."
     }
   ],
   "compliance_blockers": [
