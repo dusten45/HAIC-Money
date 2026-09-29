@@ -2,7 +2,8 @@
   "schema_version": 1,
   "experiment": "double-clear-straight-throttle-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
-  "recorded_at": "2026-09-30T06:30:00+09:00",
+  "recorded_at": "2026-09-30T03:59:10+09:00",
+  "recorded_at_basis": "Corrected to the first preregistration commit df115313e7c44d2067f632a6dd27f474ac160dc4 commit time. The original manually entered06:30 value was future-dated metadata; Git history proves preregistration before amendment32afd26 at04:04:44 and implementation bda34b3 at04:06:46.",
   "branch": "feature/DG-Codex",
   "hypothesis": "The current bare controller is acceleration-limited on fully settled straights with no detector-recognized obstacle or active latch because its positive gas branches are only 0.18, 0.135 and 0.09. Doubling only those already-eligible propulsion commands should reduce time spent accelerating while the unchanged target-speed and braking controller continues to bound speed before detected bends.",
   "scope": {
