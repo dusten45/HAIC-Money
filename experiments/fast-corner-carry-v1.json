@@ -34,7 +34,7 @@
   "single_factor": {
     "name": "friction-aware obstacle-free curve speed envelope",
     "candidate_controller": "agent._FastCornerCarryController",
-    "target_formula": "clip(68/sqrt(1+0.10*sweep),40,64) only when the inherited exact-straight predicate is false and both current obstacle and obstacle miss latch are clear",
+    "target_formula": "clip(68/sqrt(1+0.10*sweep),40,64) using the raw generic _road_sweep(centers), only when the inherited exact-straight predicate is false and both current obstacle and obstacle miss latch are clear",
     "normal_curve_gas": {
       "speed_below_target_minus_8": 0.14,
       "speed_below_target_minus_3": 0.11,
@@ -62,7 +62,7 @@
       "Obstacle-free curve throttle follows the three registered branches and steering attenuation; gas and brake never overlap.",
       "Obstacle-free curve braking begins strictly above effective target+2, is monotone and never exceeds0.18.",
       "The post-adjustment strong-steering cap44 is honored by pedal control rather than bypassed by the earlier command target.",
-      "Current obstacle, every miss-latch frame and reacquisition remain action-identical to the control for identical controller state and observation.",
+      "Current obstacle, every frame that starts with an active miss latch (including its clearing frame), and reacquisition remain action-identical to the control for identical controller state and observation.",
       "Steering remains exactly equal to the control across directed and randomized tests; invalid input, road loss and reset remain inherited.",
       "Affected/local/submission contract tests and an isolated exact-file package smoke pass."
     ],
@@ -84,5 +84,11 @@
     "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
     "The competition website is inaccessible; the official participant repository remains available and unchanged.",
     "Only source, synthetic, unit and isolated package validation is authorized."
+  ],
+  "amendments": [
+    {
+      "recorded_at": "2026-09-30T02:25:00+09:00",
+      "reason": "Pre-implementation static review found that reconstructing sweep from the base curve target saturates at16 because that target is clipped. Clarify that the registered sweep is the same raw generic image-space _road_sweep used before clipping, and close the miss-latch clearing-frame boundary explicitly. Constants and experiment scope are unchanged."
+    }
   ]
 }
