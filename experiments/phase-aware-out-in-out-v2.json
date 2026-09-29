@@ -25,7 +25,7 @@
       "Interpret0.035 as the lateral-reference correction relative to raw road steering. Because entry cancels the inherited0.05 inward preview, the explicit maximum candidate-control request delta is0.085.",
       "Use geometric half-width=(right-left)/2 without an inclusive pixel count, then clip the desired offset to half-width minus7.0.",
       "Do not write line requests into the inherited preview marker; when a line replaces an inherited preview, clear that frame's marker so post-slew equality cannot falsely arm it. Add no special line-to-obstacle zero-cross state. Obstacle transitions use the inherited sign/slew/limit rules from the actually emitted last steering action.",
-      "Maintain a reset-synchronized _LatchedClearStraightSustainController shadow on the same observations and copy only its emitted gas/brake into the candidate action. Its steering is never emitted and never changes the candidate line state. This preserves both current-frame and history-dependent longitudinal output exactly while final lateral clipping and slew remain candidate-owned."
+      "Maintain a reset-synchronized _LatchedClearStraightSustainController shadow on the same observations. Copy its gas/brake on every frame. While a current obstacle is detected or the inherited obstacle-side miss latch remains nonzero, copy its complete action and synchronize candidate _last_steer; clear the line phase. Outside that hazard fallback, shadow steering is never emitted. This preserves history-dependent longitudinal output and restores the known completion controller's natural obstacle trajectory instead of rate-limiting from a deliberately opposing entry line."
     ],
     "no_new_tuning": true,
     "persistent_phase_state": true,
@@ -37,8 +37,9 @@
       "Clear-entry/apex-clear and other interrupted sequences require consecutive clear confirmations; ambiguous geometry clears stale direction immediately.",
       "Entry correction relative to raw steering is<=0.035 and candidate-control request delta is<=0.085; apex/exit candidate-control deltas remain<=0.035.",
       "At inherited steering values immediately below, equal to and above0.28, and on the following clear straight, candidate gas/brake and target state are exact to the reset-synchronized control while final lateral action follows the registered line and slew.",
-      "Line-to-current-obstacle transitions never mutate _last_steer before final clipping/slew, do not worsen the inherited action-to-action steering change from an identical emitted last steer, and preserve the inherited obstacle request, target, gas, brake, detector and latch behavior from matched state. The inherited obstacle steer-limit clip can itself exceed0.07 when an artificially preloaded prior action is above0.39, so absolute0.07 is not asserted outside the inherited envelope.",
+      "On the registered entry-to-opposing-obstacle sequence and mirrored counterpart, current-obstacle and all miss-latch actions are complete-action exact to the reset-synchronized natural control trajectory; candidate _last_steer is synchronized to the emitted fallback. This safety fallback may cross more than0.07 from the prior line action, just as the inherited preview-priority transition can bypass ordinary slew; all non-hazard line frames retain inherited clip/slew.",
       "The inherited _previous_action_was_preview and _preview_requested fields are never armed by a non-preview line request, including the prior-steer equality boundary that emits exactly0.05 after the line replaced a preview.",
+      "The hazard fallback is inactive on every obstacle-free, latch-free phase frame and cannot change the phase targets, thresholds or clear-road steering.",
       "The exact7.0 geometric clearance boundary passes without requesting less than7.0; nextafter-inside/outside and narrower/edge-breached spans suppress safely.",
       "Mirrored entry/apex/exit, coherent opposite turns, continuing hairpins, missing rows, current obstacles, miss latch, invalid/lost/reset and randomized action bounds pass.",
       "All prior affected tests and a temporary exact-file package smoke pass; bare-only routing and frozen file hashes are preserved."
@@ -48,7 +49,7 @@
   "abort": [
     "Any environment execution, training, submission, completion/lap-time claim or SOTA promotion occurs.",
     "Any target fraction, threshold, gain, correction cap, phase definition, speed value, detector or obstacle parameter changes beyond the listed static repairs.",
-    "Any line-to-obstacle transition differs from matched control initialized with the identical emitted last steer, any emitted gas/brake or target state differs from the reset-synchronized longitudinal shadow, or any preview marker is polluted.",
+    "Any current-obstacle or miss-latch action differs from the reset-synchronized natural control shadow, the candidate _last_steer is not synchronized during fallback, any emitted gas/brake or target state differs from that shadow, or any preview marker is polluted.",
     "Any predicted geometric clearance is below7.0 pixels or any stale phase survives ambiguous/missing/obstacle/lost-road input.",
     "Any frozen model, official environment, DrQ artifact, user video or root submission.zip changes, or any relevant test fails."
   ],
