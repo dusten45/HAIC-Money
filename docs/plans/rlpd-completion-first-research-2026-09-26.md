@@ -41,6 +41,14 @@ actor and both exports on consumed TRAIN, reporting curve precursors, retained
 finishes and failures. Results and any subsequent intervention must be frozen
 separately; no performance outcome is established by this design.
 
+**Execution checkpoint:** The source-bound continuation completed all 42
+branches. Full-finish rescues are 2/10 for 12 decisions and 3/10 for 25 decisions;
+each duration harms 2/4 finished-parent controls. One and three rescues
+respectively also meet local qualification. Strict preparation produced 665
+accepted rows, with 339 unique failure-support rows on three geometries. The
+first matched 8,192-decision fine-tunes are running, not yet evaluated. See
+[the primary summary](../../experiments/rlpd-recovery-validation-v1-result.json).
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 

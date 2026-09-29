@@ -2,6 +2,15 @@
 
 ## RLPD Coupled Recovery (2026-09-29)
 
+- [Closed-loop validation and learning status](../../experiments/rlpd-recovery-validation-v1-result.json):
+  42 complete branches; 12/25-decision feedback rescued 2/10 and 3/10 failure
+  finishes but each harmed 2/4 finished controls. Strict paired-finish preparation
+  yielded 339 unique failure-support rows on three geometries, plus qualified
+  retained-finish rows. Matched raw-SAC fine-tuning is running, not evaluated.
+- [Same-time multi-second audit](../../experiments/rlpd-coupled-recovery-r2-audit-result.json)
+  and [source-bound continuation](../../experiments/rlpd-coupled-recovery-r2.json):
+  preserve the interrupted v1 attempt, reuse 28 completed traces and finish 14
+  missing branches without new cells or historical replay repair.
 - [Coupled branch protocol](../../experiments/rlpd-coupled-recovery-v1.json):
   consumed G0 TRAIN failure precursors and finished-parent controls; full-vector
   12/25-decision recovery followed by real closed-loop actor continuation. The

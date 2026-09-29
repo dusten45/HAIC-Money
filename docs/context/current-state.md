@@ -8,20 +8,31 @@ supersedes the historical migration pause below for this RLPD iteration only.
 Current collection uses only consumed G0 track-1 geometries 4272000001-4272000012;
 confirmation/blind/private cells and official actions remain out of scope.
 
-The [new frozen branch protocol](../../experiments/rlpd-coupled-recovery-v1.json)
-recomputes full steering/pedal Oracle actions for 12/25 decisions, then the
-original actor through episode end. It saves lateral error, speed, damage and
-progress through at least five seconds after handoff. The v1 shell timed out
-with 28 completed branches retained; it is not a completed 42-branch result.
-The separate continuation preserves those artifacts and collects missing
-branches rather than repairing historical archive divergence.
+The [closed-loop validation result](../../experiments/rlpd-recovery-validation-v1-result.json)
+now covers 42 completed branches, 18,411 decisions and 43 reset intents including
+one externally killed duplicate attempt with unknown extra cost. The
+[separate continuation](../../experiments/rlpd-coupled-recovery-r2.json) reused
+28 immutable traces and collected only the missing 14. Full steering/pedal
+Oracle feedback for 12/25 decisions preceded original-actor continuation to real
+episode end, with lateral error, speed, damage and progress followed for at least
+five seconds after handoff. Historical archive divergence was not repaired.
+
+At 12 decisions, 2/10 failures became finishes but 2/4 finished-parent controls
+were harmed; at 25 decisions, 3/10 became finishes and 2/4 controls were harmed.
+Only one and three rescues respectively also passed local qualification. This
+supports state-specific recovery data, not unconditional Oracle repair.
 
 Partial primary receipts already show that an unchanged actor can pass the
 five-second local condition and fail later. Learning therefore requires actual
 paired full-finish rescue plus local qualification, with preserved-finish harm
 controls. The data window includes the executed intervention and first 63 actor
-decisions after handoff, not unexecuted Oracle proposals. Data sufficiency and
-matched pixel-only RLPD fine-tuning/evaluation remain pending; there is no learned
+decisions after handoff, not unexecuted Oracle proposals. Strict preparation
+produced 665 accepted rows (653 unique), including 339 unique failure-support
+rows across three geometries. Matched 8,192-decision raw-SAC fine-tuning of two
+V5-seed50 learner-state copies is running under the
+[frozen learning protocol](../../experiments/rlpd-recovery-learning-v1.json):
+32online/32prior control versus 32online/16prior/16recovery. Contemporary
+pixel-only finish/curve-entry evaluation remains pending; there is no learned
 improvement or candidate promotion yet. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
 
