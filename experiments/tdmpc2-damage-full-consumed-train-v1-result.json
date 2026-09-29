@@ -1,0 +1,70 @@
+{
+  "format": "haic-tdmpc2-damage-full-consumed-train-result-v1",
+  "status": "complete_valid_full_episode_finish_comparison_local_gate_failed",
+  "partition": "same four previously consumed obstacle-enabled track-1 TRAIN roads used by both 100k learners; not fresh, blind, confirmation or official evaluation",
+  "evaluation_protocol": "experiments/tdmpc2-damage-full-consumed-train-v1.json",
+  "evaluation_protocol_sha256": "b00e4715703392ad1bbdaa75c6d86e0fb3d3df4c4fed0e3487aef2616d0053c6",
+  "evaluation_operator": "scripts/evaluate_tdmpc2_damage_train.py",
+  "evaluation_operator_sha256": "a405accf3d8546b80550407312d37f33e3c0af36b9be12a73e296760ededf120",
+  "primary_result": "runs/tdmpc2-damage-full-train-20260929-v1/result.json",
+  "primary_result_sha256": "965d816720f7a97690dda7ad7264a1622b29e08a6aa77e41bd9540143edcf1a1",
+  "episode_ledger": "runs/tdmpc2-damage-full-train-20260929-v1/episodes.jsonl",
+  "episode_ledger_sha256": "037bdda03a57a4ef8ac230b4ad3e6c42506aad5e68ac7e889f5d1b43ee4c5e62",
+  "source_training_result_sha256": "b7b5d1f0eaeaeb18baf71b264e38e46fcd017ba3bfee09a177658b1574555ca6",
+  "source_checkpoint": "runs/tdmpc2-damage-20260928-v1/checkpoint-at-least-100000-step-100186.pt",
+  "source_checkpoint_sha256": "469e018504ce00ad1b134c0b06c7f087da75b09cd9891375a96965c1ee7b2c1e",
+  "source_decisions": 100186,
+  "model_selection": "Only the first complete episode-boundary checkpoint >=100k, and default MPPI as PRIMARY mode, were predeclared before treatment outcomes. Prior is separately secondary.",
+  "baseline_frozen_full_episode_result": "experiments/tdmpc2-full-consumed-train-v1-result.json",
+  "baseline_frozen_full_episode_result_sha256": "3bc41dd2a35bfd488a6cd13a2778d9344f6929873edd77e701b067e31fd1366b",
+  "source_reward_target": "replay training_reward = raw environment reward - 5 * positive cumulative damage increment; evaluation uses only unmodified raw environment reward",
+  "denominators": {"distinct_heavily_reused_roads": 4, "repeats_per_road_mode": 2, "prior_episodes": 8, "mppi_episodes": 8, "total_episodes": 16, "max_decisions_per_episode": 2000},
+  "validity": {"all_scheduled_episodes_complete": true, "censored_episodes": 0,
+               "semantic_terminal_episodes": 16, "full_episode_finish_comparison_valid": true,
+               "model_optimizer_history_proven_by_checkpoint_bytes": false,
+               "generalization_claim": false, "official_score": false},
+  "prior": {
+    "finishes": 0,
+    "episodes": 8,
+    "decisions": 2634,
+    "mean_progress": 0.516190760871152,
+    "mean_raw_return": 378.21867833325626,
+    "mean_damage": 0.45,
+    "mean_action_latency_s": 0.001876150460838819,
+    "max_action_latency_s": 0.004368717782199383,
+    "per_road": [
+      {"geometry_seed": 3910800001, "episodes": 2, "finishes": 0, "mean_progress": 0.5033333333333333, "mean_raw_return": 386.06666666665024, "mean_damage": 0.4},
+      {"geometry_seed": 3910800004, "episodes": 2, "finishes": 0, "mean_progress": 0.46200607902735563, "mean_raw_return": 298.9270516717113, "mean_damage": 0.4},
+      {"geometry_seed": 3910800034, "episodes": 2, "finishes": 0, "mean_progress": 0.5, "mean_raw_return": 396.0210526315654, "mean_damage": 0.5},
+      {"geometry_seed": 3910800085, "episodes": 2, "finishes": 0, "mean_progress": 0.5994236311239193, "mean_raw_return": 431.85994236309807, "mean_damage": 0.5}
+    ]
+  },
+  "mppi_primary": {
+    "finishes": 2,
+    "episodes": 8,
+    "decisions": 2573,
+    "mean_progress": 0.6143022657681207,
+    "mean_raw_return": 479.4176832302288,
+    "mean_damage": 0.45,
+    "mean_action_latency_s": 0.7378364223746161,
+    "max_action_latency_s": 0.8246753751300275,
+    "per_road": [
+      {"geometry_seed": 3910800001, "episodes": 2, "finishes": 2, "mean_progress": 0.9983333333333333, "mean_raw_return": 841.016666666649, "mean_damage": 0.6000000000000001},
+      {"geometry_seed": 3910800004, "episodes": 2, "finishes": 0, "mean_progress": 0.3191489361702128, "mean_raw_return": 172.66990881458793, "mean_damage": 0.0},
+      {"geometry_seed": 3910800034, "episodes": 2, "finishes": 0, "mean_progress": 0.5345394736842105, "mean_raw_return": 433.76052631577926, "mean_damage": 0.7},
+      {"geometry_seed": 3910800085, "episodes": 2, "finishes": 0, "mean_progress": 0.6051873198847262, "mean_raw_return": 470.2236311238991, "mean_damage": 0.5}
+    ]
+  },
+  "primary_local_gate": {
+    "mode": "mppi",
+    "required_finishes": 4,
+    "observed_finishes": 2,
+    "episode_denominator": 8,
+    "distinct_finished_road_geometries": 1,
+    "met_on_reused_train": false,
+    "baseline_raw_target_mppi_finishes": 0,
+    "baseline_raw_target_episode_denominator": 8
+  },
+  "comparison_limits": "Compared on the same four heavily trained road/reset CELLS, not identical action/state trajectories. MPPI finishes 2/2 on one road and 0/2 on each of the other three; prior finishes 0/8. Raw-target frozen baseline MPPI finished 0/8. Aggregate shaped MPPI progress and raw return are higher than the raw-target baseline, but one road's per-cell progress is lower and mean MPPI damage remains 0.45 in BOTH studies; no general damage suppression is demonstrated. The first planned RAW and DAMAGE training actions already differed at decision10001 before a positive damage penalty occurred. A one-seed comparison cannot identify damage shaping as the cause of two local finishes; repeats of one geometry are not eight independent roads. CPU latency is an internal runtime proxy, not official package compliance. This 2/8 fails the predeclared >=4/8 descriptive local goal, and even 4/8 on these repeatedly trained roads would not establish independent or private-track generalization.",
+  "decision": "Keep this source-bound one-axis study intact, do not promote to official model or claim >=50% full-episode completion. The fixed raw H3 branch-ranking dataset does not supply matching shaped truth and cannot rank the shaped head against it. Before any separately pinned H5 horizon or MPPI sample-axis reset, examine source-bound model-only H5 reward/terminal/discount calibration without using protected roads and predeclare any new branch/evaluation cells and a single changed planner variable. Future H5 training must return to the original raw-target 100k baseline unless an explicitly different incremental study isolates shaping-plus-H5. Fresh multi-track TRAIN-DIAGNOSTIC audit remains BLOCKED and the lower-tier reused cross-lane development option is not a fresh generalization claim."
+}
