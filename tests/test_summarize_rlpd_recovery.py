@@ -36,7 +36,8 @@ def test_same_time_telemetry_and_correlated_dedup(tmp_path):
     result = summarize(dataset(tmp_path))
     assert result["verified_episode_hashes"] == 3
     assert result["unique_accepted_transitions_by_stratum"]["failure"] == 1
-    assert not result["data_gate"]["passed"]
+    assert not result["local_support_gate_not_training_gate"]["passed"]
+    assert result["training_authorized"] is False
     for table in result["finish_tables_by_horizon"].values():
         assert table["gained"] == 1 and table["lost"] == 0
         assert table["same_time_5s_followup_delta_medians"]["speed_m_s"] == -1
