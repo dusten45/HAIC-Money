@@ -1,5 +1,46 @@
 # RLPD Completion-First Research
 
+## Coupled Recovery Iteration (2026-09-29)
+
+The user explicitly selected curve-entry overspeed and steering-speed coupling
+recovery-data validation, then resumed after a Kilo-only restart. This is a new
+TRAIN-only iteration, not continuation of the frozen G1 image-coverage rubric.
+Only already-consumed G0 TRAIN cells are initially in scope. Existing Oracle
+four-decision branches are insufficient: they neither recompute the actor after
+handoff nor demonstrate multi-second recovery.
+
+The isolated collector compares the same current-runtime executed prefix with
+unchanged actor continuation and 12/25-decision full-vector Oracle control,
+followed by the original actor through real episode end or the original cap.
+It retains failed branches and finished-parent harm controls. Local recovery
+requires 63 actor decisions after handoff, positive progress, bounded lateral
+error and no added damage; full-finish rescue/harm is a separate endpoint.
+Source-specific trace/state checks are required without repairing historical
+archive replay divergence. Oracle/menu selection remains privileged training
+data generation, not a deployable recovery selector.
+
+**Data-gate refinement:** Partial primary branches show the unchanged actor can
+also pass the five-second local condition and fail later. A separate immutable
+training-data preparation step therefore requires an actual paired full-finish
+rescue plus local qualification, or a qualified preserved finish for controls.
+Its accepted window contains the executed intervention and first 63 actor
+decisions after handoff, without changing action roles or rewards. At least 128
+unique failure-support state/action rows across three geometries are required;
+control rows and duplicate menu prefixes cannot satisfy this feasibility gate.
+The externally timed-out v1 collector remains partial; a separately source-bound
+r2 reuses completed artifacts and finishes only missing branches, retaining the
+killed attempt and its unknown interaction cost.
+
+If validated data are sufficient, the first minimum intervention fine-tunes two
+copies of the same V5 seed50 learner state with fresh online replay/RNG: control
+32 online/32 ordinary prior versus treatment 32 online/16 ordinary prior/16
+validated recovery. Raw reward, SAC objective and budget stay equal; no blanket
+Oracle imitation is added. Only actually executed native actions enter Bellman
+transitions. A contemporary start-to-finish evaluation compares the original
+actor and both exports on consumed TRAIN, reporting curve precursors, retained
+finishes and failures. Results and any subsequent intervention must be frozen
+separately; no performance outcome is established by this design.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 

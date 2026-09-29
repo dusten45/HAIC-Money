@@ -1,5 +1,24 @@
 # Experiment Evidence Index
 
+## RLPD Coupled Recovery (2026-09-29)
+
+- [Coupled branch protocol](../../experiments/rlpd-coupled-recovery-v1.json):
+  consumed G0 TRAIN failure precursors and finished-parent controls; full-vector
+  12/25-decision recovery followed by real closed-loop actor continuation. The
+  v1 execution is partial after an external shell timeout; no completed cohort
+  or learner effect is established by this protocol.
+- [Archived precursor review](../../experiments/rlpd-recovery-precursor-review-v1-result.json):
+  zero resets, 24 existing actor-road traces; heading/lateral thresholds also
+  appear on successes. Curve overspeed/opposition remain unassessed for these
+  archives because the necessary telemetry is absent.
+- [Foundation checks](../../experiments/rlpd-recovery-foundation-check-v1-result.json):
+  unchanged RLPD regressions, isolated coupled collection/evaluation audits and
+  V5 learning-checkpoint/export action parity. Synthetic engineering evidence,
+  not a recovery or model performance result.
+- [Iteration and data gate](../plans/rlpd-completion-first-research-2026-09-26.md):
+  training requires paired full-finish rescue plus local qualification, not just
+  a short Oracle imitation or five-second safety pass.
+
 The JSON protocol/result artifacts under repository-root `experiments/` are the
 source of truth. This index is intentionally selective: it promotes only evidence
 that changes future research decisions. Timestamped `runs/` and `evaluations/`

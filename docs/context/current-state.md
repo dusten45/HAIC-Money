@@ -1,5 +1,37 @@
 # Current Research State
 
+## RLPD Coupled Recovery In Progress (2026-09-29)
+
+The user authorized and resumed TRAIN-only curve-entry overspeed / steering-speed
+coupling recovery validation after a Kilo-only restart. This authorization
+supersedes the historical migration pause below for this RLPD iteration only.
+Current collection uses only consumed G0 track-1 geometries 4272000001-4272000012;
+confirmation/blind/private cells and official actions remain out of scope.
+
+The [new frozen branch protocol](../../experiments/rlpd-coupled-recovery-v1.json)
+recomputes full steering/pedal Oracle actions for 12/25 decisions, then the
+original actor through episode end. It saves lateral error, speed, damage and
+progress through at least five seconds after handoff. The v1 shell timed out
+with 28 completed branches retained; it is not a completed 42-branch result.
+The separate continuation preserves those artifacts and collects missing
+branches rather than repairing historical archive divergence.
+
+Partial primary receipts already show that an unchanged actor can pass the
+five-second local condition and fail later. Learning therefore requires actual
+paired full-finish rescue plus local qualification, with preserved-finish harm
+controls. The data window includes the executed intervention and first 63 actor
+decisions after handoff, not unexecuted Oracle proposals. Data sufficiency and
+matched pixel-only RLPD fine-tuning/evaluation remain pending; there is no learned
+improvement or candidate promotion yet. See the
+[active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
+
+The [zero-reset precursor review](../../experiments/rlpd-recovery-precursor-review-v1-result.json)
+confirms heading/lateral thresholds occur in successful controls too. Seed52's
+archived traces lack curvature and same-state Oracle actions, so overspeed and
+steering opposition are unassessed rather than inferred from old actors.
+The [foundation checks](../../experiments/rlpd-recovery-foundation-check-v1-result.json)
+establish synthetic code/checkpoint feasibility only, not driving performance.
+
 Last refreshed: 2026-09-29 for the user-directed DrQ-v2 closure. This is the
 current-state source of truth, not an experiment changelog. Evidence and
 historical decisions are linked below.
