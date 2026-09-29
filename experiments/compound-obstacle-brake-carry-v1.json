@@ -5,8 +5,10 @@
   "recorded_at": "2026-09-30T04:32:17+09:00",
   "amended_at": "2026-09-30T04:38:53+09:00",
   "amendment": "Clarify that excess is measured above the inherited target-plus0.5 trigger. The registered numeric examples already used this definition; no gate or parameter changed.",
+  "precision_amended_at": "2026-09-30T04:40:11+09:00",
+  "precision_amendment": "Clarify that both control and candidate pass through the inherited final nextafter(float32(MAX_BRAKE),0) clamp. The candidate preserves the emitted base-brake envelope; no gate or parameter changed.",
   "branch": "feature/DG-Codex",
-  "hypothesis": "Submission-11 video and the active controller both indicate excessive longitudinal deceleration when a recognized obstacle overlaps a high-sweep curve. Reducing only the supplemental curve-brake envelope in that registered compound state, while retaining the base distance/speed brake as a hard floor, should improve obstacle-corner carry without weakening the inherited high-overspeed safety brake, target speed, latch or steering.",
+  "hypothesis": "Submission-11 video and the active controller both indicate excessive longitudinal deceleration when a recognized obstacle overlaps a high-sweep curve. Reducing only the supplemental curve-brake envelope in that registered compound state, while retaining the base distance/speed brake before the pre-existing final float32 clamp, should improve obstacle-corner carry without weakening the inherited emitted high-overspeed safety envelope, target speed, latch or steering.",
   "scope": {
     "control_commit": "5dcba0964524584435338b9b161f454293570057",
     "control_class": "agent._DoubleClearStraightThrottleController",
@@ -24,7 +26,7 @@
       "estimated speed is more than target plus0.5 so the inherited supplemental curve-brake branch is active"
     ],
     "excess_definition": "excess = speed - target - CURVE_BRAKE_TRIGGER_DELTA, where CURVE_BRAKE_TRIGGER_DELTA is0.5",
-    "formula": "candidate_brake = max(inherited_base_brake, clip(0.04 + 0.012 * excess, 0.04, 0.18))",
+    "formula": "raw_candidate_brake = max(inherited_base_brake, clip(0.04 + 0.012 * excess, 0.04, 0.18)); emitted_candidate_brake = min(raw_candidate_brake, nextafter(float32(MAX_BRAKE),0))",
     "registered_examples": {
       "speed_32": {"control": 0.087, "candidate": 0.058},
       "speed_36": {"control": 0.159, "candidate": 0.106},
@@ -51,7 +53,7 @@
   ],
   "static_acceptance": [
     "Only the brake component differs from control inside the registered compound gate; target, gas, steering and shared inherited state remain exact.",
-    "The candidate brake never exceeds control, never falls below the inherited base safety brake, remains finite/in bounds and never overlaps positive gas.",
+    "The candidate brake never exceeds control, never falls below the inherited emitted base safety envelope after the shared final float32 clamp, remains finite/in bounds and never overlaps positive gas.",
     "Current recognized compound obstacles and miss-latch frames1--4 are eligible; the fifth clearing frame, reacquired noncompound obstacle and all noncompound states remain control-exact.",
     "Both turn directions and the sweep boundary immediately below/at6 receive symmetric, exact coverage.",
     "The target-plus0.5 trigger and high-overspeed base-brake saturation boundaries remain exact.",
@@ -61,7 +63,7 @@
   ],
   "rollback": [
     "Any action or shared-state difference outside the registered brake component and compound gate.",
-    "Any candidate brake below the inherited base safety brake or above the control brake.",
+    "Any candidate brake below the inherited emitted base safety envelope after the shared final float32 clamp or above the control brake.",
     "Any target, gas, steering, detector, latch, state, reset, invalid-input, recovery, dependency, packaging, bounds, NaN or latency regression."
   ],
   "future_environment_gate": {
