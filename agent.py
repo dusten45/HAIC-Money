@@ -2207,6 +2207,55 @@ class _PostObstacleCurveRetentionController(_FastCornerCarryController):
         return candidate
 
 
+class _DoubleClearStraightThrottleController(
+    _PostObstacleCurveRetentionController
+):
+    """Double propulsion only inside the settled clear-straight gate.
+
+    Speed targets and every brake, curve, obstacle, latch and steering branch
+    remain inherited.  This changes acceleration toward the existing target68;
+    it does not ask the camera speed estimator to regulate above its range.
+    """
+
+    CLEAR_STRAIGHT_THROTTLE_GAIN = 2.0
+    CLEAR_STRAIGHT_GAS_CAP = 0.36
+
+    def _adjust_pedals(
+        self,
+        *,
+        gas: float,
+        brake: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        inherited_gas, inherited_brake = super()._adjust_pedals(
+            gas=gas,
+            brake=brake,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        settled_clear_straight = (
+            inherited_gas > 0.0
+            and inherited_brake == 0.0
+            and straight
+            and self._pace_straight
+            and self._pace_sweep <= self.CURVE_SWEEP_THRESHOLD
+            and obstacle is None
+            and self._obstacle_side == 0.0
+            and not self._carry_latched_at_frame_start
+            and abs(self._last_steer) <= self.MAX_STEER_STEP
+        )
+        if settled_clear_straight:
+            return (
+                min(
+                    self.CLEAR_STRAIGHT_GAS_CAP,
+                    self.CLEAR_STRAIGHT_THROTTLE_GAIN * inherited_gas,
+                ),
+                0.0,
+            )
+        return inherited_gas, inherited_brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2708,7 +2757,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _PostObstacleCurveRetentionController()
+            _DoubleClearStraightThrottleController()
             if use_forward_controller
             else None
         )

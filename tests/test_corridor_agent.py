@@ -3130,6 +3130,264 @@ class TestVisionCorridorAgent(unittest.TestCase):
                 np.testing.assert_array_equal(actions[1], actions[0])
                 self.assertFalse(candidate._curve_retention_active)
 
+    def test_double_straight_throttle_scales_only_registered_branches(self):
+        from agent import (
+            _DoubleClearStraightThrottleController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        cases = (
+            (np.nextafter(60.0, -np.inf), 0.18, 0.36, 0.0),
+            (60.0, 0.135, 0.27, 0.0),
+            (np.nextafter(65.0, -np.inf), 0.135, 0.27, 0.0),
+            (65.0, 0.09, 0.18, 0.0),
+            (69.0, 0.09, 0.18, 0.0),
+            (np.nextafter(69.0, np.inf), 0.0, 0.0, 0.04),
+        )
+        for speed, control_gas, candidate_gas, expected_brake in cases:
+            control = _PostObstacleCurveRetentionController()
+            candidate = _DoubleClearStraightThrottleController()
+            observation = _observation(speed=0.0)
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+            with self.subTest(speed=speed):
+                self.assertEqual(control.__dict__, candidate.__dict__)
+                self.assertEqual(control._pace_command_target, 68.0)
+                self.assertEqual(candidate._pace_command_target, 68.0)
+                self.assertAlmostEqual(float(control_action[1]), control_gas, places=6)
+                self.assertAlmostEqual(
+                    float(candidate_action[1]), candidate_gas, places=6
+                )
+                self.assertAlmostEqual(
+                    float(candidate_action[2]), expected_brake, places=6
+                )
+                np.testing.assert_array_equal(
+                    candidate_action[[0, 2]], control_action[[0, 2]]
+                )
+                self.assertEqual(
+                    float(candidate_action[1]) * float(candidate_action[2]), 0.0
+                )
+                self.assertEqual(candidate_action.dtype, np.float32)
+                self.assertTrue(np.all(np.isfinite(candidate_action)))
+                self.assertTrue(np.all(candidate_action <= 1.0))
+
+    def test_double_straight_throttle_preserves_every_noneligible_branch(self):
+        from agent import (
+            _DoubleClearStraightThrottleController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        cases = (
+            ("clear_curve", _observation(curve=0.25, speed=45.0), 0.0),
+            ("mirrored_clear_curve", _observation(curve=-0.25, speed=45.0), 0.0),
+            ("distant_bend", _distant_bend_observation(speed=60.0), 0.0),
+            (
+                "mirrored_distant_bend",
+                _distant_bend_observation(direction=-1.0, speed=60.0),
+                0.0,
+            ),
+            (
+                "current_obstacle",
+                _compact_obstacle_observation(
+                    obstacle_x=42, obstacle_top=32, speed=30.0
+                ),
+                0.0,
+            ),
+            ("unsettled_straight", _observation(speed=45.0), 0.14),
+        )
+        for name, observation, last_steer in cases:
+            control = _PostObstacleCurveRetentionController()
+            candidate = _DoubleClearStraightThrottleController()
+            control._last_steer = candidate._last_steer = last_steer
+            control_action = control.act(observation)
+            candidate_action = candidate.act(observation)
+            with self.subTest(case=name):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+        obstacle = _compact_obstacle_observation(
+            obstacle_x=42, obstacle_top=32, speed=30.0
+        )
+        clear = _observation(speed=45.0)
+        control = _PostObstacleCurveRetentionController()
+        candidate = _DoubleClearStraightThrottleController()
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 2):
+            control_action = control.act(clear)
+            candidate_action = candidate.act(clear)
+            with self.subTest(latch_miss=miss):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+        released_control = control.act(clear)
+        released_candidate = candidate.act(clear)
+        self.assertAlmostEqual(float(released_control[1]), 0.18, places=6)
+        self.assertAlmostEqual(float(released_candidate[1]), 0.36, places=6)
+        np.testing.assert_array_equal(
+            released_candidate[[0, 2]], released_control[[0, 2]]
+        )
+
+        control = _PostObstacleCurveRetentionController()
+        candidate = _DoubleClearStraightThrottleController()
+        candidate.act(obstacle)
+        control.act(obstacle)
+        for _ in range(2):
+            np.testing.assert_array_equal(candidate.act(clear), control.act(clear))
+        np.testing.assert_array_equal(candidate.act(obstacle), control.act(obstacle))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        for direction, obstacle_x in ((1.0, 32), (-1.0, 42)):
+            control = _PostObstacleCurveRetentionController()
+            candidate = _DoubleClearStraightThrottleController()
+            compound = _observation(
+                curve=direction * 0.25,
+                obstacle_x=obstacle_x,
+                obstacle_y=50,
+                speed=30.0,
+            )
+            matching_curve = _observation(
+                curve=direction * 0.25,
+                speed=45.0,
+            )
+            np.testing.assert_array_equal(
+                candidate.act(compound), control.act(compound)
+            )
+            for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 1):
+                with self.subTest(compound_direction=direction, miss=miss):
+                    np.testing.assert_array_equal(
+                        candidate.act(matching_curve),
+                        control.act(matching_curve),
+                    )
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_double_straight_throttle_closes_previous_steer_boundary(self):
+        from agent import (
+            _DoubleClearStraightThrottleController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        clear = _observation(speed=45.0)
+        for direction in (-1.0, 1.0):
+            for magnitude, eligible in (
+                (0.07, True),
+                (np.nextafter(0.07, np.inf), False),
+            ):
+                control = _PostObstacleCurveRetentionController()
+                candidate = _DoubleClearStraightThrottleController()
+                control._last_steer = candidate._last_steer = direction * magnitude
+                control_action = control.act(clear)
+                candidate_action = candidate.act(clear)
+                with self.subTest(
+                    direction=direction,
+                    magnitude=magnitude,
+                    eligible=eligible,
+                ):
+                    np.testing.assert_array_equal(
+                        candidate_action[[0, 2]], control_action[[0, 2]]
+                    )
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+                    if eligible:
+                        self.assertAlmostEqual(float(control_action[1]), 0.18, places=6)
+                        self.assertAlmostEqual(
+                            float(candidate_action[1]), 0.36, places=6
+                        )
+                    else:
+                        np.testing.assert_array_equal(
+                            candidate_action, control_action
+                        )
+
+    def test_double_straight_throttle_preserves_recovery_invalid_and_reset(self):
+        from agent import (
+            _DoubleClearStraightThrottleController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        control = _PostObstacleCurveRetentionController()
+        candidate = _DoubleClearStraightThrottleController()
+        road = _observation(speed=0.0)
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        control.act(road)
+        candidate.act(road)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        candidate.reset(None)
+        fresh = _DoubleClearStraightThrottleController()
+        self.assertEqual(candidate.__dict__, fresh.__dict__)
+        for invalid in (None, np.zeros((84, 84), dtype=np.float32)):
+            reset_candidate = _DoubleClearStraightThrottleController()
+            reset_control = _PostObstacleCurveRetentionController()
+            np.testing.assert_array_equal(
+                reset_candidate.act(invalid), reset_control.act(invalid)
+            )
+            self.assertEqual(reset_candidate.__dict__, reset_control.__dict__)
+
+    def test_double_straight_throttle_randomized_differential(self):
+        from agent import (
+            _DoubleClearStraightThrottleController,
+            _PostObstacleCurveRetentionController,
+        )
+
+        rng = np.random.default_rng(20260930)
+        changed = 0
+        exact = 0
+        for _ in range(384):
+            speed = float(rng.uniform(0.0, 80.0))
+            curve = float(
+                rng.choice((0.0, -0.10, 0.10, -0.25, 0.25, -0.75, 0.75))
+            )
+            obstacle = bool(rng.integers(0, 2))
+            latched = bool(rng.integers(0, 2))
+            last_steer = float(rng.choice((0.0, -0.07, 0.07, -0.14, 0.14)))
+            observation = _observation(
+                curve=curve,
+                obstacle_x=42 if obstacle else None,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            control = _PostObstacleCurveRetentionController()
+            candidate = _DoubleClearStraightThrottleController()
+            control._last_steer = candidate._last_steer = last_steer
+            if latched:
+                control._obstacle_side = candidate._obstacle_side = 1.0
+                control._obstacle_missing = candidate._obstacle_missing = 1
+                control._last_obstacle_side_offset = (
+                    candidate._last_obstacle_side_offset
+                ) = -2.0
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(observation)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(observation)
+
+            self.assertEqual(candidate.__dict__, control.__dict__)
+            self.assertTrue(np.all(np.isfinite(candidate_action)))
+            self.assertTrue(np.all(candidate_action >= (-1.0, 0.0, 0.0)))
+            self.assertTrue(np.all(candidate_action <= 1.0))
+            self.assertEqual(
+                float(candidate_action[1]) * float(candidate_action[2]), 0.0
+            )
+            np.testing.assert_array_equal(
+                candidate_action[[0, 2]], control_action[[0, 2]]
+            )
+            if np.array_equal(candidate_action, control_action):
+                exact += 1
+                continue
+            changed += 1
+            self.assertEqual(curve, 0.0)
+            self.assertFalse(obstacle)
+            self.assertFalse(latched)
+            self.assertLessEqual(abs(last_steer), candidate.MAX_STEER_STEP)
+            self.assertGreater(float(control_action[1]), 0.0)
+            self.assertEqual(float(control_action[2]), 0.0)
+            self.assertAlmostEqual(
+                float(candidate_action[1]),
+                min(0.36, 2.0 * float(control_action[1])),
+                places=7,
+            )
+        self.assertGreater(changed, 0)
+        self.assertGreater(exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,
