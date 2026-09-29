@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "name": "phase-aware-out-in-out-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-29T22:42:40.0804799+09:00",
+  "purpose": "camera-only clearance-constrained out-in-out racing-line diagnostic",
+  "source_commit": "27192d92014265e419c1c97bbbd6cc1d37bddd86",
+  "branch": "codex/out-in-out-racing-line",
+  "control": {
+    "controller": "agent._LatchedClearStraightSustainController",
+    "agent_sha256": "b77f01672e32b34e7a936b50bcba2936d9cf4c1c49c5aa59a71c71daed820c59",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "classification": "unbound-top-down-video-association-plus-primary-literature-and-static-controller-mechanism",
+    "videos": {
+      "track_1_submission_7_sha256": "c8330c32d128f97b65549dd8008f9b621839858997423c3c2c76158100753472",
+      "track_2_submission_7_sha256": "377e1eaf40a16e46ac5139f93cda6832bb0287d38b11d4ec4bdb4c4c7400cd88",
+      "track_3_submission_7_sha256": "ad5a86d5dde35d4f5cdee670b1fdc2141ee786ae160f9ee534ac0d37718a2ae6"
+    },
+    "video_interpretation": [
+      "The top-down replays show repeated center/inside-biased cornering, but do not prove that every corner is in-in-in and do not expose policy-camera frames, actions, tire clearance, package identity, seed, or speed telemetry.",
+      "They motivate a generic phase-aware lateral-line hypothesis only; they cannot establish an optimal apex, a causal lap-time loss, or bind the candidate to the displayed results."
+    ],
+    "primary_sources": [
+      {
+        "citation": "Kapania, Subosits and Gerdes, A Sequential Two-Step Algorithm for Fast Generation of Vehicle Racing Trajectories",
+        "url": "https://arxiv.org/abs/1902.00606",
+        "applied": "Separate a curvature-reducing path factor from the frozen longitudinal controller and keep the path within track boundaries.",
+        "not_transferred": "Its full-track bounds, vehicle model, friction constraints, convergence behavior and measured lap-time results are unavailable to this camera-only runtime."
+      },
+      {
+        "citation": "Xue, Yue and Dolan, Spline-Based Minimum-Curvature Trajectory Optimization for Autonomous Racing",
+        "url": "https://arxiv.org/abs/2309.09186",
+        "applied": "Use a smooth bounded lateral reference rather than a permanent inside-edge command.",
+        "not_transferred": "Its centerline, inside/outside bounds and offline optimization results do not imply that this heuristic is minimum-curvature or minimum-time."
+      },
+      {
+        "citation": "TUMFTM global racetrajectory optimization author implementation",
+        "url": "https://github.com/TUMFTM/global_racetrajectory_optimization",
+        "applied": "Treat visible road width and clearance as constraints and keep minimum-curvature distinct from minimum-time.",
+        "not_transferred": "Do not copy the global-map optimizer or its dependencies into the submission runtime."
+      }
+    ],
+    "controller_mechanism": "The routed controller steers from rows42/54 and has a one-frame rows30/34 inward preview, but it has no entry-outside, apex-inside and confirmed-exit-outside lateral reference."
+  },
+  "feedback_decision": {
+    "accepted": "A larger-radius out-in-out hypothesis is physically plausible when constrained by the currently visible road envelope and subordinated to obstacle safety.",
+    "qualified": "Out-in-out is not universally time-optimal for linked corners or obstacles, and the replay does not prove every current corner is in-in-in.",
+    "rejected": "No fixed inside/outside map coordinates, corner order, track identifier, seed, minimap, replay location, time or progress trigger may enter runtime."
+  },
+  "factor": {
+    "candidate_controller": "agent._PhaseAwareRacingLineController",
+    "single_algorithmic_change": "Replace the obstacle-free bend preview with one symmetric, clearance-constrained lateral-reference state machine whose desired near-road-center offset is outside on entry, inside at apex and outside only after a confirmed exit geometry.",
+    "rows": [30, 34, 42, 54],
+    "geometry": {
+      "distal_delta": "mean(center30, center34) - center42",
+      "proximal_delta": "center42 - center54",
+      "bend_threshold_pixels": 1.5,
+      "entry": "abs(distal)>1.5 and abs(proximal)<=1.5",
+      "apex": "distal and proximal have the same sign and both exceed1.5 in that direction",
+      "exit_candidate": "after apex, both abs(center30-center42) and abs(center34-center42) are<=1.5 while the remembered-direction proximal delta remains>1.5",
+      "exit_confirmation_frames": 2,
+      "clear_confirmation_frames": 2,
+      "opposite_turn": "distal and proximal both exceed1.5 in the coherent opposite direction; switch without holding the old sign"
+    },
+    "lateral_reference": {
+      "entry_outside_fraction_of_visible_half_width": 0.18,
+      "apex_inside_fraction_of_visible_half_width": -0.10,
+      "exit_outside_fraction_of_visible_half_width": 0.18,
+      "minimum_predicted_edge_clearance_pixels": 7.0,
+      "steering_error_gain": 0.016,
+      "maximum_added_or_subtracted_steering": 0.035,
+      "sign_definition": "for turn direction d, positive d*(center54-41.5) means the vehicle is outside; steering correction is d*clip(gain*(signed_lateral-desired), +/-0.035)"
+    },
+    "priority": "A current obstacle, any inherited nonzero obstacle-side latch, missing required row, invalid frame, lost road or insufficient near-road clearance clears the racing-line phase and returns the inherited control unchanged. An opposing obstacle transition is allowed to cross zero immediately just as in the existing preview-priority guard.",
+    "persistent_state_added": true,
+    "seed_or_track_condition": false,
+    "tuning_grid": false
+  },
+  "frozen": [
+    "cruise48, speed estimate, target-speed EMA, curve target/floor, compound target30, every gas/brake threshold and emitted value",
+    "obstacle detector, urgency, side choice, miss limit, avoidance magnitude and curve-retention rule",
+    "road center thresholds, steering cap0.48, steering slew0.07, invalid/lost action and launch/sustain behavior except the registered lateral reference",
+    "model.pt, DrQ, explicit baseline export, HAIC policy/planner, core/, env_wrapper.py, damage.py, active padding study, user videos and root submission.zip"
+  ],
+  "acceptance": {
+    "synthetic": [
+      "Mirrored entry, apex and confirmed-exit sequences produce exactly opposite steering and identical gas/brake/target state.",
+      "Entry initially steers toward the outside target; apex adds only a bounded inside correction; exit does not open until two consecutive registered exit frames.",
+      "A continuing 200-degree-style hairpin with persistent distal and proximal evidence never enters exit merely because one magnitude weakens; a one-frame exit-like disturbance resets rather than confirms.",
+      "Narrow road, edge-clearance breach, missing row, current obstacle, obstacle miss latch, invalid observation, road loss and reset suppress and clear the line state.",
+      "Opposing and same-direction obstacle transitions are no weaker than the inherited obstacle-priority control; all obstacle frames retain exact gas, brake, target and detector/latch state.",
+      "Outside the exact phase predicates, complete actions and all inherited state are exact to the matched control. All action bounds, steering slew and deterministic reset hold over seeded mirrored randomized cases."
+    ],
+    "regression": [
+      "All prior corridor, inference and routing tests pass.",
+      "Bare OrderedDict routing selects only the new final subclass; DrQ, explicit baseline exports and HAIC routes remain unchanged.",
+      "A temporary package made from exact candidate files passes static import/interface, initialization, reset, action, latency, size and banned-token checks without replacing root submission.zip."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, preregister unused geometry seeds across multiple track IDs and compare against the exact frozen control. Finish rate, DNF, collision, damage and worst progress dominate jointly finished lap time.",
+      "interpretation": "Static phase behavior is not evidence of a completion or lap-time improvement."
+    },
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any longitudinal action, target, detector/latch state, obstacle action outside the registered transition guard, invalid/lost action or non-bare route changes.",
+    "The candidate requires a map coordinate, turn order, track ID, seed, time, progress, minimap, replay frame or video template.",
+    "The line requests less than7 pixels predicted edge clearance, more than0.035 steering delta, earlier than registered exit confirmation, or retains an old sign into a coherent opposite turn.",
+    "Any frozen file/artifact changes or any relevant deterministic, interface, package or randomized differential test fails.",
+    "Any environment execution, training, submission, lap-time/completion claim or SOTA promotion occurs while governance documents remain absent."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible and no fixed official map list, public evaluation seeds or official low-20-second target is available.",
+    "Only source, synthetic, unit and package validation is authorized; the candidate remains INCOMPARABLE."
+  ]
+}
