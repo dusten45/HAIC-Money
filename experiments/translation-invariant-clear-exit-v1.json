@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "name": "translation-invariant-clear-exit-v1",
+  "status": "preregistered",
+  "registered_at": "2026-09-30T02:33:54.7880383+09:00",
+  "purpose": "resume straight-line acceleration when the visible corridor has become parallel at a curve exit, without requiring the car to return to the image center first",
+  "source_commit": "14b8aeab7ab931033eb2764714d7bb34877f9dd4",
+  "branch": "feature/DG-Codex",
+  "control": {
+    "controller": "agent._FastCornerCarryController",
+    "agent_sha256": "af07d66dcd71ebf33cf9847bee085f224f10376778f6826e328e0782d5c9e909",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "evidence": {
+    "code_cause": "The generic _road_sweep compares sampled rows34,38,42 with unsampled rows58,62,66 and substitutes IMAGE_CENTER for the missing rows. A perfectly parallel corridor displaced6 pixels therefore reports sweep6, target53.7587 and brake0.0909 at speed60 even though its translation-invariant shape sweep is zero.",
+    "straight_gate": "The inherited straight predicate additionally requires abs(center42-IMAGE_CENTER)<=1.25, so an aligned exit remains classified as a curve while the car recenters.",
+    "ema_finding": "The normal clear-curve command bypasses the stored target EMA; EMA is not the primary exit delay. Obstacle and miss-latch conservatism is intentional and remains frozen.",
+    "video_finding": "The latest 4_7 videos visibly favor the center line, but do not show a common abrupt recenter maneuver and contain no speed or pedal telemetry. Track3 race time11.36-12.56 is the clearest slow-recovery example, while Track1 race time17.76-20.16 is a counterexample. The videos motivate an exit transition but do not establish braking causality.",
+    "official_source_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "official_source_checked_at": "2026-09-30"
+  },
+  "single_factor": {
+    "name": "translation-invariant clear-exit longitudinal gate",
+    "candidate_controller": "agent._TranslationInvariantExitController",
+    "shape_sweep": "max(abs(center[row]-center[54]) for row in (30,34,38,42)), requiring all five sampled rows",
+    "clear_exit_gate": [
+      "inherited exact-straight predicate is false",
+      "no current obstacle",
+      "no obstacle latch at frame start and no active latch",
+      "shape_sweep<=1.5",
+      "abs(center[42]-center[54])<=1.5",
+      "abs(center[42]-IMAGE_CENTER)<=6.0",
+      "abs(inherited steering request)<=0.28"
+    ],
+    "clear_exit_action": "set command target68 and use the existing straight gas branches0.18/0.135/0.09 with the existing strict brake boundary speed>69",
+    "unchanged": [
+      "all steering values, steering slew, recentering and obstacle pass-side behavior",
+      "all non-clear-exit curve targets, gas, coasting and braking",
+      "current obstacle targets47/40, obstacle+sweep>=6 target30, every miss-latch frame and the latch-clearing frame",
+      "lost-road behavior, observation/action interface and official environment files",
+      "model.pt, DrQ, explicit-export and HAIC policy routes",
+      "all track-id, seed, coordinate, elapsed-time and progress independence"
+    ]
+  },
+  "acceptance": {
+    "static_and_synthetic": [
+      "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
+      "Parallel clear corridors displaced by -6 through +6 pixels use target68 and never brake at speed60; mirrored observations have equal longitudinal actions.",
+      "At the exact shape, heading, center-offset and steering boundaries the gate is closed with nextafter tests; any value above a boundary uses the parent action exactly.",
+      "True diagonal/curved road profiles remain parent-exact and cannot receive the clear-exit boost.",
+      "Current obstacle, every miss-latch frame, clearing frame and reacquisition remain action-identical to the control.",
+      "Steering is bit-exact to the control across directed and randomized tests; invalid input, road loss and reset remain inherited.",
+      "Actions remain finite and bounded, gas and brake never overlap, and gas above0.14 appears only in inherited exact straights or the registered clear-exit gate.",
+      "Affected/local/submission contract tests and an isolated exact-file package smoke pass."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "After governance restoration, compare candidate and exact control on preregistered unused multi-track geometry seeds. Completion rate, DNF, collision and worst progress may not regress before exit recovery or lap time is considered.",
+      "objective": "Reduce curve-exit recovery time and move evaluation tracks toward the low-20-second range; source and synthetic validation cannot establish that outcome."
+    },
+    "classification": "preregistered / INCOMPARABLE"
+  },
+  "abort": [
+    "Any runtime condition uses track id, seed, map identity, coordinate, time, progress or evaluation filename.",
+    "Any steering output, true-curve action, current-obstacle action, miss-latch action or latch-clearing-frame action differs from the control.",
+    "Any clear-exit boost occurs outside every registered inclusive boundary or with missing required rows.",
+    "Any action is non-finite/out of range, gas and brake overlap, package/interface gate fails, or relevant regression fails.",
+    "Any environment execution, training, submission, SOTA promotion or performance claim occurs while governance documents remain absent.",
+    "Any frozen environment/model/DrQ/active-study artifact, user video or root submission.zip changes."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible; the official participant repository remains available and unchanged.",
+    "Only source, synthetic, unit and isolated package validation is authorized."
+  ]
+}
