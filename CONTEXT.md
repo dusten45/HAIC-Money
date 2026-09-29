@@ -210,21 +210,23 @@ about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The current bare route is `_HighSpeedPreviewBrakeController` at commit `b0383f6`.
-It preserves the prior steering, perception, obstacle side and latch machinery but
-replaces its longitudinal envelope. A verified clear, latch-free, settled straight
-uses target68 and gas0.18/0.135/0.09. Any visible curve immediately uses
-`clip(52-3*sweep,30,48)` and brakes from target+0.5 up to the float32-safe0.28
-limit; obstacle caps47/40 and compound cap30 persist through detector misses. The
-implementation passed7 focused and183 affected/local/submission tests, isolated
-exact-file package smoke and independent safety review. No environment run measured
-completion or pace, so the low-20-second target is unverified and status remains
-`INCOMPARABLE`; see `experiments/high-speed-preview-braking-v1-result.json`.
+The current bare route is `_FastCornerCarryController` at commit `7bdf9b2`. It
+inherits the target68 straight envelope, steering, perception and obstacle state
+machine, but replaces only obstacle-free curve speed control. Clear curves use
+`clip(68/sqrt(1+0.10*raw_sweep),40,64)`, steering-budgeted gas0.14/0.11/0.07,
+and a delayed, capped0.18 brake. At sweep6 this changes target34 to53.76, speed60
+brake0.28 to0.091, and speed45 brake0.249 to gas0.138 in synthetic observations.
+Current obstacle targets47/40, obstacle+sweep>=6 target30, miss-latch pedals and
+all steering remain parent-exact through the latch-clearing frame. The change
+passed13 focused and189 affected/local/submission tests, isolated exact-file package
+smoke and independent review. No environment run measured completion or pace, so
+the low-20-second target remains unverified and status is `INCOMPARABLE`; see
+`experiments/fast-corner-carry-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
 4_7 videos but has no official receipt binding. It is stale relative to current
-candidate agent SHA `b77f0167...` and must not be submitted as the new candidate.
+candidate agent SHA `af07d66d...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

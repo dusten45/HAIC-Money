@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "fast-corner-carry-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T02:24:21.0815340+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": ["5a0ed86", "f062c62"],
+  "implementation_commit": "7bdf9b2a6ac80866eaf0f9682d6d3721cd275ad4",
+  "decision": "Keep as the current statically validated bare-model candidate. It deliberately accelerates only obstacle-free curves; do not claim faster laps, preserved completion, SOTA or submission readiness until an authorized controlled multi-track evaluation passes the stability-first gate.",
+  "implementation": [
+    "Route only bare state-dict inference through _FastCornerCarryController; explicit export, DrQ and HAIC routes remain unchanged.",
+    "Replace the clear-curve target clip(52-3*sweep,30,48) with clip(68/sqrt(1+0.10*raw_sweep),40,64). Straight target68 and gas0.18/0.135/0.09 remain unchanged.",
+    "On a clear curve, use steering-budgeted gas0.14/0.11/0.07 below target, coast from target through target+2, then brake clip(0.04+0.012*excess,0.04,0.18).",
+    "Store the final post-steering-cap target before pedal adjustment, preserving the inherited target44 whenever abs(pre-clipped steering)>0.28.",
+    "Keep current-obstacle targets47/40, obstacle+sweep>=6 target30 and all parent pedals unchanged. A frame that begins with an obstacle miss latch remains parent-exact even when that frame clears the latch.",
+    "Preserve road/obstacle perception, steering, pass-side state, action interface, model and all non-bare policy routes."
+  ],
+  "synthetic_observations": {
+    "clear_straight_speed0": {"target": 68.0, "action": [0.0, 0.18000000715255737, 0.0]},
+    "clear_straight_speed60": {"target": 68.0, "action": [0.0, 0.13500000536441803, 0.0]},
+    "distant_sweep6_speed60": {"target": 53.75872022286245, "action": [0.05000000074505806, 0.0, 0.09089535474777222]},
+    "mid_curve_sweep6_speed45": {"target": 53.75872022286245, "action": [0.07000000029802322, 0.13783958554267883, 0.0]},
+    "clear_sweep18_speed45": {"target": 40.63777271736938, "action": [0.07000000029802322, 0.0, 0.06834672391414642]},
+    "compound_sweep6_speed60": {"target": 30.0, "action": [0.041999999433755875, 0.0, 0.2799999713897705]}
+  },
+  "control_comparison": {
+    "sweep6_target": {"control": 34.0, "candidate": 53.75872022286245},
+    "sweep6_speed60_brake": {"control": 0.2799999713897705, "candidate": 0.09089535474777222},
+    "sweep6_speed45": {"control_brake": 0.249, "candidate_gas": 0.13783958554267883},
+    "scope": "synthetic longitudinal action comparison only; not a lap-time or completion measurement"
+  },
+  "validation": {
+    "focused_curve_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k 'fast_corner_carry or high_speed_preview' -q",
+      "result": "13 passed,86 deselected"
+    },
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "189 passed,4 warnings"
+    },
+    "independent_static_review": "No blocking defect remained after preserving raw sweep above16, carrying parent behavior through the latch-clearing frame, and closing full-act strong-steering boundaries at0.28 plus/minus nextafter.",
+    "temporary_package": {
+      "path": ".haic-artifacts/fast-corner-carry-v1/20260929T172344296859Z_fast-corner-carry-v1/submission.zip",
+      "agent_sha256": "af07d66dcd71ebf33cf9847bee085f224f10376778f6826e328e0782d5c9e909",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "9f1b7cef48cca83f4dbce6212029c5523b0a0e31a22e25209bba7a16129d7423",
+      "bytes": 6279908,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.2520093999337405,
+      "act_seconds": 0.006893900106661022,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "No authorized driving run measured whether the more aggressive clear-curve envelope preserves completion on unseen tracks.",
+    "The raw visible-row sweep is image-space curvature rather than metric radius, distance or tire friction; the inverse-square-root schedule is a bounded proxy.",
+    "The requested two-to-two-and-a-half-times overall speed cannot be inferred from gas or target constants. Actual lap-time improvement requires controlled telemetry.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, and the competition website is inaccessible; official evaluation, promotion and submission remain blocked."
+  ]
+}
