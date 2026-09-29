@@ -125,6 +125,13 @@ The Track Lab web server now exposes a local Agent catalog under
 selection to the automatic run endpoint. Map files, official seeds, and generated
 custom tracks remain selectable in the same UI.
 
+The three `evaluation_videos` maps were recovered from independent minimap shape,
+track-length and obstacle fingerprints as official `(track_id, seed)` cells:
+`(1,516237)`, `(2,644062)`, and `(3,1007)`. Runnable map specs are under
+`training/maps/evaluation/`; the evidence and video hashes are in
+`experiments/evaluation-video-track-seed-recovery-v1-result.json`. These are
+diagnostic/replay-derived cells and must not be represented as unseen evaluation.
+
 ## Bare Baseline Runtime Repair
 
 The neural weights in bare `model.pt` are bypassed after road detection, so the
