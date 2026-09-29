@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "experiment": "phase-aware-out-in-out-v1",
+  "status": "REJECTED_STATIC",
+  "recorded_at": "2026-09-30T00:07:07.0363505+09:00",
+  "protocol_commit": "d587570",
+  "implementation_commit": "512d317",
+  "decision": "Reject before environment execution and do not submit, promote or claim performance.",
+  "validation_before_review": {
+    "focused_and_package_tests": "124 passed",
+    "additional_contract_layout_tests": "36 passed",
+    "temporary_package": {
+      "agent_sha256": "7a3e6a3ea74553fd6123682df96e73c7edd7f6f12000056cd7c901a6d472631d",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "ccf523296ac240df5a75922b883ca4430edf097c2002d238fd114dd0ac0e2f0e",
+      "bytes": 6279711,
+      "windows_python": "3.11.15",
+      "init_seconds": 5.546441399957985,
+      "act_seconds": 0.005870599998161197,
+      "result": "static smoke passed; not an official Linux/container or driving evaluation"
+    }
+  },
+  "static_rejection_reasons": [
+    "A repeated identical entry frame disarmed the entry phase on the second frame, alternating the outside request with the inherited inward preview.",
+    "The registered maximum0.035 line correction did not bound candidate-versus-control steering because entry replaced the inherited +0.05 preview; the observed request delta was0.08168.",
+    "Modified lateral steering fed the inherited abs(steering)>0.28 longitudinal safety branch, so gas could differ even when final rate-limited steering matched control, contradicting the frozen longitudinal contract.",
+    "A line-transition marker was armed from a pre-slew request and could zero internal steering on the next opposing obstacle even when the request was not emitted, allowing an action-to-action steering jump above0.07.",
+    "Writing arbitrary line requests into the existing exact-preview marker mixed responsibilities and could alter later obstacle transitions.",
+    "The visible half-width calculation used an inclusive pixel count, allowing a nominal7-pixel target to have only6.5 pixels of geometric edge distance.",
+    "Clear confirmation counters were not reset on every non-clear transition."
+  ],
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "follow_up": "A separately preregistered v2 may correct only these static contract defects without changing the lateral targets or using environment feedback."
+}
