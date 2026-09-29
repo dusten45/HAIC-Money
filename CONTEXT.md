@@ -4,12 +4,13 @@
 
 Develop the strongest rule-compliant agent while preserving the active DrQ-v2
 padding study and its frozen artifacts. The bare `model.pt` path now composes a
-camera-only, video-diagnostic safety/pace layer over the completion-first controller
+camera-only, diagnostic safety/pace layer over the completion-first controller
 recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
-paths are unchanged. Submission-5 video analysis led to bounded early obstacle and
-distant-bend responses plus a reviewed obstacle-priority transition guard. New 4_7
-videos then motivated a launch-only clear-straight throttle diagnostic at commit
-`a920139`; fixed inside-line and top-speed changes were rejected. Required
+paths are unchanged. Submission videos motivated bounded early obstacle and
+distant-bend responses plus a reviewed obstacle-priority transition guard and a
+launch-only clear-straight throttle diagnostic. Consumed official seed logs now
+motivate a single compound-hazard speed-margin diagnostic at commit `ae77e3a`;
+fixed inside-line, global top-speed and seed-specific changes were rejected. Required
 competition documents are missing, so environment
 evaluation, submission, performance claims and SOTA promotion remain blocked.
 
@@ -182,7 +183,7 @@ stall. The replay does not expose policy-camera frames, actions or speed; theref
 it does not establish low top speed or an optimal apex line. A global inside bias
 would also lack clearance calibration and can oppose obstacle avoidance.
 
-The routed bare controller is now `_LaunchThrottleController` at commit `a920139`.
+At commit `a920139`, the routed bare controller was `_LaunchThrottleController`.
 Only when the inherited policy already classifies a valid, obstacle-free, settled
 straight and requests its full-gas branch (estimated speed strictly below transient
 target minus8) does emitted gas change from0.10 to0.11. Target speed, stored EMA,
@@ -193,10 +194,25 @@ smoke. No environment run measured performance, so the result is `INCOMPARABLE`.
 See `experiments/video-4-7-evidence-ledger-v1.json` and
 `experiments/clear-straight-launch-throttle-v1-result.json`.
 
+The current bare route is `_CompoundSpeedMarginController` at commit `ae77e3a`.
+Consumed runs for official seeds11,17 and21 all ended off-track after an outside
+obstacle pass into a continuing hairpin: speed had fallen to about29--30, but
+absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
+earlier collision, so collision was not the common terminal mode. Run logs lack
+source/model/package hashes and therefore are motivation, not bound confirmation.
+The only candidate factor lowers the transient target from30 to24 when the current
+detector already sees an obstacle and raw curve target is at most36; parent values,
+stored target EMA, steering, perception, recovery, model and other runtime routes
+remain unchanged. Synthetic boundaries, mirrored transitions and a temporary
+package passed141 related tests plus direct import/reset/action checks. No
+environment run measured completion or pace, so this remains `INCOMPARABLE`; see
+`experiments/official-seed-compound-hairpin-evidence-v1.json` and
+`experiments/sharp-curve-obstacle-speed-margin-v1-result.json`.
+
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the
-4_7 videos but has no official receipt binding. It is stale relative to candidate
-agent SHA `09148338...` and must not be submitted as the new candidate.
+4_7 videos but has no official receipt binding. It is stale relative to current
+candidate agent SHA `1128404c...` and must not be submitted as the new candidate.
 
 ## Runtime And Infrastructure
 

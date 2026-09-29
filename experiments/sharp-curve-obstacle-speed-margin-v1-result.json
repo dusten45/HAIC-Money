@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "experiment": "sharp-curve-obstacle-speed-margin-v1",
+  "status": "implemented-diagnostic-pass",
+  "development_decision": "ACCEPT_IMPLEMENTATION_FOR_SYNTHETIC_DIAGNOSTIC_ONLY",
+  "classification": "INCOMPARABLE",
+  "recorded_at": "2026-09-29T18:44:14.1727042+09:00",
+  "result_recorded_after_execution": true,
+  "final_protocol_sha256": "ecdbd8c6a4332e7d1be29cbf53b6a1725a0629ae3edd5d530cb1afd7e70869ee",
+  "protocol_history": {
+    "registration_commit": "bbd87e0",
+    "implementation_commit": "ae77e3af0a01d1afdac1f36aad462c1c8f2ec8f3",
+    "interpretation": "The three consumed seed logs motivate one longitudinal-margin diagnostic. They do not validate the candidate and are not reused as confirmation evidence."
+  },
+  "lineage": {
+    "control_commit": "f0dc0def2f17339c8320abd37ceebf49993b04d1",
+    "candidate_commit": "ae77e3af0a01d1afdac1f36aad462c1c8f2ec8f3",
+    "candidate_agent_git_blob": "074bab03e92758ad4ade039247cc124b1c9f06b0",
+    "candidate_agent_sha256": "1128404ce9d8b0655f20a2193ca370cc27eb7797f9389443065bf21caa166797",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "control_class": "agent._LaunchThrottleController",
+    "candidate_class": "agent._CompoundSpeedMarginController"
+  },
+  "evidence_summary": {
+    "consumed_seed_runs": [11, 17, 21],
+    "common_terminal": "off_track",
+    "common_observation": "After an outside obstacle pass into a continuing hairpin, speed fell from approximately 41-44 to approximately 29-30 while absolute steering unwound to 0.012-0.027 immediately before road loss.",
+    "collision_interpretation": "Seed17 had one earlier collision, but collision was not the common terminal mode and seeds11/21 recorded none.",
+    "source_binding": "The run JSON files contain no source, agent, model, or package hash; attribution to the control is user-provided and not cryptographically proven."
+  },
+  "factor_result": {
+    "parameters_changed": 1,
+    "parent_compound_target_speed": 30.0,
+    "candidate_compound_target_speed": 24.0,
+    "exact_predicate": "current obstacle detected AND raw curve_target_speed <= 36.0",
+    "stored_target_ema_changed": false,
+    "persistence_added": false,
+    "steering_or_perception_changed": false,
+    "seed_or_track_condition_added": false
+  },
+  "synthetic_result": {
+    "direct_hook_exact_and_nextafter_boundaries_pass": true,
+    "mirrored_curve_and_obstacle_side_cases_pass": true,
+    "matched_state_steering_and_nonlongitudinal_state_exact": true,
+    "compound_speed_48_control_brake": 0.216,
+    "compound_speed_48_candidate_brake": 0.28,
+    "compound_speed_48_candidate_gas": 0.0,
+    "detector_miss_reverts_to_control": true,
+    "reacquisition_reapplies_candidate_without_persistence": true,
+    "clear_launch_straight_obstacle_sharp_clear_weak_curve_invalid_and_roadless_exact": true,
+    "reset_deterministic": true
+  },
+  "validation": {
+    "affected_and_local_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py",
+      "result": "141 passed, 4 warnings"
+    },
+    "temporary_package": {
+      "files": [
+        "action_representation.py",
+        "action_smoothing.py",
+        "agent.py",
+        "model.pt"
+      ],
+      "bytes": 6271480,
+      "archive_sha256": "017dea34504196f56fda7f799d9cfb7fa2760f1f10416ecf51c7a013e78df52c",
+      "embedded_agent_sha256": "1128404ce9d8b0655f20a2193ca370cc27eb7797f9389443065bf21caa166797",
+      "embedded_model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "controller": "_CompoundSpeedMarginController",
+      "visible_clear_launch_action": [0.0, 0.11, 0.0],
+      "visible_compound_action": [0.07, 0.0, 0.28],
+      "finite": true,
+      "reset_matches": true,
+      "init_seconds": 0.08899650000967085,
+      "clear_act_seconds": 0.0010969999711960554,
+      "compound_act_seconds": 0.0009734000777825713,
+      "root_submission_zip_overwritten": false
+    },
+    "collection_limitation": "The host's pandas native extension is blocked by Windows application-control policy, so tests/test_submission_policy.py and tests/test_submission_package.py cannot collect through their unrelated stable_baselines3 import. Equivalent isolated package routing, import, reset and action checks passed; the committed tests retain the assertions for a compatible host."
+  },
+  "scope_check": {
+    "environment_runs": 0,
+    "training_runs": 0,
+    "fresh_or_reserved_seeds_opened": 0,
+    "model_changed": false,
+    "official_environment_changed": false,
+    "user_evidence_changed": false,
+    "root_submission_zip_changed": false,
+    "submission_performed": false,
+    "sota_updated": false
+  },
+  "limitations": [
+    "No environment execution measured finish, off-track, collision, lap-time, or unseen-map effects; the implementation remains INCOMPARABLE.",
+    "The value24 is a preregistered single-factor diagnostic, not a demonstrated optimum or a guarantee of completion.",
+    "The cap is nonpersistent: a detector miss immediately restores the inherited target and may cause target chatter.",
+    "The directly observed early steering release and post-road-loss non-recovery remain unchanged and require separate preregistered factors if fresh evaluation rejects this candidate.",
+    "Some short compound curves may be unnecessarily slowed.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so no compliant runtime evaluation, submission or SOTA claim was made.",
+    "The untracked root submission.zip is unchanged and stale relative to this candidate."
+  ]
+}
