@@ -247,24 +247,24 @@ remain. Seven focused and212 affected tests, isolated package smoke and independ
 audit passed; see
 `experiments/post-obstacle-curve-retention-v1-result.json`.
 
-The current bare route is `_CompoundObstacleLatchReleaseController` at commit
-`a593be9`, above the retained compound brake-carry and doubled-straight layers.
-Submission12 videos all finish in23.60/28.18/25.44s, improving every submission11
-lap by0.26/0.96/0.38s, but13/26 obstacle encounters still lose at least10% on a
-rendered-video speed proxy. Minimum HSV mask gaps are only20/8/12.2px, so the
-candidate keeps current-visible-obstacle actions, target30, steering, four-frame
-latch and the base brake exact. Only on compound detector-miss frames1--4 does it
-drop the redundant supplemental curve brake and emit the inherited base brake:
-at target30/speed40 this is.120 instead of.154, while speed45+ is exact. Six
-focused and229 affected tests, isolated package smoke and two independent audits
-passed. Detector flicker can occur before true clearance and closed-loop effects
-remain unmeasured, so the candidate is `INCOMPARABLE`; see
-`experiments/compound-obstacle-latch-release-v1-result.json`.
+The current bare route is `_AdaptiveCompoundTargetController` at commit `42fd0f6`,
+above the retained latch-release, compound brake-carry and doubled-straight layers.
+Submission12 videos finish in23.60/28.18/25.44s, but13/26 obstacle encounters still
+lose at least10% on a rendered-video speed proxy. The controller removes the hard
+target30 discontinuity only for a currently recognized far/moderate compound hazard:
+`30+6*clip((44-y)/12)*clip((12-sweep)/6)`, with target at most36 for y<44 and
+6<=sweep<12. The latch remains30, so the first detector miss restores target30;
+near obstacles, extreme curvature and final requested steering above0.28 also keep
+target30. The existing softened compound brake remains active throughout31--36.
+Nine focused and238 affected tests, exact-file package smoke and two independent
+audits passed. Closed-loop clearance/completion/time remain unmeasured, so the
+candidate is `INCOMPARABLE`; see
+`experiments/adaptive-compound-target-v1-result.json`.
 
 The user-requested untracked root `submission.zip` SHA is `3ac70e3a...`; it embeds
 the prior `_CompoundObstacleBrakeCarryController` agent SHA `413afda3...` and
 unchanged model SHA `c101c696...`. It has no official receipt binding and is stale
-relative to current candidate agent SHA `ffc3c0bb...`; preserve it but do not treat
+relative to current candidate agent SHA `06eed3e7...`; preserve it but do not treat
 it as the new candidate package.
 
 ## Runtime And Infrastructure

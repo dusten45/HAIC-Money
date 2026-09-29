@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "experiment": "adaptive-compound-target-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T05:50:38+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": [
+    "e997a519ddff90550e3952305426a5c512018ffd",
+    "8400943d2b270a070ffef31a5164ec68828744f2"
+  ],
+  "implementation_commit": "42fd0f6f7dde62e83bebe48364e5b2eded6b2f69",
+  "decision": "Keep as the current statically validated bare-model candidate. Raise only current-visible far, moderate compound-obstacle targets continuously from30 to at most36; preserve target30 for close obstacles, extreme curvature, strong steering and every detector miss. Do not claim a lap-time, clearance, completion, submission or SOTA improvement until an authorized paired driving evaluation passes the safety-first gate.",
+  "evidence": {
+    "submission12_laps_seconds": [23.60, 28.18, 25.44],
+    "submission12_all_finished": true,
+    "submission11_to12_mean_delta_seconds": -0.53,
+    "obstacle_encounters": 26,
+    "post_pre_speed_proxy_ratio_median": 0.88,
+    "encounters_below_0_90": 13,
+    "minimum_hsv_mask_gap_pixels": [20.0, 8.0, 12.2],
+    "interpretation": "The user feedback is supported as a localized compound-obstacle pace bottleneck, not as evidence for a blanket increase across all target speeds."
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _AdaptiveCompoundTargetController; model.pt and explicit-export, DrQ and HAIC paths remain unchanged.",
+    "For a current recognized obstacle with6<=sweep<12, y<44 and final requested steering magnitude<=0.28, command target=30+6*clip((44-y)/12,0,1)*clip((12-sweep)/6,0,1).",
+    "Keep the stored compound latch target at30, so the first detector miss immediately restores command/effective target30.",
+    "Veto the uplift in the same frame when the final obstacle-adjusted steering request magnitude exceeds0.28.",
+    "Retain the existing softened compound brake envelope for every adaptive target31--36; target32 at speed40 emits brake0.13 versus control0.154 while preserving the inherited0.096 base-brake floor.",
+    "Keep near y>=44, extreme sweep>=12, noncompound sweep<6, detector miss1--4, fifth clear, clear curves/straights, steering, detection, reset, invalid input and road-loss behavior control-exact."
+  ],
+  "static_validation": {
+    "focused_candidate_suite": "9 passed,139 deselected",
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "238 passed,4 warnings"
+    },
+    "coverage": "Exact distance, sweep and inclusive steering boundaries; four curve-direction/obstacle-side combinations; intermediate and maximum targets; first miss through release; reacquisition/flicker; far-to-near and increasing-severity transitions; reset, invalid and lost-road behavior;384 independent randomized cases and32 stateful randomized sequences all passed.",
+    "independent_audit": "Two read-only audits found no blocking implementation, MRO, latch, brake, boundary, state-restoration or protocol defect after the base hook placement and exact steering-boundary tests were corrected.",
+    "isolated_package": {
+      "path": ".haic-artifacts/adaptive-compound-target-v1/20260929T205038081768Z_adaptive-compound-target-v1/submission.zip",
+      "source_commit": "42fd0f6f7dde62e83bebe48364e5b2eded6b2f69",
+      "agent_git_blob": "4c5be8d8e02f511d79bd7d5c7e9833122cbbed6b",
+      "agent_sha256": "06eed3e7fd7a05cdd817375155a56ae7975e54c352de03f0b56c88898dc71685",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "c2b7283d416cd4cfbf362fb1b4d2729aae22a24ed2b36f53e8596553d3cf348e",
+      "bytes": 6282866,
+      "windows_python": "3.11.15",
+      "init_seconds": 1.6447266999166459,
+      "act_seconds": 0.0031269999453797936,
+      "result": "exact-file build/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "3ac70e3a5ac12ce2a63a7b39f4e7a112ca004dd4d96391c1094a834150be0e06",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "The videos cannot expose policy-camera frames, internal obstacle row/sweep, detector state, physical speed or actions, so they do not prove which encounters qualify.",
+    "Target36 versus30 can materially increase directional kinetic demand; the distance, curvature and steering gates bound but do not prove future clearance safety.",
+    "Static same-input tests cannot establish closed-loop completion, collision/off-track non-regression, clearance or lap-time improvement.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so environment evaluation, promotion and submission remain blocked."
+  ]
+}
