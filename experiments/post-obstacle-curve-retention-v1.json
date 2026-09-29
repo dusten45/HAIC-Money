@@ -56,7 +56,7 @@
     "classification": "preregistered / INCOMPARABLE"
   },
   "abort": [
-    "Any action/shared inherited state differs from _FastCornerCarryController outside miss frames1--4 with a same-sign coherent curve.",
+    "Any action/shared inherited state differs from _FastCornerCarryController outside miss frames1--4 with a same-sign coherent curve, except the explicitly registered bounded sequential carryover on the immediate release or reacquisition transition.",
     "From matched state any current-obstacle action differs from _FastCornerCarryController; or any sequential current-obstacle/fifth-clearing/opposite transition receives new gain, changes the control sign or exceeds the registered0.06 carryover.",
     "Any steering delta exceeds0.07, request increment exceeds0.06, request exceeds0.48, or stale retention survives latch expiry/reset/road loss.",
     "Any runtime condition uses track id, seed, map identity, coordinate, elapsed time, progress or evaluation filename.",
@@ -71,6 +71,10 @@
     {
       "recorded_at": "2026-09-30T04:51:00+09:00",
       "reason": "Final independent audit showed that an abrupt opposite/straight fifth clearing frame or immediate opposing obstacle after active retention can also carry the prior bounded steering difference for one frame. Remove the incorrect universal exactness requirement, require no new gain plus same-sign carryover at most0.06, and add abrupt clearing, immediate obstacle, preview-marker and exact reversal-boundary transition coverage."
+    },
+    {
+      "recorded_at": "2026-09-30T05:00:00+09:00",
+      "reason": "Final re-audit found that the broad first abort sentence still contradicted the explicitly accepted immediate-release carryover. Exempt only that registered bounded sequential transition while retaining the matched-state and all other exactness requirements."
     }
   ],
   "compliance_blockers": [
