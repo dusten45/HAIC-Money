@@ -32,7 +32,7 @@
       "the row30 and row34 deltas have the same sign",
       "every intermediate sampled-row delta relative to row54 is zero or has that same sign",
       "the inherited steering request has that same sign",
-      "the amplified magnitude remains on the same side of the inherited MAX_STEER_STEP=0.07 reversal threshold classification"
+      "gain is suppressed throughout the closed interval where inherited magnitude is at most MAX_STEER_STEP=0.07 and amplified magnitude reaches or exceeds that threshold"
     ],
     "formula": "candidate=sign(inherited)*min(0.48,1.20*abs(inherited),abs(inherited)+0.06)",
     "state_update": "overwrite _carry_steer_request with the final candidate request so inherited target44 and steering-based throttle attenuation see the actual lateral demand; when the inherited request is the registered distant preview, update _preview_requested to the amplified value so the existing next-opposing-obstacle priority marker remains valid",
@@ -50,7 +50,7 @@
     "static_and_synthetic": [
       "Bare state-dict routing selects only the candidate; explicit export, DrQ and HAIC routes remain unchanged.",
       "Mirrored coherent curves produce symmetric requests and exactly the registered20-percent/0.06/0.48 envelope; repeated actions retain the inherited0.07 slew bound.",
-      "The exact1.5 far-row boundaries, reversal-classification interval endpoints at0.07/1.20 and0.07, gain-versus-increment intersection at abs(request)=0.30, increment-versus-cap intersection at0.42, cap, sign and every sampled missing-row boundary are closed with nextafter tests.",
+      "The exact1.5 far-row boundaries, closed reversal-protection interval endpoints at0.07/1.20 and0.07, gain-versus-increment intersection at abs(request)=0.30, increment-versus-cap intersection at0.42, cap, sign and every sampled missing-row boundary are closed with nextafter tests.",
       "From identical pre-frame state, current-obstacle actions and inherited state are exactly equal to control. In a sequential attack-to-obstacle transition, steering keeps the control sign, stays within0.06 of control, respects0.07 slew and immediately disables any new gain; the first obstacle-miss latch frame may reapply the registered same-direction gain.",
       "Distant-preview-to-opposing-obstacle transitions preserve the inherited obstacle-priority marker and control action exactly. General sequential reacquisition keeps the control sign and bounded0.06 carryover; opposite-direction far/mid/near S-curves, parallel offsets, aligned exits, road loss and reset never retain stale attack state.",
       "Final _carry_steer_request equals the actual amplified preclip request, so strong-steer target44 and friction-aware gas attenuation remain active at exact0.28 plus/minus nextafter boundaries.",
@@ -88,7 +88,11 @@
     },
     {
       "recorded_at": "2026-09-30T03:18:00+09:00",
-      "reason": "Pre-implementation independent review found that amplifying a request from at most0.07 to above0.07 changes the inherited sign-reversal branch on a following opposing obstacle or S-curve. Suppress gain only when inherited and amplified magnitudes fall on different sides of that exact threshold, and close both endpoints plus nextafter values in mirrored tests."
+      "reason": "Pre-implementation independent review found that amplifying a request from at most0.07 to above0.07 changes the inherited sign-reversal branch on a following opposing obstacle or S-curve. Suppress gain around that exact threshold and close both endpoints plus nextafter values in mirrored tests."
+    },
+    {
+      "recorded_at": "2026-09-30T03:31:00+09:00",
+      "reason": "Final pre-commit audit found that the exact lower endpoint0.07/1.20 amplifies to exactly0.07 and makes a following opposing obstacle stop at zero while control crosses to the opposite sign. Make the suppression interval closed at both endpoints and add mirrored exact-lower-to-opposing-obstacle transition coverage."
     }
   ]
 }
