@@ -210,18 +210,19 @@ about29--30, but
 absolute steering unwound to0.012--0.027 just before road loss. Only seed17 had an
 earlier collision, so collision was not the common terminal mode. Run logs lack
 source/model/package hashes and therefore are motivation, not bound confirmation.
-The current bare route is `_PhaseAwareRacingLineController` at commit `734eadf` on
-`codex/out-in-out-racing-line`. It retains the latched completion controller's
-longitudinal and obstacle behavior, while generic visible geometry selects bounded
-outside/inside/outside references with7-pixel predicted edge clearance. A synchronized
-control shadow supplies every gas/brake action and the complete current-obstacle or
-miss-latch action. The first implementation was rejected statically; repaired v2
-passed12 focused,159 affected/local-contract and29 submission-contract tests plus an
-isolated package smoke and independent static review. Latest-video measurements also
-disprove a universal `in-in-in` premise, so this remains a cautious geometry
-hypothesis. No environment run measured completion or pace; status is `INCOMPARABLE`.
-See `experiments/video-4-7-racing-line-audit-v1.json` and
-`experiments/phase-aware-out-in-out-v2-result.json`.
+The current bare route is `_PhaseAwareRacingLineController` at commit `55150fc` on
+`codex/out-in-out-racing-line`. It now recovers complete tracked asphalt spans at
+rows30/34/42/54 and uses the full7-pixel-safe image corridor for persistent
+outside/inside/outside anchors. Entry/exit tracking is perspective-scaled and
+directionally convergent; apex retains inherited curvature steering while adding
+inside-position correction. Missing span geometry, road loss and obstacles clear
+the line. Obstacle behavior remains exact to a synchronized completion shadow except
+when its command would cross an already reached road edge, where a centerward-slew,
+gas0/brake0.28 guard takes priority and synchronizes shadow state. The implementation
+passed21 focused and211 combined affected/contract tests, an isolated exact-file
+package smoke and independent final review. This is still a local camera-space
+minimum-curvature proxy: no environment run measured completion or pace, and status
+is `INCOMPARABLE`. See `experiments/full-corridor-radius-line-v1-result.json`.
 
 The untracked root `submission.zip` SHA is `dd36876a...`; it embeds control agent
 SHA `ed079457...` and unchanged model SHA `c101c696...`. It plausibly matches the

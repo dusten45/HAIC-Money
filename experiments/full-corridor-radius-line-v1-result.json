@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "experiment": "full-corridor-radius-line-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T01:29:59.5713424+09:00",
+  "branch": "codex/out-in-out-racing-line",
+  "protocol_commits": [
+    "556f132",
+    "2c426bb",
+    "b63ac0a",
+    "b0df26c",
+    "50d8e8e",
+    "39f2958",
+    "8d76d56",
+    "82ffa2a",
+    "0732730"
+  ],
+  "implementation_commit": "55150fc37e30ff3dfb62b097b72d19c8da28e170",
+  "decision": "Keep as the current statically validated bare-model candidate. Do not claim faster laps, higher completion, SOTA or submission readiness without an authorized controlled driving evaluation.",
+  "implementation": [
+    "Recover the complete contiguous asphalt run associated with the tracked road at rows30,34,42 and54; suppress the racing line when any registered span is missing or ambiguous.",
+    "Use the full row54 safe envelope for persistent outside/inside/outside targets with at least7 image pixels of center-to-edge clearance. Compute row42 and row54 virtual anchors from their own perspective widths.",
+    "Track entry and exit with a directionally convergent near-lateral plus far-to-near heading law. Preserve inherited curvature steering at apex and add only signed inside-position correction.",
+    "Hold the exit outside target on the following straight until it is reached for two consecutive clear frames, while allowing new bend evidence to take priority.",
+    "Preserve the synchronized completion controller's obstacle action unless it would steer farther through an already reached edge; in that case slew centerward, command gas0 and brake0.28, and synchronize the shadow state to every guarded output."
+  ],
+  "validation": {
+    "focused_phase_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py -k phase_aware -q",
+      "result": "21 passed,86 deselected"
+    },
+    "combined_affected_contract_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_action_smoothing.py tests/test_custom_environment.py tests/test_evaluate_policy.py tests/test_local_contract.py tests/test_server_parity.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py -q",
+      "result": "211 passed,1 skipped,4 warnings"
+    },
+    "independent_static_review": "No blocking defect remained after correction of perspective-direction reversal, incomplete-span fallback and edge-guard shadow discontinuity. The reviewer verified convergent entry/exit tracking, apex curvature authority, per-row safe anchors and post-guard non-edge obstacle continuity.",
+    "temporary_package": {
+      "path": ".haic-artifacts/full-corridor-radius-line-v1/20260929T162928123685Z_full-corridor-radius-line-v1/submission.zip",
+      "agent_sha256": "975fd3a9227c36bcf16d287a6d54d658a97d4d9c5596f9f74f0e99d5b300fddf",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "ab6952779d3392f3b46ac3cae7e84ac0fd6d2cbb534394426663d0265a18f8f8",
+      "bytes": 6281539,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.5836312000174075,
+      "act_seconds": 0.005638400092720985,
+      "result": "exact-file package/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "consumed_evaluation_cells": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "root_submission_zip_modified": false,
+    "user_evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "Finite camera horizon means outside preparation is best-effort when apex evidence first appears late; turn-in safety takes priority.",
+    "The7-pixel margin is an image-space envelope, not a dynamics-level collision proof.",
+    "The camera-local path is a minimum-curvature proxy, not a globally optimized or friction-limited racing trajectory.",
+    "No authorized environment run has measured completion, lap time or generalization.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so official comparison, execution, promotion and submission remain blocked."
+  ]
+}
