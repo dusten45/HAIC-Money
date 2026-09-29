@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "name": "sharp-curve-obstacle-speed-margin-v1",
+  "purpose": "consumed-official-seed-motivated-compound-hazard-longitudinal-margin-diagnostic",
+  "status": "preregistered",
+  "registered_at": "2026-09-29T18:33:45.4181870+09:00",
+  "source_commit": "f0dc0def2f17339c8320abd37ceebf49993b04d1",
+  "evidence_ledger": "experiments/official-seed-compound-hairpin-evidence-v1.json",
+  "official_source_check": {
+    "url": "https://github.com/2026-HAIC/Participants",
+    "checked_at": "2026-09-29T18:33:45.4181870+09:00",
+    "environment_version": "variables-6",
+    "relevant_contract": "camera-only float32 4x84x84 observation, finite steer/gas/brake action, deterministic track and obstacle generation from track_id and seed, six physical obstacles, CPU Python 3.11 evaluation",
+    "competition_site": "unavailable during audit"
+  },
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "new final subclass overrides only COMPOUND_TARGET_SPEED from 30.0 to 24.0",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._LaunchThrottleController",
+    "source_commit": "f0dc0def2f17339c8320abd37ceebf49993b04d1",
+    "agent_sha256": "09148338271548044ae47b5f93a18f0b0e3e5c2e512082d57c63e6759869e91e",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "factor": {
+    "candidate_controller": "agent._CompoundSpeedMarginController",
+    "implementation": "subclass _LaunchThrottleController and override only the class attribute COMPOUND_TARGET_SPEED = 24.0; route only bare state-dict inference to the subclass",
+    "exact_predicate": "current obstacle is detected AND raw curve_target_speed <= 36.0, using the inherited inclusive predicate after target EMA storage",
+    "control_transient_target": "min(inherited transient target, 30.0)",
+    "candidate_transient_target": "min(inherited transient target, 24.0)",
+    "stored_target_state": "unchanged pre-cap EMA value",
+    "persistence": false,
+    "parameters_changed": 1,
+    "tuning_grid": false,
+    "physical_motivation": "If actual speed tracked the target at fixed radius, a 20 percent speed reduction would reduce the idealized v-squared-over-radius lateral demand to 64 percent; this is a conditional motivation, not measured vehicle dynamics or proof of safety."
+  },
+  "frozen": [
+    "_CompoundHazardController.COMPOUND_TARGET_SPEED remains 30.0 and every intermediate controller remains unchanged",
+    "curve formula and floor36, target EMA coefficient/order/state, detector/ROI/component bounds, obstacle side/miss latch, urgency formula/gain, curve retention0.5, obstacle steer limit0.32 and slew0.07",
+    "obstacle caps47/40, pedal thresholds, MAX_GAS, MAX_BRAKE, launch gas0.11, preview and obstacle-priority state",
+    "invalid/lost-road behavior, DrQ, explicit baseline export, HAIC path, model.pt, official environment files, active padding study, user videos, run evidence and root submission.zip"
+  ],
+  "acceptance": {
+    "synthetic": [
+      "Direct hook boundary: obstacle present and curve_target_speed exactly36 yields control cap30 and candidate cap24; nextafter(36,+infinity), obstacle absent at36, weak target38 plus obstacle, and an inherited target below24 are exact to control.",
+      "A spy at the unchanged pedal boundary sees target24 only for the registered predicate while stored _target_speed and every pre-pedal state remain exact to control.",
+      "At estimated speed48 the candidate emits zero gas and unchanged MAX_BRAKE0.28 while control brake is approximately0.216; steering and all state are exact and mirrored longitudinal actions match.",
+      "Close exact and nextafter boundaries for target24 at16,21,25 and control target30 at22,27,31. At estimated speed29 and30 the intentional change is control low gas to candidate brake0.060 and0.072 respectively, with no gas/brake overlap.",
+      "Across mirrored sharp curves, obstacle sides, agreeing/opposing avoidance, early/near obstacle rows, repeated frames and geometry variations, only gas/brake may differ and every steering/detector/pass-side/preview/target-state value remains exact.",
+      "Clear launch, straight obstacle, obstacle-free sharp curve, weak curve plus obstacle, distant preview, invalid input, road loss and reset remain complete-action/state exact from matched state.",
+      "Preview-to-opposing/same compound obstacle, detector miss/reacquire, compound-to-clear, abrupt opposite curve and reset-mid-event sequences remain deterministic; current detector misses revert fully to control and reacquisition reapplies24 without persistence."
+    ],
+    "regression": [
+      "Frozen compound/intermediate controller still reports target30 and all prior stable, compound, curve, preview, obstacle-priority and launch tests pass.",
+      "Bare state-dict routing selects only the new final subclass; explicit export, DrQ and HAIC routes remain unchanged.",
+      "Temporary package contains exact candidate agent.py and unchanged model.pt, passes static import/call scan and import/reset/act/action/timing/memory gates, and does not overwrite root submission.zip."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "The parent/intermediate target30 changes, the predicate broadens, or any new curve, obstacle-position, track, time, progress or seed condition is introduced.",
+    "Any steering, detector, pass-side, urgency, target EMA, preview state or non-bare route differs from matched control.",
+    "Target persistence, detector-miss latch, road-loss steering hold, a second speed value or any other repair is required.",
+    "The candidate affects obstacle-free sharp curves, weak-curve obstacles, straight obstacles, invalid/lost-road actions, or launch behavior.",
+    "The value24 is retuned after synthetic, consumed-run or submission feedback.",
+    "Any frozen environment/model/DrQ/active-study artifact or user evidence changes, or any interface/package gate fails.",
+    "Any simulator/environment execution, completion/lap/collision/generalization claim, submission or SOTA action occurs while the governance documents remain absent."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "The competition website was inaccessible during the audit.",
+    "Only static and synthetic diagnostic validation is authorized; the candidate remains INCOMPARABLE."
+  ]
+}

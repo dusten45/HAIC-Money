@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "name": "official-seed-compound-hairpin-evidence-v1",
+  "status": "recorded-consumed",
+  "recorded_at": "2026-09-29T18:33:45.4181870+09:00",
+  "source_commit_at_audit": "f0dc0def2f17339c8320abd37ceebf49993b04d1",
+  "agent_sha256_at_audit": "09148338271548044ae47b5f93a18f0b0e3e5c2e512082d57c63e6759869e91e",
+  "model_sha256_at_audit": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "binding": {
+    "classification": "user-attributed-current-agent-but-cryptographically-unbound",
+    "reason": "The run JSON identifies policy kind/name and its first action matches the current 0.11 launch behavior, but it contains no source, agent, model, or package hash."
+  },
+  "runs": [
+    {
+      "path": ".haic-artifacts/runs/run-78c47a87098c4db2b7c09bfe6f912ddb.json",
+      "sha256": "a363e6cf1748cf07f2d501e0b6fdf68b1452b98c24fb9a7c79e9ad7d1c82fd6c",
+      "bytes": 3693464,
+      "map_label": "official-track-1-seed-11",
+      "created_at": "2026-09-29T09:15:12.168959+00:00",
+      "steps": 169,
+      "outcome": {"finished": false, "progress": 0.1891891891891892, "damage": 0.0, "collisions": 0, "retire_reason": "off_track"},
+      "transition": {"turn_entry_speed": 43.55, "maximum_turn_steer_magnitude": 0.173, "last_valid_step": 67, "last_valid_speed": 29.26, "last_valid_steer": -0.027, "first_road_loss_step": 68, "road_loss_steps": 101}
+    },
+    {
+      "path": ".haic-artifacts/runs/run-a6ad034b1422401fb169fdde4b602c3c.json",
+      "sha256": "980a9d0838a047df20f657c84aaec7089a72ff33bc7a402f2ebee5a650770569",
+      "bytes": 7389254,
+      "map_label": "official-track-1-seed-17",
+      "created_at": "2026-09-29T09:14:06.386833+00:00",
+      "steps": 315,
+      "outcome": {"finished": false, "progress": 0.5481727574750831, "damage": 0.2, "collisions": 1, "retire_reason": "off_track"},
+      "transition": {"turn_entry_speed": 41.19, "maximum_turn_steer_magnitude": 0.196, "last_valid_step": 212, "last_valid_speed": 29.33, "last_valid_steer": 0.014, "first_road_loss_step": 213, "road_loss_steps": 102},
+      "collision_qualification": "The only collision was at step 49, about 13 seconds before the terminal road loss, so it is not a common terminal cause."
+    },
+    {
+      "path": ".haic-artifacts/runs/run-91ba8a9dcb4e41219129d798a9cfd6a7.json",
+      "sha256": "f737081b545b6b79bb86f2c9ff1d91d3a81a104976ac9115bed3771e3fa94274",
+      "bytes": 5651813,
+      "map_label": "official-track-1-seed-21",
+      "created_at": "2026-09-29T09:11:57.276592+00:00",
+      "steps": 241,
+      "outcome": {"finished": false, "progress": 0.33727810650887574, "damage": 0.0, "collisions": 0, "retire_reason": "off_track"},
+      "transition": {"turn_entry_speed": 43.44, "maximum_turn_steer_magnitude": 0.218, "last_valid_step": 139, "last_valid_speed": 29.59, "last_valid_steer": -0.012, "first_road_loss_step": 140, "road_loss_steps": 101}
+    }
+  ],
+  "facts": [
+    "All three runs terminate by the official 101-negative-action off-track mechanism after the road disappears from the controller, not by the five-collision limit.",
+    "All three top-down traces show an obstacle before a tight hairpin, an outside pass, and departure over the outside edge while steering unwinds from a substantial turn command to nearly zero.",
+    "The telemetry velocity magnitude is approximately 29 to 30 at the final valid-road action in all three runs.",
+    "The current launch-only 0.11 factor is inactive in the compound hazard because the road is not classified straight and an obstacle is detected."
+  ],
+  "hypotheses": [
+    "The existing transient compound target of 30 leaves insufficient lateral margin for an outside obstacle pass into a tight hairpin.",
+    "Steering release and the subsequent road-loss fallback also contribute, so a lower target is not established as the sole cause or a guaranteed repair."
+  ],
+  "limitations": [
+    "The embedded images are top-down diagnostic renders, not the 4x84x84 policy observations.",
+    "The telemetry records world velocity and emitted actions but not the controller's estimated speed, detected obstacle tuple, raw road centers, raw curve target, or internal state.",
+    "The exact global hairpin angle and map labels must not enter runtime policy logic.",
+    "These three consumed runs cannot confirm a candidate motivated by them and cannot be used as fresh confirmation or blind evidence."
+  ]
+}
