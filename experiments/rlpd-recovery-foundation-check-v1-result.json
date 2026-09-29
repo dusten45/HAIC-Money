@@ -33,6 +33,16 @@
     "passed": 119,
     "subtests_passed": 33
   },
+  "post_negative_full_pipeline_tests": {
+    "command": "env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_resume_rlpd_coupled_recovery.py tests/test_prepare_rlpd_recovery_training_data.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py tests/test_diagnose_rlpd_recovery_actions.py tests/test_diagnose_rlpd_recovery_handoff.py tests/test_summarize_rlpd_recovery_evaluation.py",
+    "passed": 139,
+    "subtests_passed": 33
+  },
+  "guided_full_pipeline_tests": {
+    "command": "env OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 python -m pytest -q -p no:cacheprovider tests/test_rlpd_recovery_guidance.py tests/test_rlpd_recovery.py tests/test_rlpd_replay.py tests/test_rlpd_model.py tests/test_rlpd_run.py tests/test_resume_rlpd_coupled_recovery.py tests/test_prepare_rlpd_recovery_training_data.py tests/test_summarize_rlpd_recovery.py tests/test_evaluate_rlpd_recovery.py tests/test_collect_rlpd_coupled_recovery.py tests/test_diagnose_rlpd_recovery_actions.py tests/test_diagnose_rlpd_recovery_handoff.py tests/test_summarize_rlpd_recovery_evaluation.py",
+    "passed": 164,
+    "subtests_passed": 33
+  },
   "actual_v5_cuda_optimizer_probe": {
     "successful_synthetic_updates": 1,
     "source_environment_steps": 131072,

@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "data_validated_q_only_intervention_rejected_guided_iteration_pending",
+  "status": "data_validated_q_only_intervention_rejected_guided_iteration_running",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -89,6 +89,7 @@
   },
   "post_learning_action_diagnosis": "experiments/rlpd-recovery-action-comparison-v1-result.json",
   "post_handoff_temporal_diagnosis": "experiments/rlpd-recovery-handoff-v2-result.json",
+  "actual_visit_regression_review": "experiments/rlpd-recovery-regression-review-v1-result.json",
   "contemporary_evaluation": {
     "output": "runs/rlpd-recovery-evaluation-r2",
     "status": "complete_36_uncensored_episodes",
@@ -108,7 +109,14 @@
     "decision": "Reject data-only Q-learning intervention: no completion or prospective curve-terminal improvement. Sparse curve-terminal proxy does not explain all 11 recovery failures."
   },
   "next_intervention": {
-    "status": "implementing_not_run",
+    "status": "source_frozen_preflight_review_passed_running",
+    "protocol": "experiments/rlpd-recovery-guided-learning-v1.json",
+    "protocol_sha256": "8e15226169b10cb2ba043f06f283a3adf154e29fa5ba64c6c7ba71844f2f2822",
+    "output": "runs/rlpd-recovery-guided-treatment-v1",
+    "environment_budget": 8192,
+    "sac_update_budget": 8191,
+    "extra_actor_optimizer_budget": 8191,
+    "matched_compute_with_q_only": false,
     "objective": "Unchanged raw SAC plus joint native deterministic-mean guidance only on 87 locally qualified, paired-finish-proven failure Oracle rows, and frozen-original-mean retention on ordinary prior plus recovery handoff/preserved-control rows.",
     "guidance_weight": 1.0,
     "retention_weight": 0.1,
