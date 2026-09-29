@@ -2315,6 +2315,37 @@ class _CompoundObstacleBrakeCarryController(
         return max(base_brake, carry_brake)
 
 
+class _CompoundObstacleLatchReleaseController(
+    _CompoundObstacleBrakeCarryController
+):
+    """Drop only redundant curve braking during compound detector misses.
+
+    The obstacle-side latch, target30, steering and inherited base speed brake
+    remain active.  A currently visible obstacle always keeps the parent brake
+    envelope; only miss frames1--4 use the base brake without its supplement.
+    """
+
+    def _curve_brake_envelope(
+        self,
+        *,
+        excess: float,
+        base_brake: float,
+    ) -> float:
+        compound_detector_miss = (
+            self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target == self.COMPOUND_TARGET_SPEED
+            and self._carry_latched_at_frame_start
+            and self._obstacle_side != 0.0
+            and 0 < self._obstacle_missing <= self.OBSTACLE_MISS_LIMIT
+        )
+        if compound_detector_miss:
+            return base_brake
+        return super()._curve_brake_envelope(
+            excess=excess,
+            base_brake=base_brake,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2816,7 +2847,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _CompoundObstacleBrakeCarryController()
+            _CompoundObstacleLatchReleaseController()
             if use_forward_controller
             else None
         )

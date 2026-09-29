@@ -3672,6 +3672,399 @@ class TestVisionCorridorAgent(unittest.TestCase):
         self.assertGreater(changed, 0)
         self.assertGreater(exact, 0)
 
+    def test_compound_latch_release_preserves_current_obstacle_at_boundaries(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        maximum = float(np.nextafter(np.float32(0.28), np.float32(0.0)))
+        saturation = 30.0 + maximum / 0.012
+        speeds = (
+            30.5,
+            np.nextafter(30.5, np.inf),
+            31.0,
+            np.nextafter(31.0, np.inf),
+            32.0,
+            36.0,
+            40.0,
+            45.0,
+            48.0,
+            saturation - 1e-5,
+            saturation,
+            saturation + 1e-5,
+        )
+        obstacle = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        for speed in speeds:
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+            with patch.object(control, "_estimate_speed", return_value=speed):
+                control_action = control.act(obstacle)
+            with patch.object(candidate, "_estimate_speed", return_value=speed):
+                candidate_action = candidate.act(obstacle)
+            with self.subTest(speed=speed):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+    def test_compound_latch_release_uses_base_brake_on_miss_frames_only(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        compound = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        curve = _observation(curve=0.75, speed=0.0)
+        maximum = float(np.nextafter(np.float32(0.28), np.float32(0.0)))
+        saturation = 30.0 + maximum / 0.012
+        expected = {
+            30.5: 0.0,
+            np.nextafter(30.5, np.inf): 0.0,
+            31.0: 0.0,
+            np.nextafter(31.0, np.inf): 0.04,
+            32.0: 0.04,
+            36.0: 0.072,
+            40.0: 0.12,
+            45.0: 0.18,
+            48.0: 0.216,
+            saturation - 1e-5: (saturation - 1e-5 - 30.0) * 0.012,
+            saturation: maximum,
+            saturation + 1e-5: maximum,
+        }
+        for speed, expected_brake in expected.items():
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+
+            def act_pair(observation):
+                actions = []
+                for controller in (control, candidate):
+                    with patch.object(
+                        controller, "_estimate_speed", return_value=speed
+                    ):
+                        actions.append(controller.act(observation))
+                self.assertEqual(candidate.__dict__, control.__dict__)
+                np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+                return actions
+
+            detected = act_pair(compound)
+            np.testing.assert_array_equal(detected[1], detected[0])
+            for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 1):
+                actions = act_pair(curve)
+                with self.subTest(speed=speed, miss=miss):
+                    self.assertAlmostEqual(
+                        float(actions[1][2]), expected_brake, places=6
+                    )
+                    self.assertLessEqual(
+                        float(actions[1][2]), float(actions[0][2])
+                    )
+                    self.assertEqual(
+                        float(actions[1][1]) * float(actions[1][2]), 0.0
+                    )
+
+            clearing = act_pair(curve)
+            np.testing.assert_array_equal(clearing[1], clearing[0])
+            released = act_pair(curve)
+            np.testing.assert_array_equal(released[1], released[0])
+            reacquired = act_pair(compound)
+            np.testing.assert_array_equal(reacquired[1], reacquired[0])
+
+    def test_compound_latch_release_closes_geometry_and_distance_gates(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        frame = _observation(speed=0.0)
+        for direction in (-1.0, 1.0):
+            for sweep, compound in ((6.0 - 1e-6, False), (6.0, True)):
+                for obstacle_y in (32.0, 50.0):
+                    centers = {
+                        30: 42.0 + direction * sweep,
+                        34: 42.0,
+                        38: 42.0,
+                        42: 42.0,
+                        54: 42.0,
+                        58: 42.0,
+                        62: 42.0,
+                    }
+                    obstacle = (
+                        obstacle_y,
+                        35.0 if direction > 0.0 else 49.0,
+                        42.0,
+                    )
+                    control = _CompoundObstacleBrakeCarryController()
+                    candidate = _CompoundObstacleLatchReleaseController()
+                    current_actions = []
+                    for controller in (control, candidate):
+                        with patch.object(
+                            controller, "_road_centers", return_value=centers
+                        ), patch.object(
+                            controller, "_nearest_obstacle", return_value=obstacle
+                        ), patch.object(
+                            controller, "_estimate_speed", return_value=40.0
+                        ):
+                            current_actions.append(controller.act(frame))
+                    np.testing.assert_array_equal(
+                        current_actions[1], current_actions[0]
+                    )
+                    self.assertEqual(candidate.__dict__, control.__dict__)
+                    actions = []
+                    for controller in (control, candidate):
+                        with patch.object(
+                            controller, "_road_centers", return_value=centers
+                        ), patch.object(
+                            controller, "_nearest_obstacle", return_value=None
+                        ), patch.object(
+                            controller, "_estimate_speed", return_value=40.0
+                        ):
+                            actions.append(controller.act(frame))
+                    with self.subTest(
+                        direction=direction,
+                        sweep=sweep,
+                        obstacle_y=obstacle_y,
+                    ):
+                        self.assertEqual(candidate.__dict__, control.__dict__)
+                        np.testing.assert_array_equal(
+                            actions[1][:2], actions[0][:2]
+                        )
+                        if compound:
+                            self.assertAlmostEqual(float(actions[1][2]), 0.12, places=6)
+                            self.assertLess(
+                                float(actions[1][2]), float(actions[0][2])
+                            )
+                        else:
+                            np.testing.assert_array_equal(actions[1], actions[0])
+
+    def test_compound_latch_release_reacquisition_resets_every_miss_phase(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        current = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=0.0,
+        )
+        missing = _observation(curve=0.75, speed=0.0)
+
+        def act_pair(control, candidate, observation):
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_estimate_speed", return_value=40.0
+                ):
+                    actions.append(controller.act(observation))
+            self.assertEqual(candidate.__dict__, control.__dict__)
+            np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+            return actions
+
+        for misses_before_reacquire in range(1, 5):
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+            visible = act_pair(control, candidate, current)
+            np.testing.assert_array_equal(visible[1], visible[0])
+            for miss in range(1, misses_before_reacquire + 1):
+                actions = act_pair(control, candidate, missing)
+                with self.subTest(
+                    misses_before_reacquire=misses_before_reacquire,
+                    miss=miss,
+                ):
+                    self.assertAlmostEqual(float(actions[1][2]), 0.12, places=6)
+                    self.assertLess(float(actions[1][2]), float(actions[0][2]))
+            reacquired = act_pair(control, candidate, current)
+            np.testing.assert_array_equal(reacquired[1], reacquired[0])
+            self.assertEqual(candidate._obstacle_missing, 0)
+
+        control = _CompoundObstacleBrakeCarryController()
+        candidate = _CompoundObstacleLatchReleaseController()
+        for cycle in range(3):
+            visible = act_pair(control, candidate, current)
+            np.testing.assert_array_equal(visible[1], visible[0])
+            self.assertEqual(candidate._obstacle_missing, 0)
+            missed = act_pair(control, candidate, missing)
+            with self.subTest(flicker_cycle=cycle):
+                self.assertAlmostEqual(float(missed[1][2]), 0.12, places=6)
+                self.assertLess(float(missed[1][2]), float(missed[0][2]))
+                self.assertEqual(candidate._obstacle_missing, 1)
+
+    def test_compound_latch_release_preserves_noneligible_and_reset_paths(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        cases = (
+            _observation(speed=45.0),
+            _observation(curve=0.25, speed=45.0),
+            _observation(obstacle_x=42, obstacle_y=50, speed=40.0),
+            _observation(curve=0.25, obstacle_x=35, obstacle_y=50, speed=40.0),
+        )
+        for observation in cases:
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+            np.testing.assert_array_equal(
+                candidate.act(observation), control.act(observation)
+            )
+            self.assertEqual(candidate.__dict__, control.__dict__)
+
+        for current, missing_latch in (
+            (
+                _observation(obstacle_x=42, obstacle_y=50, speed=40.0),
+                _observation(speed=40.0),
+            ),
+            (
+                _observation(
+                    curve=0.10,
+                    obstacle_x=35,
+                    obstacle_y=50,
+                    speed=40.0,
+                ),
+                _observation(curve=0.10, speed=40.0),
+            ),
+        ):
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+            np.testing.assert_array_equal(candidate.act(current), control.act(current))
+            for _ in range(candidate.OBSTACLE_MISS_LIMIT):
+                np.testing.assert_array_equal(
+                    candidate.act(missing_latch), control.act(missing_latch)
+                )
+                self.assertEqual(candidate.__dict__, control.__dict__)
+
+        compound_current = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=40.0,
+        )
+        straight_missing = _observation(speed=40.0)
+        control = _CompoundObstacleBrakeCarryController()
+        candidate = _CompoundObstacleLatchReleaseController()
+        np.testing.assert_array_equal(
+            candidate.act(compound_current), control.act(compound_current)
+        )
+        for miss in range(1, candidate.OBSTACLE_MISS_LIMIT + 1):
+            candidate_action = candidate.act(straight_missing)
+            control_action = control.act(straight_missing)
+            with self.subTest(compound_to_straight_miss=miss):
+                np.testing.assert_array_equal(candidate_action, control_action)
+                self.assertEqual(candidate.__dict__, control.__dict__)
+                self.assertTrue(candidate._pace_straight)
+                self.assertEqual(candidate._pace_latched_target, 30.0)
+
+        compound = _observation(
+            curve=0.75,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=40.0,
+        )
+        mild = _observation(
+            curve=0.10,
+            obstacle_x=35,
+            obstacle_y=50,
+            speed=40.0,
+        )
+        curve = _observation(curve=0.75, speed=40.0)
+        control = _CompoundObstacleBrakeCarryController()
+        candidate = _CompoundObstacleLatchReleaseController()
+        np.testing.assert_array_equal(candidate.act(compound), control.act(compound))
+        candidate.act(curve)
+        control.act(curve)
+        np.testing.assert_array_equal(candidate.act(mild), control.act(mild))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        np.testing.assert_array_equal(candidate.act(missing), control.act(missing))
+        self.assertEqual(candidate.__dict__, control.__dict__)
+        candidate.reset(None)
+        self.assertEqual(
+            candidate.__dict__,
+            _CompoundObstacleLatchReleaseController().__dict__,
+        )
+        for invalid in (None, np.zeros((84, 84), dtype=np.float32)):
+            reset_control = _CompoundObstacleBrakeCarryController()
+            reset_candidate = _CompoundObstacleLatchReleaseController()
+            np.testing.assert_array_equal(
+                reset_candidate.act(invalid), reset_control.act(invalid)
+            )
+            self.assertEqual(reset_candidate.__dict__, reset_control.__dict__)
+
+    def test_compound_latch_release_randomized_sequence_is_brake_only(self):
+        from agent import (
+            _CompoundObstacleBrakeCarryController,
+            _CompoundObstacleLatchReleaseController,
+        )
+
+        rng = np.random.default_rng(2026093003)
+        changed = 0
+        exact = 0
+        maximum = float(np.nextafter(np.float32(0.28), np.float32(0.0)))
+        for _ in range(192):
+            direction = float(rng.choice((-1.0, 1.0)))
+            curve = direction * float(rng.choice((0.10, 0.25, 0.75)))
+            obstacle_x = 35 if direction > 0.0 else 49
+            current = _observation(
+                curve=curve,
+                obstacle_x=obstacle_x,
+                obstacle_y=int(rng.choice((32, 50))),
+                speed=0.0,
+            )
+            missing = _observation(curve=curve, speed=0.0)
+            speed = float(rng.uniform(0.0, 80.0))
+            control = _CompoundObstacleBrakeCarryController()
+            candidate = _CompoundObstacleLatchReleaseController()
+            sequence = [current] + [missing] * int(rng.integers(1, 7))
+            if bool(rng.integers(0, 2)):
+                sequence.append(current)
+            for observation in sequence:
+                actions = []
+                for controller in (control, candidate):
+                    with patch.object(
+                        controller, "_estimate_speed", return_value=speed
+                    ):
+                        actions.append(controller.act(observation))
+                self.assertEqual(candidate.__dict__, control.__dict__)
+                self.assertTrue(np.all(np.isfinite(actions[1])))
+                self.assertTrue(np.all(actions[1] >= (-1.0, 0.0, 0.0)))
+                self.assertTrue(np.all(actions[1] <= 1.0))
+                self.assertEqual(float(actions[1][1]) * float(actions[1][2]), 0.0)
+                np.testing.assert_array_equal(actions[1][:2], actions[0][:2])
+                if np.array_equal(actions[1], actions[0]):
+                    exact += 1
+                    continue
+                changed += 1
+                self.assertEqual(candidate._pace_command_target, 30.0)
+                self.assertEqual(candidate._pace_latched_target, 30.0)
+                self.assertTrue(candidate._carry_latched_at_frame_start)
+                self.assertNotEqual(candidate._obstacle_side, 0.0)
+                self.assertGreater(candidate._obstacle_missing, 0)
+                self.assertLessEqual(
+                    candidate._obstacle_missing, candidate.OBSTACLE_MISS_LIMIT
+                )
+                self.assertGreater(speed, 30.5)
+                base_brake = (
+                    0.0
+                    if speed <= 31.0
+                    else min(max((speed - 30.0) * 0.012, 0.04), maximum)
+                )
+                self.assertAlmostEqual(
+                    float(actions[1][2]), base_brake, places=6
+                )
+                self.assertLess(float(actions[1][2]), float(actions[0][2]))
+        self.assertGreater(changed, 0)
+        self.assertGreater(exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,
