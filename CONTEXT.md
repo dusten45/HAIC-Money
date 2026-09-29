@@ -247,24 +247,24 @@ remain. Seven focused and212 affected tests, isolated package smoke and independ
 audit passed; see
 `experiments/post-obstacle-curve-retention-v1-result.json`.
 
-The current bare route is `_CompoundObstacleBrakeCarryController` at commit
-`a27bc51`, above the retained doubled clear-straight throttle. Submission11 videos
-all finish in23.86/29.14/25.82s, but a rendered-video speed proxy fell by a median
-19% across18 obstacle encounters;11 encounters lost at least10%. The videos lack
-source/action/speed receipts, so this is diagnostic evidence only. The candidate
-keeps compound target30, obstacle detection, four-frame latch, steering, gas and
-the inherited base brake, but changes only the redundant supplemental brake from
-`.06+.018*excess` capped.28 to `.04+.012*excess` capped.18 while the compound latch
-is active. At target30/speed40 this yields.154 instead of.231; at speed55 the base
-brake still emits the same near-.28 cap. Six focused and223 affected tests,
-isolated package smoke and two independent audits passed. Closed-loop clearance
-and lap time remain unmeasured, so the candidate is `INCOMPARABLE`; see
-`experiments/compound-obstacle-brake-carry-v1-result.json`.
+The current bare route is `_CompoundObstacleLatchReleaseController` at commit
+`a593be9`, above the retained compound brake-carry and doubled-straight layers.
+Submission12 videos all finish in23.60/28.18/25.44s, improving every submission11
+lap by0.26/0.96/0.38s, but13/26 obstacle encounters still lose at least10% on a
+rendered-video speed proxy. Minimum HSV mask gaps are only20/8/12.2px, so the
+candidate keeps current-visible-obstacle actions, target30, steering, four-frame
+latch and the base brake exact. Only on compound detector-miss frames1--4 does it
+drop the redundant supplemental curve brake and emit the inherited base brake:
+at target30/speed40 this is.120 instead of.154, while speed45+ is exact. Six
+focused and229 affected tests, isolated package smoke and two independent audits
+passed. Detector flicker can occur before true clearance and closed-loop effects
+remain unmeasured, so the candidate is `INCOMPARABLE`; see
+`experiments/compound-obstacle-latch-release-v1-result.json`.
 
-The user-requested untracked root `submission.zip` SHA is `becfb97a...`; it embeds
-the prior `_DoubleClearStraightThrottleController` agent SHA `a509f75e...` and
+The user-requested untracked root `submission.zip` SHA is `3ac70e3a...`; it embeds
+the prior `_CompoundObstacleBrakeCarryController` agent SHA `413afda3...` and
 unchanged model SHA `c101c696...`. It has no official receipt binding and is stale
-relative to current candidate agent SHA `413afda3...`; preserve it but do not treat
+relative to current candidate agent SHA `ffc3c0bb...`; preserve it but do not treat
 it as the new candidate package.
 
 ## Runtime And Infrastructure

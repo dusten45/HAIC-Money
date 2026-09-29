@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-obstacle-latch-release-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T05:22:57+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commit": "ae8ded3ae3d9291ec71063b07da52b436275d5f8",
+  "implementation_commit": "a593be98ed2b764ee644b1fda14c8f803b68d6a6",
+  "decision": "Keep as the current statically validated bare-model candidate. It removes only the supplemental curve brake on compound detector-miss latch frames1--4 while retaining the current-visible-obstacle action, target30, obstacle-side steering and inherited base speed brake. Do not claim a lap-time, clearance, completion, submission or SOTA improvement until an authorized paired driving evaluation passes the safety-first gate.",
+  "video_evidence": {
+    "attribution": "user-attributed submission12 replay videos without source/model/package/action receipt binding",
+    "results": {
+      "track1": {"status": "FINISHED", "lap_seconds": 23.60, "submission11_delta_seconds": -0.26},
+      "track2": {"status": "FINISHED", "lap_seconds": 28.18, "submission11_delta_seconds": -0.96},
+      "track3": {"status": "FINISHED", "lap_seconds": 25.44, "submission11_delta_seconds": -0.38}
+    },
+    "aggregate": {
+      "submission11_mean_lap_seconds": 26.27,
+      "submission12_mean_lap_seconds": 25.74,
+      "mean_delta_seconds": -0.53,
+      "mean_delta_percent": -2.03
+    },
+    "obstacle_speed_proxy": {
+      "method": "HSV vehicle/obstacle masks plus Lucas-Kanade background flow and RANSAC camera-motion correction",
+      "encounters": 26,
+      "overall_post_pre_ratio_median": 0.88,
+      "encounters_below_0_90": 13,
+      "track1_same_order_six_pass_ratio_median": {"submission11": 0.69, "submission12": 0.69},
+      "interpretation": "The user's residual obstacle-local slowdown feedback is supported, but the proxy cannot identify internal detector miss-latch phases."
+    },
+    "minimum_hsv_mask_gap_pixels": {"track1": 20.0, "track2": 8.0, "track3": 12.2},
+    "safety_interpretation": "Tight rendered gaps reject a global target increase, base-brake reduction or current-visible-obstacle brake reduction."
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _CompoundObstacleLatchReleaseController; explicit export, DrQ and HAIC paths remain unchanged.",
+    "Qualify only when pace-latched and command targets are both30, the frame began with a nonzero obstacle-side latch, that side remains active and the detector miss count is1--4.",
+    "Return the inherited base brake instead of the supplemental compound curve-brake maximum on those miss frames only.",
+    "At target30, candidate brake is0 for30.5<speed<=31,0.04 at32,0.072 at36 and0.12 at40; speed45/48 and base saturation remain control-exact at0.18/0.216/near0.28.",
+    "Keep current-visible-obstacle actions, target30, detector, obstacle-side and four-frame latch, steering, gas, fifth-frame clear, reacquisition, clear-straight throttle and noncompound states exact.",
+    "Add no mutable candidate state and no seed, track, coordinate, progress or time condition."
+  ],
+  "static_validation": {
+    "directed_and_randomized": "Current obstacles at speed boundaries, miss1--4, exact target-plus0.5/base onset/base saturation, both directions, sweep below/at6, rows32/50, compound-to-straight latch, fifth clear, sixth release, reacquisition at each miss index, alternating detector flicker, noncompound latch/reacquisition, invalid input, road loss and reset passed. Randomized sequences prove every difference is brake-only and equals the emitted base envelope.",
+    "focused_candidate_suite": "6 passed,133 deselected",
+    "controller_policy_package_suite": "159 passed,4 warnings",
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "229 passed,4 warnings"
+    },
+    "independent_audit": "Two read-only implementation/video audits found no blocking defect after directed miss-boundary, straight-latch, current-distance, reacquisition and detector-flicker coverage was added.",
+    "isolated_package": {
+      "path": ".haic-artifacts/compound-obstacle-latch-release-v1/20260929T202233346120Z_compound-obstacle-latch-release-v1/submission.zip",
+      "source_commit": "a593be98ed2b764ee644b1fda14c8f803b68d6a6",
+      "agent_git_blob": "d83f329440c02ada096f8deb679bad1ea4fbcce7",
+      "agent_sha256": "ffc3c0bb1e1c783b0fa2cdbf6196f02d98cb2e1b5e6bcfc504f88e400de59f70",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "7cf3fe7f107d6ea16bdfb264b11bfd02ba6abb1c4e775c414a47255d097b8b91",
+      "bytes": 6282208,
+      "windows_python": "3.11.15",
+      "init_seconds": 5.487335700076073,
+      "act_seconds": 0.009281300008296967,
+      "result": "exact-file build/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "3ac70e3a5ac12ce2a63a7b39f4e7a112ca004dd4d96391c1094a834150be0e06",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "Rendered video cannot expose the internal84x84 observation, detector result, miss-latch phase, estimated speed or emitted actions, so the proposed cause remains a code-grounded hypothesis rather than video-proven causality.",
+    "A detector miss can be a transient flicker while the obstacle is still ahead; retaining target30, steering and base brake bounds the change but does not prove clearance safety.",
+    "For30.5<speed<=31 on an eligible miss frame the candidate coasts with gas0/brake0 where control emitted the0.04 supplemental minimum.",
+    "Same-input static tests cannot establish future closed-loop completion, collision/off-track non-regression, clearance or lap-time improvement.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so environment evaluation, promotion and submission remain blocked."
+  ]
+}
