@@ -3,6 +3,8 @@
   "experiment": "compound-obstacle-brake-carry-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T04:32:17+09:00",
+  "amended_at": "2026-09-30T04:38:53+09:00",
+  "amendment": "Clarify that excess is measured above the inherited target-plus0.5 trigger. The registered numeric examples already used this definition; no gate or parameter changed.",
   "branch": "feature/DG-Codex",
   "hypothesis": "Submission-11 video and the active controller both indicate excessive longitudinal deceleration when a recognized obstacle overlaps a high-sweep curve. Reducing only the supplemental curve-brake envelope in that registered compound state, while retaining the base distance/speed brake as a hard floor, should improve obstacle-corner carry without weakening the inherited high-overspeed safety brake, target speed, latch or steering.",
   "scope": {
@@ -21,7 +23,8 @@
       "a recognized obstacle is present or the frame began in obstacle miss latch1--4",
       "estimated speed is more than target plus0.5 so the inherited supplemental curve-brake branch is active"
     ],
-    "formula": "candidate_brake = max(inherited_base_brake, clip(0.04 + 0.012 * (speed - target), 0.04, 0.18))",
+    "excess_definition": "excess = speed - target - CURVE_BRAKE_TRIGGER_DELTA, where CURVE_BRAKE_TRIGGER_DELTA is0.5",
+    "formula": "candidate_brake = max(inherited_base_brake, clip(0.04 + 0.012 * excess, 0.04, 0.18))",
     "registered_examples": {
       "speed_32": {"control": 0.087, "candidate": 0.058},
       "speed_36": {"control": 0.159, "candidate": 0.106},
