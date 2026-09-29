@@ -1,5 +1,12 @@
 # HAIC-Money
 
+## 제출 후보 (2026-09-30)
+
+[Arrival-speed 제출 ZIP과 소스·검증 결과](releases/arrival-speed-20260930/README.md)
+
+별도 검증에서 기존과 같은 10/12 완주, 완주 기록 중앙값 19.34초 → 18.46초. 대회 제출 완료를 의미하지 않습니다. 저장소 루트 연구용 agent 대신 링크된 고정 ZIP을 사용하세요.
+
+
 HAIC-Money is an experimental research fork of the official Participants template
 for building a reliable single-model agent for the 2026 HAIC CarRacing AI Challenge.
 The target is not a collection of per-track best records: one immutable candidate

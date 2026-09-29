@@ -1,0 +1,181 @@
+{
+  "summary": {
+    "control": {
+      "completed": 10,
+      "denominator": 12,
+      "median_ms": 19340.0,
+      "p90_ms": 21736.0,
+      "mean_incomplete_progress": 0.24604220256394171,
+      "collisions": 1,
+      "damage": 0.2,
+      "max_speed": 60.64548718553733,
+      "act_p50_ms": [
+        3.9885365004010964,
+        3.96191450090555,
+        3.998833999503404,
+        3.9703245001874166,
+        3.9496179997513536,
+        3.9647310004511382,
+        3.980713998316787,
+        3.540380002959864,
+        3.3271149986831006,
+        3.9938629997777753,
+        4.004592999990564,
+        3.9460794996557524
+      ],
+      "act_p95_ms": [
+        4.855096351275279,
+        4.7301773503932045,
+        5.310579896831768,
+        4.480942349073302,
+        4.7401365505720605,
+        4.9703546981618265,
+        4.385583000839688,
+        4.315795400179923,
+        4.061641498992685,
+        5.060891200264448,
+        4.9331061007251265,
+        4.703485501158866
+      ]
+    },
+    "candidate": {
+      "completed": 10,
+      "denominator": 12,
+      "median_ms": 18460.0,
+      "p90_ms": 20610.0,
+      "mean_incomplete_progress": 0.25808812765334505,
+      "collisions": 0,
+      "damage": 0.0,
+      "max_speed": 75.2768661716901,
+      "act_p50_ms": [
+        4.718359003163641,
+        4.7648010004195385,
+        4.78006499906769,
+        4.823063001822447,
+        4.685189998781425,
+        4.735064001579303,
+        4.7731890008435585,
+        4.5288544988579815,
+        4.236237002260168,
+        4.700063000200316,
+        4.661170998588204,
+        4.661045499233296
+      ],
+      "act_p95_ms": [
+        5.723191898141522,
+        5.593891000899021,
+        6.907695498739486,
+        6.072594199940795,
+        5.519134052337903,
+        5.790170599357223,
+        5.831133501487784,
+        5.659911051225208,
+        5.49190795100003,
+        5.702633151122424,
+        5.570762999923318,
+        6.094548748296801
+      ]
+    }
+  },
+  "pairs": [
+    {
+      "track": 1,
+      "seed": 49300,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -880
+    },
+    {
+      "track": 1,
+      "seed": 49301,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -660
+    },
+    {
+      "track": 1,
+      "seed": 49302,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -840
+    },
+    {
+      "track": 1,
+      "seed": 49303,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -1160
+    },
+    {
+      "track": 2,
+      "seed": 49300,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -760
+    },
+    {
+      "track": 2,
+      "seed": 49301,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -780
+    },
+    {
+      "track": 2,
+      "seed": 49302,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -780
+    },
+    {
+      "track": 2,
+      "seed": 49303,
+      "both_completed": false,
+      "finish_preserved": true,
+      "delta_ms": null
+    },
+    {
+      "track": 3,
+      "seed": 49300,
+      "both_completed": false,
+      "finish_preserved": true,
+      "delta_ms": null
+    },
+    {
+      "track": 3,
+      "seed": 49301,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -740
+    },
+    {
+      "track": 3,
+      "seed": 49302,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -940
+    },
+    {
+      "track": 3,
+      "seed": 49303,
+      "both_completed": true,
+      "finish_preserved": true,
+      "delta_ms": -820
+    }
+  ],
+  "raw_hashes_valid": 36,
+  "invalid_actions": 0,
+  "errors": 0,
+  "train_exact_replays": 12,
+  "import_max_s": 0.26822769999853335,
+  "reset_max_s": 0.00010332099918741733,
+  "act_max_ms": 12.57410499965772,
+  "peak_rss_bytes": 284217344,
+  "duration_s": 243.24672020100115,
+  "total_cycle_seconds": 703.0676584770008,
+  "archive_hashes": {
+    "control": "7bc38a3bdeab7cfdf437cfbf5c06f15a81cfa18fad5317748ab13a259b8ea835",
+    "candidate": "b168a17dac5fe5d6b28a265fb4adeeba6b3346391b35acd4a5818e7dc0b9693b"
+  },
+  "source_audit_note": "Official env_wrapper differs only by additive local telemetry validity/termination fields; no action/observation/reward/physics/end condition changes. Six physics/damage modules normalized identical. README drops only historical sentence about future released seeds. Priority website inaccessible; current official repository fallback used."
+}
