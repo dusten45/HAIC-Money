@@ -20,7 +20,8 @@
       "For the detected turn direction, set entry and exit targets to the outside safe limit and the apex target to the opposite inside safe limit. The safe limit is max(0,(right-left)/2-7.0), so the target never requests less than7.0 pixels of geometric center-to-edge clearance.",
       "Construct a virtual road reference by translating the complete-run centers toward the phase target, and apply the frozen road steering gains0.016/0.012 to that reference. Do not clip the pre-slew reference relative to inherited centerline steering because doing so removes the requested lateral equilibrium on wide roads; every emitted action still passes through the inherited per-frame0.07 slew and absolute steering limits.",
       "After a confirmed end of the bend, retain the exit outside target on the clear straight until a newly visible bend selects its own entry/apex direction. A renewed or opposite coherent apex always overrides exit hold. Missing/ambiguous geometry, invalid road, current obstacle or obstacle miss latch still clears the line immediately.",
-      "Apex-to-clear requires two consecutive clear reads before changing to exit; a continuing apex cancels that confirmation. Entry-to-clear remains a false-preview rejection and returns idle after two consecutive clear reads."
+      "Apex-to-clear requires two consecutive clear reads before changing to exit; a continuing apex cancels that confirmation. Entry-to-clear remains a false-preview rejection and returns idle after two consecutive clear reads.",
+      "Normally current-obstacle and miss-latch output remains exact to the synchronized completion shadow. If the vehicle is already at the7-pixel edge boundary and that shadow requests steering farther through the same edge, latch an edge-hazard guard: slew from the actually emitted steering toward the road center by the inherited0.07 step, emit zero gas and maximum inherited brake0.28, clear the racing-line phase, and keep that conservative recovery through the miss latch."
     ],
     "unchanged": [
       "rows30/34/42/54, bend threshold1.5, two-frame confirmations and generic camera-only geometry",
@@ -32,7 +33,7 @@
   "safety_priority": [
     "Track visibility and the7-pixel safe envelope are hard gates; any breach suppresses the racing-line target.",
     "A near/apex geometry observation always takes priority over reaching the entry outside target, so an incomplete setup cannot delay turn-in on a sharp bend.",
-    "Current obstacle and miss-latch actions must remain bit-exact to the reset-synchronized completion controller in every phase, and line state must clear.",
+    "Current obstacle and miss-latch actions remain bit-exact to the reset-synchronized completion controller unless the registered edge-hazard guard detects that its steer would cross the already reached7-pixel boundary; line state clears in both cases.",
       "The full-envelope target is a secondary objective only; inherited final clipping, slew, lost-road recovery and the synchronized longitudinal behavior remain authoritative.",
     "No target is keyed to track id, seed, elapsed time, progress, memorized coordinate or evaluation result."
   ],
@@ -46,7 +47,8 @@
       "At exact7-pixel clearance the correction is zero toward that edge; nextafter beyond the boundary suppresses the line rather than steering farther outward.",
       "Apex clear confirmation is consecutive, continuing hairpins do not unwind, and a newly visible opposite bend replaces the retained exit with the correct outside entry target.",
       "Apex geometry switches entry to inward tracking even when the outside position was not reached, preventing setup from delaying a sharp turn.",
-      "All current-obstacle and miss-latch actions, pedals and steering state remain exact to the natural completion-control shadow from entry, apex, exit and clear-straight states.",
+      "Away from an edge conflict, all current-obstacle and miss-latch actions, pedals and steering state remain exact to the natural completion-control shadow from entry, apex, exit and clear-straight states.",
+      "At mirrored left/right7-pixel edge boundaries, an outward natural obstacle action activates the guard, does not move emitted steering farther outward, commands zero gas plus0.28 brake, remains bounded through the miss latch, and releases only after the inherited obstacle latch clears; an inward natural action remains exact.",
       "Random mirrored actions remain finite, bounded, action-to-action slew-limited to0.07 on non-hazard frames and gas/brake exact to control; request-to-control delta is not used as a bound.",
       "All affected/local-contract/submission-contract tests and an isolated exact-file package smoke pass."
     ],
@@ -54,7 +56,7 @@
   },
   "abort": [
     "Any environment execution, training, submission, lap-time/completion claim or SOTA promotion occurs.",
-    "Any obstacle or miss-latch action differs from the synchronized natural control or line state survives a hazard.",
+    "Any non-edge-conflict obstacle or miss-latch action differs from the synchronized natural control, any registered edge guard steers farther outward or emits gas/brake other than0/0.28, or line state survives a hazard.",
     "Any requested target has predicted geometric edge clearance below7.0 pixels, any line frame bypasses inherited final action bounds, or any relevant regression fails.",
     "Any speed, pedal, detector, obstacle parameter, model, official environment, DrQ artifact, user video or root submission.zip changes."
   ],
