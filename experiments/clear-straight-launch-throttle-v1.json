@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "name": "clear-straight-launch-throttle-v1",
+  "purpose": "consumed-4_7-video-motivated-low-speed-clear-straight-acceleration-diagnostic",
+  "status": "preregistered",
+  "registered_at": "2026-09-29T17:50:00.9052925+09:00",
+  "source_commit": "70f9b475de9554642c7d77067b5a490df57d3bfb",
+  "evidence_ledger": "experiments/video-4-7-evidence-ledger-v1.json",
+  "scope": {
+    "runtime": "bare model.pt only",
+    "primary_change": "increase emitted gas from 0.10 to 0.11 only when the inherited clear-straight gate is active and the unchanged pedal controller requested its full-gas 0.08 branch",
+    "training": false,
+    "environment_execution": false,
+    "fresh_evaluation": false,
+    "blind_evaluation": false,
+    "submission": false,
+    "sota_promotion": false
+  },
+  "control": {
+    "controller": "agent._ObstaclePriorityController",
+    "source_commit": "70f9b475de9554642c7d77067b5a490df57d3bfb",
+    "agent_sha256": "ed079457c723d55b369ed80607709bdeee3c8bc9893ea3846e97da19c1d2fd3c",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "video_binding": "consumed-and-unbound"
+  },
+  "factor": {
+    "candidate_controller": "agent._LaunchThrottleController",
+    "launch_gas": 0.11,
+    "exact_predicate": "inherited pre-adjust gas == MAX_GAS (0.08) AND inherited _GuardedCompletionController output gas == CLEAR_STRAIGHT_MAX_GAS (0.10) AND inherited brake == 0",
+    "equivalent_operating_domain": "valid visible road, existing straight classification, no detected obstacle, settled residual steering, and estimated speed strictly below current transient target minus 8",
+    "control_output": ["same steering", 0.10, 0.0],
+    "candidate_output": ["same steering", 0.11, 0.0],
+    "call_order": "apply after unchanged _pedals and inherited clear-straight scaling; do not alter target computation or controller state",
+    "parameters_added": 1,
+    "tuning_grid": false
+  },
+  "frozen": [
+    "cruise speed 48, curve formula and floor 36, target EMA and stored target state",
+    "pedal branch thresholds, near-target gas, braking boundary speed > target+1, and all brake values",
+    "MAX_GAS 0.08 and inherited clear-straight outputs 0.10, 0.066666..., and 0.041666... outside the full-gas branch",
+    "obstacle caps 47/40, compound target 30, obstacle detector, pass side, urgency, steering, slew, preview, and transition guard",
+    "curve, preview, obstacle-present, residual-steer, invalid, lost-road, DrQ, explicit baseline export, and HAIC paths",
+    "model.pt, official environment files, user videos, and root submission.zip"
+  ],
+  "acceptance": {
+    "synthetic": [
+      "At exact estimated-speed values below target-8, including 0 and nextafter(target-8 toward negative infinity), candidate gas is 0.11 while control gas is 0.10 and steering/brake/state are exact.",
+      "At target-8 and above through overspeed, complete candidate action and state are bit-exact to control.",
+      "Curves including floor-speed curves, distant preview frames, early and near obstacles, compound hazards, obstacle-to-clear settling, residual steering, invalid input, road loss/recovery, and reset remain bit-exact to control.",
+      "Mirrored road and obstacle scenes preserve exact steering and longitudinal symmetry; output stays finite, bounded, deterministic, and gas/brake exclusive.",
+      "Repeated launch frames differ only in gas and do not create or persist any new state."
+    ],
+    "regression": [
+      "All previous stable, compound, curve, guarded, distant-obstacle, anticipatory-preview, and obstacle-priority tests pass.",
+      "Bare state-dict routing selects only the new final launch-throttle subclass; DrQ, explicit baseline export, and HAIC paths remain unchanged.",
+      "Temporary submission package contains exact candidate agent.py and unchanged model.pt, passes import/action/reset/static-scan/timing/memory gates, and does not overwrite root submission.zip."
+    ],
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any target speed, target state, brake boundary, brake value, steering, perception, obstacle, curve, preview, or transition behavior changes.",
+    "The higher gas applies at or above target-8, with any obstacle, on a curve or preview, before residual steering settles, on invalid/lost road, or outside the bare-state-dict route.",
+    "A second parameter, track-specific condition, smoothing state, ramp, latch, or detector change is needed.",
+    "Any frozen artifact or user evidence changes, or any relevant interface, package, deterministic-reset, timing, or memory test fails.",
+    "Any environment execution, performance claim, submission, or SOTA action occurs while the required governance files are absent."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md, and report.pdf are absent.",
+    "Only synthetic diagnostic validation is authorized; the candidate remains INCOMPARABLE."
+  ]
+}

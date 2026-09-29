@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "name": "video-4-7-evidence-ledger-v1",
+  "status": "recorded-consumed",
+  "recorded_at": "2026-09-29T17:50:00.9052925+09:00",
+  "source_commit": "70f9b475de9554642c7d77067b5a490df57d3bfb",
+  "evidence": [
+    {
+      "path": "evaluation_videos/video_track-01_4_7.mp4",
+      "sha256": "c8330c32d128f97b65549dd8008f9b621839858997423c3c2c76158100753472",
+      "bytes": 1444504,
+      "duration_seconds": 41.1,
+      "visible_result": {"status": "FINISHED", "progress_percent": 100.0, "lap_time_seconds": 27.18}
+    },
+    {
+      "path": "evaluation_videos/video_track-02_4_7.mp4",
+      "sha256": "377e1eaf40a16e46ac5139f93cda6832bb0287d38b11d4ec4bdb4c4c7400cd88",
+      "bytes": 1810458,
+      "duration_seconds": 48.7,
+      "visible_result": {"status": "FINISHED", "progress_percent": 100.0, "lap_time_seconds": 33.22}
+    },
+    {
+      "path": "evaluation_videos/video_track-03_4_7.mp4",
+      "sha256": "ad5a86d5dde35d4f5cdee670b1fdc2141ee786ae160f9ee534ac0d37718a2ae6",
+      "bytes": 1671210,
+      "duration_seconds": 45.4,
+      "visible_result": {"status": "FINISHED", "progress_percent": 100.0, "lap_time_seconds": 30.58}
+    }
+  ],
+  "comparison": {
+    "submission_5_visible_results": {
+      "track_1_lap_time_seconds": 27.50,
+      "track_2_lap_time_seconds": 32.96,
+      "track_3": "DNF at 19.4 percent, collision limit"
+    },
+    "submission_4_visible_results": {
+      "track_1_lap_time_seconds": 28.36,
+      "track_2": "DNF at 20.5 percent, off track",
+      "track_3_lap_time_seconds": 31.12
+    },
+    "observed_deltas": {
+      "track_1_vs_submission_5_seconds": -0.32,
+      "track_2_vs_submission_5_seconds": 0.26,
+      "track_3_vs_submission_5": "DNF to finish",
+      "track_1_vs_submission_4_seconds": -1.18,
+      "track_3_vs_submission_4_seconds": -0.54
+    }
+  },
+  "lineage": {
+    "root_submission_zip_sha256": "dd36876a13ac96a2dc6b149b1d02917c3635fc12dc69d02ae1894da6ae2b7123",
+    "embedded_agent_sha256": "ed079457c723d55b369ed80607709bdeee3c8bc9893ea3846e97da19c1d2fd3c",
+    "embedded_model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "binding": "plausible-but-unbound",
+    "reason": "No official receipt, source commit, seed, or package hash accompanies the videos; the 4_7 filename component is treated only as a label."
+  },
+  "facts": [
+    "All three new videos visibly finish.",
+    "Track 1 is 0.32 seconds faster than the recorded submission-5 video while Track 2 is 0.26 seconds slower.",
+    "Track 3 changes from a submission-5 collision-limit DNF to a 30.58-second finish.",
+    "The top-down replay does not expose the policy's 4x84x84 observation, estimated speed, steering, gas, brake, collision telemetry, track seed, or package identity."
+  ],
+  "hypotheses": [
+    "Additional low-speed clear-straight acceleration may reduce time spent recovering speed without moving the current braking boundary.",
+    "A globally faster vehicle or a more aggressive inside line is not established by these videos."
+  ],
+  "feedback_decision": {
+    "vehicle_speed": "partially accepted only as motivation for a bounded low-speed acceleration diagnostic; the videos do not establish low maximum speed",
+    "inside_line": "rejected for this change because the replay supplies no road-clearance/action telemetry, Track 2 regressed, and a fixed bias is not track-shape invariant"
+  },
+  "use_restrictions": [
+    "All three videos are consumed development evidence and cannot confirm a candidate motivated by them.",
+    "Top-down coordinates, minimap geometry, progress, time, track identity, video filename, and obstacle order must not enter runtime policy logic or threshold fitting.",
+    "No performance, safety, submission, or SOTA claim follows from this ledger."
+  ]
+}
