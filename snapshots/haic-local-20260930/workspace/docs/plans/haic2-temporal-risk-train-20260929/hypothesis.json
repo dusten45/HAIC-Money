@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-temporal-pixel-risk-train-20260929",
+  "source_ref": "docs/plans/haic2-temporal-risk-train-20260929/design.md",
+  "rule_or_requirement": "A faster pixel policy must distinguish safe fast-action windows from imminent route loss while preserving qualified finishes.",
+  "observable_information": "Current four rendered frames, pixel road/HUD/obstacle features, and the frozen fast and safe actions; future TRAIN collision and visual loss only label training rows.",
+  "allowed_action_or_state_change": "Train one fixed pixel/action risk classifier and freeze a threshold from TRAIN negatives; no learned-policy driving in this cycle.",
+  "expected_success_endpoint": "At least 40 positive train and 10 positive validation states; validation AUC >=0.70, recall >=0.50, false-positive rate <=0.25, safe checkpoint and zero invalid actions.",
+  "eligible_state": "TRAIN_TEMPORAL_RISK_FEASIBILITY_ONLY",
+  "control": "Exact visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 and its unchanged runtime, paired with unchanged fast-only actor on twelve new TRAIN cells.",
+  "falsifier": "Insufficient positive support, weak validation discrimination, broad false alarms, unsafe checkpoint, action drift or invalid actions.",
+  "smallest_decisive_experiment": "24 fixed driving episodes on tracks 1-3 x TRAIN seeds 5044-5047, then within-TRAIN classifier fit and held-back validation.",
+  "resource_and_risk_gate": "One registered Linux CPU profile capped at 1,800 seconds and 2,000 decisions per episode; no non-TRAIN labels or external action.",
+  "source_paths": [
+    "docs/plans/haic2-temporal-risk-train-20260929/design.md",
+    "training/temporal_pixel_risk_distill.py",
+    "haic_agent/pixel_temporal_risk_runtime.py",
+    "docs/plans/haic2-mode-switch-data-driven-batch-20260929.md"
+  ]
+}

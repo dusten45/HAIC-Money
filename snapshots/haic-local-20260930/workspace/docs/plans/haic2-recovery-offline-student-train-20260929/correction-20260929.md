@@ -1,0 +1,9 @@
+# Post-run correction: recovery segments
+
+This append-only interpretation correction refers to the original gate-review event `bc15c145-823d-498e-ac10-8fa5216c4573` and the immutable offline report SHA-256 `a9aba41a9fcccb2e3b865be3c14bdd3fbbf271a88c9747c6be926d75870becfb`. It does not change that run's `PIVOT`, its source, or its numeric output.
+
+The report's `switch_count` compared adjacent saved labels even if their `decision_indices` were separated by many ordinary driving decisions. In natural TRAIN 5292–5299, track 2 seed 5299 had a positive recovery at decisions 67–71 and a negative recovery at 189–196. The reported single natural sign switch is **between two distinct recovery segments**, not during continuous road loss. Across the four natural episodes there were five contiguous recovery segments, 30 labeled decisions and **zero within-segment direction switches**. In the induced TRAIN 5177 validation, six labeled episodes contained ten segments and five within-segment sign switches; there were no across-segment switches.
+
+The prior first-direction-hold baseline kept one direction across an entire episode, so its 22/30 natural sign result understates a reset-on-road-reappearance baseline. A segment-reset first-direction hold would match the teacher's sign on all 30 natural decisions if it correctly detected all five initial directions. This is a post-hoc observation, not a preregistered model result or driving evidence. The previously rejected six-decision hard-steering rule still lost a valid control finish on consumed TRAIN 3:5176. Next action: register segment-aware observability and then test a bounded runtime correction on fresh TRAIN cells, with no lost control finish gate.
+
+The existing CLI replay accepts lifecycle events only, so this correction is stored as a separate append-only document referencing the prior event. The original `events.jsonl`, `run_manifest.json`, `integration_report.json` and `report.json` are untouched.

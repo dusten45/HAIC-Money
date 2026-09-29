@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local TRAIN-only profile completed with hash-bound inputs. Official site and package compliance were not established.",
+      "evidence_paths": ["runs/haic-research-v2/policy-head-activation-candidate-r2-20260928/run_manifest.json", "runs/haic-research-v2/policy-head-activation-candidate-r2-20260928/events.jsonl"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Policy-head weight relative L2 change was 4.302% versus control 0.073%, but final TRAIN rollout mean gas was 0.07198 versus control 0.07787; the preregistered +0.02 gas activation endpoint failed.",
+      "evidence_paths": ["artifacts/haic-research-v2/policy-head-activation-candidate-r2-20260928/training/policy.pt", "artifacts/haic-research-v2/policy-head-activation-control-r3-20260928/training/policy.pt"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Activation failed; TUNE, held-out, confirmation, blind, and official scoring cells were not opened. Different TRAIN trajectories make their mean speeds unsuitable as a matched performance claim.",
+      "evidence_paths": ["docs/plans/2026-09-28-policy-head-activation-probe.md"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/policy-head-activation-candidate-r2-20260928/run_manifest.json", "artifacts/haic-research-v2/policy-head-activation-candidate-r2-20260928/training/policy.pt"]
+}

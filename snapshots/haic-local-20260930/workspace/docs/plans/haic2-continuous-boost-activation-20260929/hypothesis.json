@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-continuous-boost-activation-20260929",
+  "source_ref": "docs/plans/haic2-continuous-boost-activation-20260929/design.md",
+  "rule_or_requirement": "Retain the pixel student's lap advantage without losing valid completion to abrupt high gas near hazards.",
+  "observable_information": "Frozen pixel-student posterior, inherited pixel-driver gas and full local completion/action telemetry.",
+  "allowed_action_or_state_change": "Replace a posterior-approved 0.28 gas command with the exact midpoint between inherited gas and 0.28; leave steer and brake unchanged.",
+  "expected_success_endpoint": "At least one hundred blended boosts, preserve 1:5200 valid finish, repair one former student failure and zero invalid actions.",
+  "eligible_state": "CONSUMED_TUNE_ACTIVATION_DIAGNOSTIC",
+  "control": "Original frozen pixel student safe checkpoint SHA-256 3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194 with gas 0.28 on approved boosts.",
+  "falsifier": "Blend fails to change action magnitude, loses the reference valid finish, repairs no former failure, or creates invalid actions.",
+  "smallest_decisive_experiment": "Original and half-blended student on consumed TUNE 1:5200, 3:5201 and 2:5205, six episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 900 seconds and 2,000 decisions per episode; no fresh competitive or external action.",
+  "source_paths": ["docs/plans/haic2-continuous-boost-activation-20260929/design.md", "training/continuous_boost_probe.py", "haic_agent/pixel_speed_student_runtime.py", "docs/plans/haic2-post-four-direction-pivot-20260929.md"]
+}

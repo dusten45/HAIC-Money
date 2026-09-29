@@ -1,0 +1,55 @@
+{
+  "source": "C:/Users/koi/.codex/worktrees/strategy-d-reward/HAIC/research/strategy-d-shared-gradient/result.json",
+  "source_sha256": "98978C53B1AE6B757ADBD6BDE90C79C50BD8A235821D97231AE72CA1F6E7A33E",
+  "method": "Derived dot(g_policy,g_total)=norm(g_policy)^2 + weighted value/aux dot products; shared entropy gradient zero. No Adam transformation or optimizer update. Local fixed-batch calculation only.",
+  "rows": [
+    {
+      "row_start": 0,
+      "policy_dot_total_over_policy_norm_squared": 0.933046180603714,
+      "policy_total_cosine": 0.8126657975351996,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 32,
+      "policy_dot_total_over_policy_norm_squared": 0.9479741541466672,
+      "policy_total_cosine": 0.8115524820180745,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 64,
+      "policy_dot_total_over_policy_norm_squared": 1.0395358811893622,
+      "policy_total_cosine": 0.8032637443446398,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 96,
+      "policy_dot_total_over_policy_norm_squared": 0.9911773384311103,
+      "policy_total_cosine": 0.8870027166888589,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 128,
+      "policy_dot_total_over_policy_norm_squared": 0.9668061804071714,
+      "policy_total_cosine": 0.6220438450663007,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 160,
+      "policy_dot_total_over_policy_norm_squared": 0.9142646570224293,
+      "policy_total_cosine": 0.445250683621312,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 192,
+      "policy_dot_total_over_policy_norm_squared": 1.007831592273461,
+      "policy_total_cosine": 0.814081006889334,
+      "policy_first_order_direction_reversed": false
+    },
+    {
+      "row_start": 224,
+      "policy_dot_total_over_policy_norm_squared": 1.0516898358684972,
+      "policy_total_cosine": 0.8147321852544699,
+      "policy_first_order_direction_reversed": false
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-road-memory-fresh-tune-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-road-memory-fresh-tune-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Frozen pixel-only local diagnostic and exact control ZIP hash checked; no exact candidate ZIP or current official-site compliance check.",
+      "evidence_paths": [
+        "training/road_memory_probe.py",
+        "artifacts/haic-research-v2/haic2-road-memory-fresh-tune-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Candidate changed 59 actions on fresh TUNE cells and had zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-fresh-tune-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Fresh matched TUNE completion fell 22/24 versus control 23/24; candidate-only invalid finishes on 2:5066 and 2:5071 outweigh lap-time gains.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-road-memory-fresh-tune-20260929/report.json"
+      ]
+    }
+  ]
+}

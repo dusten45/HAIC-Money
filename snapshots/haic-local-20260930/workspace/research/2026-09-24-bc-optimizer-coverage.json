@@ -1,0 +1,35 @@
+{
+  "type": "parameter_membership_introspection_not_training",
+  "source_sha256": "4f299fa5fa37caeffb36a386a716a3b092f86630c4062204aba16d5972d32c64",
+  "rows": [
+    {
+      "name": "visual_feature_encoder.0.weight",
+      "elements": 224,
+      "requires_grad": true,
+      "in_bc_optimizer": false,
+      "all_zero": false
+    },
+    {
+      "name": "visual_feature_encoder.0.bias",
+      "elements": 32,
+      "requires_grad": true,
+      "in_bc_optimizer": false,
+      "all_zero": false
+    },
+    {
+      "name": "temporal_feature_encoder.weight",
+      "elements": 128,
+      "requires_grad": true,
+      "in_bc_optimizer": false,
+      "all_zero": true
+    },
+    {
+      "name": "temporal_feature_encoder.bias",
+      "elements": 128,
+      "requires_grad": true,
+      "in_bc_optimizer": false,
+      "all_zero": true
+    }
+  ],
+  "scope": "fresh model with both feature branches enabled; not measured policy improvement"
+}

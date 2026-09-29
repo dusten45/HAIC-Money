@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fixed-high-speed-steering-train-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-steering-20260929.md",
+  "rule_or_requirement": "Maintain high target speed and remain on asphalt; slowing or course cutting does not qualify.",
+  "observable_information": "Four image frames, pixel road centers and HUD speed; evaluator-only raw road membership and speed are never agent inputs.",
+  "allowed_action_or_state_change": "Four independent pixel steering mechanisms; identical final fixed 60 speed governor and first ten control actions.",
+  "expected_success_endpoint": "At least one mechanism improves qualified finishes at fixed high speed, with identical prefixes and no invalid actions.",
+  "eligible_state": "TRAIN_ONLY_FRESH_38200_38201",
+  "control": "Unmodified corridor steering with exactly the same fixed-speed governor; diagnostic controller, not selected submission ZIP.",
+  "falsifier": "No qualified finish gain, target reduced, lost road constraint, unequal common prefixes, invalid actions or simulator state enters inference.",
+  "smallest_decisive_experiment": "Five arms including control on tracks 1-3 times seeds 38200-38201; 30 episodes.",
+  "resource_and_risk_gate": "2 CPU, 2 GiB, 1800s, 1200 decisions per episode; no external action.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-steering-20260929.md",
+    "haic_agent/fixed_high_speed_runtime.py",
+    "training/fixed_high_speed_steering.py"
+  ]
+}

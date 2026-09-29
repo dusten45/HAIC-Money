@@ -1,0 +1,46 @@
+{
+  "run_id": "direct-gas-credit-train-snapshot-20260928",
+  "cycle_id": "direct-gas-credit-activation-20260928",
+  "purpose": "TRAIN-only direct gas action credit activation diagnostic",
+  "hypothesis_hash": "b26b36b2935c85ce5309eb2bf7445d4fe7a80a8acab9a243f420a43a740fde34",
+  "candidate_revision": "direct-gas-credit8-snapshot-4096steps",
+  "control_revision": "policy-head-activation-candidate-r2-20260928",
+  "candidate_package_hash": "none-train-only",
+  "control_package_hash": "44e349f7f5cd8cfcee33c011abbdb110b7a1e47e393005f89e0d5486cd494547",
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "official-heavy-train-only"
+  ],
+  "map_ids": [
+    "official-heavy-train-60-maps"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 3600,
+    "train_environment_decisions": 4096,
+    "episode_max_decisions": 800
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/train_policy.py": "2160445495628b3084197fab7d685d2f088218c930e80504faf7ba8d47b745f2",
+    "training/ppo.py": "0b022cf3103566f5d10538c406813899269c95f9b0db39789ea0e2bc8d611b86",
+    "haic_research/config.py": "294bbb416dcde8bb4c3ef56a0e9932e09b6381fc9694e767578dd45b6c991e99",
+    "haic_research/commands.py": "5a083fc447e91e25789c70d9cc81d6fd72c63eb84814603af459741c65a28212",
+    "harness.config.json": "c093cb3058841d024127c96488d37533ba70ea43f56aa317f2dd708976b9bf6f"
+  }
+}

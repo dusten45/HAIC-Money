@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "apex-line-fresh-three-track-tune-20260928",
+  "source_ref": "docs/plans/2026-09-28-apex-line-diagnostic.md",
+  "rule_or_requirement": "A pixel-only candidate must finish reliably before shorter lap times matter.",
+  "observable_information": "Current 84x84 grayscale road rows, near asphalt width, far road direction, visible obstacle cues, and actions of exact-hash fixed pixel actors.",
+  "allowed_action_or_state_change": "Use the activated quarter-half-width inside-bend steering correction only on fully visible unobstructed road where the fast learned pedal is already selected.",
+  "expected_success_endpoint": "At least the selected control's finish count across 12 new official tune cells, then a lower median finished lap time with no invalid actions.",
+  "eligible_state": "FRESH_THREE_TRACK_TUNE",
+  "control": "Selected full-road-guard actor and prior fast-pedal-stable-steer actor on the exact same 12 cells; fixed checkpoint hashes and protocol.",
+  "falsifier": "Lower finish count than selected control, invalid action, or tied completion with no median lap-time improvement on registered tune cells.",
+  "smallest_decisive_experiment": "Track 1, 2, 3 crossed with seeds 296, 297, 298, 299, three fixed arms, 2000 decisions per cell and full action traces.",
+  "resource_and_risk_gate": "Linux/Python 3.11 CPU, 1800-second registered diagnostic timeout, no tune map geometry used for training, no held-out/confirmation use, no website action.",
+  "source_paths": ["docs/plans/2026-09-28-apex-line-diagnostic.md", "haic_agent/apex_line_runtime.py", "training/benchmark_corridor.py", "harness.config.json", "runs/haic-research-v2/apex-line-consumed-tune-activation-20260928/integration_report.json"]
+}

@@ -1,0 +1,27 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-surge-one-shot-package-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-surge-one-shot-package-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/package_manifest.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The exact input hashes, archive inventory and static packaged-source checks passed. Clean Linux CPU import, reset, act and RSS remain unmeasured.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/package_manifest.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "The packaged wrapper contains the one-shot gas gate, but no driving episode has measured launch_count or an action difference against control.",
+      "evidence_paths": ["haic_agent/launch_surge_runtime.py", "artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/package_manifest.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "This local operation only created a candidate ZIP. Finish count, first-10-percent time and lap time require the separately registered matched comparison.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/submission.zip"]
+    }
+  ]
+}

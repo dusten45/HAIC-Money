@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-long-range-obstacle-activation-20260929",
+  "source_ref": "docs/plans/haic2-long-range-obstacle-activation-20260929/design.md",
+  "rule_or_requirement": "Preserve valid completion while retaining pixel-student lap gain by reducing late obstacle approaches.",
+  "observable_information": "Only rendered grayscale pixels: small far bright component relative to visible road center and student posterior; completion, collisions and trace telemetry for evaluation.",
+  "allowed_action_or_state_change": "After two consistent far-object detections, suppress only learned extra gas and retain inherited pixel-driver action.",
+  "expected_success_endpoint": "At least 10 extra-gas suppressions, three before the reference collision, reference finish preserved, one prior failure repaired and zero invalid actions.",
+  "eligible_state": "CONSUMED_TUNE_ACTIVATION_DIAGNOSTIC",
+  "control": "Original frozen pixel student safe checkpoint SHA-256 3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194 with no far-object guard.",
+  "falsifier": "No early obstacle signal, false suppressions that lose the reference finish, no repaired failure or invalid actions.",
+  "smallest_decisive_experiment": "Two pixel-student arms on three consumed TUNE identities 1:5200, 3:5201, 2:5205, six episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic, 900 seconds and 2,000 decisions per episode; no fresh competitive or external action.",
+  "source_paths": ["docs/plans/haic2-long-range-obstacle-activation-20260929/design.md", "training/long_range_obstacle_probe.py", "haic_agent/pixel_features.py", "haic_agent/pixel_speed_student_runtime.py"]
+}

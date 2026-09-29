@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-recovery-teacher-feasibility-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-recovery-teacher-feasibility-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "This TRAIN-only teacher uses privileged simulator track/pose and is not an eligible runtime candidate; no exact student ZIP or current official-site compliance validation.",
+      "evidence_paths": [
+        "training/recovery_teacher_probe.py",
+        "artifacts/haic-research-v2/haic2-recovery-teacher-feasibility-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Teacher changed 16 steering actions, below preregistered absolute threshold of 20, although the changed actions visibly shortened all three loss intervals.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-recovery-teacher-feasibility-20260929/report.json",
+        "docs/plans/haic2-recovery-teacher-feasibility-20260929/design.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Consumed TRAIN teacher diagnostic only: all six reference finishes retained and three long visibility-loss streaks shortened from 48/38/46 to 3/6/7 decisions; teacher laps are not submission-candidate scores.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-recovery-teacher-feasibility-20260929/report.json"
+      ]
+    }
+  ]
+}

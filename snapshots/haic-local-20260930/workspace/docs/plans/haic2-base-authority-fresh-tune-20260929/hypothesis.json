@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-base-action-authority-fresh-tune-20260929",
+  "source_ref": "docs/plans/haic2-base-authority-fresh-tune-20260929/design.md",
+  "rule_or_requirement": "Pixel-only learned gas authority must generalize beyond TRAIN and preserve valid completion before speed can decide.",
+  "observable_information": "Rendered pixels and inherited pixel-driver action at inference; matched TUNE completion, lap, collision and latency telemetry for evaluation.",
+  "allowed_action_or_state_change": "Veto boost when inherited gas is below 0.08, otherwise increase gas by at most 0.04 capped at 0.28; retain coast and inherited steering/braking.",
+  "expected_success_endpoint": "At least selected valid completion, zero invalid actions, 100 bounded boosts, 20 vetoes and, on completion tie, at least 2% median finished-lap improvement overall and jointly finished.",
+  "eligible_state": "FRESH_TUNE_PIXEL_CLOSED_LOOP_COMPARISON",
+  "control": "Unchanged selected stable-risk pixel driver on the same twelve previously unused TUNE cells.",
+  "falsifier": "Lower valid completion, invalid action, inactive mechanism or insufficient lap improvement on a completion tie.",
+  "smallest_decisive_experiment": "Two frozen pixel-only arms on tracks 1-3 x fresh TUNE seeds 5224-5227, 24 episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,800 seconds and 2,000 decisions per episode; no held-out, confirmation, blind, official or external action.",
+  "source_paths": [
+    "docs/plans/haic2-base-authority-fresh-tune-20260929/design.md",
+    "training/base_authority_tune_probe.py",
+    "haic_agent/pixel_coast_student_runtime.py",
+    "docs/plans/haic2-base-authority-fresh-train-20260929/outcome.md"
+  ]
+}

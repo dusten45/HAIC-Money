@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-base-authority-heldout-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-base-authority-heldout-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local runtime, but exact submission ZIP static and runtime compliance were not checked.",
+      "evidence_paths": [
+        "haic_agent/pixel_coast_student_runtime.py",
+        "training/base_authority_heldout_probe.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "On untouched held-out cells candidate made 678 low-base vetoes and 1,257 bounded boosts, above preregistered thresholds, with zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-heldout-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Untouched matched held-out: candidate validly finished 11/12 versus selected 12/12. Candidate-only failure 2:5231 reached progress 1.0 but ended off_track. The candidate finished-lap median 21.62 versus selected 22.49 seconds cannot override lower valid completion. On jointly finished cells candidate median was slower, 21.62 versus 21.38 seconds. Completion-first gate fails; no exact ZIP or release.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-heldout-20260929/report.json",
+        "docs/plans/haic2-base-authority-heldout-20260929/design.md"
+      ]
+    }
+  ]
+}

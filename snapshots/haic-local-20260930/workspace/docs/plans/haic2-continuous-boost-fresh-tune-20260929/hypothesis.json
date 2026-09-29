@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-continuous-boost-fresh-tune-20260929",
+  "source_ref": "docs/plans/haic2-continuous-boost-fresh-tune-20260929/design.md",
+  "rule_or_requirement": "Pixel-only candidate should retain valid completion first and improve finished lap time against the selected pixel control.",
+  "observable_information": "Frozen student posterior and inherited pixel-driver gas at inference, plus preregistered matched completion, lap, collision and action traces for evaluation.",
+  "allowed_action_or_state_change": "Use the exact midpoint of inherited gas and 0.28 on posterior-approved eligible decisions; leave all other actions unchanged.",
+  "expected_success_endpoint": "At least both control valid completion counts, zero invalid actions, at least 1,000 blended boosts and at least 2% paired lap gain when selected completion ties.",
+  "eligible_state": "FRESH_TUNE_PIXEL_CONTROLLER_COMPARISON",
+  "control": "Frozen selected stable-risk pixel driver; original pixel student is a second matched risk reference with unchanged safe checkpoint.",
+  "falsifier": "Candidate loses valid completion versus either reference, inactive blending, invalid actions or insufficient lap gain on a selected completion tie.",
+  "smallest_decisive_experiment": "Three arms on tracks 1–3 × fresh seeds 5220–5223, 36 preregistered episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,800 seconds and 2,000 decisions per episode; no held-out, confirmation, blind, official or external action.",
+  "source_paths": ["docs/plans/haic2-continuous-boost-fresh-tune-20260929/design.md", "training/continuous_boost_probe.py", "haic_agent/pixel_speed_student_runtime.py", "docs/plans/haic2-continuous-boost-activation-20260929/outcome.md"]
+}

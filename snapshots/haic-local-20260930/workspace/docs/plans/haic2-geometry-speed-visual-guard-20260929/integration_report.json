@@ -1,0 +1,29 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-geometry-speed-visual-guard-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-geometry-speed-visual-guard-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This geometry and speed teacher uses privileged TRAIN-only state and is not a submission candidate.",
+      "evidence_paths": ["training/geometry_speed_teacher.py"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Visual obstacle lockout returned control to the pixel driver on 1881 decisions. On other decisions the teacher raised gas 1018 times and coasted 214 times, with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-geometry-speed-visual-guard-train-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Both arms completed 11/12, but the candidate alone failed 1:5008 off track at 95.65% progress without collisions while control finished. On ten jointly finished cells, candidate median lap was 23.18 versus 23.74 seconds, only 2.36% faster, below the preregistered 3% gate. The candidate-only nonfinish independently fails the completion gate.",
+      "evidence_paths": [
+        "docs/plans/haic2-geometry-speed-visual-guard-20260929/design.md",
+        "artifacts/haic-research-v2/haic2-geometry-speed-visual-guard-train-20260929/report.json"
+      ]
+    }
+  ]
+}

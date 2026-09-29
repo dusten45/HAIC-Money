@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-continuous-target-train-20260929",
+  "source_ref": "docs/plans/haic2-continuous-target-train-20260929/design.md",
+  "rule_or_requirement": "A pixel-only speed controller needs anticipatory continuous caution without sacrificing valid completion.",
+  "observable_information": "Successful TRAIN stable-control pixels and inherited actions, with TRAIN-only shadow geometry teacher target-speed labels; inference will use pixels and inherited action only.",
+  "allowed_action_or_state_change": "Train one continuous target-speed pixel regressor, save tensor-only checkpoint; teacher never drives and no student driving occurs in this run.",
+  "expected_success_endpoint": "At least 100 low-target training labels, 20 validation labels and predictions below 55, finite validation loss and at least 10% lower MAE than constant-60 baseline.",
+  "eligible_state": "TRAIN_SHADOW_CONTINUOUS_TARGET_DISTILLATION",
+  "control": "Unchanged stable-risk pixel driver on twelve new TRAIN cells; constant-60 prediction as within-TRAIN validation baseline.",
+  "falsifier": "Insufficient low-speed label support, collapsed predictions, no validation MAE gain, unsafe checkpoint, teacher action execution or privileged inference input.",
+  "smallest_decisive_experiment": "Twelve unchanged-control TRAIN rollouts tracks 1-3 x seeds 5032-5035; 5035 held for within-TRAIN validation.",
+  "resource_and_risk_gate": "One registered Linux CPU local training profile capped at 1,800 seconds and 2,000 decisions per episode; no TUNE, held-out, confirmation, blind or external action.",
+  "source_paths": [
+    "docs/plans/haic2-continuous-target-train-20260929/design.md",
+    "training/continuous_target_distill.py",
+    "haic_agent/pixel_target_speed_runtime.py",
+    "training/geometry_speed_teacher.py",
+    "docs/plans/haic2-post-authority-four-directions-20260929.md"
+  ]
+}

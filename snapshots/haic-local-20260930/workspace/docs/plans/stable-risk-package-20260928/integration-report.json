@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/stable-risk-frozen-package-20260928/run_manifest.json",
+    "artifacts/haic-research-v2/stable-risk-frozen-package-20260928/package_manifest.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Exact frozen inputs and static ZIP inventory passed, but clean Linux CPU import, reset, act, and RSS remain unverified.",
+      "evidence_paths": ["artifacts/haic-research-v2/stable-risk-frozen-package-20260928/package_manifest.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "The entrypoint includes the unchanged measured controller, but the packaged actions have not yet been compared with control.",
+      "evidence_paths": ["artifacts/haic-research-v2/stable-risk-frozen-package-20260928/package_manifest.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "This operation only built a local archive; package-level finish and lap-time results require a fresh matched run.",
+      "evidence_paths": ["artifacts/haic-research-v2/stable-risk-frozen-package-20260928/submission.zip"]
+    }
+  ]
+}

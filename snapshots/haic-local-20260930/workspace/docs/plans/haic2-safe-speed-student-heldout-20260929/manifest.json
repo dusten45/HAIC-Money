@@ -1,0 +1,69 @@
+{
+  "run_id": "haic2-safe-speed-student-heldout-20260929",
+  "cycle_id": "haic2-safe-speed-student-heldout-cycle-20260929",
+  "purpose": "Frozen pixel speed student versus stable-risk control on untouched held-out cells",
+  "hypothesis_hash": "96faff2e78ff423cea2b748d2d20e81ae9db062f165822fa85d8796c5771f3ca",
+  "candidate_revision": "pixel-speed-student-v1-1c139842",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "1c139842763d9b3feb2a94380fa6b08b2e8612988bf7ef02ea31ee7a5aab51f6",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-safe-speed-student-heldout-5208-5211",
+  "seed_ids": [
+    "1:5208",
+    "1:5209",
+    "1:5210",
+    "1:5211",
+    "2:5208",
+    "2:5209",
+    "2:5210",
+    "2:5211",
+    "3:5208",
+    "3:5209",
+    "3:5210",
+    "3:5211"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "untouched-heldout-seeds5208-5211"
+  ],
+  "map_ids": [
+    "official-track1-seed5208-5211",
+    "official-track2-seed5208-5211",
+    "official-track3-seed5208-5211"
+  ],
+  "split_ids": [
+    "held_out"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/safe_speed_student_probe.py": "8658490b96358a03c33c8041232b1321205393827b4208d7b98be9ced7f2d426",
+    "haic_agent/pixel_speed_student_runtime.py": "4349ef067be4351fdfbf665cc3b05094385281a322a7cfbc5912c110ed857367",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "4bee4afcd38584edf994da3af4de5f6c44ea05047a960c51d5d31dc97941acbe",
+    "harness.config.json": "93f01ced300fb904e33261f63d0299df36a4321ee4640843f56acec47bf216ad",
+    "artifacts/haic-research-v2/haic2-safe-speed-distill-train-20260929/model.pt": "1c139842763d9b3feb2a94380fa6b08b2e8612988bf7ef02ea31ee7a5aab51f6"
+  }
+}

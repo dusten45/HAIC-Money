@@ -1,0 +1,69 @@
+{
+  "run_id": "haic2-continuous-boost-fresh-tune-20260929",
+  "cycle_id": "haic2-continuous-boost-fresh-tune-cycle-20260929",
+  "purpose": "Fresh TUNE comparison of half-blended student, original student and selected pixel control",
+  "hypothesis_hash": "de55b06e90233f467d41bb5f6533c7baddeb60f92c9a7069046fa7683f7ea13a",
+  "candidate_revision": "pixel-student-half-boost-frozen",
+  "control_revision": "selected-stable-risk-and-original-student",
+  "candidate_package_hash": "none-controller-diagnostic",
+  "control_package_hash": "none-controller-diagnostic",
+  "comparison_id": "haic2-continuous-boost-fresh-tune-5220-5223",
+  "seed_ids": [
+    "1:5220",
+    "1:5221",
+    "1:5222",
+    "1:5223",
+    "2:5220",
+    "2:5221",
+    "2:5222",
+    "2:5223",
+    "3:5220",
+    "3:5221",
+    "3:5222",
+    "3:5223"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-tune-seeds5220-5223"
+  ],
+  "map_ids": [
+    "official-track1-seed5220-5223",
+    "official-track2-seed5220-5223",
+    "official-track3-seed5220-5223"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 3
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/continuous_boost_probe.py": "4ae30efcfd61261b9a8170ad2794f444b560793c4d1d3153d125cd4d4abdb2fd",
+    "haic_agent/pixel_speed_student_runtime.py": "ac72d1f07eb5484b2cdbcdc973104b05ee33886f80b67923b770dcc9663cee88",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "f6a9fc401ac985cd8232c1d0004bee584a3b0746e26cdc8d9092d75e36f3418c",
+    "harness.config.json": "9c226fc19f26ddf10bebde4b9bab1281f01b90186c92dfae8e8542f3660c05b1",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/model_safe.pt": "3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194"
+  }
+}

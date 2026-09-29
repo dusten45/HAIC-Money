@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-acceleration-burst-activation-20260929",
+  "source_ref": "docs/plans/haic2-acceleration-burst-activation-20260929/design.md",
+  "rule_or_requirement": "Preserve valid completion while retaining a fast pixel-only student's lap gain.",
+  "observable_information": "History of student extra-gas interventions and its current posterior; evaluation observes collision, completion, action and lap traces.",
+  "allowed_action_or_state_change": "After sixteen consecutive learned extra-gas interventions, keep inherited pixel-driver gas for two eligible decisions.",
+  "expected_success_endpoint": "At least ten suppressions overall and two before the reference collision, reference finish preserved, one previous failure repaired and zero invalid actions.",
+  "eligible_state": "CONSUMED_TUNE_ACTIVATION_DIAGNOSTIC",
+  "control": "Original frozen pixel student safe checkpoint SHA-256 3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194 without burst budget.",
+  "falsifier": "No timely suppressions, loss of the reference finish, no repaired failure, or invalid actions.",
+  "smallest_decisive_experiment": "Original and burst-limited student on three consumed TUNE cells 1:5200, 3:5201 and 2:5205, six episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 900 seconds and 2,000 decisions per episode; no fresh competitive or external action.",
+  "source_paths": ["docs/plans/haic2-acceleration-burst-activation-20260929/design.md", "training/acceleration_burst_probe.py", "haic_agent/pixel_speed_student_runtime.py"]
+}

@@ -1,0 +1,46 @@
+{
+  "run_id": "policy-head-activation-control-20260928",
+  "cycle_id": "policy-head-activation-20260928",
+  "purpose": "TRAIN-only matched policy-head learning-rate activation diagnostic",
+  "hypothesis_hash": "680d6b4200c1253ce103a146521e00dd429bf610830b97b1935145c424ddf666",
+  "candidate_revision": "policy-head-control-4096steps",
+  "control_revision": "same-actor-fresh-optimizer-head-lr2e6",
+  "candidate_package_hash": "none-train-only",
+  "control_package_hash": "022b2b77e59aeb4b7e436080bf358b5017ab7f667d9569e3fe86aeed2c44a140",
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "official-heavy-train-only"
+  ],
+  "map_ids": [
+    "official-heavy-train-60-maps"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 3600,
+    "train_environment_decisions": 4096,
+    "episode_max_decisions": 800
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_research/commands.py": "5a083fc447e91e25789c70d9cc81d6fd72c63eb84814603af459741c65a28212",
+    "harness.config.json": "4986c5c2d47de053e0c2032d4bab502ae7373660bf10ac07ee52a483810fb3a5",
+    "training/ppo.py": "0b022cf3103566f5d10538c406813899269c95f9b0db39789ea0e2bc8d611b86",
+    "training/train_policy.py": "0d9a6de4e4799fa90410c5704f9c283868c4c88621a6ce7d8c5fe0c45fb76b6f",
+    "haic_research/config.py": "7ce6d481415a0834b2db9624c58d5d266caf3e5ec5837afcbbb775124c7eeeac"
+  }
+}

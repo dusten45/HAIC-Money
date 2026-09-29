@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-visual-speed-saturation-activation-20260929",
+  "source_ref": "docs/plans/haic2-visual-speed-saturation-activation-20260929/design.md",
+  "rule_or_requirement": "Preserve valid completion while reducing lap time through pixel-only actions.",
+  "observable_information": "HUD-derived speed and student posterior, plus valid finish, collision, progress and intervention traces on consumed TUNE cells.",
+  "allowed_action_or_state_change": "At visual speed 54 or above, suppress only the student extra gas and retain the stable pixel driver's action.",
+  "expected_success_endpoint": "At least 20 suppressed and 20 remaining extra-gas decisions, preserve the finish on 1:5200 and repair at least one prior student failure.",
+  "eligible_state": "CONSUMED_TUNE_ACTIVATION_DIAGNOSTIC",
+  "control": "Frozen original pixel student checkpoint SHA-256 3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194 without a visual speed ceiling.",
+  "falsifier": "No meaningful suppression, loss of low-speed intervention, loss of the reference valid finish or no repaired failure.",
+  "smallest_decisive_experiment": "Original and saturated student on three consumed TUNE cells 1:5200, 3:5201 and 2:5205, six episodes total.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic, 900 seconds and 2,000 decisions per episode; diagnostic only with no fresh promotion or external action.",
+  "source_paths": ["docs/plans/haic2-visual-speed-saturation-activation-20260929/design.md", "training/visual_speed_saturation_probe.py", "haic_agent/pixel_speed_student_runtime.py"]
+}

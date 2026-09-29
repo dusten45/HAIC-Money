@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "fast-completion-causal-repair-train-20260929",
+  "source_ref": "docs/plans/active/fast-completion-causal-repair-20260929.md",
+  "rule_or_requirement": "User requests fixed-high-speed road reacquisition and continued progress after collision, accepting brief road excursions.",
+  "observable_information": "Pixel road rows/full-width runs, last valid road direction and pixel speed drops. No simulator state enters policy.",
+  "allowed_action_or_state_change": "Two causal repairs: brake-command-aware impact veto; recovery missing-row reconstruction and bounded12-step memory. Existing pedal thresholds unchanged.",
+  "expected_success_endpoint": "12/12 completion, preserve all control finishes; record lap and speed tradeoff",
+  "eligible_state": "FULL_CONSUMED_TRAIN_COMPLETION",
+  "control": "Impact_clear on same12 consumed TRAIN cells",
+  "falsifier": "No activation, lost control finishes, no rescue, invalid actions, altered first10prefix, simulator-state leakage, or lowered normal straight target. Temporary cue-triggered targets are explicitly permitted.",
+  "smallest_decisive_experiment": "Three arms times12 cells=36episodes",
+  "resource_and_risk_gate": "2CPU2GiB1800s1200decisions; no external action",
+  "source_paths": [
+    "docs/plans/active/fast-completion-causal-repair-20260929.md",
+    "haic_agent/fast_completion_coordination.py",
+    "training/fixed60_completion.py"
+  ]
+}

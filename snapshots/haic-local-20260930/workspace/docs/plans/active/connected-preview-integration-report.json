@@ -1,0 +1,35 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/connected-preview-20260929/report.json",
+    "artifacts/haic-research-v2/connected-preview-20260929/batch_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Pixel-only local evaluation; no new ZIP validation.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-preview-20260929/report.json",
+        "artifacts/haic-research-v2/connected-preview-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "Farther path steering activates, but motion-memory reuse is zero; code presence is not activation. See per-arm counts.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-preview-20260929/report.json",
+        "artifacts/haic-research-v2/connected-preview-20260929/batch_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "All candidates lose completion relative original control. Three non-improving comparisons since prior PIVOT including pedalR2/R3; PIVOT retains stable checkpoint.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/connected-preview-20260929/report.json",
+        "artifacts/haic-research-v2/connected-preview-20260929/batch_audit.json"
+      ]
+    }
+  ]
+}

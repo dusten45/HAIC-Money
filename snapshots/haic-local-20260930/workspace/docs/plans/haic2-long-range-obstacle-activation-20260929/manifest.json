@@ -1,0 +1,60 @@
+{
+  "run_id": "haic2-long-range-obstacle-activation-20260929",
+  "cycle_id": "haic2-long-range-obstacle-activation-cycle-20260929",
+  "purpose": "Consumed TUNE long-range bright-obstacle guard activation diagnostic",
+  "hypothesis_hash": "2dd161b39d7cbdbcfc2f7af7eb006c483e1af5a3f9c92ba6e62af5aaf759880b",
+  "candidate_revision": "pixel-student-far-bright-object-guard-v1",
+  "control_revision": "pixel-student-original",
+  "candidate_package_hash": "none-controller-diagnostic",
+  "control_package_hash": "none-controller-diagnostic",
+  "comparison_id": "haic2-long-range-obstacle-consumed-tune-5200-5205",
+  "seed_ids": [
+    "1:5200",
+    "3:5201",
+    "2:5205"
+  ],
+  "comparison_episode_count": 3,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-tune-activation-5200-5205"
+  ],
+  "map_ids": [
+    "official-track1-seed5200",
+    "official-track3-seed5201",
+    "official-track2-seed5205"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 900,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 3,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/long_range_obstacle_probe.py": "f4230a85882a6cfbf6d9cb4c930f5cfc61bf1312950f2b6b82a73f21297de826",
+    "haic_agent/pixel_speed_student_runtime.py": "e7283727d9a229307eca2e55e9fe5d2426852981a27dd834c643c9074391f610",
+    "haic_agent/pixel_features.py": "4e6802089a6721baec1fcb550e580210c829ef7c90394f6ece10c0f74c513d32",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "e68e458c87d5edae42006fafe0dc575dad8797914f78a94be1360db00d32aa4a",
+    "harness.config.json": "bd96723d76ad852456010cd3a907cefdb2d08ad3ea3bcb06a0aa8cd44289952d",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/model_safe.pt": "3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "run_id": "haic2-segment-recovery-train-7400-7401-linux-20260929",
+  "cycle_id": "haic2-segment-recovery-linux-cycle-20260929",
+  "purpose": "Linux fresh TRAIN completion-first four-direction visual recovery batch after Windows import failure",
+  "hypothesis_hash": "82315694284d4616dc028c5c336a1e7929b1d580a4ed747aaa2b775c47fe7964",
+  "candidate_revision": "segment-recovery-four-directions-v1",
+  "control_revision": "wide-bend-rebound-exact-zip-8f7e87c2",
+  "candidate_package_hash": "8b2fb8a906419525c8078e94d951717383be3045e18d92022cb3968fb9aebe10",
+  "control_package_hash": "8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49",
+  "comparison_id": "haic2-segment-recovery-train-7400-7401",
+  "seed_ids": [
+    "1:7400",
+    "1:7401",
+    "2:7400",
+    "2:7401",
+    "3:7400",
+    "3:7401"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11.15",
+    "numpy": "1.26.0",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-train-seeds7400-7401"
+  ],
+  "map_ids": [
+    "official-train-track1-seed7400",
+    "official-train-track1-seed7401",
+    "official-train-track2-seed7400",
+    "official-train-track2-seed7401",
+    "official-train-track3-seed7400",
+    "official-train-track3-seed7401"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1200,
+    "episode_max_decisions": 650,
+    "episodes_per_arm": 6,
+    "arms": 5,
+    "cpu_cores": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/segment_recovery_runtime.py": "8b2fb8a906419525c8078e94d951717383be3045e18d92022cb3968fb9aebe10",
+    "training/segment_recovery_batch.py": "6f439dc032fe4343477da6435a730536689d46e9218e3812f46225bbd6e37b6d",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/wide_speed_batch_runtime.py": "bc44e4678b895322408d0ff2e1b31ffa560f60636414697921bf8a6247b37cfe",
+    "haic_agent/hazard_flow_batch_runtime.py": "9262108356ca2e6329cd009f5a81011408c9a57621420cf856d3c0a2ec2f11d8",
+    "training/benchmark_corridor.py": "91729aef684d12a22b15636fef81a59518020afbfcddbbef3c0b959d5e299d1d",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "619cf2dc63d7cef53126fd5dc12313def2d8972f1bc4dcbedd34aa04253ee03e",
+    "harness.config.json": "3e29d313fd3cafff5621c4d0b20c57682cb1ac9514ffbbdec38c1612f1c3d1cd",
+    "docs/plans/haic2-recovery-offline-student-train-20260929/correction-20260929.md": "b1964aed779675b365a866f185cdf5c40d0b07da19e710d81b6fae6e28e83a48",
+    "artifacts/haic-research-v2/wide-bend-rebound-exact-package-20260929/submission.zip": "8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49"
+  }
+}

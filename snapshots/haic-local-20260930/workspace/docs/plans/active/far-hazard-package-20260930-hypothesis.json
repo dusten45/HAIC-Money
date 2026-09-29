@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "far-hazard-package-20260930",
+  "source_ref": "docs/plans/active/far-hazard-package-20260930-design.md",
+  "rule_or_requirement": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "observable_information": "Rendered pixels/HUD, previous road-center observations and own actions only. No simulator state.",
+  "allowed_action_or_state_change": "No policy changes. Package frozen arrival_speed and exact replay plus new held-out comparison.",
+  "expected_success_endpoint": "Preserve held-out control completion and improve matched median; exact TRAIN source replay in package",
+  "eligible_state": "FROZEN_HELD_OUT_VALIDATION",
+  "control": "Exact preserved original ZIP, matched on12new held_out cells;12TRAIN source replay separate",
+  "falsifier": "Replay or endpoint mismatch, invalid actions/resources, lower completion, or no matched time improvement",
+  "smallest_decisive_experiment": "12 candidate TRAIN replay + 24 matched held-out episodes",
+  "resource_and_risk_gate": "2CPU2GiB650seconds plus previous459.82 <=1200",
+  "source_paths": [
+    "docs/plans/active/far-hazard-package-20260930-design.md",
+    "training/confirm_far_hazard.py",
+    "haic_agent/far_hazard_runtime.py"
+  ]
+}

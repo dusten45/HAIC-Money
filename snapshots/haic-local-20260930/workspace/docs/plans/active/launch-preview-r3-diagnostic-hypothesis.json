@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "launch-preview-steer-only-consumed-activation-20260929",
+  "source_ref": "docs/plans/active/launch-preview-composition-r3.md",
+  "rule_or_requirement": "Local candidates must finish the qualified line on at least as many matched cells as the selected control before a faster lap can justify advancement.",
+  "observable_information": "At inference, four grayscale frames and pixel-only road, speed, and obstacle diagnostics; evaluator records finish, action, speed, road contact, and runtime.",
+  "allowed_action_or_state_change": "Preserve frozen opening launch and fixed early pixel bend steering only; no added gas or braking.",
+  "expected_success_endpoint": "Launch and early steering activate; bend brake and extra boost remain zero; no candidate-only nonfinish on consumed diagnostic cells.",
+  "eligible_state": "CONSUMED_DIAGNOSTIC_TRACKS_1_2_3_SEEDS_2900_2903",
+  "control": "Frozen launch-only ZIP SHA-256 4043993d9901d58b126980b7bafe4f0154305c6a0bf01e1e7e5bc02aacec2389.",
+  "falsifier": "Zero steering activation, changed launch count, added gas/brake, candidate-only nonfinish, invalid action, or resource breach.",
+  "smallest_decisive_experiment": "Compare exact ZIPs on already consumed tracks 1-3 by seeds 2900-2903; 12 matched diagnostic cells, 24 episodes, 2000 decisions each.",
+  "resource_and_risk_gate": "Registered local Linux CPU profile, 2 CPUs and 2 GiB, 1800 seconds; no independent completion inference or external action.",
+  "source_paths": [
+    "docs/plans/active/launch-preview-composition-r3.md",
+    "training/compare_launch_preview_package.py",
+    "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/package_manifest.json"
+  ]
+}

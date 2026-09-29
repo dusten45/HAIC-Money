@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "completion-discovery-20260930",
+  "source_ref": "docs\\plans\\active\\completion-discovery-20260930-design.md",
+  "rule_or_requirement": "Latest user asks stronger acceleration; preserve original benchmark and evaluate complete lap times.",
+  "observable_information": "Rendered pixels/HUD, previous road-center observations and own actions only. No simulator state.",
+  "allowed_action_or_state_change": "No policy change. Diagnose frozen historical and current controllers on new TRAIN cells.",
+  "expected_success_endpoint": "Complete matched coverage with actionable TRAIN failure evidence, no promotion",
+  "eligible_state": "TRAIN_DIAGNOSIS",
+  "control": "Unchanged historical preview_row_repair and current arrival_speed references",
+  "falsifier": "Changed policy, missing cells, invalid actions, or no interpretable failure evidence",
+  "smallest_decisive_experiment": "2 frozen references x12 new TRAIN cells=24episodes",
+  "resource_and_risk_gate": "2CPU2GiB300seconds",
+  "source_paths": [
+    "docs\\plans\\active\\completion-discovery-20260930-design.md",
+    "haic_agent/far_hazard_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

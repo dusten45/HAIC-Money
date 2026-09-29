@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-bend-phase-observability-20260929",
+  "source_ref": "docs/plans/haic2-bend-observability-20260929/design.md",
+  "rule_or_requirement": "Pixel-only gas control needs a visible pre-bend warning before learned acceleration makes valid completion fail.",
+  "observable_information": "Current and prior rendered road centers and HUD speed, plus the frozen student's bounded-boost decision; simulator collision timestamp is evaluation only.",
+  "allowed_action_or_state_change": "Log two fixed pixel bend warnings without modifying actions; no driving policy state change in this run.",
+  "expected_success_endpoint": "A warning during decisions 236-251 before known collision at 256 with at most ten warnings in each successful reference and zero invalid actions.",
+  "eligible_state": "CONSUMED_TRAIN_BEND_OBSERVABILITY_DIAGNOSTIC",
+  "control": "Exact bounded-authority student on consumed TRAIN 1:5020, 2:5021 and 3:5020 plus selected stable pixel driver on 1:5020; actions unchanged.",
+  "falsifier": "No timely warning, broad false alarms on successful runs, changed replay outcome or invalid action.",
+  "smallest_decisive_experiment": "Four unchanged-driver observation-only episodes on three already consumed TRAIN cells.",
+  "resource_and_risk_gate": "One registered local Linux CPU diagnostic, 900 seconds and 2,000 decisions per episode; no new TUNE or held-out usage and no external action.",
+  "source_paths": [
+    "docs/plans/haic2-bend-observability-20260929/design.md",
+    "training/bend_phase_sensor_probe.py",
+    "haic_agent/pixel_features.py",
+    "docs/plans/haic2-post-authority-four-directions-20260929.md"
+  ]
+}

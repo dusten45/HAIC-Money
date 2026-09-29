@@ -1,0 +1,5 @@
+# Bounded pixel gas authority on untouched held-out
+
+On preregistered untouched held-out tracks 1-3 x seeds 5228-5231, the fixed candidate validly finished **11/12** versus selected pixel control **12/12**. The candidate-only 2:5231 failure reached reported progress 1.0 but retired `off_track` without a valid lap. Both arms had zero collisions and invalid actions. The mechanism was active with 678 low-base vetoes, 1,257 bounded boosts and 90 coasts. Candidate median finished lap across its eleven finishes was 21.62 seconds versus selected 22.49 seconds across twelve; this unmatched median is confounded by selected's slow successful 2:5231. On the eleven jointly finished cells candidate median was **21.62 versus selected 21.38 seconds**, so the candidate was slower by that measure.
+
+The preregistered completion-first gate failed. Decision: **REJECT**, with no exact ZIP, release, model confirmation or upload. Held-out 5228-5231 identities are consumed and must not be tuned on or reused as fresh evidence. The earlier TRAIN and TUNE gains remain their own local observations; they did not generalize sufficiently to this held-out block.

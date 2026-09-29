@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-four-direction-fresh-tune-20260928",
+  "source_ref": "docs/plans/haic2-speed-envelope-20260928/fresh-tune-design.md",
+  "rule_or_requirement": "A candidate must preserve valid pixel-only completion before shorter simulated lap time can advance it.",
+  "observable_information": "Four grayscale frames, visible road and obstacle pixels, pixel HUD speed, and actions from two exact-hash fixed actors.",
+  "allowed_action_or_state_change": "Compare four already activated single-change runtime mechanisms: bend-conditioned gas floor, exit throttle pulse, approach-rate brake, and mild-bend outer entry, against two frozen controls.",
+  "expected_success_endpoint": "At least the selected safety control's finish count across twelve matched fresh TUNE cells, then a lower median finished lap time and no invalid actions.",
+  "eligible_state": "FRESH_THREE_TRACK_TUNE_BATCH",
+  "control": "Primary selected_full_road_guard safety actor and secondary frozen apex_line actor with the exact same 12 cells and checkpoint hashes.",
+  "falsifier": "Any lower finish count than the selected safety control, invalid action, or tied completion without lower median finished lap time.",
+  "smallest_decisive_experiment": "Tracks 1–3 × seeds 308–311, six fixed arms including four independent candidates and two controls, 2000 decisions per cell and full traces.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU, registered 1800-second profile cap and 72-episode denominator; no train from tune, held-out, confirmation, blind, upload, or submission.",
+  "source_paths": ["docs/plans/haic2-speed-envelope-20260928/fresh-tune-design.md", "haic_agent/speed_envelope_runtime.py", "haic_agent/phase_candidates_runtime.py", "training/benchmark_corridor.py", "harness.config.json", "runs/haic-research-v2/haic2-four-direction-train-screen-20260928/integration_report.json"]
+}

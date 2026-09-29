@@ -1,0 +1,7 @@
+# Pixel speed student TUNE retry: faster aggregate, preregistered gate failed
+
+On the registered TUNE 5200–5203 block, the frozen pixel-only speed student finished 11/12 and the stable-risk control 10/12. The student alone failed 3:5201; control alone failed 1:5203 and 3:5200. On nine jointly completed cells, median finished lap was 19.42 seconds for student versus 20.84 seconds for control, 6.81% faster. Student gas changed on 1,614 decisions and invalid actions were zero. The safe runtime checkpoint was produced by converting the trusted TRAIN checkpoint's NumPy mean and scale arrays to tensors before rollout.
+
+The preregistered gate explicitly forbade any student-only nonfinish, so this run is `REVISE → GATE_REVIEW_REVISE → STOPPED` with no release, despite its better aggregate completion and lap time. The first loader-failed attempt remains infrastructure-invalid and separate. The 5200–5203 cells are consumed TUNE, not an independent repeated comparison. A new plan may test the unchanged student on disjoint TUNE cells with the project completion-count-first criterion registered prospectively; this does not alter the current decision.
+
+Evidence: `artifacts/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/report.json` and `runs/haic-research-v2/haic2-safe-speed-student-tune-retry-20260929/integration_report.json`. Frozen source: `tmp/haic2-safe-speed-student-tune-retry-frozen-20260929/`.

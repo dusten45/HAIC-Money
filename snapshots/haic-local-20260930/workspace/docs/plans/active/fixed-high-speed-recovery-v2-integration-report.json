@@ -1,0 +1,31 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fixed-high-speed-recovery-v2-train-20260929/recovery_comparison.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local TRAIN pixel-only controller; current website rules not certified.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-recovery-v2-train-20260929/recovery_comparison.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Impact clear changes2actions after identical100-decision prefix including same collision, completes at17.86s; all12initialprefixes match. Memory230changes but no rescued finish.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-recovery-v2-train-20260929/recovery_comparison.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Impact clear4/6 vs3/6 with all3oldfinishes retained, sufficient for fresh matched check only; consumed TRAIN not generalization.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-recovery-v2-train-20260929/recovery_comparison.json"
+      ]
+    }
+  ]
+}

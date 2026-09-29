@@ -1,0 +1,7 @@
+# Preview pedal faster calibrated-budget comparison
+
+R2 continuity visibly changes behavior and restores distance/response to6/6, but medians27.43/26.62s exceed unchangedcontrol21.59s. Preserve all source and outcomes. User asks to keep increasing useful speed within anticipatory braking strategy.
+
+Now that mechanism activation is demonstrated, one combined budget calibration is allowed; no unobserved threshold sweep. Create separate preview_pedal_fast_runtime.py from R2; keep memory/grace/release and steering unchanged. Four parent directions retained. Raise nominal lateral acceleration100→160, minimum curve and steering cap32→40, obstacle passage40→44 (same as stable reference), nominal braking40→55. Response brake estimate range25..60→40..70 using0.30 rather than0.25gain. These are hypotheses, not guaranteed bounds: observed clean straight braking median57.2 and turn45.6; assuming55 while turning may fail and must be reported. Only combined outcome can be attributed, not individual constants.
+
+5arms x6consumedTRAINcells tracks1–3/seeds38300,38302 =30episodes.2CPU2GiB1200s,1200decisions. Control unchanged,first10same. Accept only6/6and lower finishedmedian than original21.59s; further12cells/exactZIP before promotion. Inspect timeabove60,braking fraction,latency,collisions,rawhashes and control exactreplay. Standinglocal authorization applies;registernewhash and separate design/execution approvals. No upload or baseline replacement.

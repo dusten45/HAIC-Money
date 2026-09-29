@@ -1,0 +1,13 @@
+# Pixel recovery student: data sufficiency before training
+
+## Frozen teacher evidence
+
+The TRAIN-only privileged recovery teacher passed its registered fresh feasibility gate on tracks 1–3 × seeds 5072–5079: 22/24 qualified finishes against the visual mode-switch control's 21/24, no lost control finish, and all eight long road-visibility-loss intervals shortened by at least ten decisions. Its [outcome](haic2-recovery-teacher-fresh-train-20260929/outcome.md) is teacher evidence only. Simulator track and pose are forbidden student inference inputs.
+
+The completed teacher report contains 110 recovery decision labels across **eight independent episodes**. Of those actions, **108 steer left** and **two steer right**. A simple pixel-road-side memory agrees in sign on **81/110** decisions, with weak agreement on one long recovery episode. Decision count therefore overstates independent diversity; random row splitting would leak nearly identical frames from the same episode and produce an unreliable validation score. The report saved pixel-derived road centers and actions but not the raw four-frame observations needed to train a compact visual recovery model.
+
+## Next registered feasibility study
+
+Collect four-frame normalized pixel observations only at TRAIN teacher intervention decisions, retaining an exact cell identifier for groupwise partitioning and teacher steering as a training-only label. Replaying already consumed TRAIN cells is allowed for dataset creation but does not make them fresh score evidence. Horizontally mirror observation stacks and negate steering only within the fitting partition; this supplies a symmetric training augmentation, not independent episodes. Hold back whole newly registered TRAIN cells before fitting. Before a driving student is built, require at least **20 independent recovery episodes**, at least **five naturally occurring right-steer episodes**, and finite labels/features; otherwise collect more TRAIN episodes or report insufficient coverage. Do not use TUNE, held-out, confirmation, blind or private official tracks as labels.
+
+With sufficient coverage, compare a pixel-only compact student against inherited visual mode-switch steer, fixed left steer and last-road-side memory on held-back whole TRAIN episodes. Require lower teacher-action error than every baseline and timely valid actions. Even a passed imitation gate proves only action prediction, so a later fresh matched driving comparison must establish qualified completion and lap time. Keep the exact visual mode-switch ZIP unchanged until an exact candidate ZIP passes the full local gates. No external action.

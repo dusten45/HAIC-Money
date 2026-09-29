@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local Linux CPU pixel-only diagnostic with exact checkpoint hash; package and official server validation are pending.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four directions changed actions on both registered TRAIN cells: risk envelope 92/104, exit burst 55/53, obstacle preview 8/3, outer entry 23/23. All five arms finished 2/2 with zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "These are two consumed TRAIN cells; independent performance must be judged on a registered fresh tune set.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/report.json"]
+}

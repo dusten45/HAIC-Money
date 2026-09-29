@@ -1,0 +1,27 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Both exact ZIP hashes passed archive checks. Candidate had 0 invalid actions in 12 episodes, import/create under 1 s, reset under 1 ms, max act under 35 ms and peak RSS under 302 MB; no inference map or simulator state was added.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-one-shot-package-20260929/package_manifest.json", "artifacts/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The opening gas gate activated 120 times across 12 episodes, always exited at image-speed 34, and increased mean first-10-percent gas from 0.0847 to 0.1791. Median first-10-percent arrival fell from 3.68 s to 2.72 s on matched tune cells.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Candidate and control both finished 12/12 fresh tune cells; candidate median lap was 23.85 s versus 25.02 s, with no added collisions or damage. Independent held-out and unchanged-package confirmation have not been run; this diagnostic profile is ineligible for SOTA promotion.",
+      "evidence_paths": ["artifacts/haic-research-v2/launch-surge-matched-tune-2900-2903-20260929/report.json"]
+    }
+  ]
+}

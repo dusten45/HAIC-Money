@@ -1,0 +1,58 @@
+{
+  "run_id": "haic2-finish-view-observability-20260929",
+  "cycle_id": "haic2-finish-view-observability-cycle-20260929",
+  "purpose": "Consumed TUNE pixel return-to-start sensor feasibility diagnostic",
+  "hypothesis_hash": "880d3775cd554ff968d639fd8ba92e01da0ff3ca6bce17767b610e653a3ab440",
+  "candidate_revision": "sensor-only-start-view-revisit-v1",
+  "control_revision": "unchanged-pixel-student-and-stable-risk",
+  "candidate_package_hash": "none-controller-diagnostic",
+  "control_package_hash": "none-controller-diagnostic",
+  "comparison_id": "haic2-finish-view-consumed-tune-5200-5205",
+  "seed_ids": [
+    "1:5200",
+    "2:5205"
+  ],
+  "comparison_episode_count": 2,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-tune-observability-5200-5205"
+  ],
+  "map_ids": [
+    "official-track1-seed5200",
+    "official-track2-seed5205"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 900,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 1,
+    "arms": 3
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/finish_view_observability_probe.py": "33109c0772fc4bbecfd0933bb04e77dde523afe323e6241098541bd83e4430f4",
+    "haic_agent/pixel_speed_student_runtime.py": "b3574998013aba6fda5ce0811019246b4145a06625c1825837fbad5c876b8281",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "31f167928a93f7e36bf16c2df7bb48c77bd9d09413d9b1276faa1d20f3745a5d",
+    "harness.config.json": "da9fa4abda220e71ef5b8608ad9c9f332f8c1b5b7bfd2f4a7fb9762be64092a6",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/model_safe.pt": "3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194"
+  }
+}

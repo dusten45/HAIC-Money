@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-stable-four-direction-fresh-tune-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-20260928/fresh-tune-design.md",
+  "rule_or_requirement": "A pixel-only candidate must preserve valid completion before lap-time gains count.",
+  "observable_information": "Four grayscale frames, road-edge clearance, road-center motion, visible obstacles, rendered HUD speed, and fixed stable actor action.",
+  "allowed_action_or_state_change": "Compare four activated stable-base mechanisms without parameter sweeps: clearance speed floor, bend exit burst, obstacle preview brake, and mild-bend outer entry.",
+  "expected_success_endpoint": "At least the selected control's finish count in twelve fresh matched TUNE cells, followed by a lower median finished lap time with no invalid actions.",
+  "eligible_state": "FRESH_THREE_TRACK_TUNE_BATCH",
+  "control": "Exact-hash selected full-road-guard actor on each registered cell.",
+  "falsifier": "Any lower finish count than control, invalid action, or tied completion without lower median finished lap time.",
+  "smallest_decisive_experiment": "Tracks 1–3 × seeds 324–327, one control and four independent candidates, 60 episodes with 2000 decisions per episode.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU and registered 1800-second limit; 328–331 reserved held-out, no confirmation, blind, package, upload, or submission.",
+  "source_paths": ["docs/plans/haic2-stable-risk-20260928/fresh-tune-design.md", "haic_agent/stable_risk_envelope_runtime.py", "haic_agent/stable_phase_candidates_runtime.py", "training/benchmark_corridor.py", "harness.config.json", "runs/haic-research-v2/haic2-stable-four-direction-train-screen-20260928/integration_report.json"]
+}

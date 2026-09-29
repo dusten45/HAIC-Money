@@ -1,0 +1,63 @@
+{
+  "run_id": "anticipatory-bend-independent-confirmation-20260928",
+  "cycle_id": "anticipatory-bend-independent-confirmation-cycle-20260928",
+  "purpose": "Fresh twelve-cell confirmation diagnostic after cross-run split collisions",
+  "hypothesis_hash": "600aec8bb67524614384ffcc837126138106fc69697136b75286a95425ed2b0e",
+  "candidate_revision": "anticipatory-bend-neutral-steer-frozen-v1",
+  "control_revision": "full-road-guard-selected-3ceb5ebb",
+  "candidate_package_hash": "none-runtime-diagnostic",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "anticipatory-bend-independent-confirmation-312-315",
+  "seed_ids": [
+    "1:312",
+    "1:313",
+    "1:314",
+    "1:315",
+    "2:312",
+    "2:313",
+    "2:314",
+    "2:315",
+    "3:312",
+    "3:313",
+    "3:314",
+    "3:315"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "official-three-track-confirmation-seeds312-315"
+  ],
+  "map_ids": [
+    "official-track1-seed312-315",
+    "official-track2-seed312-315",
+    "official-track3-seed312-315"
+  ],
+  "split_ids": [
+    "confirmation"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1200,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "haic_agent/anticipatory_bend_runtime.py": "27459733edf6d845b61296f68fa82eb17af9672e2a6c88337ff8ab6d9a2f91d2",
+    "training/benchmark_corridor.py": "e3a7848e5c7a27e2856797acf7fffd720aac5bb2c027db7d921460ddabc96e6a",
+    "harness.config.json": "63a2f3459d534dd84786d51b494bdf5c7d45358b57efc2fd369fd9010efaf17e"
+  }
+}

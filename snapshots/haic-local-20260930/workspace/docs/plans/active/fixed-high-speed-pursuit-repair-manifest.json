@@ -1,0 +1,72 @@
+{
+  "run_id": "fixed-high-speed-pursuit-repair-20260929",
+  "cycle_id": "fixed-high-speed-pursuit-repair-20260929-cycle",
+  "purpose": "Consumed TRAIN corrected pursuit mechanism replay within four-direction high-speed batch",
+  "hypothesis_hash": "69af14fd8a12d03fe58fbb07e62939c1cd01537177ab93369a4d698c85165c34",
+  "candidate_revision": "pursuit-single-saturation-r2",
+  "control_revision": "same-target-corridor-steering",
+  "candidate_package_hash": "14beb77ca09c84a9102c9232528f6c6681f7bb263ddf9dedf2e967d0b32ce920",
+  "control_package_hash": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+  "comparison_id": "fixed-high-speed-pursuit-repair-20260929",
+  "seed_ids": [
+    "1:38200",
+    "1:38201",
+    "2:38200",
+    "2:38201",
+    "3:38200",
+    "3:38201"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38200-38201"
+  ],
+  "map_ids": [
+    "official-track1-seed38200",
+    "official-track1-seed38201",
+    "official-track2-seed38200",
+    "official-track2-seed38201",
+    "official-track3-seed38200",
+    "official-track3-seed38201"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 1,
+    "episode_max_decisions": 1200,
+    "episodes_per_arm": 6,
+    "timeout_seconds": 600,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fixed-high-speed-steering-20260929.md": "38287e44377bde791d878d3bb40daa430ef3866a3c35f6ba737576260f066c44",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "training/fixed_high_speed_steering.py": "6c43db04a08e909e330497eacf9583eec346039de37d6b1c88d5c5bf6a81251c",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "training/env_factory.py": "c0241dc7c6b4f4fae0c646d748e4ffade228c44f9bfc3a93b242528891a0a866",
+    "haic_research/config.py": "267b7b1fd814a50cd9db02722c1f99a21c75327d0ef59005b71ebc5a9b8ec75f",
+    "harness.config.json": "722b4ee2735b62eaff018f1561691350fe29ff8cf0a00cf688a4f65907773826",
+    "docs/plans/active/fixed-high-speed-pursuit-repair-20260929.md": "1abe0af0bc1e6ce67caf11f56cdacfb1a0769224e6fc81881f140495ecf435d5",
+    "haic_agent/fixed_high_speed_pursuit_repair.py": "14beb77ca09c84a9102c9232528f6c6681f7bb263ddf9dedf2e967d0b32ce920",
+    "training/fixed_high_speed_pursuit_repair.py": "e65e668c76f4a2d722524c402e2f624bd0a6479531e4b7b9e1a5bea071740d7e",
+    "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json": "a0b911e59f2faee305576e1b2a44d7ba50649e5dba965c1145e95fc31bf0bd8f"
+  }
+}

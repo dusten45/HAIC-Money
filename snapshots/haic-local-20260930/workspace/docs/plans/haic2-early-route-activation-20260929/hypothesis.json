@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-common-prefix-fast-continuation-20260929",
+  "source_ref": "docs/plans/haic2-early-route-activation-20260929/design.md",
+  "rule_or_requirement": "A route choice must preserve valid completion and faster lap time from a common visual state, not infer benefit from unmatched full-episode paths.",
+  "observable_information": "Frozen safe/fast pixel actions and private decision count; evaluation-only matched completion and trajectories.",
+  "allowed_action_or_state_change": "After 50 identical mode-switch decisions, select the fast pixel action for the remainder; no simulator or map/seed input.",
+  "expected_success_endpoint": "At least one repaired 5044 failure, all 5047 successes preserved, >=50 post-prefix action changes, zero invalid actions and identical prefix actions.",
+  "eligible_state": "CONSUMED_TRAIN_COMMON_PREFIX_ROUTING_ACTIVATION",
+  "control": "Exact frozen visual mode-switch ZIP SHA b0dc7a24e6ef994cee6e663ec6605f5aa088dbb9b3ce4510f90ccd16dc9d7fc4 on the same six consumed TRAIN cells.",
+  "falsifier": "No changed actions, no repaired failure, lost reference finish, invalid action or prefix mismatch.",
+  "smallest_decisive_experiment": "Two arms on tracks 1-3 x consumed TRAIN seeds 5044 and 5047, twelve episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU local diagnostic capped at 1,200 seconds and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-early-route-activation-20260929/design.md",
+    "training/early_route_activation_probe.py",
+    "haic_agent/hazard_flow_batch_runtime.py",
+    "docs/plans/haic2-early-routing-observability-20260929.md"
+  ]
+}

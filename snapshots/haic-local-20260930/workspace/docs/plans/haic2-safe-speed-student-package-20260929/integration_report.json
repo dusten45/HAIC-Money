@@ -1,0 +1,26 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-safe-speed-student-package-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/package_manifest.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local ZIP passed static source, inventory, path and size checks, but extracted import/create, reset, act, RSS and driving have not yet been checked in the exact package runtime.",
+      "evidence_paths": ["training/package_safe_speed_student.py", "artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/package_manifest.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "This operation only built the archive; the packaged agent has not driven or produced gas interventions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/package_manifest.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "NOT_APPLICABLE",
+      "rationale": "Packaging generated the exact local artifact and did not evaluate completion or lap time.",
+      "evidence_paths": ["docs/plans/haic2-safe-speed-student-package-20260929/design.md", "artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/package_manifest.json"]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-pixel-safe-speed-student-tune-loader-retry-20260929",
+  "source_ref": "docs/plans/haic2-safe-speed-student-tune-retry-20260929/design.md",
+  "rule_or_requirement": "A learned pixel-only speed adviser must preserve valid completion and shorten finished lap time against its exact pixel control.",
+  "observable_information": "Same frozen pixel student and control on registered 5200–5203 TUNE cells after exact-hash normalization-array conversion; full matched finish and lap traces.",
+  "allowed_action_or_state_change": "Convert only trusted checkpoint normalization arrays to tensor storage before weights-only pixel runtime loading; candidate driving policy and threshold remain fixed.",
+  "expected_success_endpoint": "At least control valid completions, no candidate-only nonfinish or invalid action, activation, and at least 2% lower median finished lap time on jointly completed cells.",
+  "eligible_state": "TUNE_PIXEL_CONTROLLER_DIAGNOSTIC",
+  "control": "StableRiskEnvelopeAgent over selected full-road-guard checkpoint SHA-256 3ceb5ebbe2a4bd96944649a693b8ef924c0252fa620b0fd547c7fb494afff199.",
+  "falsifier": "Candidate-only nonfinish, fewer finishes, invalid actions, no gas interventions, or less than 2% paired median lap improvement.",
+  "smallest_decisive_experiment": "Infrastructure retry of the same twelve matched TUNE cells, tracks 1–3 × seeds 5200–5203.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,800 seconds and 2,000 decisions per episode; no held-out, confirmation, blind, official or external action.",
+  "source_paths": [
+    "docs/plans/haic2-safe-speed-student-tune-retry-20260929/design.md",
+    "training/safe_speed_student_probe.py",
+    "haic_agent/pixel_speed_student_runtime.py",
+    "docs/plans/haic2-safe-speed-student-tune-20260929/outcome.md"
+  ]
+}

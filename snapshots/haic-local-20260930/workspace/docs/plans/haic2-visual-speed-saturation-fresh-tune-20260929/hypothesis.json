@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-visual-speed-saturation-fresh-tune-20260929",
+  "source_ref": "docs/plans/haic2-visual-speed-saturation-fresh-tune-20260929/design.md",
+  "rule_or_requirement": "Maintain valid completion first, then improve finished lap time with a pixel-only policy.",
+  "observable_information": "Rendered HUD speed and student posterior; matched completion, lap, progress, collision, action and latency evidence on fresh TUNE cells.",
+  "allowed_action_or_state_change": "Suppress only learned extra gas at rendered speed 54 or higher; retain selected pixel driver's steering, braking and base gas.",
+  "expected_success_endpoint": "At least selected and original student valid completion, zero invalid actions, active suppression and retained acceleration, then at least 2% paired median speed gain if completion ties selected.",
+  "eligible_state": "FRESH_TUNE_PIXEL_CONTROLLER_DIAGNOSTIC",
+  "control": "Exact selected stable-risk pixel driver and original student on the same twelve fresh TUNE cells.",
+  "falsifier": "Fewer valid finishes than either control, invalid actions, inactive saturation, or insufficient tied-completion lap improvement.",
+  "smallest_decisive_experiment": "Three arms on tracks 1–3 × seeds 5216–5219, 36 registered episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU diagnostic capped at 1,800 seconds and 2,000 decisions per episode; no confirmation, blind, official or external action.",
+  "source_paths": ["docs/plans/haic2-visual-speed-saturation-fresh-tune-20260929/design.md", "training/visual_speed_saturation_probe.py", "haic_agent/pixel_speed_student_runtime.py", "docs/plans/haic2-visual-speed-saturation-activation-20260929/design.md"]
+}

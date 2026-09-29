@@ -1,0 +1,31 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fast-completion-row-repair-20260929/engine_interruption.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Current official certification unavailable",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-completion-row-repair-20260929/engine_interruption.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Both targeted failures finish;21partial completed episodes including19unchanged prior finishes. Partial evidence only.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-completion-row-repair-20260929/engine_interruption.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Infrastructure interrupted at21/24; no all24 claim, no valid full-run comparison. Not a non-improving driving cycle.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fast-completion-row-repair-20260929/engine_interruption.json"
+      ]
+    }
+  ]
+}

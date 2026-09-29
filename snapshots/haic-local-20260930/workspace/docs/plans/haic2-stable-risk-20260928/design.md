@@ -1,0 +1,5 @@
+# Stable-base road-clearance speed probe
+
+The previous four-direction tune batch on 308–311 rejected all candidates because each finished fewer cells than the selected full-road-guard control. This new mechanism starts with that stable control, not the faster apex/fast-pedal combination. The candidate raises gas only when the visible road encloses the image-center vehicle footprint at rows 54 and 50, all seven road-center rows are visible, no bright obstacle is detected, inherited steering and brake are small, the visible bend is not rapidly increasing over the four-frame stack, and rendered speed is below a bend-conditioned target. The one fixed gas floor is 0.20, below the previous rejected 0.28 floor.
+
+First screen on consumed TRAIN 1/43 and 2/102 with identical control and 2,000-decision cap. Activation requires nonzero `risk_clear_decisions` on both cells and no control-completed cell lost; TRAIN lap times are diagnostic. If active, expand the next batch to at least four independent directions before opening new tune cells. Keep the frozen source until its v2 gate report is complete. No official website action.

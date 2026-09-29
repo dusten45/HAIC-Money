@@ -1,0 +1,67 @@
+{
+  "run_id": "haic2-safe-speed-student-exact-confirm-20260929",
+  "cycle_id": "haic2-safe-speed-student-exact-confirm-cycle-20260929",
+  "purpose": "Exact local pixel speed student ZIP versus selected control ZIP on untouched confirmation cells",
+  "hypothesis_hash": "389013d9a8f10ae50118ff0c72fb76bc78a5333f7d48753a6fda7be4fa6afcf3",
+  "candidate_revision": "pixel-speed-student-v1-exact-zip-4308ab2b",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "4308ab2b900aa3fd2615c8b9f84c3455dde5d9f5f1711da5d31ff200f00d5e27",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-safe-speed-student-exact-confirm-5212-5215",
+  "seed_ids": [
+    "1:5212",
+    "1:5213",
+    "1:5214",
+    "1:5215",
+    "2:5212",
+    "2:5213",
+    "2:5214",
+    "2:5215",
+    "3:5212",
+    "3:5213",
+    "3:5214",
+    "3:5215"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "untouched-confirmation-seeds5212-5215"
+  ],
+  "map_ids": [
+    "official-track1-seed5212-5215",
+    "official-track2-seed5212-5215",
+    "official-track3-seed5212-5215"
+  ],
+  "split_ids": [
+    "confirmation"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/confirm_safe_speed_student.py": "77873957337709253ad4f168c94f1c81b4c72fa0d595d2fb7c8612c3ca3a233b",
+    "training/package_submission.py": "6c845c08b8573cedf813d25d4d69935825ed52996569884db15b0905fa278d39",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "3f9413a55ac435aeb6aa5274a58832587575d7a770d07c8127b956df208b490c",
+    "harness.config.json": "4e9acd401a0d677525b88e3a8e6feb55663bdc83257ba3a4d453112ea6ff76c2",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-package-20260929/submission.zip": "4308ab2b900aa3fd2615c8b9f84c3455dde5d9f5f1711da5d31ff200f00d5e27",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40"
+  }
+}

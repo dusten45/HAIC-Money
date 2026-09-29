@@ -1,0 +1,5 @@
+# Continuous target-speed pixel student: training rejection
+
+On TRAIN tracks 1-3 x seeds 5032-5035, all twelve stable pixel-control collection runs validly finished. Only their successful trajectories supplied 1,644 training and 515 within-TRAIN validation samples. The shadow teacher supplied 235 training and 84 validation targets below speed 55; the student made 95 validation predictions below 55, so its output did not collapse to a constant. Its weights-only tensor checkpoint SHA-256 is `7b6d266e633f713cba26ceaa6d0c445ab919a759396704ebfb6e8e1ea17d5655`. The teacher never drove, and student inference requires no simulator state.
+
+The preregistered activation gate nevertheless **failed**: validation target MAE 2.2134 versus constant-60 baseline 2.4362 is a 9.14% improvement, short of the required 10%. Error on teacher targets below 55 was 7.0445. Decision: **REJECT** this checkpoint without closed-loop student driving or changing the gate on these consumed TRAIN cells. It provides no candidate completion-rate or official-score evidence. No release or external action.

@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The TRAIN diagnostic used four grayscale frames and exact-hash fixed checkpoints, but a submission package and official platform validation have not been completed.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-speed-envelope-train-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-speed-envelope-train-activation-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The envelope changed gas in 140 and 135 decisions on the two registered TRAIN cells; mean gas rose from 0.093/0.095 to 0.152/0.155. Both arms completed both cells with no invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-speed-envelope-train-activation-20260928/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "The candidate was 1.46 and 1.08 seconds faster on the two paired consumed TRAIN cells, but no fresh tune, held-out, or package comparison has been conducted. TRAIN diagnostics do not establish candidate performance.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-speed-envelope-train-activation-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-speed-envelope-train-activation-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-speed-envelope-train-activation-20260928/report.json"]
+}

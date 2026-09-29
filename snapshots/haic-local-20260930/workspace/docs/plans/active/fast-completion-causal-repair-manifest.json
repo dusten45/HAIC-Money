@@ -1,0 +1,87 @@
+{
+  "run_id": "fast-completion-causal-repair-train-20260929",
+  "cycle_id": "fast-completion-causal-repair-train-20260929-cycle",
+  "purpose": "Causal repair of pedal/impact interaction and missing geometry",
+  "hypothesis_hash": "df858213e3a565437830eb2e721e2f4e7ff5593f7142832000422eb570776aaf",
+  "candidate_revision": "fast-coordination-causal-r2",
+  "control_revision": "fixed60-impact-clear",
+  "candidate_package_hash": "1b225a7e53c76a269fd0a00883ad34a6e0c6c816f9253a82ee2fa6cfafdc16e4",
+  "control_package_hash": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+  "comparison_id": "fast-completion-causal-repair-train-20260929",
+  "seed_ids": [
+    "1:38200",
+    "1:38201",
+    "1:38210",
+    "1:38211",
+    "2:38200",
+    "2:38201",
+    "2:38210",
+    "2:38211",
+    "3:38200",
+    "3:38201",
+    "3:38210",
+    "3:38211"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38200-38201-38210-38211"
+  ],
+  "map_ids": [
+    "official-track1-seed38200",
+    "official-track1-seed38201",
+    "official-track1-seed38210",
+    "official-track1-seed38211",
+    "official-track2-seed38200",
+    "official-track2-seed38201",
+    "official-track2-seed38210",
+    "official-track2-seed38211",
+    "official-track3-seed38200",
+    "official-track3-seed38201",
+    "official-track3-seed38210",
+    "official-track3-seed38211"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 3,
+    "episodes_per_arm": 12,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/fixed60-completion-20260929.md": "4f1b0d9515aa17ab237a6e7322722685bdb9106728c7ae913fb2522d4203a31d",
+    "haic_agent/fixed60_completion.py": "50379b8ade6dc0c7058ee24afae9a0afac3e687879f21cccfdedc76e68f78ca7",
+    "training/fixed60_completion.py": "7d97f7bae8ee3f83ca72fa8b0c29f0d2bf0aa40918c488e449d41c30c449527d",
+    "docs/plans/active/fixed60-completion-settings.json": "742b6aba2a536513d0c07b55c8879b637f31917e190df2562842ccf2e329bb6c",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "87d0d419098c9cae9df034d6bfe529bef987502e7c38273b72953c5ca41bf9cb",
+    "harness.config.json": "cb3057904412482e296d8f88be4d7e3dd57f60547af33d3d201af349ead0fd8b",
+    "docs/plans/active/fast-completion-coordination-20260929.md": "4f06d1803bf7229d085dbe44522d4edd075d7e473e8293789877f1132d6cfcd5",
+    "haic_agent/fast_completion_coordination.py": "1b225a7e53c76a269fd0a00883ad34a6e0c6c816f9253a82ee2fa6cfafdc16e4",
+    "docs/plans/active/fast-completion-full-20260929.md": "f3df71581a4490cac95ced38fca81538a52873ce63524c4b4738f04e28391a6c",
+    "artifacts/haic-research-v2/fast-completion-coordination-probe-20260929/report.json": "6414393855e904b967c480e887910d0b820525d522dea75b7006fe9eb300526c",
+    "docs/plans/active/fast-completion-causal-repair-20260929.md": "3aae021895697f58b3c0ce53ca98a6b5cd9beb386a4583aba523dc3909a06be1",
+    "artifacts/haic-research-v2/fast-completion-full-train-20260929/report.json": "54873ec5e8c58ba128a9cce8e81988b9d2e6181916be528dcf97e8b4b0bd2fe5"
+  }
+}

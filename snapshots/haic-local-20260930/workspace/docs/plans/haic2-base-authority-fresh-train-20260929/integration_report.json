@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-base-authority-fresh-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-base-authority-fresh-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Both agents consume pixels at runtime, but no exact submission ZIP compliance check was performed for the bounded candidate.",
+      "evidence_paths": [
+        "haic_agent/pixel_coast_student_runtime.py",
+        "training/base_authority_fresh_probe.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "On fresh TRAIN cells the candidate made 700 low-base vetoes and 1,248 bounded boosts, above preregistered thresholds, with zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-fresh-train-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Fresh matched TRAIN: bounded candidate finished 12/12 versus selected pixel control 11/12, including repair of 3:5027, with zero collisions both arms. Candidate median finished lap 23.90 versus 24.00 seconds, and joint median 23.74 versus 24.00 seconds. Completion-first preregistered gate passes; this is not TUNE, held-out, confirmation or official evidence.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-base-authority-fresh-train-20260929/report.json",
+        "docs/plans/haic2-base-authority-fresh-train-20260929/design.md"
+      ]
+    }
+  ]
+}

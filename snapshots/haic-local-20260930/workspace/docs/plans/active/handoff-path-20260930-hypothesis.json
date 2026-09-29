@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "handoff-path-20260930",
+  "source_ref": "docs/plans/active/handoff-path-20260930-design.md",
+  "rule_or_requirement": "Preserve completion and reduce median lap time using legal image-only observations, no fixed method requirement.",
+  "observable_information": "Current and prior images/HUD and own actions only; connected road components and optical flow.",
+  "allowed_action_or_state_change": "Four separate mechanisms: residual decay handoff, geometric early obstacle gap, missing-road heading continuation, straight-path acceleration.",
+  "expected_success_endpoint": "12/12 finishes and median below stable matched control, no promotion until exact ZIP and independent registered validation",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "preview_row_repair stable control; frozen dual reference arm",
+  "falsifier": "No farther path action activation, incorrect component/flow, lost completion, no time gain or invalid action.",
+  "smallest_decisive_experiment": "6arms x12 consumed TRAIN cells=72episodes",
+  "resource_and_risk_gate": "2CPU2GiB1050seconds maximum within1200 heartbeat; local only",
+  "source_paths": [
+    "docs/plans/active/handoff-path-20260930-design.md",
+    "haic_agent/handoff_path_runtime.py",
+    "haic_agent/connected_guarded_preview_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

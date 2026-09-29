@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/run_manifest.json",
+    "runs/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/events.jsonl",
+    "artifacts/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Exact ZIP hashes passed archive checks and 24 diagnostic episodes had zero invalid actions and local resource limits passed.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "The candidate finished previously failed 3:7040 and retained 3:7041, but this comparator did not record suppressed preview opportunities per step. Behavioral attribution to the 45-speed gate remains unverified.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "On consumed diagnostic 7040-7043 candidate finished 11/12 versus selected 12/12. Candidate-only track 1 seed 7040 crashed at progress 0.93 after five collisions, so the fresh tune reservation stays closed.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/launch-preview-speed-gate-diagnostic-7040-7043-20260929/report.json"
+      ]
+    }
+  ]
+}

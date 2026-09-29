@@ -1,0 +1,52 @@
+{
+  "run_id": "haic2-safe-speed-student-package-20260929",
+  "cycle_id": "haic2-safe-speed-student-package-cycle-20260929",
+  "purpose": "Build exact local pixel speed student ZIP from frozen held-out policy and selected control archive",
+  "hypothesis_hash": "b354954c1945d1cf6cd25d31660bb08aabe4135d277547b89d84f61e9c6be06b",
+  "candidate_revision": "pixel-speed-student-v1-1c139842-exact-zip",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "pending-local-zip",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": null,
+  "seed_ids": [],
+  "comparison_episode_count": null,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "frozen-train-student-checkpoint-1c139842"
+  ],
+  "map_ids": [
+    "training-provenance-tracks1-3"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 180,
+    "package_builds": 1
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/package_safe_speed_student.py": "20bb7f640a2885da90b730160fed1ce7578c681b630e6e93a54757dbf0165285",
+    "haic_agent/pixel_speed_student_runtime.py": "4349ef067be4351fdfbf665cc3b05094385281a322a7cfbc5912c110ed857367",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/package_submission.py": "6c845c08b8573cedf813d25d4d69935825ed52996569884db15b0905fa278d39",
+    "haic_research/config.py": "417307bb1624c4c431ef3a55401a369e537fca97214c94bcd4f80f381a375e1d",
+    "harness.config.json": "c05e39d8d5ba861833f99ae32adf9eddbeab3e5439ddc59ed00967602fc95797",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+    "artifacts/haic-research-v2/haic2-safe-speed-student-heldout-20260929/model_safe.pt": "3c3cafc0d549c3777a6489ede397a4bd4f2390f8f2b1597ae6e0960dd4dc2194"
+  }
+}

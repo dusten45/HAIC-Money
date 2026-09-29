@@ -1,0 +1,3 @@
+# Guarded connected path full six TRAIN comparison
+
+Continuation of existing four mechanisms without code changes: pursuit, dual preview, transported memory, shared speed path. Control preview_row_repair. All tracks 1,2,3 x consumed TRAIN seeds 38300,38302; 5 arms x 6 =30 episodes, including prior failed 2:38302 and absent 3:38302. Completion first then matched median, p90, collisions/damage/latency. Reject completion loss; no promotion without wider registered exact ZIP evaluation. 2 CPU,2GiB,600 seconds; no external actions. Preserve original ZIP. Standing user authorization 2026-09-29 covers local design and execution; exact hash events separately before execution. Existing actor source unchanged, only evaluation settings and bounded timeout changed.

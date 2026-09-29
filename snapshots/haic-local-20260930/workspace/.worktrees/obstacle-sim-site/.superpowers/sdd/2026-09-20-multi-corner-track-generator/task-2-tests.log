@@ -1,0 +1,29 @@
+test_all_templates_generate_valid_maps (tests.test_track_generator.TestTrackGenerator.test_all_templates_generate_valid_maps) ... ok
+test_batch_generation_uses_distinct_ids (tests.test_track_generator.TestTrackGenerator.test_batch_generation_uses_distinct_ids) ... ok
+test_boundary_seeds_are_repeatable_and_each_template_varies (tests.test_track_generator.TestTrackGenerator.test_boundary_seeds_are_repeatable_and_each_template_varies) ... ok
+test_detects_overlapping_road_boundaries (tests.test_track_generator.TestTrackGenerator.test_detects_overlapping_road_boundaries) ... ok
+test_different_design_seed_changes_geometry (tests.test_track_generator.TestTrackGenerator.test_different_design_seed_changes_geometry) ... ok
+test_generated_profiles_validate_for_a_fixed_seed_range (tests.test_track_generator.TestTrackGenerator.test_generated_profiles_validate_for_a_fixed_seed_range) ... ok
+test_generated_road_boundaries_do_not_intersect (tests.test_track_generator.TestTrackGenerator.test_generated_road_boundaries_do_not_intersect) ... ok
+test_generation_v2_records_distinct_corner_profiles (tests.test_track_generator.TestTrackGenerator.test_generation_v2_records_distinct_corner_profiles) ... ok
+test_generator_handles_width_limits_and_rejects_out_of_range_width (tests.test_track_generator.TestTrackGenerator.test_generator_handles_width_limits_and_rejects_out_of_range_width) ... ok
+test_invalid_design_seeds_are_rejected (tests.test_track_generator.TestTrackGenerator.test_invalid_design_seeds_are_rejected) ... ok
+test_rejects_turn_radius_smaller_than_track_half_width (tests.test_track_generator.TestTrackGenerator.test_rejects_turn_radius_smaller_than_track_half_width) ... ok
+test_same_design_seed_has_same_geometry_and_fingerprint (tests.test_track_generator.TestTrackGenerator.test_same_design_seed_has_same_geometry_and_fingerprint) ... ok
+test_sampled_centerline_respects_segment_limit (tests.test_track_generator.TestTrackGenerator.test_sampled_centerline_respects_segment_limit) ... ok
+test_self_intersection_is_rejected (tests.test_track_generator.TestTrackGenerator.test_self_intersection_is_rejected) ... ok
+test_unknown_template_is_rejected (tests.test_track_generator.TestTrackGenerator.test_unknown_template_is_rejected) ... ok
+test_custom_environment_has_track_and_expected_observation (tests.test_custom_environment.TestCustomEnvironment.test_custom_environment_has_track_and_expected_observation) ... <frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+D:\HAIC\haic-env\Lib\site-packages\pygame\pkgdata.py:25: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import resource_stream, resource_exists
+ok
+test_custom_map_snapshot_is_deterministic (tests.test_custom_environment.TestCustomEnvironment.test_custom_map_snapshot_is_deterministic) ... ok
+test_custom_obstacle_is_attached_without_official_obstacles (tests.test_custom_environment.TestCustomEnvironment.test_custom_obstacle_is_attached_without_official_obstacles) ... ok
+test_every_generated_template_runs_in_custom_environment (tests.test_custom_environment.TestCustomEnvironment.test_every_generated_template_runs_in_custom_environment) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 18.132s
+
+OK

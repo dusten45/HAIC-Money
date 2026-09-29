@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-visual-ttc-sensor-20260929",
+  "source_ref": "docs/plans/haic2-visual-ttc-sensor-20260929/design.md",
+  "rule_or_requirement": "A pixel-only obstacle warning must precede collision with enough time to change speed while avoiding broad false alarms on valid finishes.",
+  "observable_information": "Rendered grayscale obstacle row and lateral position across consecutive frames plus pixel HUD speed; simulator collision and distance are evaluation labels only.",
+  "allowed_action_or_state_change": "Record one fixed visual time-to-contact warning while leaving both pixel drivers' actions untouched.",
+  "expected_success_endpoint": "Warning 5–12 decisions before each first student collision and at most two total warnings in each valid selected-control run.",
+  "eligible_state": "CONSUMED_TRAIN_SENSOR_FEASIBILITY_DIAGNOSTIC",
+  "control": "Unchanged selected stable-risk pixel driver on 1:5020 and 2:5021; unchanged frozen three-class pixel student on the same cells.",
+  "falsifier": "No timely warning before either student collision or more than two warnings in a successful selected-control run.",
+  "smallest_decisive_experiment": "Four unchanged episodes on two previously consumed TRAIN identities 1:5020 and 2:5021.",
+  "resource_and_risk_gate": "One registered Linux CPU sensor-only diagnostic capped at 900 seconds and 2,000 decisions per episode; no fresh competitive or external action.",
+  "source_paths": ["docs/plans/haic2-visual-ttc-sensor-20260929/design.md", "training/visual_ttc_sensor_probe.py", "haic_agent/pixel_features.py", "docs/plans/haic2-visual-ttc-observability-20260929.md"]
+}

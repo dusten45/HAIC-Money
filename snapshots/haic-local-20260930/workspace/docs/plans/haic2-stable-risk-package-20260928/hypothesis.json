@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-stable-risk-exact-local-package-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-package-20260928/design.md",
+  "rule_or_requirement": "A local candidate must preserve the verified pixel-only runtime and exact checkpoint when placed in a submission-shaped ZIP.",
+  "observable_information": "Fixed control ZIP bytes and SHA-256, confirmed candidate module bytes and SHA-256, exact archive payload names and hashes.",
+  "allowed_action_or_state_change": "Create a local ZIP with unchanged control payloads except root agent.py and the added stable-risk runtime module; do not upload or confirm a model.",
+  "expected_success_endpoint": "A ZIP whose manifest records exact control/source/file/archive hashes and whose root agent wraps the confirmed candidate, ready for separate ZIP-exact local evaluation.",
+  "eligible_state": "LOCAL_PACKAGING_ONLY",
+  "control": "Frozen full-road-guard ZIP with exact SHA-256; no new model weights.",
+  "falsifier": "Control or candidate source hash mismatch, missing or extra unintended payload, invalid archive, or wrapper behavior differing from the confirmed candidate.",
+  "smallest_decisive_experiment": "One registered package execution, then read the archive manifest and inspect the ZIP payload identities; run ZIP-exact driving only in a new plan.",
+  "resource_and_risk_gate": "Local-only 600-second package profile; no training, evaluation cell access, official site upload, model confirmation, or submission.",
+  "source_paths": ["docs/plans/haic2-stable-risk-package-20260928/design.md", "training/package_stable_risk.py", "haic_agent/stable_risk_envelope_runtime.py", "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip"]
+}

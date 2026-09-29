@@ -1,0 +1,16 @@
+{
+  "train-only-site-map-split": "training/maps/site/official_heavy_split.json",
+  "defer-tune": true,
+  "total-steps": 4096,
+  "updates": 4,
+  "teacher-warmup-epochs": 0,
+  "seed": 8106,
+  "max-decisions": 800,
+  "learning-rate": 0.000002,
+  "policy-mean-learning-rate": 0.0002,
+  "direct-gas-reward": 8.0,
+  "enable-visual-features": true,
+  "throttle-expansion": 4.0,
+  "initialize-from": "artifacts/haic-research-v2/speed-state-ppo-continuation-hudfix-20260928/training/policy.pt",
+  "disable-hud-branch": true
+}

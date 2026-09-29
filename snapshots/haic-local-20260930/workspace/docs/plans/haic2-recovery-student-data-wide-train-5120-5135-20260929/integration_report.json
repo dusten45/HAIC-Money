@@ -1,0 +1,32 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-recovery-student-data-wide-train-5120-5135-20260929/events.jsonl",
+    "artifacts/haic-research-v2/haic2-recovery-student-data-wide-train-5120-5135-20260929/pixel-recovery-labels"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "TRAIN-only teacher collection was interrupted before its report; no submission ZIP or current official-site validation is involved.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-recovery-student-data-wide-train-5120-5135-20260929/events.jsonl"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "Eleven partial recovery-label NPZ files exist, but the registered 48-cell collection and final integrity report did not finish.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-recovery-student-data-wide-train-5120-5135-20260929/pixel-recovery-labels"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "Infrastructure interruption prevents the registered coverage denominator and integrity endpoint from being evaluated; teacher data are not submission-candidate results.",
+      "evidence_paths": [
+        "runs/haic-research-v2/haic2-recovery-student-data-wide-train-5120-5135-20260929/events.jsonl"
+      ]
+    }
+  ]
+}

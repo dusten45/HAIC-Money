@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "audit_date": "2026-09-24",
+  "audit_mode": "read_only_artifact_metadata_and_hashes",
+  "eligibility_criterion": "The starting actor lineage must be demonstrable without official, tune, or held-out data exposure.",
+  "classification_values": ["clean 증명됨", "오염 확인", "출처 불명"],
+  "model_state_sha256_scheme": "Sort state_dict entries by name; SHA-256 update with UTF-8 name, NUL, str(dtype), NUL, compact JSON shape, NUL, contiguous CPU tensor bytes.",
+  "source_manifest": {
+    "path": "C:/Users/koi/.codex/worktrees/strategy-a-curve-brake-reward/HAIC/artifacts/haic/throttle-expansion-ppo-pilot-v2/source-manifest.json",
+    "file_sha256": "9C765CE8DA05F168FFA87F8A94B7C8CF0DBFDE996529AAE994D57E2EE4A1117B",
+    "execution_started": false,
+    "pilot_input_checkpoint_path": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt",
+    "pilot_input_checkpoint_optimizer_state_used": false,
+    "pilot_active_split_metadata": {
+      "train_custom_only": true,
+      "custom_tune_entries": 2,
+      "held_out_geometry_materialized": false,
+      "official_geometry_used_in_training_or_tune": false
+    },
+    "historical_input_checkpoint_provenance": {
+      "teacher_warmup_enabled": true,
+      "teacher_warmup_epochs": 30,
+      "demonstration_steps": 3625,
+      "historical_train_contains_official_track_entries": true
+    }
+  },
+  "items": [
+    {
+      "id": "sota_actor",
+      "path": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt",
+      "file_sha256": "3CEB5EBBE2A4BD96944649A693B8EF924C0252FA620B0FD547C7FB494AFFF199",
+      "model_state_sha256": "3AA08AF8F196FBBCD6D8DB64780E7717FF6CCF247C1CD800061753CDDD6539CD",
+      "step": 19456,
+      "classification": "오염 확인",
+      "classification_basis": ["teacher warmup metadata", "official track entries in historical train split", "tune selection metadata"],
+      "teacher_warmup": {"status": "recorded", "enabled": true, "epochs": 30, "demonstration_steps": 3625, "reused_from_checkpoint": true},
+      "split_metadata": {"train_entries": 22, "train_contains_official_track_entries": true, "tune_entries": 6, "held_out_entries": 8},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {
+        "path": "artifacts/haic/site-map-official-domain-speed-reward-ppo8192-u8-lr2e6-seed8101/policy.pt",
+        "path_recorded_in": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/experiment_config.json",
+        "parent_sha_recorded_at_child_training": false,
+        "parent_file_sha256_observed_at_audit": "DB34782CC5A4515E07A33FD9640383FF2A0303CC72E2B26AA15EC6D31EE443E1",
+        "parent_model_state_sha256_observed_at_audit": "4DCE4E0281ED09CB38B5D588F0691321A023EEAAA134A752C431148C7985E823",
+        "parent_step": 15360
+      },
+      "evidence_paths": [
+        "C:/Users/koi/Coding/HAIC/SOTA.md",
+        "C:/Users/koi/Coding/HAIC/RESULTS.md",
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/final-ppo-actor-selection.json",
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt",
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/experiment_config.json",
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/training-result.json",
+        "C:/Users/koi/.codex/worktrees/strategy-a-curve-brake-reward/HAIC/artifacts/haic/throttle-expansion-ppo-pilot-v2/source-manifest.json"
+      ]
+    },
+    {
+      "id": "site_map_ppo_8192",
+      "path": "artifacts/haic/site-map-ppo-8192/policy.pt",
+      "file_sha256": "5BCCB38610CC7F0E8B4EA2DDEAEF38CC5945B90277616366D74203CDA8BC3D26",
+      "model_state_sha256": "3AC25D988F4F56B80E79D48C85FD40E373687ABB5471644727A62A24DB7BA40E",
+      "step": 8192,
+      "classification": "오염 확인",
+      "classification_basis": ["tune selection metadata"],
+      "teacher_warmup": {"status": "not_recorded", "enabled": null, "epochs": null, "demonstration_steps": null},
+      "split_metadata": {"train_entries": 4, "train_contains_official_track_entries": false, "tune_entries": 2, "held_out_entries": 5},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {"path": null, "status": "not_recorded; null does not prove no parent"},
+      "evidence_paths": [
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-ppo-8192/policy.pt",
+        "C:/Users/koi/Coding/HAIC/training/train_policy.py#L400-L417",
+        "C:/Users/koi/Coding/HAIC/training/site_maps.py#L261-L271"
+      ]
+    },
+    {
+      "id": "site_map_pedal_ppo_seed_8101",
+      "path": "artifacts/haic/site-map-pedal-ppo-seed-8101/policy.pt",
+      "file_sha256": "36E84A3A652EFC88D41E1F2C08D33ED06F23322064FCF5760D5D44220DFF7A9F",
+      "model_state_sha256": "E13099AA4B6297FD7C66AAF3BEBD01151EA4357D3E1819D90CD7DEC68FE9CECB",
+      "step": 8192,
+      "classification": "오염 확인",
+      "classification_basis": ["tune selection metadata"],
+      "teacher_warmup": {"status": "not_recorded", "enabled": null, "epochs": null, "demonstration_steps": null},
+      "split_metadata": {"train_entries": 4, "train_contains_official_track_entries": false, "tune_entries": 2, "held_out_entries": 5},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {"path": null, "status": "not_recorded; null does not prove no parent"},
+      "evidence_paths": ["C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-pedal-ppo-seed-8101/policy.pt", "C:/Users/koi/Coding/HAIC/training/train_policy.py#L400-L417", "C:/Users/koi/Coding/HAIC/training/site_maps.py#L261-L271"]
+    },
+    {
+      "id": "site_map_pedal_ppo_v2_seed_8101",
+      "path": "artifacts/haic/site-map-pedal-ppo-v2-seed-8101/policy.pt",
+      "file_sha256": "F8A3CEA8E59794002052D4845235A83B71493E171939FC73DA1CFE6C3ED1486A",
+      "model_state_sha256": "E53F330ED2916F00086F899B2DEF1D9430139AA78492FE596424B5CAED8F1C02",
+      "step": 8192,
+      "classification": "오염 확인",
+      "classification_basis": ["tune selection metadata"],
+      "teacher_warmup": {"status": "not_recorded", "enabled": null, "epochs": null, "demonstration_steps": null},
+      "split_metadata": {"train_entries": 4, "train_contains_official_track_entries": false, "tune_entries": 2, "held_out_entries": 5},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {"path": null, "status": "not_recorded; null does not prove no parent"},
+      "evidence_paths": ["C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-pedal-ppo-v2-seed-8101/policy.pt", "C:/Users/koi/Coding/HAIC/training/train_policy.py#L400-L417", "C:/Users/koi/Coding/HAIC/training/site_maps.py#L261-L271"]
+    },
+    {
+      "id": "site_map_pedal_ppo_v3_seed_8101",
+      "path": "artifacts/haic/site-map-pedal-ppo-v3-seed-8101/policy.pt",
+      "file_sha256": "5D033CC64BAD21E38E203E12D0F7F5F54050B7C711E49D1612A5B918F60C9E88",
+      "model_state_sha256": "F73521CAE013A48C21D17CCB8484F01F1BD3B2F7A3E0C11490EC7ACF7AC70D18",
+      "step": 6144,
+      "classification": "오염 확인",
+      "classification_basis": ["tune selection metadata"],
+      "teacher_warmup": {"status": "not_recorded", "enabled": null, "epochs": null, "demonstration_steps": null},
+      "split_metadata": {"train_entries": 4, "train_contains_official_track_entries": false, "tune_entries": 2, "held_out_entries": 5},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {"path": null, "status": "not_recorded; null does not prove no parent"},
+      "evidence_paths": ["C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-pedal-ppo-v3-seed-8101/policy.pt", "C:/Users/koi/Coding/HAIC/training/train_policy.py#L400-L417", "C:/Users/koi/Coding/HAIC/training/site_maps.py#L261-L271"]
+    },
+    {
+      "id": "site_map_actuator_range_v2_ppo2048_seed8101",
+      "path": "artifacts/haic/site-map-actuator-range-v2-ppo2048-seed8101/policy.pt",
+      "file_sha256": "843D4A2E2CF97DD44192C2CE1C70053717FF5360367502FCCB0582D2B8AFCC8B",
+      "model_state_sha256": "6AF8AC2DE7DE247576AF1C23D8318E8E507D0C300361ECD426F0FD8810786F47",
+      "step": 2048,
+      "classification": "오염 확인",
+      "classification_basis": ["teacher warmup metadata", "tune selection metadata"],
+      "teacher_warmup": {"status": "recorded", "enabled": true, "epochs": 30, "demonstration_steps": 1066, "reused_from_checkpoint": null},
+      "split_metadata": {"train_entries": 4, "train_contains_official_track_entries": false, "tune_entries": 2, "held_out_entries": 5},
+      "tune_selection": {"recorded": true, "selection_metric": "finish_rate, negative_median_finished_lap_time_s, negative_p90_finished_lap_time_s, mean_progress"},
+      "parent_checkpoint": {"path": null, "status": "not_recorded; null does not prove no parent"},
+      "evidence_paths": [
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-actuator-range-v2-ppo2048-seed8101/policy.pt",
+        "C:/Users/koi/Coding/HAIC/artifacts/haic/site-map-actuator-range-v2-ppo2048-seed8101/training-result.json",
+        "C:/Users/koi/Coding/HAIC/training/train_policy.py#L400-L417",
+        "C:/Users/koi/Coding/HAIC/training/site_maps.py#L261-L271"
+      ]
+    }
+  ],
+  "sota_parent_chain_observed_at_audit": [
+    {
+      "child": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/policy.pt",
+      "parent": "artifacts/haic/site-map-official-domain-speed-reward-ppo8192-u8-lr2e6-seed8101/policy.pt",
+      "parent_sha256_observed_now": "DB34782CC5A4515E07A33FD9640383FF2A0303CC72E2B26AA15EC6D31EE443E1",
+      "parent_model_state_sha256_observed_now": "4DCE4E0281ED09CB38B5D588F0691321A023EEAAA134A752C431148C7985E823",
+      "parent_step": 15360,
+      "edge_evidence": "artifacts/haic/site-map-official-domain-obstacle-risk-ppo8192-u8-lr2e6-seed8101/experiment_config.json"
+    },
+    {
+      "child": "artifacts/haic/site-map-official-domain-speed-reward-ppo8192-u8-lr2e6-seed8101/policy.pt",
+      "parent": "artifacts/haic/site-map-official-domain-interleaved-ppo4096-lr2e6-seed8101-cpu1/policy.pt",
+      "parent_sha256_observed_now": "E1F1AF38D35AD859E3B030ED59E86776F5898BF66C13948C5DC359EF72A9D305",
+      "parent_model_state_sha256_observed_now": "02EF4A4BEE9983625756545DA93D341486F648A3DBF707A9BF0426D86284BE7F",
+      "parent_step": 8192,
+      "edge_evidence": "artifacts/haic/site-map-official-domain-speed-reward-ppo8192-u8-lr2e6-seed8101/experiment_config.json"
+    },
+    {
+      "child": "artifacts/haic/site-map-official-domain-interleaved-ppo4096-lr2e6-seed8101-cpu1/policy.pt",
+      "parent": "artifacts/haic/site-map-perception-feature-ppo-lr1e5-cont4096-seed8101/policy.pt",
+      "parent_sha256_observed_now": "B8EBA398FDDE76BB96E4C8AC7B8FBB9095359BA9C0A7887480AA824D5659C95F",
+      "parent_model_state_sha256_observed_now": "EC55C8F2174523A283E6B5DBF6DC21FE05E6BDE1EDA050E2095C840983CD6B56",
+      "parent_step": 6144,
+      "edge_evidence": "artifacts/haic/site-map-official-domain-interleaved-ppo4096-lr2e6-seed8101-cpu1/experiment_config.json"
+    }
+  ],
+  "parent_hash_limitation": "Child experiment_config files record parent paths but not parent file SHA values at training time. Parent SHA values above are current artifact hashes observed during this audit, not historical input hashes.",
+  "summary": {"clean_proven": 0, "contamination_confirmed": 6, "source_unknown_fields_are_recorded_per_item": true},
+  "work_performed": {"training": false, "evaluation": false, "code_modified": false, "SOTA_md_modified": false, "RESULTS_md_modified": false}
+}

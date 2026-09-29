@@ -1,0 +1,26 @@
+{
+  "run_id": "haic2-speed-envelope-train-activation-20260928",
+  "cycle_id": "haic2-speed-envelope-train-cycle-20260928",
+  "purpose": "TRAIN-only pixel speed-envelope action activation compared with a frozen apex actor",
+  "hypothesis_hash": "65371d5ac7d21f14367b5d5a2d98a02c195fd13dd5fd7bc358bd6520ff000030",
+  "candidate_revision": "pixel-speed-envelope-v1",
+  "control_revision": "apex-line-inside-quarter-width-v1",
+  "candidate_package_hash": "none-train-diagnostic",
+  "control_package_hash": "none-train-diagnostic",
+  "comparison_id": "haic2-speed-envelope-consumed-train-1-43-2-102",
+  "seed_ids": ["1:43", "2:102"],
+  "comparison_episode_count": 2,
+  "tool_versions": {"python": "3.11.15", "torch": "2.1.0+cpu", "gymnasium": "0.29.1"},
+  "runtime_versions": {"environment": "codex-haic-dagger-confirmation:2026-09-27", "platform": "Linux CPU"},
+  "data_ids": ["consumed-train-cells-1-43-2-102"],
+  "map_ids": ["official-track1-seed43", "official-track2-seed102"],
+  "split_ids": ["train"],
+  "resource_limits": {"timeout_seconds": 1800, "episode_max_decisions": 2000, "episodes_per_arm": 2, "arms": 2},
+  "permission_limits": {"local_only": true, "site_upload": false, "official_submission": false, "model_confirmation": false},
+  "source_hashes": {
+    "haic_agent/speed_envelope_runtime.py": "86cb2d2175e46c165acc50841d9fcdabcb5d0078cb00ef73875f6e0a94fbe4fe",
+    "haic_agent/apex_line_runtime.py": "4b5bc1ef12b751f1fd2d760029426d2398e150fb0f0d5dd554a8c7d0581e65ef",
+    "training/benchmark_corridor.py": "287c724f973cf0df65f97a6f36f087030a95ab6189531a37bedc1020a0953058",
+    "harness.config.json": "97309d9506c8c6058785492703a9e5fda42007d1d29d2f98693b71b270366ade"
+  }
+}

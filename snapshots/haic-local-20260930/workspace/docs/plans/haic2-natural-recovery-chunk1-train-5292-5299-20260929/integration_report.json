@@ -1,0 +1,33 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The simulator-privileged teacher is TRAIN-only; no pixel student ZIP or current official-site rule validation exists.",
+      "evidence_paths": [
+        "training/recovery_natural_chunk_collect.py",
+        "artifacts/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All 24 registered episodes executed, four positive-label NPZ files contained 30 finite samples with matching SHA-256 hashes and shapes, and there were zero invalid actions.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "The preregistered natural-data coverage gate passed exactly: four distinct new recovery cells across two tracks, with positive steering in one and negative steering in four cells. This permits offline student feasibility only, not candidate driving score.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-natural-recovery-chunk1-train-5292-5299-20260929/report.json"
+      ]
+    }
+  ]
+}

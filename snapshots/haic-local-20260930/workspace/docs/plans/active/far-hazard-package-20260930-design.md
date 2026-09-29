@@ -1,0 +1,9 @@
+# Frozen arrival-speed package validation
+
+The 72-episode screen found arrival_speed at 12/12 and 20.13 s versus stable 12/12 and 20.52 s. This is consumed TRAIN evidence only. Preserve both sources and the original benchmark ZIP.
+
+Package exactly the frozen FarHazardAgent(arrival_speed), copying stable ZIP dependencies and adding the frozen acceleration envelope and far hazard modules. Check every runtime source against the screen manifest. Evaluate in subprocesses importing runtime entirely from extracted ZIP before appending evaluator paths. Record archive hash, structural checks, import/reset/action latency, RSS, invalid actions, complete traces and raw hashes.
+
+This is validation of one frozen selected candidate, not a new search batch. First replay all 12 consumed TRAIN cells against exact screen trajectories. Then compare candidate and fixed original ZIP on tracks 1-3 x new held_out seeds 49300-49303 (12 cells, 24 episodes). Manifest search found no prior use of these four seeds in current v2 manifests/plans. No tuning on these outcomes during this validation. Total 36 episodes, 2 CPU, 2 GiB, 650 s; prior screen 459.82 s plus limit <= 1200 s. Comparison completion first then median finished time; report development and held-out separately. All source replay trajectories must be identical. Missing outcomes or resource failure invalidate the relevant comparison. No official-site action, upload, submission or model confirmation. Promotion requires all three gates, and current official validation remains unresolved.
+
+Use fixed60_completion registered entrypoint dispatching a separate package validation helper via settings. Formal predecessor far-hazard-20260930 and original checkpoint retained. Separate exact CLI hash approvals cite standing local authorization. No policy changes in this cycle.

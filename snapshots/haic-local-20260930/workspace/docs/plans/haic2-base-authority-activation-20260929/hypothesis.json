@@ -1,0 +1,19 @@
+{
+  "hypothesis_id": "haic2-base-action-authority-activation-20260929",
+  "source_ref": "docs/plans/haic2-base-authority-activation-20260929/design.md",
+  "rule_or_requirement": "Preserve valid completion while recovering faster driving from learned pixel gas control.",
+  "observable_information": "Rendered pixels, inherited stable pixel-driver action and learned three-class posterior at inference; matched TRAIN diagnostic telemetry during evaluation.",
+  "allowed_action_or_state_change": "Veto learned boost when inherited gas is below 0.08; otherwise add at most 0.04 gas capped at 0.28; leave coast, steer and brake rules unchanged.",
+  "expected_success_endpoint": "At least one repaired original-student failure, no lost success on 1:5021, at least 20 vetoes, at least 100 bounded boosts, zero invalid actions.",
+  "eligible_state": "TRAIN_CONSUMED_MECHANISM_DIAGNOSTIC",
+  "control": "Original frozen coast student on exactly the same four already consumed TRAIN cells.",
+  "falsifier": "No repair, lost original success, insufficient intervention counts or invalid action.",
+  "smallest_decisive_experiment": "Two arms on four consumed TRAIN cells, eight total episodes.",
+  "resource_and_risk_gate": "One registered Linux CPU local diagnostic, 900 seconds and 2,000 decisions per episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-base-authority-activation-20260929/design.md",
+    "training/base_authority_probe.py",
+    "haic_agent/pixel_coast_student_runtime.py",
+    "docs/plans/haic2-coast-class-driving-train-20260929/outcome.md"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "run_id": "launch-preview-selected-tune-7040-7043-20260929",
+  "cycle_id": "launch-preview-selected-tune-cycle-20260929",
+  "purpose": "Direct fresh exact-ZIP comparison of launch plus steering against current selected full-road guard",
+  "hypothesis_hash": "c78aa507c5f7fb8e2a87484975a92f435228450b9c9f40c071e5e736bdd6e120",
+  "candidate_revision": "launch-preview-steer-only-v3-exact-zip",
+  "control_revision": "selected-full-road-guard-5c55670a",
+  "candidate_package_hash": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "launch-preview-vs-selected-tune-7040-7043",
+  "seed_ids": [
+    "1:7040",
+    "1:7041",
+    "1:7042",
+    "1:7043",
+    "2:7040",
+    "2:7041",
+    "2:7042",
+    "2:7043",
+    "3:7040",
+    "3:7041",
+    "3:7042",
+    "3:7043"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "fresh-tune-seeds7040-7043"
+  ],
+  "map_ids": [
+    "official-track1-seed7040-7043",
+    "official-track2-seed7040-7043",
+    "official-track3-seed7040-7043"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2,
+    "cpu_count": 2,
+    "memory_bytes": 2147483648
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/launch-preview-selected-control-audit-r1.md": "4b13e0f98b85a23bfffce0ef88de287994a97124b08f883a12519cb60c51a323",
+    "training/compare_launch_surge_package.py": "642d90f9ac452780304521ee87edf7b9da172d3efa21e30e0ad87ae373ab388d",
+    "haic_agent/launch_preview_runtime.py": "83294dd08cccd695b8c8fdd4b856be46a3729f6a4576c07b238abff17d8c2d9d",
+    "haic_research/config.py": "bb0a2dc7412422c199abd8d9551b239d98098ae697ff8c5991a2491ee1fa7a5e",
+    "haic_research/commands.py": "e5c8d79378646ecfadb3920a030da80cad3539313250fe760ddf1e996d24e59f",
+    "harness.config.json": "8801301a5bc7a84e7866fe993ac54b3590d17bf207a77875740f3641fb74db0a",
+    "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/submission.zip": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40"
+  }
+}

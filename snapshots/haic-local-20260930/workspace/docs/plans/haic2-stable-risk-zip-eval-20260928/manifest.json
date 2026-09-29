@@ -1,0 +1,62 @@
+{
+  "run_id": "haic2-stable-risk-zip-confirmation-20260928",
+  "cycle_id": "haic2-stable-risk-zip-confirmation-cycle-20260928",
+  "purpose": "Exact extracted-ZIP paired local confirmation on 12 fresh cells",
+  "hypothesis_hash": "03565a1cf11495993cbae821b98af89d65ab2d63998187660b35b3905e6ab8c7",
+  "candidate_revision": "stable-risk-exact-zip-7f9ef05e",
+  "control_revision": "full-road-guard-exact-zip-5c55670a",
+  "candidate_package_hash": "7f9ef05e1e3366969f2d751191e926ad4cd9a517b376c8218bc1fbe61cb111f4",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "tool_versions": {
+    "python": "3.11.15"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "new-zip-exact-confirmation-seeds336-339"
+  ],
+  "map_ids": [
+    "official-track1-seed336-339",
+    "official-track2-seed336-339",
+    "official-track3-seed336-339"
+  ],
+  "split_ids": [
+    "confirmation"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 12,
+    "arms": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/evaluate_zip_pair.py": "1c387641ecee0efee900c161da7f89a7d9fdfd266b538bdcef80df9e1cf070c6",
+    "training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "haic_research/config.py": "af77840b29585cc47320a4775659b55db815478dd7954a1e44bcd0d8271bd5bd",
+    "harness.config.json": "b0458e53b1fb700a4effc4dcb926579b47f45963ecd4186e1f370c81fee6aca3"
+  },
+  "comparison_id": "haic2-stable-risk-zip-confirmation-336-339",
+  "seed_ids": [
+    "1:336",
+    "1:337",
+    "1:338",
+    "1:339",
+    "2:336",
+    "2:337",
+    "2:338",
+    "2:339",
+    "3:336",
+    "3:337",
+    "3:338",
+    "3:339"
+  ],
+  "comparison_episode_count": 12
+}

@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "launch-preview-speed-gate-consumed-activation-20260929",
+  "source_ref": "docs/plans/active/launch-preview-speed-gate-r4.md",
+  "rule_or_requirement": "Local candidates must finish the qualified line on at least as many matched cells as the selected control before a faster lap can justify advancement.",
+  "observable_information": "At inference, four grayscale frames and pixel-only road, speed, and obstacle diagnostics; evaluator records finish, action, speed, road contact, and runtime.",
+  "allowed_action_or_state_change": "Keep fixed opening surge; suppress anticipatory steering only when image-estimated speed exceeds 45, otherwise retain the old preview action.",
+  "expected_success_endpoint": "On consumed diagnostic 7040-7043, finish both 3:7040 and 3:7041 while preserving opening launch and valid actions; no fresh performance claim.",
+  "eligible_state": "CONSUMED_TUNE_DIAGNOSTIC_TRACKS_1_2_3_SEEDS_7040_7043",
+  "control": "Selected full-road-guard ZIP SHA-256 5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40.",
+  "falsifier": "Either 3:7040 or 3:7041 candidate nonfinish, lost opening acceleration, invalid action, ZIP mismatch, or resource breach.",
+  "smallest_decisive_experiment": "Exact extracted ZIP comparison on the already consumed 12 cells 7040-7043, focused on 3:7040 and 3:7041 actual finish crossings.",
+  "resource_and_risk_gate": "Local diagnostic only, 2 CPUs, 2 GiB, 1800 seconds, 2000 decisions/cell; new 7052-7055 tune remains closed until this gate.",
+  "source_paths": [
+    "docs/plans/active/launch-preview-speed-gate-r4.md",
+    "training/compare_launch_surge_package.py",
+    "artifacts/haic-research-v2/launch-preview-speed-gate-package-20260929/package_manifest.json"
+  ]
+}

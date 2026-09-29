@@ -1,0 +1,3 @@
+# Consumed TRAIN road-memory activation: ADVANCE
+
+The frozen pixel-road direction-memory candidate changed 29 steering actions, retained all six control finishes and had zero collisions or invalid actions. Longest low-visibility streaks on the three selected slow-loss cells fell 48¡æ7 (2:5053), 38¡æ12 (2:5054) and 46¡æ10 (3:5055) decisions. Lap times fell by 3.72, 4.42 and 3.90 s on those cells. The three ordinary 5052 cells had zero action changes and identical laps. This meets the preregistered activation gate. These cells were already consumed TRAIN, so the result is diagnostic only. Advance to a separately registered fresh matched TRAIN comparison; no package, release or site action.

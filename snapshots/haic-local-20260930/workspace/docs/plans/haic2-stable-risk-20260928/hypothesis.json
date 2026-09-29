@@ -1,0 +1,14 @@
+{
+  "hypothesis_id": "haic2-stable-road-clearance-speed-train-20260928",
+  "source_ref": "docs/plans/haic2-stable-risk-20260928/design.md",
+  "rule_or_requirement": "A pixel-only faster controller must preserve valid completion before shorter laps count.",
+  "observable_information": "Four grayscale frames, contiguous visible asphalt clearance at two near rows, road centers, obstacle pixels, rendered HUD speed, and the fixed stable actor action.",
+  "allowed_action_or_state_change": "Raise the stable actor's gas to a fixed 0.20 floor only on clear, wide, non-approaching-bend road with small steer and no brake.",
+  "expected_success_endpoint": "TRAIN action activation without a lost completion, followed by a four-direction fresh tune batch maintaining safety-control finish count and reducing median lap time.",
+  "eligible_state": "TRAIN_MECHANISM_ACTIVATION_ONLY",
+  "control": "Exact-hash selected full-road-guard actor on the same two consumed TRAIN cells.",
+  "falsifier": "No gas-action change on either cell, invalid actions, or candidate failure where the control finishes.",
+  "smallest_decisive_experiment": "Paired TRAIN 1/43 and 2/102, two arms, 2000 decisions per cell, full traces and risk-clear decision counts.",
+  "resource_and_risk_gate": "Linux Python 3.11 CPU within 1800 seconds; no tune, held-out, confirmation, blind, package, or website action.",
+  "source_paths": ["docs/plans/haic2-stable-risk-20260928/design.md", "haic_agent/stable_risk_envelope_runtime.py", "training/benchmark_corridor.py", "harness.config.json"]
+}

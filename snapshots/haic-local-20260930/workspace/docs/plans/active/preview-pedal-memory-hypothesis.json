@@ -1,0 +1,18 @@
+{
+  "hypothesis_id": "preview-pedal-memory-20260929",
+  "source_ref": "docs/plans/active/preview-pedal-memory-design-20260929.md",
+  "rule_or_requirement": "User requests visible-map acceleration, short anticipatory braking and faster complete laps.",
+  "observable_information": "Rendered road corridor and obstacle, current HUD, own prior pedals.",
+  "allowed_action_or_state_change": "Four parent pedal mechanisms with common constraint memory, bounded missing-geometry grace and sustained exit release. Combined repair, not isolated attribution.",
+  "expected_success_endpoint": "6/6 control finishes preserved with lower finished median; target half time remains distinct.",
+  "eligible_state": "CONSUMED_TRAIN_PREVIEW_PEDAL",
+  "control": "Unchanged preview_row_repair on matched6 cells.",
+  "falsifier": "No pedal activation, lost completion, no time improvement, invalid action or state leakage.",
+  "smallest_decisive_experiment": "5arms x tracks1-3 x seeds38300,38302 =30episodes.",
+  "resource_and_risk_gate": "2CPU2GiB1200s run budget;1200decision episodes; profile outer1800s; local only.",
+  "source_paths": [
+    "docs/plans/active/preview-pedal-memory-design-20260929.md",
+    "haic_agent/preview_pedal_memory_runtime.py",
+    "training/fixed60_completion.py"
+  ]
+}

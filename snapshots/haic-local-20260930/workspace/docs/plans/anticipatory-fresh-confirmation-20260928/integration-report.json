@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local diagnostic used pixel-only inference and an exact-hash checkpoint in Linux CPU; it did not validate the candidate as an official submission package.",
+      "evidence_paths": ["runs/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/run_manifest.json", "artifacts/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "The anticipatory bend wrapper changed steering in 91 decisions across the twelve new cells and produced zero invalid actions.",
+      "evidence_paths": ["artifacts/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/report.json", "tests/test_benchmark_corridor.py"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Both candidate and selected control finished 12/12 with no collisions or damage, but the candidate's median finished lap was 25.01 s versus control 24.40 s. Completion tied, so the slower candidate fails the registered tie breaker.",
+      "evidence_paths": ["artifacts/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/run_manifest.json", "artifacts/haic-research-v2/anticipatory-bend-independent-confirmation-20260928/report.json"]
+}

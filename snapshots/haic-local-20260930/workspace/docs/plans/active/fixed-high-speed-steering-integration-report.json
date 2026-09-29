@@ -1,0 +1,32 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json",
+    "docs/plans/active/fixed-high-speed-steering-20260929.md"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Local TRAIN diagnostic with pixel-only inference and unchanged environment; not a packaged candidate or current official-source certification.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "UNKNOWN",
+      "rationale": "All prefixes match and fixed governor is active; four arms change steering, but review found clipping residual in pursuit, requiring same-cell corrected-arm replay.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Zero qualified finishes in every arm. Damping has 3/6 ordinary completions with high speed, but road constraints fail. No slowing, threshold relaxation, or promotion.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-steering-train-20260929/report.json"
+      ]
+    }
+  ]
+}

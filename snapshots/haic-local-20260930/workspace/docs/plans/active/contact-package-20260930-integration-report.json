@@ -1,0 +1,43 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/contact-package-20260930/report.json",
+    "artifacts/haic-research-v2/contact-package-20260930/batch_audit.json",
+    "docs/experiments/contact-continuity-20260930.md",
+    "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "PASS",
+      "rationale": "Frozen ZIP static checks, isolated pixel-only inference, CPU resource limits pass; current public repository audit applies. Website unavailable; no externalaction authorized.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/contact-package-20260930/report.json",
+        "artifacts/haic-research-v2/contact-package-20260930/batch_audit.json",
+        "docs/experiments/contact-continuity-20260930.md",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "24 actual candidate action changes onheldout; exact12TRAIN replay and all3sameprefix verified.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/contact-package-20260930/report.json",
+        "artifacts/haic-research-v2/contact-package-20260930/batch_audit.json",
+        "docs/experiments/contact-continuity-20260930.md",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "PASS",
+      "rationale": "Candidate12/12 vs current11/12, no lost finish. Historical12/12 tie and all12lapsfaster. Completion-first improvement; current commonlaps median40ms slower, no paired speedclaim.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/contact-package-20260930/report.json",
+        "artifacts/haic-research-v2/contact-package-20260930/batch_audit.json",
+        "docs/experiments/contact-continuity-20260930.md",
+        "artifacts/haic-research-v2/far-hazard-package-20260930/official_source_audit.json"
+      ]
+    }
+  ]
+}

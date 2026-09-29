@@ -1,0 +1,56 @@
+{
+  "run_id": "launch-preview-7040-boundary-trace-20260929",
+  "cycle_id": "launch-preview-7040-boundary-trace-cycle-20260929",
+  "purpose": "Evaluation-only wrapper-boundary action trace on consumed candidate-only failure track 3 seed 7040",
+  "hypothesis_hash": "de8a617fbf449598980755eba5caef5d7a0b570eb3592d5a51f416679a721290",
+  "candidate_revision": "launch-preview-steer-only-v3-exact-zip",
+  "control_revision": "selected-full-road-guard-5c55670a",
+  "candidate_package_hash": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "launch-preview-consumed-3-7040-boundary-trace",
+  "seed_ids": [
+    "3:7040"
+  ],
+  "comparison_episode_count": 1,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-diagnostic-track3-seed7040"
+  ],
+  "map_ids": [
+    "official-track3-seed7040"
+  ],
+  "split_ids": [
+    "tune"
+  ],
+  "resource_limits": {
+    "arms": 2,
+    "episode_max_decisions": 2000,
+    "episodes_per_arm": 1,
+    "timeout_seconds": 600,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/launch-preview-7040-cause-diagnostic-r1.md": "be7a1cf306f88ca255c6807d4233651be83fc33463043edd25087724c0c65932",
+    "haic_research/config.py": "7d0a9e725fab91d6bd90e7b74890184c3ecccc9261d3939b17b3c7ebef90751e",
+    "haic_research/commands.py": "e5c8d79378646ecfadb3920a030da80cad3539313250fe760ddf1e996d24e59f",
+    "harness.config.json": "875cf9ee9a12efcda5881c696b1987c34b613339faf90b63a37f0832c28fd2ce",
+    "artifacts/haic-research-v2/launch-preview-steer-only-package-20260929/submission.zip": "533c3a74f43313ace925998830d3c9b948a2185d4866e761025978f44c1542d7",
+    "artifacts/haic-research-v2/full-road-guard-candidate-20260928/submission-full-road-guard.zip": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+    "training/trace_launch_preview_failure.py": "f341d1798d642bb27fda7bcf1d11e89a7ed4c3fb80fa4255a04c6128559c69e0"
+  }
+}

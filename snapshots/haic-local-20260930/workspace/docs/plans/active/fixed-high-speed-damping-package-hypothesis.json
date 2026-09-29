@@ -1,0 +1,17 @@
+{
+  "hypothesis_id": "fixed-high-speed-damping-package-20260929",
+  "source_ref": "docs/plans/active/fixed-high-speed-damping-package-20260929.md",
+  "rule_or_requirement": "User accepts measured excursions and requests original high-speed damping code as a local submission ZIP.",
+  "observable_information": "Four image frames, pixel road centers and HUD speed; evaluator-only raw road membership and speed are never agent inputs.",
+  "allowed_action_or_state_change": "Package exact tested damping code with root Agent entry; static checks and six consumed TRAIN exact-package replays.",
+  "expected_success_endpoint": "Valid local ZIP imports in Linux and reproduces all original damping actions/trajectories and 3/6 completions.",
+  "eligible_state": "USER_REQUESTED_LOCAL_PACKAGE_IDENTITY_CHECK",
+  "control": "Immutable original damping traces on tracks1-3 seeds38200-38201; not new performance comparison.",
+  "falsifier": "Any source/hash mismatch, static violation, isolated import failure, action divergence, dropped failed cell or resource violation.",
+  "smallest_decisive_experiment": "Create minimal five-file ZIP and six package-identity replays; no policy change or optimization.",
+  "resource_and_risk_gate": "2 CPU,2GiB,600s,six episodes max1200 decisions; no upload or official submission.",
+  "source_paths": [
+    "docs/plans/active/fixed-high-speed-damping-package-20260929.md",
+    "training/package_fixed_high_speed_damping.py"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "evidence_paths": [
+    "artifacts/haic-research-v2/fixed-high-speed-damping-package-20260929/package_report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "Static ZIP checks and Linux replays passed. Current website unavailable. Import timer excludes NumPy cold initialization and is only warm-dependency import evidence.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-damping-package-20260929/package_report.json"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All six extracted-ZIP action/pose/outcome sequences exactly match original fixed60 damping; source/archive hashes and reset/act limits checked.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-damping-package-20260929/package_report.json"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "UNKNOWN",
+      "rationale": "User requested local code delivery accepting observed short excursions. Original 3/6 completions reproduced; no independent score improvement or SOTA claim.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/fixed-high-speed-damping-package-20260929/package_report.json"
+      ]
+    }
+  ]
+}

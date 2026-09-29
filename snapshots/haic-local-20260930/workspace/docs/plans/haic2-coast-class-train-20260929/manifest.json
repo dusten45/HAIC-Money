@@ -1,0 +1,71 @@
+{
+  "run_id": "haic2-coast-class-train-20260929",
+  "cycle_id": "haic2-coast-class-train-cycle-20260929",
+  "purpose": "TRAIN-only three-class pixel speed student from successful control shadow teacher labels",
+  "hypothesis_hash": "5bd9e2d9baea9ebf98d9d9014702b0f73652d0204659977ae2764c5083474922",
+  "candidate_revision": "pixel-coast-class-student-v1-train-only",
+  "control_revision": "stable-risk-envelope-31eed1bc",
+  "candidate_package_hash": "none-training-checkpoint",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-coast-class-train-5016-5019",
+  "seed_ids": [
+    "1:5016",
+    "1:5017",
+    "1:5018",
+    "1:5019",
+    "2:5016",
+    "2:5017",
+    "2:5018",
+    "2:5019",
+    "3:5016",
+    "3:5017",
+    "3:5018",
+    "3:5019"
+  ],
+  "comparison_episode_count": 12,
+  "tool_versions": {
+    "python": "3.11.15",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "newly-assigned-train-seeds5016-5019"
+  ],
+  "map_ids": [
+    "official-track1-seed5016-5019",
+    "official-track2-seed5016-5019",
+    "official-track3-seed5016-5019"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "timeout_seconds": 1800,
+    "episode_max_decisions": 2000,
+    "control_episodes": 12,
+    "validation_seed_per_track": 5019
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "training/coast_class_distill.py": "9fb35d4243c8eabe66aac9cd18d4cf871f1baa6fb24c922b436a1ad319915e5f",
+    "haic_agent/pixel_coast_student_runtime.py": "37049010a75483be52af1c0d97ea3ad51307e68ec50fbe1ee9594daadfb18491",
+    "training/safe_speed_distill.py": "1afd118fe504321795c0a6d35d7a13acbbf3c896f571f389c838508642788c42",
+    "haic_agent/pixel_speed_student_runtime.py": "4349ef067be4351fdfbf665cc3b05094385281a322a7cfbc5912c110ed857367",
+    "training/geometry_speed_teacher.py": "66f6941a07cff534a51fe4f53d3c39808241dc034bcd4f7515328d994429d9a7",
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "training/env_factory.py": "c0241dc7c6b4f4fae0c646d748e4ffade228c44f9bfc3a93b242528891a0a866",
+    "haic_research/config.py": "c76edf3978a6a5c40b4a475c5bf8ff468cf9e93fef966047f893db9fa9c4aca6",
+    "harness.config.json": "fe2d621e87450c4a5c238ecf0e274c152cabb39abae9ca621bc08e40e24184d5"
+  }
+}

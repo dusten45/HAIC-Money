@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "NOT_APPLICABLE",
+      "rationale": "This is a TRAIN-only privileged teacher. Geometry and simulator speed are intentionally used for demonstration feasibility and the teacher cannot be a submitted inference agent.",
+      "evidence_paths": ["training/geometry_speed_teacher.py", "artifacts/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "Across two TRAIN cells, the teacher changed gas 299 times and added braking 41 times while preserving the inherited pixel driver's steering. Both cells finished and no invalid action occurred.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Teacher and control each finished 2/2; paired laps were 23.38 versus 23.78 seconds and 21.86 versus 22.56 seconds. Teacher median 22.62 seconds improved 2.37% over control 23.17 seconds, below the preregistered 3% feasibility threshold. Teacher runs do not count as candidate completion rates.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/run_manifest.json", "artifacts/haic-research-v2/haic2-geometry-speed-teacher-train-feasibility-20260929/report.json"]
+}

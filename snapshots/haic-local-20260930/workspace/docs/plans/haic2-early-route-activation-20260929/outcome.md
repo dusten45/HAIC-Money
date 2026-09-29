@@ -1,0 +1,5 @@
+# Common-prefix fast continuation: consumed TRAIN activation
+
+The two frozen pixel arms executed identical steer, gas and brake for the first 50 decisions on all six matched consumed TRAIN cells (tracks 1-3 x seeds 5044 and 5047). After the prefix, the fixed fast continuation changed **557** actions. It validly finished **6/6**, versus unchanged visual mode switch **3/6**. It repaired all three 5044 mode-switch failures and preserved all three 5047 successes. Candidate had zero collisions and invalid actions; control had ten collisions. On the three jointly finished 5047 cells the candidate was slower by 0.64-1.02 seconds, so this diagnostic does not demonstrate a speed gain.
+
+The preregistered activation gate passed. Decision: **ADVANCE** only to a separately registered fresh TRAIN matched comparison, with the first-50 rule unchanged. These repeated cells are consumed TRAIN diagnostics and cannot be counted as fresh candidate completion evidence. Exact candidate ZIP compliance remains UNKNOWN. No release, upload, model confirmation or submission.

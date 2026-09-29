@@ -1,0 +1,70 @@
+{
+  "run_id": "out-in-out-fast-probe-20260929",
+  "cycle_id": "out-in-out-fast-probe-20260929-cycle",
+  "purpose": "User-directed out-in-out racing line and faster pedals",
+  "hypothesis_hash": "ddd9bd6388369685d7f6219458b77c4ded4d555b3a09bd00764d857a05d12324",
+  "candidate_revision": "out-in-out-r1",
+  "control_revision": "preview-row-repair-r3",
+  "candidate_package_hash": "059c4c76c6a1ebe5697a25d8a9171a3af55d9c9597147f5df85c2ca9c0ae2666",
+  "control_package_hash": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+  "comparison_id": "out-in-out-fast-probe-20260929",
+  "seed_ids": [
+    "1:38300",
+    "1:38302",
+    "2:38300",
+    "2:38302",
+    "3:38300",
+    "3:38302"
+  ],
+  "comparison_episode_count": 6,
+  "tool_versions": {
+    "python": "3.11",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1"
+  },
+  "runtime_versions": {
+    "environment": "codex-haic-dagger-confirmation:2026-09-27",
+    "platform": "Linux CPU"
+  },
+  "data_ids": [
+    "consumed-train-38300-38302"
+  ],
+  "map_ids": [
+    "official-track1-seed38300",
+    "official-track1-seed38302",
+    "official-track2-seed38300",
+    "official-track2-seed38302",
+    "official-track3-seed38300",
+    "official-track3-seed38302"
+  ],
+  "split_ids": [
+    "train"
+  ],
+  "resource_limits": {
+    "arms": 6,
+    "episodes_per_arm": 6,
+    "episode_max_decisions": 1200,
+    "timeout_seconds": 1800,
+    "memory_bytes": 2147483648,
+    "cpu_count": 2
+  },
+  "permission_limits": {
+    "local_only": true,
+    "site_upload": false,
+    "official_submission": false,
+    "model_confirmation": false
+  },
+  "source_hashes": {
+    "docs/plans/active/out-in-out-fast-20260929.md": "5f76cc086172748d8fc319196436f7fecbb5c77c3df3f292dc126706ffd02104",
+    "haic_agent/out_in_out_runtime.py": "059c4c76c6a1ebe5697a25d8a9171a3af55d9c9597147f5df85c2ca9c0ae2666",
+    "training/fixed60_completion.py": "15d3d49f4206ef1ddb546c7951e44c83cb90ae8609f7b7533b42b30f7b96b27b",
+    "docs/plans/active/fixed60-completion-settings.json": "2c63133ea2021c836dbaa5639609d01075042010b0202579961c7ce9bc251f45",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_research/config.py": "c74acad3c6fd80c109d33843c14bbe82f63507044aa2ab219606b40047a64bf6",
+    "harness.config.json": "9fad993389c13d3a595c8af5ed907e32552d30792ad4af118c61fb351ba0e1d8"
+  }
+}

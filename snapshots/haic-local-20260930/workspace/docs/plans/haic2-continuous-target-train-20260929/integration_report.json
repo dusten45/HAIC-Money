@@ -1,0 +1,34 @@
+{
+  "evidence_paths": [
+    "runs/haic-research-v2/haic2-continuous-target-train-20260929/run_manifest.json",
+    "artifacts/haic-research-v2/haic2-continuous-target-train-20260929/report.json"
+  ],
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "TRAIN-only shadow teacher with pixel-only student checkpoint; no exact submission ZIP static or runtime compliance check.",
+      "evidence_paths": [
+        "training/continuous_target_distill.py",
+        "haic_agent/pixel_target_speed_runtime.py"
+      ]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "FAIL",
+      "rationale": "Target variation activated (235 low-target train labels, 84 validation labels, 95 low predictions), but validation MAE 2.2134 improved only 9.14% over constant-60 baseline MAE 2.4362, below preregistered 10% requirement. Cautious-target MAE was 7.04.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-continuous-target-train-20260929/report.json",
+        "docs/plans/haic2-continuous-target-train-20260929/design.md"
+      ]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "NOT_APPLICABLE",
+      "rationale": "Teacher-label training only; no student closed-loop driving or candidate completion measured.",
+      "evidence_paths": [
+        "artifacts/haic-research-v2/haic2-continuous-target-train-20260929/report.json"
+      ]
+    }
+  ]
+}

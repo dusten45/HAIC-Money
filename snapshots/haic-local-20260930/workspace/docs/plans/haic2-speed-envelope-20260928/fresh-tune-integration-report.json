@@ -1,0 +1,23 @@
+{
+  "gate_results": [
+    {
+      "name": "rule_compliance",
+      "status": "UNKNOWN",
+      "rationale": "The local Linux CPU diagnostic used grayscale-pixel runtime agents and fixed checkpoint hashes, but no official server or submission-package validation was conducted.",
+      "evidence_paths": ["runs/haic-research-v2/haic2-four-direction-fresh-tune-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-four-direction-fresh-tune-20260928/report.json"]
+    },
+    {
+      "name": "mechanism_activation",
+      "status": "PASS",
+      "rationale": "All four mechanisms changed actions across the 12 tune cells: speed envelope 1699, exit burst 983, approach brake 41, outer entry 142 decisions. No invalid actions occurred.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-four-direction-fresh-tune-20260928/report.json"]
+    },
+    {
+      "name": "competitive_or_product_outcome",
+      "status": "FAIL",
+      "rationale": "Selected safety control finished 10/12; speed envelope finished 7/12, exit burst 6/12, approach brake 9/12, and outer entry 9/12. Faster finished-lap medians cannot overcome lower completion under the preregistered ordering. No candidate qualifies for held-out or release.",
+      "evidence_paths": ["artifacts/haic-research-v2/haic2-four-direction-fresh-tune-20260928/report.json"]
+    }
+  ],
+  "evidence_paths": ["runs/haic-research-v2/haic2-four-direction-fresh-tune-20260928/run_manifest.json", "artifacts/haic-research-v2/haic2-four-direction-fresh-tune-20260928/report.json"]
+}

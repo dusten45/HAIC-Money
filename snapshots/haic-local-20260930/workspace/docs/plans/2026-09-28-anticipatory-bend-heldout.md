@@ -1,0 +1,9 @@
+# Anticipatory bend: unchanged-source held-out check
+
+The fixed `anticipatory-bend-neutral-steer-20260928` candidate from [the tune plan](2026-09-28-anticipatory-bend-fresh-tune.md) finished 12/12 versus control 12/12 on tracks 1–3 × tune seeds 300–303 in Linux Python 3.11 CPU. Median finished lap was 24.87 versus 25.06 s, candidate won 10 of 12 matched cells, and collisions were 0 versus 5. This was a local tune result, not an official score. Its source hash was stable throughout the run.
+
+Freeze `haic_agent/anticipatory_bend_runtime.py` at SHA-256 `27459733EDF6D845B61296F68FA82EB17AF9672E2A6C88337FF8AB6D9A2F91D2` and the control package at SHA-256 `5C55670AB5AEF4BF64115909792650A5E76BC3576A64F3AAEB3780EFABC18E40`. The intervention changes only steering on a confident early bend cue and returns to the base actor when it begins turning. No coefficient or threshold may be changed after this point for this held-out run.
+
+Register tracks 1, 2, and 3 × seeds 304–307 as **held_out**, 12 cells per arm with alternating order. These identities were absent from the v2 run manifests and plan documents at registration. Each cell uses the same simulator, 2,000-decision limit, Linux Python 3.11 CPU runtime, and valid finish-line criterion. A candidate-only nonfinish or a lower completion count is a failure regardless of lap time. At tied completion, compare median finished lap, incomplete progress, P90 finished lap, collisions, damage, then p95 act latency. Record activation count, invalid actions, hashes, and source drift. Cap the diagnostic at 1,800 wall-clock seconds. No site upload or model confirmation is authorized.
+
+Reserve tracks 1–3 × seeds 308–311 for **confirmation** only if this fixed source passes held-out and a byte-fixed candidate ZIP is created. Do not inspect those cells during adjustment. The current test remains a source-level local diagnostic; package and official rule-compliance gates are unknown until separately checked.

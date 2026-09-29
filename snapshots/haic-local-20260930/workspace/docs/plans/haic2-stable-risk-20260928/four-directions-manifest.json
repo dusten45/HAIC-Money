@@ -1,0 +1,27 @@
+{
+  "run_id": "haic2-stable-four-direction-train-screen-20260928",
+  "cycle_id": "haic2-stable-four-direction-train-cycle-20260928",
+  "purpose": "Four independent stable-base pixel mechanism directions versus selected control on consumed TRAIN cells",
+  "hypothesis_hash": "e3967c2bcacbd40d5138a40bf9a8b7b4f8a12578a13529dc81ad69311b7f1ffa",
+  "candidate_revision": "four-stable-base-pixel-directions-v1",
+  "control_revision": "selected-full-road-guard-3ceb5ebb",
+  "candidate_package_hash": "none-train-diagnostic",
+  "control_package_hash": "5c55670ab5aef4bf64115909792650a5e76bc3576a64f3aaeb3780efabc18e40",
+  "comparison_id": "haic2-stable-four-direction-train-1-43-2-102",
+  "seed_ids": ["1:43", "2:102"],
+  "comparison_episode_count": 2,
+  "tool_versions": {"python": "3.11.15", "torch": "2.1.0+cpu", "gymnasium": "0.29.1"},
+  "runtime_versions": {"environment": "codex-haic-dagger-confirmation:2026-09-27", "platform": "Linux CPU"},
+  "data_ids": ["consumed-train-cells-1-43-2-102"],
+  "map_ids": ["official-track1-seed43", "official-track2-seed102"],
+  "split_ids": ["train"],
+  "resource_limits": {"timeout_seconds": 1800, "episode_max_decisions": 2000, "episodes_per_arm": 2, "arms": 5},
+  "permission_limits": {"local_only": true, "site_upload": false, "official_submission": false, "model_confirmation": false},
+  "source_hashes": {
+    "haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "haic_agent/stable_phase_candidates_runtime.py": "92ab9e574a604af7268af82e122bad606593a30dd4ca839ae8f8dd127352d421",
+    "training/benchmark_corridor.py": "bf804c9e216ce46976dde248a33f455b39e9673d0cb64eb0c10b88eaaf185cd3",
+    "harness.config.json": "821825c3fe9a1a9c0b40853b7666d1fb3300d8a89f48dcdb6c2341b0998712ad",
+    "haic_research/config.py": "6ef6bbaa72f37570d8a11e459665de6af81d9ed59666a89dd336d9ec1fa63231"
+  }
+}

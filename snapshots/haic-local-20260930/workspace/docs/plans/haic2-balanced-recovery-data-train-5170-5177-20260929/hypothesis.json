@@ -1,0 +1,20 @@
+{
+  "hypothesis_id": "haic2-balanced-recovery-data-coverage-20260929",
+  "source_ref": "docs/plans/haic2-balanced-recovery-data-train-5170-5177-20260929/design.md",
+  "rule_or_requirement": "A pixel-only recovery student needs independent TRAIN cells with natural and both induced recovery directions before whole-cell validation.",
+  "observable_information": "Four-frame pixels and inherited pixel-driver action at teacher intervention, plus TRAIN-only privileged teacher steer as label; cell and arm are partition metadata.",
+  "allowed_action_or_state_change": "Collect and hash TRAIN-only unpulsed, left-pulse and right-pulse recovery labels; no eligible runtime student or submission candidate yet.",
+  "expected_success_endpoint": "All 72 episodes valid; >=20 independent recovery cells, >=20 per-direction pulse-to-opposite-teacher cells, >=4 natural control recovery cells and zero invalid actions.",
+  "eligible_state": "TRAIN_ONLY_BALANCED_RECOVERY_DATA_COLLECTION",
+  "control": "Exact bend-rebound ZIP SHA-256 8f7e87c29e92caf49db0070842dbc30f21a20ff98a3f48bf17d9599490559e49 as inherited driver in all arms; unpulsed natural arm per cell.",
+  "falsifier": "Missing/invalid data or file hash, invalid action, too few independent recovery cells, either directional transition coverage below 20 cells or fewer than four unpulsed recovery cells.",
+  "smallest_decisive_experiment": "Fresh TRAIN tracks 1-3 x seeds 5170-5177, three teacher-only arms per cell, 72 episodes with hashed pixel/teacher labels.",
+  "resource_and_risk_gate": "One registered Linux CPU local collection capped at 3,600 seconds, two cores, 2 GiB and 2,000 decisions/episode; no reserved split or external action.",
+  "source_paths": [
+    "docs/plans/haic2-balanced-recovery-data-train-5170-5177-20260929/design.md",
+    "training/recovery_perturbation_probe.py",
+    "training/recovery_teacher_probe.py",
+    "haic_agent/wide_speed_batch_runtime.py",
+    "docs/plans/haic2-recovery-transition-train-5160-5161-20260929/outcome.md"
+  ]
+}
