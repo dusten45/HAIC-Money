@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "name": "latched-clear-straight-sustain-v2",
+  "status": "preregistered",
+  "registered_at": "2026-09-29T20:16:00+09:00",
+  "purpose": "obstacle-latch-gated conservative clear-straight pace diagnostic",
+  "source_commit": "995f200",
+  "predecessor": "clear-straight-sustain-pace-v1",
+  "predecessor_result": "experiments/clear-straight-sustain-pace-v1-result.json",
+  "evidence_ledger": "experiments/procedural-map-pace-evidence-v1.json",
+  "control": {
+    "controller": "agent._LaunchThrottleController",
+    "agent_git_blob": "de1b6bff193ec511516a4095b94b0cf46e1628c7",
+    "agent_sha256": "7afde5fd71d1657c113c4021cc922d03f5719806bc501f77501ca3d39f40d749",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "factor": {
+    "candidate_controller": "agent._LatchedClearStraightSustainController",
+    "behavioral_change": "Extend the already emitted launch maximum0.11 to the inherited mid and low pedal branches only after every clear-straight guard passes and no obstacle-side latch remains.",
+    "exact_predicate": "base gas is positive, base brake is zero, exact straight is true, current obstacle is None, abs(previous steer)<=0.07, and _obstacle_side==0.0 after inherited detector state update",
+    "control_mid_low_gas": [0.06666666666666667, 0.04166666666666667],
+    "candidate_mid_low_gas": [0.07333333333333333, 0.04583333333333334],
+    "full_gas_output": 0.11,
+    "persistent_state_added": false,
+    "seed_or_track_condition": false,
+    "tuning_grid": false
+  },
+  "frozen": [
+    "cruise48, target speed and EMA, curve formula/floor, obstacle targets, parent compound target30 and every brake threshold/value",
+    "MAX_GAS0.08, existing maximum emitted gas0.11 and MAX_BRAKE0.28",
+    "obstacle detector, side/miss latch and miss limit4; the candidate only reads the inherited post-update latch",
+    "straight classifier, steering, slew, urgency, preview, obstacle priority, invalid/lost behavior and all controller state",
+    "model.pt, DrQ, explicit export, HAIC policy, official environment, active padding study, user artifacts and root submission.zip"
+  ],
+  "acceptance": {
+    "synthetic": [
+      "Exact and nextafter speed boundaries40,45 and49: full branch and overspeed brake exact; only mid/low clear-straight gas changes to registered values.",
+      "Full act closes both signs of previous-steer exact0.07 and nextafter-outside boundaries.",
+      "After a detected obstacle, all four latched detector-miss frames and any reacquisition are complete-action/state exact; only the fifth consecutive miss, which clears the inherited latch, may enable sustain.",
+      "Curves, previews, current straight/curved obstacles, compound target30, invalid input, road loss and reset remain complete-action/state exact.",
+      "A seeded randomized differential includes clear, curve, obstacle and preloaded latch states; any difference must satisfy every registered predicate, affect gas only, remain<=0.11 and preserve all state exactly.",
+      "The class adds no instance field and reset remains deterministic."
+    ],
+    "regression": [
+      "All prior corridor, inference and local contract tests pass.",
+      "Bare state-dict routing selects only the new final subclass; explicit export, DrQ and HAIC routes remain unchanged.",
+      "A temporary package with exact candidate agent.py and unchanged model.pt passes static interface/import, initialization, reset, action, latch-sequence, latency and size smoke without overwriting root submission.zip."
+    ],
+    "future_environment_gate": {
+      "blocked_now": true,
+      "required_before_claim": "Restore governance, then preregister unused geometry seeds across multiple track IDs. Require no finish-rate, DNF, collision, damage or worst-progress regression before comparing jointly finished lap times.",
+      "interpretation": "This factor is intentionally too narrow to be represented as sufficient for low-20-second laps."
+    },
+    "result_classification": "implemented-diagnostic-pass / INCOMPARABLE"
+  },
+  "abort": [
+    "Any detector-miss frame with a nonzero obstacle latch differs from control.",
+    "Any curve, current obstacle, brake, steering, target, detector state, invalid/lost action or non-bare route differs.",
+    "Emitted gas exceeds0.11, new state is added, or the inherited latch behavior changes.",
+    "Any track ID, seed, coordinate, time, progress or memorized map condition is introduced.",
+    "Any environment execution, training, completion/lap-time claim, submission or SOTA action occurs while governance documents remain absent."
+  ],
+  "compliance_blockers": [
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent.",
+    "The competition website is inaccessible and no fixed official map list, public evaluation seeds or official target time is available.",
+    "Only static and synthetic validation is authorized; the candidate remains INCOMPARABLE."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "experiment": "clear-straight-sustain-pace-v1",
+  "status": "rejected-static-review",
+  "classification": "INVALID",
+  "recorded_at": "2026-09-29T20:16:00+09:00",
+  "protocol_commit": "995f200",
+  "implementation_committed": false,
+  "environment_runs": 0,
+  "finding": {
+    "sequence": "detected straight obstacle followed by the first detector-miss straight frame at estimated speed45",
+    "control_first_miss_action": [0.0, 0.04166667, 0.0],
+    "candidate_first_miss_action": [0.0, 0.04583333, 0.0],
+    "state": "_obstacle_side remained latched during the miss frame",
+    "violation": "The candidate accelerated above control during the registered detector miss/reacquire freeze and contradicted the protocol's complete-action-exact requirement."
+  },
+  "decision": "Reject the simple class-constant override without committing it. Preserve the exact control and preregister a separate latch-gated follow-up.",
+  "artifacts_changed": false,
+  "performance_claim": false
+}
