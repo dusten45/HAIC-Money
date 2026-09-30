@@ -17,7 +17,11 @@
   and [actual-visit regression review](../../experiments/rlpd-recovery-regression-review-v1-result.json):
   joint mean guidance on qualified failure Oracle rows with original-mean prior/
   handoff retention; 8,192 decisions, 8,191 SAC updates plus separately reported
-  8,191 extra actor updates. Running, not evaluated or matched-compute with v1.
+  8,191 extra actor updates. Learning completed, not matched-compute with v1.
+- [Guided checkpoint](../../experiments/rlpd-recovery-guided-v1-result.json):
+  exported hashes verified; official-coordinate joint MSE on 87 positive failure Oracle
+  inputs is 0.0287 versus original 0.3760. Contemporary closed-loop outcome
+  evaluation remains running; no finish improvement is inferred from imitation.
 - [Post-learning action/Q comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json)
   and [policy-handoff timeline](../../experiments/rlpd-recovery-handoff-v2-result.json):
   zero-reset diagnostics separate actual trajectory outcomes, action alignment,

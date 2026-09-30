@@ -71,6 +71,12 @@ plus 33 subtests. An additional 8,191 actor updates are explicitly unmatched
 compute, not a replay-only matched comparison. Old model, source code and data
 remain unchanged; no outcome or promotion is established yet.
 
+The guided learner completed its declared budget and its export/checkpoint hashes
+were verified. The new original-versus-guided full-episode evaluation is running
+under unchanged consumed-G0 conditions and terminal-curve endpoint. Selected-row
+joint action matching improved markedly, but this cannot close the finish gate.
+See `experiments/rlpd-recovery-guided-v1-result.json` for the current checkpoint.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 
