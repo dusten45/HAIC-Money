@@ -965,6 +965,7 @@ class _StableCompletionController:
     MAX_GAS = 0.08
     MAX_BRAKE = 0.28
     OBSTACLE_MISS_LIMIT = 4
+    SIDE_SWITCH_ROW = 52.0
     SPEED_ROI = (77, 83, 10, 13)
     SPEED_BASELINE = 0.27
     SPEED_PER_UNIT = 0.085
@@ -1252,7 +1253,7 @@ class _StableCompletionController:
             candidate_side = 1.0 if side_offset < 0.0 else -1.0
             if self._obstacle_side == 0.0:
                 self._obstacle_side = candidate_side
-            elif obstacle_y < 52.0:
+            elif obstacle_y < self.SIDE_SWITCH_ROW:
                 self._obstacle_side = candidate_side
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
@@ -2714,6 +2715,16 @@ class _ObservedRoadTargetController(_CompoundClearingBrakeCarryController):
             centers=centers,
             obstacle=obstacle,
         )
+
+
+class _ObservedRoadSideCommitController(_ObservedRoadTargetController):
+    """Keep the chosen passing side once a detected obstacle becomes near.
+
+    Use the existing row44 near-obstacle boundary. The inherited detector-miss
+    latch still releases the decision, and distant obstacles may reselect it.
+    """
+
+    SIDE_SWITCH_ROW = 44.0
 
 
 class _RacingLineController(_ForwardCorridorController):

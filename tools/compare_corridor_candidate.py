@@ -17,7 +17,10 @@ sys.path.insert(0, str(ROOT))
 from tools.trace_corridor_failures import DOCUMENTS, diagnostic_json, digest, install_hooks, scalar_state
 
 CELLS = ((1, 11), (1, 21), (1, 42), (1, 17), (1, 516237), (2, 644062), (3, 1007))
-CANDIDATES = {"observed-road-target-v1": "_ObservedRoadTargetController"}
+CANDIDATES = {
+    "observed-road-target-v1": "_ObservedRoadTargetController",
+    "observed-road-side-commit-v1": "_ObservedRoadSideCommitController",
+}
 CONTROL = "_CompoundClearingBrakeCarryController"
 
 
