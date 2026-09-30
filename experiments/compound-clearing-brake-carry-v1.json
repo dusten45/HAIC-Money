@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-clearing-brake-carry-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T22:48:06+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "After four compound detector-miss frames, the latch-clearing fifth frame restores the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Retaining only the existing softened compound brake envelope for that transition should remove a deterministic brake spike without raising target speed, changing steering, or weakening the inherited base speed brake.",
+  "scope": {
+    "control_commit": "20dd1ddb8f80a977f28778a24c5c69523f98c306",
+    "control_class": "agent._AggressiveCompoundPaceController",
+    "control_agent_git_blob": "354bcc4a3fcd98edb0097180da02d3d6c9f16646",
+    "control_agent_sha256": "7aecf9ec9c9a0f116231c0b6d17a9100916d46f74f0924721c2dc64e15ccb678",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._CompoundClearingBrakeCarryController",
+    "single_factor": "On the one latch-clearing frame after a previously compound far/moderate obstacle, substitute the already-qualified compound brake envelope for the generic curve supplemental envelope."
+  },
+  "feedback_assessment": {
+    "accepted": "Obstacle-local slowdown is supported by the submission12 video diagnostic, where 13 of 26 encounters lose at least 10 percent on the rendered-video speed proxy. The current code also contains a deterministic clearing-frame brake spike after every qualifying miss sequence.",
+    "rejected": "Intentional off-road driving is not implemented. Official variables-6 rules terminate after 101 consecutive negative-reward actions and immediately on playfield exit; no official source grants a safe racing-line allowance outside the road. Grass friction is also lower than road friction.",
+    "unproven": "The videos do not expose physical speed, action, detector phase, source hash or clearance, so they cannot justify a global target increase, weaker obstacle approach braking, more aggressive steering or shorter latch duration."
+  },
+  "eligibility_gate": [
+    "no obstacle is currently detected",
+    "an obstacle-side latch existed at frame start but is cleared during this frame",
+    "the frame-start latched target was exactly the compound target30",
+    "current image-space sweep is at least6 and below12",
+    "current final obstacle-adjusted steering request has absolute value at most0.28",
+    "the generic current command target is above30"
+  ],
+  "candidate_effect": {
+    "target_speed": "unchanged from control",
+    "steering": "bit-exact to control",
+    "base_brake": "unchanged and remains the minimum",
+    "supplemental_brake": "max(base_brake, clip(0.04 + 0.012*excess, 0.04, 0.18)) instead of max(base_brake, clip(0.06 + 0.018*excess, 0.06, 0.28))",
+    "illustrative_cell": "At sweep6, generic target34 and speed40, brake changes from approximately0.168 to0.112 while the inherited base brake remains0.072."
+  },
+  "frozen": [
+    "current-obstacle approach behavior and adaptive target ceiling38",
+    "detector miss frames1--4 target30 and base-brake-only behavior",
+    "sixth and later clear frames and all ordinary clear curves",
+    "near, extreme-sweep, strong-steering, noncompound and reacquisition behavior",
+    "obstacle detection, side selection, steering, slew, reversal, gas and target formulas",
+    "model.pt and every non-bare inference route",
+    "core, env_wrapper.py, damage.py and official observation/action/termination behavior"
+  ],
+  "static_acceptance": [
+    "Candidate and control are bit-exact before the clearing frame and reconverge immediately after it.",
+    "Only brake may differ on the registered clearing frame; candidate brake is no greater than control and no lower than inherited base brake.",
+    "All eligibility boundaries, both turn directions, both obstacle sides, reacquisition, flicker, reset, invalid input and lost-road paths are covered.",
+    "Randomized stateful differential tests prove every difference is eligible, finite and bounded with mutually exclusive gas and brake.",
+    "Affected controller, inference, local-contract and submission tests pass."
+  ],
+  "rollback": [
+    "Any target, gas or steering difference.",
+    "Any difference on a current obstacle, miss frames1--4, sweep below6 or at least12, steering request above0.28, noncompound latch or ordinary clear curve.",
+    "Any brake below the inherited base brake or any state/reset/package/interface regression.",
+    "Any future authorized paired evaluation with lower finish count, collision, off-track, progress or clearance regression."
+  ],
+  "official_sources": {
+    "participant_repository": "https://github.com/2026-HAIC/Participants",
+    "environment_version": "variables-6, checked 2026-09-30",
+    "relevant_rules": "Obstacle collision damage, grass friction0.6, off-track and playfield termination, finish-first ranking.",
+    "competition_site": "Unavailable to the browsing tool on 2026-09-30; no claim depends on it."
+  },
+  "research_context": {
+    "f1tenth_planning": "https://github.com/f1tenth/f1tenth_planning",
+    "curvature_velocity_reference": "https://arxiv.org/abs/2502.03695",
+    "application_note": "Primary autonomous-racing work supports curvature-aware velocity planning and constrained obstacle avoidance, not unconstrained off-road shortcuts. This candidate remains a narrow transition-smoothing hypothesis rather than importing map-based MPC claims into the camera-only controller."
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "blocker": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent. RULES.md therefore permits only implementation and static validation, not performance execution or promotion."
+  }
+}
