@@ -1,0 +1,65 @@
+{
+  "environment_resets": 0,
+  "episodes": 24,
+  "format": "haic-rlpd-recovery-evaluation-audit-v1",
+  "limitations": [
+    "Consumed TRAIN and one learner seed; no fresh generalization or official score.",
+    "Curve-associated terminal failure is a prospective temporal proxy, not causal attribution.",
+    "Retained earlier failed evaluation attempts are additional interaction cost, not fresh cells."
+  ],
+  "manifest_sha256": "36205400e89bcfa3d5d0ba7803a5ea892eab8c231287cbd02e7000995910b572",
+  "pairs": {
+    "v5->actor_only": {
+      "causal_training_effect": false,
+      "censored_pairs": 0,
+      "denominator": 12,
+      "full_finish_comparison_valid": true,
+      "gained": 4,
+      "kept": 1,
+      "lost": 4,
+      "matched_cells_not_same_state": true,
+      "neither": 3
+    }
+  },
+  "per_actor": {
+    "actor_only": {
+      "actor_sha256": "9198802b7cd573bf359fa1217d1edcaec3496a68e7e99d712fd1ef4135e2553f",
+      "censored": 0,
+      "curve_entry_associated_terminal_failures": 2,
+      "decisions": 4393,
+      "denominator": 12,
+      "finished": 5,
+      "finished_geometries": [
+        4272000002,
+        4272000005,
+        4272000007,
+        4272000009,
+        4272000010
+      ],
+      "mean_final_damage": 0.2833333333333334,
+      "mean_final_progress": 0.6828420370676064
+    },
+    "v5": {
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "censored": 0,
+      "curve_entry_associated_terminal_failures": 1,
+      "decisions": 4670,
+      "denominator": 12,
+      "finished": 5,
+      "finished_geometries": [
+        4272000001,
+        4272000006,
+        4272000008,
+        4272000009,
+        4272000012
+      ],
+      "mean_final_damage": 0.19999999999999998,
+      "mean_final_progress": 0.6943797195373035
+    }
+  },
+  "primary_directory": "runs/rlpd-recovery-actor-only-evaluation-v1",
+  "result_sha256": "acf4c32cd038409848f3a3653578a8ac6f8732771701c83a33e5a73af553278c",
+  "source_code_sha256": "5e5c9139a842584e5a05c3c374950c871d349e6e51cd989a1a4c863e64139b27",
+  "status": "complete",
+  "verified_artifact_hashes": 75
+}
