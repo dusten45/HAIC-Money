@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "q_only_and_guided_rejected_frozen_encoder_actor_only_iteration_pending",
+  "status": "q_only_and_guided_rejected_actor_only_fitted_evaluation_running",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -126,7 +126,19 @@
     "mechanisms_are_hypotheses": "One-step Q policy bootstrapping/sequence credit, representation drift and changed state visitation are alternatives; Q rankings are not causal proof or expert-optimality guarantees."
   },
   "third_intervention": {
-    "status": "implementing_not_run",
+    "status": "2048_offline_updates_complete_evaluation_running",
+    "protocol": "experiments/rlpd-recovery-actor-only-v1.json",
+    "protocol_sha256": "cbae0a030fb73bf068076d6692c1725e1001f74212eeb01d14fba11694121af4",
+    "training_receipt": "runs/rlpd-recovery-actor-only-v1/finalstats.json",
+    "evaluation": "runs/rlpd-recovery-actor-only-evaluation-v1",
+    "actor_sha256": "9198802b7cd573bf359fa1217d1edcaec3496a68e7e99d712fd1ef4135e2553f",
+    "checkpoint_sha256": "9f4024daf4d0db318ec931ddff7a6f782723bf6fda64d7a8e0f587efe6001b03",
+    "frozen_component_hashes_before_after_identical": true,
+    "native_guide_mse": 0.00490774466500928,
+    "native_protected_retention_mse": 0.0026150610065087676,
+    "native_prior_retention_mse": 0.009926721376056472,
+    "protected_selections": 113,
+    "protected_unique_images": 108,
     "objective": "Original encoder/critics/temperature fixed bitwise; only actor decoder joint native correction on proven failure-Oracle rows, with original-mean retention on verified ordinary prior, all original initial images and source-finished path snapshots.",
     "environment_resets": 0,
     "sac_updates": 0,
