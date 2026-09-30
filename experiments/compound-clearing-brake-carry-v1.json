@@ -3,7 +3,7 @@
   "experiment": "compound-clearing-brake-carry-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T22:48:06+09:00",
-  "amended_at": "2026-09-30T23:22:00+09:00",
+  "amended_at": "2026-09-30T23:27:00+09:00",
   "branch": "feature/DG-Codex",
   "hypothesis": "After four compound detector-miss frames, an overspeed latch-clearing fifth frame can restore the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Moving that one transition toward the existing softened compound brake envelope should reduce the possible supplement increase without raising target speed, changing steering, or weakening the inherited base speed brake.",
   "scope": {
@@ -25,8 +25,8 @@
     "an obstacle-side latch existed at frame start but is cleared during this frame",
     "the frame-start latched target was exactly the compound target30",
     "current image-space sweep is at least6 and below12",
-    "current final obstacle-adjusted steering request has absolute value at most0.28",
-    "the current steering direction has not reversed against the qualifying obstacle frame",
+    "the qualifying obstacle frame has a nonzero final obstacle-adjusted steering request with absolute value at most0.28",
+    "the current steering direction is zero or has not reversed against the qualifying obstacle frame",
     "the generic current command target is above30"
   ],
   "candidate_effect": {
