@@ -1,0 +1,62 @@
+{
+  "format": "haic-rlpd-recovery-guided-iteration-v1",
+  "status": "learning_complete_closed_loop_evaluation_running",
+  "partition": "consumed TRAIN",
+  "protocol": "experiments/rlpd-recovery-guided-learning-v1.json",
+  "protocol_sha256": "8e15226169b10cb2ba043f06f283a3adf154e29fa5ba64c6c7ba71844f2f2822",
+  "training_receipt": "runs/rlpd-recovery-guided-treatment-v1/finalstats.json",
+  "actor_sha256": "c4a19aa5546464d882bd275f630eb56f342fa3026cb06e49cb76beecae8c8a8d",
+  "checkpoint_sha256": "7c5408f836fc112956c705f781129f9bdf22592ead766fd2eee4dda370481646",
+  "environment_decisions": 8192,
+  "sac_updates": 8191,
+  "extra_actor_optimizer_updates": 8191,
+  "matched_compute_to_q_only": false,
+  "exact_resume_supported": false,
+  "open_episode_steps": 44,
+  "actual_data_preflight": "passed_zero_reset",
+  "model_files_sha_verified": true,
+  "source": "Original V5 seed50 model, target critic, temperature and three optimizers; fresh online replay/RNG seed60, not rejected recovery actor.",
+  "objective": {
+    "raw_sac_unchanged": true,
+    "reward_shaping": false,
+    "guide_weight": 1.0,
+    "guide": "Joint native deterministic mean against executed full-vector actions on paired-finish-proven failure Oracle rows only",
+    "retention_weight": 0.1,
+    "retention": "Frozen original V5 mean on same images: ordinary prior, all actor-handoff recovery rows, preserved-control Oracle rows",
+    "masks_disjoint": true,
+    "encoder_detached_for_auxiliary_step": true,
+    "q_ranking_filter": false
+  },
+  "zero_reset_action_diagnosis": {
+    "directory": "runs/rlpd-recovery-guided-action-diagnosis-v1",
+    "prediction_sha256": "79bcd2cea55338ed3fa2e7999b246436006664031ec11afdb289b0b702ebb8aa",
+    "environment_resets": 0,
+    "learner_updates": 0,
+    "failure_oracle_rows": 87,
+    "action_coordinates": "official; signed error actor minus executed target",
+    "joint_mse": 0.028697283938527107,
+    "steering_mae": 0.1780911237001419,
+    "gas_signed_error": 0.05564393848180771,
+    "brake_signed_error": 0.03820199891924858,
+    "target_preferred_mean_q_count": 33,
+    "target_preferred_min_q_count": 39,
+    "within_critic_mean_target_minus_actor_q": -0.005054254550486803,
+    "within_critic_min_target_minus_actor_q": -0.0005491410265676677,
+    "interpretation": "Joint action matching changed substantially, but these selected privileged TRAIN inputs are not closed-loop outcome evidence."
+  },
+  "evaluation": {
+    "directory": "runs/rlpd-recovery-guided-evaluation-v1",
+    "status": "running_after_zero_reset_preflight",
+    "arms": ["v5", "guided"],
+    "roads_per_arm": 12,
+    "source_contract_unchanged": true,
+    "curve_terminal_endpoint_unchanged": true
+  },
+  "limitations": [
+    "Guidance is masked by actual multi-second and full-finish recovery proof, not generic Oracle imitation or pedals-only control.",
+    "Extra actor updates make this an intervention comparison with unmatched compute, not the original replay-only matched study.",
+    "Shared trunk updates can affect logstd outputs even when its head has no auxiliary gradient.",
+    "One learner seed and consumed TRAIN do not establish fresh generalization, official performance or model promotion.",
+    "No actual finish improvement has been established at this checkpoint."
+  ]
+}
