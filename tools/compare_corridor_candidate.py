@@ -20,6 +20,7 @@ CELLS = ((1, 11), (1, 21), (1, 42), (1, 17), (1, 516237), (2, 644062), (3, 1007)
 CANDIDATES = {
     "observed-road-target-v1": "_ObservedRoadTargetController",
     "observed-road-side-commit-v1": "_ObservedRoadSideCommitController",
+    "observed-curve-arbitration-v1": "_ObservedCurveArbitrationController",
 }
 CONTROL = "_CompoundClearingBrakeCarryController"
 

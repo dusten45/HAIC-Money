@@ -2727,6 +2727,57 @@ class _ObservedRoadSideCommitController(_ObservedRoadTargetController):
     SIDE_SWITCH_ROW = 44.0
 
 
+class _ObservedCurveArbitrationController(_ObservedRoadSideCommitController):
+    """Retain opposing curve steering only when the observed bend supports it."""
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._observed_bend_displacement = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._observed_bend_displacement = None
+
+    def act(self, observation) -> np.ndarray:
+        self._observed_bend_displacement = None
+        return super().act(observation)
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        self._observed_bend_displacement = None
+        if len(centers) >= 2:
+            self._observed_bend_displacement = float(
+                centers[min(centers)] - centers[max(centers)]
+            )
+        return super()._adjust_road_steering(
+            steering=steering, straight=straight, centers=centers, obstacle=obstacle
+        )
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        unsupported_turn = (
+            not straight
+            and base_steering * obstacle_bias < 0.0
+            and self._observed_bend_displacement is not None
+            and base_steering * self._observed_bend_displacement <= 0.0
+        )
+        # The inherited straight arbitration branch is additive. Selecting it
+        # here also preserves the parent's previous-preview transition guard;
+        # the actual road classification and longitudinal state stay intact.
+        return super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight or unsupported_turn,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
