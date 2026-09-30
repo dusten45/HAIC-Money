@@ -1,0 +1,20 @@
+{
+  "schema_version":1,
+  "experiment":"observed-curve-arbitration-v1",
+  "status":"PREREGISTERED",
+  "control_class":"_CompoundClearingBrakeCarryController",
+  "candidate_class":"_ObservedCurveArbitrationController",
+  "control_commit":"9687882",
+  "hypothesis":"Side-commit seed21 step273/274 retains small LEFT recentering while observed far road turns RIGHT and obstacle avoidance asks RIGHT. No identity switch occurred. Requiring observed bend direction to support retained road steering avoids suppressing useful avoidance.",
+  "single_factor_from_previous_candidate":"Extend observed-target+row44 candidate: record farthest observed center minus nearest observed center on each _adjust_road_steering call. In opposing-sign nonstraight arbitration, when base_steering times observed displacement<=0, use base+obstacle bias rather than curve retention. Otherwise inherit unchanged. Reset evidence every frame and reset(); no speed/detector change.",
+  "ablation":"Previous observed-road-target-v1 and observed-road-side-commit-v1 remain rejected ablations. Original control used for final paired comparison; do not attribute full timing delta to one repair.",
+  "development_cells":[[1,11],[1,21],[1,42],[1,17],[1,516237],[2,644062],[3,1007]],
+  "max_steps":1000,
+  "frame_skip":4,
+  "budget":"One pair per reused cell; stop on operational or paired safety regression. No tuning within run.",
+  "decision":"Reject lost finish, collision/damage increase, lower paired DNF progress, or >5% slower prior finish. Retain diagnostic candidate only with increased finishes or lower summed completed time without regression. No SOTA claim.",
+  "static_acceptance":["mirrored incorrect recentering gets additive avoidance", "supported bend and same-sign remain inherited", "evidence reset and no stale frame", "bounded exclusive finite actions", "public pixels only"],
+  "training":false,
+  "submission":false,
+  "sota_promotion":false
+}
