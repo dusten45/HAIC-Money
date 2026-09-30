@@ -2618,6 +2618,43 @@ class _CompoundClearingBrakeCarryController(_AggressiveCompoundPaceController):
         )
 
 
+class _CompoundBrakeOnsetController(_CompoundClearingBrakeCarryController):
+    """Ramp supplemental braking for small visible-compound speed errors.
+
+    The base speed brake remains a floor. Targets, lateral actions, detector
+    misses, and large overspeed retain the control policy. This is a diagnostic
+    candidate until the preregistered paired driving comparison passes.
+    """
+
+    COMPOUND_BRAKE_RAMP_EXCESS = 2.0
+
+    def _curve_brake_envelope(
+        self, *, excess: float, base_brake: float,
+    ) -> float:
+        inherited = super()._curve_brake_envelope(
+            excess=excess, base_brake=base_brake,
+        )
+        visible_adaptive_compound = (
+            self._obstacle_side != 0.0
+            and self._obstacle_missing == 0
+            and self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target is not None
+            and self.COMPOUND_TARGET_SPEED < self._pace_command_target
+            <= self.ADAPTIVE_COMPOUND_MAX_TARGET
+            and self.COMPOUND_SWEEP_THRESHOLD <= self._pace_sweep
+            < self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+        )
+        if not visible_adaptive_compound or excess >= self.COMPOUND_BRAKE_RAMP_EXCESS:
+            return inherited
+        ramp = float(np.clip(excess / self.COMPOUND_BRAKE_RAMP_EXCESS, 0.0, 1.0))
+        compound = float(np.clip(
+            self.COMPOUND_CARRY_BRAKE_BASE + self.COMPOUND_CARRY_BRAKE_GAIN * excess,
+            self.COMPOUND_CARRY_BRAKE_BASE,
+            self.COMPOUND_CARRY_BRAKE_MAX,
+        ))
+        return max(base_brake, ramp * compound)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
