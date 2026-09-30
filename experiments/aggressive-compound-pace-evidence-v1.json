@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "evidence": "aggressive-compound-pace-evidence-v1",
+  "status": "CONSUMED_DIAGNOSTIC_SYNTHESIS",
+  "recorded_at": "2026-09-30T15:46:09+09:00",
+  "branch": "feature/DG-Codex",
+  "official_source": {
+    "participant_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "repository": "https://github.com/2026-HAIC/Participants",
+    "facts": [
+      "Every official track contains six physical obstacles, so the three current videos cannot test an obstacle-count versus lap-time relationship.",
+      "A collision adds20-percent damage and degrades grip, engine and steering from the first collision; the fifth collision retires the car.",
+      "Grass friction is0.6. A brief grass excursion is not an immediate disqualification, but101 consecutive negative-reward action steps or leaving the play area retires the car.",
+      "Finished entries rank by simulated lap time; every non-finish ranks behind a finish."
+    ]
+  },
+  "video_evidence": {
+    "latest_available_submission": 12,
+    "laps_seconds": [23.60, 28.18, 25.44],
+    "track_points": [280, 336, 309],
+    "milliseconds_per_point": [84.29, 83.87, 82.33],
+    "track_length_lap_time_correlation": 0.991,
+    "normalized_pace_cv_percent": 1.0,
+    "obstacle_encounters": 26,
+    "post_pre_speed_proxy_ratio_median": 0.88,
+    "encounters_below_0_90": 13,
+    "minimum_hsv_mask_gap_pixels": [20.0, 8.0, 12.2],
+    "interpretation": "Obstacle-local slowdown is directionally supported, but the videos do not causally separate braking, steering or path length. Absolute inter-track time is primarily explained by track length, not obstacle count."
+  },
+  "current_candidate_limit": {
+    "controller": "agent._AdaptiveCompoundTargetController",
+    "maximum_compound_target": 36,
+    "closed_loop_evidence": false,
+    "reason": "The controller postdates every available evaluation video, so this follow-up must remain a bounded static-only diagnostic."
+  },
+  "accepted": {
+    "change": "Increase only the eligible adaptive compound target ceiling from36 to38 by subclassing the current controller.",
+    "formula": "target = 30 + 8*clip((44-y)/12,0,1)*clip((12-sweep)/6,0,1)",
+    "rationale": "This removes at most2 additional target-speed units in the already-qualified far/moderate regime, remains below the existing target40 used for near noncompound obstacles and clear-curve floor, and leaves all steering and recovery behavior unchanged."
+  },
+  "rejected": [
+    "Intentional off-road line: not an explicit rule violation by itself, but grass friction and terminal off-track risk make it an unsupported pace strategy.",
+    "More aggressive obstacle steering: can reduce clearance, cross the existing strong-steer speed veto and regress the historical collision/off-track failures.",
+    "Global target or brake increase: rendered clearances are tight and the current adaptive candidate has not yet received a bound closed-loop evaluation.",
+    "Obstacle-count explanation: all official tracks contain six obstacles and current normalized pace is nearly constant across the three videos."
+  ],
+  "limitations": [
+    "No available video is bound to the current agent source, model hash, package hash or internal actions.",
+    "Video speed is a rendered-motion proxy, not physical simulator speed.",
+    "The competition website was unavailable; official repository commit dfb7a2d is the verified source.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent."
+  ]
+}

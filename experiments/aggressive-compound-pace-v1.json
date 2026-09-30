@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "experiment": "aggressive-compound-pace-v1",
+  "status": "PREREGISTERED_STATIC_ONLY",
+  "recorded_at": "2026-09-30T15:46:09+09:00",
+  "branch": "feature/DG-Codex",
+  "hypothesis": "The current maximum36 adaptive target still applies brake0.082 at estimated speed40 in the farthest moderate compound cell. Raising only that registered ceiling to38 should reduce the same localized slowdown while remaining below every target40 noncompound-near and clear-curve floor and preserving all lateral safety gates.",
+  "scope": {
+    "control_commit": "ce646c1db900de00798691285db12fd7ad4acd6c",
+    "control_implementation_commit": "42fd0f6f7dde62e83bebe48364e5b2eded6b2f69",
+    "control_class": "agent._AdaptiveCompoundTargetController",
+    "control_agent_git_blob": "4c5be8d8e02f511d79bd7d5c7e9833122cbbed6b",
+    "control_agent_sha256": "06eed3e7fd7a05cdd817375155a56ae7975e54c352de03f0b56c88898dc71685",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "candidate_class": "agent._AggressiveCompoundPaceController",
+    "single_factor": "Subclass the control and change only ADAPTIVE_COMPOUND_MAX_TARGET from36 to38."
+  },
+  "eligibility_gate": {
+    "unchanged_requirements": [
+      "a current detector-recognized obstacle is present",
+      "the inherited compound latch target is exactly30",
+      "obstacle center row y is below44",
+      "image-space sweep is at least6 and below12",
+      "the final obstacle-adjusted steering request has absolute value at most0.28"
+    ],
+    "distance_factor": "d = clip((44-y)/12,0,1)",
+    "severity_factor": "m = clip((12-sweep)/6,0,1)",
+    "control_formula": "30 + 6*d*m",
+    "candidate_formula": "30 + 8*d*m",
+    "bounds": "30 < candidate_target <= 38 < 40",
+    "far_y_at_or_below32_table": {
+      "sweep6": 38,
+      "sweep7": 36.666666666666664,
+      "sweep8": 35.333333333333336,
+      "sweep9": 34,
+      "sweep10": 32.666666666666664,
+      "sweep11": 31.333333333333332,
+      "sweep12": 30
+    },
+    "distance_examples_at_sweep6": {
+      "y32": 38,
+      "y36": 35.333333333333336,
+      "y40": 32.666666666666664,
+      "y43": 30.666666666666668,
+      "y44": 30
+    }
+  },
+  "expected_longitudinal_effect": {
+    "speed40_maximum_cell": "softened compound brake decreases from0.082 at target36 to0.058 at target38; inherited base brake remains0.04",
+    "speed45_maximum_cell": "softened compound brake decreases from0.142 to0.118",
+    "pedal_rule": "Use the existing target thresholds and softened compound brake formula without changing gas constants, brake constants or overlap rules."
+  },
+  "frozen": [
+    "obstacle detection, pass-side selection, road and obstacle steering, steering cap/slew/reversal and post-obstacle retention",
+    "distance row32/44, sweep6/12 and final-request0.28 eligibility boundaries",
+    "stored latch target30 and first detector-miss restoration",
+    "near y>=44, extreme sweep>=12, sweep<6 noncompound, strong-steer and every detector-miss action/state",
+    "softened compound brake formula, inherited base brake and final float32 clamp",
+    "straight68, obstacle-free curve40--64 and noncompound obstacle47/40 targets",
+    "model.pt and every non-bare inference route",
+    "core, env_wrapper.py, damage.py and the official action/termination contract"
+  ],
+  "static_acceptance": [
+    "The candidate differs from control only on a current-visible frame already eligible under the frozen adaptive gate.",
+    "Candidate target equals30+8*d*m, remains greater than or equal to control and never exceeds38; control and candidate reconverge exactly at every gate boundary.",
+    "Steering, detector, pass-side, latch and shared inherited state remain exact except _pace_command_target and derived _pace_effective_target.",
+    "Both turn directions and both obstacle sides receive symmetric surface coverage.",
+    "Pedal boundaries, intermediate targets, target hierarchy, finite bounds and gas/brake exclusivity match the registered formulas.",
+    "Far-to-near, increasing severity, steering-veto, detector miss1--4, fifth clear, reacquisition, flicker and reset sequences reconverge outside the eligible frame.",
+    "Randomized independent and stateful differential coverage proves every difference is eligible and bounded.",
+    "Affected controller, inference, local-contract and submission suites pass.",
+    "An isolated package passes exact-file import, reset, finite-action, bounds and latency smoke without modifying root submission.zip."
+  ],
+  "rollback": [
+    "Any target above38, below control or at/above40.",
+    "Any difference at y>=44, sweep<6, sweep>=12, final steering request>0.28, detector miss or no-current-obstacle state.",
+    "Any steering, detector, pass-side, latch, reset, recovery, invalid-input, dependency, packaging, bounds, NaN or latency regression.",
+    "Any evidence of new collision, off-track, lower finish count or materially lower clearance in a future authorized paired evaluation."
+  ],
+  "future_environment_gate": {
+    "authorized_now": false,
+    "reason": "Required local governance files are absent and the latest videos predate the control candidate.",
+    "design_after_restoration": "Freeze paired control/candidate package hashes and rank finish, collision/off-track/clearance and progress before paired sector/lap time.",
+    "performance_claim": false
+  }
+}
