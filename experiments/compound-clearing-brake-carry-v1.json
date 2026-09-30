@@ -3,9 +3,9 @@
   "experiment": "compound-clearing-brake-carry-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T22:48:06+09:00",
-  "amended_at": "2026-09-30T23:10:00+09:00",
+  "amended_at": "2026-09-30T23:22:00+09:00",
   "branch": "feature/DG-Codex",
-  "hypothesis": "After four compound detector-miss frames, the latch-clearing fifth frame restores the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Retaining only the existing softened compound brake envelope for that transition should remove a deterministic brake spike without raising target speed, changing steering, or weakening the inherited base speed brake.",
+  "hypothesis": "After four compound detector-miss frames, an overspeed latch-clearing fifth frame can restore the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Moving that one transition toward the existing softened compound brake envelope should reduce the possible supplement increase without raising target speed, changing steering, or weakening the inherited base speed brake.",
   "scope": {
     "control_commit": "20dd1ddb8f80a977f28778a24c5c69523f98c306",
     "control_class": "agent._AggressiveCompoundPaceController",
@@ -13,10 +13,10 @@
     "control_agent_sha256": "7aecf9ec9c9a0f116231c0b6d17a9100916d46f74f0924721c2dc64e15ccb678",
     "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
     "candidate_class": "agent._CompoundClearingBrakeCarryController",
-    "single_factor": "On the one latch-clearing frame after a previously compound far/moderate obstacle, substitute the already-qualified compound brake envelope for the generic curve supplemental envelope."
+    "single_factor": "On the one latch-clearing frame after a previously compound far/moderate obstacle, move the generic curve supplemental brake toward the already-qualified compound envelope while capping relief at0.04, the maximum inherited miss-latch supplement removal at the strict curve-overspeed onset."
   },
   "feedback_assessment": {
-    "accepted": "Obstacle-local slowdown is supported by the submission12 video diagnostic, where 13 of 26 encounters lose at least 10 percent on the rendered-video speed proxy. The current code also contains a deterministic clearing-frame brake spike after every qualifying miss sequence.",
+    "accepted": "Obstacle-local slowdown is supported by the submission12 video diagnostic, where 13 of 26 encounters lose at least 10 percent on the rendered-video speed proxy. The current code can also reintroduce the stronger generic supplement on an overspeed clearing frame after a qualifying miss sequence.",
     "rejected": "Intentional off-road driving is not implemented. Official variables-6 rules terminate after 101 consecutive negative-reward actions and immediately on playfield exit; no official source grants a safe racing-line allowance outside the road. Grass friction is also lower than road friction.",
     "unproven": "The videos do not expose physical speed, action, detector phase, source hash or clearance, so they cannot justify a global target increase, weaker obstacle approach braking, more aggressive steering or shorter latch duration."
   },
@@ -33,8 +33,8 @@
     "target_speed": "unchanged from control",
     "steering": "bit-exact to control",
     "base_brake": "unchanged and remains the minimum",
-    "supplemental_brake": "max(base_brake, clip(0.04 + 0.012*excess, 0.04, 0.18)) instead of max(base_brake, clip(0.06 + 0.018*excess, 0.06, 0.28))",
-    "illustrative_cell": "At sweep6, generic target34 and speed40, curve excess is5.5 after the unchanged0.5 trigger delta; brake changes from0.159 to0.106 while the inherited base brake remains0.072."
+    "supplemental_brake": "max(base_brake, compound_envelope, control_envelope-0.04), where compound_envelope=clip(0.04+0.012*excess,0.04,0.18) and control_envelope=clip(0.06+0.018*excess,0.06,0.28)",
+    "illustrative_cell": "At sweep6, generic target34 and speed40, curve excess is5.5 after the unchanged0.5 trigger delta; brake changes from0.159 to0.119 while the inherited base brake0.072 and raw compound envelope0.106 remain lower floors."
   },
   "frozen": [
     "current-obstacle approach behavior and adaptive target ceiling38",
@@ -46,8 +46,8 @@
     "core, env_wrapper.py, damage.py and official observation/action/termination behavior"
   ],
   "static_acceptance": [
-    "Candidate and control are bit-exact before the clearing frame and reconverge immediately after it.",
-    "Only brake may differ on the registered clearing frame; candidate brake is no greater than control and no lower than inherited base brake.",
+    "Candidate and control actions plus all inherited shared state are exact before the clearing frame and reconverge immediately after it; candidate-only eligibility state is allowed.",
+    "Only brake may differ on the registered overspeed clearing frame; candidate brake is no greater than control, no lower than inherited base brake, and never more than0.04 below control.",
     "All eligibility boundaries, both turn directions, both obstacle sides, reacquisition, flicker, reset, invalid input and lost-road paths are covered.",
     "Randomized stateful differential tests prove every difference is eligible, finite and bounded with mutually exclusive gas and brake.",
     "Affected controller, inference, local-contract and submission tests pass."
