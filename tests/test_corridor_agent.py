@@ -5490,6 +5490,337 @@ class TestVisionCorridorAgent(unittest.TestCase):
             _AggressiveCompoundPaceController().__dict__,
         )
 
+    def test_compound_clearing_brake_carry_changes_only_fifth_miss_brake(self):
+        from agent import (
+            _AggressiveCompoundPaceController,
+            _CompoundClearingBrakeCarryController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def act_pair(control, candidate, *, obstacle_present, sweep=6.0, speed=40.0):
+            centers = {
+                30: 42.0 + sweep,
+                34: 42.0,
+                38: 42.0,
+                42: 42.0,
+                54: 42.0,
+                58: 42.0,
+                62: 42.0,
+            }
+            obstacle = (32.0, 35.0, 42.0) if obstacle_present else None
+            actions = []
+            for controller in (control, candidate):
+                with patch.object(
+                    controller, "_road_centers", return_value=centers
+                ), patch.object(
+                    controller, "_nearest_obstacle", return_value=obstacle
+                ), patch.object(
+                    controller, "_estimate_speed", return_value=speed
+                ):
+                    actions.append(controller.act(frame))
+            return actions
+
+        control = _AggressiveCompoundPaceController()
+        candidate = _CompoundClearingBrakeCarryController()
+        np.testing.assert_array_equal(
+            *act_pair(control, candidate, obstacle_present=True)
+        )
+        self.assertTrue(candidate._compound_clearing_armed)
+
+        for miss in range(1, 5):
+            actions = act_pair(control, candidate, obstacle_present=False)
+            with self.subTest(miss=miss):
+                np.testing.assert_array_equal(actions[1], actions[0])
+                self.assertTrue(candidate._compound_clearing_armed)
+                self.assertFalse(candidate._compound_clearing_active)
+
+        clearing = act_pair(control, candidate, obstacle_present=False)
+        np.testing.assert_array_equal(clearing[1][:2], clearing[0][:2])
+        self.assertLess(float(clearing[1][2]), float(clearing[0][2]))
+        self.assertAlmostEqual(float(clearing[0][2]), 0.159, places=6)
+        self.assertAlmostEqual(float(clearing[1][2]), 0.119, places=6)
+        self.assertLessEqual(
+            float(clearing[0][2]) - float(clearing[1][2]), 0.04 + 1e-6
+        )
+        self.assertGreaterEqual(float(clearing[1][2]), 0.072 - 1e-6)
+        self.assertAlmostEqual(control._pace_command_target, 34.0)
+        self.assertEqual(candidate._pace_command_target, control._pace_command_target)
+        self.assertTrue(candidate._compound_clearing_active)
+        self.assertFalse(candidate._compound_clearing_armed)
+
+        after = act_pair(control, candidate, obstacle_present=False)
+        np.testing.assert_array_equal(after[1], after[0])
+        self.assertFalse(candidate._compound_clearing_active)
+
+    def test_compound_clearing_brake_carry_closes_safety_gates(self):
+        from agent import (
+            _AggressiveCompoundPaceController,
+            _CompoundClearingBrakeCarryController,
+        )
+
+        frame = _observation(speed=0.0)
+
+        def run_case(
+            *, obstacle_y=32.0, initial_sweep=6.0, clear_sweep=6.0,
+            strong_clear=False,
+        ):
+            control = _AggressiveCompoundPaceController()
+            candidate = _CompoundClearingBrakeCarryController()
+
+            def act(obstacle_present, sweep, strong=False):
+                if strong:
+                    centers = {
+                        30: 60.0,
+                        34: 60.0,
+                        38: 60.0,
+                        42: 60.0,
+                        54: 54.0,
+                        58: 54.0,
+                        62: 54.0,
+                        66: 60.0,
+                    }
+                else:
+                    centers = {
+                        30: 42.0 + sweep,
+                        34: 42.0,
+                        38: 42.0,
+                        42: 42.0,
+                        54: 42.0,
+                        58: 42.0,
+                        62: 42.0,
+                    }
+                obstacle = (obstacle_y, 35.0, 42.0) if obstacle_present else None
+                actions = []
+                for controller in (control, candidate):
+                    with patch.object(
+                        controller, "_road_centers", return_value=centers
+                    ), patch.object(
+                        controller, "_nearest_obstacle", return_value=obstacle
+                    ), patch.object(
+                        controller, "_estimate_speed", return_value=40.0
+                    ):
+                        actions.append(controller.act(frame))
+                return actions
+
+            np.testing.assert_array_equal(*act(True, initial_sweep))
+            for _ in range(4):
+                np.testing.assert_array_equal(*act(False, initial_sweep))
+            clearing = act(False, clear_sweep, strong_clear)
+            return control, candidate, clearing
+
+        for kwargs in (
+            {"obstacle_y": 44.0},
+            {"initial_sweep": 12.0, "clear_sweep": 12.0},
+            {"initial_sweep": 5.999999, "clear_sweep": 6.0},
+            {"initial_sweep": 6.0, "clear_sweep": 12.0},
+            {"initial_sweep": 6.0, "clear_sweep": 6.0, "strong_clear": True},
+        ):
+            control, candidate, actions = run_case(**kwargs)
+            with self.subTest(**kwargs):
+                np.testing.assert_array_equal(actions[1], actions[0])
+                self.assertFalse(candidate._compound_clearing_active)
+                self.assertEqual(
+                    candidate._pace_command_target, control._pace_command_target
+                )
+
+        candidate = _CompoundClearingBrakeCarryController()
+        candidate._compound_clearing_armed = True
+        candidate._compound_clearing_active = True
+        candidate.reset(None)
+        self.assertFalse(candidate._compound_clearing_armed)
+        self.assertFalse(candidate._compound_clearing_active)
+
+        candidate.has_seen_road = True
+        candidate._compound_clearing_armed = True
+        missing = np.full((4, 84, 84), 0.1, dtype=np.float32)
+        candidate.act(missing)
+        self.assertFalse(candidate._compound_clearing_armed)
+        self.assertFalse(candidate._compound_clearing_active)
+
+    def test_compound_clearing_brake_carry_arming_boundaries_and_flicker(self):
+        from agent import _CompoundClearingBrakeCarryController
+
+        def armed(*, obstacle_y=32.0, sweep=6.0, steering=0.1):
+            controller = _CompoundClearingBrakeCarryController()
+            controller._pace_sweep = sweep
+            controller._pace_latched_target = controller.COMPOUND_TARGET_SPEED
+            curve_target = float(
+                np.clip(
+                    controller.cruise_speed - 2.0 * sweep,
+                    36.0,
+                    controller.cruise_speed,
+                )
+            )
+            target = controller._adjust_target_speed(
+                target_speed=min(curve_target, 47.0),
+                curve_target_speed=curve_target,
+                obstacle=(obstacle_y, 35.0, 42.0),
+            )
+            controller._adjust_target_speed_for_steering(
+                target_speed=target,
+                steering=steering,
+                straight=False,
+                obstacle=(obstacle_y, 35.0, 42.0),
+            )
+            return controller._compound_clearing_armed
+
+        self.assertTrue(armed(sweep=6.0, steering=0.28))
+        self.assertTrue(armed(sweep=6.0, steering=-0.28))
+        self.assertTrue(armed(obstacle_y=43.999, sweep=6.0, steering=0.1))
+        self.assertTrue(armed(sweep=11.999, steering=0.1))
+        self.assertFalse(armed(obstacle_y=44.0, sweep=6.0, steering=0.1))
+        self.assertFalse(armed(sweep=5.999, steering=0.1))
+        self.assertFalse(armed(sweep=12.0, steering=0.1))
+        self.assertFalse(armed(sweep=6.0, steering=0.0))
+        self.assertFalse(
+            armed(sweep=6.0, steering=np.nextafter(0.28, np.inf))
+        )
+        self.assertFalse(
+            armed(sweep=6.0, steering=np.nextafter(-0.28, -np.inf))
+        )
+
+        frame = _observation(speed=0.0)
+        control = _CompoundClearingBrakeCarryController()
+
+        def act(*, present, obstacle_y=32.0, sweep=6.0, reversal=False):
+            if reversal:
+                centers = {
+                    30: 30.0,
+                    34: 30.0,
+                    38: 30.0,
+                    42: 34.0,
+                    54: 36.0,
+                    58: 36.0,
+                    62: 36.0,
+                    66: 34.0,
+                }
+            else:
+                centers = {
+                    30: 42.0 + sweep,
+                    34: 42.0,
+                    38: 42.0,
+                    42: 42.0,
+                    54: 42.0,
+                    58: 42.0,
+                    62: 42.0,
+                }
+            detected = (obstacle_y, 35.0, 42.0) if present else None
+            with patch.object(
+                control, "_road_centers", return_value=centers
+            ), patch.object(
+                control, "_nearest_obstacle", return_value=detected
+            ), patch.object(
+                control, "_estimate_speed", return_value=40.0
+            ):
+                return control.act(frame)
+
+        act(present=True)
+        self.assertTrue(control._compound_clearing_armed)
+        act(present=False)
+        act(present=True, obstacle_y=44.0)
+        self.assertFalse(control._compound_clearing_armed)
+        act(present=True)
+        self.assertTrue(control._compound_clearing_armed)
+        act(present=False)
+        act(present=True)
+        self.assertTrue(control._compound_clearing_armed)
+        for _ in range(4):
+            act(present=False)
+        act(present=False, reversal=True)
+        self.assertFalse(control._compound_clearing_active)
+
+    def test_compound_clearing_brake_carry_is_mirrored_and_state_bounded(self):
+        from agent import (
+            _AggressiveCompoundPaceController,
+            _CompoundClearingBrakeCarryController,
+        )
+
+        frame = _observation(speed=0.0)
+        rng = np.random.default_rng(2026093022)
+        changed = exact = 0
+        for index in range(64):
+            direction = (-1.0, 1.0)[index % 2]
+            obstacle_x = (35.0, 49.0)[(index // 2) % 2]
+            initial_sweep = float(rng.uniform(4.0, 14.0))
+            clear_sweep = float(rng.uniform(4.0, 14.0))
+            obstacle_y = float(rng.uniform(28.0, 48.0))
+            speed = float(rng.uniform(32.0, 55.0))
+            control = _AggressiveCompoundPaceController()
+            candidate = _CompoundClearingBrakeCarryController()
+
+            def act(obstacle_present, sweep):
+                centers = {
+                    30: 42.0 + direction * sweep,
+                    34: 42.0,
+                    38: 42.0,
+                    42: 42.0,
+                    54: 42.0,
+                    58: 42.0,
+                    62: 42.0,
+                }
+                obstacle = (
+                    (obstacle_y, obstacle_x, 42.0)
+                    if obstacle_present else None
+                )
+                actions = []
+                for controller in (control, candidate):
+                    with patch.object(
+                        controller, "_road_centers", return_value=centers
+                    ), patch.object(
+                        controller, "_nearest_obstacle", return_value=obstacle
+                    ), patch.object(
+                        controller, "_estimate_speed", return_value=speed
+                    ):
+                        actions.append(controller.act(frame))
+                return actions
+
+            np.testing.assert_array_equal(*act(True, initial_sweep))
+            for _ in range(4):
+                np.testing.assert_array_equal(*act(False, initial_sweep))
+            clearing = act(False, clear_sweep)
+            np.testing.assert_array_equal(clearing[1][:2], clearing[0][:2])
+            self.assertTrue(np.all(np.isfinite(clearing[1])))
+            self.assertEqual(float(clearing[1][1]) * float(clearing[1][2]), 0.0)
+            if candidate._compound_clearing_active:
+                self.assertLess(obstacle_y, 44.0)
+                self.assertGreaterEqual(initial_sweep, 6.0)
+                self.assertLess(initial_sweep, 12.0)
+                self.assertGreaterEqual(clear_sweep, 6.0)
+                self.assertLess(clear_sweep, 12.0)
+                self.assertGreater(candidate._pace_command_target, 30.0)
+                target = float(candidate._pace_effective_target)
+                base_brake = (
+                    0.0
+                    if speed <= target + 1.0
+                    else float(np.clip((speed - target) * 0.012, 0.04, 0.28))
+                )
+                bounded_base = min(
+                    base_brake,
+                    float(np.nextafter(np.float32(0.28), np.float32(0.0))),
+                )
+                self.assertGreaterEqual(
+                    float(clearing[1][2]) + 1e-7, bounded_base
+                )
+                self.assertLessEqual(
+                    float(clearing[0][2]) - float(clearing[1][2]),
+                    0.04 + 1e-6,
+                )
+                if np.array_equal(clearing[1], clearing[0]):
+                    exact += 1
+                else:
+                    changed += 1
+                    self.assertLess(
+                        float(clearing[1][2]), float(clearing[0][2])
+                    )
+                    self.assertGreater(float(clearing[1][2]), 0.0)
+            else:
+                exact += 1
+                np.testing.assert_array_equal(clearing[1], clearing[0])
+            np.testing.assert_array_equal(*act(False, clear_sweep))
+        self.assertGreater(changed, 0)
+        self.assertGreater(exact, 0)
+
     def test_compound_speed_margin_changes_only_the_inherited_transient_cap(self):
         from agent import (
             _CompoundHazardController,

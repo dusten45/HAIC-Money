@@ -2492,6 +2492,132 @@ class _AggressiveCompoundPaceController(_AdaptiveCompoundTargetController):
     ADAPTIVE_COMPOUND_MAX_TARGET = 38.0
 
 
+class _CompoundClearingBrakeCarryController(_AggressiveCompoundPaceController):
+    """Avoid a one-frame brake spike when a safe compound latch clears.
+
+    A far/moderate adaptive obstacle arms this transition only after its final
+    steering request passes the existing safety veto.  Miss frames1--4 remain
+    parent-exact.  On the fifth miss, when the obstacle latch clears, the target,
+    gas and steering stay unchanged while the brake moves by at most0.04 toward
+    the already-qualified compound envelope for that frame only.
+    """
+
+    CLEARING_BRAKE_RELIEF_MAX = 0.04
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._compound_clearing_armed = False
+        self._compound_clearing_active = False
+        self._compound_clearing_direction = 0.0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._compound_clearing_armed = False
+        self._compound_clearing_active = False
+        self._compound_clearing_direction = 0.0
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._compound_clearing_armed = False
+        self._compound_clearing_active = False
+        self._compound_clearing_direction = 0.0
+        return super()._lost_road_action()
+
+    def _adjust_target_speed_for_steering(
+        self,
+        *,
+        target_speed: float,
+        steering: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed_for_steering(
+            target_speed=target_speed,
+            steering=steering,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        self._compound_clearing_active = False
+
+        if obstacle is not None:
+            self._compound_clearing_armed = bool(
+                self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+                and self._pace_command_target is not None
+                and self._pace_command_target > self.COMPOUND_TARGET_SPEED
+                and self.COMPOUND_SWEEP_THRESHOLD <= self._pace_sweep
+                < self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+                and steering != 0.0
+                and abs(steering) <= self.ADAPTIVE_COMPOUND_MAX_STEER_REQUEST
+            )
+            self._compound_clearing_direction = (
+                float(np.sign(steering))
+                if self._compound_clearing_armed
+                else 0.0
+            )
+            return inherited
+
+        steering_reversed = bool(
+            self._compound_clearing_direction != 0.0
+            and steering != 0.0
+            and steering * self._compound_clearing_direction < 0.0
+        )
+        safe_compound_geometry = bool(
+            self.COMPOUND_SWEEP_THRESHOLD <= self._pace_sweep
+            < self.ADAPTIVE_COMPOUND_EXTREME_SWEEP
+            and abs(steering) <= self.ADAPTIVE_COMPOUND_MAX_STEER_REQUEST
+            and not steering_reversed
+        )
+        if self._carry_latched_at_frame_start and self._obstacle_side != 0.0:
+            if not safe_compound_geometry:
+                self._compound_clearing_armed = False
+                self._compound_clearing_direction = 0.0
+            return inherited
+
+        clearing_frame = bool(
+            self._compound_clearing_armed
+            and self._carry_latched_at_frame_start
+            and self._obstacle_side == 0.0
+            and self._obstacle_missing == 0
+            and self._pace_latched_target is None
+            and self._pace_command_target is not None
+            and self._pace_command_target > self.COMPOUND_TARGET_SPEED
+            and safe_compound_geometry
+        )
+        if clearing_frame:
+            self._compound_clearing_active = True
+            self._compound_clearing_armed = False
+            self._compound_clearing_direction = 0.0
+        elif not self._carry_latched_at_frame_start:
+            self._compound_clearing_armed = False
+            self._compound_clearing_direction = 0.0
+        return inherited
+
+    def _curve_brake_envelope(
+        self,
+        *,
+        excess: float,
+        base_brake: float,
+    ) -> float:
+        control_brake = super()._curve_brake_envelope(
+            excess=excess,
+            base_brake=base_brake,
+        )
+        if not self._compound_clearing_active:
+            return control_brake
+        carry_brake = float(
+            np.clip(
+                self.COMPOUND_CARRY_BRAKE_BASE
+                + self.COMPOUND_CARRY_BRAKE_GAIN * excess,
+                self.COMPOUND_CARRY_BRAKE_BASE,
+                self.COMPOUND_CARRY_BRAKE_MAX,
+            )
+        )
+        return max(
+            base_brake,
+            carry_brake,
+            control_brake - self.CLEARING_BRAKE_RELIEF_MAX,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2993,7 +3119,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _AggressiveCompoundPaceController()
+            _CompoundClearingBrakeCarryController()
             if use_forward_controller
             else None
         )

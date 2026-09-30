@@ -87,13 +87,17 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _AggressiveCompoundPaceController
+from agent import (
+    Agent,
+    _AggressiveCompoundPaceController,
+    _CompoundClearingBrakeCarryController,
+)
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _AggressiveCompoundPaceController
+assert type(agent._forward_controller) is _CompoundClearingBrakeCarryController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.36, 0.0], dtype=np.float32))
 
 frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0

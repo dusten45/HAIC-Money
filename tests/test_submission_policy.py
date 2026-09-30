@@ -22,7 +22,7 @@ from agent import (
     Agent,
     Baseline1Actor,
     DRQ_ACTOR_FORMAT,
-    _AggressiveCompoundPaceController,
+    _CompoundClearingBrakeCarryController,
 )
 from export_policy import export_payload, source_action_smoothing
 from export_policy import ACTOR_STATE_KEYS, extract_actor_state
@@ -61,7 +61,7 @@ class TestSubmissionPolicy(unittest.TestCase):
             bare = Agent(path)
             self.assertIs(
                 type(bare._forward_controller),
-                _AggressiveCompoundPaceController,
+                _CompoundClearingBrakeCarryController,
             )
 
             explicit_path = Path(directory) / "explicit-model.pt"
