@@ -21,7 +21,10 @@
 - [Guided checkpoint](../../experiments/rlpd-recovery-guided-v1-result.json):
   exported hashes verified; official-coordinate joint MSE on 87 positive failure Oracle
   inputs is 0.0287 versus original 0.3760. Contemporary closed-loop outcome
-  evaluation remains running; no finish improvement is inferred from imitation.
+  evaluation rejected it: [verified guided outcomes](../../experiments/rlpd-recovery-guided-evaluation-v1-result.json)
+  show original5/12 versus guided2/12, four original finishes lost. Reduced sparse
+  curve proxy and action error do not offset lost completion. Frozen-encoder
+  actor-only correction with initial/successful-state protection is next.
 - [Post-learning action/Q comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json)
   and [policy-handoff timeline](../../experiments/rlpd-recovery-handoff-v2-result.json):
   zero-reset diagnostics separate actual trajectory outcomes, action alignment,

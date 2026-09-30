@@ -56,8 +56,14 @@ shows changed heading/steering visits and lost handoff retention, not a uniform
 saturation shift or a blanket speed/brake-only mechanism. The
 [guided result checkpoint](../../experiments/rlpd-recovery-guided-v1-result.json)
 records successful export/hash checks and markedly lower joint error on the
-87 selected failure Oracle images, but a new original-versus-guided full-episode
-comparison is still running. Action matching is not closed-loop improvement.
+87 selected failure Oracle images. The full comparison nevertheless finished
+original 5/12 versus guided 2/12, losing four original finishes and preserving
+only one. The sparse curve-terminal proxy fell 1 to 0 while mean progress fell
+0.6944 to 0.4804, so the guided intervention is rejected too. Action matching is
+not closed-loop improvement. See the [verified guided evaluation](../../experiments/rlpd-recovery-guided-evaluation-v1-result.json).
+The third isolated iteration freezes the original encoder/critics/temperature
+and fits only actor correction with explicit initial/successful-path protection.
+It is not yet run and must pass the same real-episode gate.
 There is
 no learned improvement or candidate promotion. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).

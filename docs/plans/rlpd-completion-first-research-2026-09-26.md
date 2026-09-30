@@ -77,6 +77,16 @@ under unchanged consumed-G0 conditions and terminal-curve endpoint. Selected-row
 joint action matching improved markedly, but this cannot close the finish gate.
 See `experiments/rlpd-recovery-guided-v1-result.json` for the current checkpoint.
 
+**Guided outcome:** 24 uncensored episodes yielded original5/12 and guided2/12;
+four original finishes were lost, one kept and one new finish gained. Mean
+progress also decreased. This variant is rejected despite substantially improved
+matching on the 87 selected Oracle inputs and sparse curve proxy1->0. The third
+intervention keeps encoder/critics/temperature fixed at the original checkpoint
+and fits actor decoder only: 16 proven failure-Oracle, 32 ordinary-prior reference
+and 16 protected initial/source-finished-path images per batch, 2,048 offline
+updates, guide1/retention1. It must be independently frozen and evaluated; no
+critic, environment or SAC updates are part of that fit.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 
