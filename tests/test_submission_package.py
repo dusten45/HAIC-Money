@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_adaptive_compound_target_controller(self):
+    def test_packaged_bare_model_uses_aggressive_compound_pace_controller(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -87,13 +87,13 @@ class TestSubmissionPackage(unittest.TestCase):
 
             code = """
 import numpy as np
-from agent import Agent, _AdaptiveCompoundTargetController
+from agent import Agent, _AggressiveCompoundPaceController
 frame = np.full((84, 84), 0.1, dtype=np.float32)
 frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _AdaptiveCompoundTargetController
+assert type(agent._forward_controller) is _AggressiveCompoundPaceController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.36, 0.0], dtype=np.float32))
 
 frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0
@@ -111,7 +111,7 @@ obstacle = frame.copy()
 obstacle[32:36, 40:43] = 0.68
 obstacle[77:83, 10:13] = (0.27 + 0.085 * 60.0) / 18.0
 obstacle_observation = np.tile(obstacle[None, :, :], (4, 1, 1))
-candidate = _AdaptiveCompoundTargetController()
+candidate = _AggressiveCompoundPaceController()
 detected = candidate.act(obstacle_observation)
 assert detected[1] == 0.0
 assert detected[2] > 0.0
@@ -159,7 +159,7 @@ adaptive[32:36, 35:38] = 0.68
 adaptive[77:83, 10:13] = (0.27 + 0.085 * 40.0) / 18.0
 agent.reset(None)
 adaptive_action = agent.act(np.tile(adaptive[None, :, :], (4, 1, 1)))
-assert 30.0 < agent._forward_controller._pace_command_target <= 36.0
+assert 30.0 < agent._forward_controller._pace_command_target <= 38.0
 assert agent._forward_controller._pace_latched_target == 30.0
 assert adaptive_action[1] == 0.0
 assert 0.0 < adaptive_action[2] < np.float32(0.154)

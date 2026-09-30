@@ -2486,6 +2486,12 @@ class _AdaptiveCompoundTargetController(
         )
 
 
+class _AggressiveCompoundPaceController(_AdaptiveCompoundTargetController):
+    """Carry two more speed units only inside the adaptive safety gate."""
+
+    ADAPTIVE_COMPOUND_MAX_TARGET = 38.0
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
@@ -2987,7 +2993,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _AdaptiveCompoundTargetController()
+            _AggressiveCompoundPaceController()
             if use_forward_controller
             else None
         )
