@@ -53,7 +53,7 @@
     "maximum_cell_gas_boundaries": {
       "full_gas": "candidate speed<30 versus control speed<28",
       "mid_gas": "candidate speed<35 versus control speed<33",
-      "hold_or_coast_transition": "candidate keeps the positive hold branch through speed39 versus control through speed37 before overspeed braking"
+      "hold_or_brake_transition": "the downstream curve-overspeed trigger keeps the candidate positive hold branch through speed38.5 versus control through speed36.5; the next representable speed above each boundary begins softened braking"
     },
     "scope_note": "The single target-ceiling factor intentionally shifts both inherited gas thresholds and the softened brake demand; tests must compare both effects to control."
   },
