@@ -2,6 +2,12 @@
 
 ## RLPD Coupled Recovery (2026-09-29)
 
+- [Frozen-encoder actor-only protocol](../../experiments/rlpd-recovery-actor-only-v1.json)
+  and [verified evaluation](../../experiments/rlpd-recovery-actor-only-evaluation-v1-result.json):
+  zero-reset offline 2,048-update fit preserves frozen components but finishes
+  5/12 versus original5/12 with four original finishes lost and four gains. Global
+  correction is not a retained improvement. Pixel-only local support gating is
+  the next separately frozen hypothesis, not an outcome-selected road router.
 - [Closed-loop validation and learning status](../../experiments/rlpd-recovery-validation-v1-result.json):
   42 complete branches; 12/25-decision feedback rescued 2/10 and 3/10 failure
   finishes but each harmed 2/4 finished controls. Strict paired-finish preparation

@@ -87,6 +87,20 @@ and 16 protected initial/source-finished-path images per batch, 2,048 offline
 updates, guide1/retention1. It must be independently frozen and evaluated; no
 critic, environment or SAC updates are part of that fit.
 
+**Actor-only outcome:** The declared 2,048-update offline fit completed with all
+frozen hashes preserved. Actual 24-episode evaluation tied original5/12 with
+actor-only5/12, but only one original finish was retained; four were lost and
+four other roads gained. Progress decreased and damage/curve-terminal proxy
+increased. It fails preservation and net improvement despite successful fitting.
+The fourth hypothesis is a pixel-feature local-support gate: 87 proven failure
+Oracle images define support in the original encoder, radius half the nearest
+protected feature distance, zero-radius prototypes disabled, 12-decision held
+learned correction. Original output is exact when inactive outside coverage.
+Calibration forbids new triggers on reference samples but cannot guarantee
+preservation across active holds or full episodes. No road IDs, ground-truth
+speed/pose or Oracle act call may enter runtime selection. Original-versus-gated
+full episodes and trigger/hold timelines must be reported.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 

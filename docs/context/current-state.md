@@ -63,7 +63,17 @@ only one. The sparse curve-terminal proxy fell 1 to 0 while mean progress fell
 not closed-loop improvement. See the [verified guided evaluation](../../experiments/rlpd-recovery-guided-evaluation-v1-result.json).
 The third isolated iteration freezes the original encoder/critics/temperature
 and fits only actor correction with explicit initial/successful-path protection.
-It is not yet run and must pass the same real-episode gate.
+It completed 2,048 offline actor updates with all declared frozen components
+bitwise unchanged, then finished 24 uncensored evaluation episodes. Completion
+is tied at 5/12, but four original finishes were lost and four different roads
+gained; damage and curve-terminal counts increased. It fails the preservation/
+improvement gate. See the [actor-only outcome](../../experiments/rlpd-recovery-actor-only-evaluation-v1-result.json).
+The fourth hypothesis uses the original actor as exact default when inactive
+and a pixel-feature local-support gate to invoke the learned joint correction
+for a held 12-decision sequence. Protected calibration prevents fresh triggers
+on its sampled reference points, not harm guarantees during active holds or
+whole episodes. It is not yet built or evaluated; no geometry/pose/Oracle inputs
+are allowed at runtime and no fresh generalization is claimed.
 There is
 no learned improvement or candidate promotion. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
