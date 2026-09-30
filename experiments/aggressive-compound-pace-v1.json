@@ -3,6 +3,7 @@
   "experiment": "aggressive-compound-pace-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T15:46:09+09:00",
+  "amended_at": "2026-09-30T16:01:28+09:00",
   "branch": "feature/DG-Codex",
   "hypothesis": "The current maximum36 adaptive target still applies brake0.082 at estimated speed40 in the farthest moderate compound cell. Raising only that registered ceiling to38 should reduce the same localized slowdown while remaining below every target40 noncompound-near and clear-curve floor and preserving all lateral safety gates.",
   "scope": {
@@ -48,7 +49,13 @@
   "expected_longitudinal_effect": {
     "speed40_maximum_cell": "softened compound brake decreases from0.082 at target36 to0.058 at target38; inherited base brake remains0.04",
     "speed45_maximum_cell": "softened compound brake decreases from0.142 to0.118",
-    "pedal_rule": "Use the existing target thresholds and softened compound brake formula without changing gas constants, brake constants or overlap rules."
+    "pedal_rule": "Use the existing target thresholds and softened compound brake formula without changing gas constants, brake constants or overlap rules.",
+    "maximum_cell_gas_boundaries": {
+      "full_gas": "candidate speed<30 versus control speed<28",
+      "mid_gas": "candidate speed<35 versus control speed<33",
+      "hold_or_coast_transition": "candidate keeps the positive hold branch through speed39 versus control through speed37 before overspeed braking"
+    },
+    "scope_note": "The single target-ceiling factor intentionally shifts both inherited gas thresholds and the softened brake demand; tests must compare both effects to control."
   },
   "frozen": [
     "obstacle detection, pass-side selection, road and obstacle steering, steering cap/slew/reversal and post-obstacle retention",
@@ -62,7 +69,7 @@
   ],
   "static_acceptance": [
     "The candidate differs from control only on a current-visible frame already eligible under the frozen adaptive gate.",
-    "Candidate target equals30+8*d*m, remains greater than or equal to control and never exceeds38; control and candidate reconverge exactly at every gate boundary.",
+    "Candidate target equals30+8*d*m, remains greater than or equal to control and never exceeds38; control and candidate reconverge exactly on the excluded side of every gate boundary. Inclusive sweep6 and absolute steering0.28 remain eligible.",
     "Steering, detector, pass-side, latch and shared inherited state remain exact except _pace_command_target and derived _pace_effective_target.",
     "Both turn directions and both obstacle sides receive symmetric surface coverage.",
     "Pedal boundaries, intermediate targets, target hierarchy, finite bounds and gas/brake exclusivity match the registered formulas.",
@@ -82,5 +89,10 @@
     "reason": "Required local governance files are absent and the latest videos predate the control candidate.",
     "design_after_restoration": "Freeze paired control/candidate package hashes and rank finish, collision/off-track/clearance and progress before paired sector/lap time.",
     "performance_claim": false
+  },
+  "amendment_rationale": {
+    "safety_language": "Official simulator termination behavior does not establish that intentional grass use is competition-legal; the candidate does not use it.",
+    "boundary_language": "The prior phrase every gate boundary was ambiguous because sweep6 and absolute steering0.28 are inclusive eligible boundaries.",
+    "longitudinal_scope": "Raising a target changes inherited acceleration thresholds as well as braking, so both effects are explicitly registered before implementation commit."
   }
 }

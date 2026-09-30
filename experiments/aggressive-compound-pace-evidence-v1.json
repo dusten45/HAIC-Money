@@ -10,7 +10,7 @@
     "facts": [
       "Every official track contains six physical obstacles, so the three current videos cannot test an obstacle-count versus lap-time relationship.",
       "A collision adds20-percent damage and degrades grip, engine and steering from the first collision; the fifth collision retires the car.",
-      "Grass friction is0.6. A brief grass excursion is not an immediate disqualification, but101 consecutive negative-reward action steps or leaving the play area retires the car.",
+      "Grass friction is0.6. The simulator does not immediately terminate every brief grass excursion, but101 consecutive negative-reward action steps or leaving the play area retires the car; competition legality of intentional excursions is unverified and not used.",
       "Finished entries rank by simulated lap time; every non-finish ranks behind a finish."
     ]
   },
@@ -39,7 +39,7 @@
     "rationale": "This removes at most2 additional target-speed units in the already-qualified far/moderate regime, remains below the existing target40 used for near noncompound obstacles and clear-curve floor, and leaves all steering and recovery behavior unchanged."
   },
   "rejected": [
-    "Intentional off-road line: not an explicit rule violation by itself, but grass friction and terminal off-track risk make it an unsupported pace strategy.",
+    "Intentional off-road line: competition legality is unverified, and grass friction plus terminal off-track risk make it an unsupported and unused pace strategy.",
     "More aggressive obstacle steering: can reduce clearance, cross the existing strong-steer speed veto and regress the historical collision/off-track failures.",
     "Global target or brake increase: rendered clearances are tight and the current adaptive candidate has not yet received a bound closed-loop evaluation.",
     "Obstacle-count explanation: all official tracks contain six obstacles and current normalized pace is nearly constant across the three videos."
