@@ -79,6 +79,7 @@
         <span><i class="legend-start"></i>출발</span>
         <span><i class="legend-official"></i>공식 장애물</span>
         <span><i class="legend-custom"></i>사용자 장애물</span>
+        <span><i class="legend-collision"></i>충돌 위치</span>
       </div>
       <p id="generated-track-summary" class="hint generated-track-summary">공식 트랙</p>
 
@@ -225,6 +226,11 @@
         <article class="metric-card"><span>Action · steer / gas / brake</span><strong id="metric-action">—</strong></article>
         <article class="metric-card"><span>Velocity</span><strong id="metric-speed">—</strong></article>
         <article class="metric-card"><span>Track / Seed</span><strong id="metric-track">—</strong></article>
+      </div>
+      <div class="collision-panel">
+        <div><p class="section-kicker">COLLISION LOCATIONS</p><h3>충돌 위치</h3></div>
+        <ol id="collision-locations" class="collision-locations empty-collision-list"><li>현재 스텝까지 충돌 기록 없음</li></ol>
+        <p class="hint">표식은 충돌이 보고된 제어 스텝 종료 시점의 차량 중심 좌표입니다.</p>
       </div>
 
       <div class="comparison-heading"><div><p class="section-kicker">RUN COMPARISON</p><h3>기록 비교</h3></div></div>

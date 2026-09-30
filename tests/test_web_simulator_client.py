@@ -414,6 +414,84 @@ if (!fills.includes("#ff6f74") || !calls.includes("translate") || !calls.include
         self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
 
     @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_collision_markers_preserve_each_collision_event_and_location(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {} } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const markers = context.window.HAICSimulator.collisionMarkers([
+  { step: 0, position: [0, 0], collision: false },
+  { step: 1, sim_time_s: 0.1, position: [2, 3], damage: 0.2, collision: true },
+  { step: 2, sim_time_s: 0.2, position: [4, 5], damage: 0.4, collision: true },
+  { step: 3, position: [6, 7], collision: false }
+]);
+if (markers.length !== 2) throw new Error(`expected two events, got ${markers.length}`);
+if (markers[0].event !== 1 || markers[0].step !== 1 || markers[0].position.join(",") !== "2,3") {
+  throw new Error("first collision marker lost its event metadata or position");
+}
+if (markers[1].event !== 2 || markers[1].step !== 2 || markers[1].position.join(",") !== "4,5") {
+  throw new Error("consecutive collision events were incorrectly coalesced");
+}
+const throughFirst = context.window.HAICSimulator.collisionMarkers([
+  { step: 0, position: [0, 0], collision: false },
+  { step: 1, position: [2, 3], collision: true },
+  { step: 2, position: [4, 5], collision: true }
+], 1);
+if (throughFirst.length !== 1) throw new Error("through-step filtering exposed a future collision");
+'''
+        result = subprocess.run(
+            [NODE, "-e", script],
+            cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
+    def test_track_canvas_draws_numbered_collision_location_marker(self):
+        script = r'''const fs = require("fs");
+const vm = require("vm");
+const source = fs.readFileSync("web_simulator/app.js", "utf8");
+const context = { window: {}, document: { addEventListener() {}, getElementById() { return null; } } };
+vm.createContext(context);
+vm.runInContext(source, context);
+const fills = [];
+const labels = [];
+const translations = [];
+const drawing = {
+  clearRect() {}, fillRect() {}, beginPath() {}, lineTo() {}, moveTo() {}, closePath() {},
+  fill() {}, stroke() {}, arc() {}, setLineDash() {}, save() {}, rotate() {}, restore() {},
+  translate(x, y) { translations.push([x, y]); }, fillText(value) { labels.push(value); }
+};
+Object.defineProperty(drawing, "fillStyle", { set(value) { fills.push(value); } });
+const canvas = { width: 400, height: 300, getContext() { return drawing; } };
+context.window.HAICSimulator.drawTrack(canvas, {
+  track: { width: 8, points: [[0, 0, 0, 0], [0.25, 0, 10, 0], [0.5, 0, 10, 10], [0.75, 0, 0, 10]] },
+  official_obstacles: []
+}, [], null, null, [{ event: 1, step: 4, position: [5, 4] }]);
+if (!fills.includes("#e5484d")) throw new Error("collision marker color was not drawn");
+if (!labels.includes("1")) throw new Error("collision marker event number was not drawn");
+const markerPosition = translations.find(([x, y]) => Math.abs(x - 200) < 0.001 && Math.abs(y - 158.823529) < 0.001);
+if (!markerPosition) throw new Error(`collision marker projected to the wrong map position: ${JSON.stringify(translations)}`);
+const redFillCount = fills.filter((value) => value === "#e5484d").length;
+if (redFillCount !== 1) throw new Error(`expected exactly one collision marker, got ${redFillCount}`);
+const cleanFills = [];
+const cleanDrawing = { ...drawing };
+Object.defineProperty(cleanDrawing, "fillStyle", { set(value) { cleanFills.push(value); } });
+context.window.HAICSimulator.drawTrack(
+  { width: 400, height: 300, getContext() { return cleanDrawing; } },
+  { track: { width: 8, points: [[0, 0, 0, 0], [0.25, 0, 10, 0], [0.5, 0, 10, 10], [0.75, 0, 0, 10]] }, official_obstacles: [] },
+  [], null, null, [{ event: 1, position: [Number.NaN, 4] }]
+);
+if (cleanFills.includes("#e5484d")) throw new Error("invalid collision position was drawn");
+'''
+        result = subprocess.run(
+            [NODE, "-e", script],
+            cwd=Path.cwd(), capture_output=True, text=True, encoding="utf-8", check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+
+    @unittest.skipUnless(NODE, "Node.js is required for browser client tests")
     def test_custom_map_browser_preview_honors_start_index_and_direction(self):
         script = r'''const fs = require("fs");
 const vm = require("vm");

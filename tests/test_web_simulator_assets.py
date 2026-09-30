@@ -23,10 +23,14 @@ class TestWebAssets(unittest.TestCase):
             "run-table",
             "metric-action",
             "metric-speed",
+            "collision-locations",
             "agent-select",
             "agent-status",
         ):
             self.assertIn(f'id="{element_id}"', html)
+        self.assertIn('class="legend-collision"', html)
+        styles = Path("web_simulator/styles.css").read_text(encoding="utf-8")
+        self.assertIn(".legend-collision", styles)
 
     def test_map_renderer_has_default_empty_state_target(self):
         script = Path("web_simulator/app.js").read_text(encoding="utf-8")

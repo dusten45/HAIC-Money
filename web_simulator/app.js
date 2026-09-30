@@ -26,6 +26,7 @@
     selectedAgentId: "repository",
     manualRunId: null,
     manualVehicle: null,
+    manualCollisionMarkers: [],
     manualTimer: null,
     manualPaused: true,
     manualActionInFlight: false,
@@ -368,7 +369,13 @@
       </tr>`).join("");
   }
 
+  function clearMapRunOverlay() {
+    state.manualVehicle = null;
+    state.manualCollisionMarkers = [];
+  }
+
   function refreshCustomMapPreview() {
+    clearMapRunOverlay();
     state.preview = previewFromCustomMap(state.mapSpec);
     drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles);
     const validation = customMapValidation(state.mapSpec);
@@ -402,6 +409,7 @@
       points.push([(first[0] + last[0]) / 2, (first[1] + last[1]) / 2]);
     }
     state.mapSpec.generator = {};
+    clearMapRunOverlay();
     updateGeneratedTrackSummary(state.mapSpec);
     renderMap();
   }
@@ -412,15 +420,16 @@
     if (points.length <= 12) throw new Error("유효성 검사를 위해 중심선 점을 최소 12개 유지해야 합니다.");
     points.pop();
     state.mapSpec.generator = {};
+    clearMapRunOverlay();
     updateGeneratedTrackSummary(state.mapSpec);
     renderMap();
   }
 
-  function worldBounds(points) {
+  function worldBounds(points, padding = 8) {
     const xs = points.map((point) => point[2]);
     const ys = points.map((point) => point[3]);
     if (!xs.length || !ys.length) return { minX: -1, maxX: 1, minY: -1, maxY: 1 };
-    const padding = 8;
+    padding = Math.max(8, Number(padding) || 0);
     return {
       minX: Math.min(...xs) - padding,
       maxX: Math.max(...xs) + padding,
@@ -439,7 +448,53 @@
     };
   }
 
-  function drawTrack(canvas, preview, obstacles, emptyId = "canvas-empty", vehicle = null) {
+  function collisionMarkers(steps, throughStep = Number.POSITIVE_INFINITY) {
+    const limit = Number.isFinite(Number(throughStep)) ? Math.trunc(Number(throughStep)) : Number.POSITIVE_INFINITY;
+    return (Array.isArray(steps) ? steps : []).slice(0, limit + 1).filter((step) => (
+      step && step.collision && Array.isArray(step.position) && step.position.length === 2
+      && step.position.every((value) => Number.isFinite(Number(value)))
+    )).map((step, index) => ({
+      event: index + 1,
+      step: Number(step.step ?? index),
+      sim_time_s: Number(step.sim_time_s ?? 0),
+      position: step.position.map(Number),
+      damage: Number(step.damage || 0)
+    }));
+  }
+
+  function drawCollisionMarkers(context, markers, bounds, width, height) {
+    (markers || []).forEach((marker, index) => {
+      if (!marker || !Array.isArray(marker.position) || marker.position.length !== 2
+          || !marker.position.every((value) => Number.isFinite(Number(value)))) return;
+      const point = project(marker.position, bounds, width, height);
+      const label = String(marker.event ?? index + 1);
+      context.save();
+      context.translate(point.x, point.y);
+      context.beginPath();
+      context.arc(0, 0, 10, 0, Math.PI * 2);
+      context.fillStyle = "#e5484d";
+      context.fill();
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 2;
+      context.stroke();
+      context.beginPath();
+      context.moveTo(-5, -5);
+      context.lineTo(5, 5);
+      context.moveTo(5, -5);
+      context.lineTo(-5, 5);
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 2;
+      context.stroke();
+      context.font = "700 10px system-ui, sans-serif";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = "#ffffff";
+      context.fillText(label, 0, -17);
+      context.restore();
+    });
+  }
+
+  function drawTrack(canvas, preview, obstacles, emptyId = "canvas-empty", vehicle = null, collisionMarkerList = []) {
     const context = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -453,7 +508,7 @@
     }
     if (empty) empty.classList.add("hidden");
     const points = preview.track.points;
-    const bounds = worldBounds(points);
+    const bounds = worldBounds(points, Number(preview.track.width || 0) + 4);
     const scale = Math.min(width / (bounds.maxX - bounds.minX), height / (bounds.maxY - bounds.minY));
     const mapped = points.map((point) => project([point[2], point[3]], bounds, width, height));
     context.lineJoin = "round";
@@ -511,6 +566,7 @@
     context.arc(start.x, start.y, 5, 0, Math.PI * 2);
     context.fillStyle = "#8eb5ff";
     context.fill();
+    drawCollisionMarkers(context, collisionMarkerList, bounds, width, height);
     if (vehicle && Array.isArray(vehicle.position) && vehicle.position.length === 2) {
       const position = project(vehicle.position, bounds, width, height);
       context.save();
@@ -550,7 +606,10 @@
   function renderMap() {
     renderObstacleTable();
     renderControlPointTable();
-    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
+    drawTrack(
+      $("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty",
+      state.manualVehicle, state.manualCollisionMarkers
+    );
     const map = state.mapSpec;
     $("map-status").textContent = map.map_kind === "custom"
       ? `${map.map_id} · ${map.obstacles.length}개 장애물`
@@ -651,7 +710,7 @@
     const preview = replayPreview(log);
     drawTrack($("replay-canvas"), preview, replayObstacles(log), "replay-empty");
     const points = log.track.points;
-    const bounds = worldBounds(points);
+    const bounds = worldBounds(points, Number(log.track.width || 0) + 4);
     const canvas = $("replay-canvas");
     const context = canvas.getContext("2d");
     const current = log.steps[stepIndex];
@@ -663,6 +722,13 @@
     context.lineWidth = 3;
     context.lineCap = "round";
     context.stroke();
+    drawCollisionMarkers(
+      context,
+      collisionMarkers(log.steps, stepIndex),
+      bounds,
+      canvas.width,
+      canvas.height
+    );
     const car = project(current.position, bounds, canvas.width, canvas.height);
     const scale = Math.min(canvas.width / (bounds.maxX - bounds.minX), canvas.height / (bounds.maxY - bounds.minY));
     context.save();
@@ -720,6 +786,28 @@
     $("timeline").value = String(runState.stepIndex);
     $("run-status").textContent = runState.running ? "재생 중" : "로그 로드됨";
     $("run-status").classList.toggle("muted", !runState.running);
+    renderCollisionLocations(log, runState.stepIndex);
+  }
+
+  function renderCollisionLocations(log, throughStep) {
+    const target = $("collision-locations");
+    if (!target) return;
+    const markers = collisionMarkers(log && log.steps, throughStep);
+    if (!markers.length) {
+      const item = document.createElement("li");
+      item.textContent = "현재 스텝까지 충돌 기록 없음";
+      target.replaceChildren(item);
+      target.classList.add("empty-collision-list");
+      return;
+    }
+    target.classList.remove("empty-collision-list");
+    const items = markers.map((marker) => {
+      const item = document.createElement("li");
+      const [x, y] = marker.position;
+      item.textContent = `#${marker.event} · step ${marker.step + 1} · (${x.toFixed(2)}, ${y.toFixed(2)})`;
+      return item;
+    });
+    target.replaceChildren(...items);
   }
 
   function renderRunFrame(runState, stepIndex) {
@@ -859,6 +947,7 @@
   function applyMap(payload, source) {
     state.mapSpec = normalizeMap(payload);
     state.preview = payload.preview || previewFromCustomMap(state.mapSpec);
+    clearMapRunOverlay();
     syncForm();
     renderMap();
     updateGeneratedTrackSummary(state.mapSpec);
@@ -905,6 +994,7 @@
   function addObstacle(obstacle) {
     if (state.mapSpec.obstacles.length >= 64) throw new Error("사용자 장애물은 최대 64개입니다.");
     state.mapSpec.obstacles = [...state.mapSpec.obstacles, obstacle];
+    clearMapRunOverlay();
     renderMap();
   }
 
@@ -1647,6 +1737,7 @@
       radius: 1.2
     }));
     state.mapSpec.obstacles = generated.slice(0, 64);
+    clearMapRunOverlay();
     if (state.mapSpec.obstacle_mode === "official") state.mapSpec.obstacle_mode = "official_plus_custom";
     syncForm();
     renderMap();
@@ -1764,7 +1855,19 @@
           position: step.position.map(Number),
           angle: Number(step.angle || 0)
         };
-        drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
+        if (step.collision) {
+          state.manualCollisionMarkers.push({
+            event: state.manualCollisionMarkers.length + 1,
+            step: Number(step.step || 0),
+            sim_time_s: Number(step.sim_time_s || 0),
+            position: step.position.map(Number),
+            damage: Number(step.damage || 0)
+          });
+        }
+        drawTrack(
+          $("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty",
+          state.manualVehicle, state.manualCollisionMarkers
+        );
       }
       setLiveRunStatus(`스텝 ${Number(step.step || 0) + 1} · 진행 ${formatPercent(step.progress)}`);
       if (response.done) {
@@ -1805,6 +1908,7 @@
       state.manualRunId = started.run_id;
       state.preview = { track: started.track, official_obstacles: [] };
       state.manualVehicle = null;
+      state.manualCollisionMarkers = [];
       state.manualPaused = false;
       state.manualKeys.clear();
       setManualControls(true);
@@ -1816,6 +1920,8 @@
       return started;
     }
     if (!['agent', 'baseline'].includes(policy)) throw new Error("지원하지 않는 자동 주행 정책입니다.");
+    clearMapRunOverlay();
+    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty");
     state.automaticRunActive = true;
     setManualControls(false);
     setLiveRunStatus(`${policy === "agent" ? "Agent" : "기본 정책"} 실행 중…`);
@@ -1897,6 +2003,7 @@
 
   function changeMapKind() {
     const kind = $("map-kind").value;
+    clearMapRunOverlay();
     updateMapKindVisibility();
     if (kind === "custom") {
       if (state.mapSpec.map_kind !== "custom") {
@@ -1944,7 +2051,7 @@
     $("random-obstacles").addEventListener("click", () => {
       try { generateRandomObstacles(); } catch (error) { setStatus(error.message, true); }
     });
-    $("clear-obstacles").addEventListener("click", () => { state.mapSpec.obstacles = []; renderMap(); setStatus("사용자 장애물을 모두 삭제했습니다.", false); });
+    $("clear-obstacles").addEventListener("click", () => { state.mapSpec.obstacles = []; clearMapRunOverlay(); renderMap(); setStatus("사용자 장애물을 모두 삭제했습니다.", false); });
     $("download-map").addEventListener("click", () => { saveMap().catch((error) => setStatus(error.message, true)); });
     $("download-map-file").addEventListener("click", () => { try { downloadMap(); } catch (error) { setStatus(error.message, true); } });
     $("map-kind").addEventListener("change", changeMapKind);
@@ -1954,6 +2061,7 @@
       if ($("map-kind").value === "custom" && state.mapSpec.map_kind !== "custom") return;
       try {
         readForm();
+        clearMapRunOverlay();
         if (state.mapSpec.map_kind === "custom") state.preview = previewFromCustomMap(state.mapSpec);
         renderMap();
       } catch (error) { setStatus(error.message, true); }
@@ -1998,14 +2106,16 @@
         const key = input.dataset.key;
         const limits = { progress: [0, 1], lateral: [-1, 1], radius: [.2, 4] }[key];
         state.mapSpec.obstacles[index][key] = finiteNumber(input.value, key, limits[0], limits[1]);
+        clearMapRunOverlay();
         if (state.mapSpec.map_kind === "custom") state.preview = previewFromCustomMap(state.mapSpec);
-    drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
+        drawTrack($("map-canvas"), state.preview, state.mapSpec.obstacles, "canvas-empty", state.manualVehicle);
       } catch (error) { setStatus(error.message, true); }
     });
     $("obstacle-table").addEventListener("click", (event) => {
       const button = event.target.closest(".delete-obstacle");
       if (!button) return;
       state.mapSpec.obstacles.splice(Number(button.dataset.index), 1);
+      clearMapRunOverlay();
       renderMap();
       setStatus("사용자 장애물을 삭제했습니다.", false);
     });
@@ -2057,6 +2167,8 @@
     loadRunLog,
     normalizeMap,
     drawTrack,
+    collisionMarkers,
+    drawCollisionMarkers,
     renderRunFrame,
     setPlaybackRunning,
     advancePlayback,

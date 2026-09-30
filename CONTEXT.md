@@ -124,6 +124,12 @@ The Track Lab web server now exposes a local Agent catalog under
 `<artifact-root>/agents`, lets the browser choose a ready model, and passes that
 selection to the automatic run endpoint. Map files, official seeds, and generated
 custom tracks remain selectable in the same UI.
+Track Lab derives collision locations from the existing `steps[].collision` and
+`steps[].position` telemetry without changing the run schema. Live manual maps
+retain numbered collision markers, and loaded/automatic replays reveal each event
+from its occurrence onward with its step and vehicle-center world coordinates. These coordinates
+are sampled at the end of the collision-bearing control step, not at the Box2D
+contact manifold.
 
 The three `evaluation_videos` maps were recovered from independent minimap shape,
 track-length and obstacle fingerprints as official `(track_id, seed)` cells:
