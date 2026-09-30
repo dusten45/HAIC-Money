@@ -1,0 +1,19 @@
+{
+  "schema_version":1,
+  "experiment":"corridor-failure-trace-v1",
+  "status":"PREREGISTERED_DIAGNOSIS",
+  "baseline_commit":"ddbda41ca70b64d312318c36d40e306ac52d0b2d",
+  "controller":"_CompoundClearingBrakeCarryController",
+  "diagnostic_cells":[[1,11],[1,21],[1,42],[2,644062]],
+  "max_steps":400,
+  "frame_skip":4,
+  "purpose":"Replay existing baseline failures with observation and internal controller telemetry, separating missing-row defaults, road loss, obstacle arbitration and overspeed. No policy changes or parameter selection during recording.",
+  "frozen":"Source/model/protocol hashes recorded before first reset; official environment untouched; observation-only policy inputs.",
+  "outputs":["pre-action observations","road centers and sweep","obstacle detections","pre/post steering hooks","target and latch state","action","post-action diagnostic position/speed/progress/collisions"],
+  "checks":"Actions and steps must match previously source-bound baseline logs to the recorded horizon. Instrumentation must call each original hook exactly once and return its result unchanged. All protected confirmation/blind partitions excluded.",
+  "budget":"One baseline trace per declared cell, up to400 decisions; no fresh performance or SOTA claim.",
+  "scope":"Previously consumed development diagnosis only. No training, new held-out cells, submission or SOTA promotion.",
+  "training":false,
+  "submission":false,
+  "sota_promotion":false
+}
