@@ -3,6 +3,7 @@
   "experiment": "compound-clearing-brake-carry-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T22:48:06+09:00",
+  "amended_at": "2026-09-30T23:05:00+09:00",
   "branch": "feature/DG-Codex",
   "hypothesis": "After four compound detector-miss frames, the latch-clearing fifth frame restores the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Retaining only the existing softened compound brake envelope for that transition should remove a deterministic brake spike without raising target speed, changing steering, or weakening the inherited base speed brake.",
   "scope": {
@@ -32,7 +33,7 @@
     "steering": "bit-exact to control",
     "base_brake": "unchanged and remains the minimum",
     "supplemental_brake": "max(base_brake, clip(0.04 + 0.012*excess, 0.04, 0.18)) instead of max(base_brake, clip(0.06 + 0.018*excess, 0.06, 0.28))",
-    "illustrative_cell": "At sweep6, generic target34 and speed40, brake changes from approximately0.168 to0.112 while the inherited base brake remains0.072."
+    "illustrative_cell": "At sweep6, generic target34 and speed40, curve excess is5.5 after the unchanged0.5 trigger delta; brake changes from0.159 to0.106 while the inherited base brake remains0.072."
   },
   "frozen": [
     "current-obstacle approach behavior and adaptive target ceiling38",
