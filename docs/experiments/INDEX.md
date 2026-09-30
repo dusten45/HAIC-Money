@@ -8,8 +8,11 @@
   prototypes and excluded16,023 reference triggers, not a full-episode harm
   guarantee. [First verified outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json)
   is original5/12 versus gated6/12, kept5/lost0/gained1, damage0.2->0.05 and
-  progress0.6944->0.7566. Sparse curve-terminal count remains1/1; unchanged-model
-  repeat and trigger-path audit are pending. Consumed TRAIN, not fresh evidence.
+  progress0.6944->0.7566. Sparse curve-terminal count remains1/1; the
+  [unchanged-model repeat](../../experiments/rlpd-local-recovery-gate-evaluation-repeat-v1-result.json)
+  matches and the [trajectory audit](../../experiments/rlpd-local-recovery-gate-trajectory-review-v1-result.json)
+  confirms24 correction decisions followed by383 source-only decisions on the
+  gained road. Consumed TRAIN repeatability, not independent training/fresh evidence.
 - [Frozen-encoder actor-only protocol](../../experiments/rlpd-recovery-actor-only-v1.json)
   and [verified evaluation](../../experiments/rlpd-recovery-actor-only-evaluation-v1-result.json):
   zero-reset offline 2,048-update fit preserves frozen components but finishes

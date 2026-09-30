@@ -80,8 +80,15 @@ versus-gated evaluation completed 24 uncensored episodes: original5/12 versus
 gated6/12, all five old finishes retained and geometry4272000010 gained. Mean
 damage0.2->0.05 and progress0.6944->0.7566 improve; sparse curve-terminal counts
 remain1/1. This is the first retained consumed-TRAIN improvement, not fresh
-generalization. An unchanged-policy repeat and actual trigger-path review are
-running. See the [verified local-gate outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json).
+generalization. The [unchanged-policy repeat](../../experiments/rlpd-local-recovery-gate-evaluation-repeat-v1-result.json)
+reproduced the same counts and aggregates. The [primary trigger-path review](../../experiments/rlpd-local-recovery-gate-trajectory-review-v1-result.json)
+verified only60/4896 decisions used correction: two12-decision holds rescue
+geometry10, then383 source-only decisions finish. At5.04s after its first
+trigger, heading is -0.049rad, speed21.99m/s, lateral2.28m, damage0, progress0.2465
+versus source heading2.937rad/progress0.1549. All five preserved finishes had no
+gate activity and exact trajectories. This closes the internal recovery-data
+validation gate, not a fresh-road/independent-training or official-model gate.
+See the [verified local-gate outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json).
 No geometry/pose/Oracle inputs
 are allowed at runtime and no fresh generalization is claimed.
 There is

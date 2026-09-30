@@ -116,6 +116,16 @@ and primary trigger/hold paths are being audited before a consequential
 recommendation. This is one consumed-TRAIN learner/support result, not fresh
 generalization, an independent training replication or official ranking.
 
+**Completed local validation:** The unchanged-artifact repeat independently
+verified its primary files and reproduced every finish count/aggregate. Primary
+trajectory review confirmed5 triggers/60 active decisions across3 episodes, not
+5 independent trials. Geometry10 follows two support cues from the same validated
+joint sequence, uses24 corrected actions, then383 original-actor actions and
+finishes. All5 retained finishes have zero gate activity and exactly unchanged
+trajectories. The requested internal data/recovery and retained completion gate
+is met at this narrow TRAIN support. Broader performance and fresh generalization
+remain unestablished; do not promote or submit based on this result.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 
