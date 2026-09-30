@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "q_only_and_guided_rejected_actor_only_fitted_evaluation_running",
+  "status": "three_global_interventions_rejected_local_gate_pending",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -126,7 +126,18 @@
     "mechanisms_are_hypotheses": "One-step Q policy bootstrapping/sequence credit, representation drift and changed state visitation are alternatives; Q rankings are not causal proof or expert-optimality guarantees."
   },
   "third_intervention": {
-    "status": "2048_offline_updates_complete_evaluation_running",
+    "status": "evaluated_tied_completion_failed_retention_gate",
+    "verified_result": "experiments/rlpd-recovery-actor-only-evaluation-v1-result.json",
+    "finish_counts": {"v5": 5, "actor_only": 5},
+    "denominator_per_actor": 12,
+    "censored_pairs": 0,
+    "kept": 1,
+    "lost": 4,
+    "gained": 4,
+    "neither": 3,
+    "curve_associated_terminal_failures": {"v5": 1, "actor_only": 2},
+    "mean_final_progress": {"v5": 0.6943797195373035, "actor_only": 0.6828420370676064},
+    "mean_final_damage": {"v5": 0.19999999999999998, "actor_only": 0.2833333333333334},
     "protocol": "experiments/rlpd-recovery-actor-only-v1.json",
     "protocol_sha256": "cbae0a030fb73bf068076d6692c1725e1001f74212eeb01d14fba11694121af4",
     "training_receipt": "runs/rlpd-recovery-actor-only-v1/finalstats.json",
@@ -146,6 +157,16 @@
     "guide_weight": 1.0,
     "retention_weight": 1.0,
     "mechanism_hypothesis": "Isolate successful local action correction from raw-SAC representation/behavior drift and explicitly protect initial/successful visual states; closed-loop performance still required."
+  },
+  "fourth_intervention": {
+    "status": "implementing_not_run",
+    "objective": "Pixel-only local-support gate selects learned joint corrected actor for a short held sequence; original RLPD actor remains exactly unchanged outside guard coverage.",
+    "prototype_rows": "87 proven failure-Oracle images encoded by frozen original encoder",
+    "radius_rule": "0.5 times nearest protected feature distance for each prototype; disable zero-distance prototypes",
+    "protected_data": "Verified ordinary prior, source-finished path snapshots and initial images; no geometry IDs/pose/speed/Oracle inputs at runtime",
+    "hold_decisions": 12,
+    "deployment_default": "original V5 actor",
+    "limitations": "TRAIN-only local-support/memorization upper bound, not fresh generalization or a deployable privileged Oracle selector. Must preserve finishes and improve actual whole episodes."
   },
   "interpretation": [
     "Full-vector feedback can actually rescue specific visited failures, but unconditional recovery also harms finished-parent controls.",
