@@ -2681,6 +2681,41 @@ class _VisibleCompoundBaseBrakeController(_CompoundClearingBrakeCarryController)
         )
 
 
+class _ObservedRoadTargetController(_CompoundClearingBrakeCarryController):
+    """Use observed road geometry when the steering reference row drops out.
+
+    A partially visible bend can retain three road rows while row42 leaves the
+    image. Replacing that row with image center invents a straight-ahead target
+    and can reverse the requested turn. Use the observed path's interpolated or
+    clamped endpoint instead, without inventing another detected road row.
+    """
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        if (
+            not straight
+            and 42 not in centers
+            and 54 in centers
+            and len(centers) >= 3
+            and min(centers) <= 46
+        ):
+            far = self._center_at(42, centers)
+            near = float(centers[54])
+            steering = 0.016 * (far - self.IMAGE_CENTER) + 0.012 * (far - near)
+        return super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
