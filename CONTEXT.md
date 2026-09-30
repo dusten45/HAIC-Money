@@ -2,19 +2,20 @@
 
 ## Current Objective
 
-Develop the strongest rule-compliant agent while preserving the active DrQ-v2
-padding study and its frozen artifacts. The bare `model.pt` path now composes a
-camera-only, diagnostic safety/pace layer over the completion-first controller
-recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
-paths are unchanged. Submission videos motivated bounded early obstacle and
-distant-bend responses plus reviewed obstacle-priority, corner-carry and compound
-pace layers. The current candidate retains the already-qualified far/moderate
-compound target ceiling38 and softens only its safe fifth latch-clearing frame:
-brake relief is capped at0.04 while target, gas and steering remain unchanged.
-Intentional off-road, fixed inside-line, global target-speed and seed-specific
-changes were rejected. Required
-competition documents are missing, so environment
-evaluation, submission, performance claims and SOTA promotion remain blocked.
+Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
+study and frozen artifacts. The active bare route remains
+`_CompoundClearingBrakeCarryController`; two further brake-reduction candidates
+were not activated after measured development diagnosis. The current controller
+finished only4/7 declared reused cells; speed tuning must now address lateral
+tracking/road-loss failures, not assume every slowdown is unnecessary.
+
+Required competition documents and source-cited `report.pdf` were reconstructed
+on2026-09-30 from pinned official sources and existing artifacts. Bounded,
+preregistered local development diagnosis is now possible. No validated SOTA
+champion exists. Website submission details and Linux certification remain
+unverified; official submission and SOTA promotion stay blocked. Brief road
+departure is not explicitly forbidden by the public rules, but deliberate grass
+use has no demonstrated benefit and lower grip. The active DrQ study is unchanged.
 
 ## Frozen Contract
 
@@ -271,7 +272,7 @@ audits passed. Closed-loop clearance/completion/time remain unmeasured, so the
 candidate is `INCOMPARABLE`; see
 `experiments/aggressive-compound-pace-v1-result.json`.
 
-The current bare route is `_CompoundClearingBrakeCarryController` at commit
+The current bare route is `_CompoundClearingBrakeCarryController`, introduced at commit
 `c4e5287`. It addresses a narrower transition exposed by code review: after the
 four target30 detector-miss frames, the fifth latch-clearing frame could restore
 the stronger generic curve supplement for one decision before the faster clear-
@@ -282,14 +283,30 @@ reversal, the clearing-frame brake becomes
 current-obstacle and miss1--4 behavior, ordinary curves, unsafe geometry, road
 loss and the following frame remain exact. Four focused and248 affected static
 tests plus two independent audits passed. Intentional off-road and global speed/
-steering changes were rejected. Closed-loop completion, clearance and lap time
-remain unmeasured, so this is `INCOMPARABLE`; see
+steering changes were rejected. Its original result was static-only; see
 `experiments/compound-clearing-brake-carry-v1-result.json`.
+
+New paired diagnostics restored actual driving evidence:
+`compound-brake-onset-v1` ran14 episodes on seven reused cells. Both control and
+candidate finished4/7 with identical trajectories; the candidate never changed a
+brake command and was not activated (INCONCLUSIVE). Control results: seed42 crash
+at69.26%, seed11 off-track18.92%, seed17 clean25.32s, seed21 off-track33.73%; the
+three video-recovered maps finish23.66/28.12/25.26s, with two collisions on track2.
+The separate `visible-compound-base-brake-v1` did alter braking, but lost seed17's
+clean finish: candidate off-track at54.82%, with zero collision damage. At equal
+progress53.49%, speed increased30.49 to36.99 while the later steering unwound to
+zero. Seed42/21 also increased off-road samples. REJECT; stopped after9 complete
+episodes, with the next candidate interrupted and remaining cells unrun. Neither
+candidate is active; both remain for audit. Raw logs/hashes are referenced by the
+two result JSONs. Next priority: source-bound policy-camera and internal
+road/obstacle/steering telemetry at failure transitions to separate perception
+loss from steering arbitration before further speed changes. No fresh holdout
+was opened and no SOTA claim follows from these reused cells.
 
 The user-requested untracked root `submission.zip` SHA is `3ac70e3a...`; it embeds
 the prior `_CompoundObstacleBrakeCarryController` agent SHA `413afda3...` and
 unchanged model SHA `c101c696...`. It has no official receipt binding and is stale
-relative to current candidate agent SHA `7aecf9ec...`; preserve it but do not treat
+relative to the current source; preserve it but do not treat
 it as the new candidate package.
 
 ## Runtime And Infrastructure

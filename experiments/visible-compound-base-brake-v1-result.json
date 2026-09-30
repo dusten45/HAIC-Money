@@ -1,0 +1,33 @@
+{
+  "experiment":"visible-compound-base-brake-v1",
+  "status":"REJECT",
+  "decision":"Keep existing Agent route. Current-visible compound brake removal produced a lost finish and more off-road samples. Candidate remains inactive for reproduction.",
+  "protocol_commits":["7bc76ec","e84a194"],
+  "implementation_commit":"f9b90b3",
+  "source_sha256":"1b936b2dd5edb383435a315cc3479e28a8ea913fff3f0380535ba2a7b3788cef",
+  "model_sha256":"c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "protocol_sha256":"cbb9d01c3440ddd788060767dbf9bc4c68ba4abf7cf602be21fc07345ae00834",
+  "raw_artifacts":".haic-artifacts/visible-compound-base-brake-v1/20260930T143921Z-84040964",
+  "raw_summary_sha256":"c658598876cde1e8f73fb86bb9545ab31ed20a0dc675b016b26cad1b7511feca",
+  "stop":{
+    "reason":"Observed safety regression; RULES immediate-stop requirement.",
+    "completed_episodes":9,
+    "completed_pairs":4,
+    "interrupted":"track1 seed516237 candidate; stopped with Ctrl-C before a result was saved. No completed outcome or lap metric is claimed.",
+    "not_run":[[2,644062],[3,1007]],
+    "limitation":"The harness initially persisted completed rows but did not stop automatically on a completed-pair safety regression; the main agent stopped it upon reading the lost-finish result. An automatic safety stop and interrupted-run preservation were added afterward, without rerunning or altering recorded outcomes."
+  },
+  "pairs":[
+    {"track":1,"seed":42,"control_finish":false,"candidate_finish":false,"control_progress":0.6925795053,"candidate_progress":0.6925795053,"control_collisions":5,"candidate_collisions":5,"control_partial_offroad":8,"candidate_partial_offroad":9,"changed_calls":16},
+    {"track":1,"seed":11,"control_finish":false,"candidate_finish":false,"control_progress":0.1891891892,"candidate_progress":0.1891891892,"control_collisions":0,"candidate_collisions":0,"changed_calls":7},
+    {"track":1,"seed":17,"control_finish":true,"control_lap_ms":25320,"candidate_finish":false,"candidate_progress":0.5481727575,"candidate_reason":"off_track","control_collisions":0,"candidate_collisions":0,"control_full_offroad":0,"candidate_full_offroad":97,"changed_calls":24},
+    {"track":1,"seed":21,"control_finish":false,"candidate_finish":false,"control_progress":0.3372781065,"candidate_progress":0.3372781065,"control_full_offroad":99,"candidate_full_offroad":100,"changed_calls":5}
+  ],
+  "maximum_observed_brake_relief":0.034000000000000016,
+  "validation":"Final affected suite:244 passed,4 warnings. Follow-up focused suite:19 passed. Partial-pair safety-stop comparator checks passed without environment execution.",
+  "seed17_trace":"First action difference at step36: same steer-0.071 and gas0, brake0.180 to0.1477647. At progress0.5348837 physical speed30.4947 to36.9916. At progress0.5481728 the control retained steering about-0.31; candidate unwound-0.122,-0.052,0 and stayed in road-loss recovery. No collisions. Internal perception versus arbitration cause is not identified by these logs.",
+  "prerun_test_correction":"Static boundary tests exposed an analytical bound error: speed31 has base0 and supplement0.046. Protocol amended before execution; no formula or parameter tuning after driving outcomes.",
+  "diagnosis":"Less braking changes arrival speed and lateral clearance, not just lap time. Seed42 still repeatedly contacts an obstacle after slowing; seed11 still unwinds steering during road loss. A blanket brake reduction is not supported. Perception/arbitration diagnosis needs pixel and controller telemetry before further speed tuning.",
+  "limits":"Reused development diagnosis only. Wheel-contact samples are action-level, not all raw ticks. No Linux/memory certification, unseen-track claim, submission or SOTA promotion.",
+  "sota_promotion":false
+}

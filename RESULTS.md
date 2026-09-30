@@ -38,8 +38,10 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 - [Compound onset](experiments/compound-brake-onset-v1-result.json): 14 completed
   development runs, both arms 4/7 finishes, zero changed actions and no time gain;
   INCONCLUSIVE, not activated.
-- [Visible compound base-brake protocol](experiments/visible-compound-base-brake-v1.json):
-  separate registered follow-up targeting the actual target30 envelope.
+- [Visible compound base-brake result](experiments/visible-compound-base-brake-v1-result.json):
+  REJECT; seed17 changes from clean25.32s finish to off-track DNF54.82%; seed42/21
+  also increase off-road samples. Stopped after9 completed runs; next candidate
+  interrupted, remaining cells unrun. Active route unchanged.
 
 Preregister protocols before execution. Record control/candidate hashes, exact
 cells and reservation audit, environment version, raw result locations, failures,
