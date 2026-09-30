@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "experiment": "aggressive-compound-pace-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T16:10:45+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": [
+    "0fd5527a3a33cc7eb415d927ec88b9661d102f17",
+    "08bee00bf69ccf0d412d19d6591be2b19a677196",
+    "93ff7103b4fe99deb16b77f9c2815a130685fc17"
+  ],
+  "implementation_commit": "42f56095f606e6c6477171647483de4a8900bff3",
+  "decision": "Keep as the current statically validated bare-model candidate. Increase only the already-qualified far/moderate current-visible compound target ceiling from36 to38. Preserve all lateral behavior and target30 for near obstacles, extreme curvature, strong steering and detector misses. Do not claim lap-time, clearance, completion, submission or SOTA improvement until an authorized paired driving evaluation passes the finish-and-safety-first gate.",
+  "feedback_assessment": {
+    "accepted": "Obstacle-local slowdown is supported: the latest videos show a0.88 median post/pre speed proxy and13 of26 encounters lose at least10 percent; the prior selective brake change coincided with lower times on all three source-unbound videos.",
+    "rejected_or_unproven": [
+      "Obstacle count does not explain the three current lap-time differences because every official track has six obstacles and time correlates0.991 with recovered track length.",
+      "Intentional grass or off-road use is not adopted: simulator termination is not immediate for every brief excursion, but competition legality is unverified, grass friction is0.6 and sustained off-track behavior can retire the car.",
+      "More aggressive obstacle steering is not adopted because it can reduce clearance or trigger the existing strong-steer target30 veto."
+    ]
+  },
+  "official_sources": {
+    "participant_commit": "dfb7a2de2178825ca5c5ce20bab01ba67052ba31",
+    "obstacle_and_damage": "https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md#L197-L225",
+    "termination_and_ranking": "https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md#L227-L259",
+    "site_status": "The competition website hostname was unavailable, so no claim relies on it."
+  },
+  "implementation": [
+    "Route only bare state-dict inference through _AggressiveCompoundPaceController; model.pt and explicit-export, DrQ and HAIC paths remain unchanged.",
+    "Subclass _AdaptiveCompoundTargetController and change only ADAPTIVE_COMPOUND_MAX_TARGET from36 to38.",
+    "For the unchanged gate y<44,6<=sweep<12 and absolute final requested steering<=0.28, target becomes30+8*d*m instead of30+6*d*m.",
+    "Keep the stored latch at30, so the first detector miss immediately restores command/effective target30.",
+    "At the maximum cell and estimated speed40, softened brake changes0.082 to0.058; at45 it changes0.142 to0.118 while the inherited base brake remains the floor.",
+    "The target increase intentionally shifts inherited full/mid/hold acceleration boundaries but changes no gas or brake constants."
+  ],
+  "static_validation": {
+    "focused_candidate_suite": "6 passed,148 deselected",
+    "affected_local_submission_suite": {
+      "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_corridor_agent.py tests/test_agent_inference.py tests/test_local_contract.py tests/test_local_simulator_api.py tests/test_local_simulator_cli.py tests/test_local_simulator_diagnostic.py tests/test_local_simulator_environment.py tests/test_local_simulator_integration.py tests/test_local_simulator_run.py tests/test_local_simulator_schema.py tests/test_submission_policy.py tests/test_submission_package.py tests/test_submission_layout.py",
+      "result": "244 passed,4 warnings"
+    },
+    "coverage": "Exact y32/y44, sweep6/12 and mirrored steering0.28/nextafter boundaries; four turn-direction/obstacle-side combinations; target and gas/brake thresholds; miss1--4 with per-phase reacquisition/flicker; fifth/sixth clear; near/extreme/strong-steer restoration; invalid/lost/reset paths;512 fresh randomized cases with injected steering and24 stateful randomized sequences passed.",
+    "independent_audit": "Two read-only audits found no blocking MRO, formula, brake, gas-threshold, latch, boundary, state-restoration, protocol or overclaim defect after amendments and candidate-specific coverage were added.",
+    "isolated_package": {
+      "path": ".haic-artifacts/aggressive-compound-pace-v1/20260930T071018249840Z_aggressive-compound-pace-v1/submission.zip",
+      "source_commit": "42f56095f606e6c6477171647483de4a8900bff3",
+      "agent_git_blob": "354bcc4a3fcd98edb0097180da02d3d6c9f16646",
+      "agent_sha256": "7aecf9ec9c9a0f116231c0b6d17a9100916d46f74f0924721c2dc64e15ccb678",
+      "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+      "zip_sha256": "5986a6da53b82d5ba7998f81d6fe74fcbce2c60f71f7fb4a54f435757fecdc1c",
+      "bytes": 6282910,
+      "windows_python": "3.11.15",
+      "init_seconds": 2.569038400077261,
+      "act_seconds": 0.0026295999996364117,
+      "result": "exact-file build/import/reset/action smoke passed; this is not an official Linux, driving or submission evaluation"
+    }
+  },
+  "governance": {
+    "environment_execution": false,
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "performance_claim": false,
+    "new_evaluation_cells_consumed": []
+  },
+  "preservation": {
+    "root_submission_zip_sha256": "3ac70e3a5ac12ce2a63a7b39f4e7a112ca004dd4d96391c1094a834150be0e06",
+    "root_submission_zip_modified": false,
+    "evaluation_videos_modified": false,
+    "model_pt_modified": false
+  },
+  "residual_risks": [
+    "Every available video predates the max36 control, so neither36 nor38 has source-bound closed-loop evidence.",
+    "Target38 raises squared-speed directional demand about11.4 percent over36 while the minimum rendered mask gap is8px; static gates do not prove clearance.",
+    "Same-input tests cannot establish future completion, collision/off-track non-regression, clearance or lap-time improvement.",
+    "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf remain absent, so environment evaluation, promotion and official submission remain blocked."
+  ]
+}

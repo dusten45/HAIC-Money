@@ -7,10 +7,10 @@ padding study and its frozen artifacts. The bare `model.pt` path now composes a
 camera-only, diagnostic safety/pace layer over the completion-first controller
 recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
 paths are unchanged. Submission videos motivated bounded early obstacle and
-distant-bend responses plus a reviewed obstacle-priority transition guard and a
-launch-only clear-straight throttle diagnostic. A failed compound-speed diagnostic
-was retired, and the current candidate cautiously sustains that same maximum gas
-only after obstacle avoidance fully clears. Fixed inside-line, global target-speed
+distant-bend responses plus reviewed obstacle-priority, corner-carry and compound
+pace layers. The current candidate raises only the already-qualified far/moderate
+compound target ceiling from36 to38 while retaining the target30 near/extreme/
+strong-steer/miss gates. Intentional off-road, fixed inside-line, global target-speed
 and seed-specific changes were rejected. Required
 competition documents are missing, so environment
 evaluation, submission, performance claims and SOTA promotion remain blocked.
@@ -247,24 +247,27 @@ remain. Seven focused and212 affected tests, isolated package smoke and independ
 audit passed; see
 `experiments/post-obstacle-curve-retention-v1-result.json`.
 
-The current bare route is `_AdaptiveCompoundTargetController` at commit `42fd0f6`,
-above the retained latch-release, compound brake-carry and doubled-straight layers.
+The current bare route is `_AggressiveCompoundPaceController` at commit `42f5609`,
+above the retained adaptive-target, latch-release, compound brake-carry and
+doubled-straight layers.
 Submission12 videos finish in23.60/28.18/25.44s, but13/26 obstacle encounters still
 lose at least10% on a rendered-video speed proxy. The controller removes the hard
 target30 discontinuity only for a currently recognized far/moderate compound hazard:
-`30+6*clip((44-y)/12)*clip((12-sweep)/6)`, with target at most36 for y<44 and
+`30+8*clip((44-y)/12)*clip((12-sweep)/6)`, with target at most38 for y<44 and
 6<=sweep<12. The latch remains30, so the first detector miss restores target30;
 near obstacles, extreme curvature and final requested steering above0.28 also keep
-target30. The existing softened compound brake remains active throughout31--36.
-Nine focused and238 affected tests, exact-file package smoke and two independent
+target30. The existing softened compound brake remains active throughout31--38.
+At the maximum cell/speed40 this changes brake0.082 to0.058 without changing any
+gas/brake constants or lateral behavior. Six focused and244 affected tests,
+exact-file package smoke and two independent
 audits passed. Closed-loop clearance/completion/time remain unmeasured, so the
 candidate is `INCOMPARABLE`; see
-`experiments/adaptive-compound-target-v1-result.json`.
+`experiments/aggressive-compound-pace-v1-result.json`.
 
 The user-requested untracked root `submission.zip` SHA is `3ac70e3a...`; it embeds
 the prior `_CompoundObstacleBrakeCarryController` agent SHA `413afda3...` and
 unchanged model SHA `c101c696...`. It has no official receipt binding and is stale
-relative to current candidate agent SHA `06eed3e7...`; preserve it but do not treat
+relative to current candidate agent SHA `7aecf9ec...`; preserve it but do not treat
 it as the new candidate package.
 
 ## Runtime And Infrastructure
