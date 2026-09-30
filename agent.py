@@ -2623,7 +2623,8 @@ class _CompoundBrakeOnsetController(_CompoundClearingBrakeCarryController):
 
     The base speed brake remains a floor. Targets, lateral actions, detector
     misses, and large overspeed retain the control policy. This is a diagnostic
-    candidate until the preregistered paired driving comparison passes.
+    candidate. The registered comparison changed no actions on seven cells;
+    this class is retained for audit and is not the active Agent route.
     """
 
     COMPOUND_BRAKE_RAMP_EXCESS = 2.0
@@ -2659,8 +2660,8 @@ class _VisibleCompoundBaseBrakeController(_CompoundClearingBrakeCarryController)
     """Evaluate inherited base braking during visible target30 compounds.
 
     This diagnostic candidate changes only the supplemental brake, including
-    near obstacles and extreme curves. Paired driving evidence is required
-    before routing the bare agent here; the base floor is not a safety proof.
+    near obstacles and extreme curves. Rejected by the registered comparison:
+    seed17 lost a clean finish. Kept for reproduction, never the active route.
     """
 
     def _curve_brake_envelope(

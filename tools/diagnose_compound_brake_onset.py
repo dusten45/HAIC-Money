@@ -70,7 +70,7 @@ def preflight(protocol_path: Path, expected: dict[str, str]) -> dict:
     }
 
 
-def compare(rows: list[dict]) -> dict:
+def compare(rows: list[dict], *, require_complete: bool = True) -> dict:
     reasons = []
     paired_time_delta = 0
     completed_pairs = 0
@@ -81,7 +81,8 @@ def compare(rows: list[dict]) -> dict:
     for track, seed in CELLS:
         pair = {row["arm"]: row for row in rows if (row["track_id"], row["seed"]) == (track, seed)}
         if set(pair) != {"control", "candidate"}:
-            reasons.append(f"{track}/{seed}: incomplete pair")
+            if require_complete:
+                reasons.append(f"{track}/{seed}: incomplete pair")
             continue
         old, new = pair["control"], pair["candidate"]
         if old.get("error") or new.get("error"):
@@ -213,7 +214,7 @@ def main() -> int:
                 })
                 if row["initialization_ms"] > 10000 or row["action_latency_max_ms"] > 5000:
                     row["error"] = "Official initialization/action latency limit exceeded"
-            except Exception as error:
+            except (Exception, KeyboardInterrupt) as error:
                 row["error"] = f"{type(error).__name__}: {error}"
                 if session is not None:
                     save_run_log(session.finish(reason="diagnostic_error"), output / f"track-{track}-seed-{seed}-{arm}-error.json")
@@ -226,6 +227,16 @@ def main() -> int:
             if row["error"]:
                 print(f"Stopped on operational failure. Artifacts: {output}", flush=True)
                 return 1
+            partial = compare(rows, require_complete=False)
+            if partial["reasons"]:
+                # RULES requires stopping on safety regression. Do not spend
+                # remaining cells after a completed pair already disqualifies it.
+                (output / "stopped.json").write_text(json.dumps({
+                    "reason": "paired_safety_regression", "comparison": partial,
+                    "completed_episodes": len(rows),
+                }, indent=2), encoding="utf-8")
+                print(json.dumps({"output": str(output), **partial}), flush=True)
+                return 0
     preflight(args.protocol, expected)
     print(json.dumps({"output": str(output), **compare(rows)}, indent=2))
     return 0
