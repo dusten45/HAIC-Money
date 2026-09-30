@@ -1,0 +1,23 @@
+{
+  "schema_version":1,
+  "experiment":"visible-compound-base-brake-v1",
+  "status":"PREREGISTERED",
+  "control_commit":"1855255",
+  "control_class":"_CompoundClearingBrakeCarryController",
+  "candidate_class":"_VisibleCompoundBaseBrakeController",
+  "hypothesis":"The first onset experiment changed no actions. A separate hypothesis removes the constant supplemental brake during current-visible target30 compound hazards, where near-target braking persists. This may retain speed but must be rejected on observed safety regression.",
+  "single_factor":"Return inherited base_brake for visible compound hazards only: side nonzero, missing0, latched target30, command30, sweep>=6. Parent action generation, targets, gas, steering and every other envelope remain exact.",
+  "risk":"Gate includes near obstacles, extreme curves and strong steering vetoes. This is not proven redundant braking. Arrival speed and obstacle clearance can worsen; the base brake floor alone is not a safety proof.",
+  "examples":"Estimated speed35: brake0.094 to0.060; speed40:0.154 to0.120; speed45:0.180 unchanged. Maximum reduction0.04. No gas added.",
+  "development_cells":[[1,42],[1,11],[1,17],[1,21],[1,516237],[2,644062],[3,1007]],
+  "cell_status":"Previously consumed development diagnostics, including all cells from concluded compound-brake-onset-v1. No fresh/confirmation/unseen claim and no reserved holdout use.",
+  "max_steps":1000,
+  "frame_skip":4,
+  "budget":"One paired run per cell. No parameter retuning inside this experiment. Preserve all failures and reject on regression.",
+  "execution_gate":"Source/model/protocol hashes frozen, restored docs present, candidate contract tests pass, environment unchanged, protected partitions excluded.",
+  "decision":"Reject operational errors, any lost finish, increased collision/damage, more full/partial offroad action samples, lower paired-DNF progress. Retain diagnostically only with actual changed calls and strictly lower summed paired completed lap time and no regression. Inspect first divergence/contacts in failed cells. No SOTA.",
+  "training":false,
+  "submission":false,
+  "sota_promotion":false,
+  "intentional_offroad":false
+}

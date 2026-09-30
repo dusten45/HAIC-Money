@@ -1,0 +1,28 @@
+{
+  "experiment": "compound-brake-onset-v1",
+  "status": "INCONCLUSIVE",
+  "decision": "Do not activate candidate: no changed actions or measured benefit on any declared cell.",
+  "implementation_commit": "1855255",
+  "protocol_commit": "fc31f21",
+  "raw_artifacts": ".haic-artifacts/compound-brake-onset-v1/20260930T143132Z-5357aaa9",
+  "source_sha256": "eae3b60e463a6466697dc5754d595960f54e24d7c929e2e83ad11803b5c21329",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "static_tests": "225 passed, 4 warnings",
+  "executions": 14,
+  "control_finishes": 4,
+  "candidate_finishes": 4,
+  "candidate_changed_envelope_calls": 0,
+  "paired_completed_time_delta_ms": 0,
+  "identical_outcomes": [
+    {"track":1,"seed":42,"finished":false,"progress":0.6925795053,"collisions":5,"reason":"crash"},
+    {"track":1,"seed":11,"finished":false,"progress":0.1891891892,"collisions":0,"reason":"off_track"},
+    {"track":1,"seed":17,"finished":true,"lap_time_ms":25320,"collisions":0},
+    {"track":1,"seed":21,"finished":false,"progress":0.3372781065,"collisions":0,"reason":"off_track"},
+    {"track":1,"seed":516237,"finished":true,"lap_time_ms":23660,"collisions":0},
+    {"track":2,"seed":644062,"finished":true,"lap_time_ms":28120,"collisions":2},
+    {"track":3,"seed":1007,"finished":true,"lap_time_ms":25260,"collisions":0}
+  ],
+  "diagnosis": "The mild adaptive overspeed gate is too narrow to change any sampled action. Existing baseline failures show speed alone is not the only limitation. Seed11 steering unwinds to zero during road loss; seed42 suffers repeated contact; track2 has two collisions despite finishing.",
+  "limits": "Reused development cells only. Wheel contacts sampled at action boundaries; latency local Windows only, not Linux/reset/memory certification. No SOTA or submission. Source hashes and raw logs are frozen in the artifact directory.",
+  "sota_promotion": false
+}
