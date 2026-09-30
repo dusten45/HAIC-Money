@@ -1,0 +1,19 @@
+{
+  "schema_version":1,
+  "experiment":"observed-road-side-commit-v1",
+  "status":"PREREGISTERED",
+  "control_class":"_CompoundClearingBrakeCarryController",
+  "candidate_class":"_ObservedRoadSideCommitController",
+  "control_commit":"4b83fda",
+  "hypothesis":"Seed21 geometry-only candidate flips avoidance side at row51.45 while obstacle remains left of vehicle (x28.64) because road center moves. Commit existing pass side once obstacle reaches row44 (existing near-obstacle boundary), rather than allowing reversal until52. Reset on existing detector-miss gate.",
+  "single_factor_from_previous_candidate":"Observed road target repair plus pass-side update row44 instead52. Original control comparator; geometry-only rejected logs are the ablation. No independent speed or detector change.",
+  "development_cells":[[1,11],[1,21],[1,42],[1,17],[1,516237],[2,644062],[3,1007]],
+  "max_steps":1000,
+  "frame_skip":4,
+  "budget":"One pair per reused development cell; stop on first regression, no tuning within comparison.",
+  "decision":"Reject lost finish, collision/damage increase, lower paired DNF progress, or >5% slower prior finish. Retain diagnostic candidate only with increased finishes or lower summed completed time without regression. No SOTA claim.",
+  "static_acceptance":["old controller side boundary remains52", "candidate preserves near side and permits far reselection", "miss/reset behavior unchanged", "finite bounded action", "camera-only input"],
+  "training":false,
+  "submission":false,
+  "sota_promotion":false
+}
