@@ -1,6 +1,6 @@
 {
   "format": "haic-rlpd-recovery-validation-v1",
-  "status": "data_validated_q_only_intervention_rejected_guided_iteration_running",
+  "status": "q_only_and_guided_rejected_frozen_encoder_actor_only_iteration_pending",
   "partition": "consumed TRAIN",
   "official_score": false,
   "fresh_generalization": false,
@@ -109,7 +109,7 @@
     "decision": "Reject data-only Q-learning intervention: no completion or prospective curve-terminal improvement. Sparse curve-terminal proxy does not explain all 11 recovery failures."
   },
   "next_intervention": {
-    "status": "learning_complete_closed_loop_evaluation_running",
+    "status": "evaluated_rejected_2_of_12_versus_original5_of_12",
     "result": "experiments/rlpd-recovery-guided-v1-result.json",
     "protocol": "experiments/rlpd-recovery-guided-learning-v1.json",
     "protocol_sha256": "8e15226169b10cb2ba043f06f283a3adf154e29fa5ba64c6c7ba71844f2f2822",
@@ -124,6 +124,16 @@
     "extra_actor_optimizer_steps_reported_separately": true,
     "old_run_sources_unchanged": true,
     "mechanisms_are_hypotheses": "One-step Q policy bootstrapping/sequence credit, representation drift and changed state visitation are alternatives; Q rankings are not causal proof or expert-optimality guarantees."
+  },
+  "third_intervention": {
+    "status": "implementing_not_run",
+    "objective": "Original encoder/critics/temperature fixed bitwise; only actor decoder joint native correction on proven failure-Oracle rows, with original-mean retention on verified ordinary prior, all original initial images and source-finished path snapshots.",
+    "environment_resets": 0,
+    "sac_updates": 0,
+    "actor_update_budget": 2048,
+    "guide_weight": 1.0,
+    "retention_weight": 1.0,
+    "mechanism_hypothesis": "Isolate successful local action correction from raw-SAC representation/behavior drift and explicitly protect initial/successful visual states; closed-loop performance still required."
   },
   "interpretation": [
     "Full-vector feedback can actually rescue specific visited failures, but unconditional recovery also harms finished-parent controls.",
