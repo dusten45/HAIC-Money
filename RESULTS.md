@@ -35,6 +35,33 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Camera failure trace](experiments/corridor-failure-trace-v1-result.json):
+  four baseline trajectories exactly reproduced with pixel/hook telemetry.
+  Missing row42 was replaced by image center, reversing requested turn on
+  seed11/21 despite three still-visible leftward road points.
+- [Observed road target](experiments/observed-road-target-v1-result.json):
+  REJECT after two pairs. Seed11 recovered from DNF18.92% to clean22.20s;
+  seed21 recovered from DNF33.73% to27.92s but gained one collision/damage0.2.
+  Five remaining cells unrun. This is not an activated or SOTA policy.
+- `observed-road-curb-filter-v1` was preregistered but deferred without
+  implementation/environment execution. Offline traces identify white-curb
+  false positives; whole-component suppression could also hide a real obstacle
+  touching a curb. Seed11/21 false selections have action-equivalent real
+  obstacles behind them, so filtering alone does not explain their recovery.
+- [Near passing commitment](experiments/observed-road-side-commit-v1-result.json):
+  REJECT after two pairs. Seed11 remains clean22.20s; seed21 crashes at81.95%
+  with5 collision events/damage1.0. At steps273/274 small left recentering
+  suppresses right avoidance despite a rightward far bend; side remains stable.
+  Remaining5 cells unrun; original
+  Agent route preserved. No additional threshold sweep or SOTA promotion.
+- [Geometry-supported arbitration](experiments/observed-curve-arbitration-v1-result.json):
+  REJECT after6 pairs/12 runs. Finishes3/6->6/6, recovering seed11/21 clean
+  in22.20/27.84s and seed42 in24.98s with3contacts (control crash5).
+  Track2/644062 increases collision2->3 and damage0.4->0.6, time28.12->28.98s;
+  paired completed time sum increases1.64s. Track3/1007 unrun. Active route
+  unchanged despite recovered failures; neither generalized speed nor safety
+  improvement is established.
+
 - [Compound onset](experiments/compound-brake-onset-v1-result.json): 14 completed
   development runs, both arms 4/7 finishes, zero changed actions and no time gain;
   INCONCLUSIVE, not activated.

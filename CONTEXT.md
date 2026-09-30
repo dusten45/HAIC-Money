@@ -4,10 +4,29 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`; two further brake-reduction candidates
-were not activated after measured development diagnosis. The current controller
-finished only4/7 declared reused cells; speed tuning must now address lateral
-tracking/road-loss failures, not assume every slowdown is unnecessary.
+`_CompoundClearingBrakeCarryController`; brake-reduction and camera-geometry
+candidates were not activated after measured development regressions. Current
+control finished only4/7 declared reused cells. Pixel/hook traces pinpoint a
+missing row42 replaced by image center, reversing steering on seed11/21.
+Observed-target repair recovers seed11 clean22.20s and seed21 in27.92s but adds
+one collision; strict comparator rejects it. Adding row44 passing commitment
+instead makes seed21 crash at81.95% with5 contacts; also rejected. Both stopped
+after2 pairs, other5 cells unrun. Source-bound results live in
+`experiments/observed-road-target-v1-result.json` and
+`experiments/observed-road-side-commit-v1-result.json`.
+
+The third, geometry-supported retention candidate fixed that arbitration error:
+on6 reused pairs, finishes rose3/6 to6/6 (seed11/21 clean22.20/27.84s;
+seed42 finished24.98s with3contacts vs crash5). It was still REJECTED because
+track2/644062 collision2->3/damage0.4->0.6; paired completed times total+1.64s.
+Track3/1007 was not run. Full record:
+`experiments/observed-curve-arbitration-v1-result.json`.
+Do not enable any of these candidates or claim a validated upgrade. Further
+work needs joint road/obstacle clearance planning rather than stacked steering
+heuristics; retain traces and all rejection gates. A white-curb filter is registered but
+deferred/unrun because merged curb+real-obstacle components could hide hazards.
+Keep inactive candidate classes for reproducibility; no SOTA/active-route gain
+is claimed. Road-target repair cannot safely be enabled alone despite seed11 gain.
 
 Required competition documents and source-cited `report.pdf` were reconstructed
 on2026-09-30 from pinned official sources and existing artifacts. Bounded,

@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-curve-arbitration-v1",
+  "status": "REJECT",
+  "decision": "Retain original bare Agent route. All six tested candidate cells finished, including three baseline DNFs, but track2/seed644062 increased collisions and damage and therefore fails the preregistered safety gate. Final cell was not run.",
+  "protocol_commit": "39e50b3",
+  "implementation_commit": "a4984ef",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_ObservedCurveArbitrationController",
+  "source_sha256": "811ad9488f18f8a97874f2c58a9b89c1652ffe40c81e13ae115146e79c03ed8d",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "protocol_sha256": "19309f99cddae96a880c11ef2f40d7740cccd4ef8ddf7c6f38bc10e6aa3738d5",
+  "harness_sha256": "ae6c8a3da73f52af20916e4f560497dff184747a22a03ee0c8228a1fc8a2a0b8",
+  "raw_artifacts": ".haic-artifacts/observed-curve-arbitration-v1/20260930T150824Z-61dc7d84",
+  "raw_summary_sha256": "80a736b4a7b9aba4308f8e0a1be35675c0b55890c58132982e8bab6776a489ff",
+  "comparison": {
+    "decision": "REJECT",
+    "reasons": [
+      "2/644062: collision_count increased",
+      "2/644062: damage increased"
+    ],
+    "missing_cells": [
+      [
+        3,
+        1007
+      ]
+    ],
+    "control_finishes": 3,
+    "candidate_finishes": 6,
+    "paired_completed_cells": 3,
+    "paired_completed_time_delta_ms": 1640,
+    "sota_promotion": false,
+    "evidence_scope": "reused development diagnosis; no unseen-track claim"
+  },
+  "stop": {
+    "reason": "paired_regression",
+    "completed_episodes": 12,
+    "completed_pairs": 6,
+    "not_run": [
+      [
+        3,
+        1007
+      ]
+    ]
+  },
+  "pairs": [
+    {
+      "track_id": 1,
+      "seed": 11,
+      "control": {
+        "finished": false,
+        "lap_time_ms": null,
+        "progress": 0.1891891891891892,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": "off_track",
+        "steps": 150,
+        "offtrack_samples": 98,
+        "partial_offtrack_samples": 101,
+        "run_log": "track-1-seed-11-control\\run.json",
+        "run_sha256": "fa6053e41c9b3bc9c3f1291b9a094c7a027dddc5988b3b2a9971cbf049be7e27"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 22200,
+        "progress": 1,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 278,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 10,
+        "run_log": "track-1-seed-11-candidate\\run.json",
+        "run_sha256": "f36d9db959b4f58e0bfdb0f17934a529df2e5929a3ebb621563d60a9b07b76ac"
+      },
+      "changed_actions_on_candidate_observations": 11
+    },
+    {
+      "track_id": 1,
+      "seed": 21,
+      "control": {
+        "finished": false,
+        "lap_time_ms": null,
+        "progress": 0.33727810650887574,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": "off_track",
+        "steps": 208,
+        "offtrack_samples": 99,
+        "partial_offtrack_samples": 102,
+        "run_log": "track-1-seed-21-control\\run.json",
+        "run_sha256": "eef28e2236cf08cd82abc49e7f40ae5a0c538f06befc710ee851ca6cd9cacc23"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 27840,
+        "progress": 1,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 349,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 18,
+        "run_log": "track-1-seed-21-candidate\\run.json",
+        "run_sha256": "2792b2c4c080312e7917f1ac3947fe61fa0caf17eb3da164173facf9222c5c9a"
+      },
+      "changed_actions_on_candidate_observations": 25
+    },
+    {
+      "track_id": 1,
+      "seed": 42,
+      "control": {
+        "finished": false,
+        "lap_time_ms": null,
+        "progress": 0.6925795053003534,
+        "damage": 1,
+        "collision_count": 5,
+        "retire_reason": "crash",
+        "steps": 206,
+        "offtrack_samples": 3,
+        "partial_offtrack_samples": 8,
+        "run_log": "track-1-seed-42-control\\run.json",
+        "run_sha256": "89e28ecb0901fad7a8314bd2558d2595550a9c0e28bf738e1b009ccba1519cf5"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 24980,
+        "progress": 0.9964664310954063,
+        "damage": 0.6000000000000001,
+        "collision_count": 3,
+        "retire_reason": null,
+        "steps": 313,
+        "offtrack_samples": 2,
+        "partial_offtrack_samples": 14,
+        "run_log": "track-1-seed-42-candidate\\run.json",
+        "run_sha256": "5047eae32462ec404966d8d1ea18b5f11a3b397db6421ce943421119f3d75e8c"
+      },
+      "changed_actions_on_candidate_observations": 4
+    },
+    {
+      "track_id": 1,
+      "seed": 17,
+      "control": {
+        "finished": true,
+        "lap_time_ms": 25320,
+        "progress": 1,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 317,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 7,
+        "run_log": "track-1-seed-17-control\\run.json",
+        "run_sha256": "1413ee7e111b29a6009a5078dc2de6340204677b6f14ffcbd48da0c0d4541005"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 25880,
+        "progress": 0.9966777408637874,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 324,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 26,
+        "run_log": "track-1-seed-17-candidate\\run.json",
+        "run_sha256": "14600999f5d78bd021b0ec68e76745f92ff54ddd34434c836f640d1017e0d523"
+      },
+      "changed_actions_on_candidate_observations": 25
+    },
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "control": {
+        "finished": true,
+        "lap_time_ms": 23660,
+        "progress": 1,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 296,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 7,
+        "run_log": "track-1-seed-516237-control\\run.json",
+        "run_sha256": "f56426aa17122bd157f1191a609c568d506586ce3095aef41dfad5112bd87dcf"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 23880,
+        "progress": 0.9928571428571429,
+        "damage": 0,
+        "collision_count": 0,
+        "retire_reason": null,
+        "steps": 299,
+        "offtrack_samples": 4,
+        "partial_offtrack_samples": 12,
+        "run_log": "track-1-seed-516237-candidate\\run.json",
+        "run_sha256": "208554f9030a935e47f0018a9dc89aa684b693b4a16bce9ca2a4210795c1210e"
+      },
+      "changed_actions_on_candidate_observations": 8
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "control": {
+        "finished": true,
+        "lap_time_ms": 28120,
+        "progress": 1,
+        "damage": 0.4,
+        "collision_count": 2,
+        "retire_reason": null,
+        "steps": 352,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 0,
+        "run_log": "track-2-seed-644062-control\\run.json",
+        "run_sha256": "4c8479812a6a9a0d0e7ced200ba825e4bbbf064970250018cbdb81c1f1e9bf85"
+      },
+      "candidate": {
+        "finished": true,
+        "lap_time_ms": 28980,
+        "progress": 1,
+        "damage": 0.6000000000000001,
+        "collision_count": 3,
+        "retire_reason": null,
+        "steps": 363,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 8,
+        "run_log": "track-2-seed-644062-candidate\\run.json",
+        "run_sha256": "19df6838847551b47bbaa6a6efecb1f4b9a5ebe528120485aaa038003cb8b907"
+      },
+      "changed_actions_on_candidate_observations": 10
+    }
+  ],
+  "validation": {
+    "static_regression_tests": "240 passed across observed-road/side/arbitration, corridor, inference, local contract, submission policy and packaging tests; final source a4984ef; 4 dependency deprecation warnings",
+    "active_route_check": "Original _CompoundClearingBrakeCarryController confirmed; all three candidate classes inactive",
+    "official_environment_diff": "No changes to core/, env_wrapper.py or damage.py",
+    "operational_errors": 0,
+    "maximum_observed_initialization_ms": 18.466099980287254,
+    "maximum_observed_action_latency_ms": 39.72929995507002,
+    "initialization_and_action_deadlines": "PASS in instrumented Windows diagnosis; not official-container certification",
+    "holdout_overlap": [],
+    "source_model_protocol_preflight": "PASS",
+    "memory_certification": "NOT_MEASURED",
+    "linux_submission_container_certification": "NOT_PERFORMED"
+  },
+  "interpretation": "Observed-road geometry and bend-supported arbitration recover early road loss on seeds11/21 and baseline collision retirement on42. Recovery is not sufficient for acceptance: candidate42 still has three contacts and track2/644062 increases contacts from two to three. Existing completed laps are slower by560,220,860ms respectively, totaling1640ms. Each is below the preregistered5% slowdown ceiling, but no speed improvement is established. Rejected earlier target-only and side-commit runs are separate ablations, so do not attribute combined changes solely to arbitration.",
+  "limits": "Six reused development pairs only; final track3/1007 pair unrun after automatic rejection. Finish3/6 versus6/6 describes the tested prefix, not the full seven-cell grid or unseen generalization. Shadow action differences use independently evolved policy states on candidate observations; wheel-contact counts have unequal exposure after recovered DNFs. No memory/Linux certification, SOTA promotion or submission.",
+  "training": false,
+  "submission": false,
+  "sota_promotion": false
+}
