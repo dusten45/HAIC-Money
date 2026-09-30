@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "experiment": "compound-clearing-brake-carry-v1",
+  "status": "IMPLEMENTED_DIAGNOSTIC_PASS_INCOMPARABLE",
+  "recorded_at": "2026-09-30T23:18:12+09:00",
+  "branch": "feature/DG-Codex",
+  "protocol_commits": [
+    "df1d0c7",
+    "fec25c9",
+    "b64efa8",
+    "6426ae6",
+    "087fa2f"
+  ],
+  "implementation": {
+    "commit": "c4e52870792b131888274b35c0707714e51a3996",
+    "class": "agent._CompoundClearingBrakeCarryController",
+    "agent_git_blob": "a9f571eaadd776b0c861b4dca8abb41f2ca9eaeb",
+    "agent_sha256": "972f5b43a43691c5e9f7bbc3aef0b34f23cbb4a7aef31fa3ca511e57987808fc",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+  },
+  "finding": {
+    "accepted_feedback": "The submission12 videos directionally support obstacle-local slowdown: all three tracks finish, but 13 of 26 rendered obstacle encounters lose at least 10 percent on the video speed proxy and recovery commonly lags 0.4 to 0.8 seconds.",
+    "code_mechanism": "After miss frames 1 through 4 retain target30, the fifth latch-clearing frame can immediately restore the stronger generic curve supplement for one decision before the faster clear-curve path becomes eligible on the next frame.",
+    "rejected_feedback": "Intentional off-road driving was not implemented. The official environment penalizes prolonged negative reward, terminates on playfield exit, and uses lower grass friction; the available official material does not establish a safe competitive allowance for leaving the road.",
+    "unproven": "Rendered video lacks physical speed, policy-camera frames, actions, clearance and source/package binding, so it does not justify a global target-speed increase, weaker obstacle-approach braking, shorter latch duration or more aggressive steering."
+  },
+  "candidate_effect": {
+    "scope": "Only the fifth latch-clearing frame after a previously qualified far/moderate compound obstacle.",
+    "unchanged": [
+      "target speed",
+      "gas",
+      "steering",
+      "current-obstacle behavior",
+      "miss frames 1 through 4",
+      "sixth and later clear frames",
+      "near, extreme-sweep, strong-steer, reversal and lost-road behavior",
+      "non-bare inference routes",
+      "model.pt"
+    ],
+    "brake_rule": "max(base_brake, compound_envelope, control_envelope - 0.04)",
+    "maximum_relief": 0.04,
+    "illustrative_action": "At target34, speed40 and excess5.5, control brake0.159 becomes0.119; inherited base brake0.072 remains a hard floor."
+  },
+  "static_validation": {
+    "focused": "4 passed, 154 deselected",
+    "affected_suite": "248 passed, 4 warnings",
+    "differential_coverage": "Both turn directions and obstacle sides; exact miss1-4 behavior; fifth-frame-only effect; sixth-frame reconvergence; y/sweep/steering boundaries; reacquisition, flicker, reversal, reset, invalid/lost-road handling; 64 randomized stateful sequences; finite actions; gas/brake exclusivity; base-brake floor; maximum relief0.04.",
+    "independent_audits": 2,
+    "audit_result": "No blocking implementation, protocol, routing or safety mismatch found."
+  },
+  "performance_evidence": {
+    "environment_execution_completed": false,
+    "lap_time_claim": false,
+    "completion_claim": false,
+    "clearance_claim": false,
+    "note": "An environment command was started accidentally and terminated before result emission; no output, cell result or performance evidence from it was retained or used."
+  },
+  "governance": {
+    "training": false,
+    "submission": false,
+    "sota_promotion": false,
+    "blocker": "SOTA.md, RESULTS.md, COMPETITION_INFO.md, RESTRICTIONs.md and report.pdf are absent, so RULES.md blocks environment performance evaluation, submission and promotion.",
+    "preserved_untracked_artifacts": [
+      "evaluation_videos/",
+      "submission.zip",
+      "submissions/20260929T191506248306Z_double-clear-straight-throttle-final/",
+      "submissions/20260929T194913313156Z_compound-obstacle-brake-carry-final/"
+    ]
+  },
+  "residual_risk": "Five detector misses do not prove that the vehicle has physically cleared the obstacle. The bounded brake-only change therefore remains a static diagnostic candidate until an authorized, source-bound closed-loop evaluation measures finish, collision, off-track, clearance and lap-time outcomes.",
+  "official_source": "https://github.com/2026-HAIC/Participants"
+}

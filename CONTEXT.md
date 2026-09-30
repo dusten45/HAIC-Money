@@ -8,10 +8,11 @@ camera-only, diagnostic safety/pace layer over the completion-first controller
 recovered from source commit `52976fe`; the DrQ, explicit-export and HAIC policy
 paths are unchanged. Submission videos motivated bounded early obstacle and
 distant-bend responses plus reviewed obstacle-priority, corner-carry and compound
-pace layers. The current candidate raises only the already-qualified far/moderate
-compound target ceiling from36 to38 while retaining the target30 near/extreme/
-strong-steer/miss gates. Intentional off-road, fixed inside-line, global target-speed
-and seed-specific changes were rejected. Required
+pace layers. The current candidate retains the already-qualified far/moderate
+compound target ceiling38 and softens only its safe fifth latch-clearing frame:
+brake relief is capped at0.04 while target, gas and steering remain unchanged.
+Intentional off-road, fixed inside-line, global target-speed and seed-specific
+changes were rejected. Required
 competition documents are missing, so environment
 evaluation, submission, performance claims and SOTA promotion remain blocked.
 
@@ -253,7 +254,7 @@ remain. Seven focused and212 affected tests, isolated package smoke and independ
 audit passed; see
 `experiments/post-obstacle-curve-retention-v1-result.json`.
 
-The current bare route is `_AggressiveCompoundPaceController` at commit `42f5609`,
+The prior bare route was `_AggressiveCompoundPaceController` at commit `42f5609`,
 above the retained adaptive-target, latch-release, compound brake-carry and
 doubled-straight layers.
 Submission12 videos finish in23.60/28.18/25.44s, but13/26 obstacle encounters still
@@ -269,6 +270,21 @@ exact-file package smoke and two independent
 audits passed. Closed-loop clearance/completion/time remain unmeasured, so the
 candidate is `INCOMPARABLE`; see
 `experiments/aggressive-compound-pace-v1-result.json`.
+
+The current bare route is `_CompoundClearingBrakeCarryController` at commit
+`c4e5287`. It addresses a narrower transition exposed by code review: after the
+four target30 detector-miss frames, the fifth latch-clearing frame could restore
+the stronger generic curve supplement for one decision before the faster clear-
+curve path became eligible. Only after a far/moderate adaptive obstacle with a
+nonzero steering request at most0.28, sweep in `[6,12)`, and no later steering
+reversal, the clearing-frame brake becomes
+`max(base, compound, control - 0.04)`. Target, gas and steering stay exact;
+current-obstacle and miss1--4 behavior, ordinary curves, unsafe geometry, road
+loss and the following frame remain exact. Four focused and248 affected static
+tests plus two independent audits passed. Intentional off-road and global speed/
+steering changes were rejected. Closed-loop completion, clearance and lap time
+remain unmeasured, so this is `INCOMPARABLE`; see
+`experiments/compound-clearing-brake-carry-v1-result.json`.
 
 The user-requested untracked root `submission.zip` SHA is `3ac70e3a...`; it embeds
 the prior `_CompoundObstacleBrakeCarryController` agent SHA `413afda3...` and
