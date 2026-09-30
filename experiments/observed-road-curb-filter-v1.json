@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-road-curb-filter-v1",
+  "status": "PREREGISTERED",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_ObservedRoadCurbFilterController",
+  "control_commit": "4b83fda",
+  "hypothesis": "White curbs are being selected as orange obstacles and halve required curve steering. Reject whole bright components with peak grayscale above0.8; official orange RGB255,165,0 maps near0.678, recorded discs peak0.671, white curb selections peak0.886--0.965. Do not threshold individual bright pixels, which could leave antialias fragments.",
+  "single_factor_from_previous_candidate": "Add whole-component upper-brightness rejection to observed road target repair; retain all component shape, proximity and action logic. Original control remains comparator.",
+  "interaction_and_ablation": "Observed-target-only experiment recovered seed11 clean22.20s and seed21 with1collision27.92s, so it was rejected. Its logs provide the geometry-only ablation; new candidate tests combined geometry repair and independently evidenced curb misclassification. No claim of isolated lap-time causality without a matched detector-only ablation.",
+  "development_cells": [[1,11],[1,21],[1,42],[1,17],[1,516237],[2,644062],[3,1007]],
+  "max_steps": 1000,
+  "frame_skip": 4,
+  "budget": "One pair per declared consumed cell; stop on first operational or safety regression, no retuning within comparison.",
+  "static_acceptance": ["whole white component rejected", "orange component preserved", "original controller remains exact", "mirror symmetry and bounded actions", "no environment/seed input"],
+  "decision": "Same comparator as observed-road-target-v1: reject lost finish, increased collision/damage, lower paired DNF progress, or >5% slower prior finish. Retain diagnostic candidate only if finish count rises or same finishes improve summed time without regression. Not SOTA/fresh confirmation.",
+  "frozen": ["speed targets", "pedals", "side arbitration", "environment", "model", "non-bare routes"],
+  "training": false,
+  "submission": false,
+  "sota_promotion": false
+}
