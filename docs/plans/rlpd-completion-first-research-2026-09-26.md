@@ -101,6 +101,21 @@ preservation across active holds or full episodes. No road IDs, ground-truth
 speed/pose or Oracle act call may enter runtime selection. Original-versus-gated
 full episodes and trigger/hold timelines must be reported.
 
+The local gate was built and frozen in
+`experiments/rlpd-local-recovery-gate-v1.json` after zero-reset calibration:
+87/87 prototypes covered, zero triggers on16,023 reference queries, source-exact
+inactive outputs. Independent review found no blocking defect, and225 tests plus
+37 subtests passed. The24-episode original-versus-gated run is underway, not yet
+an outcome or generalization claim.
+
+**Local outcome checkpoint:** The first verified 24-episode comparison finished
+original5/12 versus local6/12, kept all five original finishes, lost none and
+gained geometry4272000010. Progress and damage improve while the sparse
+curve-terminal count remains1/1. The same frozen model/policy is being repeated,
+and primary trigger/hold paths are being audited before a consequential
+recommendation. This is one consumed-TRAIN learner/support result, not fresh
+generalization, an independent training replication or official ranking.
+
 Date: 2026-09-26. Session: `r4f7`. Revised after the peer-direction comparison
 requested on 2026-09-26; see Section 1.1.
 

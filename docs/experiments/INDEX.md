@@ -2,6 +2,14 @@
 
 ## RLPD Coupled Recovery (2026-09-29)
 
+- [Pixel-local gate protocol](../../experiments/rlpd-local-recovery-gate-v1.json):
+  unchanged source actor when inactive, learned joint correction held12 decisions
+  only after pixel-feature support triggers. Build calibration covered87/87
+  prototypes and excluded16,023 reference triggers, not a full-episode harm
+  guarantee. [First verified outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json)
+  is original5/12 versus gated6/12, kept5/lost0/gained1, damage0.2->0.05 and
+  progress0.6944->0.7566. Sparse curve-terminal count remains1/1; unchanged-model
+  repeat and trigger-path audit are pending. Consumed TRAIN, not fresh evidence.
 - [Frozen-encoder actor-only protocol](../../experiments/rlpd-recovery-actor-only-v1.json)
   and [verified evaluation](../../experiments/rlpd-recovery-actor-only-evaluation-v1-result.json):
   zero-reset offline 2,048-update fit preserves frozen components but finishes

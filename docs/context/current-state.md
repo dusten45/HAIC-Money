@@ -72,10 +72,20 @@ The fourth hypothesis uses the original actor as exact default when inactive
 and a pixel-feature local-support gate to invoke the learned joint correction
 for a held 12-decision sequence. Protected calibration prevents fresh triggers
 on its sampled reference points, not harm guarantees during active holds or
-whole episodes. It is not yet built or evaluated; no geometry/pose/Oracle inputs
+whole episodes. The gate is now built with 87/87 covered prototypes and no fresh
+trigger on 16,023 reference queries; inactive actions were source-exact. Its
+[frozen protocol](../../experiments/rlpd-local-recovery-gate-v1.json) and independent
+review passed, and the full suite passed 225 tests plus 37 subtests. Original-
+versus-gated evaluation completed 24 uncensored episodes: original5/12 versus
+gated6/12, all five old finishes retained and geometry4272000010 gained. Mean
+damage0.2->0.05 and progress0.6944->0.7566 improve; sparse curve-terminal counts
+remain1/1. This is the first retained consumed-TRAIN improvement, not fresh
+generalization. An unchanged-policy repeat and actual trigger-path review are
+running. See the [verified local-gate outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json).
+No geometry/pose/Oracle inputs
 are allowed at runtime and no fresh generalization is claimed.
 There is
-no learned improvement or candidate promotion. See the
+no fresh-road improvement or candidate promotion. See the
 [active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
 
 The [zero-reset precursor review](../../experiments/rlpd-recovery-precursor-review-v1-result.json)
