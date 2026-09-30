@@ -35,6 +35,12 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Compound onset](experiments/compound-brake-onset-v1-result.json): 14 completed
+  development runs, both arms 4/7 finishes, zero changed actions and no time gain;
+  INCONCLUSIVE, not activated.
+- [Visible compound base-brake protocol](experiments/visible-compound-base-brake-v1.json):
+  separate registered follow-up targeting the actual target30 envelope.
+
 Preregister protocols before execution. Record control/candidate hashes, exact
 cells and reservation audit, environment version, raw result locations, failures,
 metrics, operational checks and comparator state. Short development diagnostics

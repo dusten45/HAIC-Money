@@ -38,7 +38,8 @@ def build():
     p("The change is tested first on synthetic observations and stateful action comparisons. Required properties are unchanged targets and lateral commands, exclusive gas/brake, the base-brake floor, maximum relief 0.04, and exact recovery outside the eligible region. Unit tests do not establish closed-loop safety or lap-time gains.")
     p("The registered diagnostic compares one control and one candidate on seven previously consumed or video-recovered cells: (1,42), (1,11), (1,17), (1,21), (1,516237), (2,644062), (3,1007). Each run has at most 1,000 action decisions and frame skip 4. These are development regressions, not independent fresh confirmation. Frozen confirmation/blind reservations are excluded. [6]")
     p("The candidate is rejected on operational failure, lost finishes, greater collision/damage, worse off-track behavior, or lower progress on paired failures. Retention additionally requires lower summed lap time on paired completed cells. All attempted outcomes are recorded; no candidate is retuned after seeing this comparison. No SOTA promotion follows from this diagnostic. [6]")
-    p("Outcome updates are recorded in experiments/compound-brake-onset-v1-result.json when available. This report describes the registered method; it does not anticipate the result. No new learning run, official submission, or reserved evaluation is authorized by this report.")
+    p("The onset experiment completed 14 runs: both arms finished 4/7, with identical trajectories and zero changed brake calls. It is INCONCLUSIVE and was not activated. Seeds 42, 11 and 21 failed in both arms. The recovered video maps finished in 23.66, 28.12 and 25.26 seconds; the second map had two collisions. Full evidence is in experiments/compound-brake-onset-v1-result.json.")
+    p("A separate registered follow-up, visible-compound-base-brake-v1, tests the actual target-30 regime: only current-visible compound hazards use the inherited base brake without the constant supplement. Speed targets and steering stay fixed. This includes close obstacles and extreme curves, so the same strict regression rejection applies. Actual activation and reduced paired completed time are required; the existing four-finish baseline is not treated as competition-ready. [7]")
     p("References", "Heading1")
     refs = [
         ("1", "Official participant contract, README.md, pinned variables-6 commit, accessed 2026-09-30", OFFICIAL + "README.md"),
@@ -50,6 +51,7 @@ def build():
     p("[4] Project agent.py: _CompoundClearingBrakeCarryController and _CompoundBrakeOnsetController; source is frozen by the diagnostic receipt before execution.")
     p("[5] experiments/aggressive-compound-pace-v1-result.json and experiments/compound-clearing-brake-carry-v1-result.json. Existing diagnostic evidence, not matched current-policy confirmation.")
     p("[6] experiments/compound-brake-onset-v1.json. Preregistered single-factor protocol; initial protocol commit fc31f21.")
+    p("[7] experiments/visible-compound-base-brake-v1.json. Separate follow-up protocol, commit 7bc76ec. Outcomes must be reported even if rejected.")
 
     def footer(canvas, doc):
         canvas.setFont("Helvetica", 8)
