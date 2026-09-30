@@ -1,0 +1,17 @@
+{
+  "experiment":"corridor-failure-trace-v1",
+  "status":"DIAGNOSIS_COMPLETE",
+  "protocol_commit":"6235231",
+  "tool_commit":"1f651a6",
+  "source_sha256":"0de07088b6eef8fa20e83076ddb90b1b40b29a177a00f21ef79dc858b797f4b6",
+  "artifacts":".haic-artifacts/corridor-failure-trace-v1/20260930T145006Z-7533ef37",
+  "trajectory_validation":"All four recorded runs have exactly equal complete step arrays to the corresponding control logs in compound-brake-onset-v1; instrumentation did not change behavior.",
+  "steps":{"1/11":150,"1/21":208,"1/42":206,"2/644062":352},
+  "findings":[
+    "Seed11step47: observed rows54:34,50:28.5,46:24; row42 absent. Raw road steering+.09, final request+.33, after previously steering-.192. Right request is caused by fallback far41.5, not visible road. Next decisions unwind-.122,-.052,0 and lose road.",
+    "Seed21step104: same missing-row failure with rows54:34.5,50:30.5,46:24.5, final request+.324. Previous turn-.185 unwinds before road loss at106.",
+    "Seed42step194/195 chooses passing side right from obstacle left of center; step196 flips side as the obstacle becomes slightly right of changing road center. Late left steering reaches-.32, then contacts at201-205. This is a separate avoidance/clearance issue, not explained by the missing42 repair alone."
+  ],
+  "next_hypothesis":"Use observed endpoint/interpolated road coordinate for absent row42 steering, keep actual detected centers untouched. Evaluate separately before any obstacle-side or speed change.",
+  "scope":"Consumed development diagnosis only; no SOTA, new model training or submission. Exact snapshots and hook telemetry allow source-bound reproduction and static testing."
+}
