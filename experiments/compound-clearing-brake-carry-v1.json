@@ -3,7 +3,7 @@
   "experiment": "compound-clearing-brake-carry-v1",
   "status": "PREREGISTERED_STATIC_ONLY",
   "recorded_at": "2026-09-30T22:48:06+09:00",
-  "amended_at": "2026-09-30T23:05:00+09:00",
+  "amended_at": "2026-09-30T23:10:00+09:00",
   "branch": "feature/DG-Codex",
   "hypothesis": "After four compound detector-miss frames, the latch-clearing fifth frame restores the generic curve supplemental brake for one control decision even though the next clear frame enables the faster clear-curve controller. Retaining only the existing softened compound brake envelope for that transition should remove a deterministic brake spike without raising target speed, changing steering, or weakening the inherited base speed brake.",
   "scope": {
@@ -26,6 +26,7 @@
     "the frame-start latched target was exactly the compound target30",
     "current image-space sweep is at least6 and below12",
     "current final obstacle-adjusted steering request has absolute value at most0.28",
+    "the current steering direction has not reversed against the qualifying obstacle frame",
     "the generic current command target is above30"
   ],
   "candidate_effect": {
@@ -53,7 +54,7 @@
   ],
   "rollback": [
     "Any target, gas or steering difference.",
-    "Any difference on a current obstacle, miss frames1--4, sweep below6 or at least12, steering request above0.28, noncompound latch or ordinary clear curve.",
+    "Any difference on a current obstacle, miss frames1--4, sweep below6 or at least12, steering request above0.28, steering reversal, noncompound latch or ordinary clear curve.",
     "Any brake below the inherited base brake or any state/reset/package/interface regression.",
     "Any future authorized paired evaluation with lower finish count, collision, off-track, progress or clearance regression."
   ],
