@@ -2655,6 +2655,31 @@ class _CompoundBrakeOnsetController(_CompoundClearingBrakeCarryController):
         return max(base_brake, ramp * compound)
 
 
+class _VisibleCompoundBaseBrakeController(_CompoundClearingBrakeCarryController):
+    """Evaluate inherited base braking during visible target30 compounds.
+
+    This diagnostic candidate changes only the supplemental brake, including
+    near obstacles and extreme curves. Paired driving evidence is required
+    before routing the bare agent here; the base floor is not a safety proof.
+    """
+
+    def _curve_brake_envelope(
+        self, *, excess: float, base_brake: float,
+    ) -> float:
+        visible_compound = (
+            self._obstacle_side != 0.0
+            and self._obstacle_missing == 0
+            and self._pace_latched_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_command_target == self.COMPOUND_TARGET_SPEED
+            and self._pace_sweep >= self.COMPOUND_SWEEP_THRESHOLD
+        )
+        if visible_compound:
+            return base_brake
+        return super()._curve_brake_envelope(
+            excess=excess, base_brake=base_brake,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 

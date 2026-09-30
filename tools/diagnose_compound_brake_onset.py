@@ -14,6 +14,10 @@ from uuid import uuid4
 ROOT = Path(__file__).resolve().parents[1]
 CELLS = ((1, 42), (1, 11), (1, 17), (1, 21), (1, 516237), (2, 644062), (3, 1007))
 DOCUMENTS = ("RESTRICTIONs.md", "COMPETITION_INFO.md", "RESULTS.md", "SOTA.md", "report.pdf")
+CONTROLLERS = {
+    "compound-brake-onset-v1": "_CompoundBrakeOnsetController",
+    "visible-compound-base-brake-v1": "_VisibleCompoundBaseBrakeController",
+}
 
 
 def digest(path: Path) -> str:
@@ -33,9 +37,10 @@ def preflight(protocol_path: Path, expected: dict[str, str]) -> dict:
         raise ValueError("Diagnostic cells must match the preregistered reused-cell grid")
     if protocol["max_steps"] != 1000 or protocol["frame_skip"] != 4:
         raise ValueError("Diagnostic budget changed")
-    if (protocol["control_class"], protocol["candidate_class"]) != (
-        "_CompoundClearingBrakeCarryController", "_CompoundBrakeOnsetController"
-    ):
+    experiment = protocol.get("experiment")
+    if experiment not in CONTROLLERS or (
+        protocol["control_class"], protocol["candidate_class"]
+    ) != ("_CompoundClearingBrakeCarryController", CONTROLLERS[experiment]):
         raise ValueError("Unexpected controller pair")
     if any(protocol.get(name) is not False for name in ("training", "submission", "sota_promotion")):
         raise ValueError("This runner permits diagnosis only")
@@ -69,6 +74,10 @@ def compare(rows: list[dict]) -> dict:
     reasons = []
     paired_time_delta = 0
     completed_pairs = 0
+    changed_calls = sum(
+        row.get("brake_envelope_counts", {}).get("changed_calls", 0)
+        for row in rows if row["arm"] == "candidate"
+    )
     for track, seed in CELLS:
         pair = {row["arm"]: row for row in rows if (row["track_id"], row["seed"]) == (track, seed)}
         if set(pair) != {"control", "candidate"}:
@@ -90,11 +99,14 @@ def compare(rows: list[dict]) -> dict:
             paired_time_delta += new["lap_time_ms"] - old["lap_time_ms"]
     return {
         "decision": "REJECT" if reasons else (
-            "RETAIN_DIAGNOSTIC_CANDIDATE" if completed_pairs and paired_time_delta < 0 else "INCONCLUSIVE"
+            "RETAIN_DIAGNOSTIC_CANDIDATE"
+            if completed_pairs and paired_time_delta < 0 and changed_calls > 0
+            else "INCONCLUSIVE"
         ),
         "reasons": reasons,
         "paired_completed_cells": completed_pairs,
         "paired_completed_time_delta_ms": paired_time_delta,
+        "candidate_changed_brake_calls": changed_calls,
         "sota_promotion": False,
         "evidence_scope": "reused development diagnosis; no unseen-track claim",
     }
@@ -123,7 +135,7 @@ def main() -> int:
 
     torch.set_num_threads(1)
     torch.use_deterministic_algorithms(True)
-    output = ROOT / ".haic-artifacts" / "compound-brake-onset-v1" / (
+    output = ROOT / ".haic-artifacts" / receipt["protocol"]["experiment"] / (
         datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid4().hex[:8]
     )
     output.mkdir(parents=True, exist_ok=False)
@@ -148,7 +160,10 @@ def main() -> int:
                 controller_class = getattr(agent_module, receipt["protocol"][f"{arm}_class"])
                 policy._forward_controller = controller_class()
                 controller = policy._forward_controller
-                brake_counts = {"envelope_calls": 0, "changed_calls": 0}
+                brake_counts = {
+                    "envelope_calls": 0, "changed_calls": 0,
+                    "max_absolute_brake_relief": 0.0,
+                }
                 original_envelope = controller._curve_brake_envelope
                 control_class = getattr(agent_module, receipt["protocol"]["control_class"])
 
@@ -159,6 +174,9 @@ def main() -> int:
                     )
                     brake_counts["envelope_calls"] += 1
                     brake_counts["changed_calls"] += int(value != reference)
+                    brake_counts["max_absolute_brake_relief"] = max(
+                        brake_counts["max_absolute_brake_relief"], abs(reference - value),
+                    )
                     return value
 
                 controller._curve_brake_envelope = counted_envelope
