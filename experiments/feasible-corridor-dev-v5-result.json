@@ -48,5 +48,14 @@
     "active_route": "unchanged",
     "sota_promotion": false
   },
-  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The side-width correction reduces a contact on one cell but does not resolve its on-road retirement or inherited speed regressions. It cannot justify promotion, and repeated development on these cells risks overfitting."
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The side-width correction reduces a contact on one cell but does not resolve its on-road retirement or inherited speed regressions. It cannot justify promotion, and repeated development on these cells risks overfitting.",
+  "source_bound_failure_trace": {
+    "tool": "tools/trace_feasible_corridor_dev_v5.py",
+    "tool_commit": "4b083ca",
+    "artifact": ".haic-artifacts/feasible-corridor-dev-telemetry-v5/track-2-seed-4089604952/candidate.json",
+    "artifact_sha256": "5530d35ccac7f4982966969c6da7858289aa1f2501106719e8b2ce2f6976b228",
+    "reproduction": "The exact v5 candidate replay on consumed track2/4089604952 matched its frozen action hash and receipt: 344 decisions, progress 0.749153, three contacts, damage 0.6 and on-road off_track retirement.",
+    "track_2_seed_4089604952": "The width veto rejects right-side switches at steps234-239. At step240 the obstacle is already at row49.5 with bbox[44,48,46,51] and steering+0.115. The nearest three edge rows suddenly report right boundaries59/56.8/54.6 instead of roughly49-50 on the preceding frame, so the veto permits a left-to-right switch. Steering can only slew to+0.185,+0.255,+0.32 by steps240-242; contact occurs at step243. Speed drops below1 and reaches zero while all four wheels remain on road. After101 negative-reward decisions the episode retires as off_track. Earlier contacts at steps157-158 were unchanged.",
+    "interpretation": "A three-row instantaneous width check cannot establish a stable passage or enough time to reach it. A temporal edge-consistency and reachable-side planner is an unvalidated corrective hypothesis; this replay is diagnostic, not independent performance evidence."
+  }
 }

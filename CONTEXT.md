@@ -20,7 +20,10 @@ Records: `experiments/feasible-corridor-dev-v1-result.json` through
 Exact source-bound replays explain the current design limit. V4 kept the
 correct left obstacle side on2/408 until a later switch into visibly
 insufficient right road width; two contacts then caused an on-road stall.
-V5 blocks that switch and removes one contact but does not recover the lap.
+V5 blocks that switch until row49.5, when a one-frame apparent right-edge
+opening bypasses the veto. The car cannot turn right in the remaining few
+decisions, contacts again and stalls on road; exact v5 action hash matches its
+frozen receipt. V5 removes one contact but does not recover the lap.
 V2's no-corridor speed cap causes a1.34s delay on2/644; the1/17 delay also
 includes the road-dropout recovery trajectory. Narrow changes to side
 switching have not solved safe passage and pace together. A temporally
