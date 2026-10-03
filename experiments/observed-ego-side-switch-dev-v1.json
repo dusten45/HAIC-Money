@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "name": "observed-ego-side-switch-dev-v1",
+  "status": "PREREGISTERED",
+  "evidence_scope": "Consumed development diagnosis only; no fresh confirmation, blind, submission, or SOTA promotion.",
+  "hypothesis": "Late obstacle-side reselection should require the proposed passing side to agree with the obstacle's observed position relative to the vehicle image center. This permits the centered-obstacle switch that prevented a third contact on screen track1/3892761381, while blocking the opposite flip on consumed seed42 where the obstacle remained far left of the car.",
+  "single_factor_from_margin": "Change only the predicate for switching an already selected obstacle-passing side. Keep first selection, detector, road/centerline/margin perception, obstacle urgency, speed and all public actions unchanged. Permit switch for y<38; for 38<=y<52 require candidate_side*(IMAGE_CENTER-obstacle_x)>0; reject switch for y>=52.",
+  "agent_sha256": {
+    "baseline": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
+    "margin": "cae2308000a8d3bb71eb09f0a028f58b29a37196a0f846e7a963841659bd1115",
+    "ego_switch": "8ddebd619e906cf70eb532721031525493883e3a1f537cfdc8dee3f935fe344f"
+  },
+  "controller_classes": {
+    "baseline": "_CompoundClearingBrakeCarryController",
+    "margin": "_ObservedMarginArbitrationController",
+    "ego_switch": "_ObservedEgoSideSwitchController"
+  },
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
+  "source_lineage": "Baseline and margin are the exact frozen source snapshots from observed-margin-generalization-v1. Ego-switch is committed agent.py bytes with SHA256 cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19, replacing the sole '_CompoundClearingBrakeCarryController()' route-constructor occurrence with '_ObservedEgoSideSwitchController()'. The new base hook's default returns the original y<SIDE_SWITCH_ROW condition for all existing classes; focused tests and stored-observation parity must verify no unintended control/margin behavior change.",
+  "source_snapshots": {
+    "baseline": ".haic-artifacts/observed-margin-generalization-v1/snapshots/control_agent.py",
+    "margin": ".haic-artifacts/observed-margin-generalization-v1/snapshots/candidate_agent.py",
+    "ego_switch": ".haic-artifacts/observed-ego-side-switch-dev-v1/snapshots/ego_switch_agent.py"
+  },
+  "screen_protocol_sha256": "dfddf7f28686501f9c35298e33cc3e5ec28c53e61e2e3dfaeae2262a840d1632",
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "development_cells": [
+    [1, 11], [1, 21], [1, 42], [1, 17], [1, 516237], [2, 644062], [3, 1007],
+    [1, 3857792434], [1, 2951861974], [1, 2786341258], [1, 3892761381],
+    [2, 3857792434], [2, 2951861974], [2, 2786341258], [2, 3892761381],
+    [3, 3857792434], [3, 2951861974], [3, 2786341258], [3, 3892761381],
+    [4, 3857792434], [4, 2951861974], [4, 2786341258], [4, 3892761381]
+  ],
+  "budget": "One cold-process official-generator episode per arm and exact development cell: 23 cells x 3 arms = 69 executions. Continue through all cells unless an operational failure; source/model/helper/harness/environment hashes remain fixed. No new geometry seed may be substituted or added after results.",
+  "comparison": "Compare ego_switch versus baseline and versus margin with the same strict paired safety veto: reject any lost prior finish, increased contacts or damage, lower paired DNF progress, or any shared completed lap more than 5% slower. Against baseline, retain only a lexicographic gain in finish count, mean progress, or shared completed time. Against margin, also count an otherwise tied comparison with at least one paired contact/damage reduction and no lap slowdown as RETAIN_SAFETY_REPAIR. Overall diagnostic retention requires baseline RETAIN and margin RETAIN or RETAIN_SAFETY_REPAIR. The margin-versus-baseline comparison is context only. One repaired consumed cell cannot establish unseen-track improvement.",
+  "expected_mechanism_checks": ["baseline behavior identical after hook refactor", "screen track1/3892761381 side switch at step259 allowed and extra contact removed", "seed42 late flip at step196 blocked without off-track or collision regression", "seed11/21 recovered finishes and track2/644062 contacts unchanged"],
+  "gates": {"fresh_confirmation": "SEALED", "blind": "SEALED", "submission": false, "sota_promotion": false}
+}
