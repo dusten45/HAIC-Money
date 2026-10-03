@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from tools import compare_reused_bare_candidate as prior
 from tools import evaluate_bare_generalization as fresh
@@ -99,6 +101,31 @@ def row(arm: str, track: int, seed: int, *, contacts: int = 0) -> dict:
             "damage": .2 * contacts, "retire_reason": "off_track",
             "offtrack_samples": 0, "partial_offtrack_samples": 0,
             "action_trace_sha256": "a" * 64, "steps": 150, "error": None}
+
+
+def development_row(arm: str, track: int, seed: int, **changes) -> dict:
+    value = row(arm, track, seed)
+    value.pop("partition")
+    value.pop("repeat")
+    value.update(receipt_origin="COLD_WORKER")
+    value.update(changes)
+    return value
+
+
+def write_mechanism_rows(root: Path, identity: dict, *, changes: dict | None = None,
+                         ego_cells: tuple[tuple[int, int], ...] = ()) -> None:
+    harness = subject()
+    changes = changes or {}
+    for track, seed in harness.MECHANISM_CELLS:
+        for arm in harness.ARMS:
+            row_changes = changes.get((track, seed, arm), {})
+            if arm == "baseline" and (track, seed) in ego_cells:
+                provenance = {"receipt_origin": "EGO_SCREEN_CONTROL",
+                              "source_receipt_sha256": "f" * 64}
+            else:
+                provenance = {"receipt_origin": "COLD_WORKER"}
+            harness.record_cell(root, identity,
+                                development_row(arm, track, seed, **{**provenance, **row_changes}))
 
 
 def write_rejected_screen(root: Path, screen: dict, identity: dict) -> None:
@@ -281,11 +308,12 @@ class ReceiptTests(unittest.TestCase):
                     "seed": 11, "finished": finished, "progress": progress,
                     "lap_time_ms": 1000 if finished else None,
                     "collision_count": 0, "damage": 0.0, "error": None,
-                    "action_trace_sha256": "a" * 64})
-            summary = harness.report(root, identity, cells, mechanism_only=True)
+                    "receipt_origin": "COLD_WORKER",
+                    "action_trace_sha256": ("a" if arm == "baseline" else "b") * 64})
+            summary = harness.report(root, identity, cells, mechanism_only=True, ego_cells=())
             self.assertEqual(summary["comparison"]["decision"], "RETAIN")
             self.assertEqual(summary["evidence_scope"], "CONSUMED_DEVELOPMENT_ONLY")
-            self.assertEqual(summary["decision"], "MECHANISM_DIAGNOSTIC")
+            self.assertEqual(summary["decision"], "MECHANISM_DIAGNOSTIC_ALLOW_FULL")
             self.assertFalse(summary["fresh_generalization"])
             self.assertFalse(summary["sota_promotion"])
             self.assertFalse(summary["confirmation_unlocked"])
@@ -297,9 +325,163 @@ class ReceiptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             fresh.prepare_run(root, identity)
-            summary = harness.report(root, identity, ((1, 11),), mechanism_only=True)
+            summary = harness.report(root, identity, ((1, 11),),
+                                     mechanism_only=True, ego_cells=())
             self.assertEqual(summary["decision"], "INCOMPLETE")
             self.assertEqual(summary["comparison"]["missing_cells"], [[1, 11]])
+
+
+class TriageGateTests(unittest.TestCase):
+    def test_full_run_refuses_to_start_without_complete_mechanism_summary(self):
+        harness = subject()
+        margin, ego = protocols()
+        identity = {"protocol_sha256": "a" * 64}
+        artifacts = harness.ROOT / ".haic-artifacts"
+        artifacts.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=artifacts) as directory:
+            root = Path(directory)
+            with patch.object(harness, "_run_worker", side_effect=AssertionError("episode started")):
+                with self.assertRaisesRegex(ValueError, "mechanism|triage"):
+                    harness.run(root, identity, {}, {}, {}, {},
+                                harness.expected_development_cells(margin, ego),
+                                harness.ego_screen_cells(ego), mechanism_only=False)
+
+    def test_contact_regression_is_recorded_but_does_not_block_development(self):
+        harness = subject()
+        ego_cells = harness.ego_screen_cells(protocols()[1])
+        identity = {"protocol_sha256": "a" * 64}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            cell = harness.MECHANISM_CELLS[0]
+            write_mechanism_rows(root, identity, ego_cells=ego_cells, changes={
+                (*cell, "candidate"): {"action_trace_sha256": "b" * 64,
+                                         "collision_count": 1, "damage": .2},
+            })
+            summary = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                     mechanism_only=True, ego_cells=ego_cells)
+            self.assertEqual(summary["comparison"]["decision"], "REJECT")
+            self.assertEqual(summary["triage_gate"]["status"], "ALLOW_FULL_CONSUMED_DEVELOPMENT")
+            self.assertEqual(summary["triage_gate"]["adverse_contact_cells"], [[*cell, 1]])
+            self.assertEqual(summary["triage_gate"]["adverse_damage_cells"], [[*cell, .2]])
+            self.assertIn("COMPARISON_REJECT", summary["decision"])
+            fresh._atomic_json(root / "mechanism-summary.json", summary)
+            self.assertEqual(harness.require_triage_gate(root, identity, ego_cells), summary)
+
+    def test_mechanism_gate_blocks_lost_finish_new_crash_and_both_dnf_decline(self):
+        harness = subject()
+        identity = {"protocol_sha256": "a" * 64}
+        cells = harness.MECHANISM_CELLS
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            write_mechanism_rows(root, identity, changes={
+                (*cells[0], "baseline"): {"finished": True, "progress": 1.0,
+                                           "lap_time_ms": 1000, "retire_reason": None},
+                (*cells[0], "candidate"): {"action_trace_sha256": "b" * 64},
+                (*cells[1], "candidate"): {"retire_reason": "crash"},
+                (*cells[2], "candidate"): {"progress": .4},
+            })
+            summary = harness.report(root, identity, cells, mechanism_only=True,
+                                     ego_cells=())
+            reasons = summary["triage_gate"]["reasons"]
+            self.assertEqual(summary["triage_gate"]["status"], "BLOCK_FULL")
+            self.assertTrue(any("control finish lost" in reason for reason in reasons))
+            self.assertTrue(any("new crash DNF" in reason for reason in reasons))
+            self.assertTrue(any("both-DNF progress declined" in reason for reason in reasons))
+            fresh._atomic_json(root / "mechanism-summary.json", summary)
+            with self.assertRaisesRegex(ValueError, "new protocol"):
+                harness.require_triage_gate(root, identity, ())
+
+    def test_mechanism_gate_requires_action_change_and_reproducible_rows(self):
+        harness = subject()
+        identity = {"protocol_sha256": "a" * 64}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            write_mechanism_rows(root, identity)
+            summary = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                     mechanism_only=True, ego_cells=())
+            self.assertEqual(summary["triage_gate"]["status"], "BLOCK_FULL")
+            self.assertTrue(any("action trace" in reason for reason in summary["triage_gate"]["reasons"]))
+            bad = harness.MECHANISM_CELLS[0]
+            candidate_path = harness.cell_path(root, "candidate", *bad)
+            candidate_path.unlink()
+            harness.record_cell(root, identity, development_row("candidate", *bad,
+                               action_trace_sha256="invalid", error="worker failed"))
+            failed = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                    mechanism_only=True, ego_cells=())
+            self.assertEqual(failed["triage_gate"]["status"], "BLOCK_FULL")
+            self.assertTrue(any("operational" in reason or "repro" in reason
+                                for reason in failed["triage_gate"]["reasons"]))
+
+    def test_nonfinite_or_out_of_range_progress_and_damage_block_triage(self):
+        harness = subject()
+        cell = harness.MECHANISM_CELLS[0]
+        for field, bad_value in (("progress", math.inf), ("damage", math.nan),
+                                 ("progress", 1.5), ("damage", -.1)):
+            with self.subTest(field=field):
+                rows = []
+                for track, seed in harness.MECHANISM_CELLS:
+                    rows.append(development_row("baseline", track, seed))
+                    changes = {"action_trace_sha256": "b" * 64} if (track, seed) == cell else {}
+                    if (track, seed) == cell:
+                        changes[field] = bad_value
+                    rows.append(development_row("candidate", track, seed, **changes))
+                gate = harness.derive_triage_gate(rows, harness.MECHANISM_CELLS, ())
+                self.assertEqual(gate["status"], "BLOCK_FULL")
+                self.assertTrue(any("numeric" in reason for reason in gate["reasons"]))
+
+    def test_full_gate_recomputes_summary_and_requires_all_twenty_rows(self):
+        harness = subject()
+        identity = {"protocol_sha256": "a" * 64}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            first = harness.MECHANISM_CELLS[0]
+            write_mechanism_rows(root, identity, changes={
+                (*first, "candidate"): {"action_trace_sha256": "b" * 64}})
+            summary = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                     mechanism_only=True, ego_cells=())
+            fresh._atomic_json(root / "mechanism-summary.json", summary)
+            harness.cell_path(root, "candidate", *first).unlink()
+            with self.assertRaisesRegex(ValueError, "20|missing|incomplete"):
+                harness.require_triage_gate(root, identity, ())
+
+    def test_full_gate_rejects_a_spoofed_allow_summary(self):
+        harness = subject()
+        identity = {"protocol_sha256": "a" * 64}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            write_mechanism_rows(root, identity)
+            summary = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                     mechanism_only=True, ego_cells=())
+            self.assertEqual(summary["triage_gate"]["status"], "BLOCK_FULL")
+            summary["triage_gate"]["status"] = "ALLOW_FULL_CONSUMED_DEVELOPMENT"
+            fresh._atomic_json(root / "mechanism-summary.json", summary)
+            with self.assertRaisesRegex(ValueError, "differs"):
+                harness.require_triage_gate(root, identity, ())
+
+    def test_report_separates_rows_from_new_cold_worker_episodes(self):
+        harness = subject()
+        margin, ego = protocols()
+        identity = {"protocol_sha256": "a" * 64}
+        ego_cells = harness.ego_screen_cells(ego)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            fresh.prepare_run(root, identity)
+            mechanism = harness.report(root, identity, harness.MECHANISM_CELLS,
+                                       mechanism_only=True, ego_cells=ego_cells)
+            full = harness.report(root, identity,
+                                  harness.expected_development_cells(margin, ego),
+                                  mechanism_only=False, ego_cells=ego_cells)
+            self.assertEqual((mechanism["rows_expected"], mechanism["cold_worker_episodes_expected"]),
+                             (20, 18))
+            self.assertEqual((full["rows_expected"], full["cold_worker_episodes_expected"]),
+                             (110, 78))
+            self.assertNotIn("episodes_expected", mechanism)
+            self.assertNotIn("episodes_expected", full)
 
 
 if __name__ == "__main__":

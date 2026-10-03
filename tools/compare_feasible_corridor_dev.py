@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -299,8 +300,88 @@ def import_ego_control(screen_root: Path, screen_identity: dict, output_root: Pa
     return imported
 
 
+def _row_issue(row: dict) -> str | None:
+    if row.get("error"):
+        return "operational failure"
+    if type(row.get("finished")) is not bool:
+        return "malformed numeric or finish result"
+    for name in ("progress", "damage"):
+        value = row.get(name)
+        if type(value) not in (int, float) or not math.isfinite(value):
+            return f"non-finite or missing numeric {name}"
+        if (name == "progress" and not 0.0 <= value <= 1.0) or (name == "damage" and value < 0):
+            return f"out-of-range numeric {name}"
+    if type(row.get("collision_count")) is not int or row["collision_count"] < 0:
+        return "malformed numeric collision_count"
+    if row["finished"]:
+        time_ms = row.get("lap_time_ms")
+        if type(time_ms) not in (int, float) or not math.isfinite(time_ms) or time_ms < 0:
+            return "non-finite or missing numeric lap_time_ms"
+    return None
+
+
+def derive_triage_gate(rows: list[dict], cells: tuple[tuple[int, int], ...],
+                       ego_cells: tuple[tuple[int, int], ...]) -> dict:
+    """Permit more consumed development only after the fixed mechanism checks."""
+    lookup = {(row["track_id"], row["seed"], row["arm"]): row for row in rows}
+    ego_set = set(ego_cells)
+    reasons = []
+    missing = []
+    changed = []
+    adverse_contacts = []
+    adverse_damage = []
+    for track, seed in cells:
+        baseline = lookup.get((track, seed, "baseline"))
+        candidate = lookup.get((track, seed, "candidate"))
+        if baseline is None or candidate is None:
+            missing.append([track, seed])
+            continue
+        valid = True
+        for arm, row in (("baseline", baseline), ("candidate", candidate)):
+            expected_origin = ("EGO_SCREEN_CONTROL" if arm == "baseline" and (track, seed) in ego_set
+                               else "COLD_WORKER")
+            issue = _row_issue(row)
+            if issue:
+                reasons.append(f"{track}/{seed}/{arm}: {issue}")
+                valid = False
+            if row.get("receipt_origin") != expected_origin:
+                reasons.append(f"{track}/{seed}/{arm}: receipt provenance failure")
+                valid = False
+            try:
+                fresh._sha256_string(row.get("action_trace_sha256"), "action_trace_sha256")
+                if expected_origin == "EGO_SCREEN_CONTROL":
+                    fresh._sha256_string(row.get("source_receipt_sha256"), "source_receipt_sha256")
+            except ValueError:
+                reasons.append(f"{track}/{seed}/{arm}: action or source receipt reproducibility failure")
+                valid = False
+        if not valid:
+            continue
+        if baseline["action_trace_sha256"] != candidate["action_trace_sha256"]:
+            changed.append([track, seed])
+        if baseline["finished"] and not candidate["finished"]:
+            reasons.append(f"{track}/{seed}: control finish lost")
+        if (not candidate["finished"] and candidate.get("retire_reason") == "crash"
+                and (baseline["finished"] or baseline.get("retire_reason") != "crash")):
+            reasons.append(f"{track}/{seed}: new crash DNF")
+        if (not baseline["finished"] and not candidate["finished"]
+                and candidate["progress"] + 1e-9 < baseline["progress"]):
+            reasons.append(f"{track}/{seed}: both-DNF progress declined")
+        if candidate["collision_count"] > baseline["collision_count"]:
+            adverse_contacts.append([track, seed, candidate["collision_count"] - baseline["collision_count"]])
+        damage_delta = candidate["damage"] - baseline["damage"]
+        if damage_delta > 1e-9:
+            adverse_damage.append([track, seed, damage_delta])
+    if not missing and not changed:
+        reasons.append("candidate action trace unchanged across mechanism cells")
+    status = ("INCOMPLETE" if missing else "BLOCK_FULL" if reasons else
+              "ALLOW_FULL_CONSUMED_DEVELOPMENT")
+    return {"status": status, "reasons": reasons, "missing_cells": missing,
+            "changed_action_cells": changed, "adverse_contact_cells": adverse_contacts,
+            "adverse_damage_cells": adverse_damage}
+
+
 def report(root: Path, identity: dict, cells: tuple[tuple[int, int], ...],
-           *, mechanism_only: bool) -> dict:
+           *, mechanism_only: bool, ego_cells: tuple[tuple[int, int], ...]) -> dict:
     rows = []
     for track, seed in cells:
         for arm in ARMS:
@@ -308,21 +389,27 @@ def report(root: Path, identity: dict, cells: tuple[tuple[int, int], ...],
             if current is not None:
                 rows.append(current)
     mapped = [{**row, "arm": "control" if row["arm"] == "baseline" else "candidate",
-               "repeat": 0} for row in rows]
+               "repeat": 0, "error": _row_issue(row)} for row in rows]
     comparison = fresh.compare_pairs(mapped, [(track, seed, 0) for track, seed in cells])
+    triage_gate = derive_triage_gate(rows, cells, ego_cells) if mechanism_only else None
     if mechanism_only:
-        decision = ("REJECT_OPERATIONAL" if any(row.get("error") for row in rows) else
-                    "INCOMPLETE" if comparison["missing_cells"] else
-                    "MECHANISM_DIAGNOSTIC")
+        decision = ("INCOMPLETE" if triage_gate["status"] == "INCOMPLETE" else
+                    "TRIAGE_BLOCK_FULL" if triage_gate["status"] == "BLOCK_FULL" else
+                    "TRIAGE_ALLOW_FULL_COMPARISON_REJECT" if comparison["decision"] == "REJECT" else
+                    "MECHANISM_DIAGNOSTIC_ALLOW_FULL")
     else:
         decision = ("REJECT" if comparison["decision"] == "REJECT" else
                     "INCOMPLETE" if comparison["decision"] == "INCOMPLETE" else
                     "RETAIN_DIAGNOSTIC_CANDIDATE" if comparison["decision"] == "RETAIN" else
                     "INCONCLUSIVE")
-    return {
+    ego_set = set(ego_cells)
+    reused_expected = sum(cell in ego_set for cell in cells)
+    result = {
         "decision": decision, "comparison": comparison,
         "rows_recorded": len(rows), "cells_expected": len(cells),
-        "episodes_expected": len(cells) * len(ARMS),
+        "rows_expected": len(cells) * len(ARMS),
+        "cold_worker_episodes_expected": len(cells) * len(ARMS) - reused_expected,
+        "reused_baseline_expected": reused_expected,
         "reused_baseline_recorded": sum(row.get("receipt_origin") == "EGO_SCREEN_CONTROL" for row in rows),
         "distinct_geometry_seeds": len({seed for _, seed in cells}),
         "mechanism_only": mechanism_only,
@@ -334,6 +421,27 @@ def report(root: Path, identity: dict, cells: tuple[tuple[int, int], ...],
         "fresh_generalization": False, "confirmation_unlocked": False,
         "blind_opened": False, "sota_promotion": False,
     }
+    if mechanism_only:
+        result["triage_gate"] = {**triage_gate, "comparison_decision": comparison["decision"]}
+    return result
+
+
+def require_triage_gate(root: Path, identity: dict,
+                        ego_cells: tuple[tuple[int, int], ...]) -> dict:
+    path = root / "mechanism-summary.json"
+    if not path.is_file():
+        raise ValueError("mechanism triage summary missing; run --mechanism-only first")
+    for track, seed in MECHANISM_CELLS:
+        for arm in ARMS:
+            if load_cell(root, identity, arm, track, seed) is None:
+                raise ValueError("mechanism triage incomplete: all 20 rows are required")
+    current = report(root, identity, MECHANISM_CELLS,
+                     mechanism_only=True, ego_cells=ego_cells)
+    if fresh._read_json(path) != current:
+        raise ValueError("mechanism triage summary differs from the 20 frozen rows")
+    if current["triage_gate"]["status"] != "ALLOW_FULL_CONSUMED_DEVELOPMENT":
+        raise ValueError("mechanism triage blocked full development; a new protocol is required")
+    return current
 
 
 def _run_worker(arm: str, track: int, seed: int, protocol: dict,
@@ -353,6 +461,9 @@ def _run_worker(arm: str, track: int, seed: int, protocol: dict,
     fresh._sha256_string(measured.get("action_trace_sha256"), "action_trace_sha256")
     if type(measured.get("steps")) is not int or not 0 <= measured["steps"] <= 2000:
         raise ValueError("cold worker returned an invalid action count")
+    issue = _row_issue(measured)
+    if issue:
+        raise ValueError(f"cold worker returned {issue}")
     return measured
 
 
@@ -363,6 +474,8 @@ def run(root: Path, identity: dict, protocol: dict, paths: dict[str, Path],
     root = validate_output_root(root)
     fresh.prepare_run(root, identity)
     with fresh._run_lock(root):
+        if not mechanism_only:
+            require_triage_gate(root, identity, ego_cells)
         for (track, seed), arm, origin in work_plan(cells, ego_cells):
             existing = load_cell(root, identity, arm, track, seed)
             if existing is not None:
@@ -385,7 +498,8 @@ def run(root: Path, identity: dict, protocol: dict, paths: dict[str, Path],
                         stderr = stderr.decode("utf-8", errors="replace")
                     row.update(error=str(error), stderr=stderr[-4000:])
                     record_cell(root, identity, row)
-                    failure = report(root, identity, cells, mechanism_only=mechanism_only)
+                    failure = report(root, identity, cells, mechanism_only=mechanism_only,
+                                     ego_cells=ego_cells)
                     fresh._atomic_json(root / ("mechanism-summary.json" if mechanism_only else "summary.json"), failure)
                     raise RuntimeError(f"worker failed: {arm}/{track}/{seed}") from error
                 check_frozen_inputs(identity, paths, screens)
@@ -394,7 +508,8 @@ def run(root: Path, identity: dict, protocol: dict, paths: dict[str, Path],
                               "finished": row["finished"], "progress": row["progress"],
                               "contacts": row["collision_count"]}), flush=True)
     check_frozen_inputs(identity, paths, screens)
-    summary = report(root, identity, cells, mechanism_only=mechanism_only)
+    summary = report(root, identity, cells, mechanism_only=mechanism_only,
+                     ego_cells=ego_cells)
     summary_path = root / ("mechanism-summary.json" if mechanism_only else "summary.json")
     if summary_path.exists() and fresh._read_json(summary_path) != summary:
         raise ValueError(f"existing consumed development summary differs: {summary_path}")
