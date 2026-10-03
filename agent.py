@@ -1,6 +1,9 @@
 import math
 import pickle
 import time
+from dataclasses import dataclass
+from math import ceil
+from collections.abc import Mapping, Sequence
 
 import numpy as np
 import torch
@@ -10,6 +13,244 @@ MODEL_FILENAME = "model.pt"
 POLICY_MODEL_FILENAME = "policy.pt"
 DYNAMICS_MODEL_FILENAME = "dynamics.pt"
 DRQ_ACTOR_FORMAT = "haic-drq-v2-actor-v1"
+
+
+@dataclass(frozen=True)
+class _TemporalObstacleTrack:
+    """One obstacle in camera pixels; missed frames carry a predicted box."""
+
+    bbox: tuple[float, float, float, float]
+    last_seen_bbox: tuple[float, float, float, float]
+    dx_samples: tuple[float, ...]
+    dy_samples: tuple[float, ...]
+    misses: int
+    observations: int
+    identity: int
+
+    @property
+    def vx(self) -> float:
+        return float(np.median(self.dx_samples)) if self.dx_samples else 0.0
+
+    @property
+    def vy(self) -> float:
+        return float(np.median(self.dy_samples)) if self.dy_samples else 0.0
+
+    @property
+    def closing_rate_upper(self) -> float:
+        return max((rate for rate in self.dy_samples if rate > 0.0), default=0.0)
+
+    @property
+    def uncertainty_px(self) -> float:
+        return 1.0 + 2.0 * self.misses
+
+
+@dataclass(frozen=True)
+class _TemporalPassAssessment:
+    """Local camera evidence and a necessary steering-slew reachability check."""
+
+    selected_side: int
+    left_width_px: float | None
+    right_width_px: float | None
+    ttc_decisions: float | None
+    slew_decisions: int | None
+    road_rows: tuple[int, ...]
+    brake_required: bool
+    selected_target_x: float | None
+    selected_path_margin_px: float | None
+    left_shift_per_row: float | None
+    right_shift_per_row: float | None
+    left_approach_clearance_px: float | None
+    right_approach_clearance_px: float | None
+
+
+def _track_obstacle_stack(
+    previous: _TemporalObstacleTrack | None,
+    stack_bboxes: Sequence[tuple[float, float, float, float] | None],
+) -> _TemporalObstacleTrack | None:
+    """Associate four oldest-to-newest camera boxes without external state.
+
+    A persistent caller supplies its preceding result. Then only the newest
+    box advances time; the other three overlap the previous observation.
+    On first sighting all four stack frames can establish approach velocity.
+    """
+    if len(stack_bboxes) != 4:
+        raise ValueError("expected four camera-frame boxes")
+
+    def advance(
+        track: _TemporalObstacleTrack | None,
+        detected: tuple[float, float, float, float] | None,
+    ) -> _TemporalObstacleTrack | None:
+        if detected is None:
+            if track is None or track.misses >= 2:
+                return None
+            left, top, right, bottom = track.bbox
+            return _TemporalObstacleTrack(
+                (left + track.vx, top + track.vy,
+                 right + track.vx, bottom + track.vy),
+                track.last_seen_bbox, track.dx_samples, track.dy_samples,
+                track.misses + 1, track.observations, track.identity,
+            )
+
+        box = tuple(float(value) for value in detected)
+        if len(box) != 4 or not all(np.isfinite(box)) or box[0] > box[2] or box[1] > box[3]:
+            raise ValueError("invalid camera obstacle box")
+        observed_x = 0.5 * (box[0] + box[2])
+        observed_y = 0.5 * (box[1] + box[3])
+        if track is not None:
+            predicted_x = 0.5 * (track.bbox[0] + track.bbox[2]) + track.vx
+            predicted_y = 0.5 * (track.bbox[1] + track.bbox[3]) + track.vy
+            residual_x = observed_x - predicted_x
+            residual_y = observed_y - predicted_y
+            same_obstacle = (
+                abs(residual_x) <= 8.0 + 2.0 * track.misses
+                and -3.0 - 2.0 * track.misses <= residual_y
+                <= 12.0 + 2.0 * track.misses
+            )
+            if same_obstacle:
+                gap = track.misses + 1
+                last = track.last_seen_bbox
+                last_x = 0.5 * (last[0] + last[2])
+                last_y = 0.5 * (last[1] + last[3])
+                return _TemporalObstacleTrack(
+                    box, box,
+                    (track.dx_samples + ((observed_x - last_x) / gap,))[-4:],
+                    (track.dy_samples + ((observed_y - last_y) / gap,))[-4:],
+                    0, track.observations + 1, track.identity,
+                )
+        return _TemporalObstacleTrack(
+            box, box, (), (), 0, 1,
+            track.identity + 1 if track is not None else 1,
+        )
+
+    if previous is not None:
+        return advance(previous, stack_bboxes[-1])
+    track = None
+    prior_bbox = None
+    for bbox in stack_bboxes:
+        if bbox is None:
+            track = advance(track, None)
+        elif bbox != prior_bbox:
+            track = advance(track, bbox)
+        prior_bbox = bbox
+    return track
+
+
+def _assess_temporal_pass(
+    track: _TemporalObstacleTrack,
+    road_edges: Mapping[int, tuple[float, float]],
+    *,
+    committed_side: int,
+    last_steer: float,
+) -> _TemporalPassAssessment:
+    """Choose only a locally observed pass that has time to slew its steer.
+
+    Camera-row time-to-contact and command slew are necessary conditions,
+    not a vehicle-dynamics safety proof. Missing edge rows cannot certify a
+    passage, and the caller must retain ordinary road-loss recovery.
+    """
+    left, top, right, bottom = track.bbox
+    center_y = 0.5 * (top + bottom)
+    nearest = sorted(
+        (row for row in road_edges if abs(row - center_y) <= 13.0),
+        key=lambda row: (abs(row - center_y), row),
+    )[:3]
+    rows = tuple(sorted(nearest)) if (
+        len(nearest) == 3 and max(nearest) - min(nearest) == 2
+    ) else ()
+    rate = track.closing_rate_upper
+    ttc = (
+        max(0.0, (54.0 - bottom - track.uncertainty_px) / rate)
+        if rate > 0.0 else None
+    )
+    if not rows:
+        return _TemporalPassAssessment(
+            committed_side, None, None, ttc, None, (), True,
+            None, None, None, None, None, None,
+        )
+
+    road_left = max(road_edges[row][0] + 2.63 for row in rows)
+    road_right = min(road_edges[row][1] - 2.63 for row in rows)
+    left_obstacle_bound = left - 3.3
+    right_obstacle_bound = right + 3.3
+    left_width = left_obstacle_bound - road_left
+    right_width = road_right - right_obstacle_bound
+
+    near_y = bottom + 2.0
+    approach_rows = range(ceil(near_y), 59)
+    approach_is_observed = (
+        near_y < 63.0
+        and len(approach_rows) > 0
+        and all(row in road_edges for row in approach_rows)
+    )
+
+    def candidate(side: int) -> tuple[bool, int, float, float, float | None]:
+        width = left_width if side < 0 else right_width
+        target = (
+            0.5 * (road_left + left_obstacle_bound)
+            if side < 0 else 0.5 * (right_obstacle_bound + road_right)
+        )
+        shift_per_row = (
+            abs(target - 41.5) / (63.0 - near_y)
+            if near_y < 63.0 else float("inf")
+        )
+        path_margin = None
+        if approach_is_observed:
+            shift_reserve = 0.4 * (63.0 - near_y) - abs(target - 41.5)
+            path_margin = shift_reserve
+            for row in approach_rows:
+                x = 41.5 + (target - 41.5) * (63.0 - row) / (63.0 - near_y)
+                edge_left, edge_right = road_edges[row]
+                path_margin = min(
+                    path_margin,
+                    x - edge_left - 2.63,
+                    edge_right - 2.63 - x,
+                )
+        desired = float(np.clip(0.016 * (target - 41.5), -0.32, 0.32))
+        slew = ceil(abs(desired - last_steer) / 0.07)
+        reachable = (
+            width >= 0.75 + 2.0 * track.uncertainty_px
+            and path_margin is not None
+            and path_margin >= 0.0
+            and ttc is not None
+            and ttc > slew + 2
+        )
+        return reachable, slew, target, shift_per_row, path_margin
+
+    left_reachable, left_slew, left_target, left_shift, left_path = candidate(-1)
+    right_reachable, right_slew, right_target, right_shift, right_path = candidate(1)
+    current_reachable = (
+        left_reachable if committed_side == -1 else right_reachable
+        if committed_side == 1 else False
+    )
+    if current_reachable:
+        selected = committed_side
+    elif left_reachable and right_reachable:
+        selected = -1 if left_width >= right_width else 1
+    elif left_reachable:
+        selected = -1
+    elif right_reachable:
+        selected = 1
+    else:
+        selected = committed_side
+    selected_reachable = (
+        left_reachable if selected == -1 else right_reachable
+        if selected == 1 else False
+    )
+    slew = (
+        left_slew if selected == -1 and left_reachable else
+        right_slew if selected == 1 and right_reachable else
+        right_slew if right_width >= 0.75 and not right_reachable else
+        left_slew if left_width >= 0.75 else None
+    )
+    return _TemporalPassAssessment(
+        selected, left_width, right_width, ttc, slew, rows,
+        not selected_reachable or track.misses > 0,
+        (left_target if selected == -1 else right_target)
+        if selected_reachable else None,
+        (left_path if selected == -1 else right_path)
+        if selected_reachable else None,
+        left_shift, right_shift, left_path, right_path,
+    )
 
 # Small single-observation CNN inference is faster and more predictable without
 # the default large CPU thread pool.
