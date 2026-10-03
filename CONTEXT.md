@@ -4,46 +4,41 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. The latest diagnostic candidate is
-`_ObservedMarginArbitrationController` (implementation commit `3feaa93`). It
-requires observed road-edge room before adding opposing-sign obstacle steering.
-On seven **reused development pairs**, finishes rose4/7 to6/7: seeds11/21
-recovered as clean finishes, track2/644062 remained at two contacts, and
-seed42 still crashed after five contacts. All four previously finished paired
-laps remained finishes, with 0.24s total added time; seed17 partial off-track
-samples rose7->25. The strict diagnostic comparator retained this candidate for
-fresh evaluation. Full source-bound record:
-`experiments/observed-margin-arbitration-v1-result.json`.
+`_CompoundClearingBrakeCarryController`. The new diagnostic candidate
+`_ObservedEgoSideSwitchController` allows a late obstacle-passing side change
+only when the proposed side agrees with the obstacle's position relative to the
+vehicle. It repairs the former margin candidate's extra contact on fresh-screen
+track1/3892761381 and recovers reused seed42 from a five-contact crash to a
+four-contact finish.
 
-Earlier observed-road target, side commitment, curve arbitration, and centerline
-arbitration candidates were rejected; see their `experiments/*-result.json`
-records. The centerline-only candidate recovered seeds11/21 but increased
-track2/644062 contacts2->4 because road room near the obstacle was only2.5px.
-Keep rejected candidate classes and traces for reproducibility. The white-curb
-filter is deferred: merged curb/obstacle components could hide hazards.
+The source-bound **consumed development** comparison completed all23 cells and
+69 cold episodes: candidate versus active baseline finishes13->17, mean
+progress0.819->0.932, contacts32->31; versus prior margin candidate finishes16->17,
+contacts33->31. No paired safety veto fired, but this is reused-cell evidence only.
+Full record: `experiments/observed-ego-side-switch-dev-v1-result.json`. All32
+reexecuted prior-screen baseline/margin rows matched their earlier full action
+hashes and outcomes. Next step: preregister and run a new geometry study before
+changing the active route. The prior frozen margin candidate remains **REJECTED**
+by its fresh screen; its confirmation/blind partitions stay sealed and untouched.
 
-Fresh study `experiments/observed-margin-generalization-v1.json` screened the
-frozen candidate on four new geometry seeds crossed with track IDs1--4. Finishes
-rose9/16->10/16 and progress0.851->0.902, but track1/3892761381 contacts rose2->3
-and damage0.4->0.6. The preregistered comparator **REJECTED** promotion. Full
-source-bound result: `experiments/observed-margin-generalization-v1-result.json`.
-Confirmation/blind remain sealed and untouched. Diagnose the first divergent
-action on that regression cell before any new candidate. Replay found the first
-divergence at step259: inherited `SIDE_SWITCH_ROW=44` kept passing side -1 while
-the control's threshold52 switched to +1, causing one extra contact. A consumed
-cell counterfactual restoring52 reproduced the control exactly, but cannot rescue
-the rejected frozen candidate. Test a separately registered switch-rule repair on
-consumed development cells before any fresh evaluation. Windows ZIP static and
-zero-observation smoke passed; official Linux CPU certification is still unknown.
+Among the prior fresh screen's six margin-candidate DNFs, four had the wrapper's
+`off_track` label. That label means101 consecutive negative-reward decisions;
+three of the four had no fully off-road samples at decision boundaries. Exact
+source-bound baseline telemetry on consumed1/3857792434 and3/3857792434
+reproduced the original action hashes: both cars stayed on road with road vision
+and an obstacle continuously present, but were almost stationary with no new
+tile for the last101 decisions. Road-loss fallback was not the cause. Future
+obstacle-stall recovery needs a separately registered candidate and clearance
+evidence; the current ego-switch change remains frozen for fresh evaluation.
+Track2 still has five-contact obstacle failures. Windows ZIP static/smoke passed
+for the old frozen screen sources; official-like Linux CPU certification is
+unavailable on this host because WSL lacks Python3.11/dependencies and Docker
+is stopped.
 
-Required competition documents and source-cited `report.pdf` were reconstructed
-on2026-09-30 from pinned official sources and existing artifacts. Bounded,
-preregistered local development diagnosis is now possible. No validated SOTA
-champion exists. Fresh independent screen/confirmation, website submission
-details, and Linux certification remain unverified; official submission and SOTA
-promotion stay blocked. Brief road
-departure is not explicitly forbidden by the public rules, but deliberate grass
-use has no demonstrated benefit and lower grip. The active DrQ study is unchanged.
+No validated SOTA champion exists. Fresh confirmation/blind, website submission
+details, and Linux certification remain unverified. The active DrQ study is
+unchanged. Competition documents and source-cited `report.pdf` were reconstructed
+on2026-09-30 from pinned official sources and existing artifacts.
 
 ## Frozen Contract
 

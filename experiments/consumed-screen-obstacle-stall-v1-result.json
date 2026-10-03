@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "experiment": "consumed-screen-obstacle-stall-v1",
+  "status": "DIAGNOSTIC_ROOT_CAUSE",
+  "source_scope": "Baseline actual Agent route on two already consumed observed-margin-generalization-v1 screen cells; no new geometry or policy selection.",
+  "telemetry_tool_commit": "0789d76",
+  "screen_protocol_sha256": "dfddf7f28686501f9c35298e33cc3e5ec28c53e61e2e3dfaeae2262a840d1632",
+  "baseline_agent_sha256": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "cells": [
+    {
+      "track_id": 1,
+      "seed": 3857792434,
+      "artifact": ".haic-artifacts/consumed-screen-telemetry-v1/track-1-seed-3857792434/baseline.json",
+      "artifact_sha256": "c1453e1acfdc2773f4cca617a3f65bf8ee6dd33747765e29c9ee5ca2eff85632",
+      "full_action_trace_sha256": "064ec8d24ec522e8204a18c153eef943d31c111adc11e1d0efaa199784422207",
+      "terminal_progress": 0.9413793103448276,
+      "terminal_contacts": 3,
+      "last_101_decisions": {
+        "steps_inclusive": [269, 369],
+        "road_visible": 101,
+        "four_wheels_on_road": 101,
+        "obstacle_detected": 101,
+        "new_tiles": 0,
+        "median_world_speed": 0.03469888149669489,
+        "speed_below_one": 97,
+        "mean_gas": 0.07841583983142777,
+        "positive_brake": 1,
+        "mean_steering": -0.06963939170150252,
+        "net_position_displacement": 0.8576105758465998,
+        "path_length": 1.7229578979550797
+      }
+    },
+    {
+      "track_id": 3,
+      "seed": 3857792434,
+      "artifact": ".haic-artifacts/consumed-screen-telemetry-v1/track-3-seed-3857792434/baseline.json",
+      "artifact_sha256": "7a2252d74e17527601d1478d9b3e345970b9edeebe52d0a9bfb557f3790a9c31",
+      "full_action_trace_sha256": "30ad414f9d7f64d7f3867b15d71af87bd7755ae2921fe6ba53bfa1d58fb0655f",
+      "terminal_progress": 0.5689655172413793,
+      "terminal_contacts": 4,
+      "last_101_decisions": {
+        "steps_inclusive": [164, 264],
+        "road_visible": 101,
+        "four_wheels_on_road": 101,
+        "obstacle_detected": 101,
+        "new_tiles": 0,
+        "median_world_speed": 0.05363694907578396,
+        "speed_below_one": 100,
+        "mean_gas": 0.03999999910593033,
+        "positive_brake": 0,
+        "mean_steering": -0.3195188048452434,
+        "net_position_displacement": 0.37342656005723346,
+        "path_length": 0.6674547790260794
+      }
+    }
+  ],
+  "interpretation": "Both source-bound control trajectories reproduce the original screen action hash and outcome. The reward-based off_track retirement came from 101 consecutive decisions without a newly visited road tile, while road perception and four-wheel road contact persisted. Nearly zero physical speed and displacement identify an obstacle-associated on-road stall, ruling out road-loss fallback and a large route loop as explanations for these two cells. The telemetry alone does not prove which steering or throttle change would safely escape.",
+  "gates": {
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "policy_change": false,
+    "sota_promotion": false
+  }
+}

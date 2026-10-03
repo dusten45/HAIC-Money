@@ -35,6 +35,11 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Consumed screen obstacle stalls](experiments/consumed-screen-obstacle-stall-v1-result.json):
+  exact baseline replays on track1/3 seed3857792434 reproduced original action
+  hashes. Both cars saw road and an obstacle, kept all wheels on road, but
+  barely moved and visited no new tile during the final101 decisions. Their
+  `off_track` retirements were reward starvation on road, not road-loss fallback.
 - [Observed ego-side switch development](experiments/observed-ego-side-switch-dev-v1-result.json):
   RETAIN_DIAGNOSTIC_CANDIDATE on23 reused cells/69 cold episodes. Versus active
   baseline, finishes13/23->17/23, mean progress0.819->0.932, contacts32->31;
