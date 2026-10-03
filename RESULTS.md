@@ -35,6 +35,13 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Observed ego-side switch development](experiments/observed-ego-side-switch-dev-v1-result.json):
+  RETAIN_DIAGNOSTIC_CANDIDATE on23 reused cells/69 cold episodes. Versus active
+  baseline, finishes13/23->17/23, mean progress0.819->0.932, contacts32->31;
+  versus rejected margin candidate, finishes16/23->17/23, contacts33->31.
+  No paired safety veto. All32 repeated prior-screen control/margin rows matched
+  original action hashes and outcomes. Active route unchanged pending new-geometry
+  screen, confirmation and blind.
 - [Observed margin fresh screen](experiments/observed-margin-generalization-v1-result.json):
   REJECT despite finishes9/16->10/16 and mean progress0.851->0.902 on four new
   geometry seeds crossed with IDs1--4. Track1/3892761381 contacts2->3 and

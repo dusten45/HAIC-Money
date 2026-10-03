@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-ego-side-switch-dev-v1",
+  "status": "RETAIN_DIAGNOSTIC_CANDIDATE",
+  "decision": "Retain _ObservedEgoSideSwitchController for a new, source-frozen geometry study. Keep _CompoundClearingBrakeCarryController as the active bare route until fresh screen, confirmation, blind, and runtime gates are assessed.",
+  "evidence_scope": "Exactly 23 already consumed development cells; no new geometry, confirmation, or blind execution.",
+  "implementation_commit": "43a0890",
+  "protocol_commit": "e56b7cf",
+  "comparator_commit": "13eea00",
+  "protocol_sha256": "eadf0ebdd5a52f73c8bb6cc75e6c668127299896b6c98a640d4387df07714b3c",
+  "agent_sha256": {
+    "baseline": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
+    "margin": "cae2308000a8d3bb71eb09f0a028f58b29a37196a0f846e7a963841659bd1115",
+    "ego_switch": "8ddebd619e906cf70eb532721031525493883e3a1f537cfdc8dee3f935fe344f"
+  },
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "raw_artifacts": ".haic-artifacts/observed-ego-side-switch-dev-v1/run",
+  "freeze_sha256": "29257b58296bc6f1f079ae75a9f884ff296a4d41291cc3e4715d40551f1d6a42",
+  "summary_sha256": "82c6df2cefc290f0a36dd818e8fe11c7cb243b780948d1a625e21aa20440a0c1",
+  "evaluation": {
+    "canonical_cells": 23,
+    "cold_worker_episodes": 69,
+    "distinct_geometry_seeds": 11,
+    "ego_vs_baseline": {
+      "decision": "RETAIN",
+      "finishes": [13, 17],
+      "mean_progress": [0.8189091066383282, 0.9316088484841943],
+      "contacts": [32, 31],
+      "damage": [6.4, 6.200000000000001],
+      "offtrack_samples": [409, 117],
+      "partial_offtrack_samples": [512, 272],
+      "shared_completed_cells": 13,
+      "paired_completed_time_delta_ms": -140,
+      "safety_veto_reasons": []
+    },
+    "ego_vs_margin": {
+      "decision": "RETAIN",
+      "finishes": [16, 17],
+      "mean_progress": [0.9185500068802612, 0.9316088484841943],
+      "contacts": [33, 31],
+      "damage": [6.600000000000001, 6.200000000000001],
+      "shared_completed_cells": 16,
+      "paired_completed_time_delta_ms": 100,
+      "safety_veto_reasons": []
+    },
+    "ego_action_hash_differences_vs_baseline": 12,
+    "ego_action_hash_differences_vs_margin": 3,
+    "operational_failures": 0
+  },
+  "mechanism_checks": {
+    "track_1_seed_42": "Margin crashed at 69.258% with five contacts; ego-switch finished at 99.293% in 24.52s with four contacts.",
+    "track_1_seed_3892761381": "Margin had three contacts and damage 0.6; ego-switch restored the baseline's two contacts and damage 0.4 at unchanged 80.064% DNF progress.",
+    "other_changed_outcome": "Track3/2951861974 remained a finish with two contacts and an additional 100ms versus margin, below the preregistered 5% per-lap veto.",
+    "prior_screen_reproduction": "All 32 baseline/margin canonical screen replays matched original finished, progress, lap time, contacts, damage, retirement, road-contact samples, steps, and full action trace SHA256.",
+    "related_tests": "34 passed across observed ego-switch, margin, reused comparator, and consumed-screen telemetry tests on Windows."
+  },
+  "gates": {
+    "development": "RETAIN_DIAGNOSTIC_CANDIDATE",
+    "fresh_screen": "NOT_RUN",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "official_linux_cpu_certification": "UNKNOWN",
+    "active_route": "UNCHANGED",
+    "sota_promotion": false
+  },
+  "limits": "The 23 cells reuse seven legacy and sixteen prior-screen track/seed pairs, with only eleven geometry seeds and correlated track-ID obstacle variants. A development result cannot establish unseen-track reliability. The inherited reward-based off_track retirement can mean 101 decisions without a newly visited tile even while wheels remain on road; distinguish it from actual road-contact samples."
+}
