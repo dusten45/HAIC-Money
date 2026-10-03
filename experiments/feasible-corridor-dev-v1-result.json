@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "feasible-corridor-dev-v1",
+  "status": "TRIAGE_BLOCK_FULL",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare Agent route. The diagnostic feasible-corridor candidate improves aggregate consumed-cell completion but loses a control finish and causes two new crash DNFs. The preregistered gate forbids full55 expansion; no fresh partition is opened.",
+  "candidate_implementation_commit": "3da0fe2",
+  "comparator_commit": "ac117f9",
+  "protocol_commit": "6fdbd5c",
+  "protocol_sha256": "b1f4a6afaba5c8a0fc8fcde2164b55ce6d2e09658ea1882221037876bf65aa73",
+  "baseline_agent_sha256": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+  "candidate_agent_sha256": "807d2ecf0fe50defd4ae66f99e9106266f9c2b346fc323889c99dd9096697c37",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "raw_artifacts": ".haic-artifacts/feasible-corridor-dev-v1/run",
+  "freeze_sha256": "a78975e9c06f594509e18c60862d6363f2044e2ae08f90ef504dae2d9692ee73",
+  "mechanism_summary_sha256": "bfcaac5577111ea697d87c58c792ccd612ad13b2336cd3772a77f182ac4571cd",
+  "mechanism": {
+    "canonical_cells": 10,
+    "distinct_geometry_seeds": 8,
+    "rows": 20,
+    "cold_worker_episodes": 18,
+    "reused_control_receipts": 2,
+    "baseline_finishes": 3,
+    "candidate_finishes": 6,
+    "baseline_mean_progress": 0.732069698639928,
+    "candidate_mean_progress": 0.875573942971049,
+    "baseline_contacts": 23,
+    "candidate_contacts": 13,
+    "baseline_damage": 4.6000000000000005,
+    "candidate_damage": 2.6,
+    "shared_completed_cells": 2,
+    "paired_completed_time_delta_ms": 880,
+    "hard_vetoes": [
+      "3/3857792434: new crash DNF",
+      "1/17: control finish lost",
+      "2/4089604952: new crash DNF"
+    ],
+    "adverse_contact_cells": [
+      [
+        3,
+        3857792434,
+        1
+      ],
+      [
+        2,
+        4089604952,
+        3
+      ]
+    ],
+    "adverse_damage_cells": [
+      [
+        3,
+        3857792434,
+        0.19999999999999996
+      ],
+      [
+        2,
+        4089604952,
+        0.6
+      ]
+    ],
+    "operational_failures": 0,
+    "audit": "All 20 envelopes and action hashes loaded; 18 cold workers and two imported ego-screen controls had exact source receipt/action hashes. Recomputed summary matched frozen file; source/model/helpers/environment/comparator matched freeze. A read-only full-run gate check rejected expansion."
+  },
+  "gates": {
+    "mechanism": "BLOCK_FULL",
+    "full_development": "NOT_OPENED",
+    "fresh_screen": "NOT_OPENED",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "active_route": "unchanged",
+    "sota_promotion": false
+  },
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The candidate is rejected under its preregistered gate despite higher aggregate completion. Source-bound failure replays are pending; no causal diagnosis is claimed from terminal receipts alone."
+}

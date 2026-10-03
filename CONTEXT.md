@@ -4,8 +4,20 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. The frozen
-`_ObservedEgoSideSwitchController` is **REJECTED** on its new-geometry screen:
+`_CompoundClearingBrakeCarryController`. A source-frozen diagnostic
+`_FeasibleCorridorObstacleController` was evaluated on ten consumed mechanism
+cells and **blocked from further evaluation** by its preregistered gate.
+Finishes improved 3->6, mean progress0.732->0.876, contacts23->13, but it
+lost the control finish on track1/17 and added crash DNFs on
+track3/3857792434 and track2/4089604952. All20 rows (18 cold workers, two
+verified reused controls) passed receipt and source-hash audit; the full55
+gate explicitly rejects expansion. Source-bound failure traces are the next
+step before a new candidate. Record:
+`experiments/feasible-corridor-dev-v1-result.json`. No fresh corridor screen,
+confirmation or blind has run.
+
+The frozen `_ObservedEgoSideSwitchController` is **REJECTED** on its
+new-geometry screen:
 11->17 finishes and mean progress0.675->0.777 on eight geometry seeds crossed
 with IDs1--4, but contacts65->73 and damage13.0->14.6, with paired safety vetoes
 on seven cells. All68 cold episodes, source hashes and two deterministic repeat
@@ -15,11 +27,11 @@ Full record: `experiments/observed-ego-side-switch-generalization-v1-result.json
 The preceding23-cell reused development comparison improved finishes13->17 and
 contacts32->31, illustrating why it was insufficient for promotion. Exact
 replays of two fresh regressions found that the ego-position rule blocked a
-beneficial baseline obstacle-side switch at screen steps116 and195. A
-diagnostic-only `_FeasibleCorridorObstacleController` is being developed to use
-visible road edges and obstacle width; `Agent` still routes to the baseline.
-Validate this candidate on consumed cells before a separately preregistered
-fresh study. The earlier observed-margin candidate also remains **REJECTED**;
+beneficial baseline obstacle-side switch at screen steps116 and195. The
+diagnostic feasible-corridor controller uses visible road edges and obstacle
+width; `Agent` still routes to the baseline. Its first consumed-cell version
+failed the safety gate and cannot advance. The earlier observed-margin
+candidate also remains **REJECTED**;
 neither rejected study's confirmation/blind seeds may be recycled.
 
 Among the prior fresh screen's six margin-candidate DNFs, four had the wrapper's
@@ -37,8 +49,8 @@ unavailable on this host because WSL lacks Python3.11/dependencies and Docker
 is stopped.
 
 No validated SOTA champion exists. Fresh confirmation/blind, website submission
-details, and Linux certification remain unverified. The active DrQ study is
-unchanged. Competition documents and source-cited `report.pdf` were reconstructed
+details, and Linux certification remain unverified. No further DrQ outcome was
+verified in this checkout. Competition documents and source-cited `report.pdf` were reconstructed
 on2026-09-30 from pinned official sources and existing artifacts.
 
 ## Frozen Contract
@@ -94,12 +106,16 @@ nonzero completion across both training seeds; this is not DrQ family rejection.
 
 ## Final Controlled Follow-Up
 
-**RUNNING:** augmentation padding **4 versus1**,
+**STATUS UNVERIFIED:** augmentation padding **4 versus1**,
 `steering_logit_l2=0` in BOTH arms. No combined repair. This is attempt2 of2.
 Protocol: `experiments/drqv2-augmentation-pad-v1.json`; explicit root
-`runs/20260922-drq-augmentation-pad-v1/`, frozen source `a28ef02`. All four arm/seed combinations run
-from scratch with the same131,072 budget and all other settings unchanged.
-Operator state is in `experiments/drqv2-pad-execution.json`. All222 related tests,
+`runs/20260922-drq-augmentation-pad-v1/`, frozen source `a28ef02`. The protocol
+plans all four arm/seed combinations from scratch with the same131,072 budget
+and all other settings unchanged.
+Operator state is in `experiments/drqv2-pad-execution.json`. Its last local
+update was2026-09-22; the declared run root and pad actor are absent from this
+Windows checkout. The original Linux/GPU host was not checked, so do not infer
+completion or global failure from the stale local `training` label. All222 related tests,
 CPU21 preflight, four-job GPU/CPU smoke and idempotent recovery passed before launch.
 
 - Reuse only the consumed development screen101--103/31001--31008.
