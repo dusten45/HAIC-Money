@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "name": "impact-aware-sparse-road-dev-v1",
+  "status": "DEVELOPMENT_ONLY",
+  "implementation_commit": "0a5aaa0b657696e5dcaf928270888e5c197afab2",
+  "candidate_class": "_ImpactAwareSparseRoadController",
+  "candidate_snapshot_sha256": "693cbb67be47934d20ea880f79957d4c3e5492503b4e9ea5024d02034e8daa9f",
+  "comparison_identity_sha256": "1bc7b33d537ac322bb5a13a7d418d66c3c4728b2adb5f66eb2610598c41a0a1b",
+  "comparison_summary": ".haic-artifacts/consumed-candidate-comparisons/693cbb67be47-8278c5cba802/summary.json",
+  "source_note": "The diagnostic snapshot was made from the Windows worktree with CRLF line endings. The committed agent.py Git blob has identical newline-normalized content; the fresh protocol binds the exact Git blob and a selector-only candidate snapshot.",
+  "reused_42": {
+    "baseline_finishes": 21,
+    "candidate_finishes": 40,
+    "baseline_contacts": 83,
+    "candidate_contacts": 9,
+    "baseline_damage": 16.6,
+    "candidate_damage": 1.8,
+    "shared_finish_time_baseline_ms": 511700,
+    "shared_finish_time_candidate_ms": 540620,
+    "v6_finishes": 38,
+    "v6_contacts": 20
+  },
+  "reused_v6_screen_32": {
+    "baseline_finishes": 18,
+    "candidate_finishes": 30,
+    "baseline_contacts": 60,
+    "candidate_contacts": 8,
+    "shared_finish_time_baseline_ms": 436400,
+    "shared_finish_time_candidate_ms": 459440
+  },
+  "notable_cells": [
+    "1/2503363267: candidate finished in 26.82 s with two contacts; baseline stalled with one contact and earlier v6 crashed with five.",
+    "3/2973604766: candidate finished in 27.14 s without contact; baseline crashed and v6 stalled.",
+    "4/4294299109: candidate and v6 both stalled at progress 0.503597 with one contact while baseline finished."
+  ],
+  "limits": "Every geometry was already consumed in prior development. The historical comparator's stricter baseline decision remains REJECT because it permits no lost control finish and tighter shared-finish pace; that decision is not replaced. This result cannot promote the candidate or unlock confirmation/blind. Evaluate only through the preregistered fresh camera-policy-generalization-v1 gates."
+}

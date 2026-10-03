@@ -2,97 +2,40 @@
 
 ## Current Objective
 
-Develop the strongest rule-compliant agent while preserving frozen studies.
-The active bare route remains `_CompoundClearingBrakeCarryController`. The new
-`_TemporalReachabilityController` tracks obstacle motion and checks visible
-passing paths. Its fresh v6 screen is **REJECTED** on eight new geometry seeds
-crossed with IDs1--4: finishes18/32->28/32 and contacts60->16, but one new
-crash, one lost control finish, one severe both-DNF progress loss and a5.26%
-shared-finish time delay violate the fixed gates. All68 cold receipts and two
-deterministic repeat pairs passed hash/replay audit. Confirmation/blind remain
-sealed; the candidate must not be submitted or activated. Full record:
-`experiments/temporal-reachability-generalization-v1-result.json`.
+Develop the strongest rule-compliant agent. The active bare `Agent` route is
+`_CompoundClearingBrakeCarryController`; do not submit or activate a diagnostic
+controller before its frozen fresh evaluation succeeds.
 
-The follow-up `_TemporalEncounterController` is still **diagnostic only** and
-the active route is unchanged. A camera/HUD conditioned obstacle-occlusion
-brake gate now finishes two previously consumed track-1 failures with zero
-contacts; the paired frozen v6 outcomes were one finish with three contacts
-and one crash with five contacts. However, the same diagnostic source loses
-an existing zero-contact finish on consumed track1/2973604766, so it is
-rejected. The track-3 sharp-bend stall and pace gate remain unresolved.
-Details: `experiments/temporal-encounter-v7-dev-result.json`.
-Restricting the occlusion release to HUD speed14--22 restores the consumed
-track1/2973604766 finish but loses the old v6 finish on3/3857792434 and is
-slow on shared finishes; it too is diagnostic-rejected. Details:
-`experiments/temporal-encounter-midrange-v1-result.json`. A further crawl
-condition did not recover that finish. A raw-edge-verified curved path produced
-zero plans in exact replays of the two track-3 stalls because near road edges
-were absent until steering had saturated; its unused diagnostic class was
-removed. A guarded early-bend steering diagnostic on the v6 base finished the
-consumed3/2973604766 cell in27.14s with no contact, repeated identically,
-while preserving the old3/3857792434 finish. Its full reused32-cell screen
-regressed to25 finishes versus v6's28, with four lost v6 finishes and a new
-crash, so it was rejected. A guarded v7 combination likewise fell to26/32
-and34 contacts versus v6's28/32 and16 contacts; four active-control finishes
-were lost. Neither candidate was activated or given fresh seeds. Raw receipts:
-`.haic-artifacts/reused-screen-candidate-only/`.
+`_ImpactAwareSparseRoadController` is committed at `0a5aaa0` and source-bound
+to `camera-policy-generalization-v1`. It combines temporal obstacle tracking,
+visible passing-path checks, sparse-road bend preview and a one-shot,
+slew-limited response to a likely near-obstacle impact. On 42 previously
+consumed cells it finished 40 versus the active route's 21, with 9 versus 83
+contacts. The reused v6 screen subset was 30/32 versus 18/32, with 8 versus
+60 contacts and 5.28% slower aggregate shared-finish time. It still loses the
+active finish on 4/4294299109. These are development results only; see
+`experiments/impact-aware-sparse-road-dev-v1-result.json`.
 
-`camera-policy-generalization-v1` is preregistered with eight screen, sixteen
-confirmation and eight blind geometry seeds crossed with IDs1--4. It remains
-`PREREGISTERED_PENDING_SOURCE`: the runner hard-stops until one committed
-candidate and exact source/runtime hashes are bound. No fresh cell has run.
+`camera-policy-generalization-v1` has eight fresh screen, sixteen confirmation
+and eight blind geometry seeds, each crossed with IDs1--4. One committed Git
+blob and selector-only control/candidate snapshots are bound; preflight passed.
+**No fresh cell has run yet.** Run screen first and apply its fixed finish,
+safety and pace gates. Confirmation and blind remain sealed unless the preceding
+phase retains the exact same finalist. Only a blind RETAIN supports changing
+the live Agent route.
 
-Its source-bound consumed ten-cell diagnostic finished10/10 versus baseline3/10
-with contacts4 versus23, but was7.81% slower across three shared finishes.
-Far-side speed relief at targets24/30 caused a new3/385 DNF and was rejected.
-Those reused cells did not predict the fresh safety failures. Diagnostic record:
-`experiments/temporal-reachability-dev-v1-result.json`.
+The previous temporal-reachability v6 fresh screen was **REJECTED** despite
+28/32 finishes versus 18/32: a new crash, a lost control finish, a severe
+both-DNF progress loss and a shared-finish pace delay breached its fixed gates.
+Its confirmation/blind remain sealed. Follow-up encounter and broad preview
+rules also regressed on reused cells and were not promoted. Frozen records are
+in `experiments/temporal-reachability-generalization-v1-result.json` and the
+related `*-dev-*-result.json` files. Reused-cell success is not evidence of
+unseen-track generalization.
 
-Prior feasible-corridor v1-v5 comparisons were rejected; their frozen results
-are `experiments/feasible-corridor-dev-v1-result.json` through v5. Exact v5
-replay found a late false right-side opening on2/408, while the v6 consumed
-trace showed that missing nearby road rows could wrongly block an escape on
-3/385. Source-bound v6 steering corrections fix both diagnostic cells. The
-18 speed cap when no full corridor is visible remains the principal pace cost
-on1/17 and2/644. Reused-cell fixes cannot establish unseen-track performance.
-
-The frozen `_ObservedEgoSideSwitchController` is **REJECTED** on its
-new-geometry screen:
-11->17 finishes and mean progress0.675->0.777 on eight geometry seeds crossed
-with IDs1--4, but contacts65->73 and damage13.0->14.6, with paired safety vetoes
-on seven cells. All68 cold episodes, source hashes and two deterministic repeat
-pairs passed independent audit. Its confirmation/blind partitions stay sealed.
-Full record: `experiments/observed-ego-side-switch-generalization-v1-result.json`.
-
-The preceding23-cell reused development comparison improved finishes13->17 and
-contacts32->31, illustrating why it was insufficient for promotion. Exact
-replays of two fresh regressions found that the ego-position rule blocked a
-beneficial baseline obstacle-side switch at screen steps116 and195. The
-diagnostic feasible-corridor controller uses visible road edges and obstacle
-width; `Agent` still routes to the baseline. Its first consumed-cell version
-failed the safety gate and cannot advance. The earlier observed-margin
-candidate also remains **REJECTED**;
-neither rejected study's confirmation/blind seeds may be recycled.
-
-Among the prior fresh screen's six margin-candidate DNFs, four had the wrapper's
-`off_track` label. That label means101 consecutive negative-reward decisions;
-three of the four had no fully off-road samples at decision boundaries. Exact
-source-bound baseline telemetry on consumed1/3857792434 and3/3857792434
-reproduced the original action hashes: both cars stayed on road with road vision
-and an obstacle continuously present, but were almost stationary with no new
-tile for the last101 decisions. Road-loss fallback was not the cause. Future
-obstacle-stall recovery needs a separately registered candidate and clearance
-evidence; the ego-switch screen is rejected.
-Track2 still has five-contact obstacle failures. Windows ZIP static/smoke passed
-for the old frozen screen sources; official-like Linux CPU certification is
-unavailable on this host because WSL lacks Python3.11/dependencies and Docker
-is stopped.
-
-No validated SOTA champion exists. Fresh confirmation/blind, website submission
-details, and Linux certification remain unverified. No further DrQ outcome was
-verified in this checkout. Competition documents and source-cited `report.pdf` were reconstructed
-on2026-09-30 from pinned official sources and existing artifacts.
-
+Official-like Linux container certification remains unavailable on this host:
+Docker is stopped and WSL lacks the required Python runtime/dependencies.
+Preserve untracked user videos, prior submission archives and `submission.zip`.
 ## Frozen Contract
 
 - Do not modify `core/`, `env_wrapper.py`, or `damage.py` for experiments.
