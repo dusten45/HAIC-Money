@@ -3374,6 +3374,71 @@ class _FeasibleCorridorRoadDropoutController(_FeasibleCorridorFallbackSpeedContr
         )
 
 
+class _FeasibleCorridorSideVetoPaceController(_FeasibleCorridorRoadDropoutController):
+    """Keep a visibly open obstacle side and use a modest no-corridor pace."""
+
+    NO_CORRIDOR_TARGET_SPEED = 20.0
+    SIDE_VETO_ROAD_ROWS = 3
+    SIDE_VETO_ROW_RADIUS = 13.0
+
+    def _allow_obstacle_side_switch(
+        self,
+        *,
+        obstacle_y: float,
+        obstacle_x: float,
+        candidate_side: float,
+    ) -> bool:
+        inherited = super()._allow_obstacle_side_switch(
+            obstacle_y=obstacle_y,
+            obstacle_x=obstacle_x,
+            candidate_side=candidate_side,
+        )
+        current_side = self._obstacle_side
+        bbox = self._corridor_bbox
+        if (
+            not inherited
+            or current_side == 0.0
+            or candidate_side == current_side
+            or bbox is None
+        ):
+            return inherited
+        if (
+            self._corridor_candidate(-1.0) is not None
+            or self._corridor_candidate(1.0) is not None
+        ):
+            return inherited
+        nearest_rows = sorted(
+            (
+                row for row in self._corridor_edges
+                if abs(row - obstacle_y) <= self.SIDE_VETO_ROW_RADIUS
+            ),
+            key=lambda row: (abs(row - obstacle_y), row),
+        )[:self.SIDE_VETO_ROAD_ROWS]
+        if (
+            len(nearest_rows) < self.SIDE_VETO_ROAD_ROWS
+            or max(nearest_rows) - min(nearest_rows)
+            > self.SIDE_VETO_ROAD_ROWS - 1
+        ):
+            return inherited
+
+        def usable_width(side: float, row: int) -> float:
+            left, right = self._corridor_edges[row]
+            if side < 0.0:
+                return bbox[0] - self.OBSTACLE_EDGE_MARGIN - (
+                    left + self.ROAD_EDGE_MARGIN
+                )
+            return (right - self.ROAD_EDGE_MARGIN) - (
+                bbox[2] + self.OBSTACLE_EDGE_MARGIN
+            )
+
+        blocked_switch = all(
+            usable_width(candidate_side, row) < self.MIN_FREE_WIDTH
+            and usable_width(current_side, row) >= self.MIN_FREE_WIDTH
+            for row in nearest_rows
+        )
+        return inherited and not blocked_switch
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
