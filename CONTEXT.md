@@ -5,43 +5,27 @@
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
 `_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1-v3
-failed consumed-cell safety gates. Temporal side v4 passed the fixed ten-cell
-hard gate but its paired comparison **REJECTED** it: finishes3->9,
-progress0.732->0.975, contacts23->7, yet track2/4089604952 contacts rose2->4
-and shared finishes on2/644062 and1/17 exceeded the5% time limit. All20 rows
-(18 cold, two verified reused controls) and frozen hashes passed audit.
-Full55 was not opened because these known paired regressions already disqualify
-the candidate; no fresh partition has run. Record:
-`experiments/feasible-corridor-dev-v4-result.json`. The active route stays
-unchanged. Exact v4 replay shows a right-side switch into visibly insufficient
-road width at the last obstacle on track2/4089604952, then two contacts and
-an on-road stall; two earlier contacts are unchanged from v2. The inherited
-speed cap causes the track2/644062 delay, while track1/17's delay also includes
-a road-dropout trajectory change. V3 improved finishes3->7 but reduced
-both-DNF progress on
-track1/1190129265 and crashed on track2/4089604952; its record remains
-`experiments/feasible-corridor-dev-v3-result.json`.
-Exact v3 replays locate a frame-local side switch to a narrower path before
-the track1/1190129265 obstacle contact and on-road stall; on track2/4089604952
-the three-adjacent-road-row veto cannot act because those rows are missing, so
-side requests flip before five contacts. V3's higher fallback cap first changes
-the track1/119 trajectory earlier, so neither the cap nor switching effect is
-isolated causally. These traces motivated the v4 temporal-switch diagnostic;
-v4 recovered track1/1190129265 but did not satisfy paired safety and speed.
-V2 had improved finishes3->8 and contacts23->7, but lost track1/17's baseline
-finish and also crashed on track2/4089604952. Its record remains
-`experiments/feasible-corridor-dev-v2-result.json`.
-Three exact v2 replays reproduce the hard vetoes and the >5% shared-finish
-delay: on1/17 row42 again disappears before a wrong-sign steering request; on
-2/408 a third obstacle causes repeated side flips despite observed left-side
-space; on2/644 the speed cap adds1.34s versus v1. The obstacle's own road row
-is unverified, so local gap evidence is not a complete safe passage.
-V1 improved finishes3->6 but had three hard vetoes; its six exact replays locate
-two later-obstacle collisions under no-corridor fallback and a road exit after
-the observed row42 disappeared. Those traces motivate narrow, separately
-frozen diagnostics, not a causal claim. V1 record:
-`experiments/feasible-corridor-dev-v1-result.json`. No fresh corridor screen,
-confirmation or blind has run.
+failed their fixed ten-cell safety gates. Temporal side v4 and visible-width
+v5 passed that hard gate but their paired comparisons **REJECTED** them.
+V5 finishes9/10 versus baseline3/10, progress0.975 versus0.732 and contacts6
+versus23 on eight reused geometry seeds. Yet track2/4089604952 still retires
+on road after three contacts versus baseline two, and completed laps on
+2/644062 and1/17 are over5% slower. All20 v5 rows (18 cold, two verified
+reused controls), summary and frozen hashes passed audit. Full55 remains
+unopened because these known paired regressions already disqualify the
+candidate; no fresh corridor screen, confirmation or blind has run.
+Records: `experiments/feasible-corridor-dev-v1-result.json` through
+`experiments/feasible-corridor-dev-v5-result.json`.
+
+Exact source-bound replays explain the current design limit. V4 kept the
+correct left obstacle side on2/408 until a later switch into visibly
+insufficient right road width; two contacts then caused an on-road stall.
+V5 blocks that switch and removes one contact but does not recover the lap.
+V2's no-corridor speed cap causes a1.34s delay on2/644; the1/17 delay also
+includes the road-dropout recovery trajectory. Narrow changes to side
+switching have not solved safe passage and pace together. A temporally
+coherent path planner or separately validated learned policy is the next
+structural direction; no SOTA champion has been validated.
 
 The frozen `_ObservedEgoSideSwitchController` is **REJECTED** on its
 new-geometry screen:

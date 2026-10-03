@@ -35,6 +35,13 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Visible-width consumed triage](experiments/feasible-corridor-dev-v5-result.json):
+  hard triage gate ALLOW_FULL_CONSUMED_DEVELOPMENT, paired comparison
+  REJECT on ten consumed cells. Finishes3->9 and contacts23->6, but
+  track2/4089604952 still retires after three contacts versus two for
+  baseline, and 2/644062 plus1/17 remain over5% slower. All20 frozen
+  rows passed source and summary audit; full55 and fresh testing stayed
+  closed. Active route unchanged.
 - [Temporal side consumed triage](experiments/feasible-corridor-dev-v4-result.json):
   hard triage gate ALLOW_FULL_CONSUMED_DEVELOPMENT, but paired comparison
   REJECT on the same ten consumed cells. Finishes3->9, mean

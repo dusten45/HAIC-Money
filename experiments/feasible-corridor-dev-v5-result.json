@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "experiment": "feasible-corridor-dev-v5",
+  "status": "TRIAGE_ALLOW_FULL_COMPARISON_REJECT",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare Agent route. The visible-width veto removed one contact from v4's late obstacle failure, but the candidate still retired without finishing on track2/4089604952 with one more contact than baseline. The same two shared-finish delays over 5% remain. The frozen comparison rejects the candidate, so full55 and fresh partitions were not opened.",
+  "candidate_implementation_commit": "ed63703",
+  "comparator_commit": "990548a",
+  "protocol_commit": "71a6ff2",
+  "protocol_sha256": "438bb480a9fcb7fd5247575e2cf1a98f357790e6d96214b189caed965285870b",
+  "baseline_agent_sha256": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+  "candidate_agent_sha256": "dbbccce00cd90697f91ff5aa2f39233e45a4b87c0dd15f5083cb5fa4c26767f9",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "raw_artifacts": ".haic-artifacts/feasible-corridor-dev-v5/run",
+  "freeze_sha256": "cad3a87caa210964f303b8fe3ddf076d473dc7c02f49d6ed2f002e27ac8dc008",
+  "mechanism_summary_sha256": "4a55aec4f5492bb8d942a97535f326aec5c45bfcbf04bcb4d5514b2ff53b0569",
+  "mechanism": {
+    "canonical_cells": 10,
+    "distinct_geometry_seeds": 8,
+    "rows": 20,
+    "cold_worker_episodes": 18,
+    "reused_control_receipts": 2,
+    "baseline_finishes": 3,
+    "candidate_finishes": 9,
+    "baseline_mean_progress": 0.732069698639928,
+    "candidate_mean_progress": 0.9749152542372881,
+    "baseline_contacts": 23,
+    "candidate_contacts": 6,
+    "baseline_damage": 4.6000000000000005,
+    "candidate_damage": 1.2000000000000002,
+    "shared_completed_cells": 3,
+    "paired_completed_time_delta_ms": 4900,
+    "hard_triage_gate": "ALLOW_FULL_CONSUMED_DEVELOPMENT",
+    "comparison_decision": "REJECT",
+    "comparison_reasons": [
+      "2/644062: shared finish more than 5% slower (28.12s to 29.54s)",
+      "1/17: shared finish more than 5% slower (25.32s to 27.74s)",
+      "2/4089604952: contacts increased from 2 to 3 and damage from 0.4 to 0.6"
+    ],
+    "operational_failures": 0,
+    "audit": "All 20 frozen receipt envelopes loaded and the saved summary exactly matched recomputation. Eighteen cold workers and two imported ego-screen controls had matching source receipts and action hashes. Candidate, model, helper, environment, harness and comparator hashes matched the freeze. The paired comparison rejected this diagnostic candidate."
+  },
+  "gates": {
+    "mechanism": "ALLOW_FULL_CONSUMED_DEVELOPMENT",
+    "full_development": "NOT_OPENED",
+    "fresh_screen": "NOT_OPENED",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "active_route": "unchanged",
+    "sota_promotion": false
+  },
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The side-width correction reduces a contact on one cell but does not resolve its on-road retirement or inherited speed regressions. It cannot justify promotion, and repeated development on these cells risks overfitting."
+}
