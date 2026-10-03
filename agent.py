@@ -4411,6 +4411,76 @@ class _TemporalEncounterController(_TemporalCombinedCorridorController):
         return gas, brake
 
 
+class _SparseRoadBendPreviewController(_TemporalReachabilityController):
+    """Anticipate an observed bend only while the nearby road is occluded.
+
+    When local edge rows are visible, the temporal pass planner's measured
+    corridor takes priority. A far obstacle on a sharp bend can hide those
+    rows before a full corridor exists; in that case, hold a bounded early
+    turn from the visible far/near centerline until a checked path appears.
+    """
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._preview_track_identity = None
+        self._preview_armed = False
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._preview_track_identity = None
+        self._preview_armed = False
+
+    def act(self, observation) -> np.ndarray:
+        action = super().act(observation)
+        if self._temporal_track is None:
+            self._preview_track_identity = None
+            self._preview_armed = False
+        return action
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        desired = super()._adjust_obstacle_steering(
+            base_steering=base_steering, obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+        centers = self._corridor_centers
+        bbox = self._corridor_bbox
+        track = self._temporal_track
+        if bbox is None or track is None:
+            return desired
+        if track.identity != self._preview_track_identity:
+            self._preview_track_identity = track.identity
+            self._preview_armed = False
+        near_road_span = self._corridor_edges.get(54)
+        near_halfwidth = (
+            0.5 * (near_road_span[1] - near_road_span[0])
+            if near_road_span is not None else None
+        )
+        if (
+            not self._preview_armed and bbox[3] <= 34
+            and self._temporal_assessment is not None
+            and not self._temporal_assessment.road_rows
+            and 30 in centers and 54 in centers
+            and near_halfwidth is not None and near_halfwidth > 1.0
+            and abs(0.5 * (bbox[0] + bbox[2]) - centers[30]) <= near_halfwidth - 1.0
+            and abs(centers[30] - centers[54]) >= 8.0
+        ):
+            self._preview_armed = True
+        if (
+            self._preview_armed and self._corridor_plan is None
+            and bbox[3] < 55 and 30 in centers and 54 in centers
+        ):
+            # Hold the early turn for this tracked object as local edge rows
+            # reappear. They alone do not certify a complete passing path.
+            bend = centers[30] - centers[54]
+            if bend <= -8.0:
+                return min(desired, -0.28)
+            if bend >= 8.0:
+                return max(desired, 0.28)
+        return desired
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
