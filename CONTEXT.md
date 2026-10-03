@@ -21,6 +21,10 @@ and one crash with five contacts. However, the same diagnostic source loses
 an existing zero-contact finish on consumed track1/2973604766, so it is
 rejected. The track-3 sharp-bend stall and pace gate remain unresolved.
 Details: `experiments/temporal-encounter-v7-dev-result.json`.
+Restricting the occlusion release to HUD speed14--22 restores the consumed
+track1/2973604766 finish but loses the old v6 finish on3/3857792434 and is
+slow on shared finishes; it too is diagnostic-rejected. Details:
+`experiments/temporal-encounter-midrange-v1-result.json`.
 
 Its source-bound consumed ten-cell diagnostic finished10/10 versus baseline3/10
 with contacts4 versus23, but was7.81% slower across three shared finishes.

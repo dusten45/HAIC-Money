@@ -4223,6 +4223,7 @@ class _TemporalEncounterController(_TemporalCombinedCorridorController):
     NEAR_BRAKE_FRAMES = 2
     OCCLUSION_HOLD_FRAMES = 2
     OCCLUSION_PASS_BOTTOM = 60
+    OCCLUSION_RELEASE_MIN_SPEED = 14.0
     OCCLUSION_RELEASE_SPEED = 22.0
     STALL_SPEED = 2.0
     STALL_FRAMES = 3
@@ -4389,7 +4390,11 @@ class _TemporalEncounterController(_TemporalCombinedCorridorController):
                 self._encounter_last_box[3] >= self.OCCLUSION_PASS_BOTTOM
                 and (
                     transient_sighting
-                    or (speed is not None and speed < self.OCCLUSION_RELEASE_SPEED)
+                    or (
+                        speed is not None
+                        and self.OCCLUSION_RELEASE_MIN_SPEED <= speed
+                        < self.OCCLUSION_RELEASE_SPEED
+                    )
                 )
             )
             if (

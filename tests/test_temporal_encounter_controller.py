@@ -122,6 +122,23 @@ def test_fast_disappearance_after_two_brake_frames_keeps_caution():
     assert brake >= 0.04
 
 
+def test_slow_disappearance_keeps_caution_until_obstacle_is_clear():
+    controller = agent._TemporalEncounterController()
+    _near(controller, 59, speed=9.5)
+    _near(controller, 61, speed=9.5)
+    controller._encounter_speed = 9.5
+    controller._temporal_track = SimpleNamespace(identity=7, observations=24, misses=1)
+    controller._temporal_assessment = None
+    controller._corridor_bbox = None
+
+    gas, brake = controller._adjust_pedals(
+        gas=0.08, brake=0.0, straight=False, obstacle=None,
+    )
+
+    assert gas == 0.0
+    assert brake >= 0.04
+
+
 def test_single_sighting_passed_box_releases_caution():
     controller = agent._TemporalEncounterController()
     _near(controller, 61, speed=32.0)

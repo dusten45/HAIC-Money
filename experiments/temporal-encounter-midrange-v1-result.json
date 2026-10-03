@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "experiment": "temporal-encounter-midrange-v1",
+  "status": "DIAGNOSTIC_REJECT",
+  "candidate_agent_sha256": "bd3b661077ac81d131e6a4814ce438d518a05b6719ced68e41aa5e380017fa92",
+  "candidate_class": "_TemporalEncounterController",
+  "evidence": "REUSED_DIAGNOSTIC_ONLY",
+  "decision": "Keep the active Agent route unchanged. The 14-to-22 HUD-speed occlusion release restores a consumed shared finish but loses an older v6 finish and is too slow on two shared finishes.",
+  "comparison": [
+    {"track_id": 1, "seed": 1190129265, "v6": "finish 27.28s, 3 contacts", "candidate": "finish 28.20s, 0 contacts"},
+    {"track_id": 1, "seed": 2503363267, "v6": "crash at 0.382456, 5 contacts", "candidate": "finish 27.58s, 0 contacts"},
+    {"track_id": 1, "seed": 2973604766, "baseline": "finish 27.36s, 0 contacts", "v6": "finish 30.20s, 0 contacts", "candidate": "finish 31.44s, 2 contacts"},
+    {"track_id": 3, "seed": 3857792434, "v6": "finish 28.04s, 1 contact", "candidate": "DNF at 0.734483, 2 contacts"},
+    {"track_id": 4, "seed": 4294299109, "baseline": "finish 22.80s, 0 contacts", "v6": "DNF at 0.503597, 1 contact", "candidate": "finish 26.24s, 0 contacts"}
+  ],
+  "receipt_roots": [
+    ".haic-artifacts/consumed-candidate-comparisons/bd3b661077ac-19f1cb88a515",
+    ".haic-artifacts/consumed-candidate-comparisons/bd3b661077ac-2e44128520f4"
+  ],
+  "limits": [
+    "All five cells were previously consumed and cannot support promotion.",
+    "The known track-3 seed 2973604766 stall and full consumed grid were not tested for this source.",
+    "No fresh screen, confirmation, blind, or official Linux CPU certification was run."
+  ]
+}
