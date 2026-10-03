@@ -4584,6 +4584,48 @@ class _ImpactAwareSparseRoadController(_SparseRoadBendPreviewController):
         return action
 
 
+class _HighSpeedBendPriorityController(_ImpactAwareSparseRoadController):
+    """Preserve a visible bend when an uncertified high-speed pass opposes it.
+
+    This is a diagnostic candidate. The live ``Agent`` route remains on the
+    established controller until a new frozen evaluation supports promotion.
+    """
+
+    BEND_PRIORITY_MIN_HUD_SPEED = 45.0
+    BEND_PRIORITY_MIN_SWEEP = 5.0
+    BEND_PRIORITY_MIN_STEER = 0.05
+    BEND_PRIORITY_MIN_BBOX_BOTTOM = 36
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        proposed = super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+        assessment = self._temporal_assessment
+        bbox = self._corridor_bbox
+        centers = self._corridor_centers
+        far = next((centers[row] for row in (30, 34, 38) if row in centers), None)
+        near = next((centers[row] for row in (54, 50) if row in centers), None)
+        if (
+            self._corridor_plan is None
+            and assessment is not None and assessment.brake_required
+            and bbox is not None and bbox[3] >= self.BEND_PRIORITY_MIN_BBOX_BOTTOM
+            and (self._impact_previous_hud or 0.0)
+            >= self.BEND_PRIORITY_MIN_HUD_SPEED
+            and far is not None and near is not None
+            and abs(far - near) >= self.BEND_PRIORITY_MIN_SWEEP
+            and abs(base_steering) >= self.BEND_PRIORITY_MIN_STEER
+            and proposed * base_steering <= 0.0
+            and obstacle_bias * base_steering < 0.0
+            and (far - near) * base_steering > 0.0
+        ):
+            return float(base_steering)
+        return proposed
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
