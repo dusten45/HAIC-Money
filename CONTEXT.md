@@ -4,16 +4,20 @@
 
 Develop the strongest rule-compliant agent while preserving frozen studies.
 The active bare route remains `_CompoundClearingBrakeCarryController`. The new
-`_TemporalReachabilityController` tracks obstacle motion, checks visible road
-passage and steering reachability, and retains a safe side through uncertain
-camera rows. Its source-bound consumed ten-cell diagnostic now finishes10/10
-versus baseline3/10, with contacts4 versus23. It recovers the formerly stalled
-2/4089604952 and crashed3/3857792434 cells, but shared completed time is
-7.81% slower across three pairs versus a registered5% limit. Far-side speed
-relief at targets24/30 caused a new3/385 DNF and was rejected. The candidate
-is **not activated**; fresh v6 screen/confirmation/blind remain the required
-generalization gates. See `experiments/temporal-reachability-dev-v1-result.json`
-and `experiments/temporal-reachability-generalization-v1.json`.
+`_TemporalReachabilityController` tracks obstacle motion and checks visible
+passing paths. Its fresh v6 screen is **REJECTED** on eight new geometry seeds
+crossed with IDs1--4: finishes18/32->28/32 and contacts60->16, but one new
+crash, one lost control finish, one severe both-DNF progress loss and a5.26%
+shared-finish time delay violate the fixed gates. All68 cold receipts and two
+deterministic repeat pairs passed hash/replay audit. Confirmation/blind remain
+sealed; the candidate must not be submitted or activated. Full record:
+`experiments/temporal-reachability-generalization-v1-result.json`.
+
+Its source-bound consumed ten-cell diagnostic finished10/10 versus baseline3/10
+with contacts4 versus23, but was7.81% slower across three shared finishes.
+Far-side speed relief at targets24/30 caused a new3/385 DNF and was rejected.
+Those reused cells did not predict the fresh safety failures. Diagnostic record:
+`experiments/temporal-reachability-dev-v1-result.json`.
 
 Prior feasible-corridor v1-v5 comparisons were rejected; their frozen results
 are `experiments/feasible-corridor-dev-v1-result.json` through v5. Exact v5

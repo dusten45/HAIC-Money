@@ -35,6 +35,13 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Temporal reachability fresh screen](experiments/temporal-reachability-generalization-v1-result.json):
+  **REJECT** on eight new geometry seeds crossed with IDs1--4. Finishes
+  18/32->28/32, contacts60->16, but one new crash, one lost control finish,
+  severe both-DNF progress loss on3/2973604766, and5.26% aggregate shared
+  completed-lap delay violate the frozen safety/pace gates. All68 cold receipts
+  and two deterministic repeat pairs passed audit. Confirmation/blind remain
+  sealed; active route unchanged.
 - [Temporal reachability consumed diagnostic](experiments/temporal-reachability-dev-v1-result.json):
   fixed ten reused cells finish3->10 and contacts23->4. The candidate recovers
   the prior2/408 and3/385 failures, but is7.81% slower on three shared

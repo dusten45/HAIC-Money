@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "experiment": "temporal-reachability-generalization-v1",
+  "status": "SCREEN_REJECT",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare Agent route. The candidate improves total finishes and contacts but violates five preregistered paired safety or pace conditions on fresh geometry. Do not open confirmation or blind for this frozen candidate.",
+  "candidate_implementation_commit": "87931abad7996f75a421d53dd81f0d64d59d8d16",
+  "protocol_commit": "35773c0",
+  "protocol_sha256": "b4f3bd8d72f507c0530103f95ec220a4c5c8b4284a13af31231d77e1d68d821d",
+  "control_agent_sha256": "52b446df2408bf8076a0762fc1de00447fd3af8636be19e1449518b44cf32a22",
+  "candidate_agent_sha256": "af21584a5f3093c4e673a71f6b16920b4ab45dc18a5e79a00f8bc33546a2d9f0",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "wrapper_sha256": "034859bc36ee8e831ceb8030021c72725b76c91bb7af1e0f9ddd05fe3358941f",
+  "environment_sha256": {
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "0c259bc89051813743e7c40e3f61104bca6c38618b8ddd19c002365f1078022b",
+    "core/obstacle_contacts.py": "796fd3dc7e8a297acdd848b14f0ef115fc605605cfd2d1b1c35d2f0d2601fb15",
+    "core/track_variables.py": "b80dc4409e8b6c4cb4e4c4b948ea355c58b24ecf9583cb96c2f9bed003bed10d",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "d0555e6722b5f5431f1b5267060012182febbc215c1cd6bd35da63798012b125",
+    "core/vendor/car_racing.py": "bf7d7a16690568c96d454322f5bba83c79bd18fb5b44eaf66d6293493058593d",
+    "damage.py": "f00d4393a1a3fb4339debde88c02671bee993724de6864a8b6325fc31f64cfc1",
+    "env_wrapper.py": "7fab18cb7a132ef389c0a7eba5928651bee8b489af65e819e2a759bb898823be",
+    "local_simulator/__init__.py": "ece2047a2e64926e0634995b2621b4f97ff0f083d33f34201f2c0c02a387c14a",
+    "local_simulator/api.py": "48c3f78f6761bcb883d7b4891a0b97db25405fca9ea427fada731b4623807cc9",
+    "local_simulator/custom_environment.py": "86bec9bf254fd9e9541d2711cc4e624ca9597d0b433ac34472e2dc41b8c726ae",
+    "local_simulator/diagnostic.py": "e85b54e6ad8cc1e2867b2f235e9f5e144de59af31563c0af0903e00bb269c95e",
+    "local_simulator/environment.py": "37cd0a218e9ddc85a222b01ab9ee1bce99b75df89bab4261c675e0439615aa77",
+    "local_simulator/logging.py": "664366400a5b83aad298a6213a5e6fe6c6a852e3bab14e21bcfd22bd6f72a050",
+    "local_simulator/map.py": "f77663bed37db8af84ef1ff3e37eae4fdbc8807aea29b1d833ded38024a0f9cf",
+    "local_simulator/policies.py": "92608455b3751a95e0549d9687cb12d5f7530d89d65db4e1dc0c7665bdb715b4",
+    "local_simulator/preview.py": "b8b511627cd59422fd11fcbc83caebc2cd93d4d118378f651d372afc9d6f74c1",
+    "local_simulator/run.py": "546396b563bc192b960b3bf2204e31bfdd5f4c28f8b1b66bcfa6a45652bce240",
+    "local_simulator/schema.py": "72126dd33319b6de0ee9dd8ae9c15bf1db34aa7294f1a5f1448fa88720d7ae6f",
+    "local_simulator/session.py": "6b792039da3e6e45c88c12774f95102b169c3a760b43f73cc7b8837c3a5d1a48",
+    "local_simulator/simulation.py": "36989a8b5ebd8bd956b653bfd808ff76c247877d5d1e93a1fdf87a3334bca4b2",
+    "local_simulator/simulation_types.py": "ede0facad4ed0f376e82dc0b9829ecefb167b65c1d557b93a5e9f8aa5fbd0b3e",
+    "local_simulator/track_generator.py": "f86cf39d641b7396740f006ce9be66196bae6ca5e3c0c125b81de8d896f1012d",
+    "local_simulator/track_model.py": "be55a664608d0604600d4138090d8ae7c6644fc73066114f312d842d30e7486b",
+    "local_simulator/web.py": "925857b374ce3d3140d213916726f7f4a5b27d19a342b98c06b047db6cae0a02"
+  },
+  "raw_artifacts": ".haic-artifacts/temporal-reachability-generalization-v1/run",
+  "freeze_sha256": "957842c72aadbe8141672af4b6242aadd6507fff1b4a2d9428171854fb320c61",
+  "screen_summary_sha256": "6e3448ea7d78fdf06c6f15a6d002c8304d04bd427d830491b0023ebc77f96f20",
+  "screen": {
+    "independent_geometry_seeds": 8,
+    "track_ids": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "canonical_pairs": 32,
+    "deterministic_repeat_pairs": 2,
+    "cold_worker_episodes": 68,
+    "control_finishes": 18,
+    "candidate_finishes": 28,
+    "control_mean_progress": 0.7881356680820971,
+    "candidate_mean_progress": 0.9293064034650912,
+    "control_contacts": 60,
+    "candidate_contacts": 16,
+    "control_damage": 12.000000000000002,
+    "candidate_damage": 3.2000000000000006,
+    "shared_completed_cells": 17,
+    "control_shared_completed_time_ms": 436400.0,
+    "candidate_shared_completed_time_ms": 459340.0,
+    "shared_time_ratio": 1.0525664527956005,
+    "decision": "REJECT",
+    "reasons": [
+      "1/2973604766: single shared finish time regression",
+      "1/2503363267: new crash",
+      "3/2973604766: severe both-DNF progress loss",
+      "4/4294299109: control finish lost",
+      "aggregate shared finish time regression"
+    ],
+    "flagged_pairs": [
+      {
+        "track_id": 1,
+        "seed": 2973604766,
+        "flags": [
+          "single shared finish time regression"
+        ],
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 27360,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 30200,
+          "progress": 1.0,
+          "retire_reason": null
+        }
+      },
+      {
+        "track_id": 1,
+        "seed": 2503363267,
+        "flags": [
+          "new crash"
+        ],
+        "control": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.37894736842105264,
+          "retire_reason": "off_track"
+        },
+        "candidate": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3824561403508772,
+          "retire_reason": "crash"
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 2973604766,
+        "flags": [
+          "severe both-DNF progress loss"
+        ],
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.9421965317919075,
+          "retire_reason": "crash"
+        },
+        "candidate": {
+          "collision_count": 3,
+          "damage": 0.6000000000000001,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.43641618497109824,
+          "retire_reason": "off_track"
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 4294299109,
+        "flags": [
+          "control finish lost"
+        ],
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 22800,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "candidate": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5035971223021583,
+          "retire_reason": "off_track"
+        }
+      }
+    ],
+    "runtime_maxima": {
+      "initialization_ms": 3631.7002999130636,
+      "reset_ms": 0.16149994917213917,
+      "action_latency_max_ms": 103.4423999954015,
+      "peak_worker_rss_mib": 232.9921875
+    },
+    "operational_failures": 0
+  },
+  "audit": "All 68 canonical/repeat receipt envelopes passed identity and digest loading. The saved summary exactly matches recomputation. Both arms repeated the same action hash and outcome on both registered spot-check cells. Source pair differs solely at the Agent selector; committed source/model/helper/environment/wrapper hashes passed preflight and postrun input checks.",
+  "gates": {
+    "screen": "REJECT",
+    "finalist": "NOT_FROZEN",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "active_route": "unchanged",
+    "sota_promotion": false
+  },
+  "limits": "Eight independent generator seeds crossed with four track IDs are a finite local Windows CPU sample, not arbitrary-track or official Linux CPU certification. Reused ten-cell diagnostics are excluded from this fresh screen. Screen regressions may inform a new version but cannot alter this frozen source or open its sealed partitions."
+}
