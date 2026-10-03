@@ -4,32 +4,30 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`, which finished 4/7 reused development
-cells. Pixel/hook traces identify a missing row42 being replaced with image
-center, reversing steering before off-track retirements on seeds11/21. The
-observed-road target and side-commit attempts were rejected; see their
-`experiments/*-result.json` records. The observed-curve arbitration candidate
-recovered seeds11/21/42 but increased track2/644062 contacts2->3, so it was
-also rejected.
+`_CompoundClearingBrakeCarryController`. The latest diagnostic candidate is
+`_ObservedMarginArbitrationController` (implementation commit `3feaa93`). It
+requires observed road-edge room before adding opposing-sign obstacle steering.
+On seven **reused development pairs**, finishes rose4/7 to6/7: seeds11/21
+recovered as clean finishes, track2/644062 remained at two contacts, and
+seed42 still crashed after five contacts. All four previously finished paired
+laps remained finishes, with 0.24s total added time; seed17 partial off-track
+samples rose7->25. The strict diagnostic comparator retained this candidate for
+fresh evaluation, not activation or SOTA promotion. Full source-bound record:
+`experiments/observed-margin-arbitration-v1-result.json`.
 
-The latest centerline-gated candidate, commit `59c60f4`, recovered seeds11/21
-without contacts and left seed42 at its original five-contact crash. On the six
-reused pairs run, finishes rose3/6 to5/6, but track2/644062 contacts rose2->4
-and damage0.4->0.8; the strict safety comparator **REJECTED** it and stopped
-before track3/1007. Full source-bound record:
-`experiments/observed-centerline-arbitration-v1-result.json`. At track2 step100,
-far road centerline crossed image center but the visible asphalt edge at the
-obstacle depth left only2.5px of right-side space. Further work must assess
-actual road-edge/obstacle passage clearance, not centerline displacement alone.
-Do not activate rejected candidates or claim a validated upgrade. Keep their
-classes and traces for reproducibility. The white-curb filter is deferred:
-merged curb/obstacle components could hide hazards.
+Earlier observed-road target, side commitment, curve arbitration, and centerline
+arbitration candidates were rejected; see their `experiments/*-result.json`
+records. The centerline-only candidate recovered seeds11/21 but increased
+track2/644062 contacts2->4 because road room near the obstacle was only2.5px.
+Keep rejected candidate classes and traces for reproducibility. The white-curb
+filter is deferred: merged curb/obstacle components could hide hazards.
 
 Required competition documents and source-cited `report.pdf` were reconstructed
 on2026-09-30 from pinned official sources and existing artifacts. Bounded,
 preregistered local development diagnosis is now possible. No validated SOTA
-champion exists. Website submission details and Linux certification remain
-unverified; official submission and SOTA promotion stay blocked. Brief road
+champion exists. Fresh independent screen/confirmation, website submission
+details, and Linux certification remain unverified; official submission and SOTA
+promotion stay blocked. Brief road
 departure is not explicitly forbidden by the public rules, but deliberate grass
 use has no demonstrated benefit and lower grip. The active DrQ study is unchanged.
 

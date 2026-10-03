@@ -35,6 +35,14 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Observed margin arbitration](experiments/observed-margin-arbitration-v1-result.json):
+  retained as a diagnostic candidate after seven reused pairs; finishes4/7->6/7,
+  no collision or damage regression, but +0.24s across four mutually completed
+  laps, more partial off-track samples on seed17, and unchanged seed42 crash.
+  Requires fresh evaluation before activation or any SOTA claim.
+- [Observed centerline arbitration](experiments/observed-centerline-arbitration-v1-result.json):
+  REJECT after six reused pairs; finishes3/6->5/6 but track2 contacts2->4 and
+  damage0.4->0.8. Track3/1007 was stopped before execution.
 - [Camera failure trace](experiments/corridor-failure-trace-v1-result.json):
   four baseline trajectories exactly reproduced with pixel/hook telemetry.
   Missing row42 was replaced by image center, reversing requested turn on

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-margin-arbitration-v1",
+  "status": "RETAIN_DIAGNOSTIC_CANDIDATE",
+  "decision": "Retain _ObservedMarginArbitrationController for fresh evaluation; keep _CompoundClearingBrakeCarryController as the active bare route until unseen-track evidence and runtime gates are complete.",
+  "implementation_commit": "3feaa93",
+  "source_sha256": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "protocol_sha256": "93e0c198a16be9b7c1bc71d344774e7526afa4b72cc354433d6b14a37ce659d6",
+  "harness_sha256": "3f644e335527835bd16e7a403f457cdf37dbfa77dd30a9dbe3e4b039e843e87f",
+  "raw_artifacts": ".haic-artifacts/observed-margin-arbitration-v1/20261003T130408Z-2aca4f02",
+  "comparison": {
+    "decision": "RETAIN_DIAGNOSTIC_CANDIDATE",
+    "reasons": [],
+    "control_finishes": 4,
+    "candidate_finishes": 6,
+    "paired_completed_cells": 4,
+    "paired_completed_time_delta_ms": 240,
+    "missing_cells": [],
+    "sota_promotion": false
+  },
+  "pairs": [
+    {"track_id": 1, "seed": 11, "control": "off_track 18.92%, 0 contacts", "candidate": "finished 22.20s, 0 contacts"},
+    {"track_id": 1, "seed": 21, "control": "off_track 33.73%, 0 contacts", "candidate": "finished 27.46s, 0 contacts"},
+    {"track_id": 1, "seed": 42, "control": "crash 69.26%, 5 contacts", "candidate": "same crash and actions"},
+    {"track_id": 1, "seed": 17, "control": "finished 25.32s, 0 contacts, 7 partial off-track samples", "candidate": "finished 25.56s, 0 contacts, 25 partial off-track samples"},
+    {"track_id": 1, "seed": 516237, "control": "finished 23.66s, 0 contacts", "candidate": "same time, contacts, and actions"},
+    {"track_id": 2, "seed": 644062, "control": "finished 28.12s, 2 contacts, damage 0.4", "candidate": "same time, contacts, damage, and actions"},
+    {"track_id": 3, "seed": 1007, "control": "finished 25.26s, 0 contacts", "candidate": "same time, contacts, and actions"}
+  ],
+  "mechanism": "The edge-margin gate prevents the first unsafe arbitration at track2/644062 while preserving the seed11/21 recovery. This is observed on reused development trajectories; it does not prove generalization or isolate all causal effects.",
+  "validation": {
+    "affected_tests": "275 passed; four third-party warnings",
+    "preflight": "PASS; no reserved holdout overlap",
+    "operational_errors": 0,
+    "linux_submission_container": "NOT_TESTED",
+    "active_route": "unchanged"
+  },
+  "limits": "Only seven reused development cells were tested. Candidate was 0.24s slower in aggregate over four mutually completed laps, and seed17 had more partial off-track samples. Seed42 still retires after five contacts. No unseen-track, official-container, submission, or SOTA claim is supported."
+}
