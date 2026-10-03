@@ -44,6 +44,7 @@ CANDIDATE_CLASSES = frozenset({
     "_SharpCurvePreviewDiagnostic",
     "_GuardedSharpCurvePreviewDiagnostic",
     "_SparseRoadBendPreviewController",
+    "_ImpactAwareSparseRoadController",
 })
 
 

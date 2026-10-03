@@ -4481,6 +4481,109 @@ class _SparseRoadBendPreviewController(_TemporalReachabilityController):
         return desired
 
 
+class _ImpactAwareSparseRoadController(_SparseRoadBendPreviewController):
+    """Make a short, slew-limited escape after a likely obstacle contact.
+
+    The HUD speed estimate is noisy. Require an unexpected speed drop while
+    the same nearby obstacle and chosen side remain visible, then change only
+    the steering command. The inherited pedals and sparse-road preview remain
+    responsible for speed and early corner entry.
+    """
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._reset_impact()
+
+    def _reset_impact(self) -> None:
+        self._impact_previous_hud = None
+        self._impact_previous_brake = 0.0
+        self._impact_previous_box = None
+        self._impact_previous_track_identity = None
+        self._impact_previous_side = 0.0
+        self._impact_escape_frames = 0
+        self._impact_escape_identity = None
+        self._impact_escape_side = 0.0
+        self._impact_recovered_identity = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._reset_impact()
+
+    def act(self, observation) -> np.ndarray:
+        frame = self._frame(observation)
+        hud_speed = self._estimate_speed(frame) if frame is not None else None
+        previous_speed = self._impact_previous_hud
+        previous_brake = self._impact_previous_brake
+        previous_box = self._impact_previous_box
+        previous_identity = self._impact_previous_track_identity
+        previous_side = self._impact_previous_side
+        previous_steer = self._last_steer
+        action = super().act(observation)
+        bbox = self._corridor_bbox
+        track = self._temporal_track
+        assessment = self._temporal_assessment
+        side = self._obstacle_side
+        if track is None:
+            self._impact_escape_frames = 0
+            self._impact_recovered_identity = None
+        elif (
+            self._impact_escape_frames == 0
+            and track.identity != self._impact_recovered_identity
+            and track.identity == previous_identity
+            and side == previous_side
+            and side in (-1.0, 1.0)
+            and assessment is not None
+            and assessment.selected_side == side
+            and len(assessment.road_rows) == 3
+            and self._corridor_plan is None
+            and track.observations >= 2
+            and previous_speed is not None and hud_speed is not None
+            and previous_speed - hud_speed >= 4.5
+            and previous_brake < 0.079
+            and float(action[2]) < 0.079
+            and previous_box is not None and previous_box[3] >= 54
+            and bbox is not None and bbox[3] >= 55
+        ):
+            self._impact_escape_frames = 2
+            self._impact_escape_identity = track.identity
+            self._impact_escape_side = side
+            self._impact_recovered_identity = track.identity
+        if self._impact_escape_frames > 0:
+            self._impact_escape_frames -= 1
+            if (
+                bbox is not None and track is not None
+                and track.identity == self._impact_escape_identity
+                and assessment is not None and len(assessment.road_rows) == 3
+                and side == self._impact_escape_side
+                and assessment.selected_side == side
+                and self._corridor_plan is None
+                and float(action[2]) < 0.079
+            ):
+                own_width = (
+                    assessment.left_width_px if side < 0
+                    else assessment.right_width_px
+                )
+                if (
+                    own_width is not None and own_width >= 2.0
+                    and float(action[0]) * side <= 0.0
+                ):
+                    proposed = float(np.clip(
+                        0.28 * side,
+                        previous_steer - self.MAX_STEER_STEP,
+                        previous_steer + self.MAX_STEER_STEP,
+                    ))
+                    if abs(proposed) <= min(self.MAX_STEER, 0.32):
+                        action = action.copy()
+                        action[0] = proposed
+                        self._last_steer = proposed
+        self._impact_previous_hud = hud_speed
+        self._impact_previous_brake = float(action[2])
+        self._impact_previous_box = bbox
+        self._impact_previous_track_identity = track.identity if track is not None else None
+        self._impact_previous_side = side if track is not None else 0.0
+        return action
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
