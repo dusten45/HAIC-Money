@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "name": "camera-policy-generalization-v1",
+  "status": "PREREGISTERED_PENDING_SOURCE",
+  "hypothesis": "One frozen camera/HUD-only controller meaningfully improves completed laps over the currently active bare route on unseen official-generator geometries, with small bounded paired finish/crash risk, no severe both-DNF progress collapse or aggregate contact/damage increase, and no material shared-finish pace loss.",
+  "evidence_scope": "Fresh paired local official-generator evaluation. All previously inspected geometries, including consumed v6 screen cells, are development only. No episode from this protocol may run until one candidate class, committed source, and every hash are frozen.",
+  "control_agent_sha256": "PENDING_SOURCE_SHA256",
+  "candidate_agent_sha256": "PENDING_SOURCE_SHA256",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
+  "controller_classes": {
+    "control": "_CompoundClearingBrakeCarryController",
+    "candidate": "PENDING_CAMERA_POLICY_CLASS"
+  },
+  "source_snapshots": {
+    "control": ".haic-artifacts/camera-policy-generalization-v1/snapshots/control_agent.py",
+    "candidate": ".haic-artifacts/camera-policy-generalization-v1/snapshots/candidate_agent.py"
+  },
+  "source_construction": {
+    "implementation_commit": "PENDING_COMMIT",
+    "agent_blob_sha256": "PENDING_SOURCE_SHA256",
+    "selector_from": "_CompoundClearingBrakeCarryController()",
+    "selector_to": "PENDING_CAMERA_POLICY_CLASS()",
+    "rule": "After candidate development on consumed cells only, copy one committed agent.py Git blob as the control snapshot and replace exactly one Agent route selector in that blob for the candidate snapshot. Pin the commit, both snapshot hashes, model, helpers, harness, and decision engine before the first fresh episode. The live Agent selector stays on the control route through evaluation."
+  },
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "training": false,
+  "partitions": {
+    "screen": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [1814481715, 1402259577, 1460583390, 2570310388, 2996001888, 1262984018, 742377006, 3438591851],
+      "spot_check_cells": [[1, 1814481715], [4, 3438591851]]
+    },
+    "confirmation": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [3630613717, 1137924399, 205339409, 1713201362, 3063713897, 4213308333, 32858620, 837051775, 4036840638, 327738104, 1121358481, 2277204105, 2660470856, 4294835412, 1515116300, 2879152864],
+      "spot_check_cells": [[1, 3630613717], [2, 1137924399], [3, 205339409], [4, 1713201362]]
+    },
+    "blind": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [770455716, 4042462006, 1822214557, 122196515, 567108673, 465847908, 2944608788, 1884570834],
+      "spot_check_cells": [[1, 770455716], [4, 1884570834]]
+    }
+  },
+  "seed_derivation": "For partition and zero-based index i, take the first four bytes of SHA256 UTF-8 'camera-policy-generalization-v1:<partition>:<i>' as an unsigned big-endian uint32. All 32 seeds are pairwise distinct and absent from the conservative documented historical/reserved set when written. A geometry seed is reserved across all track IDs.",
+  "seed_freshness_audit": "Before writing this file, compared all 32 seeds with evaluate_bare_generalization.historical_geometry_seeds(experiments/*.json): zero overlap with 269 protected values. A read-only rg scan of hidden and ignored JSON/JSONL/MD/TXT/CSV/LOG files outside .git/.venv/node_modules also found no seed token. At binding, the runner rechecks every new seed against experiments/*.json other than this protocol.",
+  "evaluation_budget": "Screen 8, confirmation 16, blind 8 independent geometries, each crossed with IDs1-4: 32/64/32 canonical paired cells. Both arms run in separate cold processes: 256 canonical episodes plus 16 deterministic spot-check reload episodes = 272 maximum. Reloads and IDs sharing geometry are not independent geometries.",
+  "decision_thresholds": {
+    "minimum_net_finish_gain": {"screen": 3, "confirmation": 5, "blind": 3},
+    "maximum_lost_control_finishes": {"screen": 1, "confirmation": 2, "blind": 1},
+    "maximum_new_candidate_crashes": {"screen": 1, "confirmation": 2, "blind": 1},
+    "moderate_both_dnf_progress_loss": 0.05,
+    "maximum_moderate_both_dnf_losses": {"screen": 1, "confirmation": 2, "blind": 1},
+    "severe_both_dnf_progress_loss": 0.15,
+    "maximum_severe_both_dnf_losses": 0,
+    "maximum_single_cell_contact_increase": 2,
+    "maximum_single_cell_damage_increase": 0.4,
+    "maximum_aggregate_shared_finish_time_ratio": 1.10,
+    "maximum_single_shared_finish_time_ratio": 1.15,
+    "maximum_aggregate_contact_increase": 0,
+    "maximum_aggregate_damage_increase": 0.0
+  },
+  "decision_rule": "Within each phase, require complete cold source-bound pairs and exact spot-check replay. Require net candidate finish gains of at least 3/5/3 on screen/confirmation/blind. Allow at most 1/2/1 lost control finishes, 1/2/1 new candidate crashes, and 1/2/1 both-DNF progress losses over 0.05 respectively; veto every both-DNF loss over 0.15. Veto a single-cell increase over 2 contacts or 0.4 damage, any aggregate contact/damage increase, total shared-finish time over 10 percent slower, or one shared finish over 15 percent slower. Operational, source, runtime, and receipt failures reject. More finishes are the primary objective; the required positive finish gain cannot be replaced by progress or pace. Report progress and shared-finish time as secondary outcomes. Screen RETAIN seals one frozen finalist before confirmation; confirmation RETAIN seals it before blind. No result-dependent thresholds, seed replacement, candidate edits, or confirmation/blind selection. Report every paired cell, including regressions.",
+  "decision_rationale": "The official ranking places every finish ahead of every DNF, then uses actual lap time among finishes and progress among DNFs (https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md#8-%EC%A2%85%EB%A3%8C%EC%99%80-%EC%A0%90%EC%88%98). A 3/5/3 net gain demands improvement in each fresh partition. The phase-specific 1/2/1 loss/crash budget permits roughly 3 percent observed tail risk because a zero-loss rule can discard a substantial completion gain. One very large progress collapse is still unacceptable. Aggregate contacts/damage must not rise. The 10 percent aggregate shared-finish pace cap prevents generally slow policies, while the 15 percent single-cell cap allows a bounded isolated slowdown when finish gain is substantial. These thresholds are fixed before opening any of these seeds; they are design choices, not statistical guarantees or fitted to the old v6 cells.",
+  "promotion_gate": "Only blind RETAIN after screen and confirmation RETAIN supports activating the same frozen source. This is finite-sample local-generator evidence, not a guarantee on every track or Linux certification.",
+  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "offtrack_samples", "partial_offtrack_samples", "initialization_ms", "reset_ms", "action_latency_max_ms", "peak_worker_rss_mib", "action_trace_sha256", "error"],
+  "limits": "Confirmation and blind partitions are sealed until their prior phase passes. An unbound source is an intentional hard stop; this document fixes seeds and gates only. The old v6 protocol and comparator are untouched."
+}
