@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-centerline-arbitration-v1",
+  "status": "REJECT",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare route. Candidate recovered two off-track cells but increased track2/644062 contacts from 2 to 4 and damage from 0.4 to 0.8.",
+  "implementation_commit": "59c60f4",
+  "source_sha256": "42740010a69ef6ca8bbfb4a4c7e73905c47f785e7783d725f3d764a307cc4c62",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "protocol_sha256": "56c01378df1a98850135c549e087801d5ddcc44f5886cdc228236555f2f1f0ad",
+  "harness_sha256": "aa41b10c086368317cb7a5e081e551fee41747b69309803619832e35843d219d",
+  "raw_artifacts": ".haic-artifacts/observed-centerline-arbitration-v1/20261003T124959Z-30680d3c",
+  "comparison": {
+    "decision": "REJECT",
+    "reasons": ["2/644062: collision_count increased", "2/644062: damage increased"],
+    "control_finishes": 3,
+    "candidate_finishes": 5,
+    "paired_completed_cells": 3,
+    "paired_completed_time_delta_ms": -140,
+    "missing_cells": [[3, 1007]],
+    "sota_promotion": false
+  },
+  "pairs": [
+    {"track_id": 1, "seed": 11, "control": "off_track 18.92%, 0 contacts", "candidate": "finished 22.20s, 0 contacts"},
+    {"track_id": 1, "seed": 21, "control": "off_track 33.73%, 0 contacts", "candidate": "finished 27.46s, 0 contacts"},
+    {"track_id": 1, "seed": 42, "control": "crash 69.26%, 5 contacts", "candidate": "same crash and actions"},
+    {"track_id": 1, "seed": 17, "control": "finished 25.32s, 0 contacts", "candidate": "finished 25.56s, 0 contacts"},
+    {"track_id": 1, "seed": 516237, "control": "finished 23.66s, 0 contacts", "candidate": "same time, contacts, and actions"},
+    {"track_id": 2, "seed": 644062, "control": "finished 28.12s, 2 contacts, damage 0.4", "candidate": "finished 27.74s, 4 contacts, damage 0.8"}
+  ],
+  "mechanism": "On track2/644062, the first changed candidate action moved right at step100 after far row30 center reached x42.5; the obstacle was already at image row52 and its asphalt right boundary was x44, only 2.5px beyond vehicle image center41.5. Far centerline crossing therefore did not establish safe passage at the obstacle depth. Candidate steering changed on steps100-105 and later took three contacts at steps299-301 versus one control contact at step300. This is trajectory association, not a causal proof from an isolated intervention.",
+  "stop": {"reason": "paired_regression", "completed_episodes": 12, "completed_pairs": 6},
+  "validation": {
+    "affected_tests": "269 passed, four third-party warnings",
+    "preflight": "PASS; no reserved holdout overlap",
+    "operational_errors": 0,
+    "linux_submission_container": "NOT_TESTED",
+    "active_route": "unchanged"
+  },
+  "limits": "Only reused development cells were tested. Track3/1007 was not run after automatic rejection. No new actor was trained or submitted; the result cannot establish unseen-track improvement."
+}
