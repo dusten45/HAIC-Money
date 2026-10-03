@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "study": "camera-policy-generalization-v1",
+  "status": "CONSUMED_SCREEN_DIAGNOSTIC_REJECTED_INTERVENTION",
+  "provenance": {
+    "frozen_identity_path": ".haic-artifacts/camera-policy-generalization-v1/run/freeze.json",
+    "frozen_identity_sha256": "ca9e5f3a08af9b6f280a2ff3185a5c9af46b1c6367d3483cb6660894c7840757",
+    "screen_summary_path": ".haic-artifacts/camera-policy-generalization-v1/run/screen-summary.json",
+    "screen_summary_sha256": "9abbe4dac6bfc25fcce112fd4acbeeb9e868dbc1f2bb45f2097082ade0072048",
+    "protocol_sha256": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+    "control_agent_sha256": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+    "candidate_agent_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "runner_sha256": "756434beadd4eee9bffdc94237bb6abb80813975a5e611f4a8f0320e5d527917",
+    "telemetry_tool_sha256": "28e1f000e27ba55622784ea2b812b6831a6ad0bfa7864a6bed8e21025c29ae04",
+    "ignored_pulse_driver_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery_probe.py",
+    "ignored_pulse_driver_sha256": "7fe2091d0c5710ba27ef253dfbd834b174e57b1252e81b578279355e19530c7e",
+    "ignored_exact_replay_driver_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/replay_screen_losses.py",
+    "ignored_exact_replay_driver_sha256_control_traces": "322c061547313641b366c6bddbbe7085220a67250cffe758896a4e80785e7be5",
+    "ignored_exact_replay_driver_sha256_candidate_traces": "7dd50a319ed9a14dc5d8ba311df8d493991acb05f325b76469c8db57895425dd",
+    "exact_replay_driver_note": "Candidate gain traces used a temporary ignored preflight exception for already-consumed screen geometry; after the historical result key was corrected to geometry_seed, the exception was removed and strict preflight passed for both control traces. Each trace records its actual driver digest.",
+    "exact_replay_check": "For both gain pairs, frozen snapshot/model/environment identity, summary, target receipt digest, outcome, step count, and full action SHA256 matched. Each envelope also records its diagnostic driver SHA256.",
+    "probe_check": "The eight interventions loaded the same frozen candidate snapshot; variant actions intentionally differ only when the camera-only pulse fires. Four zero-trigger controls retained the original full action SHA256."
+  },
+  "pulse12_policy": {
+    "scope": "ignored in-memory wrapper around the frozen candidate controller; no simulator state is read by the intervention",
+    "trigger": "HUD speed drop >= 12 to <= 12 with a stable near obstacle bbox; at the next decision require stable bbox, HUD <= 10.5 and no HUD rise > 1, and visible road",
+    "action": "keep steering; set gas >= 0.12 and brake = 0 for at most six decisions, with one pulse per continuously visible obstacle",
+    "tested_variants": [
+      "pulse12"
+    ]
+  },
+  "pulse_cases": [
+    {
+      "track_id": 1,
+      "geometry_seed": 1460583390,
+      "group": "contact_stall",
+      "frozen_candidate": {
+        "finished": false,
+        "progress": 0.6225806451612903,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track"
+      },
+      "pulse12": {
+        "finished": false,
+        "progress": 0.6225806451612903,
+        "collision_count": 4,
+        "damage": 0.8,
+        "retire_reason": "off_track"
+      },
+      "trigger_count": 1,
+      "pulse_decisions": 6,
+      "original_action_sha256_unchanged": false,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-1-seed-1460583390.json",
+      "ignored_artifact_sha256": "d3df96dbff8ce29a378e271d2170c9f6c78daeff76e4c6ebb93da6b5d22d221b"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1460583390,
+      "group": "contact_stall",
+      "frozen_candidate": {
+        "finished": false,
+        "progress": 0.5096774193548387,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": "off_track"
+      },
+      "pulse12": {
+        "finished": false,
+        "progress": 0.5096774193548387,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": "off_track"
+      },
+      "trigger_count": 1,
+      "pulse_decisions": 6,
+      "original_action_sha256_unchanged": false,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-2-seed-1460583390.json",
+      "ignored_artifact_sha256": "d6c66b693d802727d21d556d290036495d6c7ea43ccd323e816faa8878daae76"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2570310388,
+      "group": "contact_stall",
+      "frozen_candidate": {
+        "finished": false,
+        "progress": 0.46236559139784944,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": "off_track"
+      },
+      "pulse12": {
+        "finished": false,
+        "progress": 0.46236559139784944,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": "off_track"
+      },
+      "trigger_count": 1,
+      "pulse_decisions": 6,
+      "original_action_sha256_unchanged": false,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-2-seed-2570310388.json",
+      "ignored_artifact_sha256": "f197532c61416ee87d34ce8631c07f4773bf84eb79ac193b7bc0d5279a02573c"
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1402259577,
+      "group": "contact_stall",
+      "frozen_candidate": {
+        "finished": false,
+        "progress": 0.13636363636363635,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track"
+      },
+      "pulse12": {
+        "finished": false,
+        "progress": 0.13636363636363635,
+        "collision_count": 5,
+        "damage": 1.0,
+        "retire_reason": "crash"
+      },
+      "trigger_count": 1,
+      "pulse_decisions": 5,
+      "original_action_sha256_unchanged": false,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-4-seed-1402259577.json",
+      "ignored_artifact_sha256": "9d28efea42a1eba266723351225481a34f75c187ecf2098bc8e9e96b43a5190f"
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1814481715,
+      "group": "noncontact_road_exit_control",
+      "frozen_candidate": {
+        "finished": false,
+        "progress": 0.9545454545454546,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": "off_track"
+      },
+      "pulse12": {
+        "finished": false,
+        "progress": 0.9545454545454546,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": "off_track"
+      },
+      "trigger_count": 0,
+      "pulse_decisions": 0,
+      "original_action_sha256_unchanged": true,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-1-seed-1814481715.json",
+      "ignored_artifact_sha256": "f0787b94b325e7ddf59dc53fcd717c63417f5d4efa630ce88d487ce34a89b8e7"
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1402259577,
+      "group": "shared_finish_control",
+      "frozen_candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null
+      },
+      "pulse12": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null
+      },
+      "trigger_count": 0,
+      "pulse_decisions": 0,
+      "original_action_sha256_unchanged": true,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-1-seed-1402259577.json",
+      "ignored_artifact_sha256": "035be4b71d30b4cd90ee2e3730f41a746d1d2141c0220ff892b6cfa18915445c"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1262984018,
+      "group": "shared_finish_with_candidate_contacts_control",
+      "frozen_candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": null
+      },
+      "pulse12": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": null
+      },
+      "trigger_count": 0,
+      "pulse_decisions": 0,
+      "original_action_sha256_unchanged": true,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-2-seed-1262984018.json",
+      "ignored_artifact_sha256": "d7bbe891d8e07bcea6a3776810d540319f1d0b57d8f8ebb151c88cf8ef0dd4d4"
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 2570310388,
+      "group": "shared_finish_control",
+      "frozen_candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null
+      },
+      "pulse12": {
+        "finished": true,
+        "progress": 1.0,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null
+      },
+      "trigger_count": 0,
+      "pulse_decisions": 0,
+      "original_action_sha256_unchanged": true,
+      "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/recovery-probe-v1/pulse12/track-4-seed-2570310388.json",
+      "ignored_artifact_sha256": "be6d315eaf7f44c241e20056036e4d3ac07a1797b374db90f3d42a48d3e35419"
+    }
+  ],
+  "pulse12_result": "Zero of four candidate contact stalls finished. Two retained the same contact/damage and DNF progress; one gained one contact and 0.2 damage; one gained two contacts and 0.4 damage and changed from off_track to crash. Four negative controls had zero triggers and exact original action SHA256.",
+  "candidate_only_gain_cases": [
+    {
+      "track_id": 1,
+      "geometry_seed": 2570310388,
+      "control_first_contact_step": 127,
+      "control_contact_world_speed_before": 30.033,
+      "control_contact_world_speed_after": 3.633,
+      "candidate_critical_visible_steps": [
+        132,
+        144
+      ],
+      "candidate_spatial_full_plan_steps_in_window": 0,
+      "candidate_temporal_certified_steps_in_window": [
+        133,
+        134
+      ],
+      "candidate_near_uncertified_decisions": 10,
+      "near_obstacle_definition": "observed bbox bottom >= 40 pixels",
+      "exact_receipt_action_sha256_match": true,
+      "control": {
+        "outcome": {
+          "finished": false,
+          "progress": 0.46953405017921146,
+          "collision_count": 1,
+          "damage": 0.2,
+          "retire_reason": "off_track"
+        },
+        "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/track-1-seed-2570310388/control.json",
+        "ignored_artifact_sha256": "6d703bb2099567cdb59888cc0daa002e98798ea54a63287a787b604fb1ee882f",
+        "screen_receipt_path": ".haic-artifacts/camera-policy-generalization-v1/run/cells/screen/control/track-1-seed-2570310388-repeat-0.json",
+        "screen_receipt_sha256": "3cd11126da36cd381ee1e71840c9b554cce2f44c057c0c2e7eba53cdb850a319",
+        "replayed_action_sha256": "4e3f52641a0d2d2450c5af8b0505957ee6212ee1de2141c71063a693aee58a28",
+        "replayed_steps": 228
+      },
+      "candidate": {
+        "outcome": {
+          "finished": true,
+          "progress": 1.0,
+          "collision_count": 0,
+          "damage": 0.0,
+          "retire_reason": null
+        },
+        "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/track-1-seed-2570310388/candidate.json",
+        "ignored_artifact_sha256": "967e57e15a9b665462bf0a69910429dc3e7e5d367e266e0bfcdbb8bec180b08f",
+        "screen_receipt_path": ".haic-artifacts/camera-policy-generalization-v1/run/cells/screen/candidate/track-1-seed-2570310388-repeat-0.json",
+        "screen_receipt_sha256": "534f98a150c9315cbc51afefd4e8bc3c4af88c3a388b483e940ff46880ac2b9e",
+        "replayed_action_sha256": "d65eb4ca42ccf5f8c6985d5a215cbb73a4b7ba5110cafcd0c1adcc44612c791d",
+        "replayed_steps": 305
+      }
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1814481715,
+      "control_first_contact_step": 185,
+      "control_contact_world_speed_before": 30.344,
+      "control_contact_world_speed_after": 9.196,
+      "candidate_critical_visible_steps": [
+        175,
+        183
+      ],
+      "candidate_spatial_full_plan_steps_in_window": 0,
+      "candidate_temporal_certified_steps_in_window": [],
+      "candidate_near_uncertified_decisions": 6,
+      "near_obstacle_definition": "observed bbox bottom >= 40 pixels",
+      "exact_receipt_action_sha256_match": true,
+      "control": {
+        "outcome": {
+          "finished": false,
+          "progress": 0.5170454545454546,
+          "collision_count": 5,
+          "damage": 1.0,
+          "retire_reason": "crash"
+        },
+        "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/track-3-seed-1814481715/control.json",
+        "ignored_artifact_sha256": "a9a3a23ac84a966ab1ce20c2c45f77b5e22eb188fb584086db76e84beebfb27c",
+        "screen_receipt_path": ".haic-artifacts/camera-policy-generalization-v1/run/cells/screen/control/track-3-seed-1814481715-repeat-0.json",
+        "screen_receipt_sha256": "f8d8b8690b68794221767ecf55968db423c7f770b3dc9f67775aa31455a93577",
+        "replayed_action_sha256": "f80635a9f3f90fb764ed115c332df89450bb9874a5d7b7f00644da41dace3084",
+        "replayed_steps": 190
+      },
+      "candidate": {
+        "outcome": {
+          "finished": true,
+          "progress": 1.0,
+          "collision_count": 0,
+          "damage": 0.0,
+          "retire_reason": null
+        },
+        "ignored_artifact_path": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/track-3-seed-1814481715/candidate.json",
+        "ignored_artifact_sha256": "cff0656b1cd4942479e6c9bde7d3e23fea4c45a7b5a83914a7bcd7b15853971f",
+        "screen_receipt_path": ".haic-artifacts/camera-policy-generalization-v1/run/cells/screen/candidate/track-3-seed-1814481715-repeat-0.json",
+        "screen_receipt_sha256": "944b0f5c2596ea693423bbfd36c83b9d4857c70e42d05f9fd3e7ff3f52bce49e",
+        "replayed_action_sha256": "2afbda10b6e13ea45ea11110cd7ab741cb95e82898319b3737deb05b20a089c2",
+        "replayed_steps": 381
+      }
+    }
+  ],
+  "mechanism_limit": "The HUD drop and stable bbox detect a jam, but do not certify a driveable exit. The pulse reduced speed in every stalled test and caused repeated contacts in two. Both traced gains crossed their critical near-obstacle windows without a currently certified temporal path, so an unconditional veto on such passages risks losing gains. These selected consumed-screen observations do not prove any alternative policy counterfactual or unseen-geometry generalization.",
+  "scope_limit": "No additional episodes beyond the recorded consumed-screen probes and exact replays; no confirmation or blind data, active selector, frozen agent, protocol, or environment change. Local Windows official-generator diagnostics only."
+}
