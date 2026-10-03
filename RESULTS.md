@@ -35,6 +35,12 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Temporal reachability consumed diagnostic](experiments/temporal-reachability-dev-v1-result.json):
+  fixed ten reused cells finish3->10 and contacts23->4. The candidate recovers
+  the prior2/408 and3/385 failures, but is7.81% slower on three shared
+  completed laps versus a registered5% limit. Far-side pace-relief trials
+  caused a new3/385 retirement. This is development evidence only; the active
+  route remains unchanged pending the fresh v6 protocol.
 - [Visible-width consumed triage](experiments/feasible-corridor-dev-v5-result.json):
   hard triage gate ALLOW_FULL_CONSUMED_DEVELOPMENT, paired comparison
   REJECT on ten consumed cells. Finishes3->9 and contacts23->6, but

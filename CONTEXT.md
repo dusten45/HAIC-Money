@@ -2,33 +2,26 @@
 
 ## Current Objective
 
-Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
-study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1-v3
-failed their fixed ten-cell safety gates. Temporal side v4 and visible-width
-v5 passed that hard gate but their paired comparisons **REJECTED** them.
-V5 finishes9/10 versus baseline3/10, progress0.975 versus0.732 and contacts6
-versus23 on eight reused geometry seeds. Yet track2/4089604952 still retires
-on road after three contacts versus baseline two, and completed laps on
-2/644062 and1/17 are over5% slower. All20 v5 rows (18 cold, two verified
-reused controls), summary and frozen hashes passed audit. Full55 remains
-unopened because these known paired regressions already disqualify the
-candidate; no fresh corridor screen, confirmation or blind has run.
-Records: `experiments/feasible-corridor-dev-v1-result.json` through
-`experiments/feasible-corridor-dev-v5-result.json`.
+Develop the strongest rule-compliant agent while preserving frozen studies.
+The active bare route remains `_CompoundClearingBrakeCarryController`. The new
+`_TemporalReachabilityController` tracks obstacle motion, checks visible road
+passage and steering reachability, and retains a safe side through uncertain
+camera rows. Its source-bound consumed ten-cell diagnostic now finishes10/10
+versus baseline3/10, with contacts4 versus23. It recovers the formerly stalled
+2/4089604952 and crashed3/3857792434 cells, but shared completed time is
+7.81% slower across three pairs versus a registered5% limit. Far-side speed
+relief at targets24/30 caused a new3/385 DNF and was rejected. The candidate
+is **not activated**; fresh v6 screen/confirmation/blind remain the required
+generalization gates. See `experiments/temporal-reachability-dev-v1-result.json`
+and `experiments/temporal-reachability-generalization-v1.json`.
 
-Exact source-bound replays explain the current design limit. V4 kept the
-correct left obstacle side on2/408 until a later switch into visibly
-insufficient right road width; two contacts then caused an on-road stall.
-V5 blocks that switch until row49.5, when a one-frame apparent right-edge
-opening bypasses the veto. The car cannot turn right in the remaining few
-decisions, contacts again and stalls on road; exact v5 action hash matches its
-frozen receipt. V5 removes one contact but does not recover the lap.
-V2's no-corridor speed cap causes a1.34s delay on2/644; the1/17 delay also
-includes the road-dropout recovery trajectory. Narrow changes to side
-switching have not solved safe passage and pace together. A temporally
-coherent path planner or separately validated learned policy is the next
-structural direction; no SOTA champion has been validated.
+Prior feasible-corridor v1-v5 comparisons were rejected; their frozen results
+are `experiments/feasible-corridor-dev-v1-result.json` through v5. Exact v5
+replay found a late false right-side opening on2/408, while the v6 consumed
+trace showed that missing nearby road rows could wrongly block an escape on
+3/385. Source-bound v6 steering corrections fix both diagnostic cells. The
+18 speed cap when no full corridor is visible remains the principal pace cost
+on1/17 and2/644. Reused-cell fixes cannot establish unseen-track performance.
 
 The frozen `_ObservedEgoSideSwitchController` is **REJECTED** on its
 new-geometry screen:

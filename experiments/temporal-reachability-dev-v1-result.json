@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "experiment": "temporal-reachability-consumed-development-v1",
+  "status": "DIAGNOSTIC_PACE_GATE_FAIL",
+  "candidate_implementation_commit": "87931abad7996f75a421d53dd81f0d64d59d8d16",
+  "candidate_snapshot_sha256": "ad92da4f2faf9308780c4be38a8e451cf5446c18f113f773c80e50ba88cc893a",
+  "candidate_normalized_git_blob_sha256": "af21584a5f3093c4e673a71f6b16920b4ab45dc18a5e79a00f8bc33546a2d9f0",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "baseline_receipts": "Frozen v5 consumed-development baseline rows, not new v6 controls",
+  "comparison_scope": "Ten reused fixed mechanism cells across eight geometry seeds; not fresh generalization or promotion evidence. Candidate cold workers use an exact snapshot equal to the committed agent.py Git blob after selector replacement and CRLF-to-LF normalization.",
+  "metrics": {
+    "baseline_finishes": 3,
+    "candidate_finishes": 10,
+    "baseline_contacts": 23,
+    "candidate_contacts": 4,
+    "baseline_damage": 4.6000000000000005,
+    "candidate_damage": 0.8,
+    "shared_completed_cells": 3,
+    "shared_finish_time_ratio": 1.0780876494023905,
+    "shared_finish_time_gate": 1.05
+  },
+  "cells": [
+    {
+      "track_id": 1,
+      "seed": 3857792434,
+      "baseline": {
+        "finished": false,
+        "progress": 0.9413793103448276,
+        "lap_time_ms": null,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 24540,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "f8f14e1bbf8f412b3f467e4c7d0aebf07950c4e745477013994398d3ed984b00"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track1-seed3857792434.json"
+    },
+    {
+      "track_id": 3,
+      "seed": 3857792434,
+      "baseline": {
+        "finished": false,
+        "progress": 0.5689655172413793,
+        "lap_time_ms": null,
+        "collision_count": 4,
+        "damage": 0.8,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 28040,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": null,
+        "action_trace_sha256": "024e1642c6d980599611e325efa154a1bc753955d100512190ee4c2e253ec77b"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track3-seed3857792434.json"
+    },
+    {
+      "track_id": 1,
+      "seed": 3892761381,
+      "baseline": {
+        "finished": false,
+        "progress": 0.8006430868167203,
+        "lap_time_ms": null,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 29240,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "b0d0405c0e49fb96b9665146876f9f7ef7782740fc4731cd1d16b74c6e6ac192"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track1-seed3892761381.json"
+    },
+    {
+      "track_id": 1,
+      "seed": 42,
+      "baseline": {
+        "finished": false,
+        "progress": 0.6925795053003534,
+        "lap_time_ms": null,
+        "collision_count": 5,
+        "damage": 1.0,
+        "retire_reason": "crash"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 28020,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "6cc89d0a66b45d164b1c04096b171688e71305b2e1224a021ec9654c5e3440f6"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track1-seed42.json"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "baseline": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 28120,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": null
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 30500,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "f3cf14f0d4790c24e9e7351ee97fbeef3e692242b0aa9798f696237fab4ed9a0"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track2-seed644062.json"
+    },
+    {
+      "track_id": 4,
+      "seed": 2951861974,
+      "baseline": {
+        "finished": false,
+        "progress": 0.532608695652174,
+        "lap_time_ms": null,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 23080,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "b7ff46376b08ce5fd5eceb67ba45f94b95741c7d9a3c9816206a868c4fa29c63"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track4-seed2951861974.json"
+    },
+    {
+      "track_id": 1,
+      "seed": 17,
+      "baseline": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 25320,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 27840,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "4baf4e942b90ac65c1c15e1444197231a1f4d179e2a5bc93d148db09727443c8"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track1-seed17.json"
+    },
+    {
+      "track_id": 3,
+      "seed": 2951861974,
+      "baseline": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 21860,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": null
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 22840,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "f3c4492fa589efeedffae0e30c1dd931b46235e99654bfe785bb89ad2690a59c"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track3-seed2951861974.json"
+    },
+    {
+      "track_id": 1,
+      "seed": 1190129265,
+      "baseline": {
+        "finished": false,
+        "progress": 0.540453074433657,
+        "lap_time_ms": null,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 27280,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": null,
+        "action_trace_sha256": "b0aa1661e559492044cef34ee50440106b69296868b7e8a47601038b17e0928c"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track1-seed1190129265.json"
+    },
+    {
+      "track_id": 2,
+      "seed": 4089604952,
+      "baseline": {
+        "finished": false,
+        "progress": 0.2440677966101695,
+        "lap_time_ms": null,
+        "collision_count": 2,
+        "damage": 0.4,
+        "retire_reason": "off_track"
+      },
+      "candidate": {
+        "finished": true,
+        "progress": 1.0,
+        "lap_time_ms": 26220,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": null,
+        "action_trace_sha256": "ca0a6b26ffab1013436e27518fa58da5eac2cf3665a386d0ca6e531514f0929c"
+      },
+      "candidate_raw": ".haic-artifacts/temporal-reachability-dev-missingrows/track2-seed4089604952.json"
+    }
+  ],
+  "rejected_diagnostic_variants": [
+    {
+      "name": "far-visible-pass-30",
+      "snapshot_sha256": "f813cc592658b7870d349f5e5757038a00d6c35135d95188b63bf45034b8b47b",
+      "failure": "track3/3857792434 off_track at progress0.948 with3 contacts; 1/17 also slowed relative to safe candidate"
+    },
+    {
+      "name": "far-visible-pass-24",
+      "snapshot_sha256": "aedea9938e11d5d9ad8f9adf7ef7b4675bb8ae51e05b98b640deb8362056b4ca",
+      "failure": "track3/3857792434 off_track at progress0.734 with2 contacts"
+    },
+    {
+      "name": "no-emergency-brake",
+      "snapshot_sha256": "8b9c23ff15b1a50c260d14cf7ccacaed9005ec73cf33fb8d2a8e07a01cc91cdf",
+      "failure": "Still misses the shared-finish pace gate; not selected"
+    }
+  ],
+  "decision": "Do not activate from reused cells. The 10/10 candidate recovers 2/4089604952 and3/3857792434 without a new crash, but 7.81% slower time on three shared finishes exceeds the registered 5% gate. Open the separately preregistered fresh screen for independent evidence; keep the active bare Agent route unchanged unless later gates pass."
+}
