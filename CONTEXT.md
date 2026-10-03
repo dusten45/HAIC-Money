@@ -23,10 +23,14 @@ five existing finishes (budget one), exceeded per-cell contact/damage limits
 twice and the single-cell shared-finish pace limit once. Both spot-check pairs
 replayed exactly. Confirmation/blind stay sealed, and the live selector stays
 on the active route. See `experiments/camera-policy-generalization-v1-result.json`.
-Next: exact source-bound failure traces separating late road departure from
-obstacle-related progress stalls, then design a distinct camera-only controller
-and preregister new geometry. The rejected screen may be used only as consumed
-development evidence for that later protocol.
+Exact source-bound screen traces show that four of the five lost finishes were
+on-road post-contact stalls (the inherited 0.04-gas crawl yielded no new tile),
+while one was a genuine high-speed road departure after obstacle-side steering
+opposed a strengthening bend command. See
+`experiments/camera-policy-screen-loss-mechanisms-v1-result.json`. A bounded
+camera-triggered gas pulse did not recover the stalls and increased contacts;
+it remains diagnostic only. The rejected screen is consumed development evidence
+for a distinct candidate with newly preregistered geometry.
 
 The previous temporal-reachability v6 fresh screen was **REJECTED** despite
 28/32 finishes versus 18/32: a new crash, a lost control finish, a severe

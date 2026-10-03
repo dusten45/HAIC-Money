@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "study": "camera-policy-generalization-v1",
+  "status": "CONSUMED_SCREEN_DIAGNOSTIC",
+  "source": "Exact replays of the five candidate losses among the 32 frozen screen pairs; the control and candidate action hashes, outcome metrics, and replay envelopes were checked against their cold receipts. Confirmation and blind partitions were not opened.",
+  "candidate_agent_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+  "losses": [
+    {
+      "track_id": 1,
+      "geometry_seed": 1814481715,
+      "first_same_observation_action_split_step": 107,
+      "candidate_progress": 0.9545454545454546,
+      "candidate_contacts": 0,
+      "candidate_partial_wheel_off_samples": 100,
+      "mechanism": "At steps 352-354 the uncertified obstacle-side command nearly canceled a strengthening left road command at high speed. The road disappeared by step 360 and all wheels left it by step 363.",
+      "candidate_trace_sha256": "e428041de842f06c8c4271c4646be0303a69b4f08af06850d8cc24ccd1c444b0"
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1460583390,
+      "first_same_observation_action_split_step": 54,
+      "candidate_progress": 0.6225806451612903,
+      "candidate_contacts": 3,
+      "candidate_partial_wheel_off_samples": 0,
+      "mechanism": "A right spatial passage with only 0.135 then 0.064 pixel clearance overrode a temporal brake-required assessment. Contact at steps 203-205 was followed by gas around 0.04, no new tiles, and a 101-step negative-reward retirement while all wheels stayed on road.",
+      "candidate_trace_sha256": "adbfd907ed6132a383f47e00358b3191119c0194585d053768d283c08af9d169"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1460583390,
+      "first_same_observation_action_split_step": 46,
+      "candidate_progress": 0.5096774193548387,
+      "candidate_contacts": 1,
+      "candidate_partial_wheel_off_samples": 0,
+      "mechanism": "The near-obstacle encounter had no certified full spatial or temporal path. One contact at step 190 dropped world speed from 15.85 to 1.56; gas around 0.04 did not produce another tile before retirement.",
+      "candidate_trace_sha256": "a65ea12cd443283cebba9a2fb9ed603aa81bf4d63a90ab75556074d7ff002dee"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2570310388,
+      "first_same_observation_action_split_step": 38,
+      "candidate_progress": 0.46236559139784944,
+      "candidate_contacts": 1,
+      "candidate_partial_wheel_off_samples": 0,
+      "mechanism": "The last spatial plan had 1.035 pixel clearance, but the temporal path was never certified. Contact at step 130 dropped speed from 22.73 to 5.92; repeated brake and gas around 0.04 led to a 101-step on-road stall.",
+      "candidate_trace_sha256": "3ae42fc25764ccc7537c2192c0ff9d86b2a04eb8dac26b23f3e332cc644b7603"
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1402259577,
+      "first_same_observation_action_split_step": 33,
+      "candidate_progress": 0.13636363636363635,
+      "candidate_contacts": 3,
+      "candidate_partial_wheel_off_samples": 0,
+      "mechanism": "The last spatial plan had 1.035 pixel clearance, but the temporal path was never certified. Contacts at steps 38-40 dropped speed sharply; gas around 0.04 yielded no tile after step 41, followed by 101 negative-reward steps on road.",
+      "candidate_trace_sha256": "629be7c93dc5201aa8a3fd3aec7408ed82ec7c14858eb9554989f97ce96378ad"
+    }
+  ],
+  "interpretation": "Four apparent off_track retirements were on-road post-contact progress stalls; one was a true road departure. These replay associations do not prove that any proposed counterfactual action would finish. The rejected candidate remains inactive."
+}
