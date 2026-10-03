@@ -12,7 +12,7 @@ recovered as clean finishes, track2/644062 remained at two contacts, and
 seed42 still crashed after five contacts. All four previously finished paired
 laps remained finishes, with 0.24s total added time; seed17 partial off-track
 samples rose7->25. The strict diagnostic comparator retained this candidate for
-fresh evaluation, not activation or SOTA promotion. Full source-bound record:
+fresh evaluation. Full source-bound record:
 `experiments/observed-margin-arbitration-v1-result.json`.
 
 Earlier observed-road target, side commitment, curve arbitration, and centerline
@@ -22,13 +22,19 @@ track2/644062 contacts2->4 because road room near the obstacle was only2.5px.
 Keep rejected candidate classes and traces for reproducibility. The white-curb
 filter is deferred: merged curb/obstacle components could hide hazards.
 
-Fresh study `experiments/observed-margin-generalization-v1.json` is
-preregistered, with 4/8/4 new geometry seeds for screen/confirmation/blind
-crossed with track IDs1--4. The candidate and control differ by one active-route
-constructor in frozen source snapshots. No fresh cell has been opened yet; run
-screen first and keep confirmation/blind sealed unless their gates pass. Windows
-ZIP static and zero-observation smoke passed; official Linux CPU certification is
-still unknown. Raw package checks are under `.haic-artifacts/runtime-certification-v1/`.
+Fresh study `experiments/observed-margin-generalization-v1.json` screened the
+frozen candidate on four new geometry seeds crossed with track IDs1--4. Finishes
+rose9/16->10/16 and progress0.851->0.902, but track1/3892761381 contacts rose2->3
+and damage0.4->0.6. The preregistered comparator **REJECTED** promotion. Full
+source-bound result: `experiments/observed-margin-generalization-v1-result.json`.
+Confirmation/blind remain sealed and untouched. Diagnose the first divergent
+action on that regression cell before any new candidate. Replay found the first
+divergence at step259: inherited `SIDE_SWITCH_ROW=44` kept passing side -1 while
+the control's threshold52 switched to +1, causing one extra contact. A consumed
+cell counterfactual restoring52 reproduced the control exactly, but cannot rescue
+the rejected frozen candidate. Test a separately registered switch-rule repair on
+consumed development cells before any fresh evaluation. Windows ZIP static and
+zero-observation smoke passed; official Linux CPU certification is still unknown.
 
 Required competition documents and source-cited `report.pdf` were reconstructed
 on2026-09-30 from pinned official sources and existing artifacts. Bounded,

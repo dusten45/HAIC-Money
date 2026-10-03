@@ -35,6 +35,11 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Observed margin fresh screen](experiments/observed-margin-generalization-v1-result.json):
+  REJECT despite finishes9/16->10/16 and mean progress0.851->0.902 on four new
+  geometry seeds crossed with IDs1--4. Track1/3892761381 contacts2->3 and
+  damage0.4->0.6 violated the preregistered safety veto; confirmation and blind
+  remain sealed. No active route or SOTA promotion.
 - [Observed margin arbitration](experiments/observed-margin-arbitration-v1-result.json):
   retained as a diagnostic candidate after seven reused pairs; finishes4/7->6/7,
   no collision or damage regression, but +0.24s across four mutually completed
