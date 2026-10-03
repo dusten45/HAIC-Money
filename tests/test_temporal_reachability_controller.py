@@ -105,6 +105,50 @@ def test_unverified_far_track_allows_existing_early_curve_side_change():
     ) is True
 
 
+def test_visible_blocked_committed_side_allows_existing_escape_switch(monkeypatch):
+    # Consumed track3/3857792434 at step223: keeping the committed right
+    # side despite a negative right width caused a five-contact crash.
+    candidate = _controller()
+    candidate._obstacle_side = 1.0
+    candidate._corridor_bbox = (28, 42, 31, 45)
+    candidate._temporal_track = SimpleNamespace(observations=6)
+    candidate._temporal_assessment = SimpleNamespace(
+        selected_side=1, selected_target_x=None,
+        left_width_px=14.47, right_width_px=-2.93,
+    )
+    monkeypatch.setattr(
+        agent._FeasibleCorridorSideWidthController,
+        "_allow_obstacle_side_switch", lambda self, **kwargs: True,
+    )
+    monkeypatch.setattr(candidate, "_corridor_candidate", lambda side: None)
+
+    assert candidate._allow_obstacle_side_switch(
+        obstacle_y=43.5, obstacle_x=29.5, candidate_side=-1.0,
+    ) is True
+
+
+def test_missing_road_rows_do_not_veto_existing_escape_switch(monkeypatch):
+    # On consumed track3/3857792434 the road-edge parser temporarily loses
+    # all three nearby rows before the obstacle's center reaches the car.
+    candidate = _controller()
+    candidate._obstacle_side = 1.0
+    candidate._corridor_bbox = (22, 42, 24, 45)
+    candidate._temporal_track = SimpleNamespace(observations=6)
+    candidate._temporal_assessment = SimpleNamespace(
+        selected_side=1, selected_target_x=None, road_rows=(),
+        left_width_px=None, right_width_px=None,
+    )
+    monkeypatch.setattr(
+        agent._FeasibleCorridorSideWidthController,
+        "_allow_obstacle_side_switch", lambda self, **kwargs: True,
+    )
+    monkeypatch.setattr(candidate, "_corridor_candidate", lambda side: None)
+
+    assert candidate._allow_obstacle_side_switch(
+        obstacle_y=43.5, obstacle_x=23.0, candidate_side=-1.0,
+    ) is True
+
+
 def test_no_corridor_speed_relief_requires_reachable_observed_path():
     candidate = _controller()
     obstacle = (36.0, 40.0, 41.0)

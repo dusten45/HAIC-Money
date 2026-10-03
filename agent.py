@@ -3946,6 +3946,10 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
             or self._corridor_candidate(1.0) is not None
         ):
             return inherited
+        if not getattr(assessment, "road_rows", ()):
+            # No contiguous nearby road evidence exists to contradict the
+            # established side choice; keep the parent's escape transition.
+            return inherited
         candidate_width = (
             getattr(assessment, "left_width_px", None) if candidate_side < 0
             else getattr(assessment, "right_width_px", None)
@@ -3960,6 +3964,14 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
             and current_width >= self.MIN_FREE_WIDTH
         ):
             return False
+        if (
+            candidate_width is not None and current_width is not None
+            and current_width < 0.0 and candidate_width >= 3.0
+        ):
+            # The tracked obstacle has closed the committed side. Preserve
+            # the parent controller's switch to the only visibly open side,
+            # even when the full temporal path cannot yet be certified.
+            return inherited
         if assessment.selected_side == int(self._obstacle_side):
             if assessment.selected_target_x is not None:
                 return False
