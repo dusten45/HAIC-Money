@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment": "feasible-corridor-dev-v2",
+  "status": "TRIAGE_BLOCK_FULL",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare Agent route. The diagnostic no-corridor speed cap improved aggregate consumed-cell completion but lost the control finish on track1/17 and added a crash DNF on track2/4089604952. The preregistered gate forbids full55 expansion; no fresh partition was opened.",
+  "candidate_implementation_commit": "91544a5",
+  "comparator_commit": "74c1265",
+  "protocol_commit": "5d5a1cc",
+  "protocol_sha256": "8d8017d10fabd8a1be3c0de248b35be54a15b6f6b22015da8e4450c947309ecf",
+  "baseline_agent_sha256": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+  "candidate_agent_sha256": "4435330dbccda75cc187c258aa2e3b394e385bf2b4afeb052f31f90353390bd8",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "raw_artifacts": ".haic-artifacts/feasible-corridor-dev-v2/run",
+  "freeze_sha256": "059ec0deae6eb59e2bf72815322a5094d2f7c26ef83c77fcc7068d4b07c1ecbb",
+  "mechanism_summary_sha256": "10adbd32432835eb44e93513d0d5f542dc7974760d1fcdb0900012da624d9077",
+  "mechanism": {
+    "canonical_cells": 10,
+    "distinct_geometry_seeds": 8,
+    "rows": 20,
+    "cold_worker_episodes": 18,
+    "reused_control_receipts": 2,
+    "baseline_finishes": 3,
+    "candidate_finishes": 8,
+    "baseline_mean_progress": 0.732069698639928,
+    "candidate_mean_progress": 0.9304037389492651,
+    "baseline_contacts": 23,
+    "candidate_contacts": 7,
+    "baseline_damage": 4.6000000000000005,
+    "candidate_damage": 1.4,
+    "shared_completed_cells": 2,
+    "paired_completed_time_delta_ms": 2480,
+    "hard_vetoes": [
+      "1/17: control finish lost",
+      "2/4089604952: new crash DNF"
+    ],
+    "comparison_reasons": [
+      "2/644062: shared finish more than 5% slower",
+      "1/17: control finish lost",
+      "2/4089604952: collisions increased",
+      "2/4089604952: damage increased"
+    ],
+    "adverse_contact_cells": [[2, 4089604952, 3]],
+    "adverse_damage_cells": [[2, 4089604952, 0.6]],
+    "operational_failures": 0,
+    "audit": "All 20 frozen receipt envelopes loaded and the saved summary exactly matched recomputation. Eighteen cold workers and two imported ego-screen controls had matching source receipts and action hashes. Candidate, model, helper, environment, harness and wrapper hashes matched the freeze. The full-run gate rejected expansion."
+  },
+  "gates": {
+    "mechanism": "BLOCK_FULL",
+    "full_development": "NOT_OPENED",
+    "fresh_screen": "NOT_OPENED",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "active_route": "unchanged",
+    "sota_promotion": false
+  },
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The speed cap is rejected by its preregistered gate despite higher aggregate completion. No full55, fresh screen, confirmation, or blind phase was opened."
+}

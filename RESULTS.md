@@ -35,6 +35,12 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [No-corridor speed-cap consumed triage](experiments/feasible-corridor-dev-v2-result.json):
+  TRIAGE_BLOCK_FULL on the same ten already used cells. Finishes3->8, mean
+  progress0.732->0.930, contacts23->7, but track1/17 lost a control finish
+  and track2/4089604952 added a crash DNF. All20 frozen rows and hashes
+  passed audit; the full55 gate rejected expansion. No fresh partition or
+  active-route change.
 - [Feasible corridor consumed triage](experiments/feasible-corridor-dev-v1-result.json):
   TRIAGE_BLOCK_FULL on ten already used cells. Finishes3->6, mean progress
   0.732->0.876, contacts23->13, but track1/17 lost a control finish and

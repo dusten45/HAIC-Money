@@ -4,18 +4,17 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. A source-frozen diagnostic
-`_FeasibleCorridorObstacleController` was evaluated on ten consumed mechanism
-cells and **blocked from further evaluation** by its preregistered gate.
-Finishes improved 3->6, mean progress0.732->0.876, contacts23->13, but it
-lost the control finish on track1/17 and added crash DNFs on
-track3/3857792434 and track2/4089604952. All20 rows (18 cold workers, two
-verified reused controls) passed receipt and source-hash audit; the full55
-gate explicitly rejects expansion. Six source-bound replays show all three adverse
-endpoints occur under the inherited no-corridor fallback: two collisions at
-about30 world-speed on later obstacles, and one road exit after a requested
-steering reversal outran the steering slew. Earlier corridor plans changed
-the trajectories, but the traces do not prove causation. Record:
+`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1 and
+no-corridor speed-cap v2 both failed their preregistered consumed-cell safety
+gates; neither may expand to the full55 or any fresh partition. On the fixed
+ten-cell triage, v2 improved finishes3->8, progress0.732->0.930, contacts23->7,
+but lost the baseline finish on track1/17 and added a crash DNF on
+track2/4089604952. All20 rows (18 cold, two verified reused controls) and
+frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v2-result.json`.
+V1 improved finishes3->6 but had three hard vetoes; its six exact replays locate
+two later-obstacle collisions under no-corridor fallback and a road exit after
+the observed row42 disappeared. Those traces motivate narrow, separately
+frozen diagnostics, not a causal claim. V1 record:
 `experiments/feasible-corridor-dev-v1-result.json`. No fresh corridor screen,
 confirmation or blind has run.
 
