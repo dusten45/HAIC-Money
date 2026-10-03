@@ -2778,6 +2778,83 @@ class _ObservedCurveArbitrationController(_ObservedRoadSideCommitController):
         )
 
 
+class _ObservedCenterlineArbitrationController(_ObservedCurveArbitrationController):
+    """Begin opposing avoidance only when the observed road supports it.
+
+    A tiny far-near bend is insufficient if the observed centerline remains on
+    the other side of the vehicle. Once a supported pass begins, preserve its
+    direction while a matching avoidance side remains continuously visible.
+    """
+
+    MIN_OBSERVED_CROSSING = 1.0
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._observed_far_center = None
+        self._centerline_override_side = 0.0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._observed_far_center = None
+        self._centerline_override_side = 0.0
+
+    def act(self, observation) -> np.ndarray:
+        self._observed_far_center = None
+        action = super().act(observation)
+        if not self.road_visible:
+            self._centerline_override_side = 0.0
+        return action
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        self._observed_far_center = (
+            float(centers[min(centers)]) if centers else None
+        )
+        if obstacle is None:
+            self._centerline_override_side = 0.0
+        return super()._adjust_road_steering(
+            steering=steering, straight=straight, centers=centers, obstacle=obstacle
+        )
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        side = float(np.sign(obstacle_bias))
+        if side != self._centerline_override_side:
+            self._centerline_override_side = 0.0
+        supported = bool(
+            not straight
+            and base_steering * obstacle_bias < 0.0
+            and self._observed_far_center is not None
+            and self._observed_bend_displacement is not None
+            and side * (self._observed_far_center - self.IMAGE_CENTER)
+            >= self.MIN_OBSERVED_CROSSING
+            and side * self._observed_bend_displacement
+            >= self.MIN_OBSERVED_CROSSING
+        )
+        if supported:
+            self._centerline_override_side = side
+        allow_override = bool(
+            not straight
+            and base_steering * obstacle_bias < 0.0
+            and side == self._centerline_override_side
+        )
+        # Call the pre-arbitration parent to retain its preview transition
+        # guard without re-enabling the rejected flat-bend rule.
+        return _ObservedRoadSideCommitController._adjust_obstacle_steering(
+            self,
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight or allow_override,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 

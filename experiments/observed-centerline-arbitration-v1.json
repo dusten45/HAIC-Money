@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-centerline-arbitration-v1",
+  "status": "PREREGISTERED",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_ObservedCenterlineArbitrationController",
+  "hypothesis": "The previous candidate treated a flat or subpixel far-near road displacement as permission to steer toward an obstacle-side opening even when the observed road centerline remained on the opposite side of the car. On track2/644062 steps97 and140 this opposed useful curve retention and preceded an extra contact.",
+  "single_factor_from_previous_candidate": "Keep the observed-row target repair, near-obstacle side commitment, and all speed logic unchanged. Initiate opposing-sign obstacle arbitration only when the farthest observed road center is at least one image pixel beyond image center in the obstacle-bias direction and observed far-minus-near displacement is at least one pixel in that direction. Keep that choice during continuous detection of the same passing side; clear it on detector miss, lost road, reset, or side reversal. Otherwise retain the inherited curve command.",
+  "development_cells": [[1, 11], [1, 21], [1, 42], [1, 17], [1, 516237], [2, 644062], [3, 1007]],
+  "max_steps": 1000,
+  "frame_skip": 4,
+  "budget": "One control/candidate pair per reused development cell in fixed order; stop on operational or paired safety regression. No parameter adjustment within this run.",
+  "decision": "Reject lost finish, collision/damage increase, lower paired DNF progress, or more than 5% slower prior finish. Retain a diagnostic candidate only with increased finishes or lower summed completed time and no regression. Unseen-track and official submission claims require separate evidence.",
+  "static_acceptance": [
+    "flat or subpixel bend with the far observed centerline on the opposite side keeps curve retention",
+    "far road beyond image center with an agreeing observed bend initiates additive avoidance",
+    "a continuously visible obstacle keeps the initiated side and a miss releases it",
+    "mirrored directions, missing evidence, reset, and public action bounds are covered"
+  ],
+  "training": false,
+  "submission": false,
+  "sota_promotion": false
+}

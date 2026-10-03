@@ -21,6 +21,7 @@ CANDIDATES = {
     "observed-road-target-v1": "_ObservedRoadTargetController",
     "observed-road-side-commit-v1": "_ObservedRoadSideCommitController",
     "observed-curve-arbitration-v1": "_ObservedCurveArbitrationController",
+    "observed-centerline-arbitration-v1": "_ObservedCenterlineArbitrationController",
 }
 CONTROL = "_CompoundClearingBrakeCarryController"
 
