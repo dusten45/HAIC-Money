@@ -3946,8 +3946,26 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
             or self._corridor_candidate(1.0) is not None
         ):
             return inherited
-        if assessment.selected_side == int(self._obstacle_side):
+        candidate_width = (
+            getattr(assessment, "left_width_px", None) if candidate_side < 0
+            else getattr(assessment, "right_width_px", None)
+        )
+        current_width = (
+            getattr(assessment, "left_width_px", None) if self._obstacle_side < 0
+            else getattr(assessment, "right_width_px", None)
+        )
+        if (
+            candidate_width is not None and current_width is not None
+            and candidate_width < self.MIN_FREE_WIDTH
+            and current_width >= self.MIN_FREE_WIDTH
+        ):
             return False
+        if assessment.selected_side == int(self._obstacle_side):
+            if assessment.selected_target_x is not None:
+                return False
+            if track.observations >= 2 and bbox[3] >= 40:
+                return False
+            return inherited
         if assessment.selected_side == int(candidate_side) and not assessment.brake_required:
             return True
         # A close tracked object leaves no time to discover a new side by

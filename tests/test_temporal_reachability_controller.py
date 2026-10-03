@@ -74,7 +74,7 @@ def test_reachability_assessment_blocks_late_switch_even_if_v5_width_gate_opens(
         track, candidate._corridor_edges,
         committed_side=-1, last_steer=0.11484,
     )
-    candidate._temporal_track = track
+    candidate._temporal_track = SimpleNamespace(observations=8)
 
     assert previous._allow_obstacle_side_switch(
         obstacle_y=49.5, obstacle_x=45.2, candidate_side=1.0,
@@ -82,6 +82,23 @@ def test_reachability_assessment_blocks_late_switch_even_if_v5_width_gate_opens(
     assert candidate._allow_obstacle_side_switch(
         obstacle_y=49.5, obstacle_x=45.2, candidate_side=1.0,
     ) is False
+
+
+def test_unverified_far_track_allows_existing_early_curve_side_change():
+    candidate = _controller()
+    candidate._obstacle_side = 1.0
+    candidate._temporal_obstacle = (32.4, 25.5, -2.6)
+    candidate._corridor_detection = (32.5, 32.6, 31.5)
+    candidate._corridor_bbox = (31, 31, 34, 34)
+    candidate._corridor_edges = {}
+    candidate._temporal_track = SimpleNamespace(observations=2)
+    candidate._temporal_assessment = SimpleNamespace(
+        selected_side=1, selected_target_x=None, brake_required=True,
+    )
+
+    assert candidate._allow_obstacle_side_switch(
+        obstacle_y=32.5, obstacle_x=32.6, candidate_side=-1.0,
+    ) is True
 
 
 def test_no_corridor_speed_relief_requires_reachable_observed_path():
