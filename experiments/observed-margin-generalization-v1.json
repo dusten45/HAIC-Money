@@ -6,6 +6,10 @@
   "control_agent_sha256": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
   "candidate_agent_sha256": "cae2308000a8d3bb71eb09f0a028f58b29a37196a0f846e7a963841659bd1115",
   "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
   "controller_classes": {
     "control": "_CompoundClearingBrakeCarryController",
     "candidate": "_ObservedMarginArbitrationController"
@@ -38,7 +42,8 @@
   "seed_derivation": "For each partition and zero-based index i, interpret the first four SHA256 bytes of UTF-8 'observed-margin-generalization-v1:<partition>:<i>' as an unsigned big-endian 32-bit integer. No outcomes were inspected during seed selection.",
   "freshness_audit": "Before first execution, exact decimal seed strings were absent from existing JSON, JSONL, Markdown, text, CSV, log and Python files using rg -uuu across this workspace. All 16 generated geometry seeds are distinct and outside the 180 prior reserved seeds. Geometry seeds are reserved across every track ID. Historical training use beyond recorded artifacts cannot be proved absent.",
   "single_factor": "The candidate chooses _ObservedMarginArbitrationController in Agent._init_baseline instead of _CompoundClearingBrakeCarryController. Both use the same model.pt, observation/action interface, speed schedule, detector, and fallback path.",
-  "decision_rule": "On screen and confirmation, reject any lost control finish, paired increase in collisions or damage, paired DNF progress decrease, or shared completed lap more than 5 percent slower. Retain only if no such regression and candidate gains at least one finish, or at equal finishes reduces total time on mutually completed laps. Missing cells, operational errors, failed spot-check reproducibility, or source/model/protocol hash mismatch block sealing. Screen-selected candidate and hashes freeze before confirmation; confirmation is pass/fail only. Blind is opened only after passing confirmation and is reported without candidate reselection or tuning.",
-  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "action_latency_max_ms", "initialization_ms", "operational_error", "action_sha256"],
+  "decision_rule": "On screen and confirmation, reject any lost control finish, paired increase in collisions or damage, paired DNF progress decrease, or shared completed lap more than 5 percent slower. Otherwise retain only a lexicographic improvement: more finishes; at equal finishes, higher mean progress by more than 1e-9; at equal finishes and progress, lower total time on mutually completed laps. Missing cells, operational errors, failed spot-check reproducibility, or source/model/protocol/helper/environment/harness hash mismatch block sealing. Screen-selected candidate and hashes freeze before confirmation; confirmation is pass/fail only. Blind is opened only after passing confirmation and is reported without candidate reselection or tuning.",
+  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "offtrack_samples", "partial_offtrack_samples", "action_latency_max_ms", "initialization_ms", "error", "action_trace_sha256", "peak_worker_rss_mib"],
+  "road_contact_interpretation": "Offtrack and partial-offtrack samples count action steps after Agent.act where respectively zero or fewer than four wheel tiles remain on road. They are descriptive diagnostics and do not override the predeclared comparator; brief grass contact is not itself an official disqualification.",
   "limits": "One official-generator episode per arm and cell, with cold-process repeats only at listed spot checks. Track IDs sharing a geometry seed are correlated and repeats do not add independent sample size. A positive result on 16 screen and 32 confirmation cells is descriptive evidence, not a guarantee on every possible track or official container certification."
 }
