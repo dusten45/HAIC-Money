@@ -22,6 +22,7 @@ CANDIDATES = {
     "observed-road-side-commit-v1": "_ObservedRoadSideCommitController",
     "observed-curve-arbitration-v1": "_ObservedCurveArbitrationController",
     "observed-centerline-arbitration-v1": "_ObservedCenterlineArbitrationController",
+    "observed-margin-arbitration-v1": "_ObservedMarginArbitrationController",
 }
 CONTROL = "_CompoundClearingBrakeCarryController"
 

@@ -2855,6 +2855,79 @@ class _ObservedCenterlineArbitrationController(_ObservedCurveArbitrationControll
         )
 
 
+class _ObservedMarginArbitrationController(_ObservedCenterlineArbitrationController):
+    """Require visible side-edge room before initiating opposing avoidance."""
+
+    MIN_PASSAGE_MARGIN = 7.0
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._observed_side_margins = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._observed_side_margins = None
+
+    def act(self, observation) -> np.ndarray:
+        self._observed_side_margins = None
+        return super().act(observation)
+
+    @classmethod
+    def _ego_road_margins(
+        cls, frame: np.ndarray, centers: dict[int, float], obstacle_y: float,
+    ) -> tuple[float, float] | None:
+        if not centers:
+            return None
+        # A near sampled row is preferable when obstacle_y lies between rows.
+        row = min(centers, key=lambda y: (abs(y - obstacle_y), -y))
+        asphalt = (frame[row] >= cls.ROAD_LOW) & (frame[row] <= cls.ROAD_HIGH)
+        pivot = next((x for x in (41, 42) if asphalt[x]), None)
+        if pivot is None:
+            return None
+        left = right = pivot
+        while left > 0 and asphalt[left - 1]:
+            left -= 1
+        while right < frame.shape[1] - 1 and asphalt[right + 1]:
+            right += 1
+        return cls.IMAGE_CENTER - left, right - cls.IMAGE_CENTER
+
+    def _nearest_obstacle(
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
+    ) -> tuple[float, float, float] | None:
+        obstacle = super()._nearest_obstacle(frame, centers, spans)
+        self._observed_side_margins = (
+            self._ego_road_margins(frame, centers, obstacle[0])
+            if obstacle is not None else None
+        )
+        return obstacle
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        side = float(np.sign(obstacle_bias))
+        if side != self._centerline_override_side:
+            self._centerline_override_side = 0.0
+        if self._centerline_override_side == 0.0:
+            margin = None
+            if self._observed_side_margins is not None:
+                margin = self._observed_side_margins[1 if side > 0.0 else 0]
+            if margin is None or margin < self.MIN_PASSAGE_MARGIN:
+                return _ObservedRoadSideCommitController._adjust_obstacle_steering(
+                    self,
+                    base_steering=base_steering,
+                    obstacle_bias=obstacle_bias,
+                    straight=straight,
+                )
+        return super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 

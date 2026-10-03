@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "experiment": "observed-margin-arbitration-v1",
+  "status": "PREREGISTERED",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_ObservedMarginArbitrationController",
+  "previous_candidate_class": "_ObservedCenterlineArbitrationController",
+  "hypothesis": "Far centerline crossing at track2/644062 step100 was not safe passage evidence: at the obstacle depth only 2.5 image pixels remained between vehicle image center and the asphalt edge. The changed steering preceded two additional contacts, while the successful seed21 onset had 8.5 pixels of side room.",
+  "single_factor_from_previous_candidate": "Require at least seven pixels of vehicle-center-to-observed-asphalt-edge space on the selected side before initiating opposing-sign obstacle arbitration. Seven pixels is the existing corridor controller's MIN_EDGE_CLEARANCE. Measure the contiguous road run touching image center at the sampled road row nearest obstacle depth. Retain the previous centerline requirement and continuous same-side commitment; no speed, detector, side-switch, or other steering changes.",
+  "development_cells": [[1, 11], [1, 21], [1, 42], [1, 17], [1, 516237], [2, 644062], [3, 1007]],
+  "max_steps": 1000,
+  "frame_skip": 4,
+  "budget": "One control/candidate pair per reused development cell in fixed order; stop on operational or paired safety regression. No parameter adjustment within this run.",
+  "decision": "Reject lost finish, collision/damage increase, lower paired DNF progress, or more than 5% slower prior finish. Retain a diagnostic candidate only with increased finishes or lower summed completed time and no regression. Unseen-track and official submission claims require separate evidence.",
+  "static_acceptance": [
+    "centerline support without actual side-edge room keeps curve retention",
+    "centerline support and enough side-edge room initiate additive avoidance",
+    "a committed continuous pass persists as the remaining margin narrows",
+    "missing asphalt, detector miss, reset, mirrored sides, and public action bounds are covered"
+  ],
+  "training": false,
+  "submission": false,
+  "sota_promotion": false
+}
