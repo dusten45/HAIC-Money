@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "name": "observed-margin-generalization-v1",
+  "status": "PREREGISTERED",
+  "hypothesis": "The road-edge margin gate recovers curve/obstacle failures without adding unsafe avoidance on unseen official-generator geometry.",
+  "control_agent_sha256": "194e8f9d359d766743c8787ba9b3c195a21b4161bfbd0732910082cbfff2fcbb",
+  "candidate_agent_sha256": "cae2308000a8d3bb71eb09f0a028f58b29a37196a0f846e7a963841659bd1115",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "controller_classes": {
+    "control": "_CompoundClearingBrakeCarryController",
+    "candidate": "_ObservedMarginArbitrationController"
+  },
+  "source_snapshots": {
+    "control": ".haic-artifacts/observed-margin-generalization-v1/snapshots/control_agent.py",
+    "candidate": ".haic-artifacts/observed-margin-generalization-v1/snapshots/candidate_agent.py",
+    "construction": "Read the bytes of committed agent.py at e1628f1; replace the sole byte sequence '_CompoundClearingBrakeCarryController()\\n            if use_forward_controller' with '_ObservedMarginArbitrationController()\\n            if use_forward_controller' in the candidate only. All other bytes, including model loading and Agent.act, are identical."
+  },
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "training": false,
+  "partitions": {
+    "screen": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [3857792434, 2951861974, 2786341258, 3892761381],
+      "spot_check_cells": [[1, 3857792434], [4, 3892761381]]
+    },
+    "confirmation": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [725991793, 658447730, 123666955, 2099884274, 944968302, 4233326935, 314953021, 2950863490],
+      "spot_check_cells": [[1, 725991793], [2, 658447730], [3, 123666955], [4, 2099884274]]
+    },
+    "blind": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [1994844988, 1203001961, 775047930, 4222619856],
+      "spot_check_cells": [[1, 1994844988], [4, 4222619856]]
+    }
+  },
+  "seed_derivation": "For each partition and zero-based index i, interpret the first four SHA256 bytes of UTF-8 'observed-margin-generalization-v1:<partition>:<i>' as an unsigned big-endian 32-bit integer. No outcomes were inspected during seed selection.",
+  "freshness_audit": "Before first execution, exact decimal seed strings were absent from existing JSON, JSONL, Markdown, text, CSV, log and Python files using rg -uuu across this workspace. All 16 generated geometry seeds are distinct and outside the 180 prior reserved seeds. Geometry seeds are reserved across every track ID. Historical training use beyond recorded artifacts cannot be proved absent.",
+  "single_factor": "The candidate chooses _ObservedMarginArbitrationController in Agent._init_baseline instead of _CompoundClearingBrakeCarryController. Both use the same model.pt, observation/action interface, speed schedule, detector, and fallback path.",
+  "decision_rule": "On screen and confirmation, reject any lost control finish, paired increase in collisions or damage, paired DNF progress decrease, or shared completed lap more than 5 percent slower. Retain only if no such regression and candidate gains at least one finish, or at equal finishes reduces total time on mutually completed laps. Missing cells, operational errors, failed spot-check reproducibility, or source/model/protocol hash mismatch block sealing. Screen-selected candidate and hashes freeze before confirmation; confirmation is pass/fail only. Blind is opened only after passing confirmation and is reported without candidate reselection or tuning.",
+  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "action_latency_max_ms", "initialization_ms", "operational_error", "action_sha256"],
+  "limits": "One official-generator episode per arm and cell, with cold-process repeats only at listed spot checks. Track IDs sharing a geometry seed are correlated and repeats do not add independent sample size. A positive result on 16 screen and 32 confirmation cells is descriptive evidence, not a guarantee on every possible track or official container certification."
+}
