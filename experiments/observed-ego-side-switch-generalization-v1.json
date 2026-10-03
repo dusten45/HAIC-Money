@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "name": "observed-ego-side-switch-generalization-v1",
+  "status": "PREREGISTERED",
+  "hypothesis": "The observed-margin controller with ego-corroborated late obstacle-side switching increases completion on unseen official-generator geometries without adding paired contacts or damage, reducing paired DNF progress, or causing substantial lap-time regressions against the active bare Agent route.",
+  "evidence_scope": "Fresh paired local official-generator evaluation. The 23-cell predecessor is consumed development evidence only; this protocol does not reuse its screen or open the previous study's sealed confirmation or blind partitions.",
+  "control_agent_sha256": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+  "candidate_agent_sha256": "8ddebd619e906cf70eb532721031525493883e3a1f537cfdc8dee3f935fe344f",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
+  "controller_classes": {
+    "control": "_CompoundClearingBrakeCarryController",
+    "candidate": "_ObservedEgoSideSwitchController"
+  },
+  "source_snapshots": {
+    "control": ".haic-artifacts/observed-ego-side-switch-generalization-v1/snapshots/control_agent.py",
+    "candidate": ".haic-artifacts/observed-ego-side-switch-generalization-v1/snapshots/candidate_agent.py",
+    "construction": "Read committed agent.py bytes with SHA256 cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19. Copy them unchanged for control. For candidate, replace the sole byte sequence '_CompoundClearingBrakeCarryController()' with '_ObservedEgoSideSwitchController()'. Assert exactly one original occurrence and that replacing this sequence in the control snapshot yields the candidate snapshot byte-for-byte. The selected Agent route is the sole source-byte difference; the candidate route includes the already developed observed-margin and ego-side-switch behavior."
+  },
+  "predecessor": {
+    "development_protocol": "experiments/observed-ego-side-switch-dev-v1.json",
+    "development_decision": "RETAIN_DIAGNOSTIC_CANDIDATE on 23 consumed cells against both baseline and prior margin candidate, with no paired safety veto. It is a screen-selection rationale, not fresh generalization evidence.",
+    "rejected_fresh_screen": "experiments/observed-margin-generalization-v1-result.json",
+    "prior_confirmation_and_blind": "SEALED_UNRUN; never open or recycle them for this candidate"
+  },
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "training": false,
+  "partitions": {
+    "screen": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [2938666309, 533603584, 4089604952, 1162965374, 1190129265, 583088201, 3876897788, 1180885023],
+      "spot_check_cells": [[1, 2938666309], [4, 1180885023]]
+    },
+    "confirmation": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [352898933, 4182694407, 2568854412, 1495605388, 971204549, 503886951, 4203052974, 1062333891, 1551983888, 1851742803, 4180175741, 438437009, 655329180, 4264244182, 762874027, 122663598],
+      "spot_check_cells": [[1, 352898933], [2, 4182694407], [3, 2568854412], [4, 1495605388]]
+    },
+    "blind": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [595620866, 2184667616, 3418994996, 4233003405, 1538813535, 1429917270, 521523217, 346133875],
+      "spot_check_cells": [[1, 595620866], [4, 346133875]]
+    }
+  },
+  "seed_derivation": "For each partition and zero-based index i, interpret the first four SHA256 bytes of UTF-8 'observed-ego-side-switch-generalization-v1:<partition>:<i>' as an unsigned big-endian 32-bit integer. No map geometry or outcome was inspected when choosing seeds or spot-check cells.",
+  "freshness_audit": "The 32 generated geometry seeds are pairwise distinct and absent from the 205-value conservative historical seed set extracted from existing experiments JSON. That set includes the 180 DrQ training/evaluation reservations, all 16 prior observed-margin screen/confirmation/blind seeds, seven legacy development seeds with seed42 already in the DrQ set, a recorded geometry seed35, and two conservatively included non-geometry RNG values. Before this protocol was written, none of the 32 exact decimal strings occurred in workspace JSON, JSONL, Markdown, text, CSV, log, or Python files searched with rg -uuu outside environment, Git, and ignored artifact directories. Historical training use beyond recorded artifacts cannot be proved absent. Reserve each geometry seed across every track ID.",
+  "evaluation_budget": "8 screen, 16 confirmation, and 8 blind independent geometry seeds, each crossed with track IDs1-4: 32/64/32 canonical paired cells. Two arms require 256 cold-process canonical episodes; 2/4/2 repeat cells across both arms add 16 deterministic-reload episodes, for 272 maximum. A repeat is not an independent geometry sample.",
+  "decision_rule": "Use tools/evaluate_bare_generalization.py unchanged. On screen and confirmation, reject any lost control finish, paired increase in collisions or damage, paired DNF progress decrease, or shared completed lap more than 5 percent slower. Otherwise retain only a lexicographic improvement: more finishes; at equal finishes, mean progress greater by more than 1e-9; at equal finishes and progress, lower total time on mutually completed laps. Missing cells, operational errors, failed spot-check reproducibility, or source/model/protocol/helper/environment/harness hash mismatch block sealing. Require screen RETAIN and finalist seal before confirmation; require confirmation RETAIN and confirmation-accepted seal before blind. The screen-fixed candidate cannot be altered or reselected after opening confirmation. Blind is evaluated once by the same rule and reported whether it succeeds or fails; no blind-driven tuning or replacement candidate is allowed on this partition.",
+  "promotion_gate": "Only a blind RETAIN with no paired safety veto supports activating this frozen local candidate. A screen or confirmation failure ends this protocol without opening later partitions. Even a passing blind supports only measured local official-generator improvement, not a guarantee on every possible track or official Linux CPU certification.",
+  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "offtrack_samples", "partial_offtrack_samples", "action_latency_max_ms", "initialization_ms", "error", "action_trace_sha256", "peak_worker_rss_mib"],
+  "road_contact_interpretation": "Offtrack and partial-offtrack samples are descriptive diagnostics and do not override the paired decision rule; brief grass contact alone is not an official disqualification.",
+  "limits": "The four track IDs share the geometry produced by a given seed and primarily vary obstacle placements; the independent geometry counts are 8/16/8, not 32/64/32. A positive result remains finite-sample evidence with correlated cells. The separate official Linux runtime and final ZIP certification remain required before submission."
+}
