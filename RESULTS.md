@@ -40,7 +40,9 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
   0.732->0.876, contacts23->13, but track1/17 lost a control finish and
   track3/3857792434 plus track2/4089604952 added crash DNFs. All20 rows
   and frozen hashes passed audit. Full55 and fresh partitions stayed closed;
-  active route unchanged.
+  active route unchanged. Six exact source-bound replays show all three hard
+  failures occur under no-corridor fallback; the earlier plans' causal role is
+  unresolved.
 - [Observed ego-side switch fresh screen](experiments/observed-ego-side-switch-generalization-v1-result.json):
   REJECT on eight new geometry seeds crossed with IDs1--4. Finishes11/32->17/32
   and mean progress0.675->0.777, but contacts65->73 and damage13.0->14.6;

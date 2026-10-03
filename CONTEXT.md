@@ -11,8 +11,11 @@ Finishes improved 3->6, mean progress0.732->0.876, contacts23->13, but it
 lost the control finish on track1/17 and added crash DNFs on
 track3/3857792434 and track2/4089604952. All20 rows (18 cold workers, two
 verified reused controls) passed receipt and source-hash audit; the full55
-gate explicitly rejects expansion. Source-bound failure traces are the next
-step before a new candidate. Record:
+gate explicitly rejects expansion. Six source-bound replays show all three adverse
+endpoints occur under the inherited no-corridor fallback: two collisions at
+about30 world-speed on later obstacles, and one road exit after a requested
+steering reversal outran the steering slew. Earlier corridor plans changed
+the trajectories, but the traces do not prove causation. Record:
 `experiments/feasible-corridor-dev-v1-result.json`. No fresh corridor screen,
 confirmation or blind has run.
 

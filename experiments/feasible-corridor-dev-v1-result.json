@@ -70,5 +70,16 @@
     "active_route": "unchanged",
     "sota_promotion": false
   },
-  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The candidate is rejected under its preregistered gate despite higher aggregate completion. Source-bound failure replays are pending; no causal diagnosis is claimed from terminal receipts alone."
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The candidate is rejected under its preregistered gate despite higher aggregate completion. Six source-bound replays identify no-corridor fallback at every hard-veto endpoint, but do not establish a causal fix. No full55 or fresh phase was opened.",
+  "source_bound_failure_trace": {
+    "tool": "tools/trace_feasible_corridor_dev.py",
+    "tool_commit": "01be0a3",
+    "artifacts": ".haic-artifacts/feasible-corridor-dev-telemetry-v1",
+    "exact_replays": 6,
+    "reproduction": "Baseline and candidate actual-Agent-route episodes on all three hard-veto cells matched frozen full action hashes, outcomes, step counts and wheel-road counts. Their first action divergences (steps50,32,45) occurred on identical observations with an active candidate corridor plan.",
+    "track_3_seed_3857792434": "Candidate first differs at step50; corridor plans active only steps50-53 and162-165. It clears the obstacle at progress0.562 that stalls baseline, then collides with a distinct obstacle on a sharp bend at step218/progress0.731 with speed29.86 before contact and reaches five contacts/crash at progress0.734. Both corridor candidates were infeasible throughout steps206-218, so inherited fallback steering was used at collision.",
+    "track_1_seed_17": "Candidate first differs at step32; corridor plans active only steps32-37 and73-76. At step175 near the later bend the inherited road steering changes sign, requested obstacle steering becomes +0.33, but slew-limited action is still -0.133; by step177 action is +0.007 as the first wheel leaves road. Steps179-278 have all four wheels off road. The candidate loses a zero-contact control finish at progress0.551, with no corridor plan at the failure.",
+    "track_2_seed_4089604952": "Candidate first differs at step45; corridor plans active only steps45-48 and68-73. It clears the obstacle at progress0.244 that stalls baseline but encounters a second obstacle. Both corridor candidates are infeasible on steps147-153; first contact at step153 occurs at speed30.38 before contact, followed by five contacts/crash at progress0.539.",
+    "interpretation": "All three adverse endpoints occurred under inherited no-corridor fallback, after earlier planner-induced action differences. The replays establish behavior and timing but do not prove those earlier differences caused the later failures."
+  }
 }
