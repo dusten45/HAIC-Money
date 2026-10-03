@@ -53,5 +53,17 @@
     "active_route": "unchanged",
     "sota_promotion": false
   },
-  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The speed cap is rejected by its preregistered gate despite higher aggregate completion. No full55, fresh screen, confirmation, or blind phase was opened."
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. The speed cap is rejected by its preregistered gate despite higher aggregate completion. Source-bound replays describe the failures and delay but do not prove a corrective intervention. No full55, fresh screen, confirmation, or blind phase was opened.",
+  "source_bound_failure_trace": {
+    "tool": "tools/trace_feasible_corridor_dev.py",
+    "tool_commit": "1880f59",
+    "artifacts": ".haic-artifacts/feasible-corridor-dev-telemetry-v2",
+    "exact_v2_replays": 3,
+    "comparison_v1_replays": 1,
+    "reproduction": "The three v2 candidate replays on 1/17, 2/4089604952 and 2/644062 matched their frozen action hashes, outcomes, step counts and wheel-road counts. A v1 candidate replay on 2/644062 also matched its frozen receipt. All used already consumed cells.",
+    "track_1_seed_17": "The v2 candidate still retires off_track without contact at progress0.5515. At step196 road row42 disappears while rows46/50/54 remain visible; the inherited road request flips to +0.084 and the obstacle-adjusted request to +0.324, but the slew-limited action remains -0.136. At step200 the first wheel leaves road, and all four are off by step206. The speed cap delayed but did not prevent this failure.",
+    "track_2_seed_4089604952": "The v2 candidate contacts a later obstacle at step157 with world-speed21.7 and four wheels on road, continues with two contacts, then reaches a third obstacle. At steps233-236 its side latch alternates -1,+1,-1,+1 although the nearest detected road rows show approximately15 pixels of left space and 0-1 pixels of right space; the obstacle row itself has no reliable edge. It switches back left at step241 but steering slew still outputs +0.250, and contacts at steps242/244/245 produce crash at progress0.753. On the preceding obstacle, missing far road-edge rows caused the full-row corridor check to reject an otherwise locally possible right candidate; that post hoc relaxation is not a safety proof.",
+    "track_2_seed_644062": "The v2 candidate finishes without contact in29.54s, compared with28.20s for v1 and28.12s for the baseline. The no-corridor speed cap acts for36 decisions across11 intervals, adding17 decisions and1.34s versus v1. Removing only far-obstacle braking would also affect the dangerous early braking on 2/4089604952.",
+    "interpretation": "The observed row42 dropout and late side switching identify concrete control discontinuities; sparse road edges prevent a fully verified alternative pass. A narrow dropout correction and camera-width side-switch veto are separate diagnostic hypotheses, not validated improvements."
+  }
 }

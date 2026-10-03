@@ -11,6 +11,11 @@ ten-cell triage, v2 improved finishes3->8, progress0.732->0.930, contacts23->7,
 but lost the baseline finish on track1/17 and added a crash DNF on
 track2/4089604952. All20 rows (18 cold, two verified reused controls) and
 frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v2-result.json`.
+Three exact v2 replays reproduce the hard vetoes and the >5% shared-finish
+delay: on1/17 row42 again disappears before a wrong-sign steering request; on
+2/408 a third obstacle causes repeated side flips despite observed left-side
+space; on2/644 the speed cap adds1.34s versus v1. The obstacle's own road row
+is unverified, so local gap evidence is not a complete safe passage.
 V1 improved finishes3->6 but had three hard vetoes; its six exact replays locate
 two later-obstacle collisions under no-corridor fallback and a road exit after
 the observed row42 disappeared. Those traces motivate narrow, separately

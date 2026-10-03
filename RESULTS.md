@@ -40,7 +40,8 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
   progress0.732->0.930, contacts23->7, but track1/17 lost a control finish
   and track2/4089604952 added a crash DNF. All20 frozen rows and hashes
   passed audit; the full55 gate rejected expansion. No fresh partition or
-  active-route change.
+  active-route change. Exact replays locate row42 loss on1/17, repeated
+  obstacle-side flips on2/408, and36 capped-speed decisions on2/644.
 - [Feasible corridor consumed triage](experiments/feasible-corridor-dev-v1-result.json):
   TRIAGE_BLOCK_FULL on ten already used cells. Finishes3->6, mean progress
   0.732->0.876, contacts23->13, but track1/17 lost a control finish and
