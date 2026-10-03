@@ -8,6 +8,7 @@ episode runs in a cold process through evaluate_bare_generalization's worker.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import math
@@ -302,10 +303,45 @@ def check_frozen_inputs(identity: dict, protocol: dict, paths: dict[str, Path]) 
     validate_source_pair(protocol, paths["control"], paths["candidate"])
 
 
+def validate_worker_count(workers: int) -> int:
+    if type(workers) is not int or not 1 <= workers <= 3:
+        raise ValueError("workers must be an integer from 1 to 3")
+    return workers
+
+
+def _run_cold_episode(identity: dict, protocol: dict, paths: dict[str, Path],
+                      arm: str, track: int, seed: int) -> dict:
+    """Run one independent process, checking frozen inputs on both sides."""
+    check_frozen_inputs(identity, protocol, paths)
+    payload = {"source": str(paths[arm].resolve()), "model": str(paths["model"].resolve()),
+               "controller_class": protocol["controller_classes"][arm],
+               "track_id": track, "seed": seed}
+    command = [sys.executable, str(Path(fresh.__file__).resolve()),
+               "--worker", json.dumps(payload, separators=(",", ":"))]
+    try:
+        try:
+            completed = subprocess.run(command, cwd=ROOT, text=True,
+                                       capture_output=True, timeout=300, check=True)
+            measured = json.loads(completed.stdout)
+            if not isinstance(measured, dict):
+                raise ValueError("worker returned a non-object result")
+            return measured
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
+                json.JSONDecodeError, ValueError) as error:
+            stderr = getattr(error, "stderr", "") or ""
+            if isinstance(stderr, bytes):
+                stderr = stderr.decode("utf-8", errors="replace")
+            return {"error": str(error), "stderr": stderr[-4000:]}
+    finally:
+        check_frozen_inputs(identity, protocol, paths)
+
+
 def run_partition(root: Path, identity: dict, protocol: dict,
-                  paths: dict[str, Path], phase: str) -> dict:
+                  paths: dict[str, Path], phase: str, workers: int = 1) -> dict:
+    workers = validate_worker_count(workers)
     require_phase(root, identity, protocol, phase)
     with fresh._run_lock(root):
+        jobs: list[tuple[str, int, int, int]] = []
         for track, seed, repeat in fresh.expected_cells(protocol, phase):
             for arm in fresh.ARMS:
                 previous = fresh.load_cell(root, identity, phase, arm, track, seed, repeat)
@@ -313,34 +349,35 @@ def run_partition(root: Path, identity: dict, protocol: dict,
                     if previous.get("error"):
                         raise RuntimeError(f"recorded operational failure: {phase}/{arm}/{track}/{seed}/{repeat}")
                     continue
-                check_frozen_inputs(identity, protocol, paths)
-                payload = {"source": str(paths[arm].resolve()), "model": str(paths["model"].resolve()),
-                           "controller_class": protocol["controller_classes"][arm],
-                           "track_id": track, "seed": seed}
+                jobs.append((arm, track, seed, repeat))
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            pending = {}
+            next_job = 0
+
+            def fill_window() -> None:
+                nonlocal next_job
+                while len(pending) < workers and next_job < len(jobs):
+                    arm, track, seed, _repeat = jobs[next_job]
+                    pending[next_job] = pool.submit(_run_cold_episode, identity, protocol,
+                                                    paths, arm, track, seed)
+                    next_job += 1
+
+            fill_window()
+            for index, (arm, track, seed, repeat) in enumerate(jobs):
+                measured = pending.pop(index).result()
                 row = {"partition": phase, "arm": arm, "track_id": track,
                        "seed": seed, "repeat": repeat}
-                command = [sys.executable, str(Path(fresh.__file__).resolve()),
-                           "--worker", json.dumps(payload, separators=(",", ":"))]
-                try:
-                    completed = subprocess.run(command, cwd=ROOT, text=True,
-                                               capture_output=True, timeout=300, check=True)
-                    measured = json.loads(completed.stdout)
-                except (subprocess.CalledProcessError, subprocess.TimeoutExpired,
-                        json.JSONDecodeError) as error:
-                    stderr = getattr(error, "stderr", "") or ""
-                    if isinstance(stderr, bytes):
-                        stderr = stderr.decode("utf-8", errors="replace")
-                    row.update({"error": str(error), "stderr": stderr[-4000:]})
+                row.update(measured)
+                if row.get("error"):
                     fresh.record_cell(root, identity, row)
                     failure = report_phase(root, identity, protocol, phase)
                     fresh._atomic_json(root / f"{phase}-summary.json", failure)
-                    raise RuntimeError(f"worker failed at {phase}/{arm}/{track}/{seed}/{repeat}") from error
-                check_frozen_inputs(identity, protocol, paths)
-                row.update(measured)
+                    raise RuntimeError(f"worker failed at {phase}/{arm}/{track}/{seed}/{repeat}")
                 fresh.record_cell(root, identity, row)
                 print(json.dumps({"cell": [phase, arm, track, seed, repeat],
                                   "finished": row["finished"], "progress": row["progress"],
                                   "contacts": row["collision_count"]}), flush=True)
+                fill_window()
     summary = report_phase(root, identity, protocol, phase)
     path = root / f"{phase}-summary.json"
     if path.exists() and fresh._read_json(path) != summary:
@@ -357,12 +394,18 @@ def main() -> int:
     parser.add_argument("--control-agent", type=Path, default=ROOT / SOURCE_PATHS["control"])
     parser.add_argument("--candidate-agent", type=Path, default=ROOT / SOURCE_PATHS["candidate"])
     parser.add_argument("--model", type=Path, default=ROOT / "model.pt")
+    parser.add_argument("--workers", type=int, default=1,
+                        help="concurrent cold worker processes (1-3; default 1)")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--preflight-only", action="store_true")
     mode.add_argument("--partition", choices=fresh.PHASES)
     mode.add_argument("--freeze-finalist", action="store_true")
     mode.add_argument("--seal-confirmation", action="store_true")
     args = parser.parse_args()
+    try:
+        validate_worker_count(args.workers)
+    except ValueError as error:
+        parser.error(str(error))
     validate_protocol_path(args.protocol)
     validate_output_root(args.output_root)
     for arm, path in (("control", args.control_agent), ("candidate", args.candidate_agent)):
@@ -392,7 +435,8 @@ def main() -> int:
         seal_confirmation(args.output_root, identity, protocol)
         summary = report_phase(args.output_root, identity, protocol, "confirmation")
     else:
-        summary = run_partition(args.output_root, identity, protocol, paths, args.partition)
+        summary = run_partition(args.output_root, identity, protocol, paths,
+                                args.partition, workers=args.workers)
     print(json.dumps(summary, indent=2, allow_nan=False))
     return 0
 

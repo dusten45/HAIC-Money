@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "name": "temporal-reachability-generalization-v1",
-  "status": "DRAFT_UNFROZEN",
+  "status": "PREREGISTERED",
   "hypothesis": "A temporal obstacle track and reachable passing corridor increase completed laps across unseen official-generator geometries while avoiding new crashes and aggregate contact or damage increases against the current active bare Agent route.",
   "evidence_scope": "Fresh paired local official-generator evaluation. The ten reused feasible-corridor diagnostic cells may be used for debugging only; none counts toward screening, confirmation, blind, or promotion.",
-  "control_agent_sha256": "PENDING_SOURCE_SHA256",
-  "candidate_agent_sha256": "PENDING_SOURCE_SHA256",
+  "control_agent_sha256": "52b446df2408bf8076a0762fc1de00447fd3af8636be19e1449518b44cf32a22",
+  "candidate_agent_sha256": "af21584a5f3093c4e673a71f6b16920b4ab45dc18a5e79a00f8bc33546a2d9f0",
   "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
   "runtime_helper_sha256": {
     "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
@@ -13,17 +13,17 @@
   },
   "controller_classes": {
     "control": "_CompoundClearingBrakeCarryController",
-    "candidate": "PENDING_CONTROLLER_CLASS"
+    "candidate": "_TemporalReachabilityController"
   },
   "source_snapshots": {
     "control": ".haic-artifacts/temporal-reachability-generalization-v1/snapshots/control_agent.py",
     "candidate": ".haic-artifacts/temporal-reachability-generalization-v1/snapshots/candidate_agent.py"
   },
   "source_construction": {
-    "implementation_commit": "PENDING_IMPLEMENTATION_COMMIT",
-    "agent_blob_sha256": "PENDING_AGENT_BLOB_SHA256",
+    "implementation_commit": "87931abad7996f75a421d53dd81f0d64d59d8d16",
+    "agent_blob_sha256": "52b446df2408bf8076a0762fc1de00447fd3af8636be19e1449518b44cf32a22",
     "selector_from": "_CompoundClearingBrakeCarryController()",
-    "selector_to": "PENDING_CONTROLLER_CLASS()",
+    "selector_to": "_TemporalReachabilityController()",
     "rule": "Copy the normalized committed Git blob of agent.py to the control snapshot. Replace exactly one selector_from byte sequence with selector_to for the candidate snapshot; no other source byte may differ. Pin the commit, blob, both snapshot hashes, model and runtime helpers before any fresh episode. The live Agent selector remains the control route until promotion."
   },
   "max_steps": 2000,
