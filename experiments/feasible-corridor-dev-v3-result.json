@@ -54,5 +54,18 @@
     "active_route": "unchanged",
     "sota_promotion": false
   },
-  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. Four new finishes and fewer aggregate contacts do not override the paired safety vetoes or completed-lap slowdowns. The route remains diagnostic. No full55, fresh screen, confirmation or blind phase was opened."
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. Four new finishes and fewer aggregate contacts do not override the paired safety vetoes or completed-lap slowdowns. The route remains diagnostic. No full55, fresh screen, confirmation or blind phase was opened.",
+  "source_bound_failure_trace": {
+    "track_2_tool": "tools/trace_feasible_corridor_dev_v3.py",
+    "track_2_tool_commit": "a86bfaa",
+    "artifacts": [
+      ".haic-artifacts/feasible-corridor-dev-telemetry-v3/track-2-seed-4089604952/candidate.json",
+      ".haic-artifacts/feasible-corridor-dev-v3/trace-1190129265-subagent/candidate.json",
+      ".haic-artifacts/feasible-corridor-dev-v3/trace-1190129265-subagent/baseline.json"
+    ],
+    "reproduction": "Exact replays of the two v3 hard-veto cells matched their frozen action hashes, outcomes and step counts. The track1/119 baseline also reproduced. v1 and v2 candidates were separately replayed on consumed track1/119 and both matched their receipts and finished without contact.",
+    "track_1_seed_1190129265": "V3 finished no new tile after a single obstacle contact at step126, stayed on road, and retired at step227 after 101 consecutive negative-reward decisions, progress0.407767. V1 and v2 candidates finished cleanly. V2 and v3 first action divergence on identical observation was step55: changing the no-corridor target from18 to20 reduced brake from0.261 to0.237; their observations diverged at step56. At v3 step120 the no-corridor fallback switched right-to-left although three nearby measured left widths were1.47,0.67,2.27 pixels and right widths were3.07,3.40,3.07. It switched back at step123 but contacted at step126. The v3 road-row42 dropout condition did not trigger in this episode. The speed and side-switch effects are not isolated counterfactuals.",
+    "track_2_seed_4089604952": "The v3 candidate crashed at step244 with five contacts, progress0.752542 and zero off-road samples. On the third obstacle, the centroid side request changed at steps233,234,236 while full corridor candidates were absent. The three-consecutive-edge-row veto could not apply: available edge rows were28-31 and54-58 at step233,31-33 and56-58 at step234, and34-35 at step236, away from the obstacle bbox. Steering slew then rose toward+0.32 and contact began at step239. Near and far visible widths conflicted through a bend, so these observations do not prove an alternative safe passage.",
+    "interpretation": "Both failures expose frame-local centroid switching when a full corridor is unavailable. The fixed-row width veto is too strict to act when obstacle-adjacent rows are missing and too weak to prevent a switch to a consistently narrower side. A temporally associated obstacle and conservative switch condition are the next diagnostic hypotheses, not validated repairs."
+  }
 }

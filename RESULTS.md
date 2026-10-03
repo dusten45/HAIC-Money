@@ -41,7 +41,9 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
   progress fell and track2/4089604952 again crashed after five contacts.
   Three shared finishes exceeded5% time delay; track3/2951861974 gained one
   contact. All20 receipts and summary matched the frozen source-bound run;
-  full55 and fresh partitions stayed closed. Active route unchanged.
+  full55 and fresh partitions stayed closed. Exact replays locate a narrower
+  side switch before track1/119's on-road stall and unvetoed repeated flips
+  before track2/408's crash. Active route unchanged.
 - [No-corridor speed-cap consumed triage](experiments/feasible-corridor-dev-v2-result.json):
   TRIAGE_BLOCK_FULL on the same ten already used cells. Finishes3->8, mean
   progress0.732->0.930, contacts23->7, but track1/17 lost a control finish

@@ -13,6 +13,13 @@ track1/1190129265 and added a crash DNF on track2/4089604952. It also took
 over5% longer on three shared finishes and added one contact on
 track3/2951861974. All20 rows (18 cold, two verified reused controls) and
 frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v3-result.json`.
+Exact v3 replays locate a frame-local side switch to a narrower path before
+the track1/1190129265 obstacle contact and on-road stall; on track2/4089604952
+the three-adjacent-road-row veto cannot act because those rows are missing, so
+side requests flip before five contacts. V3's higher fallback cap first changes
+the track1/119 trajectory earlier, so neither the cap nor switching effect is
+isolated causally. These traces justify a separately frozen temporal-switch
+diagnostic, not activation.
 V2 had improved finishes3->8 and contacts23->7, but lost track1/17's baseline
 finish and also crashed on track2/4089604952. Its record remains
 `experiments/feasible-corridor-dev-v2-result.json`.
