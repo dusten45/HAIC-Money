@@ -71,6 +71,7 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
         _corridor_plan = None
         _corridor_previous = None
         _corridor_misses = 0
+        _corridor_edges = {42: (30.0, 53.0)}
         _pace_sweep = 3.0
         _target_speed = 20.0
 
@@ -90,6 +91,9 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
         def _adjust_obstacle_steering(self, *, base_steering, obstacle_bias, straight):
             return base_steering + obstacle_bias
 
+        def _adjust_target_speed_for_steering(self, *, target_speed, steering, straight, obstacle):
+            return min(target_speed, 18.0)
+
     class Agent:
         def __init__(self):
             self._forward_controller = Controller()
@@ -105,6 +109,10 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
             )
             steering = controller._adjust_obstacle_steering(
                 base_steering=road, obstacle_bias=0.07, straight=False,
+            )
+            controller._adjust_target_speed_for_steering(
+                target_speed=30.0, steering=steering, straight=False,
+                obstacle=(43.5, 41.5, 41.5),
             )
             controller._corridor_plan = {
                 "side": -1.0, "target_x": 36.0, "clearance_px": 1.25,
@@ -125,6 +133,7 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
     ]
     assert detail["corridor_plan"]["control_waypoints"] == [[54.0, 39.5], [47.0, 36.0]]
     assert detail["corridor_plan"]["edges"] == {"42": [30.0, 53.0]}
+    assert detail["corridor_edges"] == {"42": [30.0, 53.0]}
     assert detail["road_centers"] == {"42": 41.5, "54": 40.0}
     assert detail["road_sweep"] == 3.0
     assert detail["road_steering"] == {"input": -0.2, "straight": False, "output": pytest.approx(-0.19)}
@@ -132,11 +141,36 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
         "base": pytest.approx(-0.19), "bias": 0.07,
         "straight": False, "output": pytest.approx(-0.12),
     }
+    assert detail["steering_speed_target"] == {
+        "input": 30.0, "output": 18.0, "corridor_plan_present": False,
+    }
     assert "_nearest_obstacle" not in vars(agent._forward_controller)
     assert "_corridor_candidate" not in vars(agent._forward_controller)
     assert "_adjust_road_steering" not in vars(agent._forward_controller)
     assert "_adjust_obstacle_steering" not in vars(agent._forward_controller)
     assert "_road_centers" not in vars(agent._forward_controller)
+    assert "_adjust_target_speed_for_steering" not in vars(agent._forward_controller)
+
+
+def test_v2_study_selects_separate_frozen_receipts_and_artifacts() -> None:
+    import tools.compare_feasible_corridor_dev_v2 as compare_v2
+
+    protocol, run, output, comparator = trace.study_config(2)
+    assert protocol == ROOT / "experiments/feasible-corridor-dev-v2.json"
+    assert run == ROOT / ".haic-artifacts/feasible-corridor-dev-v2/run"
+    assert output == ROOT / ".haic-artifacts/feasible-corridor-dev-telemetry-v2"
+    assert comparator is compare_v2
+    assert trace.study_config(1)[3] is compare
+    assert trace._artifact_path("candidate", 1, 17, version=2) == (
+        output / "track-1-seed-17/candidate.json"
+    )
+    assert trace._artifact_path("candidate", 1, 17, version=2, artifact_tag="edges") == (
+        output / "track-1-seed-17/candidate.edges.json"
+    )
+    with pytest.raises(ValueError, match="artifact tag"):
+        trace._artifact_path("candidate", 1, 17, version=2, artifact_tag="../unsafe")
+    with pytest.raises(ValueError, match="study version"):
+        trace.study_config(3)
 
 
 def test_exact_replay_comparison_rejects_changed_action_hash_or_outcome() -> None:

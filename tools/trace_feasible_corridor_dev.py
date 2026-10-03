@@ -13,6 +13,7 @@ import json
 import math
 from pathlib import Path
 import random
+import re
 import sys
 import time
 from typing import Any
@@ -23,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from tools import compare_feasible_corridor_dev as compare
+from tools import compare_feasible_corridor_dev_v2 as compare_v2
 from tools import compare_reused_bare_candidate as prior_compare
 from tools import evaluate_bare_generalization as fresh
 from tools import trace_consumed_screen as prior_trace
@@ -33,6 +35,9 @@ PROTOCOL = ROOT / "experiments/feasible-corridor-dev-v1.json"
 RUN_ROOT = ROOT / ".haic-artifacts/feasible-corridor-dev-v1/run"
 OUTPUT_ROOT = ROOT / ".haic-artifacts/feasible-corridor-dev-telemetry-v1"
 MODEL = ROOT / "model.pt"
+V2_PROTOCOL = ROOT / "experiments/feasible-corridor-dev-v2.json"
+V2_RUN_ROOT = ROOT / ".haic-artifacts/feasible-corridor-dev-v2/run"
+V2_OUTPUT_ROOT = ROOT / ".haic-artifacts/feasible-corridor-dev-telemetry-v2"
 TARGETS = frozenset(compare.MECHANISM_CELLS)
 SUMMARY_KEYS = (
     "finished", "progress", "lap_time_ms", "collision_count", "damage",
@@ -49,6 +54,14 @@ def require_consumed_cell(protocol: dict, track_id: int, seed: int) -> None:
         raise ValueError("cell is outside consumed development")
     if (track_id, seed) not in TARGETS:
         raise ValueError("cell is outside fixed consumed mechanism cells")
+
+
+def study_config(version: int) -> tuple[Path, Path, Path, Any]:
+    if version == 1:
+        return PROTOCOL, RUN_ROOT, OUTPUT_ROOT, compare
+    if version == 2:
+        return V2_PROTOCOL, V2_RUN_ROOT, V2_OUTPUT_ROOT, compare_v2
+    raise ValueError("unknown corridor study version")
 
 
 def require_frozen_receipts(
@@ -71,7 +84,7 @@ def require_frozen_receipts(
     return rows, hashes
 
 
-def _paths(protocol: dict) -> dict[str, Path]:
+def _paths(protocol: dict, protocol_path: Path = PROTOCOL) -> dict[str, Path]:
     artifact_root = (ROOT / ".haic-artifacts").resolve()
     sources = {}
     for arm in compare.ARMS:
@@ -80,44 +93,46 @@ def _paths(protocol: dict) -> dict[str, Path]:
             raise ValueError("Agent source snapshot must be in .haic-artifacts")
         sources[arm] = source
     return {
-        "protocol": PROTOCOL, "model": MODEL,
+        "protocol": protocol_path, "model": MODEL,
         "baseline": sources["baseline"], "candidate": sources["candidate"],
         "margin_screen_protocol": compare.MARGIN_SCREEN_PROTOCOL,
         "ego_screen_protocol": compare.EGO_SCREEN_PROTOCOL,
     }
 
 
-def preflight(arm: str, track_id: int, seed: int) -> tuple[dict, dict]:
+def preflight(arm: str, track_id: int, seed: int, *, version: int = 1) -> tuple[dict, dict]:
     if arm not in compare.ARMS:
         raise ValueError("unknown frozen Agent arm")
-    protocol = fresh._read_json(PROTOCOL)
+    protocol_path, run_root, _, comparator = study_config(version)
+    protocol = fresh._read_json(protocol_path)
     require_consumed_cell(protocol, track_id, seed)
     margin = fresh._read_json(compare.MARGIN_SCREEN_PROTOCOL)
     ego = fresh._read_json(compare.EGO_SCREEN_PROTOCOL)
-    compare.validate_protocol(
+    comparator.validate_protocol(
         protocol, margin, ego, fresh.digest(compare.MARGIN_SCREEN_PROTOCOL),
         fresh.digest(compare.EGO_SCREEN_PROTOCOL),
         prior_compare.sealed_holdout_seeds(ROOT / "experiments"),
     )
-    paths = _paths(protocol)
-    freeze_path = RUN_ROOT / "freeze.json"
-    summary_path = RUN_ROOT / "mechanism-summary.json"
+    paths = _paths(protocol, protocol_path)
+    freeze_path = run_root / "freeze.json"
+    summary_path = run_root / "mechanism-summary.json"
     if not freeze_path.is_file() or not summary_path.is_file():
         raise ValueError("complete frozen mechanism triage is required")
     freeze = fresh._read_json(freeze_path)
-    identity = compare.build_identity(PROTOCOL, protocol, paths, margin, ego)
+    identity = comparator.build_identity(protocol_path, protocol, paths, margin, ego)
     if freeze != identity:
         raise ValueError("development freeze differs from frozen source/environment")
-    compare.check_frozen_inputs(identity, paths, {"margin": margin, "ego": ego})
+    comparator.check_frozen_inputs(identity, paths, {"margin": margin, "ego": ego})
     ego_cells = compare.ego_screen_cells(ego)
     for cell_track, cell_seed in compare.MECHANISM_CELLS:
-        require_frozen_receipts(RUN_ROOT, identity, cell_track, cell_seed, ego_cells)
-    summary = compare.report(RUN_ROOT, identity, compare.MECHANISM_CELLS,
-                             mechanism_only=True, ego_cells=ego_cells)
+        require_frozen_receipts(run_root, identity, cell_track, cell_seed,
+                                ego_cells)
+    summary = comparator.report(run_root, identity, compare.MECHANISM_CELLS,
+                                mechanism_only=True, ego_cells=ego_cells)
     if fresh._read_json(summary_path) != summary:
         raise ValueError("frozen mechanism summary differs from its 20 receipts")
     rows, receipt_hashes = require_frozen_receipts(
-        RUN_ROOT, identity, track_id, seed, ego_cells,
+        run_root, identity, track_id, seed, ego_cells,
     )
     if (track_id, seed) in ego_cells:
         original_path = fresh.cell_path(compare.EGO_SCREEN_RUN, "screen", "control",
@@ -133,6 +148,8 @@ def preflight(arm: str, track_id: int, seed: int) -> tuple[dict, dict]:
         "ego_trace_sha256": fresh.digest(Path(ego_trace.__file__)),
         "telemetry_tool_sha256": fresh.digest(Path(__file__)),
     }
+    if version == 2:
+        diagnostic_identity["study_version"] = version
     return diagnostic_identity, {
         "source": paths[arm], "model": MODEL,
         "class": protocol["controller_classes"][arm],
@@ -169,6 +186,15 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
     centers_detail: dict | None = None
     road_detail: dict | None = None
     steering_detail: dict | None = None
+    speed_detail: dict | None = None
+    if hasattr(controller, "_adjust_target_speed_for_steering"):
+        names.append("_adjust_target_speed_for_steering")
+        originals["_adjust_target_speed_for_steering"] = getattr(
+            controller, "_adjust_target_speed_for_steering")
+        prior["_adjust_target_speed_for_steering"] = (
+            "_adjust_target_speed_for_steering" in vars(controller),
+            vars(controller).get("_adjust_target_speed_for_steering"),
+        )
 
     def centers_call(*args, **kwargs):
         nonlocal centers_detail
@@ -212,11 +238,23 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
         }
         return result
 
+    def speed_call(*args, **kwargs):
+        nonlocal speed_detail
+        result = originals["_adjust_target_speed_for_steering"](*args, **kwargs)
+        speed_detail = {
+            "input": float(kwargs["target_speed"]),
+            "output": float(result),
+            "corridor_plan_present": getattr(controller, "_corridor_plan", None) is not None,
+        }
+        return result
+
     try:
         controller._road_centers = centers_call
         controller._nearest_obstacle = obstacle_call
         controller._adjust_road_steering = road_call
         controller._adjust_obstacle_steering = steering_call
+        if "_adjust_target_speed_for_steering" in originals:
+            controller._adjust_target_speed_for_steering = speed_call
         if candidate:
             controller._corridor_candidate = corridor_call
         action = fresh.validate_action(agent.act(observation))
@@ -237,6 +275,10 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
         "obstacle_bbox": None if bbox is None else list(bbox),
         "corridor_candidates": corridors if candidate else None,
         "corridor_plan": _serialize_plan(getattr(controller, "_corridor_plan", None)),
+        "corridor_edges": None if not candidate else {
+            str(row): [float(left), float(right)]
+            for row, (left, right) in controller._corridor_edges.items()
+        },
         "corridor_previous": None if getattr(controller, "_corridor_previous", None) is None
         else [float(value) for value in controller._corridor_previous],
         "corridor_misses": None if not candidate else int(controller._corridor_misses),
@@ -249,6 +291,7 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
         else float(controller._observed_far_center),
         "road_steering": road_detail,
         "obstacle_steering": steering_detail,
+        "steering_speed_target": speed_detail,
     }
     return action, detail
 
@@ -345,8 +388,12 @@ def _episode(arm: str, track_id: int, seed: int, inputs: dict) -> dict:
     return episode
 
 
-def _artifact_path(arm: str, track_id: int, seed: int) -> Path:
-    return OUTPUT_ROOT / f"track-{track_id}-seed-{seed}" / f"{arm}.json"
+def _artifact_path(arm: str, track_id: int, seed: int, *, version: int = 1,
+                   artifact_tag: str | None = None) -> Path:
+    if artifact_tag is not None and re.fullmatch(r"[A-Za-z0-9_-]{1,32}", artifact_tag) is None:
+        raise ValueError("artifact tag must be a short filename token")
+    suffix = "" if artifact_tag is None else f".{artifact_tag}"
+    return study_config(version)[2] / f"track-{track_id}-seed-{seed}" / f"{arm}{suffix}.json"
 
 
 def main() -> int:
@@ -354,17 +401,21 @@ def main() -> int:
     parser.add_argument("--arm", required=True, choices=compare.ARMS)
     parser.add_argument("--track-id", required=True, type=int)
     parser.add_argument("--seed", required=True, type=int)
+    parser.add_argument("--study-version", type=int, choices=(1, 2), default=1)
+    parser.add_argument("--artifact-tag", type=str)
     parser.add_argument("--preflight-only", action="store_true")
     args = parser.parse_args()
-    identity, inputs = preflight(args.arm, args.track_id, args.seed)
+    identity, inputs = preflight(args.arm, args.track_id, args.seed,
+                                 version=args.study_version)
     if args.preflight_only:
         print(json.dumps({"preflight": "PASS", "arm": args.arm,
                           "cell": [args.track_id, args.seed],
                           "source_sha256": identity["source_sha256"][args.arm],
                           "mechanism_receipts": "PASS"}, sort_keys=True))
         return 0
-    path = _artifact_path(args.arm, args.track_id, args.seed)
-    with fresh._run_lock(RUN_ROOT):
+    path = _artifact_path(args.arm, args.track_id, args.seed,
+                          version=args.study_version, artifact_tag=args.artifact_tag)
+    with fresh._run_lock(study_config(args.study_version)[1]):
         if path.exists():
             envelope = fresh._read_json(path)
             payload = {"identity": identity, "episode": envelope.get("episode")}
@@ -375,7 +426,8 @@ def main() -> int:
                               "summary": envelope["episode"]["summary"]}))
             return 0
         episode = _episode(args.arm, args.track_id, args.seed, inputs)
-        after, _ = preflight(args.arm, args.track_id, args.seed)
+        after, _ = preflight(args.arm, args.track_id, args.seed,
+                             version=args.study_version)
         if after != identity:
             raise RuntimeError("frozen inputs changed during telemetry replay")
         payload = {"identity": identity, "episode": episode}
