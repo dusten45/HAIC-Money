@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "experiment": "feasible-corridor-dev-v3",
+  "status": "TRIAGE_BLOCK_FULL",
+  "decision": "Keep _CompoundClearingBrakeCarryController as the active bare Agent route. The diagnostic observed-road dropout and side-switch veto candidate improved aggregate completion on consumed cells but failed the preregistered gate on track1/1190129265 and track2/4089604952. Full55 and fresh partitions were not opened.",
+  "candidate_implementation_commit": "1563a97",
+  "comparator_commit": "48e8374",
+  "protocol_commit": "5056d3f",
+  "protocol_sha256": "ee467908f6870b4fdde75135ab7ca83684811af90c36e5d48e8aeed3c460232d",
+  "baseline_agent_sha256": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+  "candidate_agent_sha256": "6f0881ec16b9bc95382229e68a2bf55e72e97eb0a31575f5a3d066a1169d5228",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "raw_artifacts": ".haic-artifacts/feasible-corridor-dev-v3/run",
+  "freeze_sha256": "f0bbeca9b74e840fd3bc48d3bca4c8ee68f8367bdef4aa490d1e0ac7bdb22481",
+  "mechanism_summary_sha256": "c3be61965b8dfb9c785edc87debb2a641d14261f0ea202e5a40b540e6d511e70",
+  "mechanism": {
+    "canonical_cells": 10,
+    "distinct_geometry_seeds": 8,
+    "rows": 20,
+    "cold_worker_episodes": 18,
+    "reused_control_receipts": 2,
+    "baseline_finishes": 3,
+    "candidate_finishes": 7,
+    "baseline_mean_progress": 0.732069698639928,
+    "candidate_mean_progress": 0.8894792121793309,
+    "baseline_contacts": 23,
+    "candidate_contacts": 13,
+    "baseline_damage": 4.6000000000000005,
+    "candidate_damage": 2.6,
+    "shared_completed_cells": 3,
+    "paired_completed_time_delta_ms": 4380,
+    "hard_vetoes": [
+      "1/1190129265: both-DNF progress declined from 0.540453 to 0.407767",
+      "2/4089604952: new crash DNF at 0.752542 progress with five contacts"
+    ],
+    "comparison_reasons": [
+      "2/644062: shared finish more than 5% slower (28.12s to 29.80s)",
+      "1/17: shared finish more than 5% slower (25.32s to 26.90s)",
+      "3/2951861974: collisions and damage increased; shared finish more than 5% slower (21.86s to 22.98s)",
+      "1/1190129265: DNF progress decreased",
+      "2/4089604952: collisions and damage increased"
+    ],
+    "adverse_contact_cells": [[3, 2951861974, 1], [2, 4089604952, 3]],
+    "adverse_damage_cells": [[3, 2951861974, 0.20000000000000007], [2, 4089604952, 0.6]],
+    "operational_failures": 0,
+    "audit": "All 20 frozen receipt envelopes loaded and the saved summary exactly matched recomputation. Eighteen cold workers and two imported ego-screen controls had matching source receipts and action hashes. Candidate, model, helper, environment, harness and comparator hashes matched the freeze. The full-run gate rejected expansion."
+  },
+  "gates": {
+    "mechanism": "BLOCK_FULL",
+    "full_development": "NOT_OPENED",
+    "fresh_screen": "NOT_OPENED",
+    "confirmation": "SEALED_UNRUN",
+    "blind": "SEALED_UNRUN",
+    "active_route": "unchanged",
+    "sota_promotion": false
+  },
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. Four new finishes and fewer aggregate contacts do not override the paired safety vetoes or completed-lap slowdowns. The route remains diagnostic. No full55, fresh screen, confirmation or blind phase was opened."
+}

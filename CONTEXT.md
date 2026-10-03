@@ -4,13 +4,18 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1 and
-no-corridor speed-cap v2 both failed their preregistered consumed-cell safety
-gates; neither may expand to the full55 or any fresh partition. On the fixed
-ten-cell triage, v2 improved finishes3->8, progress0.732->0.930, contacts23->7,
-but lost the baseline finish on track1/17 and added a crash DNF on
-track2/4089604952. All20 rows (18 cold, two verified reused controls) and
-frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v2-result.json`.
+`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1,
+no-corridor speed-cap v2, and observed-road/side-veto v3 all failed their
+preregistered consumed-cell safety gates; none may expand to the full55 or any
+fresh partition. On the fixed ten-cell triage, v3 improved finishes3->7,
+progress0.732->0.889, contacts23->13, but reduced both-DNF progress on
+track1/1190129265 and added a crash DNF on track2/4089604952. It also took
+over5% longer on three shared finishes and added one contact on
+track3/2951861974. All20 rows (18 cold, two verified reused controls) and
+frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v3-result.json`.
+V2 had improved finishes3->8 and contacts23->7, but lost track1/17's baseline
+finish and also crashed on track2/4089604952. Its record remains
+`experiments/feasible-corridor-dev-v2-result.json`.
 Three exact v2 replays reproduce the hard vetoes and the >5% shared-finish
 delay: on1/17 row42 again disappears before a wrong-sign steering request; on
 2/408 a third obstacle causes repeated side flips despite observed left-side
