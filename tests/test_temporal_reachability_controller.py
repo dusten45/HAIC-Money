@@ -82,6 +82,10 @@ def test_reachability_assessment_blocks_late_switch_even_if_v5_width_gate_opens(
     assert candidate._allow_obstacle_side_switch(
         obstacle_y=49.5, obstacle_x=45.2, candidate_side=1.0,
     ) is False
+    requested = candidate._adjust_obstacle_steering(
+        base_steering=0.24, obstacle_bias=-0.24, straight=False,
+    )
+    assert requested < 0.0
 
 
 def test_unverified_far_track_allows_existing_early_curve_side_change():
@@ -208,6 +212,92 @@ def test_local_pass_carries_side_into_next_full_corridor_plan():
 
     assert candidate._obstacle_side == -1.0
     assert candidate._corridor_previous == (44.0, 38.0, -1.0)
+
+
+def test_visible_single_side_guides_steer_when_far_corridor_rows_are_missing():
+    # Consumed 2/408 at step234: the right side is closed and a left approach
+    # is visible near the car, although the far full-corridor proof is absent.
+    candidate = _controller()
+    candidate._obstacle_side = -1.0
+    candidate._corridor_detection = (30.5, 48.6, 49.3)
+    candidate._corridor_bbox = (47, 29, 50, 32)
+    candidate._corridor_edges = {row: (32.0, 52.0) for row in range(41, 59)}
+    track = agent._track_obstacle_stack(
+        None, (None, None, (47, 24, 49, 27), (47, 29, 50, 32)),
+    )
+    candidate._temporal_track = track
+    candidate._temporal_assessment = agent._assess_temporal_pass(
+        track, candidate._corridor_edges,
+        committed_side=-1, last_steer=-0.045,
+    )
+    assert candidate._temporal_assessment.selected_target_x is None
+    assert candidate._temporal_assessment.left_width_px > 3.0
+    assert candidate._temporal_assessment.right_width_px < 0.0
+
+    requested = candidate._adjust_obstacle_steering(
+        base_steering=0.1, obstacle_bias=-0.12, straight=False,
+    )
+
+    assert requested < 0.0
+    assert candidate._obstacle_side == -1.0
+
+
+def test_partial_target_rejects_visible_pinched_obstacle_row():
+    candidate = _controller()
+    bbox = (47, 29, 50, 32)
+    candidate._corridor_bbox = bbox
+    candidate._corridor_edges = {row: (32.0, 52.0) for row in range(29, 59)}
+    candidate._corridor_edges[32] = (40.0, 52.0)
+    track = agent._track_obstacle_stack(
+        None, (None, None, (47, 24, 49, 27), bbox),
+    )
+    candidate._temporal_track = track
+    assessment = agent._assess_temporal_pass(
+        track, candidate._corridor_edges,
+        committed_side=-1, last_steer=-0.045,
+    )
+
+    assert assessment.selected_target_x is None
+    assert candidate._partial_near_target(assessment, bbox) is None
+
+
+def test_partial_target_rejects_a_gap_in_near_car_road_rows():
+    candidate = _controller()
+    bbox = (47, 29, 50, 32)
+    candidate._corridor_bbox = bbox
+    candidate._corridor_edges = {
+        row: (32.0, 52.0) for row in (*range(29, 55), 58)
+    }
+    track = agent._track_obstacle_stack(
+        None, (None, None, (47, 24, 49, 27), bbox),
+    )
+    candidate._temporal_track = track
+    assessment = agent._assess_temporal_pass(
+        track, candidate._corridor_edges,
+        committed_side=-1, last_steer=-0.045,
+    )
+
+    assert candidate._partial_near_target(assessment, bbox) is None
+
+
+def test_partial_target_keeps_guiding_through_bottom_row_52():
+    candidate = _controller()
+    bbox = (47, 49, 50, 52)
+    candidate._corridor_bbox = bbox
+    candidate._corridor_edges = {row: (32.0, 60.0) for row in range(49, 59)}
+    track = agent._track_obstacle_stack(
+        None,
+        ((47, 38, 50, 41), (47, 42, 50, 45),
+         (47, 46, 50, 49), bbox),
+    )
+    candidate._temporal_track = track
+    assessment = agent._assess_temporal_pass(
+        track, candidate._corridor_edges,
+        committed_side=-1, last_steer=-0.08,
+    )
+
+    assert assessment.selected_target_x is None
+    assert candidate._partial_near_target(assessment, bbox) is not None
 
 
 def test_ordinary_agent_route_remains_the_validated_baseline():

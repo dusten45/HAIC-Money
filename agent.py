@@ -3981,7 +3981,6 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
         bbox = self._corridor_bbox
         if (
             assessment is None or bbox is None
-            or assessment.selected_target_x is None
             or self._corridor_candidate(-1.0) is not None
             or self._corridor_candidate(1.0) is not None
         ):
@@ -3991,6 +3990,14 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
                 straight=straight,
             )
         target = assessment.selected_target_x
+        if target is None:
+            target = self._partial_near_target(assessment, bbox)
+        if target is None:
+            return super()._adjust_obstacle_steering(
+                base_steering=base_steering,
+                obstacle_bias=obstacle_bias,
+                straight=straight,
+            )
         near_y = bbox[3] + 2.0
         urgency = min(1.0, max(0.5, abs(obstacle_bias) / 0.24))
         desired = _temporal_path_steer(target, near_y) * urgency
@@ -4001,6 +4008,84 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
             y, x, _road_center = self._corridor_detection
             self._corridor_previous = (x, y, float(assessment.selected_side))
         return float(desired)
+
+    def _partial_near_target(
+        self, assessment: _TemporalPassAssessment,
+        bbox: tuple[int, int, int, int],
+    ) -> float | None:
+        """Guide an already chosen side using the visible near-car path.
+
+        This does not certify a full pass or release the uncertain speed cap.
+        It only avoids steering toward a visibly blocked opposite side while
+        additional obstacle rows come into view.
+        """
+        track = self._temporal_track
+        side = assessment.selected_side
+        if track is None or track.observations < 2 or side not in (-1, 1):
+            return None
+        own_width = assessment.left_width_px if side < 0 else assessment.right_width_px
+        other_width = assessment.right_width_px if side < 0 else assessment.left_width_px
+        own_shift = (
+            assessment.left_shift_per_row if side < 0
+            else assessment.right_shift_per_row
+        )
+        other_shift = (
+            assessment.right_shift_per_row if side < 0
+            else assessment.left_shift_per_row
+        )
+        if (
+            own_width is None or other_width is None
+            or own_shift is None or other_shift is None
+            or own_width < 3.0 or own_shift > self.MAX_SHIFT_PER_ROW
+            or not (other_width < self.MIN_FREE_WIDTH
+                    or other_shift > self.MAX_SHIFT_PER_ROW)
+            or len(assessment.road_rows) != 3
+        ):
+            return None
+        near_y = bbox[3] + 2.0
+        if near_y >= self.CAR_ROW:
+            return None
+        if side < 0:
+            road_bound = max(
+                self._corridor_edges[row][0] + self.ROAD_EDGE_MARGIN
+                for row in assessment.road_rows
+            )
+            obstacle_bound = bbox[0] - self.OBSTACLE_EDGE_MARGIN
+        else:
+            road_bound = min(
+                self._corridor_edges[row][1] - self.ROAD_EDGE_MARGIN
+                for row in assessment.road_rows
+            )
+            obstacle_bound = bbox[2] + self.OBSTACLE_EDGE_MARGIN
+        target = 0.5 * (road_bound + obstacle_bound)
+        if abs(target - self.IMAGE_CENTER) > self.MAX_SHIFT_PER_ROW * (self.CAR_ROW - near_y):
+            return None
+        visible_approach = [
+            row for row in range(math.ceil(near_y), 59)
+            if row in self._corridor_edges
+        ]
+        required_near_rows = range(max(math.ceil(near_y), 53), 59)
+        if (
+            len(required_near_rows) < 2
+            or any(row not in self._corridor_edges for row in required_near_rows)
+        ):
+            return None
+        for row in range(max(22, bbox[1] - 2), min(58, math.ceil(near_y)) + 1):
+            span = self._corridor_edges.get(row)
+            if span is not None and not (
+                span[0] + self.ROAD_EDGE_MARGIN
+                <= target <= span[1] - self.ROAD_EDGE_MARGIN
+            ):
+                return None
+        for row in visible_approach:
+            x = self._corridor_approach_x(row, target, near_y)
+            left, right = self._corridor_edges[row]
+            if (
+                x < left + self.ROAD_EDGE_MARGIN
+                or x > right - self.ROAD_EDGE_MARGIN
+            ):
+                return None
+        return target
 
     def _adjust_target_speed_for_steering(
         self, *, target_speed: float, steering: float, straight: bool,
