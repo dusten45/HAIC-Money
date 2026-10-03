@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "name": "no-corridor-speed-cap-dev-v1",
+  "status": "DEVELOPMENT_ONLY",
+  "source_protocol": "camera-policy-generalization-v1",
+  "source_phase": "screen",
+  "source_status": "REJECTED_SCREEN",
+  "frozen_candidate_class": "_ImpactAwareSparseRoadController",
+  "frozen_candidate_source_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+  "diagnostic": {
+    "cell": {
+      "track_id": 2,
+      "geometry_seed": 2996001888
+    },
+    "replay_driver": ".haic-artifacts/shared-finish-pace/replay_pace.py",
+    "replay_driver_sha256": "207b7475af8c4833d91764ff91f087184893feeb65a0384cad8185d94317aa64",
+    "exact_replays": [
+      {
+        "arm": "control",
+        "steps": 309,
+        "lap_time_ms": 24680,
+        "contacts": 1,
+        "action_trace_sha256": "0daaf439ee981eb3fa4fa88d0d50a01179c1854904665ede8024726b2bc471a0",
+        "artifact": ".haic-artifacts/shared-finish-pace/track-2-seed-2996001888/control.json",
+        "artifact_sha256": "232b50301d4df4d97c0655332e7291f0c875baf7ed6b0511e85d6988bc40c1aa",
+        "receipt_sha256": "30e477aad627f751894bf05afd5c561ff39b9cf8daa44ff064fc6b9e8d61910e"
+      },
+      {
+        "arm": "candidate",
+        "steps": 363,
+        "lap_time_ms": 28960,
+        "contacts": 0,
+        "action_trace_sha256": "1e2a291af16835b970597be17fab305bd2635b2bc029ecf9952a80722b0959a8",
+        "artifact": ".haic-artifacts/shared-finish-pace/track-2-seed-2996001888/candidate.json",
+        "artifact_sha256": "68e5baa133c54f41d61a0ec445f536cb525c17a20d8790b27ac0f73f23060077",
+        "receipt_sha256": "35cf475bd88324f233c74604496d6b965e116570c1404d9617862b1dbe8ddf9a"
+      }
+    ],
+    "time_loss": "Candidate took 54 extra decisions (28,960 vs 24,680 ms). Progress deciles 0.4-0.5, 0.7-0.8 and 0.8-0.9 contributed 15, 11 and 18 extra decisions. These were obstacle encounters where no full corridor was certified and the temporal controller braked or crawled; candidate world speed fell near 14 and 6. Simulator world speed and progress were used only in diagnosis, not inference."
+  },
+  "single_constant_probes": [
+    {
+      "no_corridor_target_speed": 24,
+      "source": ".haic-artifacts/shared-finish-pace/candidate_speed24.py",
+      "source_sha256": "ea72acf2ba5a77df0f6002d9493c55383b83a7cd96dae7c57ef3c3dafeff8b37",
+      "source_change": "NO_CORRIDOR_TARGET_SPEED = 18.0 -> 24.0 only",
+      "cells": [
+        {
+          "track_id": 2,
+          "geometry_seed": 2996001888,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 28960,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 26740,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-2-seed-2996001888.json",
+          "artifact_sha256": "3141b036cc0487f9496593ccff609173374ef4bd5d3f82c12177180690baacbb"
+        },
+        {
+          "track_id": 1,
+          "geometry_seed": 1460583390,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.6225806451612903,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 25840,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-1-seed-1460583390.json",
+          "artifact_sha256": "6a2f65eef7aa5606fc5b1d443804a327f645f92a0f40a511791961f44bc641df"
+        },
+        {
+          "track_id": 1,
+          "geometry_seed": 1814481715,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.9545454545454546,
+            "lap_time_ms": null,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 97
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.9545454545454546,
+            "lap_time_ms": null,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 99
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-1-seed-1814481715.json",
+          "artifact_sha256": "646e7e1d18fe70d4c7394912d91e3744ebb9a6465124a336f3d09d001ca294ad"
+        },
+        {
+          "track_id": 2,
+          "geometry_seed": 1460583390,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.5096774193548387,
+            "lap_time_ms": null,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.5096774193548387,
+            "lap_time_ms": null,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-2-seed-1460583390.json",
+          "artifact_sha256": "9a2c7f1f8fae0e5084ef7d6397d66f5e40586f817064c02862c967c8f7e7e860"
+        },
+        {
+          "track_id": 2,
+          "geometry_seed": 2570310388,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.46236559139784944,
+            "lap_time_ms": null,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.46236559139784944,
+            "lap_time_ms": null,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-2-seed-2570310388.json",
+          "artifact_sha256": "e1799581f3bdf89afa077f8ea8081561fa9b7d1909420321ce6b8b59798ef8ff"
+        },
+        {
+          "track_id": 4,
+          "geometry_seed": 1402259577,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.13636363636363635,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.13636363636363635,
+            "lap_time_ms": null,
+            "contacts": 4,
+            "damage": 0.8,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-4-seed-1402259577.json",
+          "artifact_sha256": "fd26cf16a0b5ba7299f8481eb21f37b7439bc432af1287b5171828bb2d1a6898"
+        },
+        {
+          "track_id": 1,
+          "geometry_seed": 2570310388,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 24380,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 23500,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-1-seed-2570310388.json",
+          "artifact_sha256": "491b7281a8114d396ef636f1a0847201301c6b3a7d3300869cfcf04cbb36afd7"
+        },
+        {
+          "track_id": 3,
+          "geometry_seed": 1814481715,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 30460,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 29820,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-3-seed-1814481715.json",
+          "artifact_sha256": "37c65fd7188cabb219033eeece0e32f50b2fbb64bfbf02bfc99d0b83a7ffe1bd"
+        },
+        {
+          "track_id": 1,
+          "geometry_seed": 2996001888,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 26140,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 24540,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-1-seed-2996001888.json",
+          "artifact_sha256": "2a6b8857eeed9ca22bffdf2e721eefa4a13f93871f33534cc6d5afe9cabafd7f"
+        },
+        {
+          "track_id": 2,
+          "geometry_seed": 3438591851,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 24240,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 23380,
+            "contacts": 1,
+            "damage": 0.2,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed24-track-2-seed-3438591851.json",
+          "artifact_sha256": "b084618f0e9c27edae799e55f840f3682b6c74e3754262f95a0a6b675af34832"
+        }
+      ]
+    },
+    {
+      "no_corridor_target_speed": 22,
+      "source": ".haic-artifacts/shared-finish-pace/candidate_speed22.py",
+      "source_sha256": "6f3b0ecd5e404887fa4b8e338f22116528191a62a45910db33a752223e275b38",
+      "source_change": "NO_CORRIDOR_TARGET_SPEED = 18.0 -> 22.0 only",
+      "cells": [
+        {
+          "track_id": 2,
+          "geometry_seed": 2996001888,
+          "frozen_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 28960,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": true,
+            "progress": 1.0,
+            "lap_time_ms": 27240,
+            "contacts": 0,
+            "damage": 0.0,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed22-track-2-seed-2996001888.json",
+          "artifact_sha256": "7f22283535f6e88f993cf325e6263d57e841153ed50c62241be10d958d1ef67e"
+        },
+        {
+          "track_id": 1,
+          "geometry_seed": 1460583390,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.6225806451612903,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.6225806451612903,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed22-track-1-seed-1460583390.json",
+          "artifact_sha256": "3493bfdc0714f38d0f0828f5b2fd50f8a28207253bbc4c4d9a59621b9c9afda6"
+        },
+        {
+          "track_id": 4,
+          "geometry_seed": 1402259577,
+          "frozen_candidate": {
+            "finished": false,
+            "progress": 0.13636363636363635,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "modified_candidate": {
+            "finished": false,
+            "progress": 0.13636363636363635,
+            "lap_time_ms": null,
+            "contacts": 3,
+            "damage": 0.6000000000000001,
+            "offtrack_samples": 0
+          },
+          "artifact": ".haic-artifacts/shared-finish-pace/speed22-track-4-seed-1402259577.json",
+          "artifact_sha256": "60173dfc0093eb1ec0298e51dcbfd49a1ce747d684ac10301c470c30560c25f9"
+        }
+      ]
+    }
+  ],
+  "interpretation": "Cap 24 changed the pace-veto cell from 28,960 to 26,740 ms with zero contacts (control 24,680 ms), recovered one of the five lost control finishes, and retained the sampled gained/shared finishes. Four lost control finishes remained; track 4/1402259577 gained one contact and 0.2 damage. Cap 22 fixed the pace ratio but did not recover the track 1/1460583390 finish. Neither variant is a promoted controller.",
+  "limits": "All geometry cells were already consumed by the rejected v1 screen. Only ten cap-24 and three cap-22 cells were probed, so unobserved regressions remain possible. No confirmation or blind cell was opened. The active Agent route, tracked source, frozen protocol and thresholds were unchanged. Local Windows simulator evidence does not certify any-track reliability or the Linux submission container."
+}
