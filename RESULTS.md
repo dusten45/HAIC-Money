@@ -35,6 +35,14 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Temporal side consumed triage](experiments/feasible-corridor-dev-v4-result.json):
+  hard triage gate ALLOW_FULL_CONSUMED_DEVELOPMENT, but paired comparison
+  REJECT on the same ten consumed cells. Finishes3->9, mean
+  progress0.732->0.975, contacts23->7; track2/4089604952 contacts2->4
+  and 2/644062 plus1/17 joint finish times exceed5% delay. All20
+  receipts and summary match their frozen source-bound run. Full55 was
+  left unopened because these observed vetoes already reject this
+  candidate; fresh partitions and active route remain unchanged.
 - [Observed-road side-veto consumed triage](experiments/feasible-corridor-dev-v3-result.json):
   TRIAGE_BLOCK_FULL on the same ten consumed cells. Finishes3->7, mean
   progress0.732->0.889 and contacts23->13, but track1/1190129265 both-DNF

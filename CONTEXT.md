@@ -4,22 +4,25 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1,
-no-corridor speed-cap v2, and observed-road/side-veto v3 all failed their
-preregistered consumed-cell safety gates; none may expand to the full55 or any
-fresh partition. On the fixed ten-cell triage, v3 improved finishes3->7,
-progress0.732->0.889, contacts23->13, but reduced both-DNF progress on
-track1/1190129265 and added a crash DNF on track2/4089604952. It also took
-over5% longer on three shared finishes and added one contact on
-track3/2951861974. All20 rows (18 cold, two verified reused controls) and
-frozen hashes passed audit. Record: `experiments/feasible-corridor-dev-v3-result.json`.
+`_CompoundClearingBrakeCarryController`. Diagnostic feasible-corridor v1-v3
+failed consumed-cell safety gates. Temporal side v4 passed the fixed ten-cell
+hard gate but its paired comparison **REJECTED** it: finishes3->9,
+progress0.732->0.975, contacts23->7, yet track2/4089604952 contacts rose2->4
+and shared finishes on2/644062 and1/17 exceeded the5% time limit. All20 rows
+(18 cold, two verified reused controls) and frozen hashes passed audit.
+Full55 was not opened because these known paired regressions already disqualify
+the candidate; no fresh partition has run. Record:
+`experiments/feasible-corridor-dev-v4-result.json`. The active route stays
+unchanged. V3 improved finishes3->7 but reduced both-DNF progress on
+track1/1190129265 and crashed on track2/4089604952; its record remains
+`experiments/feasible-corridor-dev-v3-result.json`.
 Exact v3 replays locate a frame-local side switch to a narrower path before
 the track1/1190129265 obstacle contact and on-road stall; on track2/4089604952
 the three-adjacent-road-row veto cannot act because those rows are missing, so
 side requests flip before five contacts. V3's higher fallback cap first changes
 the track1/119 trajectory earlier, so neither the cap nor switching effect is
-isolated causally. These traces justify a separately frozen temporal-switch
-diagnostic, not activation.
+isolated causally. These traces motivated the v4 temporal-switch diagnostic;
+v4 recovered track1/1190129265 but did not satisfy paired safety and speed.
 V2 had improved finishes3->8 and contacts23->7, but lost track1/17's baseline
 finish and also crashed on track2/4089604952. Its record remains
 `experiments/feasible-corridor-dev-v2-result.json`.
