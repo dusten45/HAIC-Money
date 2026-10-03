@@ -3314,6 +3314,30 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
         return float(desired)
 
 
+class _FeasibleCorridorFallbackSpeedController(_FeasibleCorridorObstacleController):
+    """Brake for a visible obstacle when no camera-verified pass is available."""
+
+    NO_CORRIDOR_TARGET_SPEED = 18.0
+
+    def _adjust_target_speed_for_steering(
+        self,
+        *,
+        target_speed: float,
+        steering: float,
+        straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed_for_steering(
+            target_speed=target_speed,
+            steering=steering,
+            straight=straight,
+            obstacle=obstacle,
+        )
+        if obstacle is None or self._corridor_plan is not None:
+            return inherited
+        return min(inherited, self.NO_CORRIDOR_TARGET_SPEED)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
