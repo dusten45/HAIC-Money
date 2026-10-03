@@ -1156,6 +1156,17 @@ class _StableCompletionController:
         del straight
         return urgency
 
+    def _allow_obstacle_side_switch(
+        self,
+        *,
+        obstacle_y: float,
+        obstacle_x: float,
+        candidate_side: float,
+    ) -> bool:
+        """Extension point whose default preserves the existing side latch."""
+        del obstacle_x, candidate_side
+        return obstacle_y < self.SIDE_SWITCH_ROW
+
     def _adjust_road_steering(
         self,
         *,
@@ -1253,7 +1264,11 @@ class _StableCompletionController:
             candidate_side = 1.0 if side_offset < 0.0 else -1.0
             if self._obstacle_side == 0.0:
                 self._obstacle_side = candidate_side
-            elif obstacle_y < self.SIDE_SWITCH_ROW:
+            elif self._allow_obstacle_side_switch(
+                obstacle_y=obstacle_y,
+                obstacle_x=obstacle_x,
+                candidate_side=candidate_side,
+            ):
                 self._obstacle_side = candidate_side
             self._last_obstacle_side_offset = side_offset
             urgency = float(np.clip((obstacle_y - 22.0) / 18.0, 0.0, 1.0))
@@ -2925,6 +2940,27 @@ class _ObservedMarginArbitrationController(_ObservedCenterlineArbitrationControl
             base_steering=base_steering,
             obstacle_bias=obstacle_bias,
             straight=straight,
+        )
+
+
+class _ObservedEgoSideSwitchController(_ObservedMarginArbitrationController):
+    """Reconsider a nearby pass only when the obstacle is across the ego."""
+
+    EARLY_SIDE_SWITCH_ROW = 38.0
+    LATE_SIDE_SWITCH_ROW = 52.0
+
+    def _allow_obstacle_side_switch(
+        self,
+        *,
+        obstacle_y: float,
+        obstacle_x: float,
+        candidate_side: float,
+    ) -> bool:
+        if obstacle_y < self.EARLY_SIDE_SWITCH_ROW:
+            return True
+        return bool(
+            obstacle_y < self.LATE_SIDE_SWITCH_ROW
+            and candidate_side * (self.IMAGE_CENTER - obstacle_x) > 0.0
         )
 
 
