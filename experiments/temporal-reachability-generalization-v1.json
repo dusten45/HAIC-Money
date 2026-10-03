@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "name": "temporal-reachability-generalization-v1",
+  "status": "DRAFT_UNFROZEN",
+  "hypothesis": "A temporal obstacle track and reachable passing corridor increase completed laps across unseen official-generator geometries while avoiding new crashes and aggregate contact or damage increases against the current active bare Agent route.",
+  "evidence_scope": "Fresh paired local official-generator evaluation. The ten reused feasible-corridor diagnostic cells may be used for debugging only; none counts toward screening, confirmation, blind, or promotion.",
+  "control_agent_sha256": "PENDING_SOURCE_SHA256",
+  "candidate_agent_sha256": "PENDING_SOURCE_SHA256",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
+  "controller_classes": {
+    "control": "_CompoundClearingBrakeCarryController",
+    "candidate": "PENDING_CONTROLLER_CLASS"
+  },
+  "source_snapshots": {
+    "control": ".haic-artifacts/temporal-reachability-generalization-v1/snapshots/control_agent.py",
+    "candidate": ".haic-artifacts/temporal-reachability-generalization-v1/snapshots/candidate_agent.py"
+  },
+  "source_construction": {
+    "implementation_commit": "PENDING_IMPLEMENTATION_COMMIT",
+    "agent_blob_sha256": "PENDING_AGENT_BLOB_SHA256",
+    "selector_from": "_CompoundClearingBrakeCarryController()",
+    "selector_to": "PENDING_CONTROLLER_CLASS()",
+    "rule": "Copy the normalized committed Git blob of agent.py to the control snapshot. Replace exactly one selector_from byte sequence with selector_to for the candidate snapshot; no other source byte may differ. Pin the commit, blob, both snapshot hashes, model and runtime helpers before any fresh episode. The live Agent selector remains the control route until promotion."
+  },
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "training": false,
+  "partitions": {
+    "screen": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [4294299109, 4050450514, 3724539067, 971704242, 3360870555, 2973604766, 2503363267, 2760412085],
+      "spot_check_cells": [[1, 4294299109], [4, 2760412085]]
+    },
+    "confirmation": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [312899890, 1454185430, 3464932906, 2165847300, 3658819113, 1551255938, 2217050085, 2669947819, 586990439, 2692268823, 787781542, 2677468645, 4220505367, 3024862695, 148760406, 482539761],
+      "spot_check_cells": [[1, 312899890], [2, 1454185430], [3, 3464932906], [4, 2165847300]]
+    },
+    "blind": {
+      "track_ids": [1, 2, 3, 4],
+      "seeds": [2114952812, 565084565, 1901345386, 1416690588, 1503761287, 3885464072, 1496838850, 338932580],
+      "spot_check_cells": [[1, 2114952812], [4, 338932580]]
+    }
+  },
+  "seed_derivation": "For each partition and zero-based index i, use the first four SHA256 bytes of UTF-8 'temporal-reachability-generalization-v1:<partition>:<i>' as an unsigned big-endian 32-bit integer. All 32 geometry seeds are distinct and absent from the conservative historical seed set in experiments/*.json before this draft was written. Reserve a seed across every track ID.",
+  "evaluation_budget": "Screen 8, confirmation 16, blind 8 independent geometry seeds, each crossed with track IDs 1-4: 32/64/32 canonical paired cells and 256 cold-process canonical episodes. Two/four/two repeated cells across both arms add 16 cold deterministic-reload episodes, 272 maximum. Repeats never increase the independent geometry count.",
+  "decision_thresholds": {
+    "maximum_both_dnf_progress_loss": 0.05,
+    "maximum_aggregate_shared_finish_time_ratio": 1.05,
+    "maximum_single_shared_finish_time_ratio": 1.10,
+    "maximum_aggregate_contact_increase": 0,
+    "maximum_aggregate_damage_increase": 0.0
+  },
+  "decision_rule": "At each partition, require every canonical pair and every repeat with matching deterministic reload, no lost control finish, no new candidate crash, no both-DNF progress loss over 0.05, total candidate contacts and damage no greater than control, total time on shared completed laps no more than 5 percent slower, and each shared completed lap no more than 10 percent slower. An operational, source, environment, runtime or receipt failure rejects. With safety gates satisfied, rank by more finishes; tied finishes by mean progress improvement over 1e-9; tied finishes and progress by lower total time on shared completed laps. Report every pair and all regressions. Screen RETAIN and a sealed finalist are required before confirmation; confirmation RETAIN and an accepted seal are required before blind. The source remains fixed after screening and blind may not select a replacement candidate.",
+  "promotion_gate": "Only blind RETAIN after screen and confirmation RETAIN supports activating this frozen candidate. Even a passing blind is finite-sample local-generator evidence and does not certify every possible track or the official Linux CPU container.",
+  "metrics": ["finished", "progress", "lap_time_ms", "retire_reason", "collision_count", "damage", "offtrack_samples", "partial_offtrack_samples", "initialization_ms", "reset_ms", "action_latency_max_ms", "peak_worker_rss_mib", "action_trace_sha256", "error"],
+  "limits": "The four track IDs share a seed's geometry and vary obstacles. Independent geometry counts are 8/16/8, not 32/64/32. Earlier confirmation/blind reservations remain sealed and are never recycled. This draft cannot run until the candidate source, route class, and hashes are frozen."
+}
