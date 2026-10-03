@@ -2978,7 +2978,10 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
     OBSTACLE_EDGE_MARGIN = 3.3
     MIN_FREE_WIDTH = 0.75
     MAX_SHIFT_PER_ROW = 0.4
-    CORRIDOR_GAIN = 0.045
+    CORRIDOR_POSITION_GAIN = 0.016
+    CORRIDOR_HEADING_GAIN = 0.012
+    MIN_SWITCH_CLEARANCE_GAIN = 2.0
+    SWITCH_APPROACH_RESERVE_ROWS = 4.0
 
     def __init__(self, *, cruise_speed: float = 68.0) -> None:
         super().__init__(cruise_speed=cruise_speed)
@@ -3144,13 +3147,28 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
             )
         return obstacle
 
+    @classmethod
+    def _corridor_approach_x(
+        cls, row: float, target: float, near_y: float,
+    ) -> float:
+        """Return the checked straight segment from ego to the pass target."""
+        return cls.IMAGE_CENTER + (
+            (target - cls.IMAGE_CENTER)
+            * (cls.CAR_ROW - row) / (cls.CAR_ROW - near_y)
+        )
+
     def _corridor_candidate(self, side: float):
         bbox = self._corridor_bbox
         obstacle = self._corridor_detection
         edges = self._corridor_edges
         if bbox is None or obstacle is None:
             return None
-        near_y = min(58, bbox[3] + 2)
+        # The checked road path ends at row 58. Do not clip the obstacle's
+        # near extent into that range: doing so would leave its closest rows
+        # unverified while still accepting the pass.
+        if bbox[3] + 2 > 58:
+            return None
+        near_y = bbox[3] + 2
         hold_y = max(22, bbox[1] - 2)
         far_y = max(22, bbox[1] - 10)
         if near_y >= self.CAR_ROW:
@@ -3173,15 +3191,13 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
         ):
             return None
         far_center = self._center_at(float(far_y), self._corridor_centers)
+        clearance = float("inf")
         for row in range(22, 59):
             span = edges.get(row)
             if span is None:
                 return None
             if row > near_y:
-                x = self.IMAGE_CENTER + (
-                    (target - self.IMAGE_CENTER)
-                    * (self.CAR_ROW - row) / (self.CAR_ROW - near_y)
-                )
+                x = self._corridor_approach_x(row, target, near_y)
             elif row >= hold_y:
                 x = target
             elif row >= far_y:
@@ -3190,18 +3206,23 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
                 )
             else:
                 x = self._center_at(float(row), self._corridor_centers)
-            if not (
-                span[0] + self.ROAD_EDGE_MARGIN <= x
-                <= span[1] - self.ROAD_EDGE_MARGIN
-            ):
+            road_clearance = min(
+                x - (span[0] + self.ROAD_EDGE_MARGIN),
+                (span[1] - self.ROAD_EDGE_MARGIN) - x,
+            )
+            if road_clearance < 0.0:
                 return None
-            if bbox[1] - 2 <= row <= bbox[3] + 2 and (
-                bbox[0] - self.OBSTACLE_EDGE_MARGIN
-                < x < bbox[2] + self.OBSTACLE_EDGE_MARGIN
-            ):
-                return None
-        clearance = min(target - free_left, free_right - target)
-        return target, clearance
+            clearance = min(clearance, road_clearance)
+            if bbox[1] - 2 <= row <= bbox[3] + 2:
+                obstacle_clearance = (
+                    bbox[0] - self.OBSTACLE_EDGE_MARGIN - x
+                    if side < 0.0
+                    else x - bbox[2] - self.OBSTACLE_EDGE_MARGIN
+                )
+                if obstacle_clearance < 0.0:
+                    return None
+                clearance = min(clearance, obstacle_clearance)
+        return target, clearance, near_y
 
     def _adjust_obstacle_steering(
         self, *, base_steering: float, obstacle_bias: float, straight: bool,
@@ -3223,12 +3244,9 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
             candidate = self._corridor_candidate(side)
             if candidate is None:
                 continue
-            target, clearance = candidate
-            score = (
-                clearance - 0.08 * abs(target - self.IMAGE_CENTER)
-                + (1.0 if side == previous_side else 0.0)
-            )
-            choices.append((score, side, target, clearance))
+            target, clearance, near_y = candidate
+            score = clearance - 0.08 * abs(target - self.IMAGE_CENTER)
+            choices.append((score, side, target, clearance, near_y))
         if not choices:
             self._corridor_previous = None
             return super()._adjust_obstacle_steering(
@@ -3236,20 +3254,60 @@ class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController)
                 obstacle_bias=obstacle_bias,
                 straight=straight,
             )
-        _score, side, target, clearance = max(choices)
-        y, x, road_center = self._corridor_detection
+        chosen = max(choices)
+        previous_choice = next(
+            (choice for choice in choices if choice[1] == previous_side), None
+        )
+        if previous_choice is not None:
+            alternate = next(
+                (choice for choice in choices if choice[1] != previous_side), None
+            )
+            if alternate is None:
+                chosen = previous_choice
+            else:
+                _alt_score, _alt_side, alt_target, alt_clearance, alt_near_y = alternate
+                approach_rows = (
+                    self.CAR_ROW - alt_near_y
+                    - self.SWITCH_APPROACH_RESERVE_ROWS
+                )
+                materially_safer = (
+                    alt_clearance - previous_choice[3]
+                    >= self.MIN_SWITCH_CLEARANCE_GAIN
+                )
+                enough_approach = (
+                    approach_rows > 0.0
+                    and abs(alt_target - self.IMAGE_CENTER)
+                    <= self.MAX_SHIFT_PER_ROW * approach_rows
+                )
+                chosen = (
+                    alternate if materially_safer and enough_approach
+                    else previous_choice
+                )
+        _score, side, target, clearance, near_y = chosen
+        y, x, _road_center = self._corridor_detection
         self._obstacle_side = side
         self._corridor_previous = (x, y, side)
+        control_y = max(42, near_y)
+        near_control_y = min(60, max(54, control_y + 4))
+        control_x = self._corridor_approach_x(control_y, target, near_y)
+        near_control_x = self._corridor_approach_x(
+            near_control_y, target, near_y
+        )
         self._corridor_plan = {
             "side": side,
             "target_x": target,
             "clearance_px": clearance,
             "bbox": self._corridor_bbox,
             "edges": dict(self._corridor_edges),
+            "control_waypoints": (
+                (near_control_y, near_control_x),
+                (control_y, control_x),
+            ),
         }
         urgency = min(1.0, max(0.5, abs(obstacle_bias) / 0.24))
-        desired = base_steering + self.CORRIDOR_GAIN * (
-            target - road_center
+        desired = (
+            self.CORRIDOR_POSITION_GAIN * (control_x - self.IMAGE_CENTER)
+            + self.CORRIDOR_HEADING_GAIN * (control_x - near_control_x)
         ) * urgency
         if self._preview_transition_pending and desired * self._last_steer < 0.0:
             self._last_steer = 0.0
