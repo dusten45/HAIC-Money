@@ -40,6 +40,9 @@ CLASSES = {"baseline": "_CompoundClearingBrakeCarryController",
 CANDIDATE_CLASSES = frozenset({
     "_TemporalCorridorMarginController", "_TemporalFullSteerController",
     "_TemporalCombinedCorridorController", "_TemporalEncounterController",
+    "_CurvedCorridorDiagnosticController",
+    "_SharpCurvePreviewDiagnostic",
+    "_GuardedSharpCurvePreviewDiagnostic",
 })
 
 
@@ -142,7 +145,7 @@ def build_identity(candidate: Path, candidate_class: str,
                    cells: list[tuple[int, int]]) -> dict:
     protocol, _, freeze, _ = _historical_records()
     if candidate_class not in CANDIDATE_CLASSES:
-        raise ValueError("candidate class must name one of the four v7 controllers")
+        raise ValueError("candidate class must name a registered diagnostic controller")
     candidate = validate_candidate_path(candidate)
     base = fresh.build_identity(V6_PROTOCOL, protocol, V6_CONTROL, V6_CANDIDATE, MODEL)
     for key in ("protocol_sha256", "source_sha256", "model_sha256", "harness_sha256",
