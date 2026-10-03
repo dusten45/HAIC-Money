@@ -3439,6 +3439,72 @@ class _FeasibleCorridorSideVetoPaceController(_FeasibleCorridorRoadDropoutContro
         return inherited and not blocked_switch
 
 
+class _FeasibleCorridorTemporalSideController(_FeasibleCorridorRoadDropoutController):
+    """Ignore a near-center side flip for the same unplanned obstacle."""
+
+    CENTERLINE_SWITCH_DEADBAND = 1.0
+    TRACKED_OBSTACLE_MAX_DX = 8.0
+    TRACKED_OBSTACLE_MIN_DY = -3.0
+    TRACKED_OBSTACLE_MAX_DY = 12.0
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._temporal_obstacle = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._temporal_obstacle = None
+
+    def act(self, observation) -> np.ndarray:
+        action = super().act(observation)
+        self._temporal_obstacle = None
+        if self.road_visible and self._corridor_detection is not None:
+            y, x, road_center = self._corridor_detection
+            self._temporal_obstacle = (x, y, x - road_center)
+        return action
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._temporal_obstacle = None
+        return super()._lost_road_action()
+
+    def _allow_obstacle_side_switch(
+        self,
+        *,
+        obstacle_y: float,
+        obstacle_x: float,
+        candidate_side: float,
+    ) -> bool:
+        inherited = super()._allow_obstacle_side_switch(
+            obstacle_y=obstacle_y,
+            obstacle_x=obstacle_x,
+            candidate_side=candidate_side,
+        )
+        previous = self._temporal_obstacle
+        current = self._corridor_detection
+        if (
+            not inherited
+            or candidate_side == self._obstacle_side
+            or previous is None
+            or current is None
+            or self._corridor_candidate(-1.0) is not None
+            or self._corridor_candidate(1.0) is not None
+        ):
+            return inherited
+        previous_x, previous_y, previous_offset = previous
+        current_y, current_x, road_center = current
+        current_offset = current_x - road_center
+        same_obstacle = (
+            abs(current_x - previous_x) <= self.TRACKED_OBSTACLE_MAX_DX
+            and previous_y + self.TRACKED_OBSTACLE_MIN_DY <= current_y
+            <= previous_y + self.TRACKED_OBSTACLE_MAX_DY
+        )
+        near_center_sign_flip = (
+            abs(current_offset) <= self.CENTERLINE_SWITCH_DEADBAND
+            and previous_offset * current_offset < 0.0
+        )
+        return inherited and not (same_obstacle and near_center_sign_flip)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
