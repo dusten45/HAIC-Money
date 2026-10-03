@@ -2964,6 +2964,298 @@ class _ObservedEgoSideSwitchController(_ObservedMarginArbitrationController):
         )
 
 
+class _FeasibleCorridorObstacleController(_CompoundClearingBrakeCarryController):
+    """Diagnostic-only obstacle pass constrained by camera-visible free space.
+
+    The existing Agent route does not select this class. Clear-road decisions
+    follow the parent exactly. An uncertain obstacle or road edge also falls
+    back to the parent's steering; only a fully checked passage replaces the
+    sign-of-centroid obstacle bias.
+    """
+
+    CAR_ROW = 63.0
+    ROAD_EDGE_MARGIN = 2.63
+    OBSTACLE_EDGE_MARGIN = 3.3
+    MIN_FREE_WIDTH = 0.75
+    MAX_SHIFT_PER_ROW = 0.4
+    CORRIDOR_GAIN = 0.045
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._corridor_bbox = None
+        self._corridor_edges = {}
+        self._corridor_centers = {}
+        self._corridor_detection = None
+        self._corridor_previous = None
+        self._corridor_misses = 0
+        self._corridor_plan = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._corridor_bbox = None
+        self._corridor_edges = {}
+        self._corridor_centers = {}
+        self._corridor_detection = None
+        self._corridor_previous = None
+        self._corridor_misses = 0
+        self._corridor_plan = None
+
+    def act(self, observation) -> np.ndarray:
+        self._corridor_plan = None
+        self._corridor_detection = None
+        self._corridor_bbox = None
+        self._corridor_edges = {}
+        self._corridor_centers = {}
+        return super().act(observation)
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._corridor_previous = None
+        self._corridor_misses = 0
+        return super()._lost_road_action()
+
+    @classmethod
+    def _component_bbox(
+        cls, frame: np.ndarray, x: float, y: float,
+    ) -> tuple[int, int, int, int] | None:
+        """Recover the component bounds omitted from the legacy detector."""
+        bright = frame >= cls.OBSTACLE_LOW
+        cx, cy = int(round(x)), int(round(y))
+        seeds = [
+            (px, py)
+            for py in range(max(22, cy - 3), min(62, cy + 4))
+            for px in range(max(0, cx - 3), min(84, cx + 4))
+            if bright[py, px]
+        ]
+        if not seeds:
+            return None
+        seed = min(seeds, key=lambda point: (point[0] - x) ** 2 + (point[1] - y) ** 2)
+        visited = {seed}
+        stack = [seed]
+        pixels = []
+        while stack:
+            px, py = stack.pop()
+            pixels.append((px, py))
+            if len(pixels) > 80:
+                return None
+            for ny in range(max(22, py - 1), min(62, py + 2)):
+                for nx in range(max(0, px - 1), min(84, px + 2)):
+                    point = (nx, ny)
+                    if bright[ny, nx] and point not in visited:
+                        visited.add(point)
+                        stack.append(point)
+        xs, ys = zip(*pixels)
+        bbox = min(xs), min(ys), max(xs), max(ys)
+        if (
+            not 4 <= len(pixels) <= 80
+            or not 2 <= bbox[2] - bbox[0] + 1 <= 9
+            or not 2 <= bbox[3] - bbox[1] + 1 <= 10
+            or abs(float(np.mean(xs)) - x) > 1.5
+            or abs(float(np.mean(ys)) - y) > 1.5
+        ):
+            return None
+        return bbox
+
+    @classmethod
+    def _visible_edges(
+        cls,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        bbox: tuple[int, int, int, int],
+    ) -> dict[int, tuple[float, float]]:
+        asphalt = (frame >= cls.ROAD_LOW) & (frame <= cls.ROAD_HIGH)
+        edges = {}
+        obscured = {}
+        for row in range(22, 59):
+            center = cls._center_at(float(row), centers)
+            lo = max(0, int(np.floor(center - 18.0)))
+            hi = min(83, int(np.ceil(center + 18.0)))
+            xs = np.flatnonzero(asphalt[row, lo : hi + 1]) + lo
+            if len(xs) < 6 or xs[0] <= lo or xs[-1] >= hi:
+                continue
+            gaps = np.flatnonzero(np.diff(xs) > 1)
+            if any(
+                not (bbox[1] <= row <= bbox[3]
+                     and xs[index] < bbox[0] <= bbox[2] < xs[index + 1])
+                for index in gaps
+            ):
+                continue
+            span = float(xs[0]), float(xs[-1])
+            if bbox[1] <= row <= bbox[3]:
+                obscured[row] = span
+            else:
+                edges[row] = span
+        clean_edges = dict(edges)
+        for row, visible in obscured.items():
+            below = max((known for known in clean_edges if known < row), default=None)
+            above = min((known for known in clean_edges if known > row), default=None)
+            if below is not None and above is not None and above - below <= 12:
+                weight = (row - below) / (above - below)
+                interpolated = tuple(
+                    (1.0 - weight) * clean_edges[below][side]
+                    + weight * clean_edges[above][side]
+                    for side in (0, 1)
+                )
+                edges[row] = (
+                    max(visible[0], interpolated[0]),
+                    min(visible[1], interpolated[1]),
+                )
+            else:
+                neighbor = below if below is not None else above
+                if neighbor is not None and abs(neighbor - row) <= 4:
+                    edges[row] = (
+                        max(visible[0], clean_edges[neighbor][0]),
+                        min(visible[1], clean_edges[neighbor][1]),
+                    )
+        # A compact obstacle can hide a complete row. Interpolate only when
+        # both nearby rows independently reveal both outer asphalt edges.
+        for row in range(22, 59):
+            if row in edges:
+                continue
+            below = max((known for known in edges if known < row), default=None)
+            above = min((known for known in edges if known > row), default=None)
+            if below is None or above is None or above - below > 8:
+                continue
+            weight = (row - below) / (above - below)
+            edges[row] = tuple(
+                (1.0 - weight) * edges[below][side] + weight * edges[above][side]
+                for side in (0, 1)
+            )
+        return edges
+
+    def _nearest_obstacle(
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
+    ) -> tuple[float, float, float] | None:
+        obstacle = super()._nearest_obstacle(frame, centers, spans)
+        if obstacle is None:
+            self._corridor_misses += 1
+            if self._corridor_misses > self.OBSTACLE_MISS_LIMIT:
+                self._corridor_previous = None
+            return None
+        self._corridor_misses = 0
+        self._corridor_detection = obstacle
+        self._corridor_centers = dict(centers)
+        self._corridor_bbox = self._component_bbox(frame, obstacle[1], obstacle[0])
+        if self._corridor_bbox is not None:
+            self._corridor_edges = self._visible_edges(
+                frame, centers, self._corridor_bbox
+            )
+        return obstacle
+
+    def _corridor_candidate(self, side: float):
+        bbox = self._corridor_bbox
+        obstacle = self._corridor_detection
+        edges = self._corridor_edges
+        if bbox is None or obstacle is None:
+            return None
+        near_y = min(58, bbox[3] + 2)
+        hold_y = max(22, bbox[1] - 2)
+        far_y = max(22, bbox[1] - 10)
+        if near_y >= self.CAR_ROW:
+            return None
+        at_obstacle = edges.get(int(round(obstacle[0])))
+        if at_obstacle is None:
+            return None
+        left, right = at_obstacle
+        if side < 0.0:
+            free_left = left + self.ROAD_EDGE_MARGIN
+            free_right = bbox[0] - self.OBSTACLE_EDGE_MARGIN
+        else:
+            free_left = bbox[2] + self.OBSTACLE_EDGE_MARGIN
+            free_right = right - self.ROAD_EDGE_MARGIN
+        if free_right - free_left < self.MIN_FREE_WIDTH:
+            return None
+        target = 0.5 * (free_left + free_right)
+        if abs(target - self.IMAGE_CENTER) > self.MAX_SHIFT_PER_ROW * (
+            self.CAR_ROW - near_y
+        ):
+            return None
+        far_center = self._center_at(float(far_y), self._corridor_centers)
+        for row in range(22, 59):
+            span = edges.get(row)
+            if span is None:
+                return None
+            if row > near_y:
+                x = self.IMAGE_CENTER + (
+                    (target - self.IMAGE_CENTER)
+                    * (self.CAR_ROW - row) / (self.CAR_ROW - near_y)
+                )
+            elif row >= hold_y:
+                x = target
+            elif row >= far_y:
+                x = target + (far_center - target) * (
+                    (hold_y - row) / max(1, hold_y - far_y)
+                )
+            else:
+                x = self._center_at(float(row), self._corridor_centers)
+            if not (
+                span[0] + self.ROAD_EDGE_MARGIN <= x
+                <= span[1] - self.ROAD_EDGE_MARGIN
+            ):
+                return None
+            if bbox[1] - 2 <= row <= bbox[3] + 2 and (
+                bbox[0] - self.OBSTACLE_EDGE_MARGIN
+                < x < bbox[2] + self.OBSTACLE_EDGE_MARGIN
+            ):
+                return None
+        clearance = min(target - free_left, free_right - target)
+        return target, clearance
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        if self._corridor_bbox is None:
+            return super()._adjust_obstacle_steering(
+                base_steering=base_steering,
+                obstacle_bias=obstacle_bias,
+                straight=straight,
+            )
+        previous_side = None
+        if self._corridor_previous is not None and self._corridor_detection is not None:
+            px, py, previous_side = self._corridor_previous
+            y, x, _road_center = self._corridor_detection
+            if abs(x - px) > 8.0 or not py - 3.0 <= y <= py + 12.0:
+                previous_side = None
+        choices = []
+        for side in (-1.0, 1.0):
+            candidate = self._corridor_candidate(side)
+            if candidate is None:
+                continue
+            target, clearance = candidate
+            score = (
+                clearance - 0.08 * abs(target - self.IMAGE_CENTER)
+                + (1.0 if side == previous_side else 0.0)
+            )
+            choices.append((score, side, target, clearance))
+        if not choices:
+            self._corridor_previous = None
+            return super()._adjust_obstacle_steering(
+                base_steering=base_steering,
+                obstacle_bias=obstacle_bias,
+                straight=straight,
+            )
+        _score, side, target, clearance = max(choices)
+        y, x, road_center = self._corridor_detection
+        self._obstacle_side = side
+        self._corridor_previous = (x, y, side)
+        self._corridor_plan = {
+            "side": side,
+            "target_x": target,
+            "clearance_px": clearance,
+            "bbox": self._corridor_bbox,
+            "edges": dict(self._corridor_edges),
+        }
+        urgency = min(1.0, max(0.5, abs(obstacle_bias) / 0.24))
+        desired = base_steering + self.CORRIDOR_GAIN * (
+            target - road_center
+        ) * urgency
+        if self._preview_transition_pending and desired * self._last_steer < 0.0:
+            self._last_steer = 0.0
+        return float(desired)
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
