@@ -4164,6 +4164,248 @@ class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
         return min(max(gas, self.UNCERTAIN_NEAR_CRAWL_GAS), 0.04), 0.0
 
 
+class _CorridorMarginMixin:
+    """Do not treat subpixel full-path clearance as an established passage."""
+
+    MIN_FULL_PATH_CLEARANCE = 1.0
+
+    def _corridor_candidate(self, side: float):
+        candidate = super()._corridor_candidate(side)
+        if candidate is not None and candidate[1] < self.MIN_FULL_PATH_CLEARANCE:
+            return None
+        return candidate
+
+
+class _FullPlanSteerMixin:
+    """Apply the checked geometric path without a second distance discount."""
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        desired = super()._adjust_obstacle_steering(
+            base_steering=base_steering, obstacle_bias=obstacle_bias,
+            straight=straight,
+        )
+        if self._corridor_plan is None:
+            return desired
+        urgency = min(1.0, max(0.5, abs(obstacle_bias) / 0.24))
+        return desired / urgency
+
+
+class _TemporalCorridorMarginController(
+    _CorridorMarginMixin, _TemporalReachabilityController,
+):
+    """Diagnostic ablation of the full-path pixel-margin gate."""
+
+
+class _TemporalFullSteerController(
+    _FullPlanSteerMixin, _TemporalReachabilityController,
+):
+    """Diagnostic ablation of the first full-path steering command."""
+
+
+class _TemporalCombinedCorridorController(
+    _CorridorMarginMixin, _FullPlanSteerMixin, _TemporalReachabilityController,
+):
+    """Pair the geometric path margin with its undiluted steering command."""
+
+
+class _TemporalEncounterController(_TemporalCombinedCorridorController):
+    """Keep one brake budget across a near obstacle's visibility jitter.
+
+    Inference observes only camera pixels: the HUD speed, object box and road
+    edges. It never receives simulator contact, reward or progress fields.
+    """
+
+    NEAR_ENTER_BOTTOM = 44
+    NEAR_EXIT_BOTTOM = 61
+    NEAR_CAUTION_BOTTOM = 54
+    NEAR_BRAKE_FRAMES = 2
+    OCCLUSION_HOLD_FRAMES = 2
+    OCCLUSION_PASS_BOTTOM = 60
+    OCCLUSION_RELEASE_SPEED = 22.0
+    STALL_SPEED = 2.0
+    STALL_FRAMES = 3
+    ESCAPE_WIDTH = 3.0
+    ESCAPE_GAS = 0.10
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._reset_encounter()
+        self._early_escape_side = 0.0
+
+    def _reset_encounter(self) -> None:
+        self._encounter_last_box = None
+        self._encounter_brake_spent = 0
+        self._encounter_misses = 0
+        self._encounter_slow_frames = 0
+        self._encounter_speed = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._reset_encounter()
+        self._early_escape_side = 0.0
+
+    def act(self, observation) -> np.ndarray:
+        frame = self._frame(observation)
+        self._encounter_speed = (
+            self._estimate_speed(frame) if frame is not None else None
+        )
+        action = super().act(observation)
+        if self._corridor_detection is None and self._obstacle_missing >= 2:
+            self._early_escape_side = 0.0
+        return action
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._reset_encounter()
+        self._early_escape_side = 0.0
+        return super()._lost_road_action()
+
+    def _allow_obstacle_side_switch(
+        self, *, obstacle_y: float, obstacle_x: float, candidate_side: float,
+    ) -> bool:
+        if (
+            self._early_escape_side != 0.0
+            and candidate_side != self._early_escape_side
+            and obstacle_y < self.SIDE_SWITCH_ROW
+            and self._corridor_bbox is not None
+        ):
+            return False
+        return super()._allow_obstacle_side_switch(
+            obstacle_y=obstacle_y, obstacle_x=obstacle_x,
+            candidate_side=candidate_side,
+        )
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        assessment = self._temporal_assessment
+        track = self._temporal_track
+        bbox = self._corridor_bbox
+        side = self._obstacle_side
+        if (
+            self._early_escape_side == 0.0
+            and side in (-1.0, 1.0)
+            and bbox is not None and bbox[3] < 35
+            and assessment is not None and len(assessment.road_rows) == 3
+            and track is not None and track.observations >= 1
+            and self._corridor_candidate(-1.0) is None
+            and self._corridor_candidate(1.0) is None
+        ):
+            current_width = (
+                assessment.left_width_px if side < 0
+                else assessment.right_width_px
+            )
+            alternate_width = (
+                assessment.right_width_px if side < 0
+                else assessment.left_width_px
+            )
+            if (
+                current_width is not None
+                and current_width < self.MIN_FREE_WIDTH
+                and alternate_width is not None
+                and alternate_width >= max(
+                    3.0, self.MIN_FREE_WIDTH + track.uncertainty_px,
+                )
+                and alternate_width - current_width >= 2.0
+            ):
+                # A complete pass is still unverified, so the inherited 18
+                # target remains. Start steering toward the visibly usable
+                # side before the compact object reaches the near camera row.
+                side = -side
+                self._obstacle_side = side
+                self._early_escape_side = side
+                obstacle_bias = side * abs(obstacle_bias)
+        return super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias, straight=straight,
+        )
+
+    def _same_encounter(self, bbox) -> bool:
+        prior = self._encounter_last_box
+        if prior is None:
+            return False
+        return bool(
+            abs(0.5 * (bbox[0] + bbox[2] - prior[0] - prior[2])) <= 8.0
+            and abs(bbox[3] - prior[3]) <= 8.0
+        )
+
+    def _adjust_pedals(
+        self, *, gas: float, brake: float, straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        # Skip v6's 58-pixel reset: an unresolved obstacle can jitter across
+        # that row, causing another full brake pulse after the first contact.
+        gas, brake = _FeasibleCorridorSideWidthController._adjust_pedals(
+            self, gas=gas, brake=brake, straight=straight, obstacle=obstacle,
+        )
+        bbox = self._corridor_bbox
+        assessment = self._temporal_assessment
+        speed = self._encounter_speed
+        uncertain_near = (
+            obstacle is not None and bbox is not None
+            and self.NEAR_ENTER_BOTTOM <= bbox[3] <= self.NEAR_EXIT_BOTTOM
+            and assessment is not None and assessment.brake_required
+        )
+        if uncertain_near:
+            if not self._same_encounter(bbox):
+                self._encounter_brake_spent = 0
+                self._encounter_slow_frames = 0
+            self._encounter_last_box = bbox
+            self._encounter_misses = 0
+            if speed is not None and speed < self.STALL_SPEED:
+                self._encounter_slow_frames += 1
+            else:
+                self._encounter_slow_frames = 0
+            if self._encounter_brake_spent < self.NEAR_BRAKE_FRAMES:
+                self._encounter_brake_spent += 1
+                return 0.0, max(brake, 0.12)
+            selected_width = (
+                assessment.left_width_px if assessment.selected_side < 0
+                else assessment.right_width_px
+            )
+            if (
+                self._encounter_slow_frames >= self.STALL_FRAMES
+                and selected_width is not None
+                and selected_width >= self.ESCAPE_WIDTH
+                and len(assessment.road_rows) == 3
+            ):
+                return max(gas, self.ESCAPE_GAS), 0.0
+            if speed is not None and speed >= 8.0 and bbox[3] >= self.NEAR_CAUTION_BOTTOM:
+                return 0.0, max(brake, 0.04)
+            if brake > 0.0 and gas <= 0.0:
+                return gas, brake
+            return min(max(gas, 0.035), 0.04), 0.0
+
+        if self._encounter_last_box is not None:
+            self._encounter_misses += 1
+            track = self._temporal_track
+            transient_sighting = (
+                track is not None
+                and getattr(track, "observations", 2) <= 1
+                and self._encounter_brake_spent < self.NEAR_BRAKE_FRAMES
+            )
+            passed_near_box = (
+                self._encounter_last_box[3] >= self.OCCLUSION_PASS_BOTTOM
+                and (
+                    transient_sighting
+                    or (speed is not None and speed < self.OCCLUSION_RELEASE_SPEED)
+                )
+            )
+            if (
+                obstacle is None
+                and self._encounter_misses <= self.OCCLUSION_HOLD_FRAMES
+                and self._encounter_last_box[3] >= self.NEAR_CAUTION_BOTTOM
+                and not passed_near_box
+            ):
+                if speed is not None and speed >= 8.0:
+                    return 0.0, max(brake, 0.04)
+                return min(max(gas, 0.035), 0.04), 0.0
+            if self._encounter_misses > self.OCCLUSION_HOLD_FRAMES or obstacle is not None:
+                self._reset_encounter()
+        return gas, brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 

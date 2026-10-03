@@ -13,6 +13,14 @@ deterministic repeat pairs passed hash/replay audit. Confirmation/blind remain
 sealed; the candidate must not be submitted or activated. Full record:
 `experiments/temporal-reachability-generalization-v1-result.json`.
 
+The follow-up `_TemporalEncounterController` is still **diagnostic only** and
+the active route is unchanged. A camera/HUD conditioned obstacle-occlusion
+brake gate now finishes two previously consumed track-1 failures with zero
+contacts; the paired frozen v6 outcomes were one finish with three contacts
+and one crash with five contacts. This does not establish new-geometry
+performance, and the track-3 sharp-bend stall and pace gate remain unresolved.
+Details: `experiments/temporal-encounter-v7-dev-result.json`.
+
 Its source-bound consumed ten-cell diagnostic finished10/10 versus baseline3/10
 with contacts4 versus23, but was7.81% slower across three shared finishes.
 Far-side speed relief at targets24/30 caused a new3/385 DNF and was rejected.

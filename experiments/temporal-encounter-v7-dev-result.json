@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "experiment": "temporal-encounter-v7-consumed-diagnostic",
+  "status": "DIAGNOSTIC_ONLY",
+  "decision": "Do not activate or submit. This source-bound candidate resolves two previously consumed track-1 failures, but the full consumed grid and a new preregistered screen remain unfinished.",
+  "candidate_agent_sha256": "d969362a8e8614c9c1c4bd508237637b4ad6048d1b5a4d9ee7e6ffdf5f906ad3",
+  "candidate_class": "_TemporalEncounterController",
+  "control": "frozen v6 _TemporalReachabilityController and current active _CompoundClearingBrakeCarryController",
+  "evidence": "REUSED_DIAGNOSTIC_ONLY",
+  "cells": [
+    {
+      "track_id": 1,
+      "seed": 1190129265,
+      "baseline": {"finished": false, "progress": 0.540453074433657, "contacts": 3},
+      "v6": {"finished": true, "lap_time_ms": 27280, "contacts": 3},
+      "candidate": {"finished": true, "lap_time_ms": 28140, "contacts": 0}
+    },
+    {
+      "track_id": 1,
+      "seed": 2503363267,
+      "baseline": {"finished": false, "progress": 0.37894736842105264, "contacts": 1},
+      "v6": {"finished": false, "progress": 0.3824561403508772, "contacts": 5},
+      "candidate": {"finished": true, "lap_time_ms": 27520, "contacts": 0}
+    }
+  ],
+  "receipt_root": ".haic-artifacts/consumed-candidate-comparisons/d969362a8e86-bb9c61fac310",
+  "tests": "31 focused temporal/controller tests passed on Windows Python 3.11",
+  "limits": [
+    "The two geometry cells were previously consumed and cannot establish generalization.",
+    "The sharp-bend on-road stall at track 3 seed 2973604766 and shared-finish pace remain unresolved.",
+    "Official Linux CPU submission certification was not run."
+  ]
+}
