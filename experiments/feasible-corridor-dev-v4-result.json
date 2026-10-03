@@ -48,5 +48,16 @@
     "active_route": "unchanged",
     "sota_promotion": false
   },
-  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. Six new finishes and lower aggregate contacts do not override paired contact and time regressions. Additional exact replays can explain these cells but are not independent performance evidence."
+  "limits": "This is an eight-geometry consumed development triage, not fresh generalization. Six new finishes and lower aggregate contacts do not override paired contact and time regressions. Additional exact replays explain these cells but are not independent performance evidence.",
+  "source_bound_failure_trace": {
+    "tool": "tools/trace_feasible_corridor_dev_v4.py",
+    "tool_commit": "f93a23e",
+    "artifact": ".haic-artifacts/feasible-corridor-dev-telemetry-v4/track-2-seed-4089604952/candidate.json",
+    "artifact_sha256": "79395e1f676718f49e149b64f4963174d1d172b6a1ae2b0a576cdb853e328a59",
+    "reproduction": "The exact v4 candidate replay on consumed track2/4089604952 matched its frozen action hash, 347 steps, progress, four contacts, damage and wheel-road samples. Read-only v4 speed replays on consumed track2/644062 and track1/17 matched their frozen receipts.",
+    "track_2_seed_4089604952": "V4 matches v2 actions until step234 and retains its first two contacts at steps157-158. The temporal guard vetoes right-side switches at steps234 and236, but permits one at237 because the obstacle-center offset remains negative across the two observations. At that step the three visible edge rows52-54 show right usable widths -4.93,-3.93,-6.93 pixels versus left 9.07,9.07,10.07; neither full corridor is feasible. V4 steers right up to +0.32, contacts at steps242 and244, then stalls on road at progress0.752542 and retires after 101 negative-reward decisions. All four wheels stay on the road throughout the recorded steps. Blocking this visibly pinched switch is an untested corrective hypothesis; it would not prevent the earlier identical contacts.",
+    "track_2_seed_644062": "V4 and v2 action hashes are identical. Compared with v1's 28.20s, the inherited no-corridor target18 acts for36 decisions and adds17 decisions/1.34s; versus the active baseline28.12s, v4's29.54s is 5.05% slower.",
+    "track_1_seed_17": "V4 completes in27.74s versus baseline25.32s. The no-corridor cap acts for63 decisions, with much of the delay accumulating near progress0.4-0.6. V4 and v2 actions are identical through step196, when the observed-road dropout correction changes the trajectory and recovers the baseline finish lost by v2. The whole2.42s delay cannot be attributed solely to the cap.",
+    "interpretation": "The last-obstacle failure motivates adding a visible road-width veto to the temporal switch guard. The time regressions motivate a separately tested conditional speed release; a sufficiently safe and effective trigger has not yet been demonstrated."
+  }
 }

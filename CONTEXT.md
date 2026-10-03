@@ -13,7 +13,12 @@ and shared finishes on2/644062 and1/17 exceeded the5% time limit. All20 rows
 Full55 was not opened because these known paired regressions already disqualify
 the candidate; no fresh partition has run. Record:
 `experiments/feasible-corridor-dev-v4-result.json`. The active route stays
-unchanged. V3 improved finishes3->7 but reduced both-DNF progress on
+unchanged. Exact v4 replay shows a right-side switch into visibly insufficient
+road width at the last obstacle on track2/4089604952, then two contacts and
+an on-road stall; two earlier contacts are unchanged from v2. The inherited
+speed cap causes the track2/644062 delay, while track1/17's delay also includes
+a road-dropout trajectory change. V3 improved finishes3->7 but reduced
+both-DNF progress on
 track1/1190129265 and crashed on track2/4089604952; its record remains
 `experiments/feasible-corridor-dev-v3-result.json`.
 Exact v3 replays locate a frame-local side switch to a narrower path before

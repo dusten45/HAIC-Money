@@ -42,7 +42,9 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
   and 2/644062 plus1/17 joint finish times exceed5% delay. All20
   receipts and summary match their frozen source-bound run. Full55 was
   left unopened because these observed vetoes already reject this
-  candidate; fresh partitions and active route remain unchanged.
+  candidate; fresh partitions and active route remain unchanged. Exact
+  replay shows the last-obstacle right-side switch into insufficient
+  visible width and subsequent on-road stall on2/408.
 - [Observed-road side-veto consumed triage](experiments/feasible-corridor-dev-v3-result.json):
   TRIAGE_BLOCK_FULL on the same ten consumed cells. Finishes3->7, mean
   progress0.732->0.889 and contacts23->13, but track1/1190129265 both-DNF
