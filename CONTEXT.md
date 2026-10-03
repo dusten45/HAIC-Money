@@ -24,7 +24,23 @@ Details: `experiments/temporal-encounter-v7-dev-result.json`.
 Restricting the occlusion release to HUD speed14--22 restores the consumed
 track1/2973604766 finish but loses the old v6 finish on3/3857792434 and is
 slow on shared finishes; it too is diagnostic-rejected. Details:
-`experiments/temporal-encounter-midrange-v1-result.json`.
+`experiments/temporal-encounter-midrange-v1-result.json`. A further crawl
+condition did not recover that finish. A raw-edge-verified curved path produced
+zero plans in exact replays of the two track-3 stalls because near road edges
+were absent until steering had saturated; its unused diagnostic class was
+removed. A guarded early-bend steering diagnostic on the v6 base finished the
+consumed3/2973604766 cell in27.14s with no contact, repeated identically,
+while preserving the old3/3857792434 finish. Its full reused32-cell screen
+regressed to25 finishes versus v6's28, with four lost v6 finishes and a new
+crash, so it was rejected. A guarded v7 combination likewise fell to26/32
+and34 contacts versus v6's28/32 and16 contacts; four active-control finishes
+were lost. Neither candidate was activated or given fresh seeds. Raw receipts:
+`.haic-artifacts/reused-screen-candidate-only/`.
+
+`camera-policy-generalization-v1` is preregistered with eight screen, sixteen
+confirmation and eight blind geometry seeds crossed with IDs1--4. It remains
+`PREREGISTERED_PENDING_SOURCE`: the runner hard-stops until one committed
+candidate and exact source/runtime hashes are bound. No fresh cell has run.
 
 Its source-bound consumed ten-cell diagnostic finished10/10 versus baseline3/10
 with contacts4 versus23, but was7.81% slower across three shared finishes.
@@ -93,7 +109,7 @@ on2026-09-30 from pinned official sources and existing artifacts.
 - CPU gate: Python 3.11, Torch 2.1 CPU, NumPy 1.26; init10s, reset/action5s,
   process1,024MB, ZIP500MB. Latest official participant commit rechecked on
   2026-10-03 is `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; environment files remain
-  identical to the prior frozen reference. No trainer/SB3/prohibited imports in
+  identical to the prior frozen reference (rechecked 2026-10-04 KST). No trainer/SB3/prohibited imports in
   submission inference. Official submission-container execution remains separate.
 
 ## Completed L2 Study
