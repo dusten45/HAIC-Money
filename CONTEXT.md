@@ -22,6 +22,14 @@ track2/644062 contacts2->4 because road room near the obstacle was only2.5px.
 Keep rejected candidate classes and traces for reproducibility. The white-curb
 filter is deferred: merged curb/obstacle components could hide hazards.
 
+Fresh study `experiments/observed-margin-generalization-v1.json` is
+preregistered, with 4/8/4 new geometry seeds for screen/confirmation/blind
+crossed with track IDs1--4. The candidate and control differ by one active-route
+constructor in frozen source snapshots. No fresh cell has been opened yet; run
+screen first and keep confirmation/blind sealed unless their gates pass. Windows
+ZIP static and zero-observation smoke passed; official Linux CPU certification is
+still unknown. Raw package checks are under `.haic-artifacts/runtime-certification-v1/`.
+
 Required competition documents and source-cited `report.pdf` were reconstructed
 on2026-09-30 from pinned official sources and existing artifacts. Bounded,
 preregistered local development diagnosis is now possible. No validated SOTA
@@ -45,8 +53,8 @@ use has no demonstrated benefit and lower grip. The active DrQ study is unchange
   then completed lap time. Freeze actor hashes before confirmation; never select
   on confirmation/blind. Diagnostic receipts cannot promote or unlock blind.
 - CPU gate: Python 3.11, Torch 2.1 CPU, NumPy 1.26; init10s, reset/action5s,
-  process1,024MB, ZIP500MB. Latest official participant commit checked on
-  2026-09-29 is `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; environment files remain
+  process1,024MB, ZIP500MB. Latest official participant commit rechecked on
+  2026-10-03 is `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; environment files remain
   identical to the prior frozen reference. No trainer/SB3/prohibited imports in
   submission inference. Official submission-container execution remains separate.
 

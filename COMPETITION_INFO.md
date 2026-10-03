@@ -5,7 +5,7 @@ source-backed summary, not a recovered original or a submission approval.
 
 ## Sources and version
 
-- [Official participant README](https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md), checked live 2026-09-30.
+- [Official participant README](https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md), rechecked live 2026-10-03.
 - Official main: `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; environment `variables-6`.
 - [Environment wrapper](https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/env_wrapper.py).
 - [Vehicle physics](https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/core/vendor/car_dynamics.py).
