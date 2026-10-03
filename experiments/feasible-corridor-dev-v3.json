@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "name": "feasible-corridor-dev-v3",
+  "status": "PREREGISTERED",
+  "evidence_scope": "CONSUMED_DEVELOPMENT_ONLY",
+  "hypothesis": "Using the three continuously visible near-road rows when row42 drops out prevents a wrong-sign bend command, and vetoing a side switch only when three nearby camera road-edge rows consistently show that side blocked prevents late obstacle-side oscillation. A modest no-corridor target speed of 20 retains much of the v2 collision margin while reducing shared-finish delay.",
+  "candidate_implementation_commit": "1563a97",
+  "candidate_source_construction": "Read the normalized committed Git blob bytes of agent.py at 1563a97 (SHA256 046cf3ec3747aa85345ba290884ae7115d488955397f101173700a5df12ebdd5; 163087 bytes). Replace the sole byte sequence '_CompoundClearingBrakeCarryController()' with '_FeasibleCorridorSideVetoPaceController()'; resulting snapshot SHA256 6f0881ec16b9bc95382229e68a2bf55e72e97eb0a31575f5a3d066a1169d5228. The active Agent route remains the baseline.",
+  "controller_classes": {
+    "baseline": "_CompoundClearingBrakeCarryController",
+    "candidate": "_FeasibleCorridorSideVetoPaceController"
+  },
+  "agent_sha256": {
+    "baseline": "cbfd1a544dd3eef30a193f97b93612ab67126fbc1d3cb41fd0027f08c997dd19",
+    "candidate": "6f0881ec16b9bc95382229e68a2bf55e72e97eb0a31575f5a3d066a1169d5228"
+  },
+  "source_snapshots": {
+    "baseline": ".haic-artifacts/observed-ego-side-switch-generalization-v1/snapshots/control_agent.py",
+    "candidate": ".haic-artifacts/feasible-corridor-dev-v3/snapshots/candidate_agent.py"
+  },
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "runtime_helper_sha256": {
+    "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
+    "action_representation.py": "a92825b2c1ca61e3d3509842ed15efa883f822babe03e66527788948fb3a36f7"
+  },
+  "margin_screen_protocol_sha256": "dfddf7f28686501f9c35298e33cc3e5ec28c53e61e2e3dfaeae2262a840d1632",
+  "margin_screen_freeze_sha256": "0d115acf9d331afef28069e2f42cc17b95bcd4b9bdd317bf5ed81fa7af1aabf9",
+  "margin_screen_summary_sha256": "9ae6180d3407044c01e188cf8f09b27b8532a56f13341779dee3be969f2b3acc",
+  "margin_screen_receipts_sha256": "9e1c176487aa22066cbe79170aec09d26317cf91d7ff4099cf80f10ff2feeceb",
+  "ego_screen_protocol_sha256": "6d2651440c8edc4d5311f23314492ad7c270455a877e47074f662a2f65767234",
+  "ego_screen_freeze_sha256": "b29eb69a8eecdaa6e61ddc0b5d4366858b48f42e8b04ae90d8d59d08d2024a20",
+  "ego_screen_summary_sha256": "cee1ca226bbb38096be3568b5a74fe1db2add324b86cf11b3148a0dc5fc7756d",
+  "ego_screen_receipts_sha256": "80a9a4bae0e743c75a6361845a5843d06276864e37cb8d7039d0b0c07604845a",
+  "max_steps": 2000,
+  "frame_skip": 4,
+  "development_cells": [
+    [
+      1,
+      11
+    ],
+    [
+      1,
+      21
+    ],
+    [
+      1,
+      42
+    ],
+    [
+      1,
+      17
+    ],
+    [
+      1,
+      516237
+    ],
+    [
+      2,
+      644062
+    ],
+    [
+      3,
+      1007
+    ],
+    [
+      1,
+      3857792434
+    ],
+    [
+      1,
+      2951861974
+    ],
+    [
+      1,
+      2786341258
+    ],
+    [
+      1,
+      3892761381
+    ],
+    [
+      2,
+      3857792434
+    ],
+    [
+      2,
+      2951861974
+    ],
+    [
+      2,
+      2786341258
+    ],
+    [
+      2,
+      3892761381
+    ],
+    [
+      3,
+      3857792434
+    ],
+    [
+      3,
+      2951861974
+    ],
+    [
+      3,
+      2786341258
+    ],
+    [
+      3,
+      3892761381
+    ],
+    [
+      4,
+      3857792434
+    ],
+    [
+      4,
+      2951861974
+    ],
+    [
+      4,
+      2786341258
+    ],
+    [
+      4,
+      3892761381
+    ],
+    [
+      1,
+      2938666309
+    ],
+    [
+      1,
+      533603584
+    ],
+    [
+      1,
+      4089604952
+    ],
+    [
+      1,
+      1162965374
+    ],
+    [
+      1,
+      1190129265
+    ],
+    [
+      1,
+      583088201
+    ],
+    [
+      1,
+      3876897788
+    ],
+    [
+      1,
+      1180885023
+    ],
+    [
+      2,
+      2938666309
+    ],
+    [
+      2,
+      533603584
+    ],
+    [
+      2,
+      4089604952
+    ],
+    [
+      2,
+      1162965374
+    ],
+    [
+      2,
+      1190129265
+    ],
+    [
+      2,
+      583088201
+    ],
+    [
+      2,
+      3876897788
+    ],
+    [
+      2,
+      1180885023
+    ],
+    [
+      3,
+      2938666309
+    ],
+    [
+      3,
+      533603584
+    ],
+    [
+      3,
+      4089604952
+    ],
+    [
+      3,
+      1162965374
+    ],
+    [
+      3,
+      1190129265
+    ],
+    [
+      3,
+      583088201
+    ],
+    [
+      3,
+      3876897788
+    ],
+    [
+      3,
+      1180885023
+    ],
+    [
+      4,
+      2938666309
+    ],
+    [
+      4,
+      533603584
+    ],
+    [
+      4,
+      4089604952
+    ],
+    [
+      4,
+      1162965374
+    ],
+    [
+      4,
+      1190129265
+    ],
+    [
+      4,
+      583088201
+    ],
+    [
+      4,
+      3876897788
+    ],
+    [
+      4,
+      1180885023
+    ]
+  ],
+  "mechanism_cells": [
+    [
+      1,
+      3857792434
+    ],
+    [
+      3,
+      3857792434
+    ],
+    [
+      1,
+      3892761381
+    ],
+    [
+      1,
+      42
+    ],
+    [
+      2,
+      644062
+    ],
+    [
+      4,
+      2951861974
+    ],
+    [
+      1,
+      17
+    ],
+    [
+      3,
+      2951861974
+    ],
+    [
+      1,
+      1190129265
+    ],
+    [
+      2,
+      4089604952
+    ]
+  ],
+  "evaluation_budget": "Reuse exactly the same 55 already consumed paired cells and fixed ten-cell mechanism triage as v1/v2; no new geometry is exposed during development. Reuse the 32 frozen ego-screen controls only after source/environment/receipt checks; cold-run the older 23 controls and all 55 v3 candidates if full expansion is unlocked. First run 20 fixed triage rows (18 new cold workers, two reused controls). Full55 is mandatory-gated on the matching complete20-row triage summary: no lost baseline finish, no new crash DNF, no paired both-DNF progress decline, no operational/receipt/hash failure, and at least one changed candidate action trace. Report contact/damage/time deltas; contact/damage increases do not block consumed-only expansion, while the full comparison decision and fresh-study design must account for them. No repeats count as independent geometry samples.",
+  "decision_rule": "This is consumed development evidence only. Compare v3 to the active baseline on actual Agent-route finish, progress, completed-lap time, per-cell contacts/damage, and source-bound comparison decision. Keep all v1/v2 hard-veto cells in the fixed triage; no selective exclusions. A passing triage permits only the remaining consumed55 comparison. Any favorable full result can justify separately preregistered fresh screen, confirmation and blind; never direct activation or SOTA promotion.",
+  "gates": {
+    "fresh_confirmation": "SEALED",
+    "blind": "SEALED",
+    "sota_promotion": false
+  },
+  "limits": "The55 pairs comprise19 distinct geometry seeds, all previously consumed by v1/v2 or older screens. The v2 hard-veto cells and shared-finish delay motivated this narrow observed-road and side-switch change. Repeated development on these cells risks overfitting. No development outcome is evidence of unseen-track generalization. Earlier confirmation/blind seeds remain sealed; no protocol permits using them here.",
+  "prior_development_v1": {
+    "protocol_sha256": "b1f4a6afaba5c8a0fc8fcde2164b55ce6d2e09658ea1882221037876bf65aa73",
+    "result_sha256": "05f006befcac93843521a38c5daa3c0053161484593025466fc63132ba10e63e",
+    "triage_summary_sha256": "bfcaac5577111ea697d87c58c792ccd612ad13b2336cd3772a77f182ac4571cd",
+    "status": "TRIAGE_BLOCK_FULL"
+  },
+  "prior_development_v2": {
+    "protocol_sha256": "8d8017d10fabd8a1be3c0de248b35be54a15b6f6b22015da8e4450c947309ecf",
+    "result_sha256": "bc9bb1a1dc03207a74db9cf778dc726167dce2a6847a24fbe7bf0fadf74059ea",
+    "triage_summary_sha256": "10adbd32432835eb44e93513d0d5f542dc7974760d1fcdb0900012da624d9077",
+    "status": "TRIAGE_BLOCK_FULL",
+    "triage_receipts_sha256": "9cca404918143efa337e9b17cdf8eef27d716e4ebb14b899324366cd37bb0000"
+  }
+}
