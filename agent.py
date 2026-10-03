@@ -3338,6 +3338,42 @@ class _FeasibleCorridorFallbackSpeedController(_FeasibleCorridorObstacleControll
         return min(inherited, self.NO_CORRIDOR_TARGET_SPEED)
 
 
+class _FeasibleCorridorRoadDropoutController(_FeasibleCorridorFallbackSpeedController):
+    """Keep an observed bend when an obstacle hides the far steering row.
+
+    This diagnostic changes only no-corridor obstacle steering. Clear road and
+    camera-verified passages retain the preceding controller's decisions.
+    """
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        if (
+            obstacle is not None
+            and not straight
+            and 42 not in centers
+            and 54 in centers
+            and 50 in centers
+            and 46 in centers
+            and self._corridor_candidate(-1.0) is None
+            and self._corridor_candidate(1.0) is None
+        ):
+            far = self._center_at(42.0, centers)
+            near = float(centers[54])
+            steering = 0.016 * (far - self.IMAGE_CENTER) + 0.012 * (far - near)
+        return super()._adjust_road_steering(
+            steering=steering,
+            straight=straight,
+            centers=centers,
+            obstacle=obstacle,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
