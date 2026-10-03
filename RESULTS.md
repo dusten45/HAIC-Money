@@ -35,6 +35,13 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
 
 ## New records
 
+- [Observed ego-side switch fresh screen](experiments/observed-ego-side-switch-generalization-v1-result.json):
+  REJECT on eight new geometry seeds crossed with IDs1--4. Finishes11/32->17/32
+  and mean progress0.675->0.777, but contacts65->73 and damage13.0->14.6;
+  seven paired cells violated the preregistered safety veto. All68 cold runs
+  and deterministic repeats passed independent audit. Source-bound replays of
+  two regressions found that the ego-side rule blocked beneficial baseline
+  obstacle-side switches. Confirmation/blind remain sealed; active route unchanged.
 - [Consumed screen obstacle stalls](experiments/consumed-screen-obstacle-stall-v1-result.json):
   exact baseline replays on track1/3 seed3857792434 reproduced original action
   hashes. Both cars saw road and an obstacle, kept all wheels on road, but
@@ -45,8 +52,8 @@ the active source. Incomparable protocols must not be merged into a leaderboard.
   baseline, finishes13/23->17/23, mean progress0.819->0.932, contacts32->31;
   versus rejected margin candidate, finishes16/23->17/23, contacts33->31.
   No paired safety veto. All32 repeated prior-screen control/margin rows matched
-  original action hashes and outcomes. Active route unchanged pending new-geometry
-  screen, confirmation and blind.
+  original action hashes and outcomes. This reused-cell gain did not pass its
+  subsequent fresh-geometry screen; active route stayed unchanged.
 - [Observed margin fresh screen](experiments/observed-margin-generalization-v1-result.json):
   REJECT despite finishes9/16->10/16 and mean progress0.851->0.902 on four new
   geometry seeds crossed with IDs1--4. Track1/3892761381 contacts2->3 and

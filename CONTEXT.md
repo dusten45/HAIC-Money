@@ -4,22 +4,23 @@
 
 Develop the strongest rule-compliant agent while preserving the DrQ-v2 padding
 study and frozen artifacts. The active bare route remains
-`_CompoundClearingBrakeCarryController`. The new diagnostic candidate
-`_ObservedEgoSideSwitchController` allows a late obstacle-passing side change
-only when the proposed side agrees with the obstacle's position relative to the
-vehicle. It repairs the former margin candidate's extra contact on fresh-screen
-track1/3892761381 and recovers reused seed42 from a five-contact crash to a
-four-contact finish.
+`_CompoundClearingBrakeCarryController`. The frozen
+`_ObservedEgoSideSwitchController` is **REJECTED** on its new-geometry screen:
+11->17 finishes and mean progress0.675->0.777 on eight geometry seeds crossed
+with IDs1--4, but contacts65->73 and damage13.0->14.6, with paired safety vetoes
+on seven cells. All68 cold episodes, source hashes and two deterministic repeat
+pairs passed independent audit. Its confirmation/blind partitions stay sealed.
+Full record: `experiments/observed-ego-side-switch-generalization-v1-result.json`.
 
-The source-bound **consumed development** comparison completed all23 cells and
-69 cold episodes: candidate versus active baseline finishes13->17, mean
-progress0.819->0.932, contacts32->31; versus prior margin candidate finishes16->17,
-contacts33->31. No paired safety veto fired, but this is reused-cell evidence only.
-Full record: `experiments/observed-ego-side-switch-dev-v1-result.json`. All32
-reexecuted prior-screen baseline/margin rows matched their earlier full action
-hashes and outcomes. Next step: preregister and run a new geometry study before
-changing the active route. The prior frozen margin candidate remains **REJECTED**
-by its fresh screen; its confirmation/blind partitions stay sealed and untouched.
+The preceding23-cell reused development comparison improved finishes13->17 and
+contacts32->31, illustrating why it was insufficient for promotion. Exact
+replays of two fresh regressions found that the ego-position rule blocked a
+beneficial baseline obstacle-side switch at screen steps116 and195. A
+diagnostic-only `_FeasibleCorridorObstacleController` is being developed to use
+visible road edges and obstacle width; `Agent` still routes to the baseline.
+Validate this candidate on consumed cells before a separately preregistered
+fresh study. The earlier observed-margin candidate also remains **REJECTED**;
+neither rejected study's confirmation/blind seeds may be recycled.
 
 Among the prior fresh screen's six margin-candidate DNFs, four had the wrapper's
 `off_track` label. That label means101 consecutive negative-reward decisions;
@@ -29,7 +30,7 @@ reproduced the original action hashes: both cars stayed on road with road vision
 and an obstacle continuously present, but were almost stationary with no new
 tile for the last101 decisions. Road-loss fallback was not the cause. Future
 obstacle-stall recovery needs a separately registered candidate and clearance
-evidence; the current ego-switch change remains frozen for fresh evaluation.
+evidence; the ego-switch screen is rejected.
 Track2 still has five-contact obstacle failures. Windows ZIP static/smoke passed
 for the old frozen screen sources; official-like Linux CPU certification is
 unavailable on this host because WSL lacks Python3.11/dependencies and Docker
