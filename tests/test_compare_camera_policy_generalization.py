@@ -59,11 +59,13 @@ def screen_rows() -> tuple[list[dict], list[tuple[int, int, int]]]:
 
 class ProtocolTests(unittest.TestCase):
     def test_unbound_source_cannot_enter_evaluation(self):
-        draft = fresh._read_json(subject.PROTOCOL_PATH)
+        draft = bound_protocol()
+        draft["status"] = "PREREGISTERED_PENDING_SOURCE"
         with self.assertRaisesRegex(ValueError, "frozen source"):
             subject.validate_protocol(draft, set())
-        self.assertEqual(draft["status"], "PREREGISTERED_PENDING_SOURCE")
         with patch("sys.argv", ["compare_camera_policy_generalization.py", "--partition", "screen"]), \
+             patch.object(fresh, "_read_json", return_value=draft), \
+             patch.object(fresh, "historical_geometry_seeds", return_value=set()), \
              patch.object(subject, "_run_cold_episode") as cold:
             with self.assertRaisesRegex(ValueError, "frozen source"):
                 subject.main()

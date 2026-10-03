@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "name": "camera-policy-generalization-v1",
-  "status": "PREREGISTERED_PENDING_SOURCE",
+  "status": "PREREGISTERED",
   "hypothesis": "One frozen camera/HUD-only controller meaningfully improves completed laps over the currently active bare route on unseen official-generator geometries, with small bounded paired finish/crash risk, no severe both-DNF progress collapse or aggregate contact/damage increase, and no material shared-finish pace loss.",
   "evidence_scope": "Fresh paired local official-generator evaluation. All previously inspected geometries, including consumed v6 screen cells, are development only. No episode from this protocol may run until one candidate class, committed source, and every hash are frozen.",
-  "control_agent_sha256": "PENDING_SOURCE_SHA256",
-  "candidate_agent_sha256": "PENDING_SOURCE_SHA256",
+  "control_agent_sha256": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+  "candidate_agent_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
   "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
   "runtime_helper_sha256": {
     "action_smoothing.py": "6e0e1d47e94c9994045ade09ab7e7c81ea5ec5db090d3259d23ff8e0ae55ce00",
@@ -13,17 +13,17 @@
   },
   "controller_classes": {
     "control": "_CompoundClearingBrakeCarryController",
-    "candidate": "PENDING_CAMERA_POLICY_CLASS"
+    "candidate": "_ImpactAwareSparseRoadController"
   },
   "source_snapshots": {
     "control": ".haic-artifacts/camera-policy-generalization-v1/snapshots/control_agent.py",
     "candidate": ".haic-artifacts/camera-policy-generalization-v1/snapshots/candidate_agent.py"
   },
   "source_construction": {
-    "implementation_commit": "PENDING_COMMIT",
-    "agent_blob_sha256": "PENDING_SOURCE_SHA256",
+    "implementation_commit": "0a5aaa0b657696e5dcaf928270888e5c197afab2",
+    "agent_blob_sha256": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
     "selector_from": "_CompoundClearingBrakeCarryController()",
-    "selector_to": "PENDING_CAMERA_POLICY_CLASS()",
+    "selector_to": "_ImpactAwareSparseRoadController()",
     "rule": "After candidate development on consumed cells only, copy one committed agent.py Git blob as the control snapshot and replace exactly one Agent route selector in that blob for the candidate snapshot. Pin the commit, both snapshot hashes, model, helpers, harness, and decision engine before the first fresh episode. The live Agent selector stays on the control route through evaluation."
   },
   "max_steps": 2000,
