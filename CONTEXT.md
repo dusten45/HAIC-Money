@@ -16,13 +16,17 @@ contacts. The reused v6 screen subset was 30/32 versus 18/32, with 8 versus
 active finish on 4/4294299109. These are development results only; see
 `experiments/impact-aware-sparse-road-dev-v1-result.json`.
 
-`camera-policy-generalization-v1` has eight fresh screen, sixteen confirmation
-and eight blind geometry seeds, each crossed with IDs1--4. One committed Git
-blob and selector-only control/candidate snapshots are bound; preflight passed.
-**No fresh cell has run yet.** Run screen first and apply its fixed finish,
-safety and pace gates. Confirmation and blind remain sealed unless the preceding
-phase retains the exact same finalist. Only a blind RETAIN supports changing
-the live Agent route.
+`camera-policy-generalization-v1` is **REJECTED on its fresh screen**. Its
+source-bound eight new geometry seeds crossed with IDs1--4 produced 25/32
+finishes versus the active route's 21/32, and 23 versus 72 contacts, but lost
+five existing finishes (budget one), exceeded per-cell contact/damage limits
+twice and the single-cell shared-finish pace limit once. Both spot-check pairs
+replayed exactly. Confirmation/blind stay sealed, and the live selector stays
+on the active route. See `experiments/camera-policy-generalization-v1-result.json`.
+Next: exact source-bound failure traces separating late road departure from
+obstacle-related progress stalls, then design a distinct camera-only controller
+and preregister new geometry. The rejected screen may be used only as consumed
+development evidence for that later protocol.
 
 The previous temporal-reachability v6 fresh screen was **REJECTED** despite
 28/32 finishes versus 18/32: a new crash, a lost control finish, a severe
@@ -36,6 +40,7 @@ unseen-track generalization.
 Official-like Linux container certification remains unavailable on this host:
 Docker is stopped and WSL lacks the required Python runtime/dependencies.
 Preserve untracked user videos, prior submission archives and `submission.zip`.
+
 ## Frozen Contract
 
 - Do not modify `core/`, `env_wrapper.py`, or `damage.py` for experiments.

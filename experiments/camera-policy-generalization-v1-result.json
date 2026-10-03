@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "protocol": "camera-policy-generalization-v1",
+  "status": "REJECTED_SCREEN",
+  "decision": "REJECT",
+  "implementation_commit": "0a5aaa0b657696e5dcaf928270888e5c197afab2",
+  "protocol_sha256": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+  "control_agent_sha256": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+  "candidate_agent_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+  "screen_receipts": ".haic-artifacts/camera-policy-generalization-v1/run/screen-summary.json",
+  "receipt_audit": "All 68 expected cold receipts, including two exact spot-check pairs, replayed with zero hash/metric/runtime errors; recomputed summary matched the saved file. No confirmation or blind receipts exist.",
+  "screen": {
+    "independent_geometry_seeds": 8,
+    "canonical_paired_cells": 32,
+    "missing_pairs": 0,
+    "control_finishes": 21,
+    "candidate_finishes": 25,
+    "net_finish_gain": 4,
+    "lost_control_finishes": 5,
+    "new_candidate_crashes": 1,
+    "control_contacts": 72,
+    "candidate_contacts": 23,
+    "control_damage": 14.4,
+    "candidate_damage": 4.6,
+    "control_mean_progress": 0.8258564314592256,
+    "candidate_mean_progress": 0.9039587533602151,
+    "shared_completed_cells": 16,
+    "control_shared_completed_time_ms": 392180,
+    "candidate_shared_completed_time_ms": 421220,
+    "moderate_both_dnf_losses": 0,
+    "severe_both_dnf_losses": 0,
+    "spot_check_pairs": 2,
+    "reasons": [
+      "Five lost control finishes exceed the preregistered screen allowance of one.",
+      "Track 1/1460583390 and track 2/3438591851 exceed the single-cell contact and damage increase limits.",
+      "Track 2/2996001888 exceeds the single shared-finish time ratio limit."
+    ]
+  },
+  "follow_up": "Keep the active Agent selector on _CompoundClearingBrakeCarryController. Confirmation and blind partitions are sealed. Treat screen geometries as consumed development evidence for a separately preregistered future candidate; do not change this protocol's thresholds or source. Source-bound failure traces may be taken only for diagnosis.",
+  "limits": "This is local official-generator evidence on Windows, not official submission-container certification or a guarantee across all track shapes. The candidate's aggregate improvement does not override its paired safety vetoes."
+}
