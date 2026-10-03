@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "experiment": "temporal-encounter-v7-consumed-diagnostic",
-  "status": "DIAGNOSTIC_ONLY",
-  "decision": "Do not activate or submit. This source-bound candidate resolves two previously consumed track-1 failures, but the full consumed grid and a new preregistered screen remain unfinished.",
+  "status": "DIAGNOSTIC_REJECT",
+  "decision": "Do not activate or submit. This source-bound candidate resolves two previously consumed track-1 failures but loses a frozen v6 and baseline shared finish on another consumed track-1 cell.",
   "candidate_agent_sha256": "d969362a8e8614c9c1c4bd508237637b4ad6048d1b5a4d9ee7e6ffdf5f906ad3",
   "candidate_class": "_TemporalEncounterController",
   "control": "frozen v6 _TemporalReachabilityController and current active _CompoundClearingBrakeCarryController",
@@ -21,12 +21,23 @@
       "baseline": {"finished": false, "progress": 0.37894736842105264, "contacts": 1},
       "v6": {"finished": false, "progress": 0.3824561403508772, "contacts": 5},
       "candidate": {"finished": true, "lap_time_ms": 27520, "contacts": 0}
+    },
+    {
+      "track_id": 1,
+      "seed": 2973604766,
+      "baseline": {"finished": true, "lap_time_ms": 27360, "contacts": 0},
+      "v6": {"finished": true, "lap_time_ms": 30200, "contacts": 0},
+      "candidate": {"finished": false, "progress": 0.6705202312138728, "contacts": 2}
     }
   ],
-  "receipt_root": ".haic-artifacts/consumed-candidate-comparisons/d969362a8e86-bb9c61fac310",
+  "receipt_roots": [
+    ".haic-artifacts/consumed-candidate-comparisons/d969362a8e86-bb9c61fac310",
+    ".haic-artifacts/consumed-candidate-comparisons/d969362a8e86-2e44128520f4"
+  ],
   "tests": "31 focused temporal/controller tests passed on Windows Python 3.11",
   "limits": [
-    "The two geometry cells were previously consumed and cannot establish generalization.",
+    "All three geometry cells were previously consumed and cannot establish generalization.",
+    "The first action divergence on track 1 seed 2973604766 is doubled full-plan steering at far obstacle row 26; its causal role is under diagnosis.",
     "The sharp-bend on-road stall at track 3 seed 2973604766 and shared-finish pace remain unresolved.",
     "Official Linux CPU submission certification was not run."
   ]
