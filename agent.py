@@ -63,6 +63,19 @@ class _TemporalPassAssessment:
     right_approach_clearance_px: float | None
 
 
+def _temporal_path_steer(target_x: float, near_y: float) -> float:
+    """Match the controller's geometric position and heading command."""
+    control_y = max(42.0, near_y)
+    near_control_y = min(60.0, max(54.0, control_y + 4.0))
+
+    def approach_x(row: float) -> float:
+        return 41.5 + (target_x - 41.5) * (63.0 - row) / (63.0 - near_y)
+
+    control_x = approach_x(control_y)
+    near_control_x = approach_x(near_control_y)
+    return 0.016 * (control_x - 41.5) + 0.012 * (control_x - near_control_x)
+
+
 def _track_obstacle_stack(
     previous: _TemporalObstacleTrack | None,
     stack_bboxes: Sequence[tuple[float, float, float, float] | None],
@@ -177,10 +190,13 @@ def _assess_temporal_pass(
 
     near_y = bottom + 2.0
     approach_rows = range(ceil(near_y), 59)
+    obstacle_rows = range(max(22, math.floor(top) - 2), min(58, ceil(near_y)) + 1)
     approach_is_observed = (
         near_y < 63.0
         and len(approach_rows) > 0
         and all(row in road_edges for row in approach_rows)
+        and len(obstacle_rows) > 0
+        and all(row in road_edges for row in obstacle_rows)
     )
 
     def candidate(side: int) -> tuple[bool, int, float, float, float | None]:
@@ -193,10 +209,19 @@ def _assess_temporal_pass(
             abs(target - 41.5) / (63.0 - near_y)
             if near_y < 63.0 else float("inf")
         )
+        if near_y >= 63.0:
+            return False, 0, target, shift_per_row, None
         path_margin = None
         if approach_is_observed:
             shift_reserve = 0.4 * (63.0 - near_y) - abs(target - 41.5)
             path_margin = shift_reserve
+            for row in obstacle_rows:
+                edge_left, edge_right = road_edges[row]
+                path_margin = min(
+                    path_margin,
+                    target - edge_left - 2.63,
+                    edge_right - 2.63 - target,
+                )
             for row in approach_rows:
                 x = 41.5 + (target - 41.5) * (63.0 - row) / (63.0 - near_y)
                 edge_left, edge_right = road_edges[row]
@@ -205,8 +230,12 @@ def _assess_temporal_pass(
                     x - edge_left - 2.63,
                     edge_right - 2.63 - x,
                 )
-        desired = float(np.clip(0.016 * (target - 41.5), -0.32, 0.32))
-        slew = ceil(abs(desired - last_steer) / 0.07)
+        desired = float(np.clip(_temporal_path_steer(target, near_y), -0.32, 0.32))
+        # The runtime scales urgency from 0.5 to 1.0. Check both endpoints
+        # and keep the larger command change as the necessary slew budget.
+        slew = ceil(max(
+            abs(desired - last_steer), abs(0.5 * desired - last_steer),
+        ) / 0.07)
         reachable = (
             width >= 0.75 + 2.0 * track.uncertainty_px
             and path_margin is not None
@@ -236,12 +265,7 @@ def _assess_temporal_pass(
         left_reachable if selected == -1 else right_reachable
         if selected == 1 else False
     )
-    slew = (
-        left_slew if selected == -1 and left_reachable else
-        right_slew if selected == 1 and right_reachable else
-        right_slew if right_width >= 0.75 and not right_reachable else
-        left_slew if left_width >= 0.75 else None
-    )
+    slew = left_slew if selected == -1 else right_slew if selected == 1 else None
     return _TemporalPassAssessment(
         selected, left_width, right_width, ttc, slew, rows,
         not selected_reachable or track.misses > 0,
@@ -3821,6 +3845,208 @@ class _FeasibleCorridorSideWidthController(_FeasibleCorridorTemporalSideControll
             for row in nearest_rows
         )
         return inherited and not blocked_switch
+
+
+class _TemporalReachabilityController(_FeasibleCorridorSideWidthController):
+    """Use stacked camera evidence to veto late passes and steer a checked path.
+
+    The active Agent route remains the frozen controller below. This candidate
+    only supplements the prior diagnostic when an obstacle is detected; a
+    complete corridor still follows the existing full-path planner.
+    """
+
+    VERIFIED_PASS_TARGET_SPEED = 30.0
+    VERIFIED_PASS_MIN_MARGIN = 0.5
+    OCCLUDED_OBSTACLE_TARGET_SPEED = 24.0
+    UNCERTAIN_NEAR_BRAKE_FRAMES = 2
+    UNCERTAIN_NEAR_CRAWL_GAS = 0.035
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._temporal_track = None
+        self._temporal_assessment = None
+        self._temporal_stack = None
+        self._temporal_brake_frames = 0
+        self._temporal_brake_identity = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._temporal_track = None
+        self._temporal_assessment = None
+        self._temporal_stack = None
+        self._temporal_brake_frames = 0
+        self._temporal_brake_identity = None
+
+    def act(self, observation) -> np.ndarray:
+        self._temporal_assessment = None
+        frame = self._frame(observation)
+        self._temporal_stack = (
+            np.asarray(observation, dtype=np.float32)
+            if frame is not None else None
+        )
+        try:
+            return super().act(observation)
+        finally:
+            self._temporal_stack = None
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._temporal_track = None
+        self._temporal_assessment = None
+        self._temporal_brake_frames = 0
+        self._temporal_brake_identity = None
+        return super()._lost_road_action()
+
+    def _nearest_obstacle(
+        self,
+        frame: np.ndarray,
+        centers: dict[int, float],
+        spans: dict[int, tuple[float, float]] | None = None,
+    ) -> tuple[float, float, float] | None:
+        obstacle = super()._nearest_obstacle(frame, centers, spans)
+        current_bbox = self._corridor_bbox
+        stack_bboxes = [None, None, None, current_bbox]
+        if self._temporal_track is None and self._temporal_stack is not None:
+            for index, past_frame in enumerate(self._temporal_stack[:3]):
+                past_centers = self._road_centers(past_frame)
+                past_obstacle = _StableCompletionController._nearest_obstacle(
+                    self, past_frame, past_centers,
+                )
+                if past_obstacle is not None:
+                    stack_bboxes[index] = self._component_bbox(
+                        past_frame, past_obstacle[1], past_obstacle[0],
+                    )
+        self._temporal_track = _track_obstacle_stack(
+            self._temporal_track, stack_bboxes,
+        )
+        self._temporal_assessment = None
+        if obstacle is not None and self._temporal_track is not None and current_bbox is not None:
+            self._temporal_assessment = _assess_temporal_pass(
+                self._temporal_track,
+                self._corridor_edges,
+                committed_side=int(self._obstacle_side),
+                last_steer=self._last_steer,
+            )
+        return obstacle
+
+    def _allow_obstacle_side_switch(
+        self, *, obstacle_y: float, obstacle_x: float, candidate_side: float,
+    ) -> bool:
+        inherited = super()._allow_obstacle_side_switch(
+            obstacle_y=obstacle_y, obstacle_x=obstacle_x,
+            candidate_side=candidate_side,
+        )
+        assessment = self._temporal_assessment
+        track = self._temporal_track
+        bbox = self._corridor_bbox
+        if (
+            not inherited or assessment is None or track is None or bbox is None
+            or self._obstacle_side == 0.0
+            or candidate_side == self._obstacle_side
+            or self._corridor_candidate(-1.0) is not None
+            or self._corridor_candidate(1.0) is not None
+        ):
+            return inherited
+        if assessment.selected_side == int(self._obstacle_side):
+            return False
+        if assessment.selected_side == int(candidate_side) and not assessment.brake_required:
+            return True
+        # A close tracked object leaves no time to discover a new side by
+        # oscillating the legacy centroid rule on a single apparent opening.
+        if track.observations >= 2 and bbox[3] >= 40:
+            return False
+        return inherited
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        assessment = self._temporal_assessment
+        bbox = self._corridor_bbox
+        if (
+            assessment is None or bbox is None
+            or assessment.selected_target_x is None
+            or self._corridor_candidate(-1.0) is not None
+            or self._corridor_candidate(1.0) is not None
+        ):
+            return super()._adjust_obstacle_steering(
+                base_steering=base_steering,
+                obstacle_bias=obstacle_bias,
+                straight=straight,
+            )
+        target = assessment.selected_target_x
+        near_y = bbox[3] + 2.0
+        urgency = min(1.0, max(0.5, abs(obstacle_bias) / 0.24))
+        desired = _temporal_path_steer(target, near_y) * urgency
+        self._obstacle_side = float(assessment.selected_side)
+        if self._preview_transition_pending and desired * self._last_steer < 0.0:
+            self._last_steer = 0.0
+        if self._corridor_detection is not None:
+            y, x, _road_center = self._corridor_detection
+            self._corridor_previous = (x, y, float(assessment.selected_side))
+        return float(desired)
+
+    def _adjust_target_speed_for_steering(
+        self, *, target_speed: float, steering: float, straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        inherited = super()._adjust_target_speed_for_steering(
+            target_speed=target_speed, steering=steering,
+            straight=straight, obstacle=obstacle,
+        )
+        assessment = self._temporal_assessment
+        track = self._temporal_track
+        if (
+            obstacle is None and track is not None
+            and 0 < track.misses <= 2
+            and track.last_seen_bbox[3] < 54.0
+        ):
+            return min(inherited, self.OCCLUDED_OBSTACLE_TARGET_SPEED)
+        if (
+            obstacle is None or self._corridor_plan is not None
+            or assessment is None or track is None
+            or assessment.brake_required
+            or assessment.selected_target_x is None
+            or assessment.selected_path_margin_px is None
+            or assessment.selected_path_margin_px < self.VERIFIED_PASS_MIN_MARGIN
+            or track.observations < 2
+        ):
+            return inherited
+        return min(target_speed, self.VERIFIED_PASS_TARGET_SPEED)
+
+    def _adjust_pedals(
+        self, *, gas: float, brake: float, straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        gas, brake = super()._adjust_pedals(
+            gas=gas, brake=brake, straight=straight, obstacle=obstacle,
+        )
+        bbox = self._corridor_bbox
+        assessment = self._temporal_assessment
+        track = self._temporal_track
+        track_identity = getattr(track, "identity", None)
+        imminent_uncertain = (
+            obstacle is not None and bbox is not None
+            and 44 <= bbox[3] < 58
+            and assessment is not None and assessment.brake_required
+        )
+        if not imminent_uncertain:
+            tracked_occlusion = (
+                obstacle is None and track is not None
+                and 0 < track.misses <= 2
+                and track_identity == self._temporal_brake_identity
+            )
+            if not tracked_occlusion:
+                self._temporal_brake_frames = 0
+                self._temporal_brake_identity = None
+            return gas, brake
+        if track_identity != self._temporal_brake_identity:
+            self._temporal_brake_frames = 0
+            self._temporal_brake_identity = track_identity
+        self._temporal_brake_frames += 1
+        if self._temporal_brake_frames <= self.UNCERTAIN_NEAR_BRAKE_FRAMES:
+            return 0.0, max(brake, 0.12)
+        if brake > 0.0 and gas <= 0.0:
+            return gas, brake
+        return min(max(gas, self.UNCERTAIN_NEAR_CRAWL_GAS), 0.04), 0.0
 
 
 class _RacingLineController(_ForwardCorridorController):

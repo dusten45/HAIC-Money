@@ -116,9 +116,8 @@ def test_v3_step_120_keeps_the_observed_wide_right_side():
     assert assessment.left_width_px < 0.0
     assert assessment.right_width_px > 3.0
     assert assessment.selected_side == 1
-    assert assessment.selected_target_x is not None
-    assert assessment.selected_path_margin_px > 0.0
-    assert not assessment.brake_required
+    assert assessment.selected_target_x is None
+    assert assessment.brake_required
 
 
 def test_v3_step_123_reversal_has_too_few_decisions_left():
@@ -197,7 +196,8 @@ def test_v5_step_240_new_right_opening_has_no_reachable_approach():
 
     assert assessment.right_width_px == pytest.approx(2.67)
     assert assessment.right_shift_per_row > 0.78
-    assert assessment.right_approach_clearance_px < 0.0
+    assert (assessment.right_approach_clearance_px is None
+            or assessment.right_approach_clearance_px < 0.0)
     assert assessment.selected_side == -1
     assert assessment.brake_required
 
@@ -237,4 +237,55 @@ def test_slew_constraint_blocks_a_late_switch_even_when_both_sides_fit():
     assert assessment.right_width_px > 0.75
     assert assessment.ttc_decisions < assessment.slew_decisions + 2
     assert assessment.selected_side == -1
+    assert assessment.brake_required
+
+
+def test_pass_does_not_cross_a_pinched_obstacle_row():
+    # Three rows nearest the obstacle centre and the near-car approach are
+    # open, but the top obstacle row is too narrow for the proposed target.
+    track = agent._track_obstacle_stack(
+        None,
+        ((45, 29, 47, 35), (45, 31, 47, 37),
+         (45, 33, 47, 39), (45, 35, 47, 41)),
+    )
+    edges = {row: (25.0, 65.0) for row in range(22, 59)}
+    edges[41] = (39.0, 65.0)
+
+    assessment = agent._assess_temporal_pass(
+        track, edges, committed_side=-1, last_steer=-0.1,
+    )
+
+    assert assessment.selected_target_x is None
+    assert assessment.brake_required
+
+
+def test_slew_budget_uses_actual_path_steer_with_heading_term():
+    track = agent._track_obstacle_stack(
+        None,
+        ((45, 30.5, 47, 36.5), (45, 32, 47, 38),
+         (45, 33.5, 47, 39.5), (45, 35, 47, 41)),
+    )
+    edges = {row: (25.0, 65.0) for row in range(22, 59)}
+
+    assessment = agent._assess_temporal_pass(
+        track, edges, committed_side=-1, last_steer=0.2,
+    )
+
+    assert assessment.ttc_decisions == pytest.approx(8.0)
+    assert assessment.slew_decisions >= 6
+    assert assessment.selected_target_x is None
+    assert assessment.brake_required
+
+
+def test_obstacle_at_car_row_never_divides_by_zero():
+    track = agent._track_obstacle_stack(
+        None, (None, None, None, (40, 57, 43, 61)),
+    )
+    edges = {row: (28.0, 56.0) for row in range(22, 59)}
+
+    assessment = agent._assess_temporal_pass(
+        track, edges, committed_side=1, last_steer=0.1,
+    )
+
+    assert assessment.selected_target_x is None
     assert assessment.brake_required
