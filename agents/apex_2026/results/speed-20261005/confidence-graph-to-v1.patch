@@ -1,0 +1,50 @@
+--- a/source.py
++++ b/source.py
+@@ -410 +410 @@
+-class Agent(_CorridorReference):
++class _GraphReference(_CorridorReference):
+@@ -452,0 +453,44 @@
++
++
++class Agent(_GraphReference):
++    """Explicit road-support confidence before using a distant road component.
++
++    Gray car fragments can be isolated from visible asphalt when the ego
++    approaches an outer road edge. A supported remote component alone does
++    not demonstrate support at the camera origin. An isolated nearest ego
++    component activates the existing bounded recovery action deliberately.
++    """
++
++    def _road(self, frame):
++        asphalt = (frame >= .32) & (frame <= .51)
++        asphalt[73:] = False
++        candidates = np.argwhere(asphalt[53:73])
++        if not len(candidates):
++            self.corridor_road = None
++            return None
++        candidates[:, 0] += 53
++        distance = ((candidates[:, 1]-self.CAR_X)/self.PX_X)**2
++        distance += ((candidates[:, 0]-self.CAR_Y)/self.PX_Y)**2
++        seed = candidates[int(np.argmin(distance))]
++        connected = np.zeros((84, 84), dtype=bool)
++        connected[tuple(seed)] = True
++        for _ in range(12):
++            expanded = connected.copy()
++            for dy in (-1, 0, 1):
++                for dx in (-1, 0, 1):
++                    if dy == 0 and dx == 0:
++                        continue
++                    y0, y1 = max(0, dy), min(84, 84+dy)
++                    x0, x1 = max(0, dx), min(84, 84+dx)
++                    expanded[y0:y1, x0:x1] |= connected[y0-dy:y1-dy, x0-dx:x1-dx]
++            expanded &= asphalt
++            if np.array_equal(expanded, connected):
++                break
++            connected = expanded
++        support = np.argwhere(connected)
++        # Require enough connected visible road for five sampled rows. This
++        # checks ego support; super() still selects the full major road graph.
++        if len(support) < 24 or np.ptp(support[:, 0]) < 8:
++            self.corridor_road = None
++            return None
++        return super()._road(frame)
