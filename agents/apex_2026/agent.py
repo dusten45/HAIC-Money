@@ -33,6 +33,7 @@ class Agent:
         self.lost_frames = 0
         self.pass_side = 0.0
         self.pass_missing = 0
+        self.last_obstacle_y = None
         self.last_speed = 0.0
         self.last_target = self.cruise_speed
 
@@ -97,26 +98,47 @@ class Agent:
         return forward, lateral, rows, np.asarray(lefts), np.asarray(rights)
 
     def _obstacle(self, frame, road):
-        ahead, lateral, rows, lefts, rights = road
-        # Orange grey is ~0.686; green is ~0.63/0.70. Restrict to an
-        # interior bounded on both sides by asphalt to reject the shoulder.
-        candidates = []
-        for row in range(13, 71):
+        _ahead, _lateral, rows, lefts, rights = road
+        bright = (frame >= 0.655) & (frame <= 0.705)
+        allowed = np.zeros((84, 84), dtype=bool)
+        for row in range(11, 71):
             left = float(np.interp(row, rows[::-1], lefts[::-1]))
             right = float(np.interp(row, rows[::-1], rights[::-1]))
             lo, hi = max(1, int(left + 2)), min(83, int(right - 1))
-            if hi - lo < 5:
+            allowed[row, lo:hi] = True
+        pixels = bright & allowed
+        seen = np.zeros((84, 84), dtype=bool)
+        candidates = []
+        for y0, x0 in zip(*np.nonzero(pixels)):
+            if seen[y0, x0]:
                 continue
-            bright = np.flatnonzero((frame[row, lo:hi] >= 0.655) & (frame[row, lo:hi] <= 0.705))
-            if bright.size >= 2:
-                for run in np.split(bright, np.flatnonzero(np.diff(bright) > 1) + 1):
-                    if 2 <= run.size <= 8:
-                        x = float(lo + run.mean())
-                        if x - left >= 2.0 and right - x >= 2.0:
-                            candidates.append((float(row), x, left, right))
-        if not candidates:
-            return None
-        return max(candidates, key=lambda item: item[0])
+            seen[y0, x0] = True
+            stack, points = [(int(y0), int(x0))], []
+            while stack:
+                y, x = stack.pop()
+                points.append((y, x))
+                for ny, nx in ((y-1,x),(y+1,x),(y,x-1),(y,x+1)):
+                    if 0 <= ny < 84 and 0 <= nx < 84 and pixels[ny,nx] and not seen[ny,nx]:
+                        seen[ny,nx] = True
+                        stack.append((ny,nx))
+            if not 4 <= len(points) <= 48:
+                continue
+            ys, xs = np.asarray(points).T
+            width, height = int(xs.max()-xs.min()+1), int(ys.max()-ys.min()+1)
+            aspect = width * self.PX_Y / (height * self.PX_X)
+            if not (2 <= width <= 8 and 2 <= height <= 9 and 0.65 <= aspect <= 1.9):
+                continue
+            y, x = float(ys.mean()), float(xs.mean())
+            surrounding = []
+            for py, px in ((y,x-4),(y,x+4),(y-5,x),(y+5,x)):
+                iy, ix = int(round(py)), int(round(px))
+                surrounding.append(0 <= iy < 73 and 0 <= ix < 84 and 0.32 <= frame[iy,ix] <= 0.51)
+            if sum(surrounding) < 3:
+                continue
+            left = float(np.interp(y, rows[::-1], lefts[::-1]))
+            right = float(np.interp(y, rows[::-1], rights[::-1]))
+            candidates.append((y,x,left,right))
+        return max(candidates,key=lambda item:item[0]) if candidates else None
 
     def _recover(self):
         self.lost_frames += 1
@@ -162,10 +184,17 @@ class Agent:
         obstacle = self._obstacle(frame, road)
         if obstacle is not None:
             row, x, left, right = obstacle
+            if self.last_obstacle_y is not None and row < self.last_obstacle_y - 14.0:
+                self.pass_side = 0.0
+            self.last_obstacle_y = row
             self.pass_missing = 0
             if self.pass_side == 0.0:
                 self.pass_side = -1.0 if x - left >= right - x else 1.0
             obstacle_distance = max(2.0, (self.CAR_Y - row) / self.PX_Y)
+            if obstacle_distance < 7.0:
+                route_row = self.CAR_Y - self.PX_Y * 7.0
+                left = float(np.interp(route_row, rows[::-1], lefts[::-1]))
+                right = float(np.interp(route_row, rows[::-1], rights[::-1]))
             pass_x = 0.5 * (left + right) + self.pass_side * 5.0
             # Vehicle halfwidth+clearance is 2.1 pixels; obstacle radius is
             # 1.63 pixels. Route only through the visible asphalt interior.
@@ -196,6 +225,6 @@ class Agent:
         else:
             gas = float(np.clip(0.30 + 0.055 * error, 0.0, 1.0))
             if abs(self.last_steer) > 0.04:
-                gas = min(gas, 0.16)
+                gas = min(gas, 0.30)
             brake = 0.0
         return np.asarray([self.last_steer, gas, brake], dtype=np.float32)

@@ -83,6 +83,23 @@ def test_pass_stays_selected_when_obstacle_crosses_front_and_rear_rows(agent_typ
         assert action[0] < -0.02, f"pass released at image row {row}"
 
 
+def test_a_new_distant_obstacle_gets_its_own_pass_side(agent_type):
+    agent = agent_type()
+    assert agent.act(camera(speed=40, obstacle=(45, 50)))[0] < 0
+    # A new pass may need two decisions to respect the steering slew bound.
+    agent.act(camera(speed=40, obstacle=(38, 20)))
+    action = agent.act(camera(speed=40, obstacle=(38, 20)))
+    assert action[0] > 0.02
+
+
+def test_long_curb_fragment_is_not_a_compact_obstacle(agent_type):
+    observation = camera(speed=40)
+    observation[:, 27:51, 44:47] = 0.686
+    clear = agent_type().act(camera(speed=40))
+    fragmented = agent_type().act(observation)
+    np.testing.assert_array_equal(fragmented, clear)
+
+
 def test_high_speed_lateral_correction_brakes_for_required_acceleration(agent_type):
     action = agent_type().act(camera(center=50, speed=90))
     assert action[1] == 0

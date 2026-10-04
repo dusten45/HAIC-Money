@@ -49,6 +49,22 @@ def end_reason(info, *, finished, terminated, truncated):
     return "time_limit" if truncated else "max_steps"
 
 
+def execute_worker(command, *, timeout=300):
+    try:
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return None, f"worker timed out after {timeout} seconds"
+    if result.returncode:
+        return None, result.stderr[-3000:] or f"worker exited with code {result.returncode}"
+    try:
+        measured = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return None, f"worker returned invalid JSON: {result.stdout[-1000:]}"
+    if not isinstance(measured, dict):
+        return None, "worker JSON must be an object"
+    return measured, None
+
+
 def pace_profile(consecutive_rejections):
     if type(consecutive_rejections) is not int or consecutive_rejections < 0:
         raise ValueError("rejections must be a nonnegative integer")
@@ -60,6 +76,8 @@ def rejection_streak(reports):
     streak, seen = 0, set()
     for report in reports:
         freeze = report["freeze"]
+        if freeze.get("trial_role", "candidate") != "candidate":
+            raise ValueError("benchmark results cannot count as candidate rejections")
         if freeze.get("suite") == "holdout":
             raise ValueError("holdout cannot drive development relaxation")
         identity = (freeze["source_sha256"], json.dumps(freeze["parameters"], sort_keys=True))
@@ -210,6 +228,7 @@ def main():
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--max-steps", type=int, default=2000)
     parser.add_argument("--trace-dir", type=Path)
+    parser.add_argument("--role", choices=("candidate", "benchmark"))
     parser.add_argument("--prior-receipts", nargs="*", type=Path, default=[],
                         help="ordered distinct development receipts supporting prospective relaxation")
     parser.add_argument("--worker", help=argparse.SUPPRESS)
@@ -236,6 +255,7 @@ def main():
     if args.suite != "mandatory":
         cells += [(track, seed) for seed in seeds for track in range(1, 5)]
     freeze = {"source_sha256": source_hash, "parameters": params, "suite": args.suite,
+              "trial_role": args.role or ("benchmark" if source == ROOT / "agent.py" else "candidate"),
               "environment_sha256": env_hashes, "cells": cells, "max_steps": args.max_steps,
               "selected_profile_seconds": selected_limit, "consecutive_rejections": prior_streak,
               "prior_receipts": [{"path": str(p.resolve()), "sha256": digest(p)} for p in args.prior_receipts],
@@ -254,15 +274,15 @@ def main():
         if args.trace_dir:
             payload["trace_path"] = str(args.trace_dir / f"track-{track}-seed-{seed}.json")
         command = [sys.executable, "-m", "agents.apex_2026.evaluate", "--worker", json.dumps(payload)]
-        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=300)
-        if result.returncode:
+        measured, error = execute_worker(command)
+        if error:
             row = {"track_id": track, "seed": seed, "finished": False,
                    "lap_time_ms": None, "progress": 0.0, "collision_count": 0,
                    "damage": 0.0, "retire_reason": "worker_error",
                    "source_sha256": source_hash, "parameters": params,
-                   "error": result.stderr[-3000:]}
+                   "error": error}
         else:
-            row = json.loads(result.stdout)
+            row = measured
         if row["source_sha256"] != source_hash or digest(source) != source_hash:
             raise RuntimeError("source changed after freeze")
         with (cell_dir / f"track-{track}-seed-{seed}.json").open("x", encoding="utf-8") as file:

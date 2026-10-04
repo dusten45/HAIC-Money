@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
+import sys
 
 from agents.apex_2026.evaluate import (
-    MANDATORY_CELLS, assess, end_reason, pace_profile, rejection_streak, validate_action,
+    MANDATORY_CELLS, assess, end_reason, execute_worker, pace_profile, rejection_streak, validate_action,
 )
 
 
@@ -82,3 +83,30 @@ def test_playfield_termination_is_not_a_time_limit():
     assert end_reason({}, finished=False, terminated=False, truncated=True) == "time_limit"
     assert end_reason({"retire_reason": "crash"}, finished=False, terminated=True, truncated=False) == "crash"
     assert end_reason({}, finished=True, terminated=False, truncated=True) is None
+
+
+def test_worker_timeout_and_bad_json_are_recorded_as_operational_errors():
+    measured, error = execute_worker([sys.executable, "-c", "import time; time.sleep(1)"], timeout=.05)
+    assert measured is None and "timed out" in error
+    measured, error = execute_worker([sys.executable, "-c", "print('broken receipt')"])
+    assert measured is None and "JSON" in error
+    measured, error = execute_worker([sys.executable, "-c", "print('{\"finished\":true}')"])
+    assert measured == {"finished": True} and error is None
+
+
+def test_baseline_results_cannot_relax_candidate_criteria():
+    mandatory, _ = cells()
+    report = {"freeze": {"trial_role": "benchmark", "source_sha256": "control",
+                         "parameters": {}, "selected_profile_seconds": 13}, "rows": mandatory}
+    with pytest.raises(ValueError, match="benchmark"):
+        rejection_streak([report])
+
+
+def test_track_floor_catches_a_concentrated_failure_with_good_aggregate():
+    mandatory, _ = cells()
+    extra = [row(track, seed) for track in range(1, 5) for seed in range(92000, 92010)]
+    for i in range(3):
+        extra[i] = row(1, 92000 + i, finished=False)
+    verdict = assess(mandatory, extra, limit_seconds=13)
+    assert verdict["extra_fast_fraction"] == .925
+    assert not verdict["passed"]
