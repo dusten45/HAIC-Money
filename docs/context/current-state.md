@@ -18,8 +18,13 @@ Terrain r8's full consumed regression is22/24, below the24/24 gate despite
 required mean18.205s. The independent beam r3 has newly finished required1–4
 in14.04/17.24/15.80/14.94s without damage, mean15.505s (16.32% faster than P1);
 its complete screen is5/6 because old track3 still fails. Full regression remains
-closed while the first collision and subsequent planning deadlock are diagnosed.
+closed after the first collision and subsequent planning deadlock were diagnosed.
 These partial speed gains do not authorize selection or holdout.
+Full-fixture checking and pixel clearance expose a second, damage-free planning
+stall. R5 preserves required1 at14.28s but fails its old-track3 probe. R6 adds
+bounded temporal refinement that recovers a lower-cost collision-free modeled
+sequence pruned by the beam. Its first two new driving cells are now under
+validation; no R6 driving success is assumed from offline preflight.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)
