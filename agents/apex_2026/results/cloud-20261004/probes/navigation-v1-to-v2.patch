@@ -1,0 +1,117 @@
+--- navigation-v1.py
++++ navigation_agent.py
+@@ -172,7 +172,17 @@
+         ahead, centers, _, _, _ = road
+         forward = np.arange(0.0, max(3.0, float(ahead[-1])) + 0.1, 0.75)
+         lateral = np.interp(forward, ahead, centers)
+-        result = {"forward": forward, "lateral": lateral,
++        for index, distance in enumerate(forward):
++            weights = np.exp(-0.5*((ahead-distance)/5.0)**2)
++            lateral[index] = np.polyfit(ahead-distance, centers, 2,
++                                        w=weights)[2]
++        # Begin at the observed ego pose and heading. A lateral road or lane
++        # offset cannot teleport the current hull into a safe future lane.
++        anchoring_distance = float(np.clip(0.28*speed, 12.0, 16.0))
++        phase = np.clip(forward/anchoring_distance, 0.0, 1.0)
++        anchor = phase**3*(10.0-15.0*phase+6.0*phase**2)
++        base = lateral*anchor
++        result = {"forward": forward, "lateral": base,
+                   "blocked": False, "side": 0, "margin": None,
+                   "obstacle_distance": None}
+         if not obstacles:
+@@ -194,7 +204,29 @@
+         candidates = []
+         for side in (-1, 1):
+             offset = ox-local_center+side*required
+-            path = lateral+offset*weight
++            path = (lateral+offset*weight)*anchor
++            slope_path = np.gradient(path, forward)
++            curvature = np.abs(np.gradient(slope_path, forward))/(1.0+slope_path*slope_path)**1.5
++            relevant = forward <= min(float(ahead[-1])-1.0, max(5.0, oy+plateau+exit_distance))
++            if np.any(curvature[relevant] > np.tan(0.4)/self.WHEELBASE):
++                continue
++            heading = np.arctan(slope_path)
++            dx, dy = ox-path, oy-forward
++            across = np.abs(dx*np.cos(heading)-dy*np.sin(heading))
++            along = np.abs(dx*np.sin(heading)+dy*np.cos(heading))
++            hull_gap = np.hypot(np.maximum(across-self.HULL_HALF_WIDTH, 0.0),
++                                np.maximum(along-self.HULL_HALF_LENGTH, 0.0))
++            if np.any(hull_gap[relevant] < radius+self.clearance-0.05):
++                continue
++            available = max(0.0, oy-radius-self.HULL_HALF_LENGTH-0.08*speed)
++            pass_x = ox+side*required
++            needed_curve = abs(2.0*pass_x/(available*available+pass_x*pass_x+0.01))
++            if needed_curve > np.tan(0.4)/self.WHEELBASE:
++                continue
++            pass_limit = np.sqrt(self.lateral_accel/max(needed_curve, 0.001))
++            brake_distance = max(0.0, (speed*speed-pass_limit*pass_limit)/(2.0*self.braking_accel))
++            if brake_distance > available:
++                continue
+             margin = self._hull_margin(forward, path, road,
+                 min(float(ahead[-1])-1.0, max(5.0, oy+plateau+exit_distance)))
+             if margin >= 0.0:
+@@ -206,6 +238,7 @@
+                 candidates.append((cost, side, path, margin))
+         if not candidates:
+             result["blocked"] = True
++            result["lateral"] = base
+             return result
+         _, side, path, margin = min(candidates, key=lambda item: item[0])
+         result.update(lateral=path, side=side, margin=margin)
+@@ -225,6 +258,23 @@
+             approach = np.sqrt(local_limit**2+2.0*self.braking_accel*max(0.0, distance-5.0))
+             limit = min(limit, approach)
+         return float(limit)
++
++    def _avoidance_steer(self, desired, obstacle, side):
++        """Necessary constant-curvature approach clearance for the front hull.
++
++        Local pursuit can aim inside a bend before its later offset becomes
++        the preview point. Restrict that command when it projects across the
++        chosen circle side. This is a reachability bound, not a slip model.
++        """
++        ox, oy, radius = obstacle
++        if side == 0 or oy <= radius+self.HULL_HALF_LENGTH:
++            return desired
++        entry = max(3.0, oy-radius-self.HULL_HALF_LENGTH)
++        required = radius+self.HULL_HALF_WIDTH+self.clearance
++        pass_x = ox+side*required
++        curve = 2.0*pass_x/(entry*entry)
++        bound = float(np.arctan(self.WHEELBASE*curve))
++        return max(desired, bound) if side > 0 else min(desired, bound)
+ 
+     def _recover(self):
+         self.lost_frames += 1
+@@ -240,7 +290,7 @@
+     def act(self, observation):
+         frame = self._frame(observation)
+         road = self._road(frame) if frame is not None else None
+-        if road is None:
++        if road is None or road[0][-1] < 6.0:
+             return self._recover()
+         self.lost_frames = 0
+         speed = self._speed(frame)
+@@ -268,6 +318,9 @@
+         target_x = float(np.interp(preview, forward, lateral))
+         pursuit = 2.0*target_x/(preview*preview+target_x*target_x)
+         desired = float(np.clip(np.arctan(self.WHEELBASE*pursuit), -0.4, 0.4))
++        if obstacles and not plan["blocked"]:
++            desired = float(np.clip(self._avoidance_steer(desired,
++                obstacles[0], plan["side"]), -0.4, 0.4))
+         self.last_steer += float(np.clip(desired-self.last_steer, -0.24, 0.24))
+         target = self._curve_speed(forward, lateral)
+         if forward[-1] < 22.0:
+@@ -276,6 +329,13 @@
+         if distance is not None:
+             pass_speed = 0.0 if plan["blocked"] else self.obstacle_speed
+             target = min(target, np.sqrt(pass_speed**2+2.0*self.braking_accel*max(0.0, distance-5.5)))
++            if obstacles and plan["side"]:
++                ox, oy, radius = obstacles[0]
++                needed = radius+self.HULL_HALF_WIDTH+self.clearance+plan["side"]*ox
++                if needed > 0.1:
++                    entry = max(0.0, oy-radius-self.HULL_HALF_LENGTH)
++                    reach_speed = np.sqrt(0.5*self.lateral_accel*entry*entry/needed)
++                    target = min(target, max(10.0, reach_speed))
+         tangent = abs(np.tan(self.last_steer))
+         physical_ceiling = np.sqrt(self.lateral_accel*self.WHEELBASE/max(tangent, 0.001))
+         target = min(target, physical_ceiling, self.last_target+3.0)

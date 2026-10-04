@@ -1,0 +1,52 @@
+{
+  "freeze": {
+    "source_sha256": "d7a9f3727e0274871a5f60116a6fb3b94c784b1215d32096407d9729c53d4e22",
+    "parameters": {},
+    "suite": "diagnostic_one_cell",
+    "trial_role": "benchmark",
+    "environment_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+      "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+      "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+      "agents/apex_2026/evaluate.py": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+    },
+    "cells": [
+      [
+        1,
+        1764402399
+      ]
+    ],
+    "max_steps": 700,
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]"
+  },
+  "rows": [
+    {
+      "track_id": 1,
+      "seed": 1764402399,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.33916083916083917,
+      "collision_count": 5,
+      "damage": 1.0,
+      "retire_reason": "crash",
+      "steps": 100,
+      "initialization_ms": 3.1171629998425487,
+      "reset_ms": 0.0036270030250307173,
+      "action_latency_max_ms": 3.4858049984904937,
+      "peak_worker_rss_mib": 92.3125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "d7a9f3727e0274871a5f60116a6fb3b94c784b1215d32096407d9729c53d4e22",
+      "parameters": {},
+      "action_trace_sha256": "bb2acb85c1e87fd7280f0350cc9d959f69145d029147b0c6fd7b55c65306ba5d",
+      "error": null
+    }
+  ]
+}
