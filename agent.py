@@ -4725,6 +4725,46 @@ class _BoundedSideHoldController(_HighSpeedBendPriorityController):
         return proposed
 
 
+class _ClearRoadRow42DropoutController(_BoundedSideHoldController):
+    """Recover an observed clear-road bend when its reference row disappears."""
+
+    def act(self, observation) -> np.ndarray:
+        frame = self._frame(observation)
+        self._row42_current_hud_speed = (
+            None if frame is None else self._estimate_speed(frame)
+        )
+        return super().act(observation)
+
+    def _adjust_road_steering(
+        self,
+        *,
+        steering: float,
+        straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        if (
+            obstacle is None
+            and not straight
+            and 42 not in centers
+            and all(row in centers for row in (54, 50, 46))
+            and (
+                (self._obstacle_side != 0.0 and self._obstacle_missing <= 2)
+                or (
+                    self._row42_current_hud_speed is not None
+                    and self._row42_current_hud_speed >= 30.0
+                )
+            )
+        ):
+            far = self._center_at(42.0, centers)
+            near = float(centers[54])
+            steering = 0.016 * (far - self.IMAGE_CENTER) + 0.012 * (far - near)
+        return super()._adjust_road_steering(
+            steering=steering, straight=straight, centers=centers,
+            obstacle=obstacle,
+        )
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
