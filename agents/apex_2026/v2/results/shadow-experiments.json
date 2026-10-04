@@ -1,0 +1,87 @@
+{
+  "status": "Mechanics predictor validated within measured conditions; shooting controller rejected and unadopted.",
+  "source_sha256": {
+    "agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agents/apex_2026/v2/shadow_agent.py": "bf998c94f6f33342dec482e79b8862bae11f8a8f8eb549ed9b5530c79f8ea17b"
+  },
+  "reset_count": 5,
+  "unique_cells": 3,
+  "episodes": [
+    {
+      "artifact": "agents/apex_2026/v2/results/shadow-required1-r1.json",
+      "track_id": 1,
+      "seed": 516237,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.05,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "inference_max_s": 0.25265683799989347,
+      "peak_memory_mib": 97.19921875
+    },
+    {
+      "artifact": "agents/apex_2026/v2/results/shadow-required1-diagnostic.json",
+      "track_id": 1,
+      "seed": 516237,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.05,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "inference_max_s": 0.13570629300011205,
+      "peak_memory_mib": 95.2421875
+    },
+    {
+      "artifact": "agents/apex_2026/v2/results/shadow-required1-r2.json",
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lapTimeMs": 22840,
+      "progress": 1.0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "inference_max_s": 0.2016928459997871,
+      "peak_memory_mib": 95.33984375
+    },
+    {
+      "artifact": "agents/apex_2026/v2/results/shadow-failure2-r2.json",
+      "track_id": 2,
+      "seed": 4031370700,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.6059479553903345,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "inference_max_s": 0.2011518960007379,
+      "peak_memory_mib": 95.27734375
+    },
+    {
+      "artifact": "agents/apex_2026/v2/results/shadow-failure3-r2.json",
+      "track_id": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.9535603715170279,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "inference_max_s": 0.22788878199935425,
+      "peak_memory_mib": 95.86328125
+    }
+  ],
+  "findings": [
+    "Public five-body mechanics reconstructed from rigid state and wheel omega are computationally feasible (~4ms per40ticks).",
+    "RPM decoder uses rows74:82; first version scene-contaminated rows72:73 caused incorrect huge RPM and stopping, preserved asr1.",
+    "Previously consumed required1 pixel capture205states: pixelHUD+LK slip0.4s positionMAE.322m/p95.679m; headingMAE.0151rad. No new resets for fidelity audit.",
+    "r2 short constant-action shooting finishes required1 slowly22.84s and stops/timesout onbothpreviousfailurecells. No completion or speed improvement.",
+    "Stopping is permitted by constant-action footprint/path objective; exactphysics alone does not certify a viable continuation or solve path representation."
+  ],
+  "limitations": [
+    "PositiveRPM calibration only[0,350]rad/s; reverse/saturated or damaged gripstates not certified.",
+    "Rigid wheel reconstruction omits transient independent wheel velocities, joint constraint errors and solver impulses.",
+    "Slip remains observation-limited; successful required1 capture is mostlylow-slip and cannot certify drift recovery.",
+    "Six footprint samples at80ms intervals are not continuouscollision certification; assumedroadgrip and undamagedmechanics.",
+    "Runtime shadows import stable frozen candidatepathmodule and ownpublicphysicshelper; not standalone finalsubmission."
+  ],
+  "tests": "7 focusedtests passed; gitdiff--check passed.",
+  "next": "Parent-owned exactpedalallocation lane may isolate prediction benefit while preserving originalpath/steering; shadowcontroller unchanged."
+}
