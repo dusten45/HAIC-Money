@@ -1,0 +1,52 @@
+{
+  "source_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+  "geometry_cases": 120,
+  "oracle": "Box2D GetWorldPoint plus independent OpenCV convex intersection, positive area >1e-7 px^2; random nontangent cases",
+  "mismatches": [],
+  "cache_probe": {
+    "clean": 0,
+    "same_object_mutated": 0,
+    "fresh_copy": 1
+  },
+  "source_unchanged": true,
+  "resets": 0,
+  "all_other_ast_nodes_identical": true,
+  "checker_microbenchmark": [
+    {
+      "mask": "all_safe",
+      "calls": 2000,
+      "process_cpu_per_call_us": 15.192736499999997,
+      "collision_cost": 0
+    },
+    {
+      "mask": "all_unsafe",
+      "calls": 2000,
+      "process_cpu_per_call_us": 572.5757735000001,
+      "collision_cost": 39
+    }
+  ],
+  "stored_observation_preflight": {
+    "path": "/tmp/apex-v2-beam-r4/preflight.json",
+    "sha256": "5651e415647fc54eef44d012d55a07189f779d4830c6698f46849fd658958e8e",
+    "timed_by": "shadow_physics",
+    "steps": [
+      125,
+      134,
+      137,
+      138,
+      145,
+      154
+    ],
+    "max_act_seconds": 2.515471049999178
+  },
+  "limitations": [
+    "Random oracle cases exclude exact tangent contacts; SAT intentionally counts boundary touches conservatively.",
+    "Pixel-cell occupied area approximates camera geometry, not physical obstacle silhouettes.",
+    "Checks occur every20ms; no continuous collision certificate between raw ticks.",
+    "Integral fast path requires free mask immutable during each search; current act satisfies this contract.",
+    "Six stored-observation latencies are below5s but do not bound worst-case episode or machine-load latency.",
+    "All-unsafe checker microbenchmark is a synthetic stress case, not a measured agent.act or episode.",
+    "Penalty is now unique unsafe pixel-cell count, not sparse sample count; coefficient200 and all other objective/search AST remain unchanged."
+  ],
+  "review_script_sha256": "296d91eac696b9bf9a8e62ab9f4576dfafae92c47879ed4861f12ce37f9623c1"
+}

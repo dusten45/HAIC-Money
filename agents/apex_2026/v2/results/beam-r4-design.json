@@ -1,0 +1,60 @@
+{
+  "status": "source_held_preflight_complete_no_episodes",
+  "source_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "config": {},
+  "architecture_change": "Replace25point unsafe sample count by union of unsafe pixel cells touched by actual predicted convex hull/wheel fixtures at each20ms tick. SAT includes boundary touches conservatively. Dynamic fivebody transforms, cached immutable localvertices, integral-image broadphase.",
+  "unchanged": "R3 search, depth8,width8, objectiveotherthanriskunits,200collision multiplier, road/geodesic/perception, speed/yaw/slip/RPM estimation, physics, actionset, occlusionfill.",
+  "risk_measure_change": "Unique unsafe pixelcells replace25sample count; numerical risk objective is not equivalent. Overlapping fixtures counted once.",
+  "cache_contract": "Each search uses one immutable free array; act creates fresh mask and fills currentocclusion beforefirstcheck. Samearray inplace mutation afterfirstcheck is unsupported.",
+  "limitations": [
+    "No continuous collision certificate between20msstates. Pixelcells approximate rendered road/obstaclephysicalgeometry.",
+    "Stored138 allnine firstactions intersect; checker detects existingcollision but cannotavoid atthatstate.",
+    "Stored120\u2013138 all19firstactions remainidentical toR3. At136 R3 fullsequence2unsafe becomes R4 sequence0, butsameexecutedfirstaction.",
+    "Postcollision slipcarry and stationaryprocrastination remainunchanged.",
+    "Sixstoredframe actmax2.515471s doesnotprove allframesunder5s. Reviewer allunsafe syntheticmicrobenchmarkcost.565ms/check ispotentialworstcase.",
+    "Previous137safe plan shifted into138 is also unsafe, even though itsfirststeering is absentfrom138lattice. 2x2 ablation: predictedstate+oldmask0,observedstate+oldmask4,predictedstate+newmask2,observedstate+newmask2 cumulativeunsafe pixelcells. Smallstate and rasterchanges independently break the zero-clearance plan."
+  ],
+  "tests": {
+    "r4": 6,
+    "r3_unchanged": 8,
+    "total_passed": 14,
+    "red": 3,
+    "independent_geometry_random_cases": 120,
+    "independent_geometry_mismatches": 0
+  },
+  "screen_prospective": {
+    "cells_order": [
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ]
+    ],
+    "status": "HOLD perparent pending recursivefeasibility diagnosis; noepisodes",
+    "retries": 0,
+    "heldout": false,
+    "singlethread_worker": true,
+    "act_limit_s": 5
+  },
+  "new_environment_resets": 0
+}
