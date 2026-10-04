@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "name": "bounded-side-hold-camera-dev-v1",
+  "status": "DEVELOPMENT_ONLY",
+  "source_protocol": "camera-policy-generalization-v1",
+  "frozen_screen_decision": "REJECT",
+  "method": "One local official-generator diagnostic replay for each of the 32 already consumed v1 screen cells, track IDs 1-4 crossed with eight geometry seeds. The bounded18 route selected _BoundedSideHoldController with inherited no-corridor target speed 18 and its high-speed bend guard; control metrics came from the frozen v1 cold receipts. No fresh, confirmation, or blind cells were used.",
+  "source_relationship": "The ignored diagnostic snapshot equals the f12c5b6 agent.py Git source after CRLF-to-LF normalization and one Agent selector replacement. After accounting for that selector change, the raw bytes still differ because of Windows newlines. The diagnostic was not a byte-identical frozen-source binding, and its candidate runs are not v1 cold receipts.",
+  "source_commit": "f12c5b62c5f02bff4053e6f4775d202d79917938",
+  "ignored_artifacts": {
+    "diagnostic_source": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/bounded_side_hold_18_agent.py",
+    "diagnostic_records": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/bounded18-screen.jsonl",
+    "frozen_screen_summary": ".haic-artifacts/camera-policy-generalization-v1/run/screen-summary.json",
+    "frozen_screen_receipts": ".haic-artifacts/camera-policy-generalization-v1/run/cells/screen"
+  },
+  "sha256": {
+    "v1_protocol": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+    "v1_control_source": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+    "v1_candidate_source": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+    "bounded18_diagnostic_source": "45f906a029ef158d89a8b539b19c670bdfdae24eb053c6add25cd860cf63ee09",
+    "diagnostic_probe": "f0a4ffebd2ea00d67d16fabf93a132c5cb7a8a1fbb37e3ec28146922aa0a6db6",
+    "v1_screen_freeze": "ca9e5f3a08af9b6f280a2ff3185a5c9af46b1c6367d3483cb6660894c7840757",
+    "v1_screen_summary": "9abbe4dac6bfc25fcce112fd4acbeeb9e868dbc1f2bb45f2097082ade0072048",
+    "v1_canonical_receipt_manifest": "e5565fb434884aa9f6fde74c03c8c124bda04ce3935612e3f3988649c9b89eeb",
+    "bounded18_screen_jsonl": "c9b134c8b2cc52b04b0fa856400ed3f78df26a2ea086e9dd72ea9acd3eb1892d"
+  },
+  "canonical_receipt_manifest_rule": "SHA256 of UTF-8 concatenation of sorted relative path, NUL, lowercase receipt file SHA256, newline for 64 v1 repeat-0 screen receipts: control files first, candidate files second. Each receipt row was checked against the frozen paired summary.",
+  "aggregate": {
+    "canonical_paired_cells": 32,
+    "independent_geometry_seeds": 8,
+    "control_finishes": 21,
+    "frozen_candidate_finishes": 25,
+    "bounded18_finishes": 28,
+    "bounded18_net_finish_gain_over_control": 7,
+    "bounded18_lost_control_finishes": 2,
+    "bounded18_new_candidate_crashes": 1,
+    "control_contacts": 72,
+    "frozen_candidate_contacts": 23,
+    "bounded18_contacts": 23,
+    "control_damage": 14.4,
+    "frozen_candidate_damage": 4.6,
+    "bounded18_damage": 4.6,
+    "control_mean_progress": 0.8258564314592256,
+    "frozen_candidate_mean_progress": 0.9039587533602151,
+    "bounded18_mean_progress": 0.9491689195381231,
+    "bounded18_moderate_both_dnf_losses": 0,
+    "bounded18_severe_both_dnf_losses": 0,
+    "bounded18_shared_finished_cells": 19,
+    "control_shared_finished_time_ms": 468160,
+    "bounded18_shared_finished_time_ms": 502740,
+    "bounded18_shared_finished_time_ratio": 1.0738636363636365
+  },
+  "metric_order": [
+    "finished",
+    "progress",
+    "collision_count",
+    "damage",
+    "lap_time_ms",
+    "retire_reason"
+  ],
+  "changed_cells_vs_frozen_candidate": [
+    {
+      "track_id": 1,
+      "geometry_seed": 1814481715,
+      "frozen_candidate": [
+        false,
+        0.9545454545454546,
+        0,
+        0.0,
+        null,
+        "off_track"
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        0,
+        0.0,
+        30980,
+        null
+      ]
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 2570310388,
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24380,
+        null
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24500,
+        null
+      ]
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1402259577,
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        27260,
+        null
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        0,
+        0.0,
+        27040,
+        null
+      ]
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2570310388,
+      "frozen_candidate": [
+        false,
+        0.46236559139784944,
+        1,
+        0.2,
+        null,
+        "off_track"
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        3,
+        0.6000000000000001,
+        23760,
+        null
+      ]
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1262984018,
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        29620,
+        null
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        0,
+        0.0,
+        29720,
+        null
+      ]
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1402259577,
+      "frozen_candidate": [
+        false,
+        0.13636363636363635,
+        3,
+        0.6000000000000001,
+        null,
+        "off_track"
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        1,
+        0.2,
+        26900,
+        null
+      ]
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 2996001888,
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        25840,
+        null
+      ],
+      "bounded18": [
+        true,
+        1.0,
+        0,
+        0.0,
+        25400,
+        null
+      ]
+    }
+  ],
+  "per_cell_v1_screen_gate_flags": [
+    {
+      "track_id": 1,
+      "geometry_seed": 742377006,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1262984018,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1402259577,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1460583390,
+      "v1_screen_gate_flags": [
+        "control finish lost",
+        "single-cell contact increase",
+        "single-cell damage increase"
+      ]
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1814481715,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 2570310388,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 2996001888,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 3438591851,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 742377006,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1262984018,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1402259577,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1460583390,
+      "v1_screen_gate_flags": [
+        "control finish lost"
+      ]
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1814481715,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2570310388,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2996001888,
+      "v1_screen_gate_flags": [
+        "single shared-finish time regression"
+      ]
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 3438591851,
+      "v1_screen_gate_flags": [
+        "single-cell contact increase",
+        "single-cell damage increase"
+      ]
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 742377006,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1262984018,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1402259577,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1460583390,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1814481715,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 2570310388,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 2996001888,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 3438591851,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 742377006,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1262984018,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1402259577,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1460583390,
+      "v1_screen_gate_flags": [
+        "new candidate crash"
+      ]
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1814481715,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 2570310388,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 2996001888,
+      "v1_screen_gate_flags": []
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 3438591851,
+      "v1_screen_gate_flags": []
+    }
+  ],
+  "v1_screen_metric_gate_replay": {
+    "decision": "REJECT",
+    "failed_limits": [
+      "Two lost control finishes exceed the fixed screen allowance of one.",
+      "Track 1/1460583390 and track 2/3438591851 each exceed the single-cell contact and damage increase limits.",
+      "Track 2/2996001888 exceeds the single shared-finish time ratio limit."
+    ],
+    "note": "This is a diagnostic replay of the fixed v1 metric thresholds, not a valid new candidate entry under the frozen v1 protocol."
+  },
+  "limits": "The 32 geometries were inspected and shaped development; 25 cells matched the old candidate episode summary, which does not establish action-trace identity. The candidate diagnostic lacks cold per-step action hashes and deterministic reload receipts. It cannot reverse the rejected v1 result, unlock sealed v1 confirmation/blind partitions, establish all-track reliability, or certify the Linux submission container. Require a separately frozen source and independent preregistered geometries before activation."
+}
