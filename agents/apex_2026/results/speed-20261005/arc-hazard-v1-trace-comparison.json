@@ -1,0 +1,205 @@
+{
+  "classification": "preserved_fresh_trace_comparison_no_new_episode",
+  "new_source_sha256": "8ec8b3014943a997eec15d9327515f99d648f98736e90897402a81c049a9734f",
+  "parent_source_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "cases": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "old_trace_sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa",
+      "new_trace_sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa",
+      "first_action_divergence": null,
+      "new_min_speed_after40_m_per_s": 16.853938564673307,
+      "new_min_speed_after40_step": 65,
+      "new_below20_action_count_after40": 1,
+      "new_below20_sample_time_s_after40": 0.08,
+      "new_slow_groups": [
+        {
+          "first": 65,
+          "last": 65,
+          "actions": 1
+        }
+      ],
+      "new_braking_sample_time_s": 3.6,
+      "first_old": null,
+      "first_new": null
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "old_trace_sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5",
+      "new_trace_sha256": "e7dae609d07cca056f4bf69660814c46226533db14a39ddd5f839ce742ee6576",
+      "first_action_divergence": 181,
+      "new_min_speed_after40_m_per_s": 29.066712420013094,
+      "new_min_speed_after40_step": 205,
+      "new_below20_action_count_after40": 0,
+      "new_below20_sample_time_s_after40": 0.0,
+      "new_slow_groups": [],
+      "new_braking_sample_time_s": 4.5600000000000005,
+      "first_old": {
+        "step": 181,
+        "sim_time_s": 14.559999999999757,
+        "action": [
+          0.08181756734848022,
+          0.0,
+          0.28747421503067017
+        ],
+        "progress": 0.7619047619047619,
+        "speed": 71.60277499112668,
+        "position": [
+          1.140446424484253,
+          -41.852169036865234
+        ],
+        "angle": 5.364671230316162,
+        "collision": false,
+        "debug": {
+          "last_speed": 77.9422913549168,
+          "last_target": 57.408418213904326,
+          "last_steer": 0.08181756861839397
+        }
+      },
+      "first_new": {
+        "step": 181,
+        "sim_time_s": 14.559999999999757,
+        "action": [
+          0.06269793212413788,
+          0.0,
+          0.03999999910593033
+        ],
+        "progress": 0.7619047619047619,
+        "speed": 77.90318754684797,
+        "position": [
+          1.3486781120300293,
+          -41.59611892700195
+        ],
+        "angle": 5.37993860244751,
+        "collision": false,
+        "debug": {
+          "last_speed": 77.9422913549168,
+          "last_target": 75.71681744890455,
+          "last_steer": 0.06269793212413788
+        }
+      }
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "old_trace_sha256": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6",
+      "new_trace_sha256": "13268bf60837e2ffdf67a63497218dd249aec2f6de557a4e3a12b9546650edde",
+      "first_action_divergence": 63,
+      "new_min_speed_after40_m_per_s": 44.384548492439045,
+      "new_min_speed_after40_step": 78,
+      "new_below20_action_count_after40": 0,
+      "new_below20_sample_time_s_after40": 0.0,
+      "new_slow_groups": [],
+      "new_braking_sample_time_s": 3.92,
+      "first_old": {
+        "step": 63,
+        "sim_time_s": 5.119999999999957,
+        "action": [
+          0.013925965875387192,
+          0.6717910170555115,
+          0.0
+        ],
+        "progress": 0.2750809061488673,
+        "speed": 61.0550638575961,
+        "position": [
+          28.319488525390625,
+          88.35211944580078
+        ],
+        "angle": 0.027350230142474174,
+        "collision": false,
+        "debug": {
+          "last_speed": 58.60122477386543,
+          "last_target": 66.79774214829808,
+          "last_steer": 0.013925965919825305
+        }
+      },
+      "first_new": {
+        "step": 63,
+        "sim_time_s": 5.119999999999957,
+        "action": [
+          0.023880871012806892,
+          0.13263538479804993,
+          0.0
+        ],
+        "progress": 0.2750809061488673,
+        "speed": 59.536433682727484,
+        "position": [
+          28.3502254486084,
+          88.28313446044922
+        ],
+        "angle": 0.018373465165495872,
+        "collision": false,
+        "debug": {
+          "last_speed": 58.60122477386543,
+          "last_target": 57.81181439708684,
+          "last_steer": 0.023880871012806892
+        }
+      }
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "old_trace_sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67",
+      "new_trace_sha256": "ccc6263884dd4a5fca945d2058ef2706ae91d7308f6ca726c65c4261ff947183",
+      "first_action_divergence": 24,
+      "new_min_speed_after40_m_per_s": 1.3489742756915895,
+      "new_min_speed_after40_step": 112,
+      "new_below20_action_count_after40": 73,
+      "new_below20_sample_time_s_after40": 5.84,
+      "new_slow_groups": [
+        {
+          "first": 108,
+          "last": 180,
+          "actions": 73
+        }
+      ],
+      "new_braking_sample_time_s": 4.5600000000000005,
+      "first_old": {
+        "step": 24,
+        "sim_time_s": 2.0000000000000018,
+        "action": [
+          -0.07831692695617676,
+          0.30000001192092896,
+          0.0
+        ],
+        "progress": 0.0931899641577061,
+        "speed": 53.97182867365101,
+        "position": [
+          208.53465270996094,
+          19.762807846069336
+        ],
+        "angle": 1.2114652395248413,
+        "collision": false,
+        "debug": {
+          "last_speed": 53.6659169359272,
+          "last_target": 68.20986232233737,
+          "last_steer": -0.07831693047034642
+        }
+      },
+      "first_new": {
+        "step": 24,
+        "sim_time_s": 2.0000000000000018,
+        "action": [
+          -0.08739298582077026,
+          0.30000001192092896,
+          0.0
+        ],
+        "progress": 0.0931899641577061,
+        "speed": 53.95866627197737,
+        "position": [
+          208.5273895263672,
+          19.742515563964844
+        ],
+        "angle": 1.218527913093567,
+        "collision": false,
+        "debug": {
+          "last_speed": 53.6659169359272,
+          "last_target": 68.20986232233737,
+          "last_steer": -0.08739298582077026
+        }
+      }
+    }
+  ]
+}

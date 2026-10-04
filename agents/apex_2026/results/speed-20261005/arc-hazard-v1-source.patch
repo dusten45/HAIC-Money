@@ -1,0 +1,163 @@
+--- fast_rear_clear_agent.py
++++ fast_arc_hazard_agent.py
+@@ -880 +880 @@
+-class Agent(_ArcClearReference):
++class _RearClearReference(_ArcClearReference):
+@@ -898,0 +899,157 @@
++
++
++class Agent(_RearClearReference):
++    """Delay a far-along-road circle using a stoppable supported prefix.
++
++    Row distance can place a later hairpin's circle before the visible bend.
++    Only a fully associated interior circle may be deferred, and the ridge
++    stops before its original avoidance footprint. Every parent detector
++    consumer sees the same per-action labels. Outside that action the exact
++    detector remains available. Static camera and constant-turn body samples
++    are conservative heuristics, not a tyre, lag or collision certificate.
++    """
++
++    def reset(self, observation=None):
++        super().reset(observation)
++        self._hazard_in_act = False
++        self._hazard_frame = None
++        self._hazard_circles = None
++        self.hazard_deferred = False
++        self.hazard_prefix = None
++        self.hazard_original_circles = ()
++        self.hazard_body_depth = None
++        self.hazard_reason = "none"
++
++    def _hazard_trim(self, path, circles, speed):
++        """Return only a known pre-footprint path long enough to stop."""
++        if path is None or len(path) < 5 or not circles:
++            return None
++        if not np.isfinite(path).all() or not np.isfinite(speed) or speed < 0.:
++            return None
++        arc = self._arc(path)
++        delta = np.diff(path, axis=0)
++        square = np.sum(delta*delta, axis=1)
++        if np.any(square <= 0.):
++            return None
++        clearance = 2.4+max(self.obstacle_margin, 1.3)
++        entries = []
++        for object_y, object_x in circles:
++            point = np.asarray([object_x, object_y], dtype=float)
++            if not np.isfinite(point).all():
++                return None
++            phase = np.clip(np.sum((point-path[:-1])*delta, axis=1)/square, 0., 1.)
++            foot = path[:-1]+phase[:, None]*delta
++            gap = np.linalg.norm(foot-point, axis=1)
++            closest = int(np.argmin(gap))
++            along = arc[closest]+phase[closest]*np.sqrt(square[closest])
++            # An endpoint or an off-reference circle has unknown parametric
++            # association. Never extrapolate missing road past the camera.
++            if (gap[closest] > clearance or along < clearance
++                    or arc[-1]-along < clearance):
++                return None
++            relative = path[:-1]-point
++            linear = 2.*np.sum(relative*delta, axis=1)
++            constant = np.sum(relative*relative, axis=1)-clearance**2
++            discriminant = linear**2-4.*square*constant
++            intersections = [float(arc[index]) for index in np.flatnonzero(constant <= 0.)]
++            for index in np.flatnonzero(discriminant >= 0.):
++                root = np.sqrt(discriminant[index])
++                for fraction in ((-linear[index]-root)/(2.*square[index]),
++                                 (-linear[index]+root)/(2.*square[index])):
++                    if 0. <= fraction <= 1.:
++                        intersections.append(float(arc[index]+fraction*np.sqrt(square[index])))
++            if not intersections:
++                return None
++            entries.append(min(intersections))
++        end = min(entries)-2.6
++        stopping = speed**2/(2.*self.braking_accel)+.08*speed+2.6
++        if end < stopping:
++            return None
++        prefix = path[arc < end]
++        endpoint = np.asarray([np.interp(end, arc, path[:, 0]),
++                               np.interp(end, arc, path[:, 1])])
++        prefix = np.vstack((prefix, endpoint))
++        return prefix if len(prefix) >= 5 else None
++
++    def _road(self, frame):
++        road = super()._road(frame)
++        if (not self._hazard_in_act or self.pass_side or self.lost_frames
++                or road is None or float(road[0][-1]) < 6.):
++            return road
++        self._hazard_frame = frame.copy()
++        circles = super()._circles(frame, road)
++        self._hazard_circles = tuple(circles)
++        self.hazard_original_circles = tuple(circles)
++        if not circles:
++            return road
++        speed, yaw = self._speed(frame), self._yaw(frame)
++        prefix = self._hazard_trim(super()._ridge(frame), circles, speed)
++        self.hazard_reason = "insufficient_or_unknown_prefix"
++        if prefix is None:
++            return road
++        field = self._distance_field(frame)
++        if float(np.min(self._sample_distance(field, prefix))) < 5.8:
++            self.hazard_reason = "point_support"
++            return road
++        dense = []
++        for a, b in zip(prefix[:-1], prefix[1:]):
++            phase = np.linspace(0., 1., max(2, int(np.ceil(np.linalg.norm(b-a)/.5))+1))
++            dense.append(a[None]+phase[:, None]*(b-a)[None])
++        if float(np.min(self._sample_distance(field, np.concatenate(dense)))) < 1.9:
++            self.hazard_reason = "chord_support"
++            return road
++        # Predict the same ridge turn and .24 slew actually emitted later.
++        # This is an additional near-body gate for this deferral only; the
++        # original ridge's static support alone does not check its turn.
++        arc = self._arc(prefix)
++        preview = min(float(np.clip(7.+self.preview_time*speed, 8., 32.)),
++                      max(3., arc[-1]-1.))
++        x, y = (float(np.interp(preview, arc, prefix[:, index])) for index in (0, 1))
++        curvature = 2.*x/max(x*x+y*y, 1.)
++        desired = np.arctan(self.WHEELBASE*curvature)
++        desired += self.yaw_gain*self.WHEELBASE*(speed*curvature-yaw)/max(speed, 20.)
++        emitted = self.last_steer+float(np.clip(np.clip(desired, -.4, .4)-self.last_steer, -.24, .24))
++        self.hazard_body_depth = self._arc_guard_depth(field, emitted)
++        if self.hazard_body_depth < 1.9:
++            self.hazard_reason = "emitted_body_support"
++            return road
++        self.hazard_prefix = prefix
++        self.hazard_deferred = True
++        self.hazard_reason = "supported_stoppable_prefix"
++        self.circle_cooldown = 0
++        return road
++
++    def _circles(self, frame, road):
++        if (self._hazard_in_act and self._hazard_frame is not None
++                and np.array_equal(frame, self._hazard_frame)):
++            if self.hazard_deferred:
++                return []
++            return list(self._hazard_circles)
++        return super()._circles(frame, road)
++
++    def _ridge(self, frame):
++        if (self._hazard_in_act and self.hazard_deferred
++                and np.array_equal(frame, self._hazard_frame)):
++            return self.hazard_prefix.copy()
++        return super()._ridge(frame)
++
++    def _ridge_target(self, path, speed):
++        target = super()._ridge_target(path, speed)
++        if self._hazard_in_act and self.hazard_deferred:
++            usable = max(0., float(self._arc(path)[-1])-2.6-.08*speed)
++            target = min(target, np.sqrt(2.*self.braking_accel*usable))
++        return float(target)
++
++    def act(self, observation):
++        self._hazard_in_act = True
++        self._hazard_frame = None
++        self._hazard_circles = None
++        self.hazard_deferred = False
++        self.hazard_prefix = None
++        self.hazard_original_circles = ()
++        self.hazard_body_depth = None
++        self.hazard_reason = "none"
++        try:
++            return super().act(observation)
++        finally:
++            self._hazard_in_act = False

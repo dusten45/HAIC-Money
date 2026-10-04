@@ -1,0 +1,22 @@
+{
+  "classification": "bounded_camera_hazard_parametric_prefix_candidate_not_adoption",
+  "parent_source_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "source_sha256": "8ec8b3014943a997eec15d9327515f99d648f98736e90897402a81c049a9734f",
+  "exact_parent_prefix_with_final_class_alias": true,
+  "zero_context_patch_sha256": "eac0bf35cb667c5b8d09828b4dc3fbb0f6cd9c6aeb08c59286fcf165128df8c7",
+  "reverse_patch_exact_parent": true,
+  "camera_fixture_sha256": "427023c84398082464e2090f8eeca0084521851962189ab244971ccedb9a69a3",
+  "tests_sha256": "ca109b1941db19698a6180adabc159f1caab5a5b3706945f1a0e17369074e4d9",
+  "red_before_implementation": {
+    "failed": 3,
+    "passed": 8,
+    "expected_failures": [
+      "actual132 parent confidence",
+      "actual133 parent confidence",
+      "missing new unknown-endpoint helper"
+    ]
+  },
+  "green_focused_tests": 32,
+  "parameters": {},
+  "new_holdout_opened": false
+}
