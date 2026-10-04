@@ -11,9 +11,12 @@ The user resumed work toward four early-10-second laps on 2026-10-05 KST.
 New source-bound mandatory screens and causal physics/camera diagnostics are
 in [`results/speed-20261005/PROGRESS.md`](results/speed-20261005/PROGRESS.md).
 No current candidate completes all four within 13 seconds, and none is adopted.
-Path V4 currently finishes three at 15.40/23.20/18.00 s; braking V2 finishes
-two at 16.56/16.76 s. Every other mandatory cell remains explicitly DNF in its
-own receipt. Current motion, committed-pass and corridor experiments continue.
+Explicit ego road-support confidence finishes all four at
+15.04/24.22/19.86/19.96 s, exactly matching initial graph action hashes.
+A fresh component development benchmark repeats those required laps but
+finishes only 12/16 extras (track 3:1/4). Clear-road ridge with a distance-support
+prefix finishes 15.18/30.24/18.50/18.38 s, contacts 0/3/0/0. These are research
+candidates; current camera motion and committed-pass experiments continue.
 
 The user cancelled the subsequently imposed time cutoff; no clock deadline
 is active. Work continues toward the requested speed goal, with immediate stop

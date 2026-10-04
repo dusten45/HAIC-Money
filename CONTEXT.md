@@ -114,11 +114,15 @@ Those are earlier fresh validations, not new measurements in the resumed phase.
 
 The current high-speed continuation is active, aiming at four early-10-second
 laps with less curve slowing. No new candidate is adopted or meets all four
-13-second laps. New path V4 finishes 15.40/23.20/18.00 s and fails track 4;
-new braking V2 finishes 16.56 s on track 1 and 16.76 s on track 4 but fails
-tracks 2/3. These distinct candidates cannot be combined into a synthetic
-four-lap result. New camera corridor, committed-pass and motion-estimation
-lanes investigate observed path tracking and wheel-slip failures. Receipts,
+13-second laps. Fresh explicit road-support confidence reproduces initial
+graph actions and finishes 15.04/24.22/19.86/19.96 s. A separate fresh
+20-cell component development benchmark exactly repeats those mandatory
+actions but finishes only 12/16 extras (track 3 only 1/4). New clear-road ridge
+with a distance-support prefix finishes 15.18/30.24/18.50/18.38 s, contacts
+0/3/0/0. Selected bend geometry improves, but speed and obstacle tracking
+remain unresolved. Forecast propulsion finishes 15.72/26.20/23.96 s and
+fails track 4. These distinct sources cannot form a synthetic result.
+Committed-pass and camera motion-estimation investigations continue. Receipts,
 source bindings and causal diagnostics are in `results/speed-20261005/`.
 No new holdout has opened; the old holdout is consumed development data.
 
@@ -126,8 +130,9 @@ The user cancelled the subsequently proposed 04:00 KST cutoff: **no active
 clock deadline**. Continue regardless of time until the requested goal or an
 actual Codex weekly quota exhaustion error. No quota-reading or Fast-mode
 setting tool is exposed; user asked to disable Fast in the app.
-The previous full baseline was 1170 passed, 10 skipped and 15 existing
-Box2D-version/provenance failures; a new full-suite checkpoint is running.
+The latest collected full-suite checkpoint has 1396 passes, 10 skips and the
+same 15 existing Box2D-version/provenance failures. Later source changes and
+newly added tests are verified separately; this is not a final-tree full run.
 
 ## Frozen Competition Contract
 

@@ -61,6 +61,14 @@ guarded snapshot, but is not yet a qualifying candidate:
 | braking feedforward V1, defaults | 16.60 s | DNF | DNF | 17.04 s |
 | braking feedforward V2, defaults | 16.56 s | DNF | DNF | 16.76 s |
 | camera corridor smoothing V1, defaults | 15.30 s | DNF | DNF | DNF |
+| grip reserve V1, defaults | 15.72 s | DNF | DNF | DNF |
+| graph V1, defaults | 15.04 s | 24.22 s | 19.86 s | 19.96 s |
+| graph V2, defaults | 14.84 s | DNF | DNF | DNF |
+| explicit ego confidence V1, defaults | 15.04 s | 24.22 s | 19.86 s | 19.96 s |
+| forecast propulsion V1, defaults | 15.72 s | 26.20 s | 23.96 s | DNF |
+| full ridge V1, defaults | 15.04 s | DNF | DNF | DNF |
+| clear-road ridge V1, defaults | 15.18 s | 29.62 s | 19.60 s | DNF |
+| clear ridge support V2, defaults | 15.18 s | 30.24 s | 18.50 s | 18.38 s |
 
 All four times must belong to one source/parameter setting; the fastest
 individual laps above must not be combined into a synthetic result. None of
@@ -116,3 +124,30 @@ episodes culminate in 14.22/17.98/16.66/15.60 s with zero contacts, still above
 the goal. Converged local point-model time estimates are about
 12.07/15.12/13.62/13.24 s, not physical laps, global optima or lower bounds.
 SciPy 1.14.1 is optional offline research only; inference stays NumPy-only.
+
+## Road support and current verification
+
+Initial graph V1's four mandatory finishes were discovered after interrupted
+parent orchestration; all workers had completed and their valid receipts are
+preserved. Its saved-camera branch regression still fails. Graph V2 fixes the
+car-fragment seed but removes a bounded recovery warning, losing three laps.
+Explicit confidence checks the nearest ego component deliberately and freshly
+reproduces all four V1 action hashes. The exact V1 source alias received a new
+20-cell development benchmark: four exact mandatory repeats, 12/16 extra
+finishes (4/4,4/4,1/4,3/4 by track), 21 total contacts. No new holdout was used.
+
+Metric ridge reconstruction improves selected nearly horizontal bend errors
+from about 2.5m to below 1m but full ridge hazard control fails three laps.
+Clear-road-only ridge V1 preserves confidence hazard/recovery actions and
+finishes three. Offline curvature measurements expose false startup and
+horizon bends; smoothing reduces average error without eliminating systematic
+bias. A 5.8m distance-support prefix restores track 4 in a fresh V2 benchmark;
+track 2 still has three contacts and takes 30.24s. No source is adopted.
+
+The completed full-suite checkpoint has 1396 passes, 10 skips, 15 known failures
+in 450.19s. Its collection predates later controller/test changes; focused
+tests verify those separately. The failures match existing four Box2D-version
+expectations and eleven historical receipt/provenance cases. Protected root
+and official simulator sources remain unchanged. The feasibility audit proves
+no useful lower bound excluding 10s; offline route times are not impossibility
+proofs or physical lap results.
