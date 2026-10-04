@@ -17,6 +17,9 @@ SHADOW_SHA='8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56'
 ROOT=Path(__file__).resolve().parents[1]
 DEFAULT_BEAM=ROOT/'results/beam_sources/aef90410f8ad.py'
 DEFAULT_SHADOW=ROOT/'results/shadow-sources/r2/shadow_physics.py'
+R6_BEAM_SHA='cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425'
+R6_BEAM=ROOT/'results/beam_refined_sources/cc0543c2bebb.py'
+PINNED_BEAMS={'r3':(BEAM_SHA,DEFAULT_BEAM),'r6':(R6_BEAM_SHA,R6_BEAM)}
 
 def digest(data):return hashlib.sha256(data).hexdigest()
 
@@ -63,9 +66,11 @@ def remove_project_import(source):
     lines[node.lineno-1]='\n'
     return ''.join(lines)
 
-def build(beam_path,shadow_path,output):
+def build(beam_path,shadow_path,output,*,variant='r3'):
+    if variant not in PINNED_BEAMS:raise ValueError('Unknown pinned beam variant')
+    beam_sha,_=PINNED_BEAMS[variant]
     beam_bytes=Path(beam_path).read_bytes();shadow_bytes=Path(shadow_path).read_bytes()
-    if digest(beam_bytes)!=BEAM_SHA:raise ValueError('Beam source hash mismatch')
+    if digest(beam_bytes)!=beam_sha:raise ValueError('Beam source hash mismatch')
     if digest(shadow_bytes)!=SHADOW_SHA:raise ValueError('Shadow source hash mismatch')
     output=Path(output).resolve()
     if not output.is_relative_to(Path('/tmp')) or output==Path('/tmp'):
@@ -73,7 +78,7 @@ def build(beam_path,shadow_path,output):
     shadow=rename_shadow_road(shadow_bytes.decode('utf-8'))
     beam=remove_project_import(beam_bytes.decode('utf-8'))
     header='# Standalone packaging preflight only; no candidate selection or freeze.\n'
-    header+=f'# Beam SHA256 {BEAM_SHA}\n# Shadow SHA256 {SHADOW_SHA}\n'
+    header+=f'# Beam SHA256 {beam_sha}\n# Shadow SHA256 {SHADOW_SHA}\n'
     packaged=(header+shadow.rstrip('\n')+'\n\n'+beam.rstrip('\n')+'\n').encode('utf-8')
     tree=ast.parse(packaged)
     for n in ast.walk(tree):
@@ -83,7 +88,7 @@ def build(beam_path,shadow_path,output):
         if any(m.split('.')[0] not in {'math','heapq','cv2','numpy','Box2D'} for m in modules):
             raise ValueError('Unexpected standalone dependency')
     manifest=dict(schema_version=1,scope='packaging_preflight_only_no_selection_or_freeze',
-        beam_sha256=BEAM_SHA,shadow_sha256=SHADOW_SHA,agent_sha256=digest(packaged),
+        beam_sha256=beam_sha,shadow_sha256=SHADOW_SHA,agent_sha256=digest(packaged),
         transformations=['shadow module _Road binding and sole ShadowCar.__init__ load renamed _ShadowRoad',
                          'beam exact project helper import removed; archived texts concatenated'],
         files=['agent.py','manifest.json'])
@@ -98,8 +103,11 @@ def build(beam_path,shadow_path,output):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--beam',type=Path,default=DEFAULT_BEAM)
+    parser.add_argument('--variant',choices=tuple(PINNED_BEAMS),default='r3')
+    parser.add_argument('--beam',type=Path,default=None)
     parser.add_argument('--shadow',type=Path,default=DEFAULT_SHADOW)
     parser.add_argument('--output',type=Path,required=True)
-    args=parser.parse_args();print(json.dumps(build(args.beam,args.shadow,args.output),indent=2))
+    args=parser.parse_args()
+    beam=args.beam if args.beam is not None else PINNED_BEAMS[args.variant][1]
+    print(json.dumps(build(beam,args.shadow,args.output,variant=args.variant),indent=2))
 if __name__=='__main__':main()

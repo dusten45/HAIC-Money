@@ -1,0 +1,111 @@
+{
+  "isolated_import": {
+    "isolated_import": true,
+    "project_modules_loaded": false
+  },
+  "selector": "r6",
+  "builder_sha256": "848cf31f387c9bd5122160910e801daaabde1097e48258ec2ad6796c2364780f",
+  "checker_sha256": "123d541080944adbaaf6a420a93a025e19fe87230d7b7bdc130bc049a8172b8f",
+  "initial_saved_action_memory": {
+    "throttle": 0.0,
+    "last_steer": 0.16901178658008575,
+    "slip": 0.07426206345377134
+  },
+  "scope": "Packagingpreflightonly; noselection,freeze,holdoutallocation orsimulatorreset.",
+  "environment_resets": 0,
+  "beam_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "package_manifest": {
+    "schema_version": 1,
+    "scope": "packaging_preflight_only_no_selection_or_freeze",
+    "beam_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agent_sha256": "95beb517147bf47bb68a5e8cb076dacafdd6f994769468ecf6a7f3457c94b44f",
+    "transformations": [
+      "shadow module _Road binding and sole ShadowCar.__init__ load renamed _ShadowRoad",
+      "beam exact project helper import removed; archived texts concatenated"
+    ],
+    "files": [
+      "agent.py",
+      "manifest.json"
+    ]
+  },
+  "package_path": "/tmp/apex-beam-r6-standalone-preflight/agent.py",
+  "ast_equal_except_authorized_bindings": true,
+  "numeric_tokens_identical": true,
+  "mit_notice_preserved": true,
+  "rows": [
+    {
+      "sequence": "pure_straight_from_rest",
+      "index": 0,
+      "action_original": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "action_packaged": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 2.5272576339993975,
+      "package_wall_s": 1.778539027000079
+    },
+    {
+      "sequence": "saved_R5_stall_120_then_121_with_R6_carry",
+      "index": 0,
+      "action_original": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "action_packaged": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 1.4857784019986866,
+      "package_wall_s": 1.5119037949989433
+    },
+    {
+      "sequence": "saved_R5_stall_120_then_121_with_R6_carry",
+      "index": 1,
+      "action_original": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "action_packaged": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 1.4992812139971647,
+      "package_wall_s": 1.5176944000013464
+    }
+  ],
+  "observation_hashes": {
+    "agents/apex_2026/v2/results/beam_refinement_fixtures/r5_stall_120_121.npz": "456042dd775fe15c4bd4633997fb04715a1ca87bb4f60409d4258de836a683c4",
+    "agents/apex_2026/v2/results/beam_refinement_fixtures/r5_stall_120_121.json": "4524f93c5a33a3f40de61b4b9393d1729d20cc2ef9b98e5e3fef5b53db6e3093"
+  },
+  "nice": 19,
+  "openblas_threads": "1",
+  "opencv_threads": 1,
+  "limitations": [
+    "Threeobservations only; exactparityatthissubsetdoesnot replacefullcandidateevaluation.",
+    "Stall120startsfromsavedR5actionmemory;121carriesnewR6statefrom120,notresettohistoricalR5memory. Purestraightusesfreshagents. Noenvironmentepisode.",
+    "Walltimesarepreflightmeasurements,not a hardresourceeligibility guarantee."
+  ]
+}
