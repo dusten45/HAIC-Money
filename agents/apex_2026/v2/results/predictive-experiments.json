@@ -364,7 +364,7 @@
     },
     {
       "variant": "predictive-r1",
-      "status": "prepared_not_evaluated",
+      "status": "completed",
       "source_sha256": "67d5a5c0430aca27fcc9c76784e46cd5a7cdb37e5d7ffcae8427e8bcc37fccde",
       "source_archive": "agents/apex_2026/v2/results/predictive_sources/67d5a5c0430a.py",
       "config": {},
@@ -402,7 +402,201 @@
           "role": "consumed_v1_failure"
         }
       ],
-      "episodes": []
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.08928571428571429,
+          "damage": 0.0,
+          "steps": 130,
+          "resource_eligible": true,
+          "inference_mean_s": 0.09200743700004331,
+          "inference_max_s": 0.4181172099997639,
+          "role": "required",
+          "receipt": "/tmp/apex-v2-predictive-r1/t1.json",
+          "receipt_sha256": "dfb517f6aedd8118aa6e78f828dd1e827febdbb56c40e2c3b8e439e7c8d7dbad",
+          "trace": "/tmp/apex-v2-predictive-r1/t1.jsonl",
+          "trace_sha256": "7a9d8c841c43d66b1194a37d64c941e0cfb3aeae9b38e93a5316bfdb8d6517a9",
+          "prediction_residuals": {
+            "moving": {
+              "count": 24,
+              "speed_mae": 0.4800436663140353,
+              "yaw_mae": 0.08185846704770026
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 13,
+              "speed_mae": 0.41145126769818563,
+              "yaw_mae": 0.08309598840199985
+            }
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.08035714285714286,
+          "damage": 0.0,
+          "steps": 309,
+          "resource_eligible": true,
+          "inference_mean_s": 0.09076121109387787,
+          "inference_max_s": 0.4839911840008426,
+          "role": "required",
+          "receipt": "/tmp/apex-v2-predictive-r1/t2.json",
+          "receipt_sha256": "cb57123ae27fc57f000301b97d2cc69457423883cfb1d67eeff295c2a0ad1c59",
+          "trace": "/tmp/apex-v2-predictive-r1/t2.jsonl",
+          "trace_sha256": "e2564de3fccfe2415358f0166891a4c61f020a0b501a211ea21c3f2a00c169b1",
+          "prediction_residuals": {
+            "moving": {
+              "count": 22,
+              "speed_mae": 0.59753308822568,
+              "yaw_mae": 0.06440561188681672
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 11,
+              "speed_mae": 0.6310912697486699,
+              "yaw_mae": 0.062221543355421585
+            }
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.08090614886731391,
+          "damage": 0.0,
+          "steps": 133,
+          "resource_eligible": true,
+          "inference_mean_s": 0.08809292457140384,
+          "inference_max_s": 0.28953386900138867,
+          "role": "required",
+          "receipt": "/tmp/apex-v2-predictive-r1/t3.json",
+          "receipt_sha256": "9b8e62c5ea981e1af26497c3740bd8c8b55bf6db1b24c69be5523f08338ea0a3",
+          "trace": "/tmp/apex-v2-predictive-r1/t3.jsonl",
+          "trace_sha256": "bf6769e164e42f200631a44aebbf0e1af708a67465f16ed032fb27fb6c8097ce",
+          "prediction_residuals": {
+            "moving": {
+              "count": 24,
+              "speed_mae": 0.6365273728867712,
+              "yaw_mae": 0.08336738685348384
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 13,
+              "speed_mae": 0.6920394646843111,
+              "yaw_mae": 0.09090138857181256
+            }
+          }
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.0931899641577061,
+          "damage": 0.0,
+          "steps": 130,
+          "resource_eligible": true,
+          "inference_mean_s": 0.07898340765385421,
+          "inference_max_s": 0.3142605619996175,
+          "role": "required",
+          "receipt": "/tmp/apex-v2-predictive-r1/t4.json",
+          "receipt_sha256": "219dcee0738f5574ced0dd1855a2ace50ea2d921a5f6c67ebfa9e967068ac013",
+          "trace": "/tmp/apex-v2-predictive-r1/t4.jsonl",
+          "trace_sha256": "0cdba1777147f768fe514af5ceb3122f5921727a11ae73177916754434c204b9",
+          "prediction_residuals": {
+            "moving": {
+              "count": 24,
+              "speed_mae": 0.5630803973525987,
+              "yaw_mae": 0.11980711854863534
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 13,
+              "speed_mae": 0.5563262140975945,
+              "yaw_mae": 0.1552777519592872
+            }
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.09665427509293681,
+          "damage": 0.0,
+          "steps": 135,
+          "resource_eligible": true,
+          "inference_mean_s": 0.0633384486666694,
+          "inference_max_s": 0.22209494199887558,
+          "role": "consumed_v1_failure",
+          "receipt": "/tmp/apex-v2-predictive-r1/oldfail-t2.json",
+          "receipt_sha256": "1c8da30e117b57bec8a8f655e38980037d9c27cd284129506f74dd73845ad2bd",
+          "trace": "/tmp/apex-v2-predictive-r1/oldfail-t2.jsonl",
+          "trace_sha256": "a17cab18d88c41da92af5a40c8a3a24dc949f8215ae39c10186d05b851211768",
+          "prediction_residuals": {
+            "moving": {
+              "count": 26,
+              "speed_mae": 0.5291017508737529,
+              "yaw_mae": 0.06446248613579995
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 15,
+              "speed_mae": 0.4952691092991954,
+              "yaw_mae": 0.06702174544334412
+            }
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": false,
+          "start_t": 1.0200000000000005,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.07739938080495357,
+          "damage": 0.0,
+          "steps": 135,
+          "resource_eligible": true,
+          "inference_mean_s": 0.05520600942230279,
+          "inference_max_s": 0.16717874499954632,
+          "role": "consumed_v1_failure",
+          "receipt": "/tmp/apex-v2-predictive-r1/oldfail-t3.json",
+          "receipt_sha256": "70bbf85d87b01092bde38b4f6ca9de2a5eab2be22f847a1878d120d9e59c5223",
+          "trace": "/tmp/apex-v2-predictive-r1/oldfail-t3.jsonl",
+          "trace_sha256": "dc7399964ce8f0e335967a2b8691fb756e6026f817e0811a9b8fdd0577ae7e4b",
+          "prediction_residuals": {
+            "moving": {
+              "count": 25,
+              "speed_mae": 0.6612872240277323,
+              "yaw_mae": 0.07891960288327998
+            },
+            "consecutive_flow_invalid_ge4": {
+              "count": 12,
+              "speed_mae": 0.7731620798585802,
+              "yaw_mae": 0.08255863438049953
+            }
+          }
+        }
+      ],
+      "finished_count": 0,
+      "decision": "rejected: stopping feasibility does not preserve route-following progress; all six episodes DNF",
+      "limitations": [
+        "Exact public force laws do not imply exact reconstructed state: RPM saturation/reversal, joint angular rates and solver warm-start state remain uncertain.",
+        "Immediate-prefix progress ignores anticipatory path alignment; a collision-free stopped terminal pose need not permit continued forward driving.",
+        "Pixel-only model-slip propagation during consecutive optical-flow failures is distinct from zero-slip fallback in earlier shadow calibration."
+      ]
     }
   ]
 }
