@@ -1,0 +1,413 @@
+{
+  "schema": "apex-independent-hud-review-v1",
+  "reviewed_at": "2026-10-04T18:34:02.830378+00:00",
+  "scope": "Existing REQUIRED/development receipt/trace and source audit; zero simulator resets, no holdout access. Only this review artifact created.",
+  "candidate_source_commit": "2f7abdd",
+  "calibration_commit": "20c15c9",
+  "candidate_source_sha256": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+  "runtime_imports": [
+    "from __future__ import annotations",
+    "import cv2",
+    "import numpy as np"
+  ],
+  "pixel_only_boundary": "No forbidden runtime imports or privileged simulator/calibration dependency found. Runtime reads observations and internal history.",
+  "required_matched_comparison": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "smooth200_ms": 18320,
+      "hud100_ms": 17140,
+      "change_ms": -1180,
+      "both_zero_damage": true,
+      "yaw": {
+        "pre_action_samples": 215,
+        "above_calibrated_abs6": 0,
+        "max_abs_true_yaw": 2.701019525527954,
+        "valid_decoder_samples": 215,
+        "decoder_mae_rad_s": 0.016721394492104802,
+        "decoder_max_abs_error_rad_s": 0.05182207084994239,
+        "flow_invalid_samples": 96
+      }
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "smooth200_ms": 22800,
+      "hud100_ms": 21420,
+      "change_ms": -1380,
+      "both_zero_damage": true,
+      "yaw": {
+        "pre_action_samples": 268,
+        "above_calibrated_abs6": 0,
+        "max_abs_true_yaw": 3.454988718032837,
+        "valid_decoder_samples": 268,
+        "decoder_mae_rad_s": 0.017220707452447432,
+        "decoder_max_abs_error_rad_s": 0.04718422568431724,
+        "flow_invalid_samples": 125
+      }
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "smooth200_ms": 20180,
+      "hud100_ms": 19480,
+      "change_ms": -700,
+      "both_zero_damage": true,
+      "yaw": {
+        "pre_action_samples": 244,
+        "above_calibrated_abs6": 0,
+        "max_abs_true_yaw": 3.4081029891967773,
+        "valid_decoder_samples": 244,
+        "decoder_mae_rad_s": 0.017530017250242513,
+        "decoder_max_abs_error_rad_s": 0.05178491953014708,
+        "flow_invalid_samples": 113
+      }
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "smooth200_ms": 18420,
+      "hud100_ms": 17920,
+      "change_ms": -500,
+      "both_zero_damage": true,
+      "yaw": {
+        "pre_action_samples": 225,
+        "above_calibrated_abs6": 0,
+        "max_abs_true_yaw": 3.2046315670013428,
+        "valid_decoder_samples": 225,
+        "decoder_mae_rad_s": 0.01858678988083871,
+        "decoder_max_abs_error_rad_s": 0.04979959096836062,
+        "flow_invalid_samples": 109
+      }
+    }
+  ],
+  "matched_change": "Archived source diff limited to HUD option/decoder/control integration and diagnostics. Config changes only hud_dynamics=True; official and evaluator source hashes unchanged. smooth200 original live source path has since changed; its archived source.py matches every original receipt hash.",
+  "development": {
+    "cells": [
+      {
+        "track_id": 1,
+        "seed": 3601050001,
+        "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050001.json",
+        "finished": false,
+        "lapTimeMs": null,
+        "damage": 0.0,
+        "retire_reason": "off_track",
+        "yaw": {
+          "pre_action_samples": 321,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 4.962320327758789,
+          "valid_decoder_samples": 235,
+          "decoder_mae_rad_s": 0.018239317451133136,
+          "decoder_max_abs_error_rad_s": 0.05526640833473717,
+          "flow_invalid_samples": 106
+        }
+      },
+      {
+        "track_id": 1,
+        "seed": 3601050002,
+        "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050002.json",
+        "finished": true,
+        "lapTimeMs": 16140,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 202,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 3.2271947860717773,
+          "valid_decoder_samples": 202,
+          "decoder_mae_rad_s": 0.017098424221259307,
+          "decoder_max_abs_error_rad_s": 0.050722138911479475,
+          "flow_invalid_samples": 72
+        }
+      },
+      {
+        "track_id": 1,
+        "seed": 3601050003,
+        "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050003.json",
+        "finished": true,
+        "lapTimeMs": 17000,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 213,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.924673557281494,
+          "valid_decoder_samples": 213,
+          "decoder_mae_rad_s": 0.017900364008503578,
+          "decoder_max_abs_error_rad_s": 0.04923886515002174,
+          "flow_invalid_samples": 91
+        }
+      },
+      {
+        "track_id": 2,
+        "seed": 3601050001,
+        "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050001.json",
+        "finished": true,
+        "lapTimeMs": 17300,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 217,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.8028817176818848,
+          "valid_decoder_samples": 217,
+          "decoder_mae_rad_s": 0.018959578942988324,
+          "decoder_max_abs_error_rad_s": 0.05208997548094396,
+          "flow_invalid_samples": 96
+        }
+      },
+      {
+        "track_id": 2,
+        "seed": 3601050002,
+        "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050002.json",
+        "finished": true,
+        "lapTimeMs": 15140,
+        "damage": 0.2,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 190,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 3.3132965564727783,
+          "valid_decoder_samples": 190,
+          "decoder_mae_rad_s": 0.017504568506854844,
+          "decoder_max_abs_error_rad_s": 0.05072297337650633,
+          "flow_invalid_samples": 74
+        }
+      },
+      {
+        "track_id": 2,
+        "seed": 3601050003,
+        "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050003.json",
+        "finished": true,
+        "lapTimeMs": 16560,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 208,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.971306800842285,
+          "valid_decoder_samples": 208,
+          "decoder_mae_rad_s": 0.015914718753029404,
+          "decoder_max_abs_error_rad_s": 0.048676065140756064,
+          "flow_invalid_samples": 108
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 3601050001,
+        "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050001.json",
+        "finished": true,
+        "lapTimeMs": 16980,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 213,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.990905284881592,
+          "valid_decoder_samples": 213,
+          "decoder_mae_rad_s": 0.017988257905885062,
+          "decoder_max_abs_error_rad_s": 0.05208997548094396,
+          "flow_invalid_samples": 97
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 3601050002,
+        "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050002.json",
+        "finished": true,
+        "lapTimeMs": 15820,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 198,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 3.27105975151062,
+          "valid_decoder_samples": 198,
+          "decoder_mae_rad_s": 0.018265024405367446,
+          "decoder_max_abs_error_rad_s": 0.049665039748251205,
+          "flow_invalid_samples": 70
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 3601050003,
+        "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050003.json",
+        "finished": true,
+        "lapTimeMs": 16200,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 203,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 3.297488212585449,
+          "valid_decoder_samples": 203,
+          "decoder_mae_rad_s": 0.014687059078447256,
+          "decoder_max_abs_error_rad_s": 0.05279154039721412,
+          "flow_invalid_samples": 90
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 3601050001,
+        "receipt": "/tmp/apex-line-dev-hud100/t4-s3601050001.json",
+        "finished": true,
+        "lapTimeMs": 17500,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 219,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.952014923095703,
+          "valid_decoder_samples": 219,
+          "decoder_mae_rad_s": 0.017721516546920155,
+          "decoder_max_abs_error_rad_s": 0.047548240731037694,
+          "flow_invalid_samples": 107
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 3601050002,
+        "receipt": "/tmp/apex-line-hud100/t4-s3601050002.json",
+        "finished": true,
+        "lapTimeMs": 16260,
+        "damage": 0.4,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 204,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 3.4807403087615967,
+          "valid_decoder_samples": 204,
+          "decoder_mae_rad_s": 0.018064465579085143,
+          "decoder_max_abs_error_rad_s": 0.050722138911479475,
+          "flow_invalid_samples": 77
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 3601050003,
+        "receipt": "/tmp/apex-line-dev-hud100/t4-s3601050003.json",
+        "finished": true,
+        "lapTimeMs": 16640,
+        "damage": 0.0,
+        "retire_reason": null,
+        "yaw": {
+          "pre_action_samples": 209,
+          "above_calibrated_abs6": 0,
+          "max_abs_true_yaw": 2.9424545764923096,
+          "valid_decoder_samples": 209,
+          "decoder_mae_rad_s": 0.016446022645412523,
+          "decoder_max_abs_error_rad_s": 0.05106393145205779,
+          "flow_invalid_samples": 95
+        }
+      }
+    ],
+    "observed": 12,
+    "finished": 11,
+    "finished_median_ms": 16560,
+    "original_target_window_finishes": 0,
+    "config": {
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 100,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100,
+        "path_smoothing": 200,
+        "hud_dynamics": true
+      }
+    },
+    "source_path": "/tmp/apex-line-hud100/source.py",
+    "homogeneous_provenance": {
+      "agent_sha256": true,
+      "evaluator_sha256": true,
+      "official_source_sha256": true,
+      "runtime_source_sha256_before": true,
+      "runtime_source_sha256_after": true
+    },
+    "homogeneous_config": true,
+    "all_timestamp_checks_pass": true,
+    "all_recorded_source_drift_checks_pass": true,
+    "all_resource_eligible": true,
+    "all_invalid_actions_zero": true,
+    "yaw": {
+      "pre_action_samples": 2597,
+      "above_calibrated_abs6": 0,
+      "max_abs_true_yaw": 4.962320327758789,
+      "valid_decoder_samples": 2511,
+      "decoder_mae_rad_s": 0.017417795925537275,
+      "decoder_max_abs_error_rad_s": 0.05526640833473717,
+      "flow_invalid_samples": 1083
+    }
+  },
+  "limitations": [
+    {
+      "topic": "Calibration range",
+      "finding": "No abs(yaw)>6 at sampled pre-action trace timestamps. Traces sample actions, not all four intermediate physics frames; this does not bound unsampled transient yaw."
+    },
+    {
+      "topic": "Path clearance",
+      "location": "agents/apex_2026/line_agent.py:138 at 2f7abdd",
+      "finding": "Smoother constrains horizontal intervals at sampled rows, not full Euclidean clearance or connecting segments. Synthetic diagonal boundary returned distanceTransform clearance 2.8 pixels with clearance=3. The obstacle noncrossing docstring is stronger than the guarantee.",
+      "suggestion": "Treat as heuristic; dense segment checks against an appropriately eroded free-space mask would support a stronger guarantee."
+    },
+    {
+      "topic": "Mechanism attribution",
+      "finding": "HUD enables preview even when optical flow fails. Improvement is attributable to the HUD-enabled controller change, not isolated yaw accuracy alone."
+    },
+    {
+      "topic": "Traction estimate",
+      "location": "agents/apex_2026/line_agent.py:275 at 2f7abdd",
+      "finding": "Traction demand uses commanded steering, not decoded actual joint angle. The latter is diagnostic only. Required traces showed command/wheel absolute mean differences 0.025\u20130.029 rad; tire-force reservation remains heuristic."
+    },
+    {
+      "topic": "Generalization",
+      "finding": "One pass on consumed REQUIRED and declared development cells; not independent holdout corroboration or achievement of the original 10\u201313-second objective."
+    }
+  ],
+  "synthetic_verification": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q agents/apex_2026/test_line_agent.py agents/apex_2026/test_hud_dynamics.py",
+    "passed": 25,
+    "scope": "Prior review at candidate commit; no new episodes"
+  },
+  "evidence_sha256": {
+    "/tmp/apex-line-dev-hud100/t1-s3601050001.json": "1bf4a36240604e7d65b66ff9f2de83e872f8fa1acabda052735096153fbb45d6",
+    "/tmp/apex-line-hud100/source.py": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+    "/tmp/apex-line-dev-hud100/t1-s3601050001.jsonl": "260d99d4993810a99663e59175cf65cb3b2ff23cbc1dc619e211bd4bc1b6f048",
+    "/tmp/apex-line-dev-hud100/t1-s3601050002.json": "9441430a09dc96c5c3530475feed0f850e45da221c2ba2e2f8fd1eb4ba15f6a1",
+    "/tmp/apex-line-dev-hud100/t1-s3601050002.jsonl": "50a255e22dd0519799d9517541a0585c8d05c6cab0a42d097cb49e8fd5c8a399",
+    "/tmp/apex-line-dev-hud100/t1-s3601050003.json": "a189f09b5ce2b9925cdab815912f83e0c96079a53fcf3e3a7549e5cca87fde11",
+    "/tmp/apex-line-dev-hud100/t1-s3601050003.jsonl": "1f1467c6d1abb8891a514c9a2e32e6e4f0479ca959bbc55ad0df12682bf6dbcf",
+    "/tmp/apex-line-dev-hud100/t2-s3601050001.json": "5206994c3b7c68aba64ed67257b5ecec9808ea5cfeca5a411535b32ba7ec212c",
+    "/tmp/apex-line-dev-hud100/t2-s3601050001.jsonl": "ffbf749ce688d3497bb2e96b0c90b69961690a7376d564acc64295700327e06f",
+    "/tmp/apex-line-dev-hud100/t2-s3601050002.json": "187b3a60f84dbe1793d8cf891e468272a12a157563a33a39fc44112e8b811bd7",
+    "/tmp/apex-line-dev-hud100/t2-s3601050002.jsonl": "008701fbb8019c15bf9cc464e4aeb4c70b1f03f71a2f1ca7c1314fc7afe0274c",
+    "/tmp/apex-line-dev-hud100/t2-s3601050003.json": "63ed678a397b99fb234877590c73103658a75381c3e5d68329f5e0ad579d79e7",
+    "/tmp/apex-line-dev-hud100/t2-s3601050003.jsonl": "e50902f15e477c777e881a63d40f44aab59929a1ec942737b76f6cf8faf5402d",
+    "/tmp/apex-line-dev-hud100/t3-s3601050001.json": "955f2939de6041e792d6a80d0639c303d49fb863739f20c6cee9a394983db110",
+    "/tmp/apex-line-dev-hud100/t3-s3601050001.jsonl": "d91d93c54cf05b00a28047249b90d32bc16c8ae75d865226cf7727e7f45b3af1",
+    "/tmp/apex-line-dev-hud100/t3-s3601050002.json": "618607dd73942240e80a08037c94ed89fc2af9fd952f537b49f60b15ce644c6f",
+    "/tmp/apex-line-dev-hud100/t3-s3601050002.jsonl": "7ad13532a43ba219eca4533549ccbe3a0cb430868b9fe72ed068dc3a4c24c82c",
+    "/tmp/apex-line-dev-hud100/t3-s3601050003.json": "9c98c091a00a013b21830b4219fb433248d31726237990df17ee70df98f9c9ff",
+    "/tmp/apex-line-dev-hud100/t3-s3601050003.jsonl": "756d0a367b6f28e14874358bfbc2828a1976051ce05467cb1fb9b57ad90aa5d7",
+    "/tmp/apex-line-dev-hud100/t4-s3601050001.json": "534d668ef3ad4fe7fae9d06d323d4615b4ccc9648beedad935474de6f2147b3d",
+    "/tmp/apex-line-dev-hud100/t4-s3601050001.jsonl": "65cb745f78101e72b88dfc01d3340a532d82bd515f0fc25ab6d24cf6ea738242",
+    "/tmp/apex-line-hud100/t4-s3601050002.json": "2cdf414ff593c216c7c7451c5b6e159ab3ec955b1fc4bf93c3797d6f640b9526",
+    "/tmp/apex-line-hud100/t4-s3601050002.jsonl": "d65f8a0326e832df6f9264c904c67ed66ea932bb30bc5885224ce4dcbec37e92",
+    "/tmp/apex-line-dev-hud100/t4-s3601050003.json": "796b54f507169c4ba06b6af9ec9fa11f374a57afffe27539230934202a319238",
+    "/tmp/apex-line-dev-hud100/t4-s3601050003.jsonl": "98c540d1509ec8bccdba5d31f4be07fd196c6cd8ad03e6ded85488af6bce39f5",
+    "/tmp/apex-line-smooth200/t1.json": "4f4314700b929217fedcb179212b0c273166ae1abaff20a27f56035fdf323664",
+    "/tmp/apex-line-hud100/t1-s516237.json": "22706b455f297879b30ae0fe038192eababf6da8ae0933c0f6a9cdf548708180",
+    "/tmp/apex-line-smooth200/source.py": "c1104bb5335ad3c492fdea8950f05345342a67884f13985b559dc50907f5199d",
+    "/tmp/apex-line-hud100/t1-s516237.jsonl": "adc74ec667ad83313c94605c1a931544d894da82234b3c3915b5f3db34dd2943",
+    "/tmp/apex-line-smooth200/t2.json": "574cd0c18acb8579ba943b406c21e235b83cf9d4c5d4ccd2515b241bae934382",
+    "/tmp/apex-line-hud100/t2-s644062.json": "6353b127f3fe98710296fa314126b2ebd738b09f1e3df70a2a553484261736fd",
+    "/tmp/apex-line-hud100/t2-s644062.jsonl": "9ffb369f38bab24255522a4bcdd327c7013cc401db4e139a4714d371741b3121",
+    "/tmp/apex-line-smooth200/t3.json": "2c793f1eb41862425c02c9d58d1326950ee48045e8fa0ea09c75ad1d5a05d84c",
+    "/tmp/apex-line-hud100/t3-s1007.json": "93d4f2df0b4fc8fba9d327219146b1fd2618b8a0d96e8d62ee59af276a2da5fb",
+    "/tmp/apex-line-hud100/t3-s1007.jsonl": "d2e8710e7e98bc13c7bdd3dada70b199dcad841e3917be69e4efc476b49199ac",
+    "/tmp/apex-line-smooth200/t4.json": "112d9999eaca9646e21f4700e3840dae2ec44475e9368ac5d973439a8f1245b1",
+    "/tmp/apex-line-hud100/t4-s18800.json": "2778422991a30de599c9b66a2716412a2902b639b32f228b3c31f21116000b1c",
+    "/tmp/apex-line-hud100/t4-s18800.jsonl": "c9d2d3fb1930ff2635af40f22d75c07e894f0b0bdc161669b0abeaf0a237fb1f"
+  }
+}

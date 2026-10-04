@@ -37,6 +37,17 @@ No official submission or model confirmation is authorized by this experiment.
 - [Conservative line development screen](results/line-development-safe.json):
   12/12 finishes, zero damage, median 26.25 seconds. This is development evidence,
   not holdout performance or the 10–13-second objective.
+- [Continuous-path development screen](results/line-development-smooth200.json):
+  10/12 finishes, median completed lap 17.57 seconds; two lost finishes relative
+  to the slower preview controller prevent treating this as unqualified progress.
+- [Rollout R10 development screen](results/rollout-development-r10.json):
+  6/12 finishes despite 4/4 required finishes. Finish-only speed hid a large
+  robustness regression, so this candidate does not qualify.
+- [HUD dynamics calibration](results/hud-dynamics-calibration.json): yaw and
+  actual wheel angle decoded from the public image; no runtime telemetry access.
+  Required smooth200→HUD100 times improve on all four cells, zero damage:
+  18.32→17.14, 22.80→21.42, 20.18→19.48, 18.42→17.92 seconds.
+  This combines better yaw accuracy with availability during optical-flow loss.
 - [Physical feasibility and image calibration](FEASIBILITY.md): measured
   diagnostics and explicitly limited approximations; no impossibility proof.
 

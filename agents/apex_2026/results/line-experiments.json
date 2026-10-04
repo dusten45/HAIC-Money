@@ -922,5 +922,28 @@
       "seed": 3601050002,
       "result": "Exact early obstacle contact/stall reproduced: progress .1418181818 damage .2, image inputs and diagnostics retained."
     }
+  ],
+  "development_screens": [
+    {
+      "variant": "hud100",
+      "report": "agents/apex_2026/results/line-development-hud100.json",
+      "source_sha256": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+      "new_episodes": 11,
+      "reused_episodes": 1,
+      "summary": {
+        "expected": 12,
+        "observed": 12,
+        "completed": 12,
+        "complete": true,
+        "finished": 11,
+        "finish_rate": 0.9166666666666666,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 16560,
+        "finished_max_ms": 17500
+      }
+    }
   ]
 }

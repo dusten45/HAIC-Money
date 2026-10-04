@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "variant": "hud100",
+  "scope": "12 declared, consumed development cells; no holdout",
+  "source_snapshot": "/tmp/apex-line-hud100/source.py",
+  "source_sha256": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+  "config": {
+    "config": {
+      "lookahead": 26,
+      "pursuit_gain": 4.5,
+      "lateral_accel": 100,
+      "motion_preview": 0.12,
+      "traction_accel": 180,
+      "max_speed": 100,
+      "path_smoothing": 200,
+      "hud_dynamics": true
+    }
+  },
+  "protocol_validation": {
+    "expected": 12,
+    "observed": 12,
+    "completed": 12,
+    "complete": true,
+    "finished": 11,
+    "finish_rate": 0.9166666666666666,
+    "in_target_window": 0,
+    "driving_target_met": false,
+    "resource_eligible": true,
+    "original_target_met": false,
+    "finished_median_ms": 16560,
+    "finished_max_ms": 17500
+  },
+  "damage_sum": 0.6000000000000001,
+  "zero_damage_count": 10,
+  "new_episode_count": 11,
+  "reused_episode_count": 1,
+  "receipts": [
+    {
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.9646643109540636,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050001.json",
+      "receipt_sha256": "1bf4a36240604e7d65b66ff9f2de83e872f8fa1acabda052735096153fbb45d6",
+      "reused": false
+    },
+    {
+      "track_id": 1,
+      "seed": 3601050002,
+      "finished": true,
+      "lapTimeMs": 16140,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050002.json",
+      "receipt_sha256": "9441430a09dc96c5c3530475feed0f850e45da221c2ba2e2f8fd1eb4ba15f6a1",
+      "reused": false
+    },
+    {
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true,
+      "lapTimeMs": 17000,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t1-s3601050003.json",
+      "receipt_sha256": "a189f09b5ce2b9925cdab815912f83e0c96079a53fcf3e3a7549e5cca87fde11",
+      "reused": false
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true,
+      "lapTimeMs": 17300,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050001.json",
+      "receipt_sha256": "5206994c3b7c68aba64ed67257b5ecec9808ea5cfeca5a411535b32ba7ec212c",
+      "reused": false
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true,
+      "lapTimeMs": 15140,
+      "progress": 1.0,
+      "damage": 0.2,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050002.json",
+      "receipt_sha256": "187b3a60f84dbe1793d8cf891e468272a12a157563a33a39fc44112e8b811bd7",
+      "reused": false
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true,
+      "lapTimeMs": 16560,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t2-s3601050003.json",
+      "receipt_sha256": "63ed678a397b99fb234877590c73103658a75381c3e5d68329f5e0ad579d79e7",
+      "reused": false
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050001,
+      "finished": true,
+      "lapTimeMs": 16980,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050001.json",
+      "receipt_sha256": "955f2939de6041e792d6a80d0639c303d49fb863739f20c6cee9a394983db110",
+      "reused": false
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050002,
+      "finished": true,
+      "lapTimeMs": 15820,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050002.json",
+      "receipt_sha256": "618607dd73942240e80a08037c94ed89fc2af9fd952f537b49f60b15ce644c6f",
+      "reused": false
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050003,
+      "finished": true,
+      "lapTimeMs": 16200,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t3-s3601050003.json",
+      "receipt_sha256": "9c98c091a00a013b21830b4219fb433248d31726237990df17ee70df98f9c9ff",
+      "reused": false
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true,
+      "lapTimeMs": 17500,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t4-s3601050001.json",
+      "receipt_sha256": "534d668ef3ad4fe7fae9d06d323d4615b4ccc9648beedad935474de6f2147b3d",
+      "reused": false
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true,
+      "lapTimeMs": 16260,
+      "progress": 1.0,
+      "damage": 0.4,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-hud100/t4-s3601050002.json",
+      "receipt_sha256": "2cdf414ff593c216c7c7451c5b6e159ab3ec955b1fc4bf93c3797d6f640b9526",
+      "reused": true
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050003,
+      "finished": true,
+      "lapTimeMs": 16640,
+      "progress": 1.0,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-line-dev-hud100/t4-s3601050003.json",
+      "receipt_sha256": "796b54f507169c4ba06b6af9ec9fa11f374a57afffe27539230934202a319238",
+      "reused": false
+    }
+  ]
+}
