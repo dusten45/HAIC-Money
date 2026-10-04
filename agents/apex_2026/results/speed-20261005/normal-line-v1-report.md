@@ -74,6 +74,13 @@ regresses T2 by1.24s and T4 by1.02s, so it is not adopted. Small T1/T3 gains do
 not outweigh those regressions. Existing parent results remain their original
 fresh runs; none is described as new validation.
 
+Trace-only localization finds the T2 candidate initially leads0.16s at progress
+0.6, then trails1.12s at0.7. Steps158–170 contain repeated inherited recovery
+actions, braking nearly to zero twice. The receipt reports0 full-offtrack but13
+partial-offtrack samples. Zero obstacle contacts therefore does not imply clean
+road tracking. An exact new173-action camera prefix investigates this recovery
+onset separately; no second candidate or benchmark is being run.
+
 Receipt `normal-line-v1.json`, compact camera audit, lineage and zero-context
 source patch accompany this report. No holdout opened, official/root sources
 edited, or Git operations performed by this lane.

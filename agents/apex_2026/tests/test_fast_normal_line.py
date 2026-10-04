@@ -2,10 +2,7 @@ import unittest
 from pathlib import Path
 import numpy as np
 from agents.apex_2026.fast_rear_clear_agent import Agent as Parent
-try:
-    from agents.apex_2026.fast_normal_line_agent import Agent
-except ModuleNotFoundError:
-    Agent = Parent  # RED exercises the unchanged behavior before implementation.
+from agents.apex_2026.fast_normal_line_agent import Agent
 from agents.apex_2026.research.speed_20261005.rear_normal_line import footprint_depth
 
 
