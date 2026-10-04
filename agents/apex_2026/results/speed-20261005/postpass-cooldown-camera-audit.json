@@ -1,0 +1,101 @@
+{
+  "classification": "offline_same_camera_cooldown_counterfactual_no_rollout",
+  "source_sha256": "15478c179ff1c8fa2c7dfe12bf65eaba91ad215fc250bde893ce65d7eebcd5ba",
+  "raw_prefix_sha256": "5037ae9d426985b4ef1634158391a21b5c381da08b7e8b6a9da2af8d4b9e3ebc",
+  "all_current_actions_exact": true,
+  "new_driving_episodes": 0,
+  "cases": [
+    {
+      "step": 101,
+      "current_action": [
+        -0.3623276948928833,
+        0.12260745465755463,
+        0.0
+      ],
+      "zero_cooldown_action": [
+        -0.4000000059604645,
+        0.12260745465755463,
+        0.0
+      ],
+      "current_mode": "confidence",
+      "zero_cooldown_mode": "ridge",
+      "current_target_m_per_s": 30.922876662807884,
+      "zero_cooldown_target_m_per_s": 30.922876662807884,
+      "zero_cooldown_reference_curvature": -0.12204985846700844,
+      "actual_previous_obstacle_rear_clearance_m": 3.046763521531238,
+      "actual_previous_obstacle_y_m": -6.646763569214954,
+      "current_circle_cooldown": 11,
+      "current_pass_side": 0
+    },
+    {
+      "step": 102,
+      "current_action": [
+        -0.17828665673732758,
+        0.4826074540615082,
+        0.0
+      ],
+      "zero_cooldown_action": [
+        -0.3182743191719055,
+        0.4826074540615082,
+        0.0
+      ],
+      "current_mode": "confidence",
+      "zero_cooldown_mode": "ridge",
+      "current_target_m_per_s": 36.92287666280788,
+      "zero_cooldown_target_m_per_s": 36.92287666280788,
+      "zero_cooldown_reference_curvature": -0.09978469227696911,
+      "actual_previous_obstacle_rear_clearance_m": 6.738601251034742,
+      "actual_previous_obstacle_y_m": -10.338601298718459,
+      "current_circle_cooldown": 10,
+      "current_pass_side": 0
+    },
+    {
+      "step": 103,
+      "current_action": [
+        -0.15582264959812164,
+        0.6000000238418579,
+        0.0
+      ],
+      "zero_cooldown_action": [
+        -0.28987738490104675,
+        0.6000000238418579,
+        0.0
+      ],
+      "current_mode": "confidence",
+      "zero_cooldown_mode": "ridge",
+      "current_target_m_per_s": 42.92287666280788,
+      "zero_cooldown_target_m_per_s": 42.92287666280788,
+      "zero_cooldown_reference_curvature": -0.08294972959521958,
+      "actual_previous_obstacle_rear_clearance_m": 10.164358779120539,
+      "actual_previous_obstacle_y_m": -13.764358826804255,
+      "current_circle_cooldown": 9,
+      "current_pass_side": 0
+    },
+    {
+      "step": 104,
+      "current_action": [
+        -0.14734067022800446,
+        0.6000000238418579,
+        0.0
+      ],
+      "zero_cooldown_action": [
+        -0.2844911217689514,
+        0.30000001192092896,
+        0.0
+      ],
+      "current_mode": "confidence",
+      "zero_cooldown_mode": "ridge",
+      "current_target_m_per_s": 48.92287666280788,
+      "zero_cooldown_target_m_per_s": 48.92287666280788,
+      "zero_cooldown_reference_curvature": -0.07858307616182215,
+      "actual_previous_obstacle_rear_clearance_m": 13.349896505770039,
+      "actual_previous_obstacle_y_m": -16.949896553453755,
+      "current_circle_cooldown": 8,
+      "current_pass_side": 0
+    }
+  ],
+  "limitations": [
+    "Counterfactual camera actions are not a driving or dynamic safety result.",
+    "Actual obstacle coordinates quantify ground truth only; legal inference cannot read them."
+  ]
+}

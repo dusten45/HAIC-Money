@@ -1,0 +1,27 @@
+--- arc-clear-v2.py
++++ rear-clear-v1.py
+@@ -852 +852 @@
+-class Agent(_ArcGuardReference):
++class _ArcClearReference(_ArcGuardReference):
+@@ -877,0 +878,21 @@
++
++
++class Agent(_ArcClearReference):
++    """Release the post-pass phase on confirmed camera rear clearance.
++
++    Missing-object expiry remains conservative. Existing circle detection,
++    ridge support, near-body checks and force bounds decide the next action;
++    this transition alone is not a collision or dynamics certificate.
++    """
++
++    def _route(self, ahead, center, circles, speed, yaw):
++        previous_side, previous_x, previous_y = self.pass_side, self.pass_x, self.pass_y
++        result = super()._route(ahead, center, circles, speed, yaw)
++        if (previous_side and previous_y is not None and not self.pass_side
++                and self.pass_missing <= 4 and not circles and self.lost_frames == 0
++                and np.isfinite([previous_x, previous_y, speed, yaw]).all()):
++            angle = float(np.clip(.08*yaw, -.64, .64))
++            rear_y = previous_x*np.sin(angle)+(previous_y-.08*speed)*np.cos(angle)
++            if rear_y < -5.:
++                self.circle_cooldown = 0
++        return result

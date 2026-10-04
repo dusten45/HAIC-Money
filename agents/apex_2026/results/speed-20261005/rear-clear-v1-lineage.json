@@ -1,0 +1,126 @@
+{
+  "source_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "parent_source_sha256": "15478c179ff1c8fa2c7dfe12bf65eaba91ad215fc250bde893ce65d7eebcd5ba",
+  "parent_definition_prefix_exact": true,
+  "parent_class_alias": "_ArcClearReference",
+  "source_patch_sha256": "1863c2cd2a825aed1c4b3daf663df7dedcf92b59741637e898b46129e1d5d654",
+  "reverse_patch_recovers_parent_exactly": true,
+  "parent_route_called_once": true,
+  "parameters": {},
+  "focused_tests_passed": 25,
+  "new_regression_tests_passed": 6,
+  "test_sha256": "32c925ae656a3a16b7bed8147c3688669866a02ed5a896f01e8bbba452698461",
+  "postpass_camera_fixture_sha256": "a1e45f11e69ca67fde4c281c3c1935478d2e9668b17899a0b0bc935d27880057",
+  "red_result": "2 failed (actual101 phase and yaw camera transport release),4 passed",
+  "transition": "Only prior active pass -> clear, missing<=4, no current circles, valid road and unchanged parent camera transport y<-5 clears cooldown; expiry remains conservative.",
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "receipt_sha256": "9dc20efcf6e34bb763d935dcd1b43e6d2b389872fe533d813d44010580ad52d5",
+  "freeze_sha256": "4be0b292232f94eb8e8926ebed7ee59987763011736a9e471ae3d187e3f86194",
+  "source_unchanged_through_evaluation": true,
+  "outcomes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 15540,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "a1be4b54b6881232e5c3bde46725edba394c3d976fe1cf84d2fca339fd806611"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lap_time_ms": 18720,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "790570eea380d59a7815af36b0defdc0674c943bff69ba87d5f39233fe036c6f"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lap_time_ms": 16560,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "9cba2e7a18384dcd9de3987158f3516b510c2582e029c63963dc03b6f619bf33"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 18140,
+      "progress": 0.992831541218638,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "56d8caf42c8de896179e95f254afb5a2299aa83cee559e0a55ffa8b1fc35a0b9"
+    }
+  ],
+  "trace_only_parent_comparison": {
+    "1": {
+      "first_divergence_action": 35,
+      "parent_action": [
+        0.014144359156489372,
+        0.0643373429775238,
+        0.0
+      ],
+      "candidate_action": [
+        0.02405943162739277,
+        0.0643373429775238,
+        0.0
+      ],
+      "min_speed_after_action40_m_per_s": 16.853938564673307,
+      "parent_min_speed_after_action40_m_per_s": 43.99195025889417
+    },
+    "2": {
+      "first_divergence_action": 51,
+      "parent_action": [
+        0.4000000059604645,
+        0.0,
+        0.38766828179359436
+      ],
+      "candidate_action": [
+        0.1905185431241989,
+        0.0,
+        0.23873518407344818
+      ],
+      "min_speed_after_action40_m_per_s": 42.82052217455926,
+      "parent_min_speed_after_action40_m_per_s": 19.348190312041552
+    },
+    "3": {
+      "first_divergence_action": 48,
+      "parent_action": [
+        -0.09477129578590393,
+        0.194661483168602,
+        0.0
+      ],
+      "candidate_action": [
+        -0.10040269047021866,
+        0.194661483168602,
+        0.0
+      ],
+      "min_speed_after_action40_m_per_s": 45.49251005680099,
+      "parent_min_speed_after_action40_m_per_s": 39.995262713980516
+    },
+    "4": {
+      "first_divergence_action": 32,
+      "parent_action": [
+        0.021776530891656876,
+        0.0,
+        0.04483607038855553
+      ],
+      "candidate_action": [
+        0.02991281822323799,
+        0.0,
+        0.04483607038855553
+      ],
+      "min_speed_after_action40_m_per_s": 1.7549954159009251,
+      "parent_min_speed_after_action40_m_per_s": 1.5389897129353247
+    }
+  }
+}
