@@ -1,6 +1,6 @@
 # V2 experiment scoreboard
 
-Receipt snapshot: 2026-10-04T20:34:41.311430+00:00. No new resets.
+Receipt snapshot: 2026-10-04T20:38:50.385046+00:00. No new resets.
 
 Explicit planned scopes retain missing and started cells. DNF means completed without a finish. Required4 coverage is reported even for smaller diagnostic allocations. Each source + exact config is separate; source/dependency verification failures invalidate aggregate finish claims.
 
@@ -18,7 +18,7 @@ Explicit planned scopes retain missing and started cells. DNF means completed wi
 | kinematic-r0 7e2087e | 1/4 | 15.42 / DNF / DNF / DNF | screen6: 1/6 | 0/2 | 0 / 0 | 0 / 0 | 0 |
 | beam-r1 acbb747 | 0/4 | DNF / DNF / DNF / DNF | screen6: 0/6 | 0/2 | 0 / 0 | 6 / 0 | 0 |
 | beam-r2 aa2198a | 0/4 | DNF / DNF / DNF / DNF | screen6: 0/6 | 0/2 | 0 / 0 | 0 / 0 | 0 |
-| beam-r3 952c7c0 | 4/4 | 14.04 / 17.24 / 15.80 / 14.94 | screen6: 5/6 | 1/2 | 1 / 0 | 0 / 0 | 0 |
+| beam-r3 952c7c0 | 4/4 | 14.04 / 17.24 / 15.80 / 14.94 | screen6: 5/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
 | recovery-r0 08c6ff9 | 4/4 | 16.78 / 20.68 / 18.56 / 18.10 | screen6: 4/6 | 0/2 | 0 / 0 | 0 / 0 | 1 |
 | recovery-r1 e83b363 | 4/4 | 16.78 / 20.68 / 18.56 / 18.10 | screen6: 5/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
 | shield-r0 51775a9 | 3/4 | 21.28 / 28.12 / 25.66 / DNF | screen6: 5/6 | 2/2 | 0 / 0 | 0 / 0 | 1 |

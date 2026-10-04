@@ -17,8 +17,9 @@ preserving required laps, but its other old failure remains unresolved.
 Terrain r8's full consumed regression is22/24, below the24/24 gate despite
 required mean18.205s. The independent beam r3 has newly finished required1–4
 in14.04/17.24/15.80/14.94s without damage, mean15.505s (16.32% faster than P1);
-its old-failure screen and full regression
-are pending. These partial speed gains do not authorize selection or holdout.
+its complete screen is5/6 because old track3 still fails. Full regression remains
+closed while the first collision and subsequent planning deadlock are diagnosed.
+These partial speed gains do not authorize selection or holdout.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)

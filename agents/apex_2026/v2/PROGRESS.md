@@ -97,9 +97,9 @@ but loses two r8 successes, so the observation change is not adopted.
 Beam r3 ranks each action prefix using a feedback continuation to the same
 0.64s horizon, correcting a reproduced premature-pruning counterexample.
 Fresh required1–4 laps are14.04/17.24/15.80/14.94s, all damage-free and resource-eligible;
-mean15.505s is16.32% faster than P1. The two old-failure screen cells are pending.
-These partial results are promising,
-not original-target achievement or candidate selection. The largest measured
+mean15.505s is16.32% faster than P1. The old track2 failure is rescued in13.48s,
+but old track3 fails at progress0.6161 with damage0.4. Thus the full screen is5/6;
+the full24 gate stays closed and this source is not selected. The largest measured
 action so far is4.038s against the5s hard limit. Sampled footprint, partially
 observed tire state and short horizon remain explicit limitations. All138 v2
 unit tests passed at checkpointd0b3cfa; driving validation remains decisive.

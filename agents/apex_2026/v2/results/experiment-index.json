@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:34:41.311430+00:00",
+  "generated_at": "2026-10-04T20:38:50.385046+00:00",
   "analysis_sha256": "0b8488005b556c298a650683931bc2e0b66ef41b457e02cf0ceadc71ddc8a25c",
   "benchmark_sha256": "c52da67c7dfaf9bcc700a7ed4a5ac462558934c177d75585c6701fbc83166f33",
   "registry": {
@@ -6688,14 +6688,6 @@
               "after_count": 145,
               "changed_paths": [],
               "note": "Full path-to-hash maps remain in SHA-bound primary receipts; protocol verifies them before aggregation."
-            },
-            "4922c00baf6cec97220d1ddfe06d4c0eb1754b7ddac98014b671c1a656c780b5": {
-              "before_sha256": "b64dd9750654980a3b08bcf52024bb344cdc2794759ea39d20fc4ebffb097f63",
-              "after_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-              "before_count": 127,
-              "after_count": 0,
-              "changed_paths": [],
-              "note": "Full path-to-hash maps remain in SHA-bound primary receipts; protocol verifies them before aggregation."
             }
           },
           "whole_declared_scope": {
@@ -6727,14 +6719,14 @@
               ]
             ],
             "observed": 6,
-            "completed": 5,
-            "incomplete": 1,
+            "completed": 6,
+            "incomplete": 0,
             "missing": 0,
             "unique_attempts": 6,
             "repeat_attempts": 0,
             "raw_finished": 5,
             "finished": 5,
-            "dnf": 0,
+            "dnf": 1,
             "finished_median_ms": 14940,
             "all_cells_finish": false,
             "target10_13_count": 0,
@@ -6742,8 +6734,8 @@
             "progress_at_least95_completed": 5,
             "invalid_action_failure_count": 0,
             "resource_ineligible_completed": 0,
-            "resource_eligible_completed": 5,
-            "damage_sum_completed": 0,
+            "resource_eligible_completed": 6,
+            "damage_sum_completed": 0.4,
             "protocol_verified": true,
             "warnings": [],
             "selected": [
@@ -6791,8 +6783,8 @@
                 "track_id": 3,
                 "seed": 4111953688,
                 "started_at": "2026-10-04T20:33:32.983963+00:00",
-                "status": "started",
-                "finished": null,
+                "status": "completed",
+                "finished": false,
                 "lapTimeMs": null
               }
             ]
@@ -6885,14 +6877,14 @@
               ]
             ],
             "observed": 2,
-            "completed": 1,
-            "incomplete": 1,
+            "completed": 2,
+            "incomplete": 0,
             "missing": 0,
             "unique_attempts": 2,
             "repeat_attempts": 0,
             "raw_finished": 1,
             "finished": 1,
-            "dnf": 0,
+            "dnf": 1,
             "finished_median_ms": 13480,
             "all_cells_finish": false,
             "target10_13_count": 0,
@@ -6900,8 +6892,8 @@
             "progress_at_least95_completed": 1,
             "invalid_action_failure_count": 0,
             "resource_ineligible_completed": 0,
-            "resource_eligible_completed": 1,
-            "damage_sum_completed": 0,
+            "resource_eligible_completed": 2,
+            "damage_sum_completed": 0.4,
             "protocol_verified": true,
             "warnings": [],
             "selected": [
@@ -6917,8 +6909,8 @@
                 "track_id": 3,
                 "seed": 4111953688,
                 "started_at": "2026-10-04T20:33:32.983963+00:00",
-                "status": "started",
-                "finished": null,
+                "status": "completed",
+                "finished": false,
                 "lapTimeMs": null
               }
             ]
@@ -7019,25 +7011,25 @@
             },
             {
               "receipt": "/tmp/apex-v2-beam-r3/t3-s4111953688.json",
-              "receipt_sha256": "cea23ea38280f54d5da2ed3dfcef09648b68bc963d967c6cfb726844f8c1bb00",
+              "receipt_sha256": "7a7396458f36b571c1693c5965e4238cd3d9914d4d49f2f81f161ae05a16cfff",
               "track_id": 3,
               "seed": 4111953688,
-              "status": "started",
+              "status": "completed",
               "started_at": "2026-10-04T20:33:32.983963+00:00",
-              "ended_at": null,
-              "finished": null,
+              "ended_at": "2026-10-04T20:38:07.842327+00:00",
+              "finished": false,
               "lapTimeMs": null,
-              "start_t": null,
+              "start_t": 1.0200000000000005,
               "finish_time_s": null,
-              "end_t": null,
-              "progress": null,
-              "damage": null,
-              "resource_eligible": null,
-              "retire_reason": null,
-              "finish_qualified": null,
+              "end_t": 20.939999999999642,
+              "progress": 0.6160990712074303,
+              "damage": 0.4,
+              "resource_eligible": true,
+              "retire_reason": "off_track",
+              "finish_qualified": false,
               "finish_qualified_time_s": null,
-              "invalid_actions": null,
-              "act_timeout_count": null,
+              "invalid_actions": 0,
+              "act_timeout_count": 0,
               "error": null
             },
             {
