@@ -129,6 +129,14 @@ class LineAgentTests(unittest.TestCase):
             self.assertAlmostEqual(yaw, -raw_yaw, delta=.065)
             self.assertAlmostEqual(wheel, -raw_wheel, delta=.005)
 
+    def test_actual_yaw_and_wheel_angle_constrain_reacceleration(self):
+        a = Agent({'traction_accel': 180., 'actual_state_traction': True})
+        commanded_only = a._traction_gas_limit(42., .15)
+        turning = a._traction_gas_limit(42., .15, yaw_rate=3.4, wheel_angle=.15)
+        self.assertLess(turning, commanded_only)
+        self.assertEqual(a._traction_gas_limit(43., .02, yaw_rate=4.7), 0.)
+        self.assertEqual(a._traction_gas_limit(60., .02, wheel_angle=.25), 0.)
+
     def test_reset_clears_temporal_state(self):
         a = Agent()
         a.act(scene(bend=1.))
