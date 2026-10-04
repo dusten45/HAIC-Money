@@ -60,6 +60,39 @@ class LineAgentTests(unittest.TestCase):
         self.assertEqual(action[1], 0.)
         self.assertGreater(action[2], 0.)
 
+    def test_motion_preview_counteracts_existing_turn_and_sideslip(self):
+        a = Agent({'motion_preview': .12})
+        straight = a._preview_curvature(.02, 50., 0., 0., 30.)
+        moving_right = a._preview_curvature(.02, 50., .8, .1, 30.)
+        self.assertLess(moving_right, straight)
+        self.assertAlmostEqual(a._preview_curvature(-.02, 50., -.8, -.1, 30.), -moving_right)
+
+    def test_visual_motion_recovers_known_camera_rotation(self):
+        import cv2
+        rng = np.random.default_rng(4)
+        previous = cv2.GaussianBlur(rng.random((84,84)).astype(np.float32), (3,3), 0)
+        scale = np.diag([1.3608, 1.701])
+        angle = -.04
+        rotation = np.array([[np.cos(angle), -np.sin(angle)],
+                             [np.sin(angle), np.cos(angle)]])
+        matrix = scale @ rotation @ np.linalg.inv(scale)
+        center = np.array([42.,63.])
+        transform = np.column_stack((matrix, center-matrix@center))
+        current = cv2.warpAffine(previous, transform, (84,84))
+        yaw, slip, valid = Agent()._motion(previous, current)
+        self.assertTrue(valid)
+        self.assertAlmostEqual(yaw, .5, delta=.12)
+
+    def test_traction_budget_coasts_when_turning_at_speed(self):
+        a = Agent({'traction_accel': 180.})
+        self.assertAlmostEqual(a._traction_gas_limit(60., 0.), 1.)
+        self.assertLessEqual(a._traction_gas_limit(60., .1), .5)
+        self.assertGreater(a._traction_gas_limit(60., .1), 0.)
+        self.assertEqual(a._traction_gas_limit(80., .1), 0.)
+        self.assertLessEqual(a._traction_gas_limit(40., .2), .5)
+        self.assertGreater(a._traction_gas_limit(10., .1), .9)
+        self.assertEqual(a._traction_gas_limit(60., -.1), a._traction_gas_limit(60., .1))
+
     def test_reset_clears_temporal_state(self):
         a = Agent()
         a.act(scene(bend=1.))

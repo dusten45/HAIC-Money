@@ -14,10 +14,11 @@ DEFAULTS = dict(max_speed=72., min_speed=24., lateral_accel=48., braking_accel=6
                 steer_smoothing=.35, max_steer=.85, clearance=3.,
                 obstacle_margin=3, bend_cost=.8, slope_cost=.04,
                 center_cost=2., previous_cost=.015, brake_gain=.025,
-                road_low=.24, road_high=.52)
+                road_low=.24, road_high=.52, motion_preview=0., traction_accel=0.)
 
 
 class Agent:
+    PIXELS_X, PIXELS_Y = 1.3608, 1.701
     def __init__(self, config=None, *, project_root=None):
         del project_root
         self.config = dict(DEFAULTS)
@@ -145,6 +146,62 @@ class Agent:
                 + 20.*(candidates-preferred)**2)
         return float(candidates[np.argmin(cost)])
 
+    def _motion(self, previous, current):
+        """Shared measurement concept independently validated by the rollout lane."""
+        old = np.clip(previous * 255, 0, 255).astype(np.uint8)
+        new = np.clip(current * 255, 0, 255).astype(np.uint8)
+        mask = np.zeros((84, 84), np.uint8)
+        mask[4:70, 4:80] = 255
+        mask[56:70, 36:48] = 0
+        points = cv2.goodFeaturesToTrack(old, 100, 0.015, 4, mask=mask)
+        if points is None or len(points) < 6:
+            return 0.0, 0.0, False
+        moved, status, error = cv2.calcOpticalFlowPyrLK(old, new, points, None,
+                                                     winSize=(15, 15), maxLevel=2)
+        if moved is None:
+            return 0.0, 0.0, False
+        keep = (status.ravel() > 0) & (error.ravel() < 30)
+        if np.count_nonzero(keep) < 6:
+            return 0.0, 0.0, False
+        scale = np.array([self.PIXELS_X, self.PIXELS_Y], np.float32)
+        before = points.reshape(-1, 2)[keep] / scale
+        after = moved.reshape(-1, 2)[keep] / scale
+        transform, inliers = cv2.estimateAffinePartial2D(before, after,
+                    method=cv2.RANSAC, ransacReprojThreshold=0.8, maxIters=500)
+        if transform is None or np.count_nonzero(inliers) < 6:
+            return 0.0, 0.0, False
+        center = np.array([42.0, 63.0]) / scale
+        delta = transform[:, :2] @ center + transform[:, 2] - center
+        yaw_rate = -np.arctan2(transform[1, 0], transform[0, 0]) / 0.08
+        velocity = np.array([-delta[0], delta[1]]) / 0.08
+        slip = np.arctan2(velocity[0], max(0.1, velocity[1]))
+        zoom = np.sqrt(np.linalg.det(transform[:, :2]))
+        if not (0.96 < zoom < 1.04) or abs(yaw_rate) > 8 or np.linalg.norm(velocity) > 140:
+            return 0.0, 0.0, False
+        return float(yaw_rate), float(np.clip(slip, -0.8, 0.8)), True
+
+
+    def _preview_curvature(self, curvature, speed, yaw_rate, slip, lookahead):
+        distance = max(lookahead/1.701, 4.)
+        dt = float(self.config['motion_preview'])
+        return float(curvature + 2.*dt*(speed*curvature-yaw_rate)/distance
+                     - 2.*speed*np.sin(slip)*dt/(distance*distance))
+
+    def _traction_gas_limit(self, speed, steer):
+        """Reserve tire force for turning instead of saturating the rear wheels.
+
+        Independent uniform-road dynamics identification supports half throttle
+        under moderate lateral load, tapering to coast near 180 m/s² demand.
+        This is a runtime image-speed/action calculation, not environment access.
+        """
+        limit = float(self.config['traction_accel'])
+        if limit <= 0:
+            return 1.
+        demand = speed*speed*abs(np.tan(steer))/3.24
+        turning_cap = .5+.5*float(np.clip(1.-demand/20., 0., 1.))
+        reserve = float(np.clip((limit-demand)/(limit*4./9.), 0., 1.))
+        return turning_cap*reserve
+
     def act(self, observation):
         obs = np.asarray(observation)
         if obs.shape != (4,84,84) or not np.isfinite(obs).all() or obs.min() < 0 or obs.max() > 1:
@@ -162,6 +219,11 @@ class Agent:
         distances = 63.-path[:,1]
         lookahead = float(np.clip(c['lookahead']+c['speed_lookahead']*speed, 9., distances[-1]))
         curvature = self._tracking_curvature(path, lookahead, free, obstacles)
+        yaw_rate, slip, motion_valid = 0., 0., False
+        if c['motion_preview'] > 0:
+            yaw_rate, slip, motion_valid = self._motion(obs[-2], obs[-1])
+            if motion_valid:
+                curvature = self._preview_curvature(curvature, speed, yaw_rate, slip, lookahead)
         steer = float(np.clip(c['pursuit_gain']*curvature, -c['max_steer'], c['max_steer']))
         steer = (1.-c['steer_smoothing'])*steer + c['steer_smoothing']*self.last_steer
         # Fit overlapping local quadratics to suppress lattice quantization.
@@ -183,11 +245,13 @@ class Agent:
         excess = speed-target_speed
         gas = float(np.clip((target_speed-speed)*.10+.25,0.,1.)) if excess <= 1 else 0.
         brake = float(np.clip(excess*c['brake_gain'],.03,.7)) if excess > 1 else 0.
+        gas_cap = self._traction_gas_limit(speed, steer)
+        gas = min(gas, gas_cap)
         self.last_steer = steer
         self.previous_path = path.copy()
         self.diagnostics = dict(valid=True,path=path.tolist(),speed=speed,target_speed=target_speed,
                                 lookahead=lookahead,curvature=float(curvature),steer=steer,
-                                obstacle_pixels=int(obstacles.sum()))
+                                obstacle_pixels=int(obstacles.sum()), yaw_rate=yaw_rate, slip=slip, motion_valid=motion_valid, gas_cap=gas_cap)
         return np.array([steer,gas,brake],np.float32)
 
     def last_step_diagnostics(self):
