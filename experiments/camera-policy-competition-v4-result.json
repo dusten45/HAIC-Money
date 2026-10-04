@@ -3540,8 +3540,45 @@
     "Official Linux submission-container certification is unavailable on this Windows host."
   ],
   "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "post_promotion_validation": {
+    "elapsed_seconds": 430.49,
+    "environment": {
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1"
+    },
+    "excluded_file": "tests/test_drqv2_matched.py",
+    "exclusion_reason": "Windows lacks the Linux fcntl module; preexisting platform exclusion.",
+    "focused_checks": {
+      "local_api_isolated": 11,
+      "source_bound_v4_runner_gate": 34,
+      "submission_policy_and_package": 21,
+      "temporal_route": 18
+    },
+    "local_http_diagnostic": {
+      "finding": "Intermittent Windows abort on rejected POST requests; unchanged frozen local web API, no controller implication established.",
+      "path": ".haic-artifacts/clear-road-row42-v4/freshness-audit/http-rejection-race-diagnostic.json",
+      "sha256": "f5e60e2000128011d3fcda608eb7ec40053b5808ec7affda46e70a991b5e893c"
+    },
+    "log": ".haic-artifacts\\clear-road-row42-v4\\freshness-audit\\pytest-final.log",
+    "log_sha256": "ebd89f2bd5a0454e5e47a2e2b42dfc624260c763167b5cc491a0a868ba4ee23d",
+    "passed": 972,
+    "skipped": 10,
+    "source_and_frozen_evaluation_post_suite": "PASS",
+    "source_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+    "status": "PASS",
+    "test_command": ".venv/Scripts/python.exe -m pytest -q --ignore=tests/test_drqv2_matched.py",
+    "test_exit_code": 0,
+    "warnings": 4
+  },
   "protocol_name": "camera-policy-competition-v4",
   "protocol_sha256": "856bc121a2f9c95d0a95cd25653443000cebe615c1fcc7d5f47ebe7fbfc5e7cc",
+  "remaining_failure_analysis": {
+    "crash_retirements": 1,
+    "dnf_count": 28,
+    "interpretation": "Prioritize post-contact loss of motion or partial road contact; sampled telemetry alone does not prove the physical cause.",
+    "off_track_retirements": 27,
+    "post_contact_off_track_retirements_without_full_offtrack_sample": 25
+  },
   "schema_version": 1,
   "source_identity": {
     "candidate_route_class": "_ClearRoadRow42DropoutController",
@@ -3592,5 +3629,84 @@
     "template_sha256": "9f163e4aa34cd558dce1be941a478742cab34c87f0034bea16019a2a48f9baac"
   },
   "status": "PROMOTED",
+  "submission_package": {
+    "archive": ".haic-artifacts\\submissions\\20261004T104340018489Z_clear-road-camera-practical-v4-final\\submission.zip",
+    "archive_sha256": "3508100c4f700de4fdeb1d7f9e66a5e0eeb79c697b9762a57d6987d2bce05fe6",
+    "bytes": 6298260,
+    "cold_drive_parity": {
+      "archive": "C:\\HAIC-Money\\.haic-artifacts\\submissions\\20261004T104340018489Z_clear-road-camera-practical-v4-final\\submission.zip",
+      "archive_sha256": "3508100c4f700de4fdeb1d7f9e66a5e0eeb79c697b9762a57d6987d2bce05fe6",
+      "cold_drive": {
+        "action_latency_max_ms": 43.982299976050854,
+        "action_trace_sha256": "b53990f714ee7dd143ecd990c57543e7b9a45a9e084c7194a6c003450a71527b",
+        "collision_count": 0,
+        "damage": 0.0,
+        "error": null,
+        "finished": true,
+        "initialization_ms": 1556.2594000948593,
+        "lap_time_ms": 24860,
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 1,
+        "peak_worker_rss_mib": 233.40625,
+        "progress": 1.0,
+        "reset_ms": 0.06859994027763605,
+        "retire_reason": null,
+        "steps": 311
+      },
+      "compared_outcome_keys": [
+        "action_trace_sha256",
+        "collision_count",
+        "damage",
+        "error",
+        "finished",
+        "lap_time_ms",
+        "offtrack_samples",
+        "partial_offtrack_samples",
+        "progress",
+        "retire_reason",
+        "steps"
+      ],
+      "members_sha256": {
+        "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+        "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+        "agent.py": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+        "model.pt": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+      },
+      "protocol_sha256": "856bc121a2f9c95d0a95cd25653443000cebe615c1fcc7d5f47ebe7fbfc5e7cc",
+      "reference_cell_label": "screen/1/1274277667",
+      "status": "PASS"
+    },
+    "cpu_smoke": {
+      "act_seconds": 0.00238659989554435,
+      "finite": true,
+      "init_seconds": 1.5704103999305516,
+      "reset_matches_first": true,
+      "shape": [
+        3
+      ],
+      "unreset_matches_first": true
+    },
+    "drive_parity_receipt_sha256": "5d33bfbfa7e87ab964e8d10441463c2b0c1fa72f7ad3b2f5ab970c3a2003114d",
+    "independent_delivery_audit": {
+      "action_latency_max_ms_rounded": 45.06,
+      "archive_bytes": 6298260,
+      "committed_source_bytes": "c1ae4b7c358b495a462b3b917c924ddc44536e00",
+      "extracted_bytes": 7002243,
+      "four_root_members_and_all_pins": "PASS",
+      "independent_extracted_zip_action_outcome_parity": "PASS",
+      "initialization_ms_rounded": 1526,
+      "peak_worker_rss_mib": 231.83,
+      "reference_cell_label": "screen/1/1274277667",
+      "status": "PASS"
+    },
+    "manifest_sha256": "a93838848937f91075a1f3e5569fb45206440f1e69e99da20bd3cd838c05b833",
+    "members_sha256": {
+      "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+      "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+      "agent.py": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+      "model.pt": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12"
+    },
+    "source_git_commit": "c1ae4b7c358b495a462b3b917c924ddc44536e00"
+  },
   "validation_platform": "Windows-10-10.0.26200-SP0"
 }

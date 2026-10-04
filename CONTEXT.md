@@ -45,9 +45,18 @@ aggregate, within the fixed 10% pace allowance. All 272 cold receipts, eight
 exact paired repeats, source pins and predecessor seals passed independent
 recomputation. Runtime maxima: init 4.67 s, reset 0.20 ms, action 139.26 ms,
 RSS 231.55 MiB. Finite testing does not guarantee completion on every geometry.
+Next controller priority: 25 of the 28 remaining DNF cells retired after
+contacts without a sampled full off-road event. Investigate post-contact loss
+of motion and partial road contact before choosing a further recovery change.
 The promoted source exactly matches the evaluated selected source above.
-See `experiments/camera-policy-competition-v4-result.json`. Final package and
-post-promotion full-suite verification are being completed.
+See `experiments/camera-policy-competition-v4-result.json`. Final ZIP:
+`.haic-artifacts/submissions/20261004T104340018489Z_clear-road-camera-practical-v4-final/submission.zip`
+(6,298,260 bytes; SHA256
+`3508100c4f700de4fdeb1d7f9e66a5e0eeb79c697b9762a57d6987d2bce05fe6`).
+Its four member hashes match V4; CPU loading/reset/action checks passed, and
+extracted cold driving exactly reproduced a fresh V4 action trace/outcome.
+Post-promotion Windows-compatible full suite passed 972 tests, skipped 10;
+the submission ZIP also passed independent extracted-file cold driving.
 
 ## Frozen Competition Contract
 
@@ -80,9 +89,11 @@ post-promotion full-suite verification are being completed.
   are diagnostic, not fresh evaluation. Track Lab can replay camera, action,
   trajectory and collision telemetry.
 - Local `.venv`: Windows Python 3.11.15, Torch 2.1 CPU, NumPy 1.26. Windows
-  lacks `fcntl` for `tests/test_drqv2_matched.py`; the latest full suite
-  before promotion excluding that file passed 971 tests and skipped 10.
-  Post-promotion full-suite verification is pending. Official-like Linux
+  lacks `fcntl` for `tests/test_drqv2_matched.py`; the latest post-promotion
+  full suite excluding that file passed 972 tests and skipped 10 (430.49 s).
+  The unchanged local web API has an intermittent Windows TCP abort on rejected
+  POST requests (two of 360 diagnostic requests; final full suite passed).
+  This does not establish an inference defect. Official-like Linux
   submission-container certification is unavailable here: Docker is stopped
   and WSL lacks the required runtime/dependencies.
 - Preserve untracked user videos, prior submission directories and
