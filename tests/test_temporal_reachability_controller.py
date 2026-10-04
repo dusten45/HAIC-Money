@@ -344,8 +344,7 @@ def test_partial_target_keeps_guiding_through_bottom_row_52():
     assert candidate._partial_near_target(assessment, bbox) is not None
 
 
-def test_ordinary_agent_route_remains_the_validated_baseline():
+def test_ordinary_agent_route_is_the_validated_clear_road_controller():
     runtime = agent.Agent("model.pt")
 
-    assert isinstance(runtime._forward_controller, agent._CompoundClearingBrakeCarryController)
-    assert not isinstance(runtime._forward_controller, agent._TemporalReachabilityController)
+    assert type(runtime._forward_controller) is agent._ClearRoadRow42DropoutController
