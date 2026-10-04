@@ -1,0 +1,31 @@
+--- preview-v4.py
++++ guarded-preview-v1.py
+@@ -3345,0 +3346 @@
++        target = robust._pace_effective_target if self.mode == 'robust' else self._metric.last_target
+@@ -3352,0 +3354,6 @@
++            target = self._metric.last_target
++            if hazard:
++                robust_target = robust._pace_effective_target
++                if robust_target is not None and np.isfinite(robust_target):
++                    target = min(float(target), max(0.0, float(robust_target)))
++                action = self._hazard_pedals(action, robust_action, speed=speed, target=target)
+@@ -3369 +3376,2 @@
+-        target = self._robust._pace_effective_target if self.mode == 'robust' else self._metric.last_target
++        if self.mode == 'recovery':
++            target = self._metric.last_target
+@@ -3370,0 +3379,15 @@
++        return action
++
++    @staticmethod
++    def _hazard_pedals(action, robust_action, *, speed, target):
++        action = np.asarray(action, dtype=np.float32).copy()
++        action[1] = min(float(action[1]), float(robust_action[1]))
++        action[2] = max(float(action[2]), float(robust_action[2]))
++        if target is not None and np.isfinite(target):
++            error = float(target) - float(speed)
++            if error < -2.0:
++                action[2] = max(float(action[2]), float(np.clip(-error * .018, .04, .7)))
++            else:
++                action[1] = min(float(action[1]), float(np.clip(.3 + .055 * error, 0.0, 1.0)))
++        if action[2] > 0.0:
++            action[1] = 0.0

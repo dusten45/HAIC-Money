@@ -20,8 +20,9 @@ All candidates infer from images and internal memory. They require NumPy and
 contain no map seed lookup, simulator import, root-agent import, or checkpoint.
 The evaluator and packager are development tools and must not be submitted.
 
-## Measured mandatory laps
+## Historical checkpoint mandatory laps
 
+These are the earlier checkpoint measurements, not the new Linux cloud runs.
 Times are actual simulated finish times excluding warmup. DNF is not a lap.
 
 | Track / seed | Existing agent | Robust | Hybrid | MPC v2 |
@@ -36,7 +37,7 @@ the four-lap total by 15.63%, but its additional development coverage is only
 10/16 finishes, versus 13/16 for the existing and robust agents. Hybrid has
 not been promoted. All hybrid development retirements occurred before its
 700-step budget, so none needs a longer timeout resolution. Holdout geometries
-remain unopened. Source-bound summaries are in `benchmark.json`; large camera
+were unopened at that checkpoint. Source-bound summaries are in `benchmark.json`; large camera
 traces and immutable original receipts remain in the ignored local directory
 `.haic-artifacts/independent-racer-20261004/`.
 The robust timings bind its frozen version-2 source with explicit 68/.65/.22
@@ -47,6 +48,27 @@ The fixed prospective pace profiles are 13, then 15, then 18 seconds after
 three and six distinct development rejections. Those relaxations never change
 past results or completion/runtime/safety rules. Every candidate above still
 fails the original target and the latest 18-second pace profile.
+
+## Cloud continuation from 14bb967
+
+The user resumed development on `codex/apex-2026-independent-agent`. New Python
+3.11.16 Linux measurements, source-bound receipts, rejected variants and
+reversible patches are in `results/cloud-20261004/`. The fresh hybrid required
+laps are **19.62 / 26.20 / 22.90 / 21.82 seconds**, with **10/16** extra finishes;
+historical MPC completion results do not reproduce on this platform.
+
+Six complete prospective development candidates failed: safety, pace, recovery,
+preview, envelope and corridor. Preview and envelope reach 12/16 extra finishes;
+preview has three finishes on every track. Three guarded combinations isolate
+hazard pedal protection from the unsuccessful heading and curved-path changes.
+Each tested source is preserved; none is silently substituted for an earlier
+receipt. The next complete development candidate uses the 18-second profile.
+The original 13-second goal remains separate. No candidate is promoted.
+
+The fresh existing full suite has 1170 passes, 10 skips and 15 old dependency /
+provenance failures; see `results/cloud-20261004/BASELINE.md`. Cloud inference
+uses NumPy only. The official repository source was rechecked byte for byte;
+website-only announcements were inaccessible from this environment.
 
 ## Reproduce a mandatory screen
 

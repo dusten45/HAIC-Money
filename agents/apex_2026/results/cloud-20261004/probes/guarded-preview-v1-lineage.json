@@ -1,0 +1,36 @@
+{
+  "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+  "source_bytes": 133977,
+  "base_preview_sha256": "f0ccb11d8bcae690cb1a5b3ac98ea0ab9f727f85b9d7d488263c86760f92302d",
+  "robust_metric_prefix_sha256": "355f696321b154e87d25daec905294ac3120b25b1101d31417895aa83e864590",
+  "prefix_exact_copy": true,
+  "embedded_parameters": {
+    "cruise_speed": 100.0,
+    "preview_time": 0.19,
+    "braking_accel": 100.0,
+    "lateral_accel": 145.0,
+    "curve_window": 12.0,
+    "curve_step": 4.0
+  },
+  "change_scope": "public guided hazard pedals and effective target only",
+  "promoted": false,
+  "original_target_met": false,
+  "holdout_opened": false,
+  "prefix_boundary": "before literal class Agent:",
+  "focused_tests_passed": 22,
+  "mandatory_receipt": "guarded-preview-v1-mandatory.json",
+  "mandatory_receipt_sha256": "8cb96ebdcefd67137012f91a4c986953a352e6299df26da507fc0c89052a9653",
+  "mandatory_finished": 4,
+  "mandatory_total": 4,
+  "mandatory_contacts": 0,
+  "mandatory_lap_times_ms": [
+    21920,
+    27640,
+    26140,
+    23740
+  ],
+  "mandatory_parameters": {},
+  "known_model_limitation": "Sparse localized-bend camera remains target 66.82 m/s, gas 0.2499 without braking, versus dense target 59.94 and brake 0.1403 at decoded speed 67.73 m/s.",
+  "complete_development_status": "R7 prospective study pending; root evaluates frozen source under 18-second profile.",
+  "public_patch_sha256": "f4e19ccd485992358d32b8dd332adaa91c5e0b0d58a1693f017e0a79c6c17420"
+}
