@@ -218,6 +218,138 @@
           "mean_horizon_target_reduction": 13.652841874910775
         }
       }
+    },
+    {
+      "variant": "geodesic_r2_single_margin",
+      "source_snapshot": "/tmp/apex-v2-geodesic-r2/source.py",
+      "source_sha256": "8856056b40be92e7c62e93cabe655d213faf149b3cfdcbb8861e1f1dceb54314",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 6,
+        "finish_rate": 0.75,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 17650.0,
+        "finished_max_ms": 21560
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5236363636363637,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t1-s3601050002.json",
+          "receipt_sha256": "180737ddb6b8d096201355d42796886c79a2222c1c2931ab920d9747bbcfa0d1"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 17580,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t1-s516237.json",
+          "receipt_sha256": "8a903e6299be65b84715ff025bcbf78b56e42756dd10eb7e9cb6f7b89a0fb09b"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "lap_time_ms": 17040,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t2-s4031370700.json",
+          "receipt_sha256": "691a1e5d7cdd5fe645b83cd5cfe4bbd68de17f84f4c18becbc35ea0a4fd13a01"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21560,
+          "progress": 1.0,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t2-s644062.json",
+          "receipt_sha256": "5a70c23b31f61807c0384ca4ff1a3a5cf46b25ae5ef2c3463f5b37c280d10756"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 19440,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t3-s1007.json",
+          "receipt_sha256": "d8be67e7a7b01d874a5cc4e48c4ec995b6943175e0ab026023b447637ae4f96e"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": true,
+          "lap_time_ms": 17080,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t3-s3601050003.json",
+          "receipt_sha256": "c5bde8e53173fce61de101ee2fa1aa25dc3465dc56a0d176153fb42bcb7e8ce3"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3622291021671827,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t3-s4111953688.json",
+          "receipt_sha256": "f10373388ed7373b4455033917066957790e87bfe28220dcd25c497fed3ee538"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 17720,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-r2/t4-s18800.json",
+          "receipt_sha256": "31dec66a0a9b50f8866aa9dff529fb5c304c9fb10dec88f896a7dee2ed621c6e"
+        }
+      ],
+      "hypothesis": "Remove duplicated obstacle margin: pre-inflate only excess above geometricclearance. Nominal3px footprint clearance applied once. No speed/brake change.",
+      "observations": "Required4/4 but t2 damage.8,t4damage.4; consumedr1t3 rescued, r1t1 fails earlier withdamage1; consumedV1t3 rescue regresses to DNFdamage1. Pixelconnectivity fixed in both knownfinalframes, but dynamic tracking safety regressed. Not promoted.",
+      "pixel_replay": {
+        "t1-s3601050002": {
+          "frame200_path_nodes": 48,
+          "start": [
+            46.0,
+            58.0
+          ],
+          "end": [
+            4.0,
+            16.0
+          ],
+          "min_sampled_clearance": 3.0
+        },
+        "t3-s3601050003": {
+          "frame200_path_nodes": 59,
+          "start": [
+            46.0,
+            58.0
+          ],
+          "end": [
+            3.0,
+            0.0
+          ],
+          "min_sampled_clearance": 3.0
+        }
+      },
+      "tests": "7 geodesic tests pass; fullApex130 passed before batch"
     }
   ]
 }

@@ -70,6 +70,18 @@ class GeodesicTests(unittest.TestCase):
         pixels = np.rint(points*np.array([1.3608,-1.701])+[42,63]).astype(int)
         self.assertTrue(np.all(free[pixels[:,1],pixels[:,0]]))
 
+    def test_single_footprint_margin_preserves_narrow_obstacle_bypass(self):
+        a = agent()
+        frame = np.full((84,84), .15, np.float32)
+        frame[:74,33:52] = .4
+        cv2.circle(frame, (42,35), 3, .9, -1)
+        free, obstacles, _ = a._free_space(frame)
+        path = a._geodesic(free)
+        self.assertLess(path[-1,1], 6., 'Single 3px clearance fits this road; double inflation blocks it')
+        raw_distance = cv2.distanceTransform(free, cv2.DIST_L2, 5)
+        x,y = np.rint(path).astype(int).T
+        self.assertGreaterEqual(raw_distance[y,x].min(), 3.)
+
     def test_invalid_observation_brakes(self):
         np.testing.assert_array_equal(agent().act(np.zeros((2,3))),np.array([0,0,.3],np.float32))
 
