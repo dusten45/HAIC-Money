@@ -1,0 +1,89 @@
+--- early-circle-v1.py
++++ arc-guard-v1.py
+@@ -727 +727 @@
+-class Agent(_ClearSupportedReference):
++class _EarlyCircleReference(_ClearSupportedReference):
+@@ -766,0 +767,83 @@
++
++class Agent(_EarlyCircleReference):
++    """Guard the base emitted turn using visible near vehicle support.
++
++    A distant row reference can weaken a turn while the nearby road bends
++    out of its trajectory. Only an unsupported base turn tries one shorter
++    preview. Sampled camera clearance is a heuristic, not a dynamic or tyre
++    sweep certificate. Existing ridge selection and recovery remain active.
++    """
++
++    def reset(self, observation=None):
++        super().reset(observation)
++        self._arc_guard_frame = None
++        self.arc_guard_used = False
++        self.arc_guard_curve = 0.
++
++    def _road(self, frame):
++        self._arc_guard_frame = frame
++        return super()._road(frame)
++
++    def _arc_guard_depth(self, field, steer):
++        curvature = np.tan(steer)/self.WHEELBASE
++        distance = np.linspace(0., 8., 33)
++        angle = curvature*distance
++        if abs(curvature) < 1e-8:
++            center = np.column_stack((np.zeros_like(distance), distance))
++        else:
++            center = np.column_stack(((1.-np.cos(angle))/curvature,
++                                      np.sin(angle)/curvature))
++        corners = []
++        for lateral, longitudinal in ((-1.6, -2.4), (-1.6, 2.6),
++                                      (1.6, -2.4), (1.6, 2.6)):
++            offsets = np.column_stack((lateral*np.cos(angle)+longitudinal*np.sin(angle),
++                                       -lateral*np.sin(angle)+longitudinal*np.cos(angle)))
++            corners.append(center+offsets)
++        return float(np.min(self._sample_distance(field, np.concatenate(corners))))
++
++    def _steering(self, ahead, path, speed, yaw):
++        desired = super()._steering(ahead, path, speed, yaw)
++        emitted = self.last_steer+float(np.clip(desired-self.last_steer, -.24, .24))
++        frame = self._arc_guard_frame
++        if frame is None:
++            return desired
++        field = self._distance_field(frame)
++        original_depth = self._arc_guard_depth(field, emitted)
++        if original_depth >= 1.9:
++            return desired
++        preview = min(8., max(3., float(ahead[-1])-1.))
++        x = float(np.interp(preview, ahead, path))
++        curvature = 2.*x/(preview*preview+x*x)
++        short = np.arctan(self.WHEELBASE*curvature)
++        short += self.yaw_gain*self.WHEELBASE*(speed*curvature-yaw)/max(speed, 20.)
++        short = float(np.clip(short, -.4, .4))
++        short_emitted = self.last_steer+float(np.clip(short-self.last_steer, -.24, .24))
++        short_depth = self._arc_guard_depth(field, short_emitted)
++        if short_depth < 1.9 or short_depth <= original_depth:
++            return desired
++        self.arc_guard_used = True
++        self.arc_guard_curve = abs(np.tan(short_emitted)/self.WHEELBASE)
++        self.reference_curvature = curvature
++        return short
++
++    def _target(self, ahead, path, speed):
++        target = super()._target(ahead, path, speed)
++        if self.arc_guard_used:
++            target = min(target, np.sqrt(self.lateral_accel/max(self.arc_guard_curve, .0005)))
++        return float(target)
++
++    def act(self, observation):
++        self.arc_guard_used = False
++        self.arc_guard_curve = 0.
++        action = super().act(observation)
++        if self.mode != "confidence" or self.lost_frames:
++            self.arc_guard_used = False
++            return action
++        if self.arc_guard_used and action[1] > 0.:
++            demand = max(self.last_speed*abs(self.last_yaw),
++                         self.last_speed**2*self.arc_guard_curve)
++            if demand > 120.:
++                action[1] = min(float(action[1]), .30)
++            elif demand > 60.:
++                action[1] = min(float(action[1]), .60)
++        return action

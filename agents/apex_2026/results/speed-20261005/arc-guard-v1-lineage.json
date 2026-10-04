@@ -1,0 +1,105 @@
+{
+  "source_sha256": "ea34ba8e8d9bb414d2fc28f73a9728f791b58ace40f0d00e20b0bb49a1c42914",
+  "parent_source_sha256": "5d9958d142970fcc0556af850ccd83895fbea08c8e1f81921a2f2d1085c7dad5",
+  "parent_definition_prefix_exact": true,
+  "parent_class_alias": "_EarlyCircleReference",
+  "parameters": {},
+  "source_patch_sha256": "e2aa5649693c0765549fa0e9a06e04c66c57e6f952b673098c6ab9193d207175",
+  "camera_fixture_sha256": "e4990387ee0e5de071cf16c109347ffad4962498ca2fbe5badae123060949099",
+  "focused_tests_passed": 14,
+  "test_sha256": "96589f58d37b072964744b1d13b6d6c2dbced84f51078bdf3307700a7c6aea18",
+  "red_regressions": {
+    "frame77_original_corner_depth_m": 0.6426761880368183,
+    "frame78_original_corner_depth_m": 0.0,
+    "result": "2 failed, 3 passed"
+  },
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "limitations": [
+    "Sampled camera corners approximate a rigid path; they do not certify tyre sweep, lag or dynamic feasibility.",
+    "Selected clear-ridge behavior and confidence recovery are inherited."
+  ],
+  "reverse_patch_recovers_parent_exactly": true,
+  "receipt_sha256": "17d3d7f5669823dce09523ca71bec16800c965dfab611c1de61887b8072746f3",
+  "freeze_sha256": "cfb4537272bad7856d23a1eeb00181a5233b7ee2c8ecb59cc20bad16dc406cbc",
+  "source_unchanged_through_evaluation": true,
+  "outcomes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 15440,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "0ce6c1dc7262dbf136d847056ec788e14c0bd84fde93810b77689f20f83d1521"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lap_time_ms": 19500,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "a05f21ec733ddf6249f26fea8b0e590c8f4e354f4efbf1b0c94dc64fd00b973e"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lap_time_ms": 19760,
+      "progress": 1.0,
+      "collision_count": 2,
+      "retire_reason": null,
+      "action_trace_sha256": "c5ae39bca2cb0cd7e6758d598af412460bff744ebd5e412d0ad2540e12dc0c25"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 19780,
+      "progress": 0.992831541218638,
+      "collision_count": 1,
+      "retire_reason": null,
+      "action_trace_sha256": "62b88212f139329da372fe238337961abfc0dbd78fdcc8aa304f9c58a7067265"
+    }
+  ],
+  "trace_only_parent_comparison": {
+    "3": {
+      "first_divergence_action": 54,
+      "parent_action": [
+        0.10095380246639252,
+        0.0,
+        0.08928586542606354
+      ],
+      "candidate_action": [
+        -0.10474220663309097,
+        0.0,
+        0.08928586542606354
+      ],
+      "candidate_contact_actions": [
+        98,
+        99
+      ]
+    },
+    "4": {
+      "first_divergence_action": 62,
+      "parent_action": [
+        -0.11162693798542023,
+        0.0,
+        0.29963406920433044
+      ],
+      "candidate_action": [
+        0.1504080444574356,
+        0.0,
+        0.29963406920433044
+      ],
+      "candidate_contact_actions": [
+        145
+      ]
+    }
+  },
+  "rejected_reason": "All mandatory laps exceed13 seconds and T3/T4 introduce contacts relative to preserved earlier parent receipts."
+}
