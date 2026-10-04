@@ -39,13 +39,17 @@ The three-decision camera-motion predictor has wide and sparse residuals; it
 does not certify physical passing reachability. Related `experiments/*dev-v1-result.json`
 files retain the evidence.
 
-Current priority: diagnose v2's severe loss at track 2 / geometry 1918128940
-and crash/contact increases at tracks 3/4 on geometry 416046940 and track 4
-on geometry 3602985103. Initial exact replays show the short side hold made no
-applied steering change in these failures. Inherited no-path obstacle steering,
-side switching and braking require a source-bound causal analysis. Test
-distinct repairs only on consumed data, then preregister new geometry; never
-open v2 confirmation/blind or activate the rejected source.
+V2 loss traces are now action-exact. Track 2 / 1918128940 stalls on road after
+an uncertified pass collides; track 3 / 416046940 has two redundant side-switch
+vetoes; track 4 / 3602985103 crashes without any side-hold or bend-guard
+intervention. Global side-steer and clearance floors fail on other cells. The
+selector-only `_FeasibleCorridorObstacleController` repairs three flagged cells
+but finishes only 20/32 across the consumed v2 screen, loses four control
+finishes and adds three crashes. Static 1–2-pixel camera widths do not predict
+physical hull clearance. See `experiments/camera-policy-v2-loss-diagnostics-result.json`.
+Current priority: test compact dynamic-clearance or context-sensitive control
+rules on consumed cells, then preregister new geometry for a source-bound
+candidate. Keep v2 confirmation/blind sealed and the rejected route inactive.
 
 ## Frozen Competition Contract
 

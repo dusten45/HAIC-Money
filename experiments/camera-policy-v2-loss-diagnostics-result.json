@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "experiment": "camera-policy-v2-loss-diagnostics",
+  "evidence": "REUSED_V2_SCREEN_ONLY",
+  "decision": "Do not promote the rejected v2 candidate or the tested local repairs.",
+  "frozen_protocol_sha256": "47aeb0740d52598b7dff359d4c96c2d12250d23aa2bdee832701291b64b99831",
+  "frozen_screen_sha256": "9fcb917195db41225d14cd3e7f4984f4b29e847164bff26706e7908b9dd797f0",
+  "failure_mechanisms": [
+    {
+      "cell": [2, 1918128940],
+      "finding": "At the first obstacle, an uncertified right-side target opposes the observed left bend. Two contacts leave the car stationary on the road; the no-progress counter labels the endpoint off_track. A one-action road-steering override and late policy handoff do not recover the lap."
+    },
+    {
+      "cell": [3, 416046940],
+      "finding": "A near-center obstacle offset flip is vetoed by both temporal-side and reachability guards. Removing either veto alone leaves the entire action trace and five-contact crash unchanged."
+    },
+    {
+      "cell": [4, 416046940],
+      "finding": "The candidate finishes with four contacts versus zero for control. Raising a global camera clearance floor to two pixels reduces this cell to three contacts but loses a separate candidate-only finish."
+    },
+    {
+      "cell": [4, 3602985103],
+      "finding": "The candidate crashes with five contacts; side-hold and high-speed bend guard never alter its applied actions. A global selected-side steering floor rescues this cell but loses ten other candidate finishes in the consumed screen."
+    }
+  ],
+  "simple_corridor_ablation": {
+    "controller": "_FeasibleCorridorObstacleController",
+    "selector_only_source_sha256": "70fbb2d6e86f60696226296de475db1987516596cc07a30d9a4df5d51c798feb",
+    "canonical_pairs": 32,
+    "control_finishes": 16,
+    "ablation_finishes": 20,
+    "frozen_v2_candidate_finishes": 27,
+    "lost_control_finishes": 4,
+    "new_crashes": 3,
+    "control_contacts": 65,
+    "ablation_contacts": 46,
+    "decision_under_unchanged_v2_screen_gates": "REJECT",
+    "deterministic_repeat_failures": 0,
+    "screen_summary_sha256": "406307a7f2ce42ba7f1cdbea38fb015d8a3b1a7ab07b252b94e1f00a669bebda"
+  },
+  "camera_clearance_calibration": {
+    "finding": "The same 2.07/1.07-pixel visible side widths preceded both a four-contact pass and a zero-contact pass. Static camera width alone does not predict future vehicle-hull clearance.",
+    "report_sha256": "fa948c124746847cfeb44b557c5e16b3e5063d5b2d1dd30a94763ff98a338fa7"
+  },
+  "limits": "All experiments reuse the eight v2 screen geometries and are development evidence only. The frozen v2 confirmation and blind phases remain sealed. No official Linux submission-container certification was available."
+}
