@@ -1,7 +1,7 @@
 """Prospective, source-bound speed evaluation against the promoted V4 Agent.
 
 Commit this runner, gate and seedless template before binding. Bind once per
-profile, then commit the protocol before opening any cold worker. Confirmation
+global study slot, then commit the protocol before opening any cold worker. Confirmation
 requires a freshly recomputed screen seal. Historical studies are never edited.
 """
 from __future__ import annotations
@@ -43,6 +43,9 @@ EVALUATION_POLICY = {
     "maximum_candidates": 2,
     "candidate_budget_scope": "retained production revisions; exploratory prototypes are development",
     "maximum_fresh_studies": 2,
+    "global_study_slots": [1, 2],
+    "each_global_slot_may_bind_once_under_either_profile": True,
+    "subsequent_study_requires_distinct_selected_source": True,
     "maximum_cold_episodes_per_study": 72,
     "maximum_workers": 3,
     "worker_timeout_seconds": 300,
@@ -62,10 +65,12 @@ EVALUATION_POLICY = {
 }
 
 
-def study_paths(profile: str) -> dict[str, Path]:
+def study_paths(profile: str, slot: int = 1) -> dict[str, Path]:
     gate.thresholds_for(profile)
-    base = ROOT / ".haic-artifacts" / NAME / profile
-    return {"protocol": ROOT / "experiments" / f"{NAME}-{profile}.json",
+    if type(slot) is not int or slot not in (1, 2):
+        raise ValueError("global study slot must be integer 1 or 2")
+    base = ROOT / ".haic-artifacts" / NAME / f"study-{slot}" / profile
+    return {"protocol": ROOT / "experiments" / f"{NAME}-{profile}-study-{slot}.json",
             "root": base / "run", "control": base / "snapshots/control_agent.py",
             "candidate": base / "snapshots/candidate_agent.py", "model": ROOT / "model.pt"}
 
@@ -95,12 +100,13 @@ def validate_template(template: dict) -> None:
         raise ValueError("unbound V5 template must contain no geometry")
 
 
-def derived_seed_partitions(profile: str, salt: str) -> dict[str, list[int]]:
+def derived_seed_partitions(profile: str, salt: str, slot: int = 1) -> dict[str, list[int]]:
     gate.thresholds_for(profile)
+    study_paths(profile, slot)
     if not isinstance(salt, str) or not re.fullmatch(r"[0-9a-f]{32}", salt):
         raise ValueError("seed salt must be 128-bit lowercase hex")
     return {phase: [int.from_bytes(hashlib.sha256(
-        f"{NAME}:{profile}:{salt}:{phase}:{index}".encode("ascii")).digest()[:4], "big")
+        f"{NAME}:{profile}:{slot}:{salt}:{phase}:{index}".encode("ascii")).digest()[:4], "big")
         for index in range(SEED_COUNTS[phase])] for phase in PHASES}
 
 
@@ -281,7 +287,7 @@ def failure_evidence(profile: str, records: list[str]) -> list[dict]:
         if not recomputed:
             raise ValueError("performance proof has no recomputable strict performance failure")
         if record["evaluation_scope"] == "fresh-strict":
-            strict_path = study_paths("strict")["protocol"]
+            strict_path = study_paths("strict", record.get("study_slot"))["protocol"]
             if not strict_path.is_file():
                 raise ValueError("fresh performance proof needs its committed strict protocol")
             verify_committed_protocol(strict_path)
@@ -353,8 +359,8 @@ def _require_committed_runtime() -> None:
             raise ValueError("V5 runner, gate and template must be committed with exact bytes before binding")
 
 
-def _source_paths(profile: str) -> dict[str, str]:
-    paths = study_paths(profile)
+def _source_paths(profile: str, slot: int = 1) -> dict[str, str]:
+    paths = study_paths(profile, slot)
     return {arm: paths[arm].relative_to(ROOT).as_posix() for arm in fresh.ARMS}
 
 
@@ -363,8 +369,9 @@ def validate_protocol(protocol: dict, historical: set[int]) -> None:
             or type(protocol.get("schema_version")) is not int or protocol["schema_version"] != 1):
         raise ValueError("unbound V5 protocol: one-time binding and source pins required")
     profile = protocol.get("evaluation_profile")
-    paths = study_paths(profile)
-    if protocol.get("name") != f"{NAME}-{profile}":
+    slot = protocol.get("study_slot")
+    paths = study_paths(profile, slot)
+    if protocol.get("name") != f"{NAME}-{profile}-study-{slot}":
         raise ValueError("V5 study name/profile mismatch")
     construction = protocol.get("source_construction", {})
     if not isinstance(construction, dict):
@@ -374,7 +381,7 @@ def validate_protocol(protocol: dict, historical: set[int]) -> None:
                              "candidate_base_commit": construction["candidate_base_commit"],
                              "candidate_base_blob_sha256": hashlib.sha256(base).hexdigest(),
                              "selector_from": f"{CONTROL_CLASS}()", "selector_to": f"{CANDIDATE_CLASS}()"}
-    expected = {"source_construction": expected_construction, "source_snapshots": _source_paths(profile),
+    expected = {"source_construction": expected_construction, "source_snapshots": _source_paths(profile, slot),
                 "control_agent_sha256": hashlib.sha256(control).hexdigest(), "candidate_agent_sha256": hashlib.sha256(candidate).hexdigest(),
                 "controller_classes": {"control": CONTROL_CLASS, "candidate": CANDIDATE_CLASS},
                 "max_steps": 2000, "frame_skip": 4, "training": False,
@@ -398,7 +405,8 @@ def validate_protocol(protocol: dict, historical: set[int]) -> None:
         raise ValueError("V5 performance failure proof changed")
     if profile == "fallback" and protocol["candidate_agent_sha256"] in {proof["candidate_agent_sha256"] for proof in proofs}:
         raise ValueError("fallback needs a new candidate source")
-    seeds = derived_seed_partitions(profile, protocol.get("seed_salt_hex"))
+    validate_bound_history(protocol)
+    seeds = derived_seed_partitions(profile, protocol.get("seed_salt_hex"), slot)
     require_fresh_seeds(seeds, historical)
     expected_partitions = {phase: {"track_ids": TRACKS, "seeds": seeds[phase],
                           "spot_check_cells": [[track, seeds[phase][index]] for track, index in SPOT_INDEX[phase]]} for phase in PHASES}
@@ -427,32 +435,103 @@ def _exclusive_bytes(path: Path, content: bytes) -> None:
         raise
 
 
-def bind_source(profile: str, candidate_commit: str, candidate_blob: str, failure_records: list[str]) -> dict:
+def _registered_bindings() -> list[dict]:
+    """Count globally occupied slots from exact committed protocol metadata."""
+    records, occupied = [], set()
+    for slot in (1, 2):
+        for profile in gate.PROFILES:
+            path = study_paths(profile, slot)["protocol"]
+            if not path.exists():
+                continue
+            if slot in occupied:
+                raise ValueError("global study slot has duplicate profile bindings")
+            verify_committed_protocol(path)
+            protocol = fresh._read_json(path)
+            if not isinstance(protocol, dict) or protocol.get("study_slot") != slot or protocol.get("evaluation_profile") != profile:
+                raise ValueError("registered study slot/profile metadata changed")
+            validate_protocol(protocol, historical_geometry_seeds(ROOT / "experiments", path))
+            occupied.add(slot)
+            records.append(protocol)
+    if len(records) > EVALUATION_POLICY["maximum_fresh_studies"]:
+        raise ValueError("global two-study binding budget exceeded")
+    return records
+
+
+def require_available_slot(profile: str, slot: int, candidate_sha256: str) -> list[dict]:
+    study_paths(profile, slot)
+    records = _registered_bindings()
+    if len(records) >= EVALUATION_POLICY["maximum_fresh_studies"]:
+        raise ValueError("global two-study binding budget exhausted")
+    if any(record["study_slot"] == slot for record in records):
+        raise ValueError("global study slot is already occupied under a profile")
+    if any(record["candidate_agent_sha256"] == candidate_sha256 for record in records):
+        raise ValueError("subsequent study requires a distinct selected candidate source SHA256")
+    return records
+
+
+def validate_bound_history(protocol: dict) -> None:
+    records = protocol.get("prior_bound_studies")
+    if not isinstance(records, list) or len(records) > 1:
+        raise ValueError("V5 prior binding inventory is invalid")
+    for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("V5 prior binding metadata is invalid")
+        slot, profile = record.get("study_slot"), record.get("evaluation_profile")
+        path = study_paths(profile, slot)["protocol"]
+        if slot == protocol["study_slot"] or record.get("protocol_path") != path.relative_to(ROOT).as_posix():
+            raise ValueError("V5 prior global slot metadata changed")
+        if not path.is_file() or fresh.digest(path) != record.get("protocol_sha256"):
+            raise ValueError("previous bound study protocol SHA256 changed")
+        verify_committed_protocol(path)
+        previous = fresh._read_json(path)
+        if (previous.get("candidate_agent_sha256") != record.get("candidate_agent_sha256")
+                or record.get("candidate_agent_sha256") == protocol["candidate_agent_sha256"]):
+            raise ValueError("previous bound candidate source identity changed or was reused")
+
+
+def bind_source(profile: str, candidate_commit: str, candidate_blob: str,
+                failure_records: list[str], slot: int = 1) -> dict:
+    study_paths(profile, slot)
+    registry_root = ROOT / ".haic-artifacts" / NAME / "binding-registry"
+    registry_root.mkdir(parents=True, exist_ok=True)
+    # One shared lock covers all profile namespaces and both global slots.
+    with fresh._run_lock(registry_root):
+        return _bind_source_under_lock(profile, candidate_commit, candidate_blob, failure_records, slot)
+
+
+def _bind_source_under_lock(profile: str, candidate_commit: str, candidate_blob: str,
+                            failure_records: list[str], slot: int) -> dict:
     # Missing source pins reject before runtime loading or generating a random salt.
     control, base, candidate = source_pair(candidate_commit, candidate_blob)
-    paths = study_paths(profile)
+    paths = study_paths(profile, slot)
     validate_template(fresh._read_json(TEMPLATE_PATH))
     proofs = failure_evidence(profile, failure_records)
     if profile == "fallback" and hashlib.sha256(candidate).hexdigest() in {proof["candidate_agent_sha256"] for proof in proofs}:
         raise ValueError("fallback needs a new candidate source")
+    previous = require_available_slot(profile, slot, hashlib.sha256(candidate).hexdigest())
     if any(paths[name].exists() for name in ("protocol", "control", "candidate", "root")):
         raise ValueError("V5 one-time binding already exists; resampling or overwrite is forbidden")
     _require_committed_runtime()
     require_runtime_versions()
     historical = historical_geometry_seeds(ROOT / "experiments", paths["protocol"])
     salt = secrets.token_hex(16)
-    seeds = derived_seed_partitions(profile, salt)
+    seeds = derived_seed_partitions(profile, salt, slot)
     require_fresh_seeds(seeds, historical)
-    protocol = {"schema_version": 1, "name": f"{NAME}-{profile}", "status": "PREREGISTERED", "evaluation_profile": profile,
+    protocol = {"schema_version": 1, "name": f"{NAME}-{profile}-study-{slot}", "status": "PREREGISTERED",
+                "evaluation_profile": profile, "study_slot": slot,
+                "prior_bound_studies": [{"study_slot": record["study_slot"], "evaluation_profile": record["evaluation_profile"],
+                    "protocol_path": study_paths(record["evaluation_profile"], record["study_slot"])["protocol"].relative_to(ROOT).as_posix(),
+                    "protocol_sha256": fresh.digest(study_paths(record["evaluation_profile"], record["study_slot"])["protocol"]),
+                    "candidate_agent_sha256": record["candidate_agent_sha256"]} for record in previous],
                 "hypothesis": "The committed speed route maintains completion and safety without overall slowdown; strict promotion needs at least 10% faster shared finish time.",
                 "evidence_scope": "Prospective paired screen and independent confirmation; consumed historical grids are development only.",
                 "control_agent_sha256": hashlib.sha256(control).hexdigest(), "candidate_agent_sha256": hashlib.sha256(candidate).hexdigest(),
-                "model_sha256": fresh.digest(paths["model"]), "source_snapshots": _source_paths(profile),
+                "model_sha256": fresh.digest(paths["model"]), "source_snapshots": _source_paths(profile, slot),
                 "controller_classes": {"control": CONTROL_CLASS, "candidate": CANDIDATE_CLASS},
                 "source_construction": {"control_implementation_commit": CONTROL_COMMIT, "control_blob_sha256": CONTROL_BLOB_SHA256,
                                         "candidate_base_commit": candidate_commit, "candidate_base_blob_sha256": hashlib.sha256(base).hexdigest(),
                                         "selector_from": f"{CONTROL_CLASS}()", "selector_to": f"{CANDIDATE_CLASS}()"},
-                "seed_salt_hex": salt, "seed_derivation": "First four SHA256 bytes of name:profile:salt:phase:index, unsigned big-endian uint32.",
+                "seed_salt_hex": salt, "seed_derivation": "First four SHA256 bytes of name:profile:slot:salt:phase:index, unsigned big-endian uint32.",
                 "partitions": {phase: {"track_ids": TRACKS, "seeds": seeds[phase],
                                "spot_check_cells": [[track, seeds[phase][index]] for track, index in SPOT_INDEX[phase]]} for phase in PHASES},
                 "template_sha256": fresh.digest(TEMPLATE_PATH), "runner_sha256": fresh.digest(Path(__file__)),
@@ -509,14 +588,17 @@ def verify_committed_protocol(path: Path) -> None:
         raise ValueError("V5 protocol must match committed exact Git bytes before evaluation")
 
 
-def load_study(profile: str, restore: bool = False) -> tuple[dict, dict, dict[str, Path]]:
-    paths = study_paths(profile)
+def load_study(profile: str, slot: int = 1, restore: bool = False) -> tuple[dict, dict, dict[str, Path]]:
+    paths = study_paths(profile, slot)
     if not paths["protocol"].is_file():
         raise ValueError("unbound V5 protocol: commit tooling, pin candidate, then bind")
     verify_committed_protocol(paths["protocol"])
     validate_template(fresh._read_json(TEMPLATE_PATH))
     protocol = fresh._read_json(paths["protocol"])
+    if protocol.get("study_slot") != slot or protocol.get("evaluation_profile") != profile:
+        raise ValueError("loaded V5 protocol slot/profile differs from requested study")
     validate_protocol(protocol, historical_geometry_seeds(ROOT / "experiments", paths["protocol"]))
+    _registered_bindings()
     if restore:
         restore_snapshots(protocol, paths)
     validate_source_pair(protocol, paths)
@@ -544,6 +626,7 @@ def check_frozen_inputs(identity: dict, protocol: dict, paths: dict[str, Path]) 
     if _requirements_blob_sha256() != protocol["requirements_blob_sha256"]:
         raise ValueError("V5 requirements changed")
     validate_source_pair(protocol, paths)
+    validate_bound_history(protocol)
     proofs = protocol["prior_performance_failure_evidence"]
     if proofs != failure_evidence(protocol["evaluation_profile"], [proof["path"] for proof in proofs]):
         raise ValueError("V5 prospective failure evidence changed")
@@ -786,6 +869,7 @@ def _budget_clock(root: Path, identity: dict) -> float:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", choices=gate.PROFILES, default="strict")
+    parser.add_argument("--study-slot", type=int, choices=(1, 2), default=1)
     modes = parser.add_subparsers(dest="mode", required=True)
     bind = modes.add_parser("bind")
     bind.add_argument("--candidate-commit", required=True)
@@ -802,13 +886,13 @@ def main() -> int:
     modes.add_parser("final-decision")
     args = parser.parse_args()
     if args.mode == "bind":
-        protocol = bind_source(args.profile, args.candidate_commit, args.candidate_blob_sha256, args.failure_record)
-        print(json.dumps({"binding": "CREATED", "protocol": str(study_paths(args.profile)["protocol"]),
+        protocol = bind_source(args.profile, args.candidate_commit, args.candidate_blob_sha256, args.failure_record, args.study_slot)
+        print(json.dumps({"binding": "CREATED", "protocol": str(study_paths(args.profile, args.study_slot)["protocol"]),
                           "candidate_base_commit": protocol["source_construction"]["candidate_base_commit"]}, indent=2))
         return 0
     if args.mode != "restore-snapshots":
         require_runtime_versions()
-    protocol, identity, paths = load_study(args.profile, restore=args.mode == "restore-snapshots")
+    protocol, identity, paths = load_study(args.profile, args.study_slot, restore=args.mode == "restore-snapshots")
     if args.mode == "restore-snapshots":
         print(json.dumps({"restore_snapshots": "PASS", "identity": identity}, indent=2))
         return 0

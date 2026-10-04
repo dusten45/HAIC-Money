@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import tempfile
+import threading
 import unittest
 from unittest.mock import patch
 from contextlib import ExitStack
@@ -150,16 +151,61 @@ class SpeedGateTests(unittest.TestCase):
             self.assertEqual(gate.compare_pairs(rows, cells, 'screen', 'strict')['decision'], 'REJECT')
 
 class SourceAndProtocolTests(unittest.TestCase):
+    def test_global_slots_are_profile_independent_with_total_cap_and_distinct_sources(self):
+        self.assertNotEqual(runner.study_paths('fallback', 1)['protocol'], runner.study_paths('fallback', 2)['protocol'])
+        self.assertNotEqual(runner.derived_seed_partitions('fallback', '0' * 32, 1),
+                            runner.derived_seed_partitions('fallback', '0' * 32, 2))
+        first = {'study_slot': 1, 'evaluation_profile': 'fallback', 'candidate_agent_sha256': '1' * 64}
+        with patch.object(runner, '_registered_bindings', return_value=[first]):
+            with self.assertRaisesRegex(ValueError, 'occupied'):
+                runner.require_available_slot('strict', 1, '2' * 64)
+            with self.assertRaisesRegex(ValueError, 'distinct'):
+                runner.require_available_slot('fallback', 2, '1' * 64)
+            runner.require_available_slot('fallback', 2, '2' * 64)
+        second = {'study_slot': 2, 'evaluation_profile': 'fallback', 'candidate_agent_sha256': '2' * 64}
+        with patch.object(runner, '_registered_bindings', return_value=[first, second]):
+            with self.assertRaisesRegex(ValueError, 'two|budget'):
+                runner.require_available_slot('strict', 1, '3' * 64)
+        for slot in (0, 3, True):
+            with self.assertRaises(ValueError): runner.study_paths('strict', slot)
+
+    def test_shared_binding_lock_prevents_simultaneous_same_slot_bindings(self):
+        entered, release = threading.Event(), threading.Event()
+        result = []
+        def held(*args, **kwargs):
+            entered.set()
+            release.wait(5)
+            return {'fixture': 'first binding'}
+        def first():
+            try: result.append(runner.bind_source('fallback', 'a' * 40, 'b' * 64, [], 1))
+            except BaseException as error: result.append(error)
+        with tempfile.TemporaryDirectory() as directory, patch.object(runner, 'ROOT', Path(directory)), patch.object(runner, '_bind_source_under_lock', side_effect=held) as binder:
+            thread = threading.Thread(target=first)
+            thread.start()
+            self.assertTrue(entered.wait(5))
+            try:
+                with self.assertRaisesRegex(ValueError, 'owns'):
+                    runner.bind_source('strict', 'c' * 40, 'd' * 64, [], 1)
+            finally:
+                release.set()
+                thread.join(5)
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(result, [{'fixture': 'first binding'}])
+            self.assertEqual(binder.call_count, 1)
+
     def test_binding_is_one_time_and_each_source_grid_policy_pin_is_checked(self):
         control = runner.committed_bytes('agent.py', runner.CONTROL_COMMIT)
         candidate = control + b'\nclass _SpeedOptimizedController: pass\n'
         requirements = runner.committed_bytes('requirements.txt')
         candidate_commit = 'e' * 40
         candidate_blob = hashlib.sha256(candidate).hexdigest()
+        candidates = {candidate_commit: candidate}
         real_template = runner.TEMPLATE_PATH.read_bytes()
         def git_bytes(name, commit='HEAD'):
             if name == 'requirements.txt': return requirements
-            if name == 'agent.py': return control if commit == runner.CONTROL_COMMIT else candidate
+            if name == 'agent.py': return control if commit == runner.CONTROL_COMMIT else candidates[commit]
+            path = runner.ROOT / name
+            if path.is_file(): return path.read_bytes()
             raise AssertionError(name)
         with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
             root = Path(directory)
@@ -177,6 +223,12 @@ class SourceAndProtocolTests(unittest.TestCase):
             salt = stack.enter_context(patch.object(runner.secrets, 'token_hex', return_value='f' * 32))
             protocol = runner.bind_source('strict', candidate_commit, candidate_blob, [])
             runner.validate_protocol(protocol, set())
+            changed = copy.deepcopy(protocol)
+            changed['study_slot'] = 2
+            changed['name'] = 'camera-speed-v5-strict-study-2'
+            changed['source_snapshots'] = runner._source_paths('strict', 2)
+            with self.assertRaisesRegex(ValueError, 'geometry|grid'):
+                runner.validate_protocol(changed, set())
             paths = runner.study_paths('strict')
             self.assertEqual(paths['control'].read_bytes(), control)
             self.assertEqual(paths['candidate'].read_bytes(), runner.selected_source(candidate))
@@ -191,9 +243,25 @@ class SourceAndProtocolTests(unittest.TestCase):
             changed['partitions']['screen']['track_ids'][0] = True
             with self.assertRaisesRegex(ValueError, 'integer'):
                 runner.validate_protocol(changed, set())
-            with self.assertRaisesRegex(ValueError, 'already exists'):
+            with self.assertRaisesRegex(ValueError, 'already exists|occupied'):
                 runner.bind_source('strict', candidate_commit, candidate_blob, [])
             salt.assert_called_once()
+            with self.assertRaisesRegex(ValueError, 'distinct'):
+                runner.bind_source('strict', candidate_commit, candidate_blob, [], 2)
+            second_commit, second_source = 'f' * 40, candidate + b'# distinct production revision\n'
+            candidates[second_commit] = second_source
+            second = runner.bind_source('strict', second_commit, hashlib.sha256(second_source).hexdigest(), [], 2)
+            first_seeds = {seed for part in protocol['partitions'].values() for seed in part['seeds']}
+            second_seeds = {seed for part in second['partitions'].values() for seed in part['seeds']}
+            self.assertTrue(first_seeds.isdisjoint(second_seeds))
+            self.assertEqual(len(runner._registered_bindings()), 2)
+            self.assertEqual(second['prior_bound_studies'][0]['candidate_agent_sha256'], protocol['candidate_agent_sha256'])
+            with self.assertRaisesRegex(ValueError, 'two-study'):
+                runner.bind_source('strict', candidate_commit, candidate_blob, [], 1)
+            prior_path = paths['protocol']
+            prior_path.write_bytes(prior_path.read_bytes() + b'\n')
+            with self.assertRaisesRegex(ValueError, 'previous.*SHA256'):
+                runner.validate_bound_history(second)
 
     def test_fallback_proofs_require_distinct_sources_exact_committed_bytes_and_performance(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(runner, 'ROOT', Path(directory)):

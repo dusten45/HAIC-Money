@@ -46,6 +46,12 @@
     "maximum_candidates": 2,
     "candidate_budget_scope": "retained production revisions; exploratory prototypes are development",
     "maximum_fresh_studies": 2,
+    "global_study_slots": [
+      1,
+      2
+    ],
+    "each_global_slot_may_bind_once_under_either_profile": true,
+    "subsequent_study_requires_distinct_selected_source": true,
     "maximum_cold_episodes_per_study": 72,
     "maximum_workers": 3,
     "worker_timeout_seconds": 300,

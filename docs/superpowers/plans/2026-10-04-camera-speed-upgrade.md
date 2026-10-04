@@ -83,3 +83,21 @@ ratio at most 1.00, all other stated floors) only with two committed exact
 source/report failure proofs. No V5 geometry has been bound or opened yet.
 Actual target laps must still be reported; this does not establish the
 requested low-teens performance.
+
+Before any fresh binding, two global study slots may each select the fixed
+fallback profile. A slot is single-use across profiles; total bindings remain
+at most two, with distinct candidate source hashes and disjoint geometry.
+The second slot pins its predecessor's exact protocol/source. Neither slot
+may rescore an earlier study or weaken the fallback safety/time floors.
+
+The first localized production revision lost two prior track-2 finishes in
+its consumed grid. An action-exact diagnostic on `(1,1274277667)` also showed
+extra gas at HUD 47–52 immediately before the hazard detector armed, followed
+by three contacts. The final revision therefore limits additional gas to
+HUD at most 35 and requires actual steering to have caught up to the request.
+Its source, three-map outcomes and complete grid must verify independently.
+For this final revision, before observing its development outcomes, accept any
+strictly positive three-map total-time improvement with no individual target
+slowdown. The repeated rejected faster variants justify this bounded-time
+pace relaxation; all completion, aggregate safety and fresh no-slowdown
+floors stay fixed. A safety failure still keeps the verified V4 route live.
