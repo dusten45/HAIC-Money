@@ -908,6 +908,84 @@
           "receipt_sha256": "4b8929ac64785c52a8f18a63e83af964db29c7b119558d0757e21fb0dde3faa9"
         }
       ]
+    },
+    {
+      "variant": "r13",
+      "parent_variant": "r12",
+      "change": "Yaw-only HUD ablation: restore prior-command wheel initialization while keeping instantaneous HUD yaw; negative2/4 outcome",
+      "source_sha256": "d1f605a39794ee7307207c3b7b73bc99a0949e674cce161afd0341948e9bbbbc",
+      "source": "agents/apex_2026/results/rollout_sources/r13.py",
+      "config": {},
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "status": "completed",
+          "finished": false,
+          "lapTimeMs": null,
+          "progress": 0.3107142857142857,
+          "damage": 0.8,
+          "collision_steps": 4,
+          "steps": 179,
+          "retire_reason": "off_track",
+          "inference_mean_s": 0.007475580748630097,
+          "inference_max_s": 0.01080308099881222,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r13/t1.json",
+          "receipt_sha256": "7508ee00ce2fe34259d5af34d2603e76acd896758668cb3e0b21af418b6c6604"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "status": "completed",
+          "finished": true,
+          "lapTimeMs": 22300,
+          "progress": 1.0,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 279,
+          "retire_reason": null,
+          "inference_mean_s": 0.007792608268782161,
+          "inference_max_s": 0.013435884000500664,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r13/t2.json",
+          "receipt_sha256": "dc76ea089b7b90787833542478a3c34d3a8d84265b05b0a701cdbd91179b4007"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "status": "completed",
+          "finished": true,
+          "lapTimeMs": 21260,
+          "progress": 1.0,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 266,
+          "retire_reason": null,
+          "inference_mean_s": 0.008331158680496293,
+          "inference_max_s": 0.018106629000612884,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r13/t3.json",
+          "receipt_sha256": "e694252a854469d0d667ad0f894c153fc1789575883d06a621f0daea10ae28d4"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "status": "completed",
+          "finished": false,
+          "lapTimeMs": null,
+          "progress": 0.5161290322580645,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 216,
+          "retire_reason": "off_track",
+          "inference_mean_s": 0.007556279532461001,
+          "inference_max_s": 0.009323902000687667,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r13/t4.json",
+          "receipt_sha256": "018f460341dbbb36ab67402d89161a30e7a1e532ca3584c6cd3d3065a2f19168"
+        }
+      ]
     }
   ],
   "zero_reset_operator_errors": [
@@ -915,5 +993,6 @@
       "variant": "r8",
       "description": "Two CLI invocations used a slash in the -m module name and failed before import/reset; corrected before actual episode calls."
     }
-  ]
+  ],
+  "model_diagnostic": "agents/apex_2026/results/rollout-prediction-check.json"
 }
