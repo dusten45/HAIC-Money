@@ -1,0 +1,63 @@
+--- base.py
++++ candidate.py
+@@ -852 +852 @@
+-class Agent(_ArcGuardReference):
++class _ArcClearReference(_ArcGuardReference):
+@@ -877,0 +878,57 @@
++
++
++class Agent(_ArcClearReference):
++    """Keep both near clear-road support and remembered hazard constraints."""
++
++    def _route(self, ahead, center, circles, speed, yaw):
++        original, imminent, distance = _PathReference._route(self, ahead, center, circles, speed, yaw)
++        self.corridor_used = False
++        road = self.corridor_road
++        if road is None or ahead[-1] < 12. or imminent:
++            return original, imminent, distance
++        y = np.linspace(0., float(ahead[-1]), 36)
++        middle = np.interp(y, ahead, center)
++        slope = (np.interp(y+2., ahead, center)-np.interp(y-2., ahead, center))/4.
++        inset = 1.9*np.sqrt(1.+slope*slope)
++        lower = (np.interp(y, ahead, road[3])-self.CAR_X)/self.PX_X+inset
++        upper = (np.interp(y, ahead, road[4])-self.CAR_X)/self.PX_X-inset
++        solver_circles = list(circles)
++        if self.pass_side and self.pass_missing > 0 and self.pass_y is not None:
++            solver_circles.append((self.pass_y, self.pass_x))
++        for object_y, object_x in solver_circles:
++            if object_y < -4. or object_y > y[-1]+4.:
++                continue
++            if distance is not None and abs(object_y-distance) < 1.:
++                side = self.pass_side
++            else:
++                side = -1 if object_x >= np.interp(object_y, ahead, original) else 1
++            extent = 3.8*np.sqrt(np.maximum(0., 1.-((y-object_y)/4.5)**2))
++            active = np.abs(y-object_y) < 4.5
++            if side < 0:
++                upper[active] = np.minimum(upper[active], object_x-extent[active])
++            else:
++                lower[active] = np.maximum(lower[active], object_x+extent[active])
++        if np.any(lower > upper) or np.any(lower[:2] > 0.) or np.any(upper[:2] < 0.):
++            return original, imminent, distance
++        # Position and heading are fixed at the actual camera ego pose. The
++        # remaining convex box problem uses a weak centering preference.
++        lower[:2] = upper[:2] = 0.
++        count = len(y)
++        identity = np.eye(count)
++        d1, d2 = np.diff(identity, axis=0), np.diff(identity, n=2, axis=0)
++        hessian = 30.*(d2.T@d2)+.3*(d1.T@d1)+.04*identity
++        linear = .04*middle
++        step = 1./float(np.max(np.sum(np.abs(hessian), axis=1)))
++        x = np.clip(np.interp(y, ahead, original), lower, upper)
++        extrapolated, momentum = x.copy(), 1.
++        for _ in range(180):
++            updated = np.clip(extrapolated-step*(hessian@extrapolated-linear), lower, upper)
++            next_momentum = .5*(1.+np.sqrt(1.+4.*momentum*momentum))
++            extrapolated = updated+(momentum-1.)/next_momentum*(updated-x)
++            x, momentum = updated, next_momentum
++        if not np.isfinite(x).all():
++            return original, imminent, distance
++        self.corridor_used = True
++        result = np.interp(ahead, y, x)
++        result[ahead < 0.] = 0.
++        return result, imminent, distance
