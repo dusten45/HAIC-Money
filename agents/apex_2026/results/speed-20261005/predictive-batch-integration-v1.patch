@@ -1,0 +1,366 @@
+--- agents/apex_2026/fast_predictive_v2_agent.py
++++ agents/apex_2026/fast_predictive_batch_agent.py
+@@ -1553,0 +1554,363 @@
++
++
++_PredictiveV2Reference = Agent
++_ScalarPlannerReference = FixedControlPlanner
++
++BATCH_DT = .02
++
++BATCH_ARRAY_SHAPES = {'velocity': (2,), 'local_center': (2,), 'wheel_offsets': (4, 2),
++                      'joint': (4,), 'omega': (4,), 'gas': (4,)}
++
++BATCH_SCALARS = ('angle', 'yaw', 'mass', 'inertia')
++
++def _copy_batch(state):
++    expected = set(BATCH_ARRAY_SHAPES) | set(BATCH_SCALARS) | {'wheel_velocity_override'}
++    if set(state) != expected or state['wheel_velocity_override'] is not None:
++        raise ValueError('invalid supported batch state keys or wheel override')
++    angle = np.asarray(state['angle'], dtype=float)
++    if angle.ndim != 1 or not len(angle):
++        raise ValueError('expected nonempty batch axis')
++    count = len(angle)
++    result = {'wheel_velocity_override': None}
++    for name in BATCH_SCALARS:
++        value = np.asarray(state[name], dtype=float)
++        if value.shape != (count,) or not np.isfinite(value).all():
++            raise ValueError('invalid batch scalar array')
++        result[name] = value.copy()
++    if np.any(result['mass'] <= 0.) or np.any(result['inertia'] <= 0.):
++        raise ValueError('invalid mechanical constants')
++    for name, shape in BATCH_ARRAY_SHAPES.items():
++        value = np.asarray(state[name], dtype=float)
++        if value.shape != (count, *shape) or not np.isfinite(value).all():
++            raise ValueError('invalid batch model array')
++        result[name] = value.copy()
++    return result
++
++def _rotate_batch(vector, angle):
++    c, s = np.cos(angle), np.sin(angle)
++    return np.stack((c*vector[..., 0]-s*vector[..., 1],
++                     s*vector[..., 0]+c*vector[..., 1]), axis=-1)
++
++def predict_batch(supplied_state, commands):
++    """Predict one .02s tick without changing scalar force/update semantics.
++
++    No internal command clipping is introduced. Finite raw inputs preserve the
++    scalar predictor's immediate gas decrease and negative-brake branch too;
++    legal callers separately enforce their action contract.
++    """
++    state = _copy_batch(supplied_state)
++    # Float64 preserves each normalized float32 action's exact value. Keeping
++    # a float32 comparison array would accidentally round the .9 threshold
++    # down and treat float32(.9) as locking, unlike the scalar Python branch.
++    commands = np.asarray(commands, dtype=float)
++    count = len(state['angle'])
++    if commands.shape != (count, 3) or not np.isfinite(commands).all():
++        raise ValueError('expected one finite physical command per batch row')
++    target, requested_gas, brake = commands.T
++    state['gas'][:, 2:] += np.minimum(requested_gas[:, None]-state['gas'][:, 2:], .1)
++    omega = state['omega']+BATCH_DT*40000.*state['gas']/1.6/(abs(state['omega'])+5.)
++    partial = omega-np.sign(omega)*np.minimum(15.*brake[:, None], abs(omega))
++    omega = np.where((brake >= .9)[:, None], 0.,
++                     np.where((brake > 0.)[:, None], partial, omega))
++
++    # Tire velocities and force frames still use the OLD joint/body state.
++    arm = _rotate_batch(state['wheel_offsets'], state['angle'][:, None])
++    angular_velocity = state['yaw'][:, None, None]*np.stack((-arm[..., 1], arm[..., 0]), axis=-1)
++    wheel_velocity = state['velocity'][:, None, :]+angular_velocity
++    wheel_velocity *= (100./np.maximum(100., np.linalg.norm(wheel_velocity, axis=-1)))[..., None]
++    local_velocity = _rotate_batch(wheel_velocity, -(state['angle'][:, None]+state['joint']))
++    sideways, forward = local_velocity[..., 0], local_velocity[..., 1]
++    requested = 82.*np.stack((-sideways, .54*omega-forward), axis=-1)
++    ratios = np.linalg.norm(requested, axis=-1)/400.
++    forces = requested/np.maximum(1., ratios)[..., None]
++    state['omega'] = omega-BATCH_DT*forces[..., 1]*.54/1.6
++
++    body_forces = _rotate_batch(forces, state['joint'])
++    world_force = _rotate_batch(body_forces.sum(axis=1), state['angle'])
++    offsets = state['wheel_offsets']
++    torque = np.sum(offsets[..., 0]*body_forces[..., 1]-offsets[..., 1]*body_forces[..., 0], axis=1)
++    state['velocity'] += BATCH_DT*world_force/state['mass'][:, None]
++    state['velocity'] *= (100./np.maximum(100., np.linalg.norm(state['velocity'], axis=1)))[:, None]
++    state['yaw'] += BATCH_DT*torque/state['inertia']
++    state['angle'] += BATCH_DT*state['yaw']
++    state['joint'][:, :2] += BATCH_DT*np.clip(50.*(target[:, None]-state['joint'][:, :2]), -3., 3.)
++    state['joint'] = np.clip(state['joint'], -.4, .4)
++    diagnostics = {'wheel_forward_mps': forward, 'wheel_lateral_mps': sideways,
++                   'tire_force_local_N': forces, 'unsaturated_tire_demand_ratio': ratios}
++    return state, diagnostics
++
++class FixedBatchControlPlanner(_ScalarPlannerReference):
++    """Batch the model while retaining the frozen scalar control policy.
++
++    The supplied batch callback has the same physical target/gas/brake model
++    contract. Geometry remains an independent pure per-trajectory callback.
++    First-stop masks retain exactly the unpadded scalar emergency trajectory.
++    """
++
++    def __init__(self, predict_batch, geometry):
++        super().__init__(None, geometry)
++        self.predict_batch = predict_batch
++        self.batch_calls = 0
++        self.batched_model_rows = 0
++
++    def _pack_many(self, states):
++        result = {'wheel_velocity_override': None}
++        for key in self.SCALARS:
++            result[key] = np.asarray([state[key] for state in states], float)
++        for key in self.ARRAY_SHAPES:
++            result[key] = np.stack([state[key] for state in states])
++        return result
++
++    @staticmethod
++    def _copy_packed(state):
++        return {name: value.copy() if isinstance(value, np.ndarray) else value
++                for name, value in state.items()}
++
++    @staticmethod
++    def _rotate_many(vector, angle):
++        c, s = np.cos(angle), np.sin(angle)
++        return np.stack((c*vector[:, 0]-s*vector[:, 1],
++                         s*vector[:, 0]+c*vector[:, 1]), axis=1)
++
++    def _call_batch(self, state, commands):
++        count = len(commands)
++        self.batch_calls += 1
++        self.batched_model_rows += count
++        result, diagnostics = self.predict_batch(state, commands)
++        expected = set(self.SCALARS) | set(self.ARRAY_SHAPES) | {'wheel_velocity_override'}
++        if set(result) != expected or result['wheel_velocity_override'] is not None:
++            raise ValueError('invalid batch prediction state keys')
++        for key in self.SCALARS:
++            value = np.asarray(result[key], float)
++            if value.shape != (count,) or not np.isfinite(value).all():
++                raise ValueError('invalid batch scalar prediction')
++        for key, shape in self.ARRAY_SHAPES.items():
++            value = np.asarray(result[key], float)
++            if value.shape != (count, *shape) or not np.isfinite(value).all():
++                raise ValueError('invalid batch array prediction')
++        if (np.any(result['mass'] <= 0.) or np.any(result['inertia'] <= 0.)
++                or np.any(abs(result['joint']) > .400001)
++                or np.any(result['gas'] < 0.) or np.any(result['gas'] > 1.)):
++            raise ValueError('invalid batch mechanical bounds')
++        for key, shape in (('tire_force_local_N', (count, 4, 2)),
++                           ('unsaturated_tire_demand_ratio', (count, 4)),
++                           ('wheel_forward_mps', (count, 4))):
++            value = np.asarray(diagnostics[key], float)
++            if value.shape != shape or not np.isfinite(value).all():
++                raise ValueError('invalid batch tire diagnostics')
++        if np.max(np.linalg.norm(diagnostics['tire_force_local_N'], axis=-1)) > 400.00001:
++            raise ValueError('batch tire force outside model bound')
++        return self._copy_packed(result), {key: np.asarray(value).copy() for key, value in diagnostics.items()}
++
++    def _advance(self, state, cm, action):
++        # Preserve the inherited public single-trajectory rollout interface.
++        self.model_steps += 1
++        packed, diagnostics = self._call_batch(self._pack_many([self._copy_state(state)]),
++                                              [[-float(action[0]), float(action[1]), float(action[2])]])
++        row = {'wheel_velocity_override': None}
++        for key in self.SCALARS:
++            row[key] = float(packed[key][0])
++        for key in self.ARRAY_SHAPES:
++            row[key] = packed[key][0].copy()
++        cm = cm+self.DT*row['velocity']
++        hull = cm-self._rotate(row['local_center'], row['angle'])
++        return row, cm, hull, {key: value[0] for key, value in diagnostics.items()}
++
++    def _rollout_matrix(self, states, actions):
++        scenario_count, action_count = len(states), len(actions)
++        state = self._pack_many([item for _ in actions for item in states])
++        count = action_count*scenario_count
++        commands = np.repeat(np.asarray(actions, float), scenario_count, axis=0)
++        commands[:, 0] *= -1.
++        cm = self._rotate_many(state['local_center'], state['angle'])
++        positions = np.zeros((count, self.STEPS+1, 2))
++        centers = np.empty_like(positions)
++        angles = np.empty((count, self.STEPS+1))
++        velocities = np.empty_like(positions)
++        centers[:, 0], angles[:, 0], velocities[:, 0] = cm, state['angle'], state['velocity']
++        omega, ratios, forward = [], [], []
++        for tick in range(1, self.STEPS+1):
++            state, diagnostics = self._call_batch(state, commands)
++            cm = cm+self.DT*state['velocity']
++            centers[:, tick] = cm
++            positions[:, tick] = cm-self._rotate_many(state['local_center'], state['angle'])
++            angles[:, tick], velocities[:, tick] = state['angle'], state['velocity']
++            omega.append(state['omega'].copy())
++            ratios.append(diagnostics['unsaturated_tire_demand_ratio'])
++            forward.append(diagnostics['wheel_forward_mps'])
++            if tick == self.EXECUTED_STEPS:
++                first_state = self._copy_packed(state)
++        return {'positions': positions, 'angles': angles, 'velocities': velocities,
++                'centers': centers, 'first_state': first_state,
++                'omega': np.stack(omega, axis=1), 'ratios': np.stack(ratios, axis=1),
++                'forward': np.stack(forward, axis=1)}
++
++    @staticmethod
++    def _stopped_many(state):
++        return (np.linalg.norm(state['velocity'], axis=1) <= .5) & (abs(state['yaw']) <= .1)
++
++    def _backup_matrix(self, rows, actions, eligible):
++        count = len(eligible)
++        scenarios = count//len(actions)
++        state = self._copy_packed(rows['first_state'])
++        index = self.EXECUTED_STEPS
++        cm = rows['centers'][:, index].copy()
++        size = index+self.BACKUP_STEPS+1
++        positions = np.empty((count, size, 2))
++        angles = np.empty((count, size))
++        velocities = np.empty_like(positions)
++        positions[:, :index+1] = rows['positions'][:, :index+1]
++        angles[:, :index+1] = rows['angles'][:, :index+1]
++        velocities[:, :index+1] = rows['velocities'][:, :index+1]
++        selected = np.repeat(np.asarray(actions, float), scenarios, axis=0)
++        steer = np.clip(-np.mean(state['joint'][:, :2], axis=1), -.4, .4)
++        steer = np.clip(steer, selected[:, 0]-.24, selected[:, 0]+.24)
++        # Round the held legal command exactly as the scalar backup does,
++        # then promote normalized values and invert to physical targets.
++        commands = np.asarray(np.stack((steer, np.zeros(count), np.ones(count)), axis=1), np.float32).astype(float)
++        commands[:, 0] *= -1.
++        stopped = self._stopped_many(state)
++        ticks = np.where(stopped, 0, self.BACKUP_STEPS)
++        for tick in range(1, self.BACKUP_STEPS+1):
++            active = np.flatnonzero(eligible & ~stopped)
++            if not len(active):
++                break
++            subset = {key: None if value is None else value[active].copy() for key, value in state.items()}
++            predicted, _ = self._call_batch(subset, commands[active])
++            for key, value in predicted.items():
++                if value is not None:
++                    state[key][active] = value
++            cm[active] += self.DT*predicted['velocity']
++            positions[active, index+tick] = cm[active]-self._rotate_many(predicted['local_center'], predicted['angle'])
++            angles[active, index+tick], velocities[active, index+tick] = predicted['angle'], predicted['velocity']
++            newly_stopped = active[self._stopped_many(predicted)]
++            ticks[newly_stopped], stopped[newly_stopped] = tick, True
++        progress = np.zeros(count)
++        violations = np.zeros(count)
++        for row in np.flatnonzero(eligible):
++            stop = index+int(ticks[row])+1
++            values, violation = self._geometry(positions[row, :stop], angles[row, :stop], velocities[row, :stop])
++            progress[row], violations[row] = values[-1], violation
++        return {'progress_m': progress, 'violation': violations, 'stopped': stopped,
++                'duration_s': ticks*self.DT, 'pose_counts': index+ticks+1}
++
++    def plan(self, supplied_states, previous_action):
++        self.model_steps = self.batch_calls = self.batched_model_rows = 0
++        try:
++            states = [self._copy_state(state) for state in supplied_states]
++            if not 1 <= len(states) <= 7:
++                raise ValueError('expected one to seven supplied camera state scenarios')
++            actions = self.candidate_actions(previous_action)
++            if not len(actions):
++                return {'feasible': False, 'action': None, 'reason': 'no_feasible_candidate',
++                        'candidate_count': 0, 'feasible_count': 0, 'scenario_count': len(states),
++                        'model_steps': 0, 'rejected_max_violation_m': 0., 'batch_calls': 0, 'batched_model_rows': 0}
++            rows = self._rollout_matrix(states, actions)
++            count = len(rows['positions'])
++            progress, violations = np.empty(count), np.empty(count)
++            for row in range(count):
++                values, violations[row] = self._geometry(rows['positions'][row], rows['angles'][row], rows['velocities'][row])
++                progress[row] = values[-1]
++            backup = self._backup_matrix(rows, actions, violations <= 0.)
++            ratio_cost = np.mean(np.mean(np.maximum(0., rows['ratios']-1.)**2, axis=2), axis=1)
++            slip = .54*rows['omega'][:, :, 2:]-rows['forward'][:, :, 2:]
++            model_cost = .10*ratio_cost+.002*np.mean(np.mean(slip**2, axis=2), axis=1)
++            terminal = np.linalg.norm(rows['velocities'][:, -1], axis=1)
++            best, feasible_count, worst_violation = None, 0, 0.
++            for candidate, action in enumerate(actions):
++                summaries = []
++                for scenario in range(len(states)):
++                    row = candidate*len(states)+scenario
++                    # Logical telemetry preserves scalar early rejection;
++                    # actual simultaneous work is reported separately.
++                    self.model_steps += self.STEPS
++                    worst_violation = max(worst_violation, float(violations[row]))
++                    if violations[row] > 0.:
++                        break
++                    self.model_steps += int(round(backup['duration_s'][row]/self.DT))
++                    worst_violation = max(worst_violation, float(backup['violation'][row]))
++                    if not backup['stopped'][row] or backup['violation'][row] > 0.:
++                        break
++                    summaries.append({'progress': float(progress[row]), 'model_cost': float(model_cost[row]),
++                                      'terminal_speed': float(terminal[row]),
++                                      'backup_progress': float(backup['progress_m'][row]),
++                                      'backup_duration': float(backup['duration_s'][row])})
++                if len(summaries) != len(states):
++                    continue
++                feasible_count += 1
++                worst_progress = min(row['progress'] for row in summaries)
++                score = -worst_progress+max(row['model_cost'] for row in summaries)
++                score += .5*(float(action[0])-float(previous_action[0]))**2+.02*float(action[2])
++                if best is None or score < best['score']:
++                    best = {'feasible': True, 'action': action.copy(), 'reason': 'feasible',
++                            'score': float(score), 'worst_progress_m': worst_progress,
++                            'predicted_terminal_speed_mps': min(row['terminal_speed'] for row in summaries),
++                            'backup_start_s': self.EXECUTED_STEPS*self.DT,
++                            'backup_end_progress_m': max(row['backup_progress'] for row in summaries),
++                            'backup_duration_s': max(row['backup_duration'] for row in summaries)}
++            if best is None:
++                best = {'feasible': False, 'action': None, 'reason': 'no_feasible_candidate'}
++            best.update(candidate_count=len(actions), feasible_count=feasible_count,
++                        scenario_count=len(states), model_steps=self.model_steps,
++                        rejected_max_violation_m=worst_violation,
++                        batch_calls=self.batch_calls, batched_model_rows=self.batched_model_rows)
++            return best
++        except Exception as error:
++            return {'feasible': False, 'action': None, 'reason': 'planning_error',
++                    'error': type(error).__name__+': '+str(error)[:160], 'model_steps': self.model_steps,
++                    'batch_calls': self.batch_calls, 'batched_model_rows': self.batched_model_rows}
++
++
++class _BudgetedBatchControlPlanner(FixedBatchControlPlanner):
++    """Retain the owner's original deadline through model and geometry work."""
++
++    def __init__(self, batch_callback, geometry):
++        super().__init__(batch_callback, geometry)
++        owner = getattr(batch_callback, '__self__', None)
++        if not isinstance(owner, _PredictiveV2Reference):
++            raise ValueError('expected the owning camera agent batch callback')
++        # Only this agent's explicit public method reads its private deadline.
++        # Constructor checks must not raise a timeout outside inherited act's
++        # planner error handling; the first model/geometry call checks it.
++        self._check_budget = owner.check_planning_budget
++
++    def _geometry(self, positions, angles, velocities):
++        self._check_budget()
++        result = super()._geometry(positions, angles, velocities)
++        self._check_budget()
++        return result
++
++    def plan(self, supplied_states, previous_action):
++        result = super().plan(supplied_states, previous_action)
++        if result.get('feasible'):
++            try:
++                # Aggregation also consumes the original per-action budget.
++                self._check_budget()
++            except _PlanningBudgetExceeded as error:
++                return {'feasible': False, 'action': None, 'reason': 'planning_error',
++                        'error': type(error).__name__+': '+str(error)[:160],
++                        'model_steps': self.model_steps, 'batch_calls': self.batch_calls,
++                        'batched_model_rows': self.batched_model_rows}
++        return result
++
++
++class Agent(_PredictiveV2Reference):
++    """Same camera policy and action history with batched model computation."""
++
++    def check_planning_budget(self):
++        if time.perf_counter() >= self._predictive_deadline:
++            raise _PlanningBudgetExceeded('camera planning time budget reached')
++
++    def _predictive_step(self, state, commands):
++        self.check_planning_budget()
++        # Count actual raw row predictions, not batch callback invocations.
++        # Planner model_steps separately preserves scalar logical telemetry.
++        self.predictive_model_calls += len(commands)
++        result = predict_batch(state, commands)
++        self.check_planning_budget()
++        return result
++
++
++# Inherited V2 act looks up this global when creating its planning object.
++# Scalar predict_step remains unchanged for CameraObserver.advance.
++FixedControlPlanner = _BudgetedBatchControlPlanner

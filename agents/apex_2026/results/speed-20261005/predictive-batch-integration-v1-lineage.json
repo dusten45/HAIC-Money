@@ -1,0 +1,59 @@
+{
+  "classification": "compute_only_standalone_batch_integration_offline_verified",
+  "source_sha256": "93a6b4db3484a2621407a410af64fea6f88465cb49173f6c8234e94e5c240547",
+  "parent_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+  "exact_parent_byte_prefix": true,
+  "reverse_parent_prefix_bytes": 77630,
+  "source_freeze": ".haic-artifacts/apex-speed-20261005/predictive-batch-integration-v1",
+  "all_old_sources_preserved": true,
+  "scalar_observer_predict_step_preserved": true,
+  "perception_scenarios_control_formulas_preserved": true,
+  "deadline_guards": [
+    "before_and_after_model",
+    "before_and_after_geometry",
+    "before_final_success"
+  ],
+  "original_deadline_never_restarted": true,
+  "test_command": "MPLCONFIGDIR=/tmp/haic-mpl PYGAME_HIDE_SUPPORT_PROMPT=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest agents/apex_2026/tests/test_fast_predictive_batch.py -q",
+  "test_exit_code": 0,
+  "observed_test_summary": "10 passed in 16.34s",
+  "red_preimplementation_summary": "3 failed, 7 deselected in 0.24s",
+  "red_cases": [
+    "namespace_captures_scalar_planner_without_replacing_observer_predict_step",
+    "exported_batch_model_recurrence_matches_frozen_kernel_and_no_aliases",
+    "geometry_deadline_is_guarded_before_after_and_final_selection"
+  ],
+  "independent_audit": {
+    "agent": "/root/brake_reserve/batch_semantic_audit",
+    "source_sha256": "93a6b4db3484a2621407a410af64fea6f88465cb49173f6c8234e94e5c240547",
+    "elapsed_s": 0.148,
+    "exact_prefix_and_ast_exports": true,
+    "method_and_runtime_namespace_identity": true,
+    "timeout_fallback_and_scalar_advance_once": true,
+    "model_and_geometry_post_guard_tested": true,
+    "concrete_discrepancies_found": false,
+    "file_edits": false
+  },
+  "files_sha256": {
+    "agents/apex_2026/fast_predictive_v2_agent.py": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+    "agents/apex_2026/fast_predictive_batch_agent.py": "93a6b4db3484a2621407a410af64fea6f88465cb49173f6c8234e94e5c240547",
+    "agents/apex_2026/research/speed_20261005/build_predictive_batch.py": "0e93927f877bf20c563122e180d994c95e01ecf4512088ab4eb3c2b3efd52d0c",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_model.py": "8ae7239b81d9b41e649e2ef704c3a6bbf3a8b2a933ed499b7bf13f566cb82d53",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_control.py": "263909e1163fdce76e6704246e7a612c7b940f40dab89a34338bd1c57bfbaeca",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_integration_fixture.py": "d25a5f0a2e15cc81ec3ee540941cc9bd82a6bdbd0ffd904ec3f242c248979e23",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_integration_profile.py": "2ff46dfca4985b850a7824f94cff8841c30577f4061f962b3c2de23249ea2d58",
+    "agents/apex_2026/tests/test_fast_predictive_batch.py": "99238c9c3522c03dfac69db28a25e893e0b633d2522033a21f26b99f5547cdf1",
+    "agents/apex_2026/tests/fixtures/predictive-batch-history.npz": "fe51315481583212c889d12801e6b6b585574664df3217fbc8977a74ad0d0e78",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-integration-v1-history.json": "483b6eb8c8e9e7b803a3f25c491f2f56bf80e82f66990400f7c26514143ad437",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-integration-v1-profile.json": "207e09e0f44a4b92e9ea4198a781b3b679120daa9fddabbc0d6f23f9b821aa93",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-integration-v1.md": "a356e814e9cebfef5690fd35876024e6ab3dc5322a1ae194ef5f94f599ec5095",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-integration-v1.patch": "143e6b55a3a0d619a8991831e046309d7756241b73851f6a0619f61c034031ab",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-integration-v1.reverse.patch": "ffb532e9eb3101fb6e80ed65eb080496b66573b024fbf3efe9b4913118590f23"
+  },
+  "world_steps": 0,
+  "new_episodes": 0,
+  "new_holdout_opened": false,
+  "truth_for_initialization": false,
+  "original_early_10s_goal_achieved": false,
+  "adopted": false
+}

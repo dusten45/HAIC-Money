@@ -1,0 +1,256 @@
+{
+  "classification": "three_fixed_existing_camera_causal_standalone_profiles_not_lap",
+  "source_sha256": {
+    "scalar_parent": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+    "batch_candidate": "93a6b4db3484a2621407a410af64fea6f88465cb49173f6c8234e94e5c240547",
+    "profile": "2ff46dfca4985b850a7824f94cff8841c30577f4061f962b3c2de23249ea2d58"
+  },
+  "history_sha256": "fe51315481583212c889d12801e6b6b585574664df3217fbc8977a74ad0d0e78",
+  "all_sources_unchanged": true,
+  "world_steps": 0,
+  "new_episodes": 0,
+  "new_holdout_opened": false,
+  "truth_for_initialization": false,
+  "old_candidate_logged_history_not_new_candidate_trajectory": true,
+  "cases": [
+    {
+      "step": 20,
+      "status": "predictive",
+      "action": [
+        -0.15155474841594696,
+        1.0,
+        0.0
+      ],
+      "elapsed_act_s": {
+        "scalar_parent": 2.0637287229983485,
+        "batch_candidate": 0.902356452003005
+      },
+      "act_speedup": 2.2870437934115597,
+      "scalar_model_row_predictions": 4943,
+      "batch_model_row_predictions": 5479,
+      "scalar_plan": {
+        "feasible": true,
+        "action": [
+          -0.15155474841594696,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -18.28121786119632,
+        "worst_progress_m": 18.324308424130237,
+        "predicted_terminal_speed_mps": 61.63040141668551,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 12.586650462713017,
+        "backup_duration_s": 0.28,
+        "candidate_count": 72,
+        "feasible_count": 56,
+        "scenario_count": 3,
+        "model_steps": 4943,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_plan": {
+        "feasible": true,
+        "action": [
+          -0.15155474841594696,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -18.28121786119632,
+        "worst_progress_m": 18.324308424130237,
+        "predicted_terminal_speed_mps": 61.63040141668551,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 12.586650462713017,
+        "backup_duration_s": 0.28,
+        "candidate_count": 72,
+        "feasible_count": 56,
+        "scenario_count": 3,
+        "model_steps": 4943,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 30,
+        "batched_model_rows": 5479
+      },
+      "sensor": {
+        "speed_mps": 56.48342885619924,
+        "body_yaw_radps": 2.0920169475258215,
+        "joint_rad": 0.181220834798726,
+        "rear_rolling_mps": [
+          56.143364912627845,
+          58.91673061628641
+        ],
+        "speed_innovation_mps": 1.1083567085144992,
+        "yaw_innovation_radps": 0.017920869715348342,
+        "rear_innovation_max_mps": 1.1318520447528826,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "every_scalar_plan_field_matched": true,
+      "observer_state_after_final_action_equal": true,
+      "past_legal_actions_seen_before_target": 20
+    },
+    {
+      "step": 40,
+      "status": "predictive",
+      "action": [
+        -0.0014088933821767569,
+        1.0,
+        0.0
+      ],
+      "elapsed_act_s": {
+        "scalar_parent": 1.3730714400007855,
+        "batch_candidate": 0.7448266869978397
+      },
+      "act_speedup": 1.843477770023522,
+      "scalar_model_row_predictions": 3403,
+      "batch_model_row_predictions": 4892,
+      "scalar_plan": {
+        "feasible": true,
+        "action": [
+          -0.0014088933821767569,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -28.735869081887714,
+        "worst_progress_m": 28.743481012560494,
+        "predicted_terminal_speed_mps": 94.03725355781172,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 24.91498189332918,
+        "backup_duration_s": 0.42,
+        "candidate_count": 72,
+        "feasible_count": 26,
+        "scenario_count": 3,
+        "model_steps": 3403,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_plan": {
+        "feasible": true,
+        "action": [
+          -0.0014088933821767569,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -28.735869081887714,
+        "worst_progress_m": 28.743481012560494,
+        "predicted_terminal_speed_mps": 94.03725355781172,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 24.91498189332918,
+        "backup_duration_s": 0.42,
+        "candidate_count": 72,
+        "feasible_count": 26,
+        "scenario_count": 3,
+        "model_steps": 3403,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 37,
+        "batched_model_rows": 4892
+      },
+      "sensor": {
+        "speed_mps": 86.48988845470033,
+        "body_yaw_radps": -0.027863323214895642,
+        "joint_rad": 0.0017235307355372555,
+        "rear_rolling_mps": [
+          87.2509476823501,
+          87.73073988250135
+        ],
+        "speed_innovation_mps": -1.0639084076947682,
+        "yaw_innovation_radps": -0.05433202050023481,
+        "rear_innovation_max_mps": 0.9881135013722258,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "every_scalar_plan_field_matched": true,
+      "observer_state_after_final_action_equal": true,
+      "past_legal_actions_seen_before_target": 40
+    },
+    {
+      "step": 60,
+      "status": "predictive",
+      "action": [
+        0.054482102394104004,
+        1.0,
+        0.0
+      ],
+      "elapsed_act_s": {
+        "scalar_parent": 1.6572497660017689,
+        "batch_candidate": 0.8064078579991474
+      },
+      "act_speedup": 2.05510121158011,
+      "scalar_model_row_predictions": 4037,
+      "batch_model_row_predictions": 5044,
+      "scalar_plan": {
+        "feasible": true,
+        "action": [
+          0.054482102394104004,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -20.7333075582603,
+        "worst_progress_m": 20.746639980186075,
+        "predicted_terminal_speed_mps": 70.98446210760055,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 13.997838217289743,
+        "backup_duration_s": 0.3,
+        "candidate_count": 72,
+        "feasible_count": 40,
+        "scenario_count": 3,
+        "model_steps": 4037,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_plan": {
+        "feasible": true,
+        "action": [
+          0.054482102394104004,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -20.7333075582603,
+        "worst_progress_m": 20.746639980186075,
+        "predicted_terminal_speed_mps": 70.98446210760055,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 13.997838217289743,
+        "backup_duration_s": 0.3,
+        "candidate_count": 72,
+        "feasible_count": 40,
+        "scenario_count": 3,
+        "model_steps": 4037,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 31,
+        "batched_model_rows": 5044
+      },
+      "sensor": {
+        "speed_mps": 61.46925850408698,
+        "body_yaw_radps": -1.64801550118152,
+        "joint_rad": -0.08731009192164407,
+        "rear_rolling_mps": [
+          63.920260587299616,
+          60.881322639635776
+        ],
+        "speed_innovation_mps": -0.2572179879720835,
+        "yaw_innovation_radps": 0.03914841297728766,
+        "rear_innovation_max_mps": 0.5364790383461511,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "every_scalar_plan_field_matched": true,
+      "observer_state_after_final_action_equal": true,
+      "past_legal_actions_seen_before_target": 60
+    }
+  ],
+  "limits": [
+    "One fixed measurement per case on this shared host; no worst-case latency bound.",
+    "Timers include complete act: parent perception, field, ridge, scenarios, rollout/backup geometry and final scalar observer advance.",
+    "Warmup history and module loading are outside the action timers.",
+    "Finite output equivalence assumes successful planning within the fixed deadline.",
+    "Batch eager geometry has distinct error behavior for scalar-unvisited invalid rows.",
+    "No new driving, pace improvement, adoption or safety certificate is claimed."
+  ]
+}
