@@ -1,0 +1,168 @@
+{
+  "schema": "apex-baseline-tests-v1",
+  "recorded_at_utc": "2026-10-04T16:23:58.515400+00:00",
+  "purpose": "Existing repository baseline with protected source unchanged; new isolated Apex files were developed concurrently. No protected-code fixes or full-suite rerun.",
+  "command": "PYTHONDONTWRITEBYTECODE=1 timeout 900 .venv/bin/python -m unittest discover -s tests -v",
+  "cwd": "/workspace/HAIC-Money",
+  "result": {
+    "tests_run": 1182,
+    "errors": 14,
+    "failures": 0,
+    "skipped": 7,
+    "passed": 1161,
+    "duration_seconds": 597.487,
+    "status": "failed"
+  },
+  "versions": {
+    "python": "3.11.16",
+    "gymnasium": "0.29.1",
+    "torch": "2.1.0+cpu",
+    "opencv_python": "4.8.1.78",
+    "numpy": "1.26.0",
+    "Box2D": "2.3.5"
+  },
+  "log": {
+    "path": "/tmp/apex-verification/baseline-tests.log",
+    "sha256": "230ddd2090aa91f86ae4fb369f5a4837e50dd62e7b446ec61483a2ee158ff3a8"
+  },
+  "errors": [
+    {
+      "test_id": "test_audit_dreamerv3_p1_seeds.DreamerP1SeedAuditTests.test_real_g0_and_r5_chains_are_primary_byte_checked",
+      "category": "missing_historical_evidence",
+      "exception": "scripts.audit_dreamerv3_p1_seeds.SeedAuditError: G0 consumed claim directory missing or symlinked"
+    },
+    {
+      "test_id": "test_dreamerv3_reused_source1.Source1Tests.test_real_input_sha_constants_are_exact_and_static",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/collection-result.json'"
+    },
+    {
+      "test_id": "test_rlpd_entropy_ablation.TestEntropyTargetAblation.test_entropy_arm_change_cannot_smuggle_a_second_hyperparameter",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_entropy_ablation.TestEntropyTargetAblation.test_entropy_arms_differ_only_in_target",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_entropy_ablation.TestEntropyTargetAblation.test_fixed_teacher_budget_allows_frozen_accounting_metadata",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_entropy_v5.TestEntropyV5Protocol.test_v5_name_seed_and_budget_contract_roundtrips",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_entropy_v5.TestEntropyV5Protocol.test_v5_rejects_relabelled_entropy_arm_or_seed",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_recovery.TrainerBoundaryTests.test_inlined_historical_evidence_and_config_preserve_consumed_g0_v5_chain",
+      "category": "missing_historical_evidence",
+      "exception": "ValueError: missing or changed frozen evidence: runs/20260925-pixel-rlpd-entropy-target-ablation-v5/prior-data/manifest.json"
+    },
+    {
+      "test_id": "test_rlpd_run.TestRLPDRunContracts.test_dataset_hash_and_teacher_geometry_gate_then_restore_offline_replay",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_run.TestRLPDRunContracts.test_dataset_rejects_missing_finish_or_modified_episode_content",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_run.TestRLPDRunContracts.test_followup_protocol_allows_longer_horizon_with_fresh_closed_partitions",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_run.TestRLPDRunContracts.test_frozen_protocol_accepts_disjoint_uint32_partitions_and_source_hashes",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_rlpd_run.TestRLPDRunContracts.test_protocol_rejects_training_overlap_and_unreserved_evaluation_cells",
+      "category": "missing_historical_evidence",
+      "exception": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/HAIC-Money/runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl'"
+    },
+    {
+      "test_id": "test_submission_layout.TestInferenceOnlySubmissionArchive.test_archive_has_only_inference_code_and_cpu_smoke_loads",
+      "category": "test_order_dependent_ru_maxrss_measurement",
+      "exception": "RuntimeError: CPU inference validity or memory check failed: {'init_s': 0.979699801000038, 'reset_s': [3.6760000057256548e-06, 3.0930000320950057e-06], 'act_s': [0.002839933000018391, 0.0009082919999627848], 'actions': [[-0.11889846622943878, 0.01099556777626276, 0.0], [-0.11889846622943878, 0.01099556777626276, 0.0]], 'finite_action': True, 'process_rss_bytes': 1950756864, 'planner_enabled': False, 'planner_settings': {'horizon': 4, 'population': 16, 'iterations': 2, 'candidate_batch_size': 8, 'uncertainty_cost': 1.0}}"
+    }
+  ],
+  "missing_evidence": [
+    {
+      "path": "runs/rlpd-g0-claims",
+      "exists_at_diagnosis": false,
+      "is_symlink": false
+    },
+    {
+      "path": "runs/20260926-dreamerv3-reused-train-diversity-v1/collection/teacher/collection-result.json",
+      "exists_at_diagnosis": false,
+      "is_symlink": false
+    },
+    {
+      "path": "runs/20260922-drq-augmentation-pad-v1-restart/control-seed1/episodes.jsonl",
+      "exists_at_diagnosis": false,
+      "is_symlink": false
+    },
+    {
+      "path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/prior-data/manifest.json",
+      "exists_at_diagnosis": false,
+      "is_symlink": false
+    }
+  ],
+  "classification_counts": {
+    "missing_historical_evidence": 13,
+    "test_order_dependent_ru_maxrss_measurement": 1
+  },
+  "targeted_rerun": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 timeout 120 .venv/bin/python -m unittest discover -s tests -p test_submission_layout.py -v",
+    "tests_run": 9,
+    "errors": 0,
+    "failures": 0,
+    "duration_seconds": 1.619,
+    "status": "passed",
+    "log": {
+      "path": "/tmp/apex-verification/submission-layout-fresh.log",
+      "sha256": "0cb232dcfc8e9eb09c6172ec2e14e5ccaee8845d57879aab602417c0f77eeb33"
+    }
+  },
+  "memory_diagnosis": {
+    "original_reported_bytes": 1950756864,
+    "interpretation": "Linux child ru_maxrss inherits parent high-water mark across this subprocess fork/exec path; not a clean child RSS measurement. Fresh isolated module passes.",
+    "reproduction": {
+      "parent_peak_kib": 321140,
+      "child_ru_maxrss_kib": 321140,
+      "child_proc_vmhwm_kib": 12880,
+      "child_proc_vmrss_kib": 12880
+    },
+    "log": {
+      "path": "/tmp/apex-verification/rss-inheritance.log",
+      "sha256": "9aeff563fba4f927233bde384e1a3c13aed1a500d8df7b4299e2057b7e7c7776"
+    }
+  },
+  "root_model": {
+    "sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "format": "untagged Baseline1Actor OrderedDict, 10 tensors",
+    "safe_load": "torch.load weights_only=True map_location=cpu",
+    "default_agent_constructed": true,
+    "synthetic_zero_frame_action": [
+      0.06859898567199707,
+      0.017528822645545006,
+      0.0
+    ],
+    "log": {
+      "path": "/tmp/apex-verification/environment-model.log",
+      "sha256": "66b010da1e520069b19285908cbae1ef75f6a2d5ec19c5d115b7776b7c508526"
+    }
+  },
+  "scope": "No standalone simulator or holdout evaluation episodes launched. Existing suite includes its own environment unit tests. Missing evidence was not fetched, synthesized, or altered; existing implementation/tests untouched."
+}

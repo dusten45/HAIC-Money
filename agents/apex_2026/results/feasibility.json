@@ -1,0 +1,626 @@
+{
+  "schema_version": 1,
+  "purpose": "Persist existing REQUIRED-only evidence; no measurements rerun",
+  "persisted_at": "2026-10-04T16:22:28.183620+00:00",
+  "scope": {
+    "official_resets": 4,
+    "required_only": true,
+    "agent_actions": 0,
+    "synthetic_physics_steps": 1000,
+    "hud_samples": 31,
+    "holdout_access": false
+  },
+  "git_commit_at_persistence": "420fa00c5447a0b4b3becaf4fa162c0a0a3ff0e9",
+  "python_at_persistence": "3.11.16",
+  "packages_at_persistence": {
+    "numpy": "1.26.0",
+    "gymnasium": "0.29.1",
+    "box2d-py": "2.3.5",
+    "pygame": "2.6.1",
+    "opencv-python": "4.8.1.78"
+  },
+  "original_executed_scripts": [
+    {
+      "path": "/tmp/apex-feasibility/probe.py",
+      "sha256": "20b2e456c6ee2c12f1087d9e99dcb9b252b79c4862a724b313af61c9b0ab841e",
+      "source_text": "import sys,json,math,hashlib\nfrom pathlib import Path\nfrom datetime import datetime,timezone\nsys.path.insert(0,'/workspace/HAIC-Money')\nimport numpy as np\nfrom agents.apex_2026.evaluate import make_environment\nfrom env_wrapper import image_preprocessing\nfrom core.vendor.car_racing import CarRacing, WINDOW_W, WINDOW_H,STATE_W,STATE_H\nimport pygame\nfrom types import SimpleNamespace\nout=Path('/tmp/apex-feasibility')\nsummary=[]\nfor tid,seed in [(1,516237),(2,644062),(3,1007),(4,18800)]:\n p=out/f'geometry-t{tid}.json'\n r=dict(status='started',track_id=tid,seed=seed,started_at=datetime.now(timezone.utc).isoformat(),agent_actions=0,purpose='geometry-only unchanged official reset')\n with p.open('x') as f: json.dump(r,f)\n env=make_environment()\n try:\n  obs,info=env.reset(seed=seed,options={'track_id':tid})\n  raw=env.unwrapped\n  xy=np.array(raw.track)[:,2:4]; ds=np.linalg.norm(np.roll(xy,-1,axis=0)-xy,axis=1)\n  mass=float(raw.car.hull.mass+sum(w.mass for w in raw.car.wheels))\n  r.update(status='completed',track=raw.track,tiles=len(xy),centerline_length=float(ds.sum()),car_mass=mass,start_t=raw.t,road_friction=sorted(set(float(t.road_friction) for t in raw.road)),wheelbase=3.24)\n  p.write_text(json.dumps(r,indent=2))\n  records=[json.loads(s) for s in Path(f'/tmp/apex-release-r0/t{tid}.jsonl').read_text().splitlines()]\n  pos=np.array([records[0]['before']['position']]+[q['after']['position'] for q in records]); speed=np.array([q['after']['speed_m_s'] for q in records]); result=json.loads(Path(f'/tmp/apex-release-r0/t{tid}.json').read_text())\n  summary.append(dict(track_id=tid,tiles=len(xy),centerline_length=float(ds.sum()),car_mass=mass,force_accel_upper=1600/mass,path_length=float(np.linalg.norm(np.diff(pos,axis=0),axis=1).sum()),speed_mean=float(speed.mean()),speed_max=float(speed.max()),speed_p10_p50_p90=np.percentile(speed,[10,50,90]).tolist(),lapTimeMs=result['lapTimeMs'],damage=result['damage'],progress=result['progress'],centerline_average_for13=float(ds.sum()/13),centerline_average_for10=float(ds.sum()/10)))\n finally: env.close()\n# Synthetic indicator-only rendering: no world reset, no physics mutations.\ncal=[]\nfor v in np.arange(0,151,5):\n wheels=[SimpleNamespace(omega=0,joint=SimpleNamespace(angle=0)) for _ in range(4)]\n fake=SimpleNamespace(surf=pygame.Surface((WINDOW_W,WINDOW_H)),car=SimpleNamespace(hull=SimpleNamespace(linearVelocity=(float(v),0),angularVelocity=0),wheels=wheels))\n CarRacing._render_indicators(fake,WINDOW_W,WINDOW_H)\n img=CarRacing._create_image_array(fake,fake.surf,(STATE_W,STATE_H)); frame=image_preprocessing(img)\n mass=float(frame[77:83,10:13].sum())\n cal.append(dict(speed=float(v),mass=mass,line_estimate=float(np.clip((mass-.27)/.085,0,100)),rollout_estimate=float(np.clip(frame[74:81,11:12].mean(axis=1).sum()/.042,0,100))))\n(out/'summary.json').write_text(json.dumps(summary,indent=2)); (out/'hud-calibration.json').write_text(json.dumps(cal,indent=2))\nprint(json.dumps(summary,indent=2)); print(json.dumps(cal[::2],indent=2))\n"
+    },
+    {
+      "path": "/tmp/apex-feasibility/limits.py",
+      "sha256": "57f6c197eaa625eaac0a0f8e0cd976f88316051e10fc5f1e90bfa3d226a557dd",
+      "source_text": "import sys,json,math\nfrom pathlib import Path\nsys.path.insert(0,'/workspace/HAIC-Money')\nimport Box2D,numpy as np\nfrom core.vendor.car_dynamics import Car\nout=Path('/tmp/apex-feasibility')\n# Synthetic isolated dynamics diagnostic. No CarRacing reset, no track cells.\nw=Box2D.b2World(gravity=(0,0)); car=Car(w,0,0,0)\nclass Road: road_friction=1.\nroad=Road()\nfor wheel in car.wheels: wheel.tiles.add(road)\nrows=[]\nfor i in range(1000):\n car.gas(1); car.brake(0); car.steer(0); car.step(.02); w.Step(.02,180,60)\n rows.append(dict(t=(i+1)*.02,speed=float(car.hull.linearVelocity.length),y=float(car.hull.position.y)))\n(out/'synthetic-straight.json').write_text(json.dumps(dict(kind='synthetic uniform road, isolated official Car dynamics, NOT an episode',samples=rows),indent=2))\nprint('straight',[(r['t'],r['speed'],r['y']) for r in rows if round(r['t']*100)%100==0][:13])\nprint('peak accel',max((rows[i]['speed']-rows[i-1]['speed'])/.02 for i in range(1,len(rows))))\nresults=[]\nfor tid in range(1,5):\n g=json.loads((out/f'geometry-t{tid}.json').read_text()); xy=np.array(g['track'])[:,2:4]\n delta=np.roll(xy,-1,axis=0)-xy; ds=np.linalg.norm(delta,axis=1); angles=np.arctan2(delta[:,1],delta[:,0]); da=np.abs(np.angle(np.exp(1j*(angles-np.roll(angles,1))))); k=da/((ds+np.roll(ds,1))/2)\n a=1600/g['car_mass']; vmax=np.minimum(100,np.sqrt(a/np.maximum(k,1e-9)))\n results.append(dict(track_id=tid,centerline_constant100_time=ds.sum()/100,centerline_pointmass_optimistic_time=float(np.sum(ds/vmax)),min_pointmass_curve_cap=float(vmax.min()),max_curvature=float(k.max())))\nprint(json.dumps(results,indent=2)); (out/'centerline-relaxation.json').write_text(json.dumps(results,indent=2))\n"
+    }
+  ],
+  "adapted_replay_scripts": [
+    {
+      "path": "diagnostics/feasibility_probe.py",
+      "sha256": "98abc58b9a4db152a28e948a7dba9d6b88977cf08cd2adaa30ba0cd14cc7a13a",
+      "measurement_execution": "not used for recorded values; --help and compile only"
+    },
+    {
+      "path": "diagnostics/physical_limits.py",
+      "sha256": "6025cb54de7e1e43fcbac5c082c446b8f29907123d4ec1d9357700d5f1a4437e",
+      "measurement_execution": "not used for recorded values; --help and compile only"
+    }
+  ],
+  "simulator_source_sha256_at_persistence": {
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30"
+  },
+  "geometry": [
+    {
+      "status": "completed",
+      "track_id": 1,
+      "seed": 516237,
+      "started_at": "2026-10-04T16:16:00.590984+00:00",
+      "agent_actions": 0,
+      "purpose": "geometry-only unchanged official reset",
+      "tiles": 280,
+      "centerline_length": 983.5000000000005,
+      "car_mass": 7.3019199669361115,
+      "start_t": 1.0200000000000005,
+      "road_friction": [
+        1.0
+      ],
+      "wheelbase": 3.24,
+      "receipt_path": "/tmp/apex-feasibility/geometry-t1.json",
+      "receipt_sha256": "3b9a0a98be9413ac50afa653b9d2684c7a1cf56a01e8e845b7f7ceb81c94e4fe",
+      "track_coordinates_sha256_encoding": "sha256(json.dumps(track,separators=(comma,colon)).encode())",
+      "track_coordinates_sha256": "bdde4391d745dc8350a45b614871a298a82f7561ab2ab7cfcfbebf2506d45c43"
+    },
+    {
+      "status": "completed",
+      "track_id": 2,
+      "seed": 644062,
+      "started_at": "2026-10-04T16:16:01.253655+00:00",
+      "agent_actions": 0,
+      "purpose": "geometry-only unchanged official reset",
+      "tiles": 336,
+      "centerline_length": 1179.5000000001578,
+      "car_mass": 7.3019199669361115,
+      "start_t": 1.0200000000000005,
+      "road_friction": [
+        1.0
+      ],
+      "wheelbase": 3.24,
+      "receipt_path": "/tmp/apex-feasibility/geometry-t2.json",
+      "receipt_sha256": "d589676f0a383d31f82e2b7e5a362ae80208847a09e30b906b40da4d3cb51db8",
+      "track_coordinates_sha256_encoding": "sha256(json.dumps(track,separators=(comma,colon)).encode())",
+      "track_coordinates_sha256": "972bf079b8c038aa35c4cb7168be2932d87ad58ca456756ec222cfc684f13c59"
+    },
+    {
+      "status": "completed",
+      "track_id": 3,
+      "seed": 1007,
+      "started_at": "2026-10-04T16:16:01.928934+00:00",
+      "agent_actions": 0,
+      "purpose": "geometry-only unchanged official reset",
+      "tiles": 309,
+      "centerline_length": 1085.0000001926633,
+      "car_mass": 7.3019199669361115,
+      "start_t": 1.0200000000000005,
+      "road_friction": [
+        1.0
+      ],
+      "wheelbase": 3.24,
+      "receipt_path": "/tmp/apex-feasibility/geometry-t3.json",
+      "receipt_sha256": "10e7325377b4eed1294f682e891edf3b2a26ff44b62d8ac3e715132be70e0fed",
+      "track_coordinates_sha256_encoding": "sha256(json.dumps(track,separators=(comma,colon)).encode())",
+      "track_coordinates_sha256": "b47148095f2a8aea56137713fde1cacbeb5ebd530cfc12766810a504a2dc02c2"
+    },
+    {
+      "status": "completed",
+      "track_id": 4,
+      "seed": 18800,
+      "started_at": "2026-10-04T16:16:03.319673+00:00",
+      "agent_actions": 0,
+      "purpose": "geometry-only unchanged official reset",
+      "tiles": 279,
+      "centerline_length": 979.823531009087,
+      "car_mass": 7.3019199669361115,
+      "start_t": 1.0200000000000005,
+      "road_friction": [
+        1.0
+      ],
+      "wheelbase": 3.24,
+      "receipt_path": "/tmp/apex-feasibility/geometry-t4.json",
+      "receipt_sha256": "8e9b3f63a72f13f23b2c4249f07ce84b40b1e9f4c9fc4c19a254aae8bc13c3a4",
+      "track_coordinates_sha256_encoding": "sha256(json.dumps(track,separators=(comma,colon)).encode())",
+      "track_coordinates_sha256": "5d07d121b2761997fec5ac4e47ed84e01539e2baedfa050a20a6306fb120e5f5"
+    }
+  ],
+  "release_summary": [
+    {
+      "track_id": 1,
+      "tiles": 280,
+      "centerline_length": 983.5000000000005,
+      "car_mass": 7.3019199669361115,
+      "force_accel_upper": 219.1204515038475,
+      "path_length": 978.819093740653,
+      "speed_mean": 53.04479974212586,
+      "speed_max": 72.58192452658231,
+      "speed_p10_p50_p90": [
+        42.98709337723057,
+        53.090344115365,
+        65.52984710854554
+      ],
+      "lapTimeMs": 18520,
+      "damage": 0.0,
+      "progress": 1.0,
+      "centerline_average_for13": 75.65384615384619,
+      "centerline_average_for10": 98.35000000000005
+    },
+    {
+      "track_id": 2,
+      "tiles": 336,
+      "centerline_length": 1179.5000000001578,
+      "car_mass": 7.3019199669361115,
+      "force_accel_upper": 219.1204515038475,
+      "path_length": 1168.026945601266,
+      "speed_mean": 53.92164774988005,
+      "speed_max": 75.15491804403288,
+      "speed_p10_p50_p90": [
+        42.88627046981327,
+        53.00663366251356,
+        68.62132132047995
+      ],
+      "lapTimeMs": 21700,
+      "damage": 0.0,
+      "progress": 1.0,
+      "centerline_average_for13": 90.73076923078136,
+      "centerline_average_for10": 117.95000000001578
+    },
+    {
+      "track_id": 3,
+      "tiles": 309,
+      "centerline_length": 1085.0000001926633,
+      "car_mass": 7.3019199669361115,
+      "force_accel_upper": 219.1204515038475,
+      "path_length": 1075.8026486814933,
+      "speed_mean": 53.0794250807505,
+      "speed_max": 74.6099120487963,
+      "speed_p10_p50_p90": [
+        42.59508461093935,
+        52.55134543366309,
+        67.00085842691641
+      ],
+      "lapTimeMs": 20300,
+      "damage": 0.0,
+      "progress": 1.0,
+      "centerline_average_for13": 83.46153847635871,
+      "centerline_average_for10": 108.50000001926632
+    },
+    {
+      "track_id": 4,
+      "tiles": 279,
+      "centerline_length": 979.823531009087,
+      "car_mass": 7.3019199669361115,
+      "force_accel_upper": 219.1204515038475,
+      "path_length": 692.8716511421968,
+      "speed_mean": 31.87463419929458,
+      "speed_max": 73.83628335024132,
+      "speed_p10_p50_p90": [
+        3.077668924427788e-05,
+        43.92605948316461,
+        61.62732819626314
+      ],
+      "lapTimeMs": null,
+      "damage": 0.4,
+      "progress": 0.7419354838709677,
+      "centerline_average_for13": 75.37104084685285,
+      "centerline_average_for10": 97.9823531009087
+    }
+  ],
+  "hud_calibration": [
+    {
+      "speed": 0.0,
+      "mass": 0.0,
+      "line_estimate": 0.0,
+      "rollout_estimate": 0.0
+    },
+    {
+      "speed": 5.0,
+      "mass": 0.6470588445663452,
+      "line_estimate": 4.4359864066628845,
+      "rollout_estimate": 0.0
+    },
+    {
+      "speed": 10.0,
+      "mass": 1.078431487083435,
+      "line_estimate": 9.510958671569822,
+      "rollout_estimate": 0.0
+    },
+    {
+      "speed": 15.0,
+      "mass": 1.5058825016021729,
+      "line_estimate": 14.53979413649615,
+      "rollout_estimate": 1.400560229307129
+    },
+    {
+      "speed": 20.0,
+      "mass": 1.933333396911621,
+      "line_estimate": 19.568628198960248,
+      "rollout_estimate": 4.2950514526594255
+    },
+    {
+      "speed": 25.0,
+      "mass": 2.364706039428711,
+      "line_estimate": 24.643600463867184,
+      "rollout_estimate": 7.096172088668459
+    },
+    {
+      "speed": 30.0,
+      "mass": 2.7960784435272217,
+      "line_estimate": 29.718569923849664,
+      "rollout_estimate": 9.99066304592859
+    },
+    {
+      "speed": 35.0,
+      "mass": 3.2196078300476074,
+      "line_estimate": 34.70126858879538,
+      "rollout_estimate": 13.445378769011723
+    },
+    {
+      "speed": 40.0,
+      "mass": 3.6470589637756348,
+      "line_estimate": 39.730105456183935,
+      "rollout_estimate": 18.30065392312549
+    },
+    {
+      "speed": 45.0,
+      "mass": 4.082353115081787,
+      "line_estimate": 44.85121311860926,
+      "rollout_estimate": 23.24929975327991
+    },
+    {
+      "speed": 50.0,
+      "mass": 4.5098042488098145,
+      "line_estimate": 49.88004998599782,
+      "rollout_estimate": 28.01120565051124
+    },
+    {
+      "speed": 55.0,
+      "mass": 4.933333396911621,
+      "line_estimate": 54.862745846019074,
+      "rollout_estimate": 32.86648080462501
+    },
+    {
+      "speed": 60.0,
+      "mass": 5.368627548217773,
+      "line_estimate": 59.9838535084444,
+      "rollout_estimate": 37.721755958738775
+    },
+    {
+      "speed": 65.0,
+      "mass": 5.788235664367676,
+      "line_estimate": 64.92041958079619,
+      "rollout_estimate": 42.48365901765369
+    },
+    {
+      "speed": 70.0,
+      "mass": 6.227451324462891,
+      "line_estimate": 70.0876626407399,
+      "rollout_estimate": 47.432306266966314
+    },
+    {
+      "speed": 75.0,
+      "mass": 6.650980472564697,
+      "line_estimate": 75.07035850076115,
+      "rollout_estimate": 52.28757858276367
+    },
+    {
+      "speed": 80.0,
+      "mass": 7.07451057434082,
+      "line_estimate": 80.05306558048024,
+      "rollout_estimate": 57.04949015662783
+    },
+    {
+      "speed": 85.0,
+      "mass": 7.505882740020752,
+      "line_estimate": 85.12803223553826,
+      "rollout_estimate": 61.998128890991204
+    },
+    {
+      "speed": 90.0,
+      "mass": 7.933333396911621,
+      "line_estimate": 90.15686349307789,
+      "rollout_estimate": 66.85340972173782
+    },
+    {
+      "speed": 95.0,
+      "mass": 8.360784530639648,
+      "line_estimate": 95.18570036046646,
+      "rollout_estimate": 71.70869055248441
+    },
+    {
+      "speed": 100.0,
+      "mass": 8.81568717956543,
+      "line_estimate": 100.0,
+      "rollout_estimate": 76.84406780061268
+    },
+    {
+      "speed": 105.0,
+      "mass": 9.286274909973145,
+      "line_estimate": 100.0,
+      "rollout_estimate": 82.16620626903715
+    },
+    {
+      "speed": 110.0,
+      "mass": 9.752941131591797,
+      "line_estimate": 100.0,
+      "rollout_estimate": 87.48833338419595
+    },
+    {
+      "speed": 115.0,
+      "mass": 10.215686798095703,
+      "line_estimate": 100.0,
+      "rollout_estimate": 92.71709124247232
+    },
+    {
+      "speed": 120.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 97.94584910074869
+    },
+    {
+      "speed": 125.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    },
+    {
+      "speed": 130.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    },
+    {
+      "speed": 135.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    },
+    {
+      "speed": 140.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    },
+    {
+      "speed": 145.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    },
+    {
+      "speed": 150.0,
+      "mass": 10.368627548217773,
+      "line_estimate": 100.0,
+      "rollout_estimate": 100.0
+    }
+  ],
+  "centerline_relaxation": [
+    {
+      "track_id": 1,
+      "centerline_constant100_time": 9.835000000000004,
+      "centerline_pointmass_optimistic_time": 10.756726145693577,
+      "min_pointmass_curve_cap": 49.73872315907431,
+      "max_curvature": 0.08857142857142918
+    },
+    {
+      "track_id": 2,
+      "centerline_constant100_time": 11.795000000001577,
+      "centerline_pointmass_optimistic_time": 13.533387916080073,
+      "min_pointmass_curve_cap": 49.73872315907417,
+      "max_curvature": 0.08857142857142968
+    },
+    {
+      "track_id": 3,
+      "centerline_constant100_time": 10.850000001926633,
+      "centerline_pointmass_optimistic_time": 12.157976205094236,
+      "min_pointmass_curve_cap": 49.738723159074084,
+      "max_curvature": 0.08857142857143
+    },
+    {
+      "track_id": 4,
+      "centerline_constant100_time": 9.79823531009087,
+      "centerline_pointmass_optimistic_time": 11.451761882554017,
+      "min_pointmass_curve_cap": 49.738723159074176,
+      "max_curvature": 0.08857142857142966
+    }
+  ],
+  "relaxation_caveat": "Fixed-centerline optimistic point-mass approximation, NOT a global lower bound for legal racing lines.",
+  "synthetic_straight": {
+    "kind": "isolated official Car on synthetic uniform road, not episode or universal optimality bound",
+    "sample_count": 1000,
+    "dt": 0.02,
+    "peak_sampled_acceleration": 60.34613847732544,
+    "samples_at_integer_seconds": [
+      {
+        "t": 1.0,
+        "speed": 45.53241729736328,
+        "y": 24.071491241455078
+      },
+      {
+        "t": 2.0,
+        "speed": 87.56327819824219,
+        "y": 91.79949951171875
+      },
+      {
+        "t": 3.0,
+        "speed": 100.00000762939453,
+        "y": 189.2101287841797
+      },
+      {
+        "t": 4.0,
+        "speed": 100.0,
+        "y": 289.2101135253906
+      },
+      {
+        "t": 5.0,
+        "speed": 100.0,
+        "y": 389.2101135253906
+      },
+      {
+        "t": 6.0,
+        "speed": 100.0,
+        "y": 489.2101135253906
+      },
+      {
+        "t": 7.0,
+        "speed": 100.0,
+        "y": 589.2100830078125
+      },
+      {
+        "t": 8.0,
+        "speed": 100.0,
+        "y": 689.2100830078125
+      },
+      {
+        "t": 9.0,
+        "speed": 100.0,
+        "y": 789.2100830078125
+      },
+      {
+        "t": 10.0,
+        "speed": 100.0,
+        "y": 889.2100830078125
+      },
+      {
+        "t": 11.0,
+        "speed": 100.0,
+        "y": 989.2100830078125
+      },
+      {
+        "t": 12.0,
+        "speed": 100.0,
+        "y": 1089.2100830078125
+      },
+      {
+        "t": 13.0,
+        "speed": 100.0,
+        "y": 1189.2100830078125
+      },
+      {
+        "t": 14.0,
+        "speed": 100.0,
+        "y": 1289.2100830078125
+      },
+      {
+        "t": 15.0,
+        "speed": 100.0,
+        "y": 1389.2100830078125
+      },
+      {
+        "t": 16.0,
+        "speed": 100.0,
+        "y": 1489.2100830078125
+      },
+      {
+        "t": 17.0,
+        "speed": 100.0,
+        "y": 1589.2100830078125
+      },
+      {
+        "t": 18.0,
+        "speed": 100.0,
+        "y": 1689.2100830078125
+      },
+      {
+        "t": 19.0,
+        "speed": 100.0,
+        "y": 1789.2100830078125
+      },
+      {
+        "t": 20.0,
+        "speed": 100.0,
+        "y": 1889.2100830078125
+      }
+    ]
+  },
+  "original_evidence_sha256": {
+    "/tmp/apex-feasibility/centerline-relaxation.json": "5ac3b0498211e8eefb0e09179907c4127df056c19d683c515cd07fea6df5739f",
+    "/tmp/apex-feasibility/geometry-t1.json": "3b9a0a98be9413ac50afa653b9d2684c7a1cf56a01e8e845b7f7ceb81c94e4fe",
+    "/tmp/apex-feasibility/geometry-t2.json": "d589676f0a383d31f82e2b7e5a362ae80208847a09e30b906b40da4d3cb51db8",
+    "/tmp/apex-feasibility/geometry-t3.json": "10e7325377b4eed1294f682e891edf3b2a26ff44b62d8ac3e715132be70e0fed",
+    "/tmp/apex-feasibility/geometry-t4.json": "8e9b3f63a72f13f23b2c4249f07ce84b40b1e9f4c9fc4c19a254aae8bc13c3a4",
+    "/tmp/apex-feasibility/hud-calibration.json": "d2782f0e518d03161e74a0cd5f788a6ae6641127f52862ec8f6e88cd6dd64ab1",
+    "/tmp/apex-feasibility/summary.json": "752691502ad194fc618bf2c3d8d4b34a4dae11da020e6f49d819b3c4e8d6e721",
+    "/tmp/apex-feasibility/synthetic-straight.json": "2e34e75c16a58413f5338f8c1ad7cbb482668870d0322cfc44719bda631fa17e"
+  },
+  "release_evidence_sha256": {
+    "/tmp/apex-release-r0/t1.json": "4e55434ec9c93baa9912f0b221f32981eea8897b5644be419259e6c25dc2094a",
+    "/tmp/apex-release-r0/t1.jsonl": "4f1456bcd5172eb057cb8a83fcbfe81312eaf4f8e2279317ecf08f9a55f701d9",
+    "/tmp/apex-release-r0/t2.json": "9625a8f6b8b5c71c38e50526f1ceaa6600c9ddb76096690409f8ef78f381e9d7",
+    "/tmp/apex-release-r0/t2.jsonl": "d9ec7648c1551f67a647a2cdf4b0adb5c8b5379ebdb167e5d4b95c22453920b6",
+    "/tmp/apex-release-r0/t3.json": "d9a4644ee0272d02e04692285c2d8b84b337362964d27cefb0434de3e66c7059",
+    "/tmp/apex-release-r0/t3.jsonl": "081422bf491b4208b54d7cf048493718f7be20e69a657c59e6c671921985f2af",
+    "/tmp/apex-release-r0/t4.json": "447be3f34c098b72ce8d5e8a9d1ad9ba82922bf44a3188ae0af8574f444db7d6",
+    "/tmp/apex-release-r0/t4.jsonl": "85852e442f1ac1b6fed78c433de1becba20bf4bbefe985bf47fa787b62912d79"
+  },
+  "trajectory_acceleration_mismatch": {
+    "formula": "gas*31/(1+0.055*v)-brake*38-0.004*v**2",
+    "prediction_at_50_full_gas": -1.7333333333333325,
+    "required_release_example": {
+      "track_id": 1,
+      "seed": 516237,
+      "step": 15,
+      "action": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "before": {
+        "sim_time_s": 2.1400000000000015,
+        "position": [
+          222.0166778564453,
+          -23.170616149902344
+        ],
+        "speed_m_s": 50.778283211287395,
+        "heading_rad": -0.11011453717947006,
+        "angular_velocity": -0.013606932014226913,
+        "info": {
+          "collision": false,
+          "finished": false,
+          "finish_time_s": null,
+          "damage": 0.0,
+          "progress": 0.03571428571428571,
+          "finish_qualified": false,
+          "finish_qualified_time_s": null,
+          "retire_reason": null
+        }
+      },
+      "after": {
+        "sim_time_s": 2.2200000000000015,
+        "position": [
+          222.482421875,
+          -18.958932876586914
+        ],
+        "speed_m_s": 54.280145166053885,
+        "heading_rad": -0.11107300966978073,
+        "angular_velocity": -0.01103837788105011,
+        "info": {
+          "collision": false,
+          "finished": false,
+          "finish_time_s": null,
+          "damage": 0.0,
+          "progress": 0.04285714285714286,
+          "finish_qualified": false,
+          "finish_qualified_time_s": null,
+          "retire_reason": null
+        }
+      },
+      "dt": 0.08000000000000007,
+      "measured_speed_derivative": 43.77327443458108,
+      "predicted_speed_derivative": -2.1403670577730516
+    },
+    "interpretation": "Model mismatch clue; actual observation is an 80ms speed derivative, not a universal acceleration law."
+  }
+}
