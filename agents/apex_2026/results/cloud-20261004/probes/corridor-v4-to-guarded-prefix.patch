@@ -1,0 +1,24 @@
+--- corridor-v4-prefix
++++ guarded-v1-prefix
+@@ -291,7 +291,8 @@
+     ROAD_LOW = 0.24
+     ROAD_HIGH = 0.52
+     OBSTACLE_LOW = 0.54
+-    # Official RGB(255,165,0) maps to gray171/255 after camera resizing.
++    # Saved official raster peaks at171/255; pure RGB(255,165,0) maps to
++    # grayscale173/255. The classifier band covers both.
+     # Keep antialias pixels in the component, but require an orange-like
+     # peak rather than accepting compact pieces of a white/red curb.
+     OBSTACLE_CORE_LOW = 0.655
+@@ -1985,8 +1986,9 @@
+         longitudinal = obstacle_x * sine + obstacle_y * cosine
+         outside_lateral = max(abs(lateral) - 1.2, 0.)
+         outside_longitudinal = max(longitudinal - 2.6, -longitudinal - 2.4, 0.)
+-        radius = .5 * max((bbox[2] - bbox[0] + 1) / px_x,
+-                         (bbox[3] - bbox[1] + 1) / px_y)
++        # A dim bright core can be smaller than the official physical circle.
++        radius = max(1.2, .5 * max((bbox[2] - bbox[0] + 1) / px_x,
++                                 (bbox[3] - bbox[1] + 1) / px_y))
+         obstacle_margin = math.hypot(outside_lateral, outside_longitudinal) - radius - .10
+         if obstacle_margin < 0:
+             return None
