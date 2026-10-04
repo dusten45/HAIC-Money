@@ -61,13 +61,16 @@ class Agent:
 
     @staticmethod
     def _yaw(frame):
-        crop = frame[76:80, 54:75]
-        weights = np.where((crop >= .22) & (crop <= .37), crop, 0.)
+        # Preserve antialiased red area over the full4.2px HUD height. The
+        # green wheel-angle bar ends before51, and the white gauges/text are
+        # further left. A lower intensity cutoff would erase partial reds.
+        crop = frame[75:81, 51:83]
+        weights = np.where(crop <= .37, crop, 0.)
         mass = float(weights.sum())
         if mass < .03:
             return 0.
-        middle = float((weights*np.arange(54, 75)).sum())/mass
-        magnitude = mass/(4.*.299*1.68)
+        middle = float((weights*np.arange(51, 83)).sum())/mass
+        magnitude = mass/(4.2*.299*1.68)
         return float(np.clip(magnitude if middle >= 62.5 else -magnitude, -8., 8.))
 
     @staticmethod
@@ -170,6 +173,22 @@ class Agent:
             slope = (float(np.interp(sample+eps, ahead, center))-
                      float(np.interp(sample-eps, ahead, center)))/(2.*eps)
             normal_gap = abs(x-road_x)/np.sqrt(1.+slope*slope)
+            if not self.pass_side and 0. <= distance <= max(6., 3.8+.08*speed):
+                # A near circle may conflict with the road center while
+                # already clearing our actual turn. Do not invent a new pass
+                # across it when both current motion and preview turn away.
+                curvature = yaw/max(speed, 10.)
+                phase = float(np.clip(curvature*distance, -.85, .85))
+                if abs(curvature) > .0001:
+                    motion_x = (1.-np.sqrt(1.-phase*phase))/curvature
+                else:
+                    motion_x = 0.
+                motion_slope = phase/np.sqrt(1.-phase*phase)
+                motion_gap = abs(x-motion_x)/np.sqrt(1.+motion_slope*motion_slope)
+                preview = float(np.clip(7.+self.preview_time*speed, 8., 32.))
+                intent_x = float(np.interp(preview, ahead, center))
+                if motion_gap >= clearance and intent_x*x <= 0.:
+                    continue
             if normal_gap < clearance:
                 selected = (distance, x, road_x, slope)
                 break

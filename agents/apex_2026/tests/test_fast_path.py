@@ -1,5 +1,7 @@
 """Camera steering feedback and selective fast-path routing behaviors."""
 import importlib.util
+import base64
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -35,9 +37,10 @@ def camera(speed=0.0, yaw=0.0, center=42.0, curvature=0.0, obstacle=None):
             frame[row,col] = width*height
     # Positive camera yaw is a right turn, whose red bar extends right.
     left,right = sorted((63.0,63.0+1.68*yaw))
-    for row in range(76,80):
-        for col in range(54,75):
-            frame[row,col] = .299*max(0.,min(col+1.,right)-max(float(col),left))
+    for row in range(75,81):
+        height=max(0.,min(row+1.,79.8)-max(float(row),75.6))
+        for col in range(51,83):
+            frame[row,col] = .299*height*max(0.,min(col+1.,right)-max(float(col),left))
     return np.repeat(frame[None],4,axis=0)
 
 
@@ -67,6 +70,12 @@ def test_yaw_hud_sign_and_speed_range_are_camera_only():
     assert 110.<agent._speed(camera(speed=120.)[-1])<130.
 
 
+def test_antialiased_yaw_area_keeps_moderate_and_large_turn_magnitudes():
+    agent=agent_type()()
+    for yaw in (-5.8,-1.5,.5,1.5,5.8):
+        assert abs(agent._yaw(camera(yaw=yaw)[-1])-yaw)<.15
+
+
 def test_a_circle_outside_the_swept_straight_does_not_force_a_lane_change():
     agent=agent_type()()
     clear=agent.act(camera(speed=55.))
@@ -87,6 +96,54 @@ def test_near_pass_preview_cannot_aim_at_the_departure_back_through_the_circle()
     # already sampled the future departure segment, and collided next.
     action=agent_type()().act(camera(speed=70.,obstacle=(40,47)))
     assert action[0]>.05
+
+
+def test_near_circle_already_outside_actual_turn_cannot_reverse_the_curve():
+    # Frozen V4 T4 camera at step101, before any privileged diagnostic fields.
+    # The circle at x4m/y4.4m was outside the actual left-turning hull; the
+    # road-center conflict invented a pass and reversed the wheel toward it.
+    compressed = (
+        'eNrtnHlsFFUcx/HG+77v+76Nxrj7Bk1MjEf0DxNNPKMmmmgiHlHjkVABbQGhQLlLaQFLKW25QRERUBEBES8oyFEOoQhiKQjl'
+        '1Pd5+JpxnJmd2ZnZXdhp8sueM/PmM9/3u+ZtK8ovMCoC2PBhFxu1NdcYY0ZfH7qx32FDLwo0PicbVX1VJGOuyGGeNaOujnnG'
+        'PHOWJ+cc84x5xjxjnjHPmOeBzJPcIeYZ6zNXeUY15lzmWT3ySmNoxYUxz5hn2vbx8EuMutprY54xz5hnzDNneUY15phn/vAc'
+        'WXVFzDPmmZc8R9ddl5c8o2AZ88wfntSb9C3I5+wM1l6NczRbPvLUTK2Gbs1W+fGljjai8jJbYz9R8XTTQCotWK+7+dpENd5c'
+        'N/qA2uz0kEofTjrJV56xxRZbbLHlp5UPOV/ZkLLzlJUNPlfZ4NJz1OuYkbvBqW+fU42Puh1jdOp4iLGjpUVg27dta7W/tm5V'
+        'xnO+w3fZJua7zwb0P8Mo/PAIY0tzs1i9apX4dckS8cvPP4vv589X9tOPP9qa/mxxfb1YsXy5WN/YKHbt3Cngy3XJJ4alg842'
+        'unY5yvhj40axaOFC8cOCBeK7efPEt7Nn/8fmzpmjPnPiyTZm09fgtzVrRM/iEw5oP4jfK+l9sprD6M/KAnZeeWr+dqb3w+Of'
+        'mzaJA8kXwJD5zBzc3NSkOMLCTlt2+sTstOmFp3n7gg5t9msfy7jR4gedDzM2/P674phqrobB007jWqsrGxpEt65H73dM+5Sc'
+        'omIzscXJ9znxiIonxucw7f7Rscr/7A9xuuP7BxvEAs3Gr/+z4xF0e+s4uM65HKvwkcRq8hXmsVcednPejoddzuTHX2htmrdH'
+        'p8yjXIvZ/fqepuIMY/TDww9Pr/p0m+t2+0CnjD9X6pgPPzjcIHdMpRGnOR9En354WrVpNmJl/36nZ50nmvQTU/z4QC88vF4L'
+        'p2NrI++gbh044Mys8vQbE/zM+TB5umlTG/VqUWHbrMZ8v3GBc/VaM1q5BOHppk3zNWW+kZ9km2fQOR8mT7/aNO+DeU+uny2N'
+        'hpX3eIkrdtr2wtNNm3bHRaPZ8qPp5IJ2XNLhaXcNrduk6vPZjZf99uh+XFY0GmbtmIqNX55uPT63PgpG/zAbvdOoc0m362DH'
+        '04s2nXRp7Z8W9zg+6zy9ajTdOe/G04s2U+nSbNTN2eap600vGvWyrXU7KyMnnn7yXKfx8sj9A+s5s6bUvN5GG+9rC5NnmP0N'
+        'N55Wrblp0/pd6uN1a9f+733r8Xr1PNF2jSXrwfhNrDZepzLW89sZ6wC1Bemh2eWFbucHg2VLl4pvZs1SRj3DPTsrT+t+rftk'
+        'O3qfsMFHutWo9G+tPFm3FcVaRSxIvZNKR3zOvU6OU7/oEaN58yuqjzVo4ECB0fdvXPe8sfTXx1S/FcbWfdpdW/apf3ONbuDr'
+        '1I/ivpOVJ2sho+IZtI9mnvOcF72zL2fOFLU1NTJfKVX31xtWPGXs3fOesXvXO2quDSkrk+dYLsgPW7a/qd6nruE9NIxm3eaJ'
+        'lSffdeLJfq15aNQ8neo5rz0jerp/790rYLVi+ZNqnwP69xdww8fN/+4BY33jC0qHrEelZ818ZR0quuX9r7/6SkyeNEnM+vpu'
+        'xUn7Aae8gvuCsOHRiaXWirU3GjXPdPuaurbDJ69seNrYtfNtpcPevU4y9Gf0zuE2dswNjmPgc3oY1DRbml81vpx5V+u9ltF1'
+        'dWJkVZUynptzC66jWy9fj1GzzxRPt9zZKS6xjuP9goNUngHLPbvfNTY3tTeWL3tCsSPn8LtGfcL4m40Z09up+y34i7Fjxkgf'
+        '8qjo2qWLZNJNHvt+8cW0aa787PTMODPN06tGic/EDjTI/VrWmc+dc6/0fw8rXU2ccEug8XB9OAY+AV8qdSt6FhfLOdsXnSnG'
+        'fnlaY1ImeKaqIXkktsCR+3Y6L2auo6vx424KbUwzZ9xpbNzwosoFmON9SkpUPsBzYp1fntwLMfOsGnF5RnhqblamzG29Nssc'
+        'K+EZ9v81wVegd3hy3RhX506dRFFhoSBm+WHppM9M8bRqlPnGOjenXiJzM4r/E0Ps13okh9rR8payEZWVafFkXpnHTR2TKZ66'
+        'x018xYe59RCj4sn6JHL7z6ZMET26d5d5QnvJ5HXpa3qlNd/RRLZ4ak16uZ8dBU/i2Q8LHjLmzb1PrSOV8V78sfElZcQmc86U'
+        'bnyPkqd5TSD5HOth7XoymeI5edKtxupVzxhrVj+r1qAx7/GdmMzJlGb98GS+WWv4KHnq3quO3X7WrIXNk9qJnJ6eELUWPgd+'
+        'EydMUPb51Km+/Sfnx3qNTPHEV6LJQQPP8n2/JWye9H3gRi2Uah2TH55dio7MGE80me59qzB5kid9Mvk2qcvhKo4Tj4KydKo3'
+        'o+QZ9DelYfyfQlhSX1H/T/n0dllzTg+Fpc7/6AvmC89xY2+UPvx+xXL7tjeURqkpwuJJ7Wqdf9R0ByrPz6cmjKY/X1Y9UOp/'
+        '+nRhscToI1rHHS3PcpGuDRs6VIyqrlY9inSNuU2eSc5LXfnt7HtCNXpT1nET74KM2c3axH958VfQoUNyZcPTqu+JSR0nguxP'
+        '6jIh53+yZ/EJQpusvRJRjF36lGTnTocKeQ4JjlHQoQ3HTcrXd/BeNngyHvrK/N4Ak+NKBtmfzCGSso5VvT9tQa+Rgw4S9Gup'
+        '7fT6SXw4PUh8Dc+zxZOx0BvBwuApczJ1X0tbFDzZJ/chqeWoc6klli19vHVNOnVozNMPz3aJ9Y0vtN6nhSlsa2uuUa/37N6t'
+        'eMoc+N/+4z3iX5+QWNnQ0Oob8BkY45Z+j7mVDOIr8HXUnvRoMI4RbB62YXzitzXPtRo+NQotbG5qL8d+C7+NTHIe3KfhOdx2'
+        'tLSo80CnW7e8purTfZ9Nl752uvr+4vr6pNSS2q5PySkC9jzCNEj8kBriOMq4fgF5Jrgm6Fwb8SFb8ZaaZcH3DxrkiehS89QG'
+        '06LCtq2xU45foNU4U3HUS3Jw6Tlin1ZU3FexXxt6grM2eAfVVPwX//0DWghjyA=='
+    )
+    frame=np.frombuffer(zlib.decompress(base64.b64decode(compressed)),dtype="<f4").reshape(84,84)
+    clear=frame.copy()
+    orange=(clear>=.655)&(clear<=.705)
+    orange[73:]=False
+    clear[orange]=.4
+    baseline=agent_type()().act(clear)
+    circle=agent_type()().act(frame)
+    assert circle[0]<=baseline[0]+.025
 
 
 def test_circle_with_small_raster_clearance_is_routed_with_tracking_margin():

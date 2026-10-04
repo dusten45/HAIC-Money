@@ -1,0 +1,32 @@
+{
+  "source_sha256": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+  "test_sha256": "81704eba0e9ef6ffea2662a2eca04d99fb89173d7dcfb791d53739f0a96488bb",
+  "tests_passed": 19,
+  "parent_frozen_v4_source_sha256": "71c9ad3fa505615c6316abd99e6bf2d4989cf7e987087eec055148f67ca06bfc",
+  "reverse_patch_verified_exact": true,
+  "patch_sha256": "7e4e9977782b290ca0069e7a06cca03bc797d8b6cf4f687be0b7d08ce21cb741",
+  "yaw_calibration_receipt_sha256": "e560a90f93e60488d1507bd9fbb809b65eb643a5783dd9d9789ac27621d65b30",
+  "yaw_calibration_scope": "nine stationary official renders; no laps; .5rad/s raster quantization and extreme-steer bleed limits remain",
+  "receipts": [
+    {
+      "path": "agents/apex_2026/results/speed-20261005/path-v5.json",
+      "sha256": "c0c6a5885e4bf9f22f51b2790a3666e30f9d34e42589ac23f95290f73917ead9",
+      "parameters": {}
+    },
+    {
+      "path": "agents/apex_2026/results/speed-20261005/path-v5-yaw015.json",
+      "sha256": "311d8b1d644fe6d50eb1933f9cc1b3505b1d2049f24a60d0401b76a5f8eb5b96",
+      "parameters": {
+        "yaw_gain": 0.15
+      }
+    }
+  ],
+  "new_holdout_opened": false,
+  "old_holdout_already_consumed": true,
+  "original_13_second_goal_met": false,
+  "formal_adoption": false,
+  "inference_imports": [
+    "numpy"
+  ],
+  "camera_regression_fixture": "compressed exact V4 camera observation at mandatory T4 step101; no privileged diagnostics included"
+}
