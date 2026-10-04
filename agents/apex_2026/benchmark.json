@@ -1,0 +1,13 @@
+{
+  "protocol": "apex-2026-opposite-v1",
+  "base_commit": "0a887f5",
+  "required": [{"track_id":1,"seed":516237},{"track_id":2,"seed":644062},{"track_id":3,"seed":1007},{"track_id":4,"seed":18800}],
+  "development": [{"track_id":1,"seed":3601050001},{"track_id":1,"seed":3601050002},{"track_id":1,"seed":3601050003},{"track_id":2,"seed":3601050001},{"track_id":2,"seed":3601050002},{"track_id":2,"seed":3601050003},{"track_id":3,"seed":3601050001},{"track_id":3,"seed":3601050002},{"track_id":3,"seed":3601050003},{"track_id":4,"seed":3601050001},{"track_id":4,"seed":3601050002},{"track_id":4,"seed":3601050003}],
+  "development_audit": "Exact seeds absent in current non-snapshot tracked research/documentation search before allocation; audit snapshot metadata before first development reset.",
+  "holdout": {"status":"unallocated_unopened","count":12,"tracks":[1,2,3,4],"seeds_per_track":3,"allocation":"random 32-bit geometry seeds only after frozen candidate commit; reject previously exposed/reserved seeds"},
+  "frame_skip":4,
+  "max_steps":2000,
+  "target_lap_time_ms":[10000,13000],
+  "candidate_status":"none_adopted",
+  "deadline_utc":"2026-10-04T19:00:00Z"
+}
