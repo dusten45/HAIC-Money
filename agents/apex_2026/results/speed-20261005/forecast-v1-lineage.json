@@ -1,0 +1,20 @@
+{
+  "source_sha256": "daeffaa55b9aa705dd8ef2361fc1683692eff644950361c43264053c3a70aae9",
+  "parent_source_sha256": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+  "parent_definition_prefix_exact": true,
+  "parameters": {},
+  "focused_tests_passed": 3,
+  "regressions_red_against_parent": 1,
+  "test_sha256": "4cf57c0fb5724aa9a8a56cd33080c5b57af7c57ed93889a9bb3fb08421f14c0c",
+  "receipt_sha256": "749461516c98190c2122abee60941af130af2cb56a5e772325cc76f0f4ace5c6",
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "physics_motivation_receipt": "torque-v1.json",
+  "limits": [
+    "Fixed gas.3 is measured on uniform asphalt, not a physical safety certificate",
+    "Projection uses emitted desired joint, not measured sideslip",
+    "This does not implement the failed wheel-feedback formula",
+    "No new speed target, steering, obstacle or recovery behavior is introduced"
+  ]
+}
