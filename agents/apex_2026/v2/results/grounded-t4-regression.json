@@ -1,0 +1,731 @@
+{
+  "cell": [
+    4,
+    3601050002
+  ],
+  "episodes_run": 0,
+  "sources": {
+    "r8": {
+      "source_sha256": "380bdba222dba1b90e7d0e72958a0c0b86bb6ee1c50199c453589dcd970a7455",
+      "trace": "/tmp/apex-v2-terrain-r8-regression/t4-s3601050002.jsonl",
+      "trace_sha256": "cdc4047b7676db94b70b0a56e08da17bfb356765045c3d2ee28fb07d77e5144c",
+      "finished": true,
+      "lap_time_ms": 15800,
+      "progress": 1.0
+    },
+    "r9": {
+      "source_sha256": "11fa64142b62e0a451afaf085434b03772074c942ac9a650e0c2c09999957afa",
+      "trace": "/tmp/apex-v2-terrain-grounded-r9-regression/t4-s3601050002.jsonl",
+      "trace_sha256": "7ef0ee25e95d26f31b18ed2a05b924737c06a0a57c1758adebdc21f8be2b7368",
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.5563636363636364
+    }
+  },
+  "first_action_divergence_step": 30,
+  "matched_events": {
+    "29": {
+      "r8": {
+        "action": [
+          -0.32646095752716064,
+          0.0,
+          0.19619140028953552
+        ],
+        "pixel_target": 35.09820590815169,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 52.24091508913246,
+        "privileged_position": [
+          226.23123168945312,
+          4.482539653778076
+        ],
+        "privileged_progress": 0.12,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.32646095752716064,
+          0.0,
+          0.19619140028953552
+        ],
+        "pixel_target": 35.09820590815169,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 52.24091508913246,
+        "privileged_position": [
+          226.23123168945312,
+          4.482539653778076
+        ],
+        "privileged_progress": 0.12,
+        "privileged_collision": false
+      }
+    },
+    "30": {
+      "r8": {
+        "action": [
+          -0.3912760317325592,
+          0.0,
+          0.19438476860523224
+        ],
+        "pixel_target": 32.494624495722555,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 47.132354991211535,
+        "privileged_position": [
+          228.30679321289062,
+          7.800483703613281
+        ],
+        "privileged_progress": 0.12727272727272726,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.3912760317325592,
+          0.0,
+          0.19250020384788513
+        ],
+        "pixel_target": 30.82710753551509,
+        "pixel_current_grip": [
+          0.6,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 47.132354991211535,
+        "privileged_position": [
+          228.30679321289062,
+          7.800483703613281
+        ],
+        "privileged_progress": 0.12727272727272726,
+        "privileged_collision": false
+      }
+    },
+    "31": {
+      "r8": {
+        "action": [
+          -0.37699174880981445,
+          0.0,
+          0.19108887016773224
+        ],
+        "pixel_target": 34.90731717370663,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 42.288990651226776,
+        "privileged_position": [
+          229.27552795410156,
+          11.18862247467041
+        ],
+        "privileged_progress": 0.13454545454545455,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.3754214644432068,
+          0.0,
+          0.1711113005876541
+        ],
+        "pixel_target": 31.324679967569963,
+        "pixel_current_grip": [
+          0.6,
+          1.0,
+          0.6,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 42.330916843360534,
+        "privileged_position": [
+          229.27589416503906,
+          11.190632820129395
+        ],
+        "privileged_progress": 0.13454545454545455,
+        "privileged_collision": false
+      }
+    },
+    "32": {
+      "r8": {
+        "action": [
+          -0.42874857783317566,
+          0.0,
+          0.16030272841453552
+        ],
+        "pixel_target": 31.39278971956477,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 37.10877924630032,
+        "privileged_position": [
+          229.2751007080078,
+          14.30605411529541
+        ],
+        "privileged_progress": 0.14181818181818182,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.3363616168498993,
+          0.0,
+          0.1711113005876541
+        ],
+        "pixel_target": 33.788508539626854,
+        "pixel_current_grip": [
+          0.6,
+          1.0,
+          0.6,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 37.60715671413755,
+        "privileged_position": [
+          229.27224731445312,
+          14.333266258239746
+        ],
+        "privileged_progress": 0.14181818181818182,
+        "privileged_collision": false
+      }
+    },
+    "33": {
+      "r8": {
+        "action": [
+          -0.3054932951927185,
+          0.39049631357192993,
+          0.0
+        ],
+        "pixel_target": 43.38041544711439,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 32.39481121000511,
+        "privileged_position": [
+          228.44189453125,
+          16.896160125732422
+        ],
+        "privileged_progress": 0.14545454545454545,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.29256799817085266,
+          0.32025402784347534,
+          0.0
+        ],
+        "pixel_target": 40.90164239055295,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 32.73467242084319,
+        "privileged_position": [
+          228.4819793701172,
+          16.970430374145508
+        ],
+        "privileged_progress": 0.14545454545454545,
+        "privileged_collision": false
+      }
+    },
+    "106": {
+      "r8": {
+        "action": [
+          -0.031021108850836754,
+          0.5,
+          0.0
+        ],
+        "pixel_target": 71.09166815505245,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 65.21931098010457,
+        "privileged_position": [
+          -103.5098876953125,
+          92.97936248779297
+        ],
+        "privileged_progress": 0.5272727272727272,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          0.012930960394442081,
+          0.4781898260116577,
+          0.0
+        ],
+        "pixel_target": 69.2215817348024,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_1",
+          "history_1"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 65.84056840697423,
+        "privileged_position": [
+          -104.81494903564453,
+          89.6463623046875
+        ],
+        "privileged_progress": 0.5309090909090909,
+        "privileged_collision": false
+      }
+    },
+    "107": {
+      "r8": {
+        "action": [
+          -0.03963259235024452,
+          0.0,
+          0.0
+        ],
+        "pixel_target": 67.93765872101957,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 66.79031491444393,
+        "privileged_position": [
+          -105.80070495605469,
+          88.20474243164062
+        ],
+        "privileged_progress": 0.5345454545454545,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          0.005886641796678305,
+          0.17753903567790985,
+          0.0
+        ],
+        "pixel_target": 68.60666103596067,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_1",
+          "history_1"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 67.331929975671,
+        "privileged_position": [
+          -107.16455841064453,
+          84.84888458251953
+        ],
+        "privileged_progress": 0.5381818181818182,
+        "privileged_collision": false
+      }
+    },
+    "108": {
+      "r8": {
+        "action": [
+          -0.05463431030511856,
+          0.0,
+          0.02067871019244194
+        ],
+        "pixel_target": 66.45326649691195,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 66.71092300544305,
+        "privileged_position": [
+          -107.7972412109375,
+          83.2562026977539
+        ],
+        "privileged_progress": 0.5381818181818182,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.09428177028894424,
+          0.0,
+          0.21113280951976776
+        ],
+        "pixel_target": 53.84004017270172,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_1",
+          "history_1"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 67.8388626251916,
+        "privileged_position": [
+          -109.533447265625,
+          79.98444366455078
+        ],
+        "privileged_progress": 0.5418181818181819,
+        "privileged_collision": false
+      }
+    },
+    "109": {
+      "r8": {
+        "action": [
+          -0.03890877217054367,
+          0.0,
+          0.07529296725988388
+        ],
+        "pixel_target": 63.82121769343629,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 66.15682385143349,
+        "privileged_position": [
+          -109.39839172363281,
+          78.19662475585938
+        ],
+        "privileged_progress": 0.5454545454545454,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          0.00657490873709321,
+          0.0,
+          0.17485351860523224
+        ],
+        "pixel_target": 57.75602787392884,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_1",
+          "history_1"
+        ],
+        "pixel_connector_feasible": true,
+        "privileged_speed": 62.35605123899372,
+        "privileged_position": [
+          -111.56829071044922,
+          75.26020050048828
+        ],
+        "privileged_progress": 0.5490909090909091,
+        "privileged_collision": false
+      }
+    },
+    "110": {
+      "r8": {
+        "action": [
+          -0.013618070632219315,
+          0.0,
+          0.11525879055261612
+        ],
+        "pixel_target": 60.605921798651224,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 64.26848422236607,
+        "privileged_position": [
+          -110.5775146484375,
+          73.13666534423828
+        ],
+        "privileged_progress": 0.5490909090909091,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.027378929778933525,
+          0.0,
+          0.2137451171875
+        ],
+        "pixel_target": 24.0,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_1",
+          "history_1"
+        ],
+        "pixel_connector_feasible": false,
+        "privileged_speed": 58.18083807693785,
+        "privileged_position": [
+          -113.13298034667969,
+          70.7423324584961
+        ],
+        "privileged_progress": 0.5527272727272727,
+        "privileged_collision": false
+      }
+    },
+    "111": {
+      "r8": {
+        "action": [
+          0.044700585305690765,
+          0.0,
+          0.1497802734375
+        ],
+        "pixel_target": 56.36823976559111,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 61.432343628230804,
+        "privileged_position": [
+          -111.46018981933594,
+          68.21699523925781
+        ],
+        "privileged_progress": 0.5527272727272727,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.03926277160644531,
+          0.0,
+          0.213623046875
+        ],
+        "pixel_target": 24.0,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": false,
+        "privileged_speed": 52.935926334798594,
+        "privileged_position": [
+          -114.47425842285156,
+          66.56181335449219
+        ],
+        "privileged_progress": 0.5563636363636364,
+        "privileged_collision": true
+      }
+    },
+    "112": {
+      "r8": {
+        "action": [
+          0.06511211395263672,
+          0.0,
+          0.21298828721046448
+        ],
+        "pixel_target": 33.74170087392919,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 57.73035785023676,
+        "privileged_position": [
+          -112.30548858642578,
+          63.56534194946289
+        ],
+        "privileged_progress": 0.56,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.07310226559638977,
+          0.0,
+          0.11606445163488388
+        ],
+        "pixel_target": 24.0,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_1",
+          "history_1",
+          "history_2",
+          "history_2"
+        ],
+        "pixel_connector_feasible": false,
+        "privileged_speed": 4.85027509388437,
+        "privileged_position": [
+          -115.22413635253906,
+          63.529930114746094
+        ],
+        "privileged_progress": 0.5563636363636364,
+        "privileged_collision": false
+      }
+    },
+    "113": {
+      "r8": {
+        "action": [
+          0.058034732937812805,
+          0.0,
+          0.21333007514476776
+        ],
+        "pixel_target": 41.575553915613405,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": null,
+        "pixel_connector_feasible": true,
+        "privileged_speed": 52.453440634495045,
+        "privileged_position": [
+          -113.31837463378906,
+          59.333351135253906
+        ],
+        "privileged_progress": 0.5636363636363636,
+        "privileged_collision": false
+      },
+      "r9": {
+        "action": [
+          -0.3619607985019684,
+          0.9425082802772522,
+          0.0
+        ],
+        "pixel_target": 24.0,
+        "pixel_current_grip": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pixel_ground_sources": [
+          "history_2",
+          "history_2",
+          "history_3",
+          "history_3"
+        ],
+        "pixel_connector_feasible": false,
+        "privileged_speed": 4.747805515651466,
+        "privileged_position": [
+          -114.87674713134766,
+          63.357303619384766
+        ],
+        "privileged_progress": 0.5563636363636364,
+        "privileged_collision": false
+      }
+    }
+  },
+  "findings": [
+    "Actions and trajectories match through29. Step30 historical front-left ground becomes.6; same steering but target32.4946->30.8271 and brake.194385->.192500. Thus first divergence is observed-grip conditioning, not a preceding trajectory difference.",
+    "Steps31/32 also infer rear-left grass and use mean.8; lower-grip brake ceiling is65*.8/303.89578=.171111. Step31 R8 brake.191089 versus R9 .171111: lower target does not imply stronger braking when friction cap also falls.",
+    "Only steps30-32 infer any grass before first impact111. Every step33-111 reports all-road. First-impact approach differences are propagated closed-loop trajectory effects, not a concurrent new grass classification.",
+    "R9 connector becomes infeasible110 at58.2m/s; first collision111 starts52.9 and next state4.9m/s. R8 has no collision and finishes15.80s. Around same road segment R8 follows a different lateral line; direct same-step comparisons are not pose-matched causal counterfactuals.",
+    "Postcollision connector remains infeasible, but target floor24 allows nearfull gas at nearzero speed. Car remains pinned atprogress.55636 until off_track retirement. Existing no-feasible-connector recovery is an additional structural weakness.",
+    "Classification accuracy cannot be decided: raw frames29-32 and impact111 were not saved, only0/100/200/end. Historical projection, conservative erosion, road-boundary proximity or true grass are all unresolved explanations. No claim false-positive ground classification or specific obstacle shape."
+  ],
+  "limits": [
+    "No new episodes or runtime changes.",
+    "Privileged pose/speed/collision used only offline; runtime receives pixels.",
+    "Frame100 exists but cannot establish wheel-ground truth at30 or collision object at111.",
+    "Changing inference can perturb a marginal controller without inference being wrong; this result rejects robustness promotion, not independently the observer calibration."
+  ]
+}
