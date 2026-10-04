@@ -1,0 +1,67 @@
+{
+  "classification": "research_camera_memory_model_source_and_calibration_binding",
+  "source_and_report_sha256": {
+    "agents/apex_2026/research/speed_20261005/camera_circle_memory_study.py": "c6f01482a6dda035426f8f0b814aea3667449441ff49903a616b954c3f1aa448",
+    "agents/apex_2026/research/speed_20261005/camera_circle_memory_probe.py": "9f1a231a5b731bcb107e1e9a2b2a5eab79d0b8381a4538a9106325d6fc36eea7",
+    "agents/apex_2026/tests/test_camera_circle_memory_study.py": "95cd9ec179d81062f53a495c25358334c418980935300f735586add584136f17",
+    "agents/apex_2026/results/speed-20261005/camera-circle-memory-v1.json": "565c987b8b0d39e40b8c076c5aee093dad649f97ac86ab395ed174bec43fafde",
+    "agents/apex_2026/results/speed-20261005/camera-circle-memory-v1.md": "4b2c6e765849fc3c3c78bec2891c233b078a722b7a8b0113ea6f4df70a15bf3a"
+  },
+  "dependencies_verified_against_run_and_observer_receipt": {
+    "agents/apex_2026/research/speed_20261005/camera_circle_memory_probe.py": "9f1a231a5b731bcb107e1e9a2b2a5eab79d0b8381a4538a9106325d6fc36eea7",
+    "agents/apex_2026/fast_rear_clear_agent.py": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+    "agents/apex_2026/fast_early_far_agent.py": "1835002767a09f6f3839d6e9695c0a0d3b9b7ee47722ee06e7b7bad7cb4580fb",
+    "agents/apex_2026/research/speed_20261005/camera_circle_memory_study.py": "c6f01482a6dda035426f8f0b814aea3667449441ff49903a616b954c3f1aa448",
+    "agents/apex_2026/research/speed_20261005/physics_camera_observer.py": "80d079c5f46e064e1d1c5af2f3844911d8d3c7dfab125dd40db84bcc214dd008",
+    "agents/apex_2026/research/speed_20261005/physics_four_tire_model.py": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+    "agents/apex_2026/research/speed_20261005/physics_hud_joint_body.py": "df8ee78e05d702a39395c4076129c551074d96fdd842cc08db7d40e2aa41edd1",
+    "agents/apex_2026/results/speed-20261005/physics-hud-joint-body-v1.json": "b5a64dd46d4f459dd4a2c260d3ac65ee3722721733c13f6eed1070297b2d21dd",
+    "agents/apex_2026/results/speed-20261005/physics-hud-rear-isolated-v1.json": "57f3ec01c0e0a2ef9538ad9ec59bd67d68bfea03ab7bbfd061196c465425cccb",
+    "agents/apex_2026/results/speed-20261005/audit-yaw.json": "e560a90f93e60488d1507bd9fbb809b65eb643a5783dd9d9789ac27621d65b30"
+  },
+  "observer_receipt_sha256": "2a8df73e0329feadc20cc4d4a90102bae9b862e50d627322832ae89aca471a68",
+  "source_bound_camera_cases": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "frames": 82,
+      "camera_sha256": "75f416271d5a3d4cc431cfe5ade5ff12039ebe31984cfaef57c2b2553665da72",
+      "trace_sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa",
+      "parent_actions_exact": true,
+      "multi_circle_frames": 0,
+      "maximum_current_circles": 1,
+      "ambiguous_associations_rejected": 0,
+      "unmatched_old_circles": 3
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "frames": 235,
+      "camera_sha256": "11628e9484aa24878179c6d13d0419308058669db3606eebd7adbc2c13f5a368",
+      "trace_sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5",
+      "parent_actions_exact": true,
+      "multi_circle_frames": 0,
+      "maximum_current_circles": 1,
+      "ambiguous_associations_rejected": 0,
+      "unmatched_old_circles": 7
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "frames": 175,
+      "camera_sha256": "d2d7fab4103df8a643cc1faea11bc1a49f94c9b1673a572bd08704dd29e57ef7",
+      "trace_sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67",
+      "parent_actions_exact": true,
+      "multi_circle_frames": 0,
+      "maximum_current_circles": 1,
+      "ambiguous_associations_rejected": 0,
+      "unmatched_old_circles": 7
+    }
+  ],
+  "focused_tests_passed": 8,
+  "meaningful_timing_red_failures": 2,
+  "new_episodes": 0,
+  "new_holdout_opened": false,
+  "is_inference_candidate": false,
+  "original_driving_goal_met": false
+}
