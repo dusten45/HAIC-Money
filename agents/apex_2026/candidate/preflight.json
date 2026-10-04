@@ -1,0 +1,27 @@
+{
+  "parent_source_sha256": "aab71b842b07d69d7fa01556e40626c606b2ac2d70823987e3dba733e65ff410",
+  "selected_config": {
+    "lookahead": 26,
+    "pursuit_gain": 4.5,
+    "lateral_accel": 100,
+    "motion_preview": 0.12,
+    "traction_accel": 180,
+    "max_speed": 100,
+    "path_smoothing": 200,
+    "hud_dynamics": true
+  },
+  "action_parity_checks": 135,
+  "resets": 3,
+  "imports": [
+    "__future__",
+    "numpy",
+    "cv2"
+  ],
+  "freeze": {
+    "source_sha256": {
+      "agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97"
+    },
+    "config": {},
+    "candidate_id": "ce84033dc4c3f28a4023480ef4d4ca8e730058e0fd4c5c39380c1ccf48f5958b"
+  }
+}

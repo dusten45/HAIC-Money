@@ -1,0 +1,57 @@
+{
+  "selected_at": "2026-10-04T18:48:24.583942+00:00",
+  "status": "frozen_internal_candidate_pending_fresh_validation",
+  "family": "continuous_free_space_path_with_HUD_yaw_and_rolling_pedal_allocator",
+  "parent_source": "agents/apex_2026/results/pedal_sources/aab71b842b07.py",
+  "parent_source_sha256": "aab71b842b07d69d7fa01556e40626c606b2ac2d70823987e3dba733e65ff410",
+  "selected_config": {
+    "lookahead": 26,
+    "pursuit_gain": 4.5,
+    "lateral_accel": 100,
+    "motion_preview": 0.12,
+    "traction_accel": 180,
+    "max_speed": 100,
+    "path_smoothing": 200,
+    "hud_dynamics": true
+  },
+  "runtime_config": {},
+  "pre_freeze_required_lap_ms": [
+    16780,
+    20680,
+    18560,
+    18100
+  ],
+  "pre_freeze_required_finished": 4,
+  "pre_freeze_development": {
+    "expected": 12,
+    "observed": 12,
+    "completed": 12,
+    "complete": true,
+    "finished": 12,
+    "finish_rate": 1.0,
+    "in_target_window": 0,
+    "driving_target_met": false,
+    "resource_eligible": true,
+    "original_target_met": false,
+    "finished_median_ms": 16280.0,
+    "finished_max_ms": 17440
+  },
+  "pre_freeze_development_report_sha256": "58f0e92831f5ce1caa00065ba234acebcf7d6075b024619246b003e5b5bcfd91",
+  "selection_reason": "P1 retains all 11 HUD100 development finishes and rescues the remaining cell; all four required finish below 25s. Qualified completion first, then time under prospective DESIGN.md. Original 10-13s objective remains unmet.",
+  "fallback_activated": true,
+  "structural_rounds_missing_original_target": [
+    "second_order_free_space_path_and_pursuit",
+    "joint_action_rollout_with_steering_pulses",
+    "continuous_path_refinement_with_instantaneous_HUD_state"
+  ],
+  "original_target_met": false,
+  "holdout_status_at_freeze": "unallocated_unopened",
+  "runtime_changes_from_parent": "Bake selected DEFAULTS; correct only an overstrong clearance docstring. No policy behavior change; 135 sequential synthetic action parity checks.",
+  "known_limitations": [
+    "Limited forward image horizon can reveal hazards late.",
+    "Path row constraints do not guarantee continuous vehicle footprint clearance.",
+    "Rolling predictor has large saturation/slip errors. Failed optical flow produces unknown slip represented as zero; model applicability is not established on those frames.",
+    "Consumed development results are selected evidence, not unseen generalization."
+  ],
+  "official_submission_or_confirmation": false
+}
