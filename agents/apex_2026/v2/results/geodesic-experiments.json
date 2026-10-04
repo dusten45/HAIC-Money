@@ -569,7 +569,7 @@
         }
       ],
       "hypothesis": "Keep candidate steering fixed for first80ms only; future virtual feedback follows the racingline rather than forcing one constant command through an S-shaped route. Other geometry/speed/pedal unchanged.",
-      "observations": "Required track2 collision removed but lap27.0s vs23.8; meanactualspeed48.38\u219243.17 and meansteeringgoal55.62\u219248.95; steeringSD.113\u2192.140. Feedback surrogate did not improve efficiency. Exact full8 outcomes retained; not promoted.",
+      "observations": "Required track2 collision removed but lap27.0s vs23.8; meanactualspeed48.38→43.17 and meansteeringgoal55.62→48.95; steeringSD.113→.140. Feedback surrogate did not improve efficiency. Exact full8 outcomes retained; not promoted.",
       "tests": "4 newfeedback tests plus5 racing tests pass; initial straight fixture falsely populated HUDgray, corrected to actual blankHUD without runtime edit. Shell batch had begun before this fixture correction; immutable runtime unchanged."
     },
     {
@@ -1045,7 +1045,7 @@
         }
       ],
       "hypothesis": "Only augment r6 arc-clearance decision with yaw-oriented public hull/wheel envelope sample checks. Existing center3px guard, gain/speed/path/pedal unchanged.",
-      "observations": "8/8 finish; requiredmean18.575s vsr6 18.60, still above18.53 gate. Requiredcollisiondamageunchanged; consumedV1t2damage.4\u2192.2 whilet3.2\u2192.8, so no consistent collision improvement. Physics footprint is approximate raster and still follows staticarc rather than actual transient trajectory.",
+      "observations": "8/8 finish; requiredmean18.575s vsr6 18.60, still above18.53 gate. Requiredcollisiondamageunchanged; consumedV1t2damage.4→.2 whilet3.2→.8, so no consistent collision improvement. Physics footprint is approximate raster and still follows staticarc rather than actual transient trajectory.",
       "tests": "3 footprint behavior tests pass; originalr6method bodies unchanged except_tracking_arc collisionpredicate."
     },
     {
@@ -1197,9 +1197,193 @@
         }
       ],
       "hypothesis": "Keep normal observed road-frontier goal, permit only <=2m shoulder candidates with at least1 predictedwheel still on road, use per-wheel road/grass1/.6 friction in speed/braking/grasspedals. Choose lower time-proxy candidate without privileged track/tile/finish state.",
-      "observations": "8/8 truefinished+qualified; requiredmean18.205 meets speedgate, original10\u201313s unmet. Damage0/.4/0/.4 required. Currentgrass inference0steps inall8 is potentially biased by vehicle occlusion: wheel pixels under graycar/road closing are not direct ground observations. Do not claim verifiedgrasscontact or grass-friction feasibility; shoulder/geometry effect measured. Full24 pending.",
+      "observations": "8/8 truefinished+qualified; requiredmean18.205 meets speedgate, original10–13s unmet. Damage0/.4/0/.4 required. Currentgrass inference0steps inall8 is potentially biased by vehicle occlusion: wheel pixels under graycar/road closing are not direct ground observations. Do not claim verifiedgrasscontact or grass-friction feasibility; shoulder/geometry effect measured. Full24 pending.",
       "tests": "6 terrain behavior tests pass",
       "rule_evidence": "agents/apex_2026/v2/diagnostics/grass_rules.md; officialREADME permits interpretationofshortgrassdriving, normal95%uniquevisits+finish mandatory; websiteHTTP403 uncertainty retained"
+    },
+    {
+      "variant": "terrain_grounded_r9_past_visible_ground",
+      "source_snapshot": "/tmp/apex-v2-terrain-grounded-r9/source.py",
+      "source_sha256": "11fa64142b62e0a451afaf085434b03772074c942ac9a650e0c2c09999957afa",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 8,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 16880.0,
+        "finished_max_ms": 20720
+      },
+      "required_protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 4,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 17830.0,
+        "finished_max_ms": 20720
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 16740,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t1-s516237.json",
+          "receipt_sha256": "35feec60249bbf8804ff70288b55bb5f43475eddadc0e602f000521efba2a8b3",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 8,
+            "history_2": 207,
+            "history_1": 605
+          },
+          "inferred_current_grass_steps": 8
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 20720,
+          "progress": 0.9970238095238095,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t2-s644062.json",
+          "receipt_sha256": "3c093b86099d675ce8f0dd082be5709ccd87de7b3366e9c5f353120cb8e5ac40",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 12,
+            "history_2": 295,
+            "history_1": 713
+          },
+          "inferred_current_grass_steps": 16
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 18640,
+          "progress": 0.9902912621359223,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t3-s1007.json",
+          "receipt_sha256": "cdb904c02a0ec30610894d5e7962078f34845d0ff0641e44d248f2e1bc113a0a",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 13,
+            "history_2": 247,
+            "history_1": 656
+          },
+          "inferred_current_grass_steps": 10
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 17020,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t4-s18800.json",
+          "receipt_sha256": "cde26deee51fc2ec1c89346ccbf8eab6105c644b740036f619453dcdb8126222",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 10,
+            "history_2": 247,
+            "history_1": 575
+          },
+          "inferred_current_grass_steps": 16
+        },
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 16600,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t1-s3601050002.json",
+          "receipt_sha256": "e692485ad4e2f63a3417f9489c6f103657f12492a92dfe81fa92de440bf5215b",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 19,
+            "history_2": 175,
+            "history_1": 618
+          },
+          "inferred_current_grass_steps": 10
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 16060,
+          "progress": 0.9928825622775801,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t3-s3601050003.json",
+          "receipt_sha256": "3b2656b7e07b5e14949c4a4a96d7ece9cc1b8ac725ea42b5656ed442866d9583",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 8,
+            "history_2": 143,
+            "history_1": 633
+          },
+          "inferred_current_grass_steps": 6
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 16320,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t2-s4031370700.json",
+          "receipt_sha256": "8a06b6dc7f37ffd4826513003aa11b11dcd5e96f0e9a57c77f5311b8858a559e",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 8,
+            "history_2": 219,
+            "history_1": 569
+          },
+          "inferred_current_grass_steps": 7
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": true,
+          "finish_qualified": true,
+          "lap_time_ms": 19220,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-terrain-grounded-r9/t3-s4111953688.json",
+          "receipt_sha256": "b056f4230f1462ed4eba628b447a3c6e6cd979e51259549deaf0efbc7c17afe4",
+          "ground_source_counts": {
+            "visible_side_fallback": 20,
+            "history_3": 8,
+            "history_2": 266,
+            "history_1": 670
+          },
+          "inferred_current_grass_steps": 13
+        }
+      ],
+      "hypothesis": "Observation-only change from r8: project current wheel centers into visible historical stack ground using HUD speed/yaw rigid transforms, reject vehicle sprite/crop, explicit indirect side fallback. Existing planner, friction maps, gains and pedal methods unchanged.",
+      "observations": "Historical classification is approximate pixel reprojection, not simulator contact truth. Observed flags mean historical unoccluded sample, not certified current wheel contact. Visible-side fallback can differ from under-wheel terrain and remains explicitly indirect. No fresh holdout or authoritative contact validation.",
+      "tests": "6 grounded observer synthetic tests pass; AST verifies act only existing method changed, plus3 new observation helpers."
     }
   ]
 }
