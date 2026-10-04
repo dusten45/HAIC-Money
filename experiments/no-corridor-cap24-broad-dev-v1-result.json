@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "name": "no-corridor-cap24-broad-dev-v1",
+  "status": "REJECTED_DEVELOPMENT_ONLY",
+  "source_protocol": "camera-policy-generalization-v1",
+  "source_phase": "rejected_screen_reused_as_development",
+  "comparison": "Eight consumed geometry seeds crossed with tracks 1-4. The broad diagnostic replays _HighSpeedBendPriorityController with NO_CORRIDOR_TARGET_SPEED raised from 18.0 to 24.0 against the frozen v1 screen control and candidate outcomes. It is not a new cold evaluation phase.",
+  "sha256": {
+    "protocol": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+    "screen_freeze": "ca9e5f3a08af9b6f280a2ff3185a5c9af46b1c6367d3483cb6660894c7840757",
+    "frozen_screen_summary": "9abbe4dac6bfc25fcce112fd4acbeeb9e868dbc1f2bb45f2097082ade0072048",
+    "frozen_control_agent": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+    "frozen_candidate_agent": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+    "highspeed_guard_cap18_snapshot": "831cdad46656f018d4325642f46d7d3112225586e8836512aef87d5cd436ef99",
+    "highspeed_guard_cap24_snapshot": "46f6e12d91ad2fee4344d0fb2338d0049e0f35c1627b3c123c52d4a19f1cf27f",
+    "broad_diagnostic_driver": "f0a4ffebd2ea00d67d16fabf93a132c5cb7a8a1fbb37e3ec28146922aa0a6db6",
+    "broad_diagnostic_jsonl": "29fe22a1e3b051b6f21ef6b51942cd8704ccde695525d335d79e8f2aa9df9ed0",
+    "cap24_only_source_bound_snapshot": "ea72acf2ba5a77df0f6002d9493c55383b83a7cd96dae7c57ef3c3dafeff8b37",
+    "cap24_only_source_bound_driver": "bf91f1648e5aa0ad112d2817468d9ae22ad2ae928b822a038f7dd4679f964206",
+    "cap24_only_trace_report": "ef0e44a3f91b6b51a5e24c3135c8bb7d081118767acaee34b0e5941fc0706499"
+  },
+  "artifacts": {
+    "broad_diagnostic_jsonl": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/highspeed-cap24-screen.jsonl",
+    "broad_agent_snapshot": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/highspeed_cap24_agent.py",
+    "trace_report": ".haic-artifacts/shared-finish-pace/cap24-regressions/report.md",
+    "source_bound_trace_root": ".haic-artifacts/shared-finish-pace/cap24-regressions"
+  },
+  "source_delta": "The broad cap24 snapshot is byte-for-byte the highspeed-guard cap18 snapshot after one replacement of NO_CORRIDOR_TARGET_SPEED = 18.0 with 24.0. The separate source-bound traces use the frozen v1 candidate with that one replacement and no highspeed guard.",
+  "aggregate": {
+    "independent_geometry_seeds": 8,
+    "canonical_paired_cells": 32,
+    "missing_cells": 0,
+    "control": {
+      "finishes": 21,
+      "mean_progress": 0.8258564314592256,
+      "contacts": 72,
+      "damage": 14.4
+    },
+    "frozen_candidate": {
+      "finishes": 25,
+      "mean_progress": 0.9039587533602151,
+      "contacts": 23,
+      "damage": 4.6
+    },
+    "cap24_with_highspeed_guard": {
+      "finishes": 24,
+      "mean_progress": 0.8870996652876694,
+      "contacts": 24,
+      "damage": 4.8
+    },
+    "net_finish_gain_over_control": 3,
+    "lost_control_finishes": 5,
+    "new_candidate_crashes": 2,
+    "moderate_both_dnf_progress_losses": 1,
+    "severe_both_dnf_progress_losses": 1,
+    "single_cell_contact_increase_vetoes": 0,
+    "single_cell_damage_increase_vetoes": 0,
+    "single_cell_shared_finish_pace_vetoes": 0,
+    "shared_completed_cells": 16,
+    "control_shared_completed_time_ms": 397240,
+    "cap24_guard_shared_completed_time_ms": 408660,
+    "shared_completed_time_ratio": 1.0287483637095962
+  },
+  "new_regressions_vs_frozen_candidate": [
+    {
+      "track_id": 1,
+      "geometry_seed": 742377006,
+      "frozen_candidate": {"finished": true, "progress": 1.0, "lap_time_ms": 26580, "contacts": 0, "damage": 0.0, "retire_reason": null},
+      "cap24_with_highspeed_guard": {"finished": false, "progress": 0.9833333333333333, "lap_time_ms": null, "contacts": 0, "damage": 0.0, "retire_reason": "off_track"},
+      "cap24_only_source_bound_replay": {"finished": false, "progress": 0.9833333333333333, "contacts": 0, "damage": 0.0, "retire_reason": "off_track", "mechanism": "True road departure near progress 0.98 after a later fast bend; the first brake difference alone does not establish causality."},
+      "trace_artifact_sha256": {"frozen_candidate": "2d2539ad65b2d7ad280b3393798b3e1adb77c04fbdfc323f3dd52782f6b926b3", "cap24_only": "aa0910364a10283f296f69762182b673265a41b050486e8d342070f9a9350e9b"}
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 742377006,
+      "frozen_candidate": {"finished": true, "progress": 1.0, "lap_time_ms": 26080, "contacts": 3, "damage": 0.6000000000000001, "retire_reason": null},
+      "cap24_with_highspeed_guard": {"finished": false, "progress": 0.95, "lap_time_ms": null, "contacts": 5, "damage": 1.0, "retire_reason": "crash"},
+      "cap24_only_source_bound_replay": {"finished": false, "progress": 0.9466666666666667, "contacts": 2, "damage": 0.4, "retire_reason": "off_track", "mechanism": "Post-contact on-road stall. The guarded broad replay instead crashed, so this mechanism is specific to the cap24-only trace."},
+      "trace_artifact_sha256": {"frozen_candidate": "9ba4248abde0a7c0b215528667ccd684e26ce1d0d510dca3ab2860eb4a0a33a0", "cap24_only": "b4ed0dbd72ce8439345bcbd42f04640ca7fe482f647b5ea19b462349582505ec"}
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 3438591851,
+      "frozen_candidate": {"finished": true, "progress": 1.0, "lap_time_ms": 25600, "contacts": 0, "damage": 0.0, "retire_reason": null},
+      "cap24_with_highspeed_guard": {"finished": false, "progress": 0.10714285714285714, "lap_time_ms": null, "contacts": 4, "damage": 0.8, "retire_reason": "off_track"},
+      "cap24_only_source_bound_replay": {"finished": false, "progress": 0.10714285714285714, "contacts": 4, "damage": 0.8, "retire_reason": "off_track", "mechanism": "Near-obstacle contact followed by on-road stall at progress 0.1071."},
+      "trace_artifact_sha256": {"frozen_candidate": "bf7c7e2afe2c6c70f9890fe96d4defc31caaa4057e44bf31dd9dc5470d7f0df3", "cap24_only": "4f78c1e3139467e7d16aa452b298283c1bbc12e9eb4321b2cfe6ba61c51a123c"}
+    }
+  ],
+  "screen_gate_violations": {
+    "lost_control_finish_cells": [{"track_id": 1, "geometry_seed": 742377006}, {"track_id": 2, "geometry_seed": 1460583390}, {"track_id": 2, "geometry_seed": 2570310388}, {"track_id": 4, "geometry_seed": 742377006}, {"track_id": 4, "geometry_seed": 1402259577}],
+    "new_crash_cells": [{"track_id": 4, "geometry_seed": 742377006}, {"track_id": 4, "geometry_seed": 1460583390}],
+    "severe_both_dnf_cell": {"track_id": 1, "geometry_seed": 3438591851, "control_progress": 0.36428571428571427, "cap24_guard_progress": 0.10714285714285714}
+  },
+  "decision": "REJECT_GLOBAL_CAP24",
+  "method_and_limits": "The broad 32-cell run is an in-process diagnostic with a hashed source snapshot and driver, compared against previously audited frozen screen results; it is not a new cold source-bound screen or an independent holdout. The three selected source-bound cap24-only replays verify frozen candidate action traces against their cold receipts and preflight source/protocol/target identities before and after each run, but do not validate the distinct guard-plus-cap24 source. All geometries were consumed by the rejected v1 screen. No confirmation or blind cell was opened; the active Agent selector remains _CompoundClearingBrakeCarryController. World-state trace signals informed diagnosis only, not inference. Neither local Windows evidence nor these paired cells certify arbitrary tracks or the Linux submission container."
+}
