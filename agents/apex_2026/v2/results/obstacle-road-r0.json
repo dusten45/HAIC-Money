@@ -1,0 +1,4191 @@
+{
+  "schema_version": 1,
+  "hypothesis": "Single-axis roadeligibility forjointescape candidates whileobstacle-onlyactivation andcurbdetectorremainunchanged.",
+  "source_hashes": {
+    "agents/apex_2026/v2/obstacle_road_agent.py": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+    "agents/apex_2026/v2/obstacle_steering_agent.py": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+    "agents/apex_2026/v2/obstacle_shield_agent.py": "f22a6d43229d6ab60d65aa25e22584929e9395bd436598fc8d50be0aff9efaed",
+    "agents/apex_2026/v2/recovery_agent.py": "842e6c2f7f0e004f249e16819eb5ee131958353b3cf9fa42369277a4ddb8cccd",
+    "agents/apex_2026/candidate/agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agents/apex_2026/v2/test_obstacle_road_agent.py": "ee8d0b8c6ac0777fec8ec740075fd1de60d67a40d324e63c32821021ee3a896f"
+  },
+  "snapshot": "/tmp/apex-v2-obstacle-road-r0/source.py",
+  "snapshot_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+  "tests": {
+    "command": ".venv/bin/python -m unittest agents.apex_2026.v2.test_obstacle_road_agent -v",
+    "passed": 4,
+    "combined_command": ".venv/bin/python -m unittest agents.apex_2026.v2.test_obstacle_road_agent agents.apex_2026.v2.test_obstacle_steering_agent agents.apex_2026.v2.test_obstacle_shield_agent agents.apex_2026.v2.test_recovery_agent -q",
+    "combined_passed": 21,
+    "log": "/tmp/apex-v2-obstacle-road-r0/tests.log",
+    "log_sha256": "37645ef64723071a09122668253f9d10c4f88bad4ff90f59a261682c2742f7ae"
+  },
+  "constraints": {
+    "horizon_s": 0.32,
+    "raw_step_s": 0.02,
+    "nominal_command_hold_s": 0.08,
+    "continuation": "nominalhazardtriggerusespathcontinuation; candidatejointbranchesholdsteer.32s andscorecurrentpatharclength/lateral/heading",
+    "candidates": "nominalsteer offsets\u00b1.18/.36,straight,HUDwheel; nominalpedals/coast/brake.15/.3/.4/.7",
+    "obstacle_mask": "rawdetectedcomponentswithoutdilation",
+    "roadedge_trigger": false,
+    "recovery": "r1 unchanged,bypassesobstacleshieldwhileactive",
+    "runtime_inputs": "publicpixelHUD/flow andpastactionslip/throttle memory only",
+    "road_eligibility": "Every20ms hull+wheel raster mustremainwithinthresholdroad/morphclose5; outsideviewrejected; currentprojectedfootprinttreatedoccludedinitialspace. Inheritedemergencyfallback explicitlyunverified ifroadinvalid.",
+    "curb_classification": "unchanged",
+    "candidate_command_hold_s": 0.32
+  },
+  "limitations": [
+    "Roadgrip/no-damage andunsignedRPM assumptions",
+    "Unknownflow propagatedslip cannot validate longhorizonforecast",
+    "Pixelobstacle raster/fullfixtureprojection may alias",
+    "No futureunobserved obstacles modeled",
+    "Matchedconsumedregression only; no newholdout"
+  ],
+  "baseline_comparator": "/tmp/apex-v2-recovery-r1 historical,not rerun",
+  "cells": [
+    {
+      "track": 1,
+      "seed": 516237,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 16780,
+      "reason": null,
+      "steps": 210,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t1-s516237.json",
+      "receipt_sha256": "4bab0c2b5ce0d543724443275f0cdd43a76ea0c23afb5ac161e34e28a8987dd9",
+      "trace_sha256": "ef96e8058cd297b375a217762bb2bf22ef57e54b65aad269afd3587b1777c57e",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 16780,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.26171875,
+      "inference_max_s": 0.15234563199919648,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [],
+      "final_progress": 1.0
+    },
+    {
+      "track": 2,
+      "seed": 644062,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 20680,
+      "reason": null,
+      "steps": 259,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t2-s644062.json",
+      "receipt_sha256": "a7e200bd41f9ac15e03273e412f88b02479bd00bdceadeca98f705b01010a74e",
+      "trace_sha256": "e3819c601477ee472348fcced29fb2063344d978af292147b7707366d960841e",
+      "shield_actions": 1,
+      "shield_action_fraction": 0.003861003861003861,
+      "shield_duration_s": 0.08,
+      "first_shield_step": 218,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [
+        0.32
+      ],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 20680,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 98.38671875,
+      "inference_max_s": 0.50726873199892,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [
+        {
+          "step": 218,
+          "action": [
+            -0.041665248572826385,
+            0.0,
+            0.2132568359375
+          ],
+          "nominal": [
+            -0.041665248572826385,
+            0.0,
+            0.2132568359375
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 16,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 24,
+            "backup_advance_m": 15.873387170056045,
+            "backup_lateral_m": 0.42255155728014826,
+            "backup_terminal_speed": 48.04981994628906,
+            "backup_cost": 0.054652485171798125,
+            "backup_position": [
+              -2.0045299530029297,
+              18.337905883789062
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 13,
+            "road_fallback_unverified": false
+          }
+        }
+      ],
+      "final_progress": 1.0
+    },
+    {
+      "track": 3,
+      "seed": 1007,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 18560,
+      "reason": null,
+      "steps": 233,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t3-s1007.json",
+      "receipt_sha256": "9b3fda6cbba269416ac9d298740ce9be78e8581af0592b41be1a6ab63ac4726d",
+      "trace_sha256": "799e556ab3ebac35ece4031840e76a3a974ffcea223206e817fc2623ec764926",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 18560,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.625,
+      "inference_max_s": 0.1339296189999004,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [],
+      "final_progress": 0.9902912621359223
+    },
+    {
+      "track": 4,
+      "seed": 18800,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 17860,
+      "reason": null,
+      "steps": 224,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t4-s18800.json",
+      "receipt_sha256": "25e9b12a32eece4a136542e88e7063a01c42feb89dd04956def5591d1899999d",
+      "trace_sha256": "2a1f8d2562e1e639a0e8d81ee847fe0e4903fa3c4f211221c02e05e848b0f4c7",
+      "shield_actions": 5,
+      "shield_action_fraction": 0.022321428571428572,
+      "shield_duration_s": 0.4,
+      "first_shield_step": 108,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [
+        0.24,
+        0.2,
+        0.24,
+        0.22,
+        0.32
+      ],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 18100,
+      "lap_delta_ms": -240,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.37109375,
+      "inference_max_s": 0.7136343690017384,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [
+        {
+          "step": 108,
+          "action": [
+            -0.15812259912490845,
+            0.0,
+            0.15000000596046448
+          ],
+          "nominal": [
+            -0.23511599004268646,
+            0.0,
+            0.20502929389476776
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 12,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 11,
+            "backup_advance_m": 12.680461801760032,
+            "backup_lateral_m": 1.0443704540157437,
+            "backup_terminal_speed": 35.1426887512207,
+            "backup_cost": 0.2134013502096772,
+            "backup_position": [
+              -4.301675796508789,
+              12.551750183105469
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 12,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 109,
+          "action": [
+            -0.15812259912490845,
+            0.0,
+            0.20449218153953552
+          ],
+          "nominal": [
+            -0.2788955867290497,
+            0.0,
+            0.20449218153953552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 10,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 7,
+            "backup_advance_m": 10.725223222242796,
+            "backup_lateral_m": 0.5205696139815987,
+            "backup_terminal_speed": 25.9948673248291,
+            "backup_cost": 0.14224906307097204,
+            "backup_position": [
+              -3.4909303188323975,
+              10.604350090026855
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 13,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 110,
+          "action": [
+            -0.17251184582710266,
+            0.0,
+            0.30000001192092896
+          ],
+          "nominal": [
+            -0.35251185297966003,
+            0.0,
+            0.20278319716453552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 12,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 9,
+            "backup_advance_m": 6.5910634932264465,
+            "backup_lateral_m": 0.4647506721485567,
+            "backup_terminal_speed": 11.392066955566406,
+            "backup_cost": 0.263659995479578,
+            "backup_position": [
+              -2.1683146953582764,
+              7.637172222137451
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 17,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 164,
+          "action": [
+            -0.19725675880908966,
+            0.0,
+            0.4000000059604645
+          ],
+          "nominal": [
+            -0.19793659448623657,
+            0.0,
+            0.07487793266773224
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 11,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 4,
+            "backup_advance_m": 5.2450443970340315,
+            "backup_lateral_m": 1.8299913666800884,
+            "backup_terminal_speed": 7.178465366363525,
+            "backup_cost": 1.1804085487982694,
+            "backup_position": [
+              -2.6084601879119873,
+              7.56717586517334
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 15,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 165,
+          "action": [
+            -0.08505120128393173,
+            0.0,
+            0.13811035454273224
+          ],
+          "nominal": [
+            -0.08505120128393173,
+            0.0,
+            0.13811035454273224
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 16,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 5,
+            "backup_advance_m": 7.32121954267589,
+            "backup_lateral_m": 0.5620477505062972,
+            "backup_terminal_speed": 23.115764617919922,
+            "backup_cost": 0.1629516724723145,
+            "backup_position": [
+              -2.080760955810547,
+              9.132060050964355
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 11,
+            "road_fallback_unverified": false
+          }
+        }
+      ],
+      "final_progress": 1.0
+    },
+    {
+      "track": 2,
+      "seed": 4031370700,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 19960,
+      "reason": null,
+      "steps": 250,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t2-s4031370700.json",
+      "receipt_sha256": "1a353b22dc47fec4f9e896ba4766f42442e9d41afa9f5e5ea7478c255477d286",
+      "trace_sha256": "1580514d7a8fdf7896494e5aeeddf90d4adb4da1ab31e09df814e352416445b2",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 44,
+      "baseline_lap_ms": 19960,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 98.84765625,
+      "inference_max_s": 0.13475842900152202,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [],
+      "final_progress": 0.9851301115241635
+    },
+    {
+      "track": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 299,
+      "source_sha256": "db046d92dd0864a42a1f3ea65baf7814d91cdb339ecb8a0e52aa0a0a2eda6fe4",
+      "receipt": "/tmp/apex-v2-obstacle-road-r0/t3-s4111953688.json",
+      "receipt_sha256": "fbe5ba969b04a7a54e2ce6ac96eadcb9a1b94f35a334922ce6b98642f5e288bd",
+      "trace_sha256": "4f9f6c7c6ab42cc6cc95e0f26be7b59fd90542c202543379fd233b58a0da0841",
+      "shield_actions": 107,
+      "shield_action_fraction": 0.35785953177257523,
+      "shield_duration_s": 8.56,
+      "first_shield_step": 67,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [
+        0.32,
+        0.26,
+        0.28,
+        0.22,
+        0.2,
+        0.22,
+        0.08,
+        0.06,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "recovery_actions": 0,
+      "baseline_lap_ms": null,
+      "lap_delta_ms": null,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 98.7578125,
+      "inference_max_s": 0.8355198219996964,
+      "road_ineligible_fallbacks": 0,
+      "joint_interventions": [
+        {
+          "step": 67,
+          "action": [
+            0.0,
+            0.0,
+            0.09091796725988388
+          ],
+          "nominal": [
+            -0.016450684517621994,
+            0.0,
+            0.09091796725988388
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 16,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 22,
+            "backup_advance_m": 14.001331772325958,
+            "backup_lateral_m": 0.12995321891279257,
+            "backup_terminal_speed": 48.641788482666016,
+            "backup_cost": 0.04566002914402513,
+            "backup_position": [
+              -0.6130989193916321,
+              16.873817443847656
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 11,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 68,
+          "action": [
+            -0.03719617798924446,
+            0.0,
+            0.21328124403953552
+          ],
+          "nominal": [
+            -0.03719617798924446,
+            0.0,
+            0.21328124403953552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 13,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 6,
+            "backup_advance_m": 11.399875783734887,
+            "backup_lateral_m": 1.0852379226418816,
+            "backup_terminal_speed": 34.60447692871094,
+            "backup_cost": 0.13119498379489178,
+            "backup_position": [
+              -0.9375219345092773,
+              14.137886047363281
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 17,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 99,
+          "action": [
+            0.07955127954483032,
+            0.0,
+            0.15000000596046448
+          ],
+          "nominal": [
+            0.12280303984880447,
+            0.0,
+            0.20993652939796448
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 14,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 11,
+            "backup_advance_m": 15.451892106677137,
+            "backup_lateral_m": 0.8450620881707427,
+            "backup_terminal_speed": 46.925384521484375,
+            "backup_cost": 0.1557702598165696,
+            "backup_position": [
+              4.179897308349609,
+              16.55008316040039
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 12,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 196,
+          "action": [
+            -0.5615267157554626,
+            0.0,
+            0.30000001192092896
+          ],
+          "nominal": [
+            -0.2015267014503479,
+            0.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 11,
+            "backup_hit_tick": null,
+            "trials": 37,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 6,
+            "backup_advance_m": 4.333802018637504,
+            "backup_lateral_m": 2.5729493142498137,
+            "backup_terminal_speed": 15.485967636108398,
+            "backup_cost": 1.520508707078086,
+            "backup_position": [
+              -5.065340518951416,
+              7.33099365234375
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 12,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 197,
+          "action": [
+            -0.6335305571556091,
+            0.0,
+            0.4000000059604645
+          ],
+          "nominal": [
+            -0.6335305571556091,
+            0.0,
+            0.17353515326976776
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 10,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.6298766164055724,
+            "backup_lateral_m": 1.7964074861679806,
+            "backup_terminal_speed": 0.4423128366470337,
+            "backup_cost": 1.3571725579758889,
+            "backup_position": [
+              -2.6060712337493896,
+              4.761801242828369
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 198,
+          "action": [
+            -0.7742356657981873,
+            0.0,
+            0.17880859971046448
+          ],
+          "nominal": [
+            -0.7742356657981873,
+            0.0,
+            0.17880859971046448
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 11,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 4,
+            "backup_advance_m": 0.4633715776584061,
+            "backup_lateral_m": 2.518176298466515,
+            "backup_terminal_speed": 10.271119117736816,
+            "backup_cost": 1.0096414356749501,
+            "backup_position": [
+              -3.1049563884735107,
+              4.768647193908691
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 199,
+          "action": [
+            -0.8234824538230896,
+            0.0,
+            0.699999988079071
+          ],
+          "nominal": [
+            -0.8234824538230896,
+            0.0,
+            0.04270019382238388
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 4,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 4.837220612456694,
+            "backup_terminal_speed": 8.017433117402106e-08,
+            "backup_cost": 4.261120473615037,
+            "backup_position": [
+              -0.3163187503814697,
+              1.1771222352981567
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 200,
+          "action": [
+            -0.8407188653945923,
+            0.0,
+            0.30000001192092896
+          ],
+          "nominal": [
+            -0.8407188653945923,
+            0.5,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 3,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.352688775304001,
+            "backup_terminal_speed": 2.909030527575851e-08,
+            "backup_cost": 11.04200669907794,
+            "backup_position": [
+              -0.0674518570303917,
+              0.2662026286125183
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 201,
+          "action": [
+            -0.8467516303062439,
+            0.0,
+            0.4000000059604645
+          ],
+          "nominal": [
+            -0.8467516303062439,
+            0.8336039185523987,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 1,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.278261067700946,
+            "backup_terminal_speed": 1.5831985722414288e-10,
+            "backup_cost": 8.59285576011208,
+            "backup_position": [
+              -0.0044947462156414986,
+              0.031034357845783234
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 202,
+          "action": [
+            -0.8488630652427673,
+            0.0,
+            0.30000001192092896
+          ],
+          "nominal": [
+            -0.8488630652427673,
+            0.9714100360870361,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 1,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.386220598257497,
+            "backup_terminal_speed": 8.366270454196467e-10,
+            "backup_cost": 8.465700503084673,
+            "backup_position": [
+              -0.003996989224106073,
+              0.030800338834524155
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 203,
+          "action": [
+            -0.8376377820968628,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8376377820968628,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 204,
+          "action": [
+            -0.8337088823318481,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8337088823318481,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 205,
+          "action": [
+            -0.8323338031768799,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8323338031768799,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 206,
+          "action": [
+            -0.8318524956703186,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8318524956703186,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 207,
+          "action": [
+            -0.8316840529441833,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8316840529441833,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 208,
+          "action": [
+            -0.8316251039505005,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8316251039505005,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 209,
+          "action": [
+            -0.8316044807434082,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8316044807434082,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 210,
+          "action": [
+            -0.8315972685813904,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8315972685813904,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 211,
+          "action": [
+            -0.831594705581665,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.831594705581665,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 212,
+          "action": [
+            -0.8315938115119934,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8315938115119934,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 213,
+          "action": [
+            -0.8315935134887695,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.8315935134887695,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 214,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 215,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 216,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 217,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 218,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 219,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 220,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 221,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 222,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 223,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 224,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 225,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 226,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 227,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 228,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 229,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 230,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 231,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 232,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 233,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 234,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 235,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 236,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 237,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 238,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 239,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 240,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 241,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 242,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 243,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 244,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 245,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 246,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 247,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 248,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 249,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 250,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 251,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 252,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 253,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 254,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 255,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 256,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 257,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 258,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 259,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 260,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 261,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 262,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 263,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 264,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 265,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 266,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 267,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 268,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 269,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 270,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 271,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 272,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 273,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 274,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 275,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 276,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 277,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 278,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 279,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 280,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 281,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 282,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 283,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 284,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 285,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 286,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 287,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 288,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 289,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 290,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 291,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 292,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 293,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 294,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 295,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 296,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 297,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 298,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        },
+        {
+          "step": 299,
+          "action": [
+            -0.83159339427948,
+            0.0,
+            0.0
+          ],
+          "nominal": [
+            -0.83159339427948,
+            1.0,
+            0.0
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 2,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 0,
+            "backup_advance_m": 0.0,
+            "backup_lateral_m": 5.406269600901232,
+            "backup_terminal_speed": 1.637222163397567e-10,
+            "backup_cost": 7.411082490218628,
+            "backup_position": [
+              9.271916567854532e-12,
+              0.0
+            ],
+            "road_backup_eligible": true,
+            "road_outside_max": 0.0,
+            "road_rejected_previews": 0,
+            "road_fallback_unverified": false
+          }
+        }
+      ],
+      "final_progress": 0.7430340557275542
+    }
+  ],
+  "status": "partialmechanism;5/6finished;earlydeparturegone,butremainingT3safe-stopdeadlock;unadopted",
+  "durable_source_archive": "agents/apex_2026/v2/results/obstacle_road_sources/db046d92dd08.py",
+  "fixture": {
+    "path": "agents/apex_2026/v2/results/obstacle_road_fixtures/step0068.npz",
+    "sha256": "09d396b2c4a6afe56800f8a0f0020fc579a5b58dd4b8ce2db8c756bf9b41e515",
+    "source": "authorized source-matched consumedT3audit atstep68; publicpixels/path/state estimates only"
+  },
+  "findings": [
+    "Required4clean16.78/20.68/18.56/17.86;mean18.47s vsP1/recovery18.53.",
+    "Recordedstep68priorcandidate had13.95%offroadpreview; rejectedandselectedsteer\u2212.0372/brake.21328with0offroad.",
+    "ConsumedT3earlydepartureat.498gone; nowreaches.743,stopsbeforeoriginalobstaclewithzero damage andretiredoff_trackat299.",
+    "Movingbackupat196doesnotensurefutureescape:197nomovingbackup,198briefmovingbackup,199fullbrake thenzero202. Roadeligibility isnecessarybutdoesnot certifyterminalescape.",
+    "Curbclassification intentionallyuntouched; itsfalsepositiveissue remainsseparate."
+  ],
+  "required_mean_ms": 18470.0
+}
