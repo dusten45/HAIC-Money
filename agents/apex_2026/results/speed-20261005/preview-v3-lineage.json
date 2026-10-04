@@ -1,0 +1,107 @@
+{
+  "candidate": "fast_preview_commit_agent.py",
+  "source_sha256": "6b5ec35a93a1facd9879f36a5cecd813fdba6f3626a8c0b10bc4bb88b77a92d7",
+  "source_bytes": 151976,
+  "parent_source": "fast_preview_pass_agent.py",
+  "parent_source_sha256": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+  "parameters": {},
+  "derivation": "Frozen V2 entire source prefix byte-identical except Agent(_BaseAgent) renamed _PassAgent(_BaseAgent); appended standalone public commitment Agent. No prior file edits.",
+  "renamed_parent_prefix_exact": true,
+  "change": "Circle-associated camera yaw rigid transform, passed-prefix trim, unchanged current-road/vehicle/circle acceptance gates and local signed-curvature/heading/cross-track/yaw tracking.",
+  "package": {
+    "archive": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-preview-v3/candidate.zip",
+    "size_bytes": 31070,
+    "zip_sha256": "1f169dbadf2cde772de7e848c8ba810d53c63a092c8ff753e9a398f36d4c194d",
+    "source_sha256": "6b5ec35a93a1facd9879f36a5cecd813fdba6f3626a8c0b10bc4bb88b77a92d7",
+    "member_sha256": {
+      "agent.py": "6b5ec35a93a1facd9879f36a5cecd813fdba6f3626a8c0b10bc4bb88b77a92d7"
+    },
+    "official_linux_certification": false
+  },
+  "focused_tests": {
+    "red_new_behaviors": 10,
+    "green_after_initial_implementation": 35,
+    "green_after_added_reject_cases": 38,
+    "review_branch_omission_red": 1,
+    "final_green": 39,
+    "final_command": ".venv/bin/python -m pytest agents/apex_2026/tests/test_fast_preview_commit.py -q",
+    "apex_suite_command": ".venv/bin/python -m pytest agents/apex_2026/tests -q",
+    "apex_suite_passed": 307,
+    "apex_suite_seconds": 7.96
+  },
+  "test_source_sha256": "944bc9157748de7a3a7e667ecd094cbc912bf1978ecef3b53e786fd7a2b43967",
+  "camera_fixture": {
+    "classification": "consumed mandatory camera-only exact replay regression; not new validation",
+    "source_sha256": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+    "exact_actions": 113,
+    "fixture_sha256": "a5a2b422af050dff9a8caa8cd1ab00a87dc9760299fbf9e13a52e7f82bf5a8e2",
+    "fixture_bytes": 22749,
+    "rows": [
+      {
+        "step": 110,
+        "bbox": [
+          41,
+          25,
+          44,
+          28
+        ],
+        "speed": 60.957719409276564,
+        "mode": "curved_pass",
+        "peak": 0.024512266432471466
+      },
+      {
+        "step": 111,
+        "bbox": [
+          41,
+          33,
+          43,
+          37
+        ],
+        "speed": 63.35868100190108,
+        "mode": "curved_pass",
+        "peak": 0.07147245298247197
+      },
+      {
+        "step": 112,
+        "bbox": [
+          43,
+          42,
+          45,
+          45
+        ],
+        "speed": 56.11133467313113,
+        "mode": "robust",
+        "peak": null
+      }
+    ]
+  },
+  "source_patch_sha256": "639d242e5004e4f542510958eca8ae835203f357e7d529352713d626d62acb9b",
+  "patch_context_lines": 0,
+  "independent_review": "evaluation_audit cleared exact final source6b5ec35a before benchmark; geometric/feedback screen, not dynamic safety certificate.",
+  "benchmark": {
+    "suite": "mandatory",
+    "trial_role": "benchmark",
+    "workers": 1,
+    "max_steps": 700,
+    "status": "complete",
+    "output": ".haic-artifacts/apex-speed-preview-v3/mandatory.json",
+    "receipt_sha256": "48cb5a3bb9fbe050ebb91e9e1f6ca1f2b3c30ffc4238e8dd3441b0bb8d47f539",
+    "mandatory_finishes": 4,
+    "contacts": 0,
+    "times_s": [
+      19.42,
+      25.22,
+      21.5,
+      22.74
+    ]
+  },
+  "original_target_met": false,
+  "adopted": false,
+  "limitations": [
+    "Current-road single-valued cubic model remains; ambiguous hairpin rejects to legacy target18.",
+    "Circle association is camera/HUD consistency, not an obstacle identity guarantee on arbitrary future geometry.",
+    "Yaw raster bias/quantization and hidden lateral slip remain; reference transport is not actual car reachability or tire certificate.",
+    "No additional development or holdout opened in this lane."
+  ],
+  "source_patch_reverse_check_passed": true
+}

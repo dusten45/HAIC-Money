@@ -1,0 +1,211 @@
+--- a/agents/apex_2026/fast_preview_commit_agent.py
++++ b/agents/apex_2026/fast_preview_commit_agent.py
+@@ -3395 +3395 @@
+-class Agent(_BaseAgent):
++class _PassAgent(_BaseAgent):
+@@ -3570,0 +3571,205 @@
++
++
++class Agent(_PassAgent):
++    """Track an accepted camera-local pass instead of resetting its curve.
++
++    A current, consistently associated circle supplies translation; the legal
++    red yaw HUD supplies rotation. Reference geometry is rechecked each frame.
++    These camera checks do not certify tire dynamics, steering lag or unseen
++    branches. Inconsistent observations retain the frozen V2 fallback.
++    """
++
++    def reset(self, observation=None):
++        super().reset(observation)
++        self._committed = None
++        self._commit_circle = None
++        self._camera_previous_speed = None
++        self._camera_previous_yaw = None
++        self.last_yaw = 0.0
++        self.last_commit_rejection = None
++
++    @staticmethod
++    def _camera_yaw(frame):
++        # Official red bar: pivot63, height4.2px, width1.68px per rightward
++        # rad/s. Use all antialiased area, excluding the boundary at row73.
++        crop = frame[75:81,51:83]
++        weights = np.where(crop <= .37,crop,0.0)
++        mass = float(weights.sum())
++        if mass < .03:
++            return 0.0
++        center = float((weights*np.arange(51,83)).sum()/mass)
++        magnitude = mass/(4.2*.299*1.68)
++        return float(np.clip(magnitude if center >= 62.5 else -magnitude,-8.0,8.0))
++
++    @staticmethod
++    def _camera_transform(x,y,turn,translation_x,translation_y):
++        cosine,sine = np.cos(turn),np.sin(turn)
++        dx,dy = np.asarray(x)-translation_x,np.asarray(y)-translation_y
++        return cosine*dx-sine*dy,sine*dx+cosine*dy
++
++    @staticmethod
++    def _circle_center(bbox):
++        return np.asarray([(.5*(bbox[0]+bbox[2])-42.0)/1.3608,
++                           (63.0-.5*(bbox[1]+bbox[3]))/1.701])
++
++    @staticmethod
++    def _with_curvature(plan):
++        plan = dict(plan)
++        arc = np.r_[0.0,np.cumsum(np.hypot(np.diff(plan["x"]),np.diff(plan["y"])))]
++        plan["curvature"] = np.gradient(np.unwrap(plan["heading"]),arc)
++        return plan
++
++    def _transport_reference(self,road,bbox,speed,yaw):
++        self.last_commit_rejection = None
++        old = self._committed
++        if (old is None or self._commit_circle is None
++                or self._camera_previous_speed is None
++                or self._camera_previous_yaw is None):
++            return None
++        turn = .04*(yaw+self._camera_previous_yaw)
++        distance = .04*(speed+self._camera_previous_speed)
++        if abs(turn) > .5 or abs(speed-self._camera_previous_speed) > 35.0:
++            self.last_commit_rejection = "inconsistent HUD motion"
++            return None
++        if abs(turn) < 1e-6:
++            tx,ty = 0.0,distance
++        else:
++            radius = distance/turn
++            tx,ty = radius*(1-np.cos(turn)),radius*np.sin(turn)
++        predicted = np.asarray(self._camera_transform(
++            self._commit_circle[0],self._commit_circle[1],turn,tx,ty))
++        circle = self._circle_center(bbox)
++        if np.linalg.norm(circle-predicted) > 2.0:
++            self.last_commit_rejection = "circle association disagrees with HUD motion"
++            return None
++        # Correct the translation from the observed same circle. This admits
++        # lateral motion without assuming that velocity equals body heading.
++        ox,oy = self._camera_transform(old["x"]-self._commit_circle[0],
++                                     old["y"]-self._commit_circle[1],turn,0.0,0.0)
++        xs,ys = ox+circle[0],oy+circle[1]
++        headings = old["heading"]-turn
++        if np.any(np.diff(ys) <= .01):
++            self.last_commit_rejection = "reference folds in current forward coordinates"
++            return None
++        if ys[0] > 1.0 or ys[-1] < 4.0:
++            self.last_commit_rejection = "reference does not cover current ego and preview"
++            return None
++        x_error = float(np.interp(0.0,ys,xs))
++        heading_error = float(np.interp(0.0,ys,headings))
++        if abs(x_error) > 1.5 or abs(heading_error) > .45:
++            self.last_commit_rejection = "actual ego departed the committed reference"
++            return None
++        # The passed prefix is no longer part of the current future path.
++        # Interpolate its exact y0 crossing without reanchoring x or heading.
++        future = ys > 0.0
++        xs = np.r_[x_error,xs[future]]
++        curves = np.r_[np.interp(0.0,ys,old["curvature"]),old["curvature"][future]]
++        headings = np.r_[heading_error,headings[future]]
++        ys = np.r_[0.0,ys[future]]
++        ahead,side,_,pixel_lefts,pixel_rights = road
++        if (len(ahead) < 10 or np.max(np.diff(ahead)) > 2.5
++                or ahead[0] > -2.4 or ahead[-1] < ys[-1]+2.7):
++            self.last_commit_rejection = "insufficient current road support"
++            return None
++        fit = (ahead >= -2.0) & (ahead <= circle[1]+6.0)
++        if np.count_nonzero(fit) < 10 or np.max(np.diff(ahead[fit])) > 2.5:
++            self.last_commit_rejection = "insufficient current road support"
++            return None
++        coefficients = np.polyfit(ahead[fit],side[fit],3)
++        if np.max(abs(np.polyval(coefficients,ahead[fit])-side[fit])) > 1.5:
++            self.last_commit_rejection = "ambiguous current road model"
++            return None
++        lefts,rights = (pixel_lefts-42.0)/1.3608,(pixel_rights-42.0)/1.3608
++        margins = [self._hull_road_margin(0.0,0.0,0.0,ahead,lefts,rights)]
++        margins.extend(self._hull_road_margin(y,x,h,ahead,lefts,rights)
++                       for y,x,h in zip(ys,xs,headings))
++        if any(m is None for m in margins) or min(margins) < .30:
++            self.last_commit_rejection = "current full vehicle road margin"
++            return None
++        dx,dy = np.diff(xs),np.diff(ys)
++        fractions = np.clip(((circle[0]-xs[:-1])*dx+(circle[1]-ys[:-1])*dy)
++                            /(dx*dx+dy*dy),0.0,1.0)
++        separation = float(np.min(np.hypot(xs[:-1]+fractions*dx-circle[0],
++                                          ys[:-1]+fractions*dy-circle[1])))
++        # Include the actual ego footprint independently of reference poses.
++        cx,cy = circle[0]-np.r_[0.0,xs],circle[1]-np.r_[0.0,ys]
++        hs = np.r_[0.0,headings]
++        lateral = cx*np.cos(hs)-cy*np.sin(hs)
++        longitudinal = cx*np.sin(hs)+cy*np.cos(hs)
++        outside_lat = np.maximum(abs(lateral)-1.6,0.0)
++        outside_long = np.maximum(np.maximum(longitudinal-2.6,-longitudinal-2.4),0.0)
++        obstacle_margin = float(np.min(np.hypot(outside_lat,outside_long)-1.2))
++        if separation < 3.5 or obstacle_margin < .75:
++            self.last_commit_rejection = "current circle clearance"
++            return None
++        plan = dict(old,x=xs,y=ys,heading=headings,curvature=curves,
++                    road_margin=float(min(margins)),obstacle_margin=obstacle_margin,
++                    min_separation=separation,obstacle_distance=float(circle[1]))
++        return plan
++
++    def _track_reference(self,plan,speed,yaw,previous_emitted):
++        ys,xs = plan["y"],plan["x"]
++        preview = min(float(np.clip(5.5+self._metric.preview_time*speed,7.0,22.0)),
++                      max(4.0,plan["obstacle_distance"]),float(ys[-1]))
++        x = float(np.interp(preview,ys,xs))
++        pursuit = 2*x/(preview*preview+x*x)
++        error_x = float(np.interp(0.0,ys,xs))
++        error_heading = float(np.interp(0.0,ys,plan["heading"]))
++        curvature = float(np.interp(min(1.5,ys[-1]),ys,plan["curvature"]))
++        # Signed feedforward plus bounded heading/cross-track/yaw feedback.
++        # HUD yaw is body heading rate, not a privileged trajectory/slip field.
++        desired = (np.arctan(3.24*curvature)+.65*error_heading
++                   +np.arctan(2.0*error_x/max(speed,20.0))
++                   +.20*3.24*(speed*curvature-yaw)/max(speed,20.0))
++        limit = min(.4,float(np.arctan(3.24*self._metric.lateral_accel/max(speed*speed,100.0))))
++        desired = float(np.clip(desired,-limit,limit))
++        steer = float(previous_emitted+np.clip(desired-previous_emitted,-.24,.24))
++        target = min(self.pass_cruise,self._metric.cruise_speed,
++                     float(np.sqrt(self._metric.lateral_accel/max(plan["max_curvature"],.001))),
++                     float(np.sqrt(self._metric.lateral_accel/max(abs(pursuit),.001))),
++                     float(np.sqrt(3.24*self._metric.lateral_accel/max(abs(np.tan(steer)),.003))))
++        error = target-speed
++        if error < -2.0:
++            gas,brake = 0.0,float(np.clip(-error*.018,.04,.7))
++        else:
++            gas,brake = float(np.clip(.3+.055*error,0.0,1.0)),0.0
++        return self._traction_pedals([steer,gas,brake],speed=speed),float(target)
++
++    def act(self,observation):
++        previous_emitted = self.last_steer
++        inherited = _BaseAgent.act(self,observation)
++        self.last_pass_plan = None
++        frame = self._metric._frame(observation)
++        road = None if frame is None else self._metric._road(frame)
++        bbox = self._robust._corridor_bbox
++        speed = max(float(self._metric.last_speed),float(self._robust._pace_speed))
++        yaw = self._camera_yaw(frame) if frame is not None else 0.0
++        self.last_yaw = yaw
++        plan = None
++        committed = False
++        if road is not None and bbox is not None:
++            plan = self._transport_reference(road,bbox,speed,yaw)
++            committed = plan is not None
++            if plan is None:
++                plan = self._curved_pass(road,bbox)
++                if plan is not None:
++                    plan = self._with_curvature(plan)
++        self._camera_previous_speed,self._camera_previous_yaw = speed,yaw
++        if plan is None:
++            self._committed = self._commit_circle = None
++            self._pass_misses += 1
++            if self._pass_misses > 4:
++                self._pass_side = 0.0
++            return inherited
++        self._pass_misses = 0
++        action,target = self._track_reference(plan,speed,yaw,previous_emitted)
++        self.mode = "committed_pass" if committed else "curved_pass"
++        self.last_pass_plan = plan
++        self._committed = plan
++        self._commit_circle = self._circle_center(bbox)
++        self._pass_side = plan["side"]
++        self.last_target = target
++        self.last_steer = float(action[0])
++        self._metric.last_steer = self._robust._last_steer = self.last_steer
++        self._robust._obstacle_side = self._pass_side
++        return action
