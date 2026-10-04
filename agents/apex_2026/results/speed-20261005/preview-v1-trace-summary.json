@@ -1,0 +1,83 @@
+{
+  "source_sha256": "a0cbdf690ead624597968ed8237e4712178dbc70af6b380f9fb6ed9cc3abb8ac",
+  "parameters": {},
+  "description": "Existing source-bound camera benchmark traces; body yaw*speed is diagnostic, not sideslip-correct acceleration or future-road safety.",
+  "rows": [
+    {
+      "track_trace": "track-1-seed-516237.json",
+      "steps": 265,
+      "true_speed_quantiles_10_50_90": [
+        29.952438824394186,
+        46.55528225459604,
+        66.85403810034161
+      ],
+      "target_mean": 63.04237765979957,
+      "target_below60_fraction": 0.44528301886792454,
+      "gas_le025_fraction": 0.37735849056603776,
+      "brake_fraction": 0.24150943396226415,
+      "median_hud_minus_post_action_speed": -0.8699189985860087,
+      "absolute_steer_median": 0.045592039823532104,
+      "body_yaw_speed_lateral_quantiles_50_90": [
+        20.94232988090527,
+        133.6282530241925
+      ]
+    },
+    {
+      "track_trace": "track-2-seed-644062.json",
+      "steps": 343,
+      "true_speed_quantiles_10_50_90": [
+        18.868007142571706,
+        43.89850377569436,
+        65.24412353870711
+      ],
+      "target_mean": 57.96033866431118,
+      "target_below60_fraction": 0.5189504373177842,
+      "gas_le025_fraction": 0.4110787172011662,
+      "brake_fraction": 0.25072886297376096,
+      "median_hud_minus_post_action_speed": -0.781478724036127,
+      "absolute_steer_median": 0.05764910951256752,
+      "body_yaw_speed_lateral_quantiles_50_90": [
+        19.2620118697351,
+        121.46860656154253
+      ]
+    },
+    {
+      "track_trace": "track-3-seed-1007.json",
+      "steps": 311,
+      "true_speed_quantiles_10_50_90": [
+        24.80071573195916,
+        43.9072746037689,
+        63.87607791090747
+      ],
+      "target_mean": 60.41786344338333,
+      "target_below60_fraction": 0.4887459807073955,
+      "gas_le025_fraction": 0.40192926045016075,
+      "brake_fraction": 0.2379421221864952,
+      "median_hud_minus_post_action_speed": -0.9208405039533147,
+      "absolute_steer_median": 0.0487329326570034,
+      "body_yaw_speed_lateral_quantiles_50_90": [
+        18.951978714117008,
+        120.0137747375337
+      ]
+    },
+    {
+      "track_trace": "track-4-seed-18800.json",
+      "steps": 246,
+      "true_speed_quantiles_10_50_90": [
+        0.08004470908239802,
+        27.92212421542896,
+        57.466213927924926
+      ],
+      "target_mean": 44.486352759333776,
+      "target_below60_fraction": 0.6991869918699187,
+      "gas_le025_fraction": 0.6544715447154471,
+      "brake_fraction": 0.16666666666666666,
+      "median_hud_minus_post_action_speed": 2.312892228030613,
+      "absolute_steer_median": 0.18550462275743484,
+      "body_yaw_speed_lateral_quantiles_50_90": [
+        3.494368382620557,
+        61.29678292940608
+      ]
+    }
+  ]
+}

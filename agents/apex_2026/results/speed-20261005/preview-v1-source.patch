@@ -1,0 +1,116 @@
+--- guarded_preview_agent.py
++++ fast_preview_agent.py
+@@ -3038,3 +3038,3 @@
+-    def __init__(self, cruise_speed=100.0, lateral_accel=145.0,
+-                 preview_time=0.19, steer_gain=1.0,
+-                 low_gas_gate=0.50, high_gas_gate=0.75,
++    def __init__(self, cruise_speed=100.0, lateral_accel=190.0,
++                 preview_time=0.12, steer_gain=1.0,
++                 low_gas_gate=0.90, high_gas_gate=0.98,
+@@ -3164,6 +3164,7 @@
+-        """Brake for local visible curvature at its conservative approach distance.
+-
+-        Overlapping metric windows smooth pixel quantization. A quadratic's
+-        second derivative becomes physical curvature only after normalizing
+-        by its local heading. The first window constrains the present turn;
+-        farther windows permit the distance needed to reach their corner speed.
++        """Let present pursuit geometry own clear-road corner speed.
++
++        A five-point quadratic on rasterized asphalt can invent an immediate
++        sharp bend. This experimental lane removes that separate minimum;
++        act still limits steering and speed by its observed pursuit curvature,
++        and preserves the visible-horizon and obstacle braking budgets.
++        It provides no braking certificate for curves beyond the target.
+@@ -3171,52 +3172 @@
+-        # Pixel edge quantization can displace one sampled center by a whole
+-        # pixel. A three-row median removes isolated peaks while preserving
+-        # monotone bends, including their immediate curvature constraint.
+-        lateral = np.asarray(lateral, dtype=np.float64).copy()
+-        if lateral.size >= 3:
+-            lateral[1:-1] = np.median(np.stack((lateral[:-2], lateral[1:-1], lateral[2:])), axis=0)
+-        valid = (forward >= 0.0) & (forward <= min(32.0, float(forward[-1])))
+-        if np.count_nonzero(valid) < 5:
+-            return min(self.cruise_speed, float(np.sqrt(self.lateral_accel / 0.03)))
+-        ahead = forward[valid]
+-        side = lateral[valid]
+-        target = self.cruise_speed
+-        # Resolve the current bend over a shorter window. Its closest tangent
+-        # matters immediately, before any forward braking allowance applies.
+-        near = ahead <= min(6.0, self.curve_window)
+-        if np.count_nonzero(near) >= 5:
+-            coefficients = np.polyfit(ahead[near], side[near], 2)
+-            heading = 2.0 * coefficients[0] * ahead[near][0] + coefficients[1]
+-            curvature = abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5
+-            target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
+-        last_start = max(0.0, float(ahead[-1]) - self.curve_window)
+-        starts = np.unique(np.append(np.arange(0.0, last_start, self.curve_step), last_start))
+-        fitted_windows = 0
+-        reserve = 2.6 + max(0.0, float(speed)) * 0.08
+-        for start in starts:
+-            window = (ahead >= start) & (ahead <= start + self.curve_window)
+-            if np.count_nonzero(window) < 5:
+-                continue
+-            fitted_windows += 1
+-            distances = ahead[window] - start
+-            coefficients = np.polyfit(distances, side[window], 2)
+-            # Fit curvature belongs to the window midpoint. Applying its mean
+-            # second derivative to a different tangent creates a large false
+-            # curvature on rotated circles; the near window above separately
+-            # preserves the immediate constraint.
+-            midpoint = 0.5 * (distances[0] + distances[-1])
+-            heading = 2.0 * coefficients[0] * midpoint + coefficients[1]
+-            curvature = float(abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5)
+-            curve_speed_squared = self.lateral_accel / max(curvature, 0.001)
+-            # Reserve vehicle length and distance travelled before the next
+-            # action can apply braking, using official four-tick decisions.
+-            available = max(0.0, float(ahead[window][0]) - reserve)
+-            approach = np.sqrt(curve_speed_squared + 2.0 * self.braking_accel * available)
+-            target = min(target, float(approach))
+-        if fitted_windows == 0:
+-            # Sparse camera support may never put five points in one local
+-            # window. Its full visible bend still constrains current speed.
+-            coefficients = np.polyfit(ahead, side, 2)
+-            heading = 2.0 * coefficients[0] * ahead[0] + coefficients[1]
+-            curvature = abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5
+-            target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
+-        return target
++        return self.cruise_speed
+@@ -3303,4 +3253,4 @@
+-    def __init__(self, cruise_speed=100.0, lateral_accel=145.0,
+-                 preview_time=.19, steer_gain=1.0, robust_cruise_speed=68.0,
+-                 propulsion=.65, corner_boost=.22, unstable_sweep=15.0,
+-                 low_gas_gate=.50, high_gas_gate=.75,
++    def __init__(self, cruise_speed=100.0, lateral_accel=190.0,
++                 preview_time=.12, steer_gain=1.0, robust_cruise_speed=100.0,
++                 propulsion=1.0, corner_boost=.50, unstable_sweep=40.0,
++                 low_gas_gate=.90, high_gas_gate=.98,
+@@ -3369,0 +3320,2 @@
++        speed = max(float(self._metric.last_speed), float(robust._pace_speed))
++        action = self._traction_pedals(action, speed=speed)
+@@ -3378,0 +3331,26 @@
++        return action
++
++    @staticmethod
++    def _traction_pedals(action, *, speed):
++        """Reserve rear-wheel lateral grip while a visible turn accelerates.
++
++        Official engine force is approximately 40000*gas/speed per driven
++        wheel, with a 400 N tire circle. A 0.8 propulsion reserve and 210 m/s²
++        lateral budget are below the measured flat-asphalt 219 upper bound.
++        This quasistatic camera-speed bound is experimental, not a sideslip
++        observer or a dynamic tire certificate.
++        """
++        action = np.asarray(action, dtype=np.float32).copy()
++        if action[2] > 0.0:
++            action[1] = 0.0
++        elif speed >= 25.0 and abs(float(action[0])) > .005:
++            lateral = speed * speed * abs(float(np.tan(action[0]))) / 3.24
++            remaining = np.sqrt(max(0.0, 1.0 - (lateral / 210.0) ** 2))
++            action[1] = min(float(action[1]), float(np.clip(.008 * speed * remaining, 0.0, 1.0)))
++            # The instantaneous force budget alone spun while accelerating
++            # into a .06-rad bend. Gas .3 was stable from70 and100m/s in the
++            # official-Car characterization; .5+ was not. Anticipate that
++            # measured high-speed regime instead of waiting for speed to rise.
++            projected_lateral = 100.0 ** 2 * abs(float(np.tan(action[0]))) / 3.24
++            if projected_lateral >= 130.0:
++                action[1] = min(float(action[1]), .30)

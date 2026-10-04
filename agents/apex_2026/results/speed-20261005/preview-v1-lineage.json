@@ -1,0 +1,62 @@
+{
+  "source": "agents/apex_2026/fast_preview_agent.py",
+  "source_sha256": "a0cbdf690ead624597968ed8237e4712178dbc70af6b380f9fb6ed9cc3abb8ac",
+  "source_bytes": 132343,
+  "base_source": "agents/apex_2026/guarded_preview_agent.py",
+  "base_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+  "robust_prefix_boundary": "before literal class _MetricAgent:",
+  "robust_prefix_exact_copy": true,
+  "robust_prefix_sha256": "5525b0147168c92893bf9155d56a8d4cceb6758676363c7cdcf6ed0d0cebc74f",
+  "parameters": {},
+  "embedded_defaults": {
+    "cruise_speed": 100,
+    "lateral_accel": 190,
+    "preview_time": 0.12,
+    "steer_gain": 1,
+    "robust_cruise_speed": 100,
+    "propulsion": 1,
+    "corner_boost": 0.5,
+    "unstable_sweep": 40,
+    "low_gas_gate": 0.9,
+    "high_gas_gate": 0.98,
+    "braking_accel": 100,
+    "curve_window": 12,
+    "curve_step": 4
+  },
+  "source_snapshot": ".haic-artifacts/apex-speed-preview-v1/source.py",
+  "test_sha256": "e5027cfe10111f4a0ac3e09e0b759caeffac20622707b4118069aaac06d2a514",
+  "focused_tests_passed": 13,
+  "combined_tests_passed": 239,
+  "scope": [
+    "remove separate quadratic window corner speed minimum",
+    "shorter speed-dependent pursuit preview and larger measured force budget",
+    "embedded robust clear cruise/boost parameters only, robust definitions preserved",
+    "public rear-drive traction bound and measured sustained-turn gas ceiling"
+  ],
+  "unused_legacy_parameters": [
+    "curve_window",
+    "curve_step",
+    "braking_accel only legacy constructor validation; visible-horizon cap remains100 and selected default matches"
+  ],
+  "known_limits": [
+    "present pursuit curvature is not an anticipatory corner-entry certificate",
+    "quasistatic rear-force budget and threshold do not estimate sideslip or tire omega",
+    "unchanged robust geometry/obstacle failure modes",
+    "no guarantee of unseen completion"
+  ],
+  "holdout_opened": false,
+  "promoted": false,
+  "original_target_met": false,
+  "driving_status": "complete; failed mandatory completion and original pace",
+  "mandatory_receipt": "preview-v1-mandatory.json",
+  "mandatory_receipt_sha256": "39049d7bdf37cf2126373299be64f1a7e5aae0e25cec15903064ac87026fafaa",
+  "mandatory_finished": 3,
+  "mandatory_total": 4,
+  "mandatory_contacts": 2,
+  "mandatory_lap_times_ms": [
+    21120,
+    27400,
+    24820,
+    null
+  ]
+}
