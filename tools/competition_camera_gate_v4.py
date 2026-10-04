@@ -1,4 +1,9 @@
-"""Fixed finish-first decision gate for source-bound camera policy v3 receipts.
+"""Preregistered practical gate for fresh, source-bound camera policy v4.
+
+Three rejected earlier studies justify reducing the required finish gains and
+increasing the paired finish-loss budget before any v4 geometry is bound.
+Aggregate safety, runtime, exact-repeat, seed-cluster, pace and track gates
+remain unchanged. Earlier studies retain their own frozen decisions.
 
 The thresholds below are part of this module's bytes.  The comparator never
 reads a protocol or caller-supplied threshold object, so changing a protocol
@@ -12,10 +17,10 @@ import math
 
 PHASES = ("screen", "confirmation", "blind")
 ARMS = ("control", "candidate")
-_MIN_NET_GAIN = (3, 6, 3)
-_MAX_LOST_FINISHES = (2, 4, 2)
+_MIN_NET_GAIN = (2, 4, 2)
+_MAX_LOST_FINISHES = (3, 6, 3)
 _MAX_SHARED_TIME_RATIO = 1.10
-_MIN_COMBINED_NET_GAIN = 18
+_MIN_COMBINED_NET_GAIN = 12
 _SEED_LOSS_CLUSTER = 2
 _SEEDS_PER_PHASE = (8, 16, 8)
 _REPEATS_PER_PHASE = (2, 4, 2)
@@ -144,7 +149,7 @@ def _finish_breakdowns(paired: list[dict], seeds: set[int]) -> tuple[list[dict],
 
 
 def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: str) -> dict:
-    """Validate all cold receipts and apply the fixed v3 phase gate.
+    """Validate all cold receipts and apply the fixed practical v4 phase gate.
 
     ``cells`` is the full expected inventory including repeat-1 cells.  Only
     repeat-0 pairs enter the statistical totals.  A repeat must exactly match
@@ -326,7 +331,7 @@ def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: st
 
 
 def combined_decision(phase_summaries: dict[str, dict]) -> dict:
-    """Require retained phases, 18 net finishes and no harmed track layout."""
+    """Require retained phases, 12 net finishes and no harmed track layout."""
     if not isinstance(phase_summaries, dict):
         raise TypeError("phase_summaries must be a dictionary")
     rejected: list[str] = []

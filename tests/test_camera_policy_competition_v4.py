@@ -17,6 +17,7 @@ from unittest.mock import patch
 from tools import compare_camera_policy_competition_v4 as subject
 from tools import compare_camera_policy_generalization as v1
 from tools import evaluate_bare_generalization as fresh
+from tools import competition_camera_gate_v3 as historical_gate
 
 
 def _result(arm: str, finished: bool) -> dict:
@@ -82,6 +83,70 @@ def _candidate_pin_is_ready() -> bool:
             is not None)
 
 
+def _gate_rows(phase: str, losses: int, net_gain: int) -> tuple[list[dict], list[tuple]]:
+    """Spread losses across seeds so the fixture does not trip the cluster veto."""
+    protocol = _protocol()
+    cells = fresh.expected_cells(protocol, phase)
+    canonical = [(track, seed) for track, seed, repeat in cells if repeat == 0]
+    control_count = 40 if phase == "confirmation" else 20
+    seed_count = 16 if phase == "confirmation" else 8
+    lost_indices = {index * (seed_count + 1) % control_count for index in range(losses)}
+    gains = set(range(control_count, control_count + losses + net_gain))
+    rows = []
+    for track, seed, repeat in cells:
+        index = canonical.index((track, seed))
+        for arm in fresh.ARMS:
+            finished = (index < control_count if arm == "control" else
+                        (index < control_count and index not in lost_indices) or index in gains)
+            rows.append({"partition": phase, "arm": arm, "track_id": track,
+                         "seed": seed, "repeat": repeat, **_result(arm, finished)})
+    return rows, cells
+
+
+class PracticalGateTests(unittest.TestCase):
+    def test_practical_phase_boundaries_accept_small_gains_without_rescoring_v3(self):
+        for phase, losses, net_gain in (("screen", 3, 2),
+                                        ("confirmation", 6, 4), ("blind", 3, 2)):
+            rows, cells = _gate_rows(phase, losses, net_gain)
+            with self.subTest(phase=phase):
+                practical = subject.compare_pairs(rows, cells, phase)
+                self.assertEqual(practical["decision"], "RETAIN", practical["reasons"])
+                self.assertEqual(practical["lost_control_finishes"], losses)
+                self.assertEqual(practical["net_finish_gain"], net_gain)
+                self.assertEqual(historical_gate.compare_pairs(rows, cells, phase)["decision"],
+                                 "REJECT")
+
+    def test_practical_gate_still_rejects_excess_loss_and_insufficient_finish_gain(self):
+        for phase, losses, net_gain, reason in (
+                ("screen", 4, 2, "lost control finishes"),
+                ("confirmation", 7, 4, "lost control finishes"),
+                ("blind", 4, 2, "lost control finishes"),
+                ("screen", 0, 1, "net finish gain"),
+                ("confirmation", 0, 3, "net finish gain"),
+                ("blind", 0, 1, "net finish gain")):
+            rows, cells = _gate_rows(phase, losses, net_gain)
+            with self.subTest(phase=phase, losses=losses, net_gain=net_gain):
+                summary = subject.compare_pairs(rows, cells, phase)
+                self.assertEqual(summary["decision"], "REJECT")
+                self.assertIn(reason, " ".join(summary["reasons"]))
+
+    def test_combined_practical_gate_accepts_twelve_gains_but_rejects_eleven(self):
+        for gains, decision in (((3, 6, 3), "RETAIN"), ((3, 5, 3), "REJECT")):
+            summaries = {}
+            for phase, gain in zip(fresh.PHASES, gains):
+                rows, cells = _gate_rows(phase, 0, gain)
+                summary = subject.compare_pairs(rows, cells, phase)
+                summary.update({"protocol_sha256": "a" * 64,
+                                "candidate_agent_sha256": "b" * 64,
+                                "runner_sha256": "c" * 64,
+                                "decision_engine_sha256": "d" * 64})
+                summaries[phase] = summary
+            with self.subTest(gains=gains):
+                combined = subject.combined_decision(summaries)
+                self.assertEqual(combined["decision"], decision, combined["reasons"])
+                self.assertEqual(combined["net_finish_gain"], sum(gains))
+
+
 class TemplateAndSourceTests(unittest.TestCase):
     def test_template_is_unbound_and_rejects_seed_material(self):
         template = json.loads(subject.TEMPLATE_PATH.read_text(encoding="utf-8"))
@@ -140,10 +205,35 @@ class TemplateAndSourceTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(blob).hexdigest(), subject.REQUIREMENTS_BLOB_SHA256)
         self.assertEqual(subject._requirements_blob_sha256(), subject.REQUIREMENTS_BLOB_SHA256)
 
-    def test_fixed_gate_is_byte_identical(self):
+    def test_practical_gate_is_independent_and_historical_v3_stays_frozen(self):
         v3_gate = subject.ROOT / "tools" / "competition_camera_gate_v3.py"
-        self.assertEqual(v3_gate.read_bytes(), Path(subject.gate.__file__).read_bytes())
+        self.assertEqual(fresh.digest(v3_gate),
+                         "0e2ea38793d980605c607e1b490eede26d32a60e223e3c70b6386a8cdb2a7a02")
+        self.assertNotEqual(v3_gate.read_bytes(), Path(subject.gate.__file__).read_bytes())
         self.assertEqual(fresh.digest(Path(subject.gate.__file__)), subject.GATE_SHA256)
+
+    def test_unbound_template_cannot_change_the_preregistered_relaxation(self):
+        template = json.loads(subject.TEMPLATE_PATH.read_text(encoding="utf-8"))
+        for key, value in (("profile", "strict"), ("consecutive_prior_rejections", 0),
+                           ("maximum_fresh_studies", 100)):
+            changed = copy.deepcopy(template)
+            changed["evaluation_policy"] = {key: value}
+            with self.subTest(key=key), self.assertRaisesRegex(ValueError, "template|unbound"):
+                subject.validate_template(changed)
+
+    def test_preregistered_prior_rejections_reject_changed_result_bytes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            for name in ("camera-policy-generalization-v1-result.json",
+                         "camera-policy-generalization-v2-result.json",
+                         "camera-policy-competition-v3-result.json"):
+                (directory / name).write_bytes((subject.ROOT / "experiments" / name).read_bytes())
+            proof = subject.prior_rejection_evidence(directory)
+            self.assertEqual(len(proof), 3)
+            self.assertTrue(all(row["decision"] == "REJECT" for row in proof))
+            (directory / "camera-policy-generalization-v1-result.json").write_text("{}")
+            with self.assertRaisesRegex(ValueError, "prior rejection|historical"):
+                subject.prior_rejection_evidence(directory)
 
     def test_committed_source_blobs_are_distinct_and_selector_only(self):
         if not _candidate_pin_is_ready():
@@ -258,6 +348,9 @@ class TemplateAndSourceTests(unittest.TestCase):
             "runtime_provenance": subject.RUNTIME_PROVENANCE,
             "requirements_blob_sha256": subject.REQUIREMENTS_BLOB_SHA256,
             "decision_thresholds": subject.THRESHOLDS,
+            "evaluation_policy": subject.EVALUATION_POLICY,
+            "prior_rejection_evidence": subject.prior_rejection_evidence(
+                subject.ROOT / "experiments"),
             "template_sha256": fresh.digest(subject.TEMPLATE_PATH),
             "decision_engine_sha256": fresh.digest(Path(subject.gate.__file__)),
             "runner_sha256": fresh.digest(Path(subject.__file__)),
@@ -289,6 +382,10 @@ class TemplateAndSourceTests(unittest.TestCase):
             altered["requirements_blob_sha256"] = "f" * 64
             with self.assertRaisesRegex(ValueError, "requirements"):
                 subject.validate_protocol(altered, set())
+            altered = copy.deepcopy(protocol)
+            altered["evaluation_policy"]["fallback"]["minimum_combined_net_finish_gain"] = 0
+            with self.assertRaisesRegex(ValueError, "practical evaluation policy"):
+                subject.validate_protocol(altered, set())
 
     def test_uncommitted_template_fails_before_salt_generation(self):
         template = json.loads(subject.TEMPLATE_PATH.read_text(encoding="utf-8"))
@@ -314,7 +411,9 @@ class TemplateAndSourceTests(unittest.TestCase):
         protocol = {"control_agent_sha256": hashlib.sha256(control_source).hexdigest(),
                     "candidate_agent_sha256": hashlib.sha256(selected).hexdigest(),
                     "source_construction": {"selector_from": f"{subject.CONTROL_CLASS}()",
-                                            "selector_to": f"{subject.CANDIDATE_CLASS}()"}}
+                                            "selector_to": f"{subject.CANDIDATE_CLASS}()",
+                                            "candidate_base_blob_sha256":
+                                            hashlib.sha256(candidate_base).hexdigest()}}
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             control, candidate = root / "control.py", root / "candidate.py"

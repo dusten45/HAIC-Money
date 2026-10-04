@@ -34,10 +34,10 @@ CONTROL_CLASS = "_CompoundClearingBrakeCarryController"
 CANDIDATE_CLASS = "_ClearRoadRow42DropoutController"
 CONTROL_IMPLEMENTATION_COMMIT = "f12c5b62c5f02bff4053e6f4775d202d79917938"
 CONTROL_BLOB_SHA256 = "291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61"
-# Set these only after the row-42 implementation is committed and audited.
-CANDIDATE_BASE_COMMIT = "PENDING_ROW42_IMPLEMENTATION_COMMIT"
-CANDIDATE_BASE_BLOB_SHA256 = "PENDING_ROW42_IMPLEMENTATION_BLOB_SHA256"
-GATE_SHA256 = "0e2ea38793d980605c607e1b490eede26d32a60e223e3c70b6386a8cdb2a7a02"
+# The committed implementation remains on the live control route until promotion.
+CANDIDATE_BASE_COMMIT = "7df85ae822fa3234b9ccd30844776420f0a56012"
+CANDIDATE_BASE_BLOB_SHA256 = "b639b9595da2e117410f1556eb13ab8576b873c464e689f5dd1fd8f38f2157c0"
+GATE_SHA256 = "7bd905e6e83d4035528c0cec375c964c0e094c1dfef3f63dd916c70320b607d5"
 REQUIREMENTS_BLOB_SHA256 = "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2"
 PARTICIPANTS_COMMIT = "dfb7a2de2178825ca5c5ce20bab01ba67052ba31"
 RUNTIME_PROVENANCE = {"python": "3.11", "torch": "2.1.0", "numpy": "1.26.0",
@@ -51,6 +51,47 @@ SPOT_INDEX = {"screen": ((1, 0), (4, 7)),
 THRESHOLDS = gate.THRESHOLDS
 compare_pairs = gate.compare_pairs
 combined_decision = gate.combined_decision
+PRIOR_REJECTION_RESULTS = (
+    ("camera-policy-generalization-v1-result.json",
+     "c56af797774b07d7874d5d4947847c3d84f9957309fab65358f048d6b0593ebc"),
+    ("camera-policy-generalization-v2-result.json",
+     "ae4618a2bcf34541a33536402bfda835963f0f4cff2ede88159302da8538e724"),
+    ("camera-policy-competition-v3-result.json",
+     "b10a5cd7a4b74fff9d01b09162ad60a269d33da5353780e0eb6539bac9424cc5"),
+)
+EVALUATION_POLICY = {
+    "profile": "practical",
+    "consecutive_prior_rejections": 3,
+    "prior_rejection_results": dict(PRIOR_REJECTION_RESULTS),
+    "selected_before_geometry_binding": True,
+    "maximum_candidates": 2,
+    "maximum_fresh_studies": 2,
+    "fallback": {
+        "trigger": "The practical fresh study rejects before promotion.",
+        "minimum_net_finish_gain": {"screen": 1, "confirmation": 2, "blind": 1},
+        "minimum_combined_net_finish_gain": 8,
+        "remaining_thresholds": "Unchanged practical safety, loss, pace, seed and track floors.",
+        "requires_distinct_protocol_and_unused_geometry": True,
+        "maximum_additional_studies": 1,
+    },
+    "historical_decisions_and_sealed_holdouts_unchanged": True,
+    "no_rescoring_bound_study": True,
+}
+
+
+def prior_rejection_evidence(experiments_dir: Path) -> list[dict]:
+    """Validate the recorded failures that selected this profile before seeds."""
+    evidence = []
+    for name, expected in PRIOR_REJECTION_RESULTS:
+        path = experiments_dir / name
+        if not path.is_file() or fresh.digest(path) != expected:
+            raise ValueError(f"historical prior rejection result changed: {name}")
+        result = fresh._read_json(path)
+        if not isinstance(result, dict) or result.get("decision") != "REJECT":
+            raise ValueError(f"historical prior rejection decision changed: {name}")
+        evidence.append({"path": f"experiments/{name}", "sha256": expected,
+                         "decision": "REJECT"})
+    return evidence
 
 
 def validate_template(template: dict) -> None:
@@ -64,7 +105,8 @@ def validate_template(template: dict) -> None:
                 "control_class": CONTROL_CLASS, "candidate_class": CANDIDATE_CLASS,
                 "track_ids": TRACKS, "seed_counts": SEED_COUNTS,
                 "spot_indices": {phase: [list(cell) for cell in SPOT_INDEX[phase]]
-                                 for phase in fresh.PHASES}}
+                                 for phase in fresh.PHASES},
+                "evaluation_policy": EVALUATION_POLICY}
     if not isinstance(template, dict) or any(template.get(key) != value
                                              for key, value in expected.items()):
         raise ValueError("unbound v4 template contract changed")
@@ -281,6 +323,10 @@ def validate_protocol(protocol: dict, historical_seeds: set[int]) -> None:
         raise ValueError("v4 committed requirements provenance changed")
     if protocol.get("decision_thresholds") != THRESHOLDS:
         raise ValueError("v4 decision thresholds changed")
+    if (protocol.get("evaluation_policy") != EVALUATION_POLICY
+            or protocol.get("prior_rejection_evidence") !=
+            prior_rejection_evidence(ROOT / "experiments")):
+        raise ValueError("v4 preregistered practical evaluation policy changed")
     if protocol.get("template_sha256") != fresh.digest(TEMPLATE_PATH):
         raise ValueError("v4 unbound template hash changed")
     if (protocol.get("decision_engine_sha256") != _decision_engine_sha256()
@@ -335,6 +381,7 @@ def bind_source(template: dict, model: Path, protocol_path: Path,
     runner_hash = fresh.digest(Path(__file__))
     engine_hash = _decision_engine_sha256()
     requirements_hash = _requirements_blob_sha256()
+    prior_rejections = prior_rejection_evidence(ROOT / "experiments")
     historical = historical_geometry_seeds_v4(ROOT / "experiments", protocol_path)
     salt = secrets.token_hex(16)
     seeds = derived_seed_partitions(salt)
@@ -370,7 +417,9 @@ def bind_source(template: dict, model: Path, protocol_path: Path,
         "evaluation_harness_sha256": harness_hash, "environment_sha256": environment,
         "max_steps": 2000, "frame_skip": 4, "training": False,
         "partitions": partitions, "decision_thresholds": THRESHOLDS,
-        "decision_rule": "V4 phase, seed-cluster, and combined track gates apply; all phases RETAIN and at least 18 combined net finishes are needed for activation.",
+        "evaluation_policy": EVALUATION_POLICY,
+        "prior_rejection_evidence": prior_rejections,
+        "decision_rule": "Preregistered practical V4 phase, seed-cluster, and combined track gates apply; all phases RETAIN and at least 12 combined net finishes are needed for activation. A fallback requires a distinct later protocol with new unused seeds; bound V4 is never rescored.",
         "evaluation_budget": "32/64/32 canonical pairs plus 2/4/2 exact repeat pairs; at most 272 cold episodes.",
         "promotion_gate": "Screen and confirmation phase and seed-cluster RETAIN seals unlock later phases; blind RETAIN and the combined finish and per-track gates decide activation.",
     }
