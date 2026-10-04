@@ -7,6 +7,9 @@ New structural work is isolated under [agents/apex_2026/v2](../../agents/apex_20
 V1 frozen source/results remain unchanged and unadopted. All exposed old24 cells
 are consumed regression data; v2 holdout24 is unallocated until final freeze.
 See the [prospective design](../../agents/apex_2026/v2/DESIGN.md).
+The [v2 progress record](../../agents/apex_2026/v2/PROGRESS.md) retains rejected
+force/brake/actuator probes and geodesic r1's22/24 consumed regression result.
+No matched improvement yet; geometry and observable-state physics work continues.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)

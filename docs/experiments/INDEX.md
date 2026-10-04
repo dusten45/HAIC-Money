@@ -1,5 +1,13 @@
 # Experiment Evidence Index
 
+## Apex structural cycle v2 — active
+
+See [prospective protocol](../../agents/apex_2026/v2/DESIGN.md) and
+[measured progress](../../agents/apex_2026/v2/PROGRESS.md). Separate user-authorized
+cycle after failed v1 validation; old24 cells are consumed regression data.
+Force, brake, actuator and geodesic r1 evidence is retained without adoption.
+New holdout24 remains unallocated until one final candidate is frozen and pushed.
+
 ## Apex opposite-strategy lane — 2026-10-05 KST
 
 Independent pixel-only continuous-path and action-rollout research, preserving main.

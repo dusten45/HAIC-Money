@@ -25,6 +25,10 @@ Independent structural axes:
 3. Braking-feasibility safety barrier based on visible drivable footprint and
    predicted vehicle motion. Distinguish comfort deceleration from emergency
    braking when newly visible geometry makes the former infeasible.
+4. An internal five-body Box2D vehicle predictor, reconstructed from public
+   pixels and action memory. Measure tire-RPM/state reconstruction error and
+   compute cost before using short-horizon action shooting. This copies public
+   mechanics into an independent model; it never reads the live simulator.
 
 A shared diagnosis examines the two consumed v1 failures and successful traces.
 Unknown slip is a measurement limitation, not proof that tire saturation caused
@@ -62,3 +66,5 @@ ledger. official_rules: shield_agent/tests/ledger. evaluation_harness: read-only
 failure diagnostic and later matched suites. Root: protocol, source archives,
 motion-observation experiments, selection and final evidence. Parallel runs use
 at most one worker per controller during exploration to fit available CPUs.
+Root also owns isolated force-budget, brake-authority and actuator-domain probes.
+shadow_physics owns shadow runtime, calibration diagnostics and tests.
