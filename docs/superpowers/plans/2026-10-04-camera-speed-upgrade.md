@@ -47,18 +47,20 @@ targets are `(1,516237)`, `(2,644062)` and `(3,1007)`, aiming at 10–13 seconds
 
 ## Execution
 
-- [ ] Measure current policy and per-decision limitations on the three targets.
-- [ ] Run bounded ignored exploratory variants and select one generic design.
-- [ ] Add failing behavioral tests, implement the minimal speed controller,
+- [x] Measure current policy and per-decision limitations on the three targets.
+- [x] Run bounded ignored exploratory variants and select one generic design.
+- [x] Add failing behavioral tests, implement the minimal speed controller,
   review and commit/push it while the live selector remains the V4 control.
-- [ ] Complete the consumed development grid and record failures/relaxation
+- [x] Complete the consumed development grid and record failures/relaxation
   explicitly if applicable.
-- [ ] Commit and bind the independent V5 profile, source/runtime pins and fresh
-  seeds before episodes. Run screen before unlocking confirmation.
-- [ ] Independently recompute receipts, exact repeats, seals and speed metrics.
-- [ ] Promote only verified exact candidate bytes; update route tests, run the
-  compatible suite and independently test immutable ZIP cold-driving parity.
-- [ ] Update concise project state/results and commit/push coherent checkpoints.
+- [x] Commit and test the independent V5 profiles and source/runtime binding
+  tools. Binding and fresh episodes are intentionally skipped: no candidate
+  passed the fixed consumed-development completion/safety gates.
+- [x] Independently recompute consumed development receipts and speed metrics;
+  verify the preserved original V4 gates/seals and exact extracted replay.
+- [x] Keep the verified V4 selector/package after rejecting the speed sources;
+  run the compatible suite and independently verify preserved ZIP cold parity.
+- [x] Update concise project state/results and commit/push coherent checkpoints.
 
 ## Review focus
 
@@ -101,3 +103,26 @@ strictly positive three-map total-time improvement with no individual target
 slowdown. The repeated rejected faster variants justify this bounded-time
 pace relaxation; all completion, aggregate safety and fresh no-slowdown
 floors stay fixed. A safety failure still keeps the verified V4 route live.
+
+## Final disposition
+
+The two production revisions both failed the fixed consumed-development
+completion/safety gates. The final revision completed all 32 comparisons:
+23 versus 26 finishes, three old finishes lost, contacts 27 versus 15,
+damage 5.4 versus 3.0, and lower completion-aware progress. Its 23 common
+finishes were 0.54% faster in total; that does not outweigh the gate failures.
+The designated maps were 23.20/30.96/27.76 s versus V4's
+23.98/31.00/27.84 s (1.09% total gain). The 10–13 s goal remains unmet.
+
+No V5 study was bound or run. No failed source was promoted and no submission
+was rebuilt. The default V4 route and original immutable d77 ZIP are retained;
+the live module contains only one extra unused speed class. Independent static
+AST comparison verified this distinction, and the preserved extracted ZIP
+reproduced the original 25.76 s confirmation action/outcome exactly. The
+compatible full suite passed 1,043 tests with 10 skips (630.22 s).
+
+Three original operational child failures had no original stderr. Two later
+initialization-limit errors are recorded explicitly; the final serial resume
+then completed valid receipts without further errors. Failed attempts remain
+part of the record. See `experiments/camera-speed-v5-development-result.json`
+and `.haic-artifacts/camera-speed-v5/final-verification.json`.

@@ -1,0 +1,686 @@
+{
+  "actual_current_model_helpers_environment_match_frozen_v4": true,
+  "baseline_diagnosis": {
+    "path": ".haic-artifacts/camera-speed-v5/diagnosis/baseline-pace-diagnosis.json",
+    "sha256": "ef3b93fd0fe12a591b5e8a09cba6e08e44cbf6df1d5317581c69fe58736f022d"
+  },
+  "bounded_stall_probes": [
+    {
+      "cell": [
+        1,
+        1493128875
+      ],
+      "gas_floor": 0.14,
+      "limitation": "Bounded one-cell diagnostic only; not a completed study or fallback performance proof.",
+      "no_outcome_improvement_over_consumed_v4": true,
+      "pulse_applied_count": 6,
+      "receipt": {
+        "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse-track-1-seed-1493128875.json",
+        "sha256": "86e2583c532e1e593a5fc54e52472a01efeddae4661550d8cb2e17029bc237db"
+      },
+      "result": {
+        "action_trace_sha256": "6d68a11a3ba90074cfdfc17858a16cd2600e889e3831b3735b3b244333938f8b",
+        "collision_count": 1,
+        "damage": 0.2,
+        "finished": false,
+        "progress": 0.6745762711864407,
+        "retire_reason": "off_track",
+        "steps": 316
+      },
+      "source": {
+        "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse-agent.py",
+        "sha256": "9fcb13cbb8a82e93f12c07403bef9f2702b53669b627d15421da13cc0181c1b9"
+      },
+      "status": "REJECT_EXPLORATORY_ONE_CELL"
+    },
+    {
+      "cell": [
+        1,
+        1493128875
+      ],
+      "gas_floor": 0.35,
+      "limitation": "Bounded one-cell diagnostic only; not a completed study or fallback performance proof.",
+      "no_outcome_improvement_over_consumed_v4": true,
+      "pulse_applied_count": 6,
+      "receipt": {
+        "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse35-track-1-seed-1493128875.json",
+        "sha256": "bd37889912b3a872b46aef0684fd56afda1833f18b6ae921dc007796aea61692"
+      },
+      "result": {
+        "action_trace_sha256": "b90e0747893f0e0837ab8bbe0292d2972d64e05ed1a40758809fc28e85e77bd1",
+        "collision_count": 1,
+        "damage": 0.2,
+        "finished": false,
+        "progress": 0.6745762711864407,
+        "retire_reason": "off_track",
+        "steps": 316
+      },
+      "source": {
+        "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse35-agent.py",
+        "sha256": "6e3600443491cae29adf2aba737d21a84a668c6314987f2bed3ed8960c9ea008"
+      },
+      "status": "REJECT_EXPLORATORY_ONE_CELL"
+    }
+  ],
+  "complete_development_trials": [
+    {
+      "candidate": {
+        "completion_aware_progress": 0.9305175632964177,
+        "contacts": 24,
+        "crashes": 1,
+        "damage": 4.800000000000001,
+        "finishes": 25,
+        "track_finishes": {
+          "1": 7,
+          "2": 4,
+          "3": 8,
+          "4": 6
+        }
+      },
+      "candidate_runtime_maxima": {
+        "action_latency_max_ms": 191.90320000052452,
+        "initialization_ms": 9348.057799972594,
+        "peak_worker_rss_mib": 230.93359375,
+        "reset_ms": 0.2128001069650054
+      },
+      "candidate_source": {
+        "path": ".haic-artifacts/camera-speed-v5/propulsion-probe/agent.py",
+        "sha256": "23ba582d2bf23057be08b631b66a512e71d6c80c16d25533439e3ef6bbe76008"
+      },
+      "cells": 32,
+      "common_finishes": 22,
+      "completion_status": "COMPLETE",
+      "control": {
+        "completion_aware_progress": 0.9190749953399612,
+        "contacts": 15,
+        "crashes": 0,
+        "damage": 3.0,
+        "finishes": 26,
+        "track_finishes": {
+          "1": 7,
+          "2": 5,
+          "3": 7,
+          "4": 7
+        }
+      },
+      "controller_class": "_SpeedOptimizedProbe",
+      "freeze": {
+        "path": ".haic-artifacts/camera-speed-v5/propulsion-development/freeze.json",
+        "sha256": "950f3dcc187d5f930ac262e3ee5cc4f0433ba7806277e8195881b00293e817f1"
+      },
+      "independent_audit": {
+        "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-propulsion-development.json",
+        "sha256": "765b267be3c0576e623b0fceb8f065e5c903d3e66d2a0e7358c423c9c5922011"
+      },
+      "label": "P0",
+      "lost_control_finishes": 4,
+      "reasons": [
+        "lost previous finish",
+        "aggregate contacts increase",
+        "aggregate crashes increase",
+        "aggregate damage increase"
+      ],
+      "receipt_file_set_sha256": "742b49e3b453f0cbfd3859735a26e36aacf502961c6cc71754d83e355a770245",
+      "scope": "CONSUMED_V4_SCREEN_DEVELOPMENT_ONLY",
+      "shared_finish_total_time_ratio": 0.9215047067872971,
+      "status": "REJECT",
+      "summary": {
+        "path": ".haic-artifacts/camera-speed-v5/propulsion-development/summary.json",
+        "sha256": "b9ae5c2dd89811af9720e82ddcdb9447740bac8873b0774ef312f2cda46a6742"
+      }
+    },
+    {
+      "candidate": {
+        "completion_aware_progress": 0.9063251203754659,
+        "contacts": 30,
+        "crashes": 2,
+        "damage": 6.000000000000001,
+        "finishes": 24,
+        "track_finishes": {
+          "1": 7,
+          "2": 5,
+          "3": 7,
+          "4": 5
+        }
+      },
+      "candidate_runtime_maxima": {
+        "action_latency_max_ms": 426.4503000304103,
+        "initialization_ms": 8848.888299893588,
+        "peak_worker_rss_mib": 231.3828125,
+        "reset_ms": 0.30319998040795326
+      },
+      "candidate_source": {
+        "path": ".haic-artifacts/camera-speed-v5/localized-probe/agent.py",
+        "sha256": "741a2b020dc9dd53e5286a0f3bdcb4be659ddbef3cd8ccebafd58545401f496d"
+      },
+      "cells": 32,
+      "common_finishes": 22,
+      "completion_status": "COMPLETE",
+      "control": {
+        "completion_aware_progress": 0.9190749953399612,
+        "contacts": 15,
+        "crashes": 0,
+        "damage": 3.0,
+        "finishes": 26,
+        "track_finishes": {
+          "1": 7,
+          "2": 5,
+          "3": 7,
+          "4": 7
+        }
+      },
+      "controller_class": "_SpeedOptimizedController",
+      "freeze": {
+        "path": ".haic-artifacts/camera-speed-v5/localized-development/freeze.json",
+        "sha256": "3d4905bede6589721eb1a7723c77a1dc810b5d1eb910743549d1762dd824ea47"
+      },
+      "independent_audit": {
+        "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-localized-development.json",
+        "sha256": "698704ac0cad4815ada78ad86ebfa9f16d181ee133b4817f7cb2225b07e38baa"
+      },
+      "label": "source1",
+      "lost_control_finishes": 4,
+      "reasons": [
+        "lost previous finish",
+        "aggregate contacts increase",
+        "aggregate crashes increase",
+        "aggregate damage increase",
+        "completion-aware progress regression"
+      ],
+      "receipt_file_set_sha256": "4b8e7c6730b1cfecec65d7eb80819f0b8f57f4c69d0bb72f1fc28bc15379b81f",
+      "scope": "CONSUMED_V4_SCREEN_DEVELOPMENT_ONLY",
+      "shared_finish_total_time_ratio": 0.9772593896713615,
+      "status": "REJECT",
+      "summary": {
+        "path": ".haic-artifacts/camera-speed-v5/localized-development/summary.json",
+        "sha256": "19b086ed16e1f4c9cbe10e47003c0796beb425b4b7957f2854f5b3b2f2c04a4c"
+      }
+    }
+  ],
+  "control_agent_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+  "environment_file_set_sha256": "073fd16bc72252a83babd5402481594230dbfd2d85aea542620ffdae7cefc6e4",
+  "evaluation_scope": "Consumed development data only. No fresh-retain or promotion claim.",
+  "file_set_definition": "SHA256 of UTF-8 compact sorted-key JSON over source_files/reports_files arrays in their explicit listed order.",
+  "final_assembly_tool": {
+    "path": ".haic-artifacts/camera-speed-v5/preview-probes/finalize_development_result.py",
+    "sha256": "e9095f8aab0675a3ad496cb3a4223bb1082a404d6cd5f2b934f76eb0b7756a08"
+  },
+  "final_source2": {
+    "all_three_finished_without_contacts_damage_or_sampled_offroad": true,
+    "base_agent_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+    "behavior_contracts": {
+      "command": "OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv/Scripts/python.exe -m pytest -q tests/test_speed_optimized_controller.py",
+      "covers": "Low-speed aligned curve acceleration; unchanged uncertain/hazard/overspeed actions; obstacle latch/reset; invalid current frame; bounds/slew; speed40; opposite actual steering.",
+      "result": "12 passed in5.06s",
+      "test_source": {
+        "path": "tests/test_speed_optimized_controller.py",
+        "sha256": "f3655b7e31df370e3be36fee33c71fed6dddbbe4a29880c2014136decef7de69"
+      }
+    },
+    "candidate": {
+      "completion_aware_progress": 0.8992503130797895,
+      "contacts": 27,
+      "crashes": 0,
+      "damage": 5.4,
+      "finishes": 23,
+      "track_finishes": {
+        "1": 6,
+        "2": 3,
+        "3": 7,
+        "4": 7
+      }
+    },
+    "candidate_total_time_ms": 81920,
+    "cells": 32,
+    "cold_runtime_maxima": {
+      "action_latency_max_ms": 85.25030000600964,
+      "initialization_ms": 6974.963700049557,
+      "peak_worker_rss_mib": 236.296875,
+      "reset_ms": 0.11939997784793377
+    },
+    "common_finishes": 23,
+    "completion_status": "COMPLETE",
+    "control": {
+      "completion_aware_progress": 0.9190749953399612,
+      "contacts": 15,
+      "crashes": 0,
+      "damage": 3.0,
+      "finishes": 26,
+      "track_finishes": {
+        "1": 7,
+        "2": 5,
+        "3": 7,
+        "4": 7
+      }
+    },
+    "control_total_time_ms": 82820,
+    "controller_class": "_SpeedOptimizedController",
+    "designated_cold_targets": [
+      {
+        "action_trace_sha256": "921d150141aa2bc4e97a05658d05606e154f510d3fb2d6acf32335f3e3d158ec",
+        "baseline_receipt_sha256": "2518cac220710ccbce347d35f39b11aeafc7863e2025a39b07c0b3ebee41677c",
+        "candidate_lap_time_ms": 23200,
+        "cold_receipt_path": ".haic-artifacts/camera-speed-v5/localized-final-probe/track-1-seed-516237.json",
+        "control_lap_time_ms": 23980,
+        "seed": 516237,
+        "track_id": 1
+      },
+      {
+        "action_trace_sha256": "48b23f58f95d848d28da9f4e6f212791e76f8f206a285e69b0cfc08522b894c2",
+        "baseline_receipt_sha256": "37b0a8a7e23f885308f25c85fb94587c8912b953b5fb7426cc3318b87b5a36d9",
+        "candidate_lap_time_ms": 30960,
+        "cold_receipt_path": ".haic-artifacts/camera-speed-v5/localized-final-probe/track-2-seed-644062.json",
+        "control_lap_time_ms": 31000,
+        "seed": 644062,
+        "track_id": 2
+      },
+      {
+        "action_trace_sha256": "8fef720e623beb062be54180aac30410c6a1b245e555385ec3fdad0988935e91",
+        "baseline_receipt_sha256": "167389627a6bd8cf9ac2753fb0f91cf5625fd07b782356704949515511ea5a51",
+        "candidate_lap_time_ms": 27760,
+        "cold_receipt_path": ".haic-artifacts/camera-speed-v5/localized-final-probe/track-3-seed-1007.json",
+        "control_lap_time_ms": 27840,
+        "seed": 1007,
+        "track_id": 3
+      }
+    ],
+    "development_independent_audit": {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-localized-final-development.json",
+      "sha256": "63cc6dca3a6940a58fd7e506273a997bf1ac2e94eb444569eadedd0322441d79"
+    },
+    "development_receipt_file_set_sha256": "2c518b3929fa1587281a30da8b97f82ac1ea9d835b282bc51fc263fe06ac0cfe",
+    "development_road_samples": {
+      "candidate": {
+        "full_offroad_samples": 98,
+        "partial_offroad_samples": 145,
+        "runtime_maxima": {
+          "action_latency_max_ms": 468.49360002670437,
+          "initialization_ms": 9714.122600038536,
+          "peak_worker_rss_mib": 230.9609375,
+          "reset_ms": 0.15360000543296337
+        }
+      },
+      "control": {
+        "full_offroad_samples": 96,
+        "partial_offroad_samples": 131,
+        "runtime_maxima": {
+          "action_latency_max_ms": 139.25509992986917,
+          "initialization_ms": 4669.695500051603,
+          "peak_worker_rss_mib": 231.375,
+          "reset_ms": 0.1449999399483204
+        }
+      }
+    },
+    "development_runtime_maxima": {
+      "action_latency_max_ms": 468.49360002670437,
+      "initialization_ms": 9714.122600038536,
+      "peak_worker_rss_mib": 230.9609375,
+      "reset_ms": 0.15360000543296337
+    },
+    "independent_target_audit": {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-final-targets.json",
+      "sha256": "59bc471bdc020d875b8d5bfa34c9b846aac98c0bd9ed2d0d35da1ca2e4405a65"
+    },
+    "label": "source2",
+    "limitation": "Complete consumed32 development audit rejects this candidate. Successful stored receipts pass runtime ceilings; failed operational attempts are preserved separately. No fresh evaluation or promotion.",
+    "lost_control_finishes": 3,
+    "lost_finish_cells": [
+      [
+        1,
+        647410651
+      ],
+      [
+        2,
+        337571917
+      ],
+      [
+        2,
+        2108416565
+      ]
+    ],
+    "no_individual_slowdown": true,
+    "promoted": false,
+    "reasons": [
+      "lost previous finish",
+      "aggregate contacts increase",
+      "aggregate damage increase",
+      "completion-aware progress regression"
+    ],
+    "receipt_file_set_sha256": "60b8b0d98c222c7ce8ad13688dbca275f8bf08d5e55ad33dc09a715114793084",
+    "selected_source": {
+      "path": ".haic-artifacts/camera-speed-v5/localized-final-probe/agent.py",
+      "sha256": "1524750055af9772c1e9fba4374d5010605cc8e3dd37cc39fa634cc27e801a94"
+    },
+    "shared_finish_total_time_ratio": 0.9946329578757812,
+    "source_base_commit": "a61f711f0f40bdaaacddc9fbad70cc24115d9559",
+    "speed_improvement_fraction": 0.010866940352571852,
+    "status": "REJECT",
+    "summary": {
+      "path": ".haic-artifacts/camera-speed-v5/localized-final-development/summary.json",
+      "sha256": "69a71279017bf2f1f8e03e58d034a67d6bd623e2df9c53725cf4eb0daf140f70"
+    },
+    "thirteen_second_target_met": false,
+    "time_ratio": 0.9891330596474281
+  },
+  "final_verification": {
+    "record": {
+      "path": ".haic-artifacts/camera-speed-v5/final-verification.json",
+      "sha256": "cd5541238f0d2a662959e81d8900b1e5bd3642eaa0477291324f6df3d3c100cc"
+    },
+    "reported_compatible_full_suite": {
+      "evidence": "Root reported session32788 exit0; exact command/source/runtime notes retained in referenced final-verification.json.",
+      "excluded_module": "tests/test_drqv2_matched.py (Linuxfcntl)",
+      "passed": 1043,
+      "seconds": 630.22,
+      "skipped": 10,
+      "warnings": 4
+    }
+  },
+  "fresh_v5": {
+    "binding_registry_entries": 0,
+    "candidate_promoted": false,
+    "decision": "Retain validated V4; do not bind rejected development source2.",
+    "fresh_studies_run": 0,
+    "status": "SKIPPED_UNBOUND",
+    "template": {
+      "path": "experiments/camera-speed-v5.template.json",
+      "sha256": "74ac796f56a5c81705988ee25200130678028887c6943242fb1b7cf4109fbb71"
+    },
+    "template_status": "UNBOUND"
+  },
+  "frozen_v4_identity": {
+    "path": ".haic-artifacts/camera-policy-competition-v4/run/freeze.json",
+    "sha256": "d59f4f04236bee4c0f14e2e1318413aebbd1d85f5ef79e471ea87785e1e92917"
+  },
+  "goal": {
+    "achieved": false,
+    "designated_lap_target_ms": 13000,
+    "reason": "Every final source2 designated lap exceeds13seconds; faster rejected previews do also.",
+    "requested_range_seconds": [
+      10,
+      13
+    ]
+  },
+  "helper_sha256": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb"
+  },
+  "independent_assembly_tool": {
+    "path": ".haic-artifacts/camera-speed-v5/preview-probes/write_development_result.py",
+    "sha256": "2b5d9d9d7534eef68bc7b437006da11cb61b517354838673729b299ce8ad5053"
+  },
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "operational_initialization_failures": {
+    "classification": "Operational failures, not completed driving outcomes or performance-relaxation evidence. Resource contention remains a hypothesis.",
+    "earlier_events": [
+      {
+        "driving_outcome_recorded": false,
+        "returncode": 1,
+        "seed": 647410651,
+        "stderr_error": "RuntimeError: Agent initialization exceeded 10 seconds: 19541.9ms",
+        "track_id": 4
+      },
+      {
+        "cell_attribution": "Unavailable from the printed child stderr; do not infer an exact seed.",
+        "driving_outcome_recorded": false,
+        "returncode": 1,
+        "seed": null,
+        "stderr_error": "RuntimeError: Agent initialization exceeded 10 seconds: 11553.8ms",
+        "track_id": null
+      }
+    ],
+    "earlier_transcribed_failure_messages": {
+      "path": ".haic-artifacts/camera-speed-v5/localized-final-development/operational-initialization-failures.json",
+      "sha256": "56920e0cb8bab227cbafdc640d9a5f8138d2a765d2e1cc9c489076c4ae6e6ddb"
+    },
+    "known_distinct_failed_attempts_at_least": 5,
+    "later_persisted_worker_failures": [],
+    "retention": "All failed attempts remain visible alongside later successful exact-source receipts. Stored valid receipts do not imply every attempted cold initialization passed10seconds."
+  },
+  "operational_unknowns": {
+    "classification": "operational, cause unassigned",
+    "count_evidence": "Orchestrator supplied three original development child rc1 event coordinates. Original stderr was not retained, so stages and causes remain unassigned.",
+    "driving_outcome_recorded_for_failed_child": false,
+    "limitation": "No original stderr or proven stage/cause. These rc1 events are not performance evidence and do not justify relaxing a gate.",
+    "original_child_returncode_1_events": 3,
+    "original_stderr_available": false,
+    "persisted_known_event": {
+      "note": {
+        "path": ".haic-artifacts/camera-speed-v5/preview-v2-development/operational-note.json",
+        "sha256": "0eaba710cc391d5c80489d15b796411c94b8f70dff7fbe7d6bf183a110579f2a"
+      },
+      "returncode": 1,
+      "seed": 727444949,
+      "source_sha256": "40978119a81b7f7bb7f9d7fbc7f1882ad9098fb6492170fb8b3049de36e541ba",
+      "track_id": 1
+    },
+    "second_event_reported_by_orchestrator": {
+      "driving_outcome_recorded_for_failed_child": false,
+      "original_stderr_available": false,
+      "returncode": 1,
+      "same_pin_later_serial_retry": {
+        "contacts": 2,
+        "finished": true
+      },
+      "seed": 1274277667,
+      "source_sha256": "741a2b020dc9dd53e5286a0f3bdcb4be659ddbef3cd8ccebafd58545401f496d",
+      "track_id": 2
+    },
+    "third_event_reported_by_orchestrator": {
+      "driving_outcome_recorded_for_failed_child": false,
+      "original_stderr_available": false,
+      "returncode": 1,
+      "same_pin_later_valid_receipt": {
+        "contacts": 3,
+        "finished": false
+      },
+      "seed": 1274277667,
+      "source_sha256": "1524750055af9772c1e9fba4374d5010605cc8e3dd37cc39fa634cc27e801a94",
+      "track_id": 2
+    }
+  },
+  "preserved_v4": {
+    "active_controller_class": "_ClearRoadRow42DropoutController",
+    "archive_bytes": 6298260,
+    "cold_action_trace_sha256": "2966cc0bea9a4988cbcfe6d2b3be4e80264e4d067735538a079fcec08a0d9e9d",
+    "cold_lap_time_ms": 25760,
+    "cold_replay_cell": {
+      "phase": "confirmation",
+      "repeat": 0,
+      "seed": 2841112300,
+      "track_id": 1
+    },
+    "decision": "RETAIN",
+    "evaluated_agent_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+    "extracted_package_cold_parity": {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/preserved-v4-confirmation-extracted-drive-parity.json",
+      "sha256": "b636b2f5c13f295d4b584352a8db23a109b0e83a053040ce933f98c9e5cf9590"
+    },
+    "live_agent_source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+    "live_source_byte_identical_to_evaluated_v4": false,
+    "original_combined_decision": "RETAIN",
+    "original_phase_decisions": {
+      "blind": "RETAIN",
+      "confirmation": "RETAIN",
+      "screen": "RETAIN"
+    },
+    "source_distinction": "The live source adds an unused experimental class. Active source AST and selector match frozen V4 after removing that one class; the preserved submission ZIP contains exact evaluated d77 source.",
+    "source_route_parity": {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/source-route-parity.json",
+      "sha256": "97ba973dc4d705619f5b4a4276c2c0c650afe5c908e38b2028b2a873d2cf7c62"
+    },
+    "submission_archive": {
+      "path": ".haic-artifacts/submissions/20261004T104340018489Z_clear-road-camera-practical-v4-final/submission.zip",
+      "sha256": "3508100c4f700de4fdeb1d7f9e66a5e0eeb79c697b9762a57d6987d2bce05fe6"
+    }
+  },
+  "preview_partial": {
+    "candidate_source": {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/v2/agent.py",
+      "sha256": "40978119a81b7f7bb7f9d7fbc7f1882ad9098fb6492170fb8b3049de36e541ba"
+    },
+    "completed_cells": 25,
+    "confirmed_lost_finish_cells": [
+      [
+        2,
+        2108416565
+      ]
+    ],
+    "expected_cells": 32,
+    "label": "preview_v2",
+    "limitation": "25 present receipts were independently validated. This is not a complete32-cell performance gate or fallback proof.",
+    "missing_cells": [
+      [
+        4,
+        337571917
+      ],
+      [
+        4,
+        647410651
+      ],
+      [
+        4,
+        727444949
+      ],
+      [
+        4,
+        1493128875
+      ],
+      [
+        4,
+        2108416565
+      ],
+      [
+        4,
+        2366896665
+      ],
+      [
+        4,
+        4235093740
+      ]
+    ],
+    "owned_episode_workers_remaining": 0,
+    "partial_descriptive_metrics_only": {
+      "candidate": {
+        "contacts": 18,
+        "crashes": 1,
+        "damage": 3.6000000000000005,
+        "finishes": 20,
+        "full_offroad_samples": 13,
+        "partial_offroad_samples": 97
+      },
+      "common_finishes": 19,
+      "control": {
+        "contacts": 15,
+        "crashes": 0,
+        "damage": 3.0,
+        "finishes": 20,
+        "full_offroad_samples": 0,
+        "partial_offroad_samples": 32
+      },
+      "shared_finish_total_time_ratio": 0.8902901974017209
+    },
+    "partial_report": {
+      "path": ".haic-artifacts/camera-speed-v5/preview-v2-development/partial-rejection.json",
+      "sha256": "c649f18c33ac6477b812133fcdba39d63fed1e6b04f71a466fe05334342ed1ca"
+    },
+    "reason": "Lost previous finish under the fixed zero-loss development floor.",
+    "receipt_file_set_sha256": "b7cf18b82661bb2b9aea2ff6228d38c88526ae51b7842f7cf097709a68098d99",
+    "scope": "CONSUMED_V4_SCREEN_DEVELOPMENT_ONLY",
+    "status": "INCOMPLETE_REJECT"
+  },
+  "prospective_fallback_failure_records": [
+    {
+      "path": "experiments/camera-speed-v5-propulsion-failure.json",
+      "sha256": "01b4414393c6b7c81c14b787629b2b374317b4c15b4692c34341ae5e72261ad9"
+    },
+    {
+      "path": "experiments/camera-speed-v5-target76-failure.json",
+      "sha256": "a8ee8c03f17b7d9814715d9b5dbc4c565c25950e12eda24dd371db81794c097b"
+    }
+  ],
+  "record_status": "DEVELOPMENT_COMPLETE_FINAL_SOURCE2_REJECTED",
+  "reports_file_set_sha256": "3103f651a17bbcc251d06f7d92ed89dc1dbc019be2105d18470cab6770f26e26",
+  "reports_files": [
+    {
+      "path": ".haic-artifacts/camera-speed-v5/propulsion-development/summary.json",
+      "sha256": "b9ae5c2dd89811af9720e82ddcdb9447740bac8873b0774ef312f2cda46a6742"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/localized-development/summary.json",
+      "sha256": "19b086ed16e1f4c9cbe10e47003c0796beb425b4b7957f2854f5b3b2f2c04a4c"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-propulsion-development.json",
+      "sha256": "765b267be3c0576e623b0fceb8f065e5c903d3e66d2a0e7358c423c9c5922011"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-localized-development.json",
+      "sha256": "698704ac0cad4815ada78ad86ebfa9f16d181ee133b4817f7cb2225b07e38baa"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-v2-development/partial-rejection.json",
+      "sha256": "c649f18c33ac6477b812133fcdba39d63fed1e6b04f71a466fe05334342ed1ca"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-final-targets.json",
+      "sha256": "59bc471bdc020d875b8d5bfa34c9b846aac98c0bd9ed2d0d35da1ca2e4405a65"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/independent-localized-final-development.json",
+      "sha256": "63cc6dca3a6940a58fd7e506273a997bf1ac2e94eb444569eadedd0322441d79"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse-track-1-seed-1493128875.json",
+      "sha256": "86e2583c532e1e593a5fc54e52472a01efeddae4661550d8cb2e17029bc237db"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse35-track-1-seed-1493128875.json",
+      "sha256": "bd37889912b3a872b46aef0684fd56afda1833f18b6ae921dc007796aea61692"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/preserved-v4-confirmation-extracted-drive-parity.json",
+      "sha256": "b636b2f5c13f295d4b584352a8db23a109b0e83a053040ce933f98c9e5cf9590"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/source-route-parity.json",
+      "sha256": "97ba973dc4d705619f5b4a4276c2c0c650afe5c908e38b2028b2a873d2cf7c62"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/localized-final-development/operational-initialization-failures.json",
+      "sha256": "56920e0cb8bab227cbafdc640d9a5f8138d2a765d2e1cc9c489076c4ae6e6ddb"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/final-verification.json",
+      "sha256": "cd5541238f0d2a662959e81d8900b1e5bd3642eaa0477291324f6df3d3c100cc"
+    }
+  ],
+  "source_file_set_sha256": "7fa11f436c60f8dc0e2455d7aa655f11a75d311526487ceaadfdab87451def64",
+  "source_files": [
+    {
+      "path": ".haic-artifacts/camera-speed-v5/propulsion-probe/agent.py",
+      "sha256": "23ba582d2bf23057be08b631b66a512e71d6c80c16d25533439e3ef6bbe76008"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/localized-probe/agent.py",
+      "sha256": "741a2b020dc9dd53e5286a0f3bdcb4be659ddbef3cd8ccebafd58545401f496d"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/preview-probes/v2/agent.py",
+      "sha256": "40978119a81b7f7bb7f9d7fbc7f1882ad9098fb6492170fb8b3049de36e541ba"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/localized-final-probe/agent.py",
+      "sha256": "1524750055af9772c1e9fba4374d5010605cc8e3dd37cc39fa634cc27e801a94"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse-agent.py",
+      "sha256": "9fcb13cbb8a82e93f12c07403bef9f2702b53669b627d15421da13cc0181c1b9"
+    },
+    {
+      "path": ".haic-artifacts/camera-speed-v5/review-probes/stall-pulse35-agent.py",
+      "sha256": "6e3600443491cae29adf2aba737d21a84a668c6314987f2bed3ed8960c9ea008"
+    }
+  ],
+  "study_family": "camera-speed-v5"
+}

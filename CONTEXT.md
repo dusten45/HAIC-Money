@@ -3,36 +3,31 @@
 ## Current State
 
 The goal is a fast, reliable, rule-compliant 2026 HAIC agent. The live bare
-`Agent` now selects `_ClearRoadRow42DropoutController`; neural weights in
+`Agent` still selects `_ClearRoadRow42DropoutController`; neural weights in
 `model.pt` are bypassed after road detection. Other diagnostic controllers in
-`agent.py` are not the active submission route.
+`agent.py`, including the rejected speed candidate, are not the submission
+route. Use the immutable V4 ZIP below for the exact verified source; the live
+file also contains an unselected experimental class and is not byte-identical.
 
 The `_ClearRoadRow42DropoutController` candidate now invalidates its own
 obstacle confidence after lost-road or invalid current-frame decisions while
 preserving inherited obstacle latches. Commit `7df85ae` is pinned as its base;
-the actual selected source SHA256 is
+the evaluated and packaged V4 source SHA256 is
 `d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18`.
-Its complete 96-cell consumed V3 development audit independently passed:
-75 to 81 finishes, no previous finish lost, contacts 43 to 43, crashes 2 to 2,
-damage 8.6 to 8.6, common-finish time ratio 0.999857. Both known no-contact
+Its complete consumed V3 development audit passed; both known no-contact
 track-3 road-exit rescues remain. See
-`experiments/camera-upgrade-development-20261004-result.json`; full development
-receipts are under `.haic-artifacts/clear-road-row42-v4/freshness-audit/`.
+`experiments/camera-upgrade-development-20261004-result.json`.
 
 V1, V2 and V3 camera studies remain rejected under their original fixed gates.
-V3 screen had 29/32 versus 18/32 finishes; confirmation had 46/64 versus 31/64
-but lost five control finishes against its fixed allowance of four. V3 blind
-remains sealed; earlier unopened phases also remain protected. Its 24 opened
-geometries are development data. Known remaining failures include post-contact
-on-road stalls and multi-contact crashes.
+V3 confirmation exceeded its fixed lost-finish allowance. Its blind phase and
+earlier unopened phases remain protected; its 24 opened geometries are
+development data. Remaining failures include post-contact stalls and crashes.
 
 At the user's explicit request to relax criteria after repeated failures, a
-new practical V4 profile was committed before binding any new geometry:
-phase finish gains at least 2/4/2, lost control finish budgets 3/6/3, combined
-gain at least 12. Runtime, source/repeat integrity, aggregate safety, progress,
-pace ratio at most 1.10, seed-cluster and combined per-track floors are unchanged.
-The search is capped at two candidate implementations and two fresh studies;
-any further relaxation requires a distinct protocol and unused geometry.
+new practical V4 profile was committed before binding any new geometry, with
+bounded lost-finish allowances and a 1.10 combined pace floor. Runtime,
+source/repeat integrity, safety, progress and per-track floors stayed fixed.
+See the immutable protocol for its complete prospective criteria.
 V4 is now source-bound in `experiments/camera-policy-competition-v4.json`,
 with 8/16/8 new geometries across four tracks and 2/4/2 exact paired repeats.
 All three phases and the combined gate independently retained: screen 26/32
@@ -48,7 +43,7 @@ RSS 231.55 MiB. Finite testing does not guarantee completion on every geometry.
 Next controller priority: 25 of the 28 remaining DNF cells retired after
 contacts without a sampled full off-road event. Investigate post-contact loss
 of motion and partial road contact before choosing a further recovery change.
-The promoted source exactly matches the evaluated selected source above.
+The preserved V4 package source exactly matches the evaluated source above.
 See `experiments/camera-policy-competition-v4-result.json`. Final ZIP:
 `.haic-artifacts/submissions/20261004T104340018489Z_clear-road-camera-practical-v4-final/submission.zip`
 (6,298,260 bytes; SHA256
@@ -57,6 +52,50 @@ Its four member hashes match V4; CPU loading/reset/action checks passed, and
 extracted cold driving exactly reproduced a fresh V4 action trace/outcome.
 Post-promotion Windows-compatible full suite passed 972 tests, skipped 10;
 the submission ZIP also passed independent extracted-file cold driving.
+
+## Bounded Camera Speed Study
+
+The latest request adds a no-aggregate-slowdown constraint and 10–13 s targets
+for `(1,516237)`, `(2,644062)` and `(3,1007)`. Exact V4 cold laps are
+23.98/31.00/27.84 s, all without contacts or sampled off-road events. The main
+limits are low gas on clear curves and conservative obstacle/corridor speed;
+more gas changes the trajectory before hazards become visible.
+
+The unrestricted acceleration probe lost four old finishes and raised contacts
+15 to 24 on the consumed 32-cell V4 screen. Localized production revision 1
+lost four and raised contacts to 30. Revision 2 restricts extra gas to HUD at
+most 35 with aligned actual steering; its target laps are 23.20/30.96/27.76 s,
+only 1.09% faster in total. Its complete consumed-grid audit had 23/32 versus
+26/32 finishes, lost three old finishes, and raised contacts 15 to 27 and
+damage 3.0 to 5.4 (common-finish time ratio 0.994633). It is rejected. Faster
+preview probes also failed the fixed
+completion floor; their best target laps were 20.88/26.64/24.08 s. The requested
+10–13 s performance is not achieved.
+
+After recorded failures, the target-speed floor was prospectively relaxed
+from 13 s to 20% improvement, then 3%, then any positive gain for the final
+revision. Development completion/safety and no-aggregate-slowdown floors stay
+fixed. The two-revision budget is exhausted: keep V4. New V5 strict/fallback
+protocol tools are tested, but no V5 geometry has been bound or opened. Older
+unopened partitions remain protected. See the plan and
+`experiments/camera-speed-v5-development-result.json`; consumed data must never
+be described as fresh validation.
+
+Exact V4 replay of `(1,1493128875)` confirms a post-contact stall despite
+continuously visible road and obstacle; this is not a missing-row42 failure.
+Six-step gas pulses of 0.14 and 0.35 each failed to recover it. Next controller
+priority is preventing contact with better camera path/corridor prediction,
+rather than adding global acceleration or weakening safety gates. Large
+source-bound telemetry/receipts remain under `.haic-artifacts/camera-speed-v5/`.
+The preserved V4 ZIP passed a second independent extracted cold replay on
+confirmation `(1,2841112300)`: identical action/outcome, 25.76 s, no contacts,
+damage or sampled off-road events; init 7.06 s and other runtime limits pass.
+The final Windows-compatible full suite passed 1,043 tests, skipped 10
+(630.22 s); it excludes only the Linux `fcntl` matched-study test file.
+Three original cold child failures lack their original stderr; two later
+initialization-limit failures (19.54/11.55 s) are preserved explicitly. The
+last serial resume completed all 32 valid receipts without further failures;
+this does not erase earlier invalid attempts or qualify the rejected source.
 
 ## Frozen Competition Contract
 
@@ -90,7 +129,7 @@ the submission ZIP also passed independent extracted-file cold driving.
   trajectory and collision telemetry.
 - Local `.venv`: Windows Python 3.11.15, Torch 2.1 CPU, NumPy 1.26. Windows
   lacks `fcntl` for `tests/test_drqv2_matched.py`; the latest post-promotion
-  full suite excluding that file passed 972 tests and skipped 10 (430.49 s).
+  full suite excluding that file passed 1,043 tests and skipped 10 (630.22 s).
   The unchanged local web API has an intermittent Windows TCP abort on rejected
   POST requests (two of 360 diagnostic requests; final full suite passed).
   This does not establish an inference defect. Official-like Linux
