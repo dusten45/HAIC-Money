@@ -76,3 +76,45 @@ def test_finite_recovery_reset_and_input_preservation():
         assert np.all(action >= [-1, 0, 0]) and np.all(action <= 1)
     controller.reset()
     np.testing.assert_array_equal(controller.act(camera()), agent_type()().act(camera()))
+
+
+def test_observed_rear_wheel_spin_releases_propulsion_on_a_bend():
+    observation = camera(curvature=.012, speed=70)
+    for row in range(73, 84):
+        for col in range(18, 24):
+            height = max(0., min(row + 1., 81.9) - max(float(row), 81.9 - .021 * 450))
+            widths = sum(max(0., min(col + 1., hi) - max(float(col), lo))
+                         for lo, hi in ((18.9, 21.), (21., 23.1)))
+            observation[:, row, col] = widths * height * (44 / 255)
+    action = agent_type()().act(observation)
+    assert action[1] == 0
+    assert .01 <= action[2] <= .15
+
+
+def test_accelerating_sustained_bend_keeps_rear_wheel_force_reserve():
+    action = agent_type()().act(camera(curvature=.02, speed=70))
+    assert .05 < action[1] <= .300001
+    assert action[2] == 0
+
+
+def test_launch_keeps_propulsion_despite_normal_accelerating_wheel_spin():
+    observation = camera(curvature=.025, speed=10)
+    observation[:, 73:82, 19:23] = 44 / 255
+    action = agent_type()().act(observation)
+    assert action[1] > .6
+    assert action[2] == 0
+
+
+def test_partial_hud_boundary_row_does_not_create_false_rear_spin():
+    clear = camera(curvature=.012, speed=70)
+    for row in range(74, 83):
+        for col in range(18, 24):
+            height = max(0., min(row + 1., 81.9) - max(float(row), 81.9 - .021 * 70 / .54))
+            widths = sum(max(0., min(col + 1., hi) - max(float(col), lo))
+                         for lo, hi in ((18.9, 21.), (21., 23.1)))
+            clear[:, row, col] = widths * height * (44 / 255)
+    mixed = clear.copy()
+    mixed[:, 73, 19:24] = .315
+    reference = agent_type()().act(clear)
+    action = agent_type()().act(mixed)
+    np.testing.assert_array_equal(action, reference)

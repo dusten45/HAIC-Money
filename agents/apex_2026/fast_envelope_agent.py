@@ -237,8 +237,8 @@ class Agent(_Camera):
     Inference uses only the latest image and past camera commands.
     """
 
-    def __init__(self, cruise_speed=120., lateral_accel=200.,
-                 preview_time=.19, steer_gain=1., pass_clearance=2.7,
+    def __init__(self, cruise_speed=100., lateral_accel=200.,
+                 preview_time=.19, steer_gain=1., pass_clearance=3.7,
                  braking_accel=110., gas_reserve=.85):
         values = np.asarray([pass_clearance, braking_accel, gas_reserve])
         if not np.isfinite(values).all() or np.any(values <= 0):
@@ -252,6 +252,16 @@ class Agent(_Camera):
         super().reset(observation)
         self.pass_offset = 0.
         self.pass_distance = None
+
+    @staticmethod
+    def _rear_speed(frame):
+        # The two purple HUD bars render rear-wheel omega. Exclude column18
+        # where the blue right-front gauge can bleed into the rear region.
+        # 4.1 px pooled width, .021 px/omega, gray44/255, radius.54 m.
+        # The black HUD begins at row73.5. Row73 contains visible road/grass,
+        # which must not be decoded as wheel rotation.
+        area = float(np.sum(frame[74:83, 19:24]))
+        return .54 * area / (4.1 * .021 * (44. / 255.))
 
     def _pass_target(self, frame, road, speed, preview):
         forward, lateral, rows, lefts, rights = road
@@ -335,6 +345,17 @@ class Agent(_Camera):
             if tangent > .008:
                 force_ratio = min(1., speed ** 2 * tangent / (self.WHEELBASE * 210.))
                 budget = .008 * speed * np.sqrt(max(0., 1. - force_ratio ** 2))
-                budget = max(.32 if speed < 55. else .10, budget)
+                launch_floor = .8 if speed < 35. else (.32 if speed < 55. else .10)
+                budget = max(launch_floor, budget)
                 gas = min(gas, float(budget * self.gas_reserve / .85))
+                projected_load = min(self.cruise_speed, 100.) ** 2 * tangent / self.WHEELBASE
+                if speed >= 60. and projected_load >= 130.:
+                    # Measured .5+ gas spins a .06 rad turn while accelerating
+                    # from70 to100; .3 stays stable. Instantaneous demand alone
+                    # misses this rear-wheel inertia transient.
+                    gas = min(gas, .3)
+                excess_spin = self._rear_speed(frame) - speed
+                if speed >= 55. and excess_spin > 15.:
+                    gas = 0.
+                    brake = max(brake, float(np.clip(.002 * excess_spin, .03, .12)))
         return np.asarray([self.last_steer, gas, brake], dtype=np.float32)

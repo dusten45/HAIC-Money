@@ -1,0 +1,7 @@
+--- envelope-v3.py
++++ envelope-v4.py
+@@ -261 +261,3 @@
+-        area = float(np.sum(frame[73:83, 19:24]))
++        # The black HUD begins at row73.5. Row73 contains visible road/grass,
++        # which must not be decoded as wheel rotation.
++        area = float(np.sum(frame[74:83, 19:24]))

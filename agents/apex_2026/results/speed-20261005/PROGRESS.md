@@ -35,3 +35,50 @@ its privileged wheel/pose access is not part of any submitted agent.
 Parallel lanes continue on observed yaw feedback, improved curve planning,
 rear-wheel grip budgeting and obstacle routes. There is no callable tool for
 Codex weekly remaining usage; a quota error will trigger immediate stopping.
+
+## Subsequent fresh evidence
+
+The independent yaw-feedback path lane is substantially faster than the prior
+guarded snapshot, but is not yet a qualifying candidate:
+
+| Source / parameters | Track 1 | Track 2 | Track 3 | Track 4 |
+|---|---:|---:|---:|---:|
+| path V3, defaults | 15.52 s | 19.92 s | DNF | 18.32 s |
+| path V3, wider-preview study | 15.30 s | 19.50 s | DNF | DNF |
+| path V4, defaults | 15.40 s | 23.20 s | 18.00 s | DNF |
+| faster preview V1, defaults | 21.12 s | 27.40 s | 24.82 s | DNF |
+| envelope V3, defaults | 18.54 s | DNF | DNF | DNF |
+| envelope V4, defaults | DNF | DNF | DNF | DNF |
+| path V4 without local quadratic caps | 15.56 s | DNF | DNF | DNF |
+
+All four times must belong to one source/parameter setting; the fastest
+individual laps above must not be combined into a synthetic result. None of
+these studies meets even the four required 13 second laps. Old holdout remains
+consumed, no new holdout has opened, and no source is promoted.
+
+Path V4 corrects road-normal pass offsets, remembered-circle rotation, HUD
+boundary contamination and straight-launch feedback. Seventeen focused tests
+pass, and reversible patches reconstruct V1–V3 source bytes and their receipts.
+Dropping its local curvature speed caps entirely loses three finishes; the
+three passing camera behavior tests do not qualify that pursuit-only variant.
+
+Envelope V2 prematurely brakes ordinary launch wheel rotation and completes
+0/4 with almost no progress; its camera regressions were red. V3 gates this
+feedback to high speed and passes eight tests. An independent camera test then
+shows row73 grass/road can inflate measured rear speed by over 50 m/s, creating
+false spin braking. V4 excludes that row and passes nine tests, but its four
+driving runs still fail: correcting the measurement exposes further control
+and road-tracking limitations. The crop correction is not a lap improvement.
+
+Physical measurements show full throttle can spin a sustained high-speed bend,
+while gas0.3 remains stable in the measured .06 rad steering cases. The installed
+Box2D maximum translation gives an approximately 100 m/s ceiling; full straight
+launch reaches 99 m/s at 2.42 seconds. Neither these measurements nor a privileged
+route model is an official lap or a proof of the minimum possible lap time.
+Official Participants main was rechecked and remains `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`.
+
+Current verified source-level regressions include 83 tests covering the existing
+Apex evaluator/package/controllers and the preview/envelope candidates. The
+previous full baseline's 15 dependency/provenance failures remain disclosed in
+the preceding cloud report. Independent curved-pass, current-pose obstacle and
+HUD-yaw investigations continue toward the original goal.

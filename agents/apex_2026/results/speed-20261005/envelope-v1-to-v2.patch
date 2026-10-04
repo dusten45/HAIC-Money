@@ -1,0 +1,27 @@
+--- envelope-v1.py
++++ envelope-v2.py
+@@ -240,2 +240,2 @@
+-    def __init__(self, cruise_speed=120., lateral_accel=200.,
+-                 preview_time=.19, steer_gain=1., pass_clearance=2.7,
++    def __init__(self, cruise_speed=100., lateral_accel=200.,
++                 preview_time=.19, steer_gain=1., pass_clearance=3.7,
+@@ -254,0 +255,8 @@
++
++    @staticmethod
++    def _rear_speed(frame):
++        # The two purple HUD bars render rear-wheel omega. Exclude column18
++        # where the blue right-front gauge can bleed into the rear region.
++        # 4.1 px pooled width, .021 px/omega, gray44/255, radius.54 m.
++        area = float(np.sum(frame[73:83, 19:24]))
++        return .54 * area / (4.1 * .021 * (44. / 255.))
+@@ -339,0 +348,10 @@
++                projected_load = min(self.cruise_speed, 100.) ** 2 * tangent / self.WHEELBASE
++                if projected_load >= 130.:
++                    # Measured .5+ gas spins a .06 rad turn while accelerating
++                    # from70 to100; .3 stays stable. Instantaneous demand alone
++                    # misses this rear-wheel inertia transient.
++                    gas = min(gas, .3)
++                excess_spin = self._rear_speed(frame) - speed
++                if excess_spin > 15.:
++                    gas = 0.
++                    brake = max(brake, float(np.clip(.002 * excess_spin, .03, .12)))

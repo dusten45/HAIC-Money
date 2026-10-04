@@ -1,0 +1,12 @@
+--- envelope-v2.py
++++ envelope-v3.py
+@@ -346 +346,2 @@
+-                budget = max(.32 if speed < 55. else .10, budget)
++                launch_floor = .8 if speed < 35. else (.32 if speed < 55. else .10)
++                budget = max(launch_floor, budget)
+@@ -349 +350 @@
+-                if projected_load >= 130.:
++                if speed >= 60. and projected_load >= 130.:
+@@ -355 +356 @@
+-                if excess_spin > 15.:
++                if speed >= 55. and excess_spin > 15.:
