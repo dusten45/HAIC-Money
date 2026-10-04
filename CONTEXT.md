@@ -97,6 +97,16 @@ initialization-limit failures (19.54/11.55 s) are preserved explicitly. The
 last serial resume completed all 32 valid receipts without further failures;
 this does not erase earlier invalid attempts or qualify the rejected source.
 
+## Independent Agent Checkpoint
+
+The separate new-agent study is preserved in `agents/apex_2026/` on branch
+`codex/apex-2026-independent-agent`; the active root agent and official physics
+were preserved. Hybrid mandatory laps are 19.62/26.68/22.74/21.78 s with zero
+contacts, but only 10/16 additional development cells finish. The 10–13 s target
+and relaxed 18 s profile remain unmet; no independent candidate is promoted.
+Holdout geometries remain unopened. See its README and source-bound benchmark
+summary. Development was paused at the user's request for a GitHub checkpoint.
+
 ## Frozen Competition Contract
 
 - Do not modify `core/`, `env_wrapper.py`, or `damage.py` for experiments.
