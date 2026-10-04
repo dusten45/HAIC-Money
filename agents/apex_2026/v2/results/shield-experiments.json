@@ -1,0 +1,425 @@
+{
+  "schema": "apex-v2-shield-experiments-v1",
+  "baseline": {
+    "path": "agents/apex_2026/candidate/agent.py",
+    "sha256": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97"
+  },
+  "protocol": {
+    "path": "agents/apex_2026/v2/benchmark.json",
+    "sha256": "c52da67c7dfaf9bcc700a7ed4a5ac462558934c177d75585c6701fbc83166f33"
+  },
+  "runs": [
+    {
+      "id": "r0-fixed-action-arc",
+      "source": {
+        "path": "/tmp/apex-v2-shield-r0/source.py",
+        "sha256": "06abb86c1ec531c7e18cdfee2f6b805215249ec4896c99601ac97a7bb483ae69",
+        "archive": "agents/apex_2026/v2/results/shield_sources/06abb86c1ec5.py"
+      },
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 21280,
+          "damage": 0.0,
+          "progress": 1.0,
+          "steps": 266,
+          "resource_eligible": true,
+          "interventions": 33,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t1-s516237.json",
+            "sha256": "e0557aa453208bbca459768efb073b6b6f62531b9593cd822e3755e291fee168"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t1-s516237.jsonl",
+            "sha256": "fd03773c8e1e2e4164211ef7f111687927ebdf45a5e0514f03fb343694342be0"
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 28120,
+          "damage": 0.0,
+          "progress": 1.0,
+          "steps": 352,
+          "resource_eligible": true,
+          "interventions": 54,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t2-s644062.json",
+            "sha256": "509e45a4beca15ebef5be8acb80a9b785f159645746dc1c30e73874fc73e9563"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t2-s644062.jsonl",
+            "sha256": "85eb44f1e1c54ef291596c1b516e6e2eecfbfcdee54cab99b1a6c05f9d605e80"
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 25660,
+          "damage": 0.0,
+          "progress": 1.0,
+          "steps": 321,
+          "resource_eligible": true,
+          "interventions": 45,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t3-s1007.json",
+            "sha256": "c4cc1dbd8122d700158801dca071a73b0df4ea528a90cacebd3185ac71d79581"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t3-s1007.jsonl",
+            "sha256": "7b3d947afd79cb177fd147c1cf2eb289d5c287420d63349204b91331dbbb914a"
+          }
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "partition": "required",
+          "finished": false,
+          "lap_time_ms": null,
+          "damage": 0.8,
+          "progress": 0.7311827956989247,
+          "steps": 348,
+          "resource_eligible": true,
+          "interventions": 37,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t4-s18800.json",
+            "sha256": "244f08db5a9503f8f87c93209258346ee20f2175519bfe63921fc9b98c585cb0"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t4-s18800.jsonl",
+            "sha256": "ad167791650264c6b0c9243eecb7fad48d751d792efd7f20165b414c1f90548a"
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "partition": "consumed_regression",
+          "finished": true,
+          "lap_time_ms": 24380,
+          "damage": 0.0,
+          "progress": 0.9888475836431226,
+          "steps": 305,
+          "resource_eligible": true,
+          "interventions": 46,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t2-s4031370700.json",
+            "sha256": "c65dc86bd398d78c62b6e6498d7fb148470af5069e445cb1a35bff1e1822cdd9"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t2-s4031370700.jsonl",
+            "sha256": "df9f540034a2f0eded726e5c87804a7313eae2df8e8de846bbe9290bc0a97f79"
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "partition": "consumed_regression",
+          "finished": true,
+          "lap_time_ms": 25980,
+          "damage": 0.0,
+          "progress": 1.0,
+          "steps": 325,
+          "resource_eligible": true,
+          "interventions": 45,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r0/t3-s4111953688.json",
+            "sha256": "75c052220364d0ffc5d55e0d666e499b3e147cdaf3e311a8733db7db12f8b998"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r0/t3-s4111953688.jsonl",
+            "sha256": "104985f1f7fd39d1d6aad58413ed6d847b12d8c2f958687544b6ad7c84badd28"
+          }
+        }
+      ],
+      "required_finishes": 3,
+      "consumed_failure_finishes": 2,
+      "interpretation": "Rejected: rescues both old failures but loses requiredtrack4 and slows survivors. Fixed steering projection incorrectly treats ordinary future turns as stopping hazards.",
+      "unit_tests": {
+        "count": 6,
+        "passed": 6
+      }
+    },
+    {
+      "id": "r1-steering-rate-limited-braking-backup",
+      "source": {
+        "path": "/tmp/apex-v2-shield-r1/source.py",
+        "sha256": "22828ec0c8c1af918a740b248ddf78386f63403985fd55e374aecd8e7091381e",
+        "archive": "agents/apex_2026/v2/results/shield_sources/22828ec0c8c1.py"
+      },
+      "current_source": {
+        "path": "agents/apex_2026/v2/shield_agent.py",
+        "sha256": "22828ec0c8c1af918a740b248ddf78386f63403985fd55e374aecd8e7091381e"
+      },
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 19420,
+          "damage": 0.0,
+          "steps": 243,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 21,
+          "intervention_fraction": 0.08641975308641975,
+          "intervention_reasons": {
+            "braking_backup_override": 11,
+            "no_feasible_backup_emergency": 10
+          },
+          "median_trigger_distance_m": 5.553803244872584,
+          "uncertain_slip_interventions": 9,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t1-s516237.json",
+            "sha256": "81719cece43875b503c37373d0d9f1693ae0892978352b76ae7ad4cc5c94ffdd"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t1-s516237.jsonl",
+            "sha256": "2ba8ee32c8e61f72825db0f21dbad28fff1ea4dee8d7a8a148e5b54921ff5cd8"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-frozen/required/t1-s516237.json",
+              "sha256": "05a233db5648d6050e74ed1b1e2690186eaf47134eae09206b240bf685d03a2d"
+            },
+            "finished": true,
+            "lap_time_ms": 16780,
+            "damage": 0.0,
+            "new_matched_run": false
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 25500,
+          "damage": 0.0,
+          "steps": 319,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 35,
+          "intervention_fraction": 0.109717868338558,
+          "intervention_reasons": {
+            "braking_backup_override": 21,
+            "no_feasible_backup_emergency": 14
+          },
+          "median_trigger_distance_m": 4.211672645885559,
+          "uncertain_slip_interventions": 24,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t2-s644062.json",
+            "sha256": "ead8eb5824913dea74cb47673c33dd15512b60daa3f4919121031f27406dd212"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t2-s644062.jsonl",
+            "sha256": "48de3dc46f9c5e22d56d5b88576592f8fa48c5bec96b922844f5651a981df082"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-frozen/required/t2-s644062.json",
+              "sha256": "ba861510e77eea6eee42e34904d19893d27f8c475cce0decd88fd59958510fbd"
+            },
+            "finished": true,
+            "lap_time_ms": 20680,
+            "damage": 0.0,
+            "new_matched_run": false
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 22020,
+          "damage": 0.0,
+          "steps": 276,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 30,
+          "intervention_fraction": 0.10869565217391304,
+          "intervention_reasons": {
+            "braking_backup_override": 21,
+            "no_feasible_backup_emergency": 9
+          },
+          "median_trigger_distance_m": 4.112302432246525,
+          "uncertain_slip_interventions": 18,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t3-s1007.json",
+            "sha256": "603294bd08fc84ae59819a5687a89ab7ff6eaba663a7b76cefd77ddf10ed15d4"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t3-s1007.jsonl",
+            "sha256": "5445666360fb042e754de75c367682eb7da4f50eb761e5995e725bc5b1f8bb35"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-frozen/required/t3-s1007.json",
+              "sha256": "972ebfa379d17e1bb302f39934a26061cb81d8573a7d7c425fed3e0227d7103c"
+            },
+            "finished": true,
+            "lap_time_ms": 18560,
+            "damage": 0.0,
+            "new_matched_run": false
+          }
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "partition": "required",
+          "finished": true,
+          "lap_time_ms": 20660,
+          "damage": 0.0,
+          "steps": 259,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 29,
+          "intervention_fraction": 0.11196911196911197,
+          "intervention_reasons": {
+            "braking_backup_override": 19,
+            "no_feasible_backup_emergency": 10
+          },
+          "median_trigger_distance_m": 4.247116418878325,
+          "uncertain_slip_interventions": 23,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t4-s18800.json",
+            "sha256": "6db818a6281465a6091fc399cba041b9a9bf25d9e9b40ad5741a3a22b7f7e2c4"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t4-s18800.jsonl",
+            "sha256": "855ad9f481fe24725d491c8b8161ecffc26193b94c6b0deb58ebdfffdc7d2cab"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-frozen/required/t4-s18800.json",
+              "sha256": "60a07286e0717112d06aae0b0db7c2bb15e158be28cdaf1418c4e58cedd30336"
+            },
+            "finished": true,
+            "lap_time_ms": 18100,
+            "damage": 0.0,
+            "new_matched_run": false
+          }
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "partition": "consumed_regression",
+          "finished": true,
+          "lap_time_ms": 20940,
+          "damage": 0.0,
+          "steps": 262,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 34,
+          "intervention_fraction": 0.1297709923664122,
+          "intervention_reasons": {
+            "braking_backup_override": 25,
+            "no_feasible_backup_emergency": 9
+          },
+          "median_trigger_distance_m": 3.496645021202421,
+          "uncertain_slip_interventions": 10,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t2-s4031370700.json",
+            "sha256": "bb753db8c90b266bd5f07181ec291c4cce2e3e06d5bd736b09b291e7a124e354"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t2-s4031370700.jsonl",
+            "sha256": "8f21c40d709dafe3cd76cd339b0c5802814831bf7a62175d27f5699432bd432a"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-holdout/holdout/t2-s4031370700.json",
+              "sha256": "c016171c7d943606e75e8c5cc03eae15dd76a720bf52cc1982dc15de5206061f"
+            },
+            "finished": false,
+            "lap_time_ms": null,
+            "damage": 0.0,
+            "new_matched_run": false
+          }
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "partition": "consumed_regression",
+          "finished": true,
+          "lap_time_ms": 23720,
+          "damage": 0.0,
+          "steps": 297,
+          "resource_eligible": true,
+          "invalid_actions": 0,
+          "interventions": 31,
+          "intervention_fraction": 0.10437710437710437,
+          "intervention_reasons": {
+            "braking_backup_override": 22,
+            "no_feasible_backup_emergency": 9
+          },
+          "median_trigger_distance_m": 3.3044658995656713,
+          "uncertain_slip_interventions": 26,
+          "receipt": {
+            "path": "/tmp/apex-v2-shield-r1/t3-s4111953688.json",
+            "sha256": "ed047a3329a744ac669a9eba6684d500040c0bf82d7cb0b9fa26056db5014b5a"
+          },
+          "trace": {
+            "path": "/tmp/apex-v2-shield-r1/t3-s4111953688.jsonl",
+            "sha256": "78df3b4785e138d8b6d4c1793161f75bfab75caac7740d79ea41b7ad0c231be6"
+          },
+          "runtime_hash_check": "All preloaded sources unchanged; newly imported simulator modules are additionally recorded after reset.",
+          "historical_v1_comparator": {
+            "receipt": {
+              "path": "/tmp/apex-final-holdout/holdout/t3-s4111953688.json",
+              "sha256": "f0206a1570bee7bac1f5ec8d64a2b177cef1cb5d6c4eda0a12e2a5b384db2bcb"
+            },
+            "finished": false,
+            "lap_time_ms": null,
+            "damage": 0.2,
+            "new_matched_run": false
+          }
+        }
+      ],
+      "required_finishes": 4,
+      "consumed_failure_finishes": 2,
+      "all_zero_damage": true,
+      "required_mean_ms": 21900,
+      "historical_v1_required_mean_ms": 18530,
+      "required_mean_slowdown_ms": 3370,
+      "unit_tests": {
+        "count": 10,
+        "passed": 10,
+        "source": {
+          "path": "agents/apex_2026/v2/test_shield_agent.py",
+          "sha256": "886d023290b4c137dd3086e08f2c7216736603d08feb4099b8cabbd5341d6a86"
+        },
+        "log": {
+          "path": "/tmp/apex-v2-shield-r1/unit-tests.log",
+          "sha256": "4f1cc2efe72ac252d91187d18ddc10bbe3be4faf9f8675a843d71a8a85def32b"
+        },
+        "red_log": {
+          "path": "/tmp/apex-v2-shield-r0/backup-red.log",
+          "sha256": "7a894ee5e30432d08215e0ecd8993888e09875bb48112ed392483a4a418c70a9"
+        }
+      },
+      "interpretation": "Both prior failures rescued and all required finishes preserved, but every required lap slower. Not selected/promoted; consumed24 and prospective holdout not evaluated for shield.",
+      "limitations": [
+        "Backup feasibility is an approximate rolling/pixel model, not formal stability or collision assurance.",
+        "Steering state respects+-0.4rad and3rad/s; coast-drag calibration only covered+-0.2, so its extrapolation remains uncertain.",
+        "P1 obstacle mask already has3pixel padding; extra hull footprint may double-count clearance and reject feasible routes.",
+        "Lateral tire/slip dynamics remain approximate. Missing flow widens footprint, not evidence actual slip is large.",
+        "61 no-feasible-backup interventions use maximum tested brake fallback, not a verified feasible recovery.",
+        "Historical v1 comparisons are original frozen receipts, not newly matched baseline reruns."
+      ],
+      "next_step": "Hold files for checkpoint. Before further revision align obstacle padding and exact-wheel shadow diagnostics."
+    }
+  ],
+  "status": "r1_complete_held_for_checkpoint_not_adopted"
+}
