@@ -1985,6 +1985,100 @@
           }
         ],
         "adopted": false
+      },
+      {
+        "receipt_path": "agents/apex_2026/results/speed-20261005/predictive-v2.json",
+        "receipt_sha256": "f0a3e0b5ba7f5fcc92e6f4a91dee6514285c234cd6b8f59e453f8706c1443ffb",
+        "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+        "suite": "mandatory",
+        "role": "benchmark",
+        "mandatory_rows": [
+          {
+            "track_id": 1,
+            "seed": 516237,
+            "finished": true,
+            "lap_time_ms": 17540,
+            "progress": 1.0,
+            "collision_count": 0,
+            "damage": 0.0,
+            "retire_reason": null,
+            "steps": 220,
+            "initialization_ms": 15.637119999155402,
+            "reset_ms": 0.035386001400183886,
+            "action_latency_max_ms": 2494.04381000204,
+            "peak_worker_rss_mib": 96.8515625,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+            "parameters": {},
+            "action_trace_sha256": "dfa54af02f2f7ae7a80a5a65ff9e2ecfdae2b8a5bebd79223bd7553cefa616fa",
+            "error": null
+          },
+          {
+            "track_id": 2,
+            "seed": 644062,
+            "finished": false,
+            "lap_time_ms": null,
+            "progress": 0.41369047619047616,
+            "collision_count": 1,
+            "damage": 0.2,
+            "retire_reason": "off_track",
+            "steps": 217,
+            "initialization_ms": 15.504101000260562,
+            "reset_ms": 0.04154899943387136,
+            "action_latency_max_ms": 2184.8508899929584,
+            "peak_worker_rss_mib": 97.1640625,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+            "parameters": {},
+            "action_trace_sha256": "c3a76f5935e31f0b9d97fbd0dc849814e17c771af28094e5b0dd4504a08d1c73",
+            "error": null
+          },
+          {
+            "track_id": 3,
+            "seed": 1007,
+            "finished": true,
+            "lap_time_ms": 21300,
+            "progress": 1.0,
+            "collision_count": 1,
+            "damage": 0.2,
+            "retire_reason": null,
+            "steps": 267,
+            "initialization_ms": 15.568819995678496,
+            "reset_ms": 0.039042999560479075,
+            "action_latency_max_ms": 1971.9869350010413,
+            "peak_worker_rss_mib": 96.52734375,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 16,
+            "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+            "parameters": {},
+            "action_trace_sha256": "ecfabd41f3fb45b2de6c5f6122e059c2d241ed2f9c127defbcdf1f6c9c5962c4",
+            "error": null
+          },
+          {
+            "track_id": 4,
+            "seed": 18800,
+            "finished": false,
+            "lap_time_ms": null,
+            "progress": 0.12186379928315412,
+            "collision_count": 4,
+            "damage": 0.8,
+            "retire_reason": "off_track",
+            "steps": 137,
+            "initialization_ms": 15.774644001794513,
+            "reset_ms": 0.03937400470022112,
+            "action_latency_max_ms": 2058.3603760023834,
+            "peak_worker_rss_mib": 96.6328125,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+            "parameters": {},
+            "action_trace_sha256": "64daff64c39d7161622fc857427220c0d6b40d5c15accf7f100835910481835e",
+            "error": null
+          }
+        ],
+        "adopted": false
       }
     ],
     "component_checkpoint_tests": {
@@ -1994,6 +2088,11 @@
       "scope": "before standalone predictive-agent integration"
     },
     "predictive_agent_laps_measured": true,
-    "root_and_official_sources_preserved": true
+    "root_and_official_sources_preserved": true,
+    "latest_apex_package_checkpoint": {
+      "passed": 454,
+      "duration_s": 22.91,
+      "scope": "after predictive V1/V2 and diagnostic helpers, before stopping-only guard integration"
+    }
   }
 }
