@@ -1,0 +1,127 @@
+{
+  "version": "koi-collision-shield-v1-experimental-submission",
+  "status": "EXPERIMENTAL_SUBMISSION_CANDIDATE_FROZEN_V1",
+  "package": "submissions/koi-collision-shield-v1-experimental-submission.zip",
+  "zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+  "archive_bytes": 19660,
+  "extracted_bytes": 59790,
+  "policy_source_sha256": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+  "baseline_zip_sha256": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+  "unchanged_research_result_sha256": "25819a469f5e44dec9ae216feb67e38ca06cbc6ab71ee9440a7772e97a048ea5",
+  "research_verdict": "NOT_ADOPTED",
+  "purpose": "prevent imminent obstacle-collision DNF",
+  "ordinary_overavoidance": "separate follow-up; no changes in this candidate",
+  "policy_and_parameters_byte_identical": true,
+  "crossing_dependencies_byte_identical": true,
+  "packaging_only_change": "Static root Agent instantiates unchanged shield over unchanged crossing driver.",
+  "files": [
+    {
+      "path": "agent.py",
+      "sha256": "fd07d794bf502fd9d6e2b95d36bf78f39955b51609d7fbbb42fdb9b9ab19c48e",
+      "bytes": 510
+    },
+    {
+      "path": "haic_agent/__init__.py",
+      "sha256": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+      "bytes": 32
+    },
+    {
+      "path": "haic_agent/acceleration_envelope_runtime.py",
+      "sha256": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+      "bytes": 4279
+    },
+    {
+      "path": "haic_agent/collision_shield_runtime.py",
+      "sha256": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+      "bytes": 13457
+    },
+    {
+      "path": "haic_agent/contact_continuity_runtime.py",
+      "sha256": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+      "bytes": 4559
+    },
+    {
+      "path": "haic_agent/corridor_agent.py",
+      "sha256": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+      "bytes": 10439
+    },
+    {
+      "path": "haic_agent/far_hazard_runtime.py",
+      "sha256": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+      "bytes": 5489
+    },
+    {
+      "path": "haic_agent/fast_completion_coordination.py",
+      "sha256": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+      "bytes": 5285
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_recovery_v2.py",
+      "sha256": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+      "bytes": 2906
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_runtime.py",
+      "sha256": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+      "bytes": 3105
+    },
+    {
+      "path": "haic_agent/pixel_features.py",
+      "sha256": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+      "bytes": 9729
+    }
+  ],
+  "static_zip_checks_pass": true,
+  "runtime_smoke": {
+    "python": "3.11.14",
+    "numpy": "1.26.0",
+    "opencv": "4.8.1.78",
+    "torch": "2.1.0+cpu",
+    "import_construct_seconds": 0.1327431397512555,
+    "max_reset_seconds": 0.00011780671775341034,
+    "max_act_seconds": 0.010931401047855616,
+    "peak_rss_bytes": 509173760,
+    "act_calls": 64,
+    "synthetic_changed_actions": 0,
+    "exact_frozen_action_and_diagnostic_parity": true,
+    "deterministic_reset": true,
+    "finite_bounded_float32_actions": true,
+    "environment_constructions": 0,
+    "environment_resets": 0
+  },
+  "protected_artifacts_unchanged": {
+    "/workspace/HAIC-Money/agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "/workspace/HAIC-Money/experiments/koi-collision-shield-v1-result.json": "25819a469f5e44dec9ae216feb67e38ca06cbc6ab71ee9440a7772e97a048ea5",
+    "/workspace/HAIC-Money/haic/algorithms/koi/collision_shield.py": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "/workspace/HAIC-Money/haic/algorithms/koi/steering_release.py": "52f540993eecc4453d36900b726f8fb54bda189e58b0c3e5eb6126ac3fcdd54b",
+    "/workspace/HAIC-Money/runs/koi-collision-shield-v1/crossing-projection-source-reconstruction.zip": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "/workspace/HAIC-Money/runs/koi-collision-shield-v1/protocol.json": "afeeb356ff1fae1e74b6606ab81073c1e10ebebefddf90ae945596e2c922ea8b",
+    "/workspace/HAIC-Money/runs/koi-collision-shield-v1/source/collision_shield.py": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/crossing-projection-source-reconstruction.zip": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "/workspace/HAIC-Money/submissions/20260919T135436Z_baseline1-final/submission.zip": "2b0e1c319f4a883407bde1822d6470d99c917870c48f27fc0aa231804ee99aad",
+    "/workspace/HAIC-Money/submissions/20260929T100923330496Z_drqv2-pad4-control-seed1/submission.zip": "88b2dcfd9d40350e23116419eef462f1f3e2833947d2f980ddfe5ae7657a5fd7",
+    "/workspace/HAIC-Money/submissions/koi-adaptive-avoidance-v1.zip": "5f7057a432074d2e7215f5d2aeb863aafc4d557d9ba93c9fb3d34ee2b46e679c",
+    "/workspace/HAIC-Money/submissions/koi-minimum-clearance-v1.zip": "ddadbc512b02469f96d04785f27c7a74045ad0f26582c779780a750aac17a73e",
+    "/workspace/HAIC-Money/submissions/koi-minimum-clearance-v2.zip": "64cecc0bf52426622d094664ebd8130fb4f9f6b132b78754130d98e627d47e2a",
+    "/workspace/HAIC-Money/submissions/koi-minimum-clearance-v3.zip": "594fca15005ec38cc67801824e9725fc84da440c2309083f02a24955b0ab8fca",
+    "/workspace/HAIC-Money/submissions/koi-steering-release-v1.zip": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+    "/workspace/HAIC-Money/submissions/koi-steering-release-v1a.zip": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+    "/workspace/HAIC-Money/submissions/koi-steering-release-v2-submission.zip": "705f3844c044f962e348bf7afdc824889f55a714eeedaaefa13c3f577ac57efd",
+    "/workspace/HAIC-Money/submissions/koi-steering-release-v2.manifest.json": "b1a97164434d66f3e83cfda938d606a1bf6aab910adafbac5fd7dbb59be981a4",
+    "/workspace/HAIC-Money/submissions/koi-steering-release-v2.zip": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce"
+  },
+  "packager_sha256": "741dc396a4c22d4436d26f832c71dbeb418a67c3cc9a545695ea0f4d4c0ce930",
+  "official_sources_checked_date": "2026-10-01",
+  "official_sources": [
+    "https://scholarships-hardwood-headers-influenced.trycloudflare.com/",
+    "https://github.com/2026-HAIC/Participants"
+  ],
+  "additional_requirements": false,
+  "external_weights": false,
+  "official_upload_performed": false,
+  "official_server_acceptance_verified": false,
+  "limitations": [
+    "Synthetic packaging smoke only; no additional simulator evaluation or tuning.",
+    "Local packaging validation is not official Docker/server acceptance."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/tmp/kilo/haic-cpu21/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import sys; sys.path.insert(0,sys.argv[1]); from scripts.evaluate_koi_avoidance_magnitude import worker; worker(sys.argv[2],int(sys.argv[3]),sys.argv[4],import_only=sys.argv[5]==\"True\")",
+    "/workspace/HAIC-Money/runs/koi-avoidance-magnitude-v1/source",
+    "/workspace/HAIC-Money/runs/koi-avoidance-magnitude-v1",
+    "1",
+    "1456126e31bdbcfce1e3d158bf032990820a4b46fa85dba49dd401031769b890",
+    "False"
+  ],
+  "protocol_sha256": "1456126e31bdbcfce1e3d158bf032990820a4b46fa85dba49dd401031769b890",
+  "wall_time_s": 20.44945970689878,
+  "error": null
+}

@@ -1,0 +1,33 @@
+{
+  "protocol_sha256": "77bda836df249b08d0a0863a82ffbf7f0016123e76fa97046a2393515ad38078",
+  "frozen_validation_passed": true,
+  "environment_resets": 0,
+  "official_action": false,
+  "tests": {
+    "command": "python -m pytest -q tests/test_evaluate_koi_nominal_trajectory.py tests/test_analyze_koi_nominal_trajectory.py tests/test_koi_nominal_trajectory.py tests/test_koi_trajectory_rollout.py tests/test_koi_collision_shield.py",
+    "passed": 75,
+    "subtests_passed": 30
+  },
+  "arms": [
+    {
+      "import_only": true,
+      "environment_resets": 0,
+      "mode": "frozen_shield",
+      "peak_import_rss_bytes": 267800576
+    },
+    {
+      "import_only": true,
+      "environment_resets": 0,
+      "mode": "nominal_trajectory",
+      "peak_import_rss_bytes": 267681792
+    }
+  ],
+  "resource_forecast": {
+    "execution": "one serial CPU21 child; no GPU",
+    "additional_child_peak_forecast_bytes": 1073741824,
+    "memory_basis": "Measured import/construct peak267800576; allow roughly three times that peak for environment, bounded1200-decision/4800-tick observer objects and rollout/serialization buffers, plus approximately256MiB reserve. Not an official or universal memory limit.",
+    "remaining_output_forecast_bytes": 502208400,
+    "disk_basis": "Comparable12-episode directory94164075 bytes; four times per-episode cost x16/12 covers candidate diagnostics and growth.",
+    "pre_reset_resource_recheck_required": true
+  }
+}

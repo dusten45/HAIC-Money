@@ -1,6 +1,556 @@
 # Current Research State
 
-Last refreshed: 2026-09-29 for the user-directed DrQ-v2 closure. This is the
+## Current Submission Baseline (2026-10-02)
+
+**User-designated baseline: crossing_projection + collision-shield v1.** At
+2026-10-02T01:36:47Z the user reported that the current official submission
+finished Track4 in **18.4s** and ranked **6th overall** at report time, and
+explicitly selected it as the new submission baseline. The user binds this report
+to ZIP SHA-256
+`c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801`.
+This is a **user-reported official result and user-bound package identity**, not
+independent verification: no site submission ID, server receipt or model-confirmation
+receipt is available. No new upload or server confirmation is performed here.
+
+Frozen reference artifact:
+[`20261002-crossing-projection-collision-shield-v1-baseline/`](../../submissions/20261002-crossing-projection-collision-shield-v1-baseline/),
+with the exact ZIP, manifest, all11 source members, standalone stdlib restoration
+helper, dependency versions, provenance and checksums. ZIP/member hashes match the
+original receipt; isolated exact-copy restoration and source-only ZIP rebuilding
+both reproduce the same ZIP SHA-256. These were file operations only: no Agent
+execution, simulator reset, performance test or new official action.
+The original experimental ZIP/receipt, shield source`ad772bde...`, standalone
+crossing ZIP`a4b35c56...`, root Agent and previous candidates are retained unchanged.
+The original research **NOT_ADOPTED / failed+20ms efficiency gate remains unchanged**;
+this submission designation is separate from research adoption. No retuning or
+evaluation is authorized by this documentation update. Historical packaging and
+research designations below remain dated evidence, not the current selection.
+
+## Bounded Magnitude Rejected; Overavoidance Closed (2026-10-02)
+
+The user authorized one isolated reaction-based replacement of nominal `.34/.55`
+avoidance with current-observation clearance/risk-dependent bounded magnitude,
+followed by the exact unchanged submitted v1 shield. The adapter owns only the
+original nominal and last diagnostics: no plan, action feedback, recovery/release
+timer, margin reduction, steering-release or persistent trajectory controller.
+
+The [four-pair frozen study](../../runs/koi-avoidance-magnitude-v1/protocol.json),
+SHA`1456126e...`, completed all8 contemporary episodes on four consumed ordinary
+TRAIN layouts/two roads. The [primary result](../../experiments/koi-avoidance-magnitude-v1-result.json),
+SHA`55d489f9...`, is **REJECTED / NOT ADOPTED**: finishes4/4->3/4, lost1/gained0,
+damage0->1.4, collision-positive decisions0->7, physical contact events0->4 and
+hit objects0->3, retaining all24 objects/arm. New hits are1/0013 object4,
+1/0015 object1 and3/0015 object1;1/0015 loses its finish. All four pairs match
+geometry/initial state/pixels and exact raw/decision prefixes before divergence.
+
+Only19/24 baseline windows and19/24 return followups remain comparable. Apparent
+three-retained-cell means (lateral-48.188963%, path-0.526375%, issued steering
+integral-12.230624%) exclude the failed cell and are NOT valid four-cell efficiency
+evidence. On road0013, path+2.813968% and steering integral+14.947015% worsen
+despite lower lateral deviation; lap+80ms also violates the20ms ceiling. Kept3
+lap mean-120ms omits the lost finish. Common19 return-censor count5->1 and
+descriptive bound13.131535->9.258961s do not repair five missing followups.
+
+Nominal98/820 candidate decisions changed; unchanged shield interventions9->25
+do not establish safety preservation. Integrated zero-reset validation277 tests
++133 subtests PASS; both exact CPU21 arms pass zero-reset import preflight.
+Source/environment/model pins and root/champion/shield/prior candidates rehash
+unchanged. No fresh/protected/Track4 geometry, official action or baseline edit.
+
+**Discard this candidate and close overavoidance optimization under the user's
+stop criterion.** Preserve frozen source/run/result as negative evidence; no
+retuning, repeat, new controller or automatic next experiment. This is rejection
+of this consumed-TRAIN candidate, not a proof that every possible avoidance
+controller is ineffective. Details and fixed gates are in
+[section27](../architecture/koi-baseline-analysis-2026-09-30.md#27-stateless-bounded-avoidance-magnitude-2026-10-02).
+
+The [independent primary audit](../../experiments/koi-avoidance-magnitude-v1-audit.json),
+SHA`7bc1297f...`, verifies all63 study-root files and frozen inventories, exactly
+reproduces the result and17 gates (7 pass/10 fail), and independently confirms
+safety,19/24 coverage and invalid four-cell efficiency denominators. No artifact
+discrepancy, Agent/policy execution, environment reset or driving replay.
+
+## Nominal Trajectory Candidate Rejected (2026-10-02)
+
+The user authorized isolated nominal avoidance trajectory/side selection and
+matched A/B on existing consumed TRAIN ordinary-obstacle cases. The new bilateral
+approach/pass/rejoin generator, complete lagged pursuit projection and per-frame
+remaining-plan validation precede the same byte-identical v1 shield in both arms.
+No margin reduction, steering-release or recovery-state tuning was reopened.
+
+The [frozen eight-pair study](../../runs/koi-nominal-trajectory-v1/protocol.json),
+SHA`77bda836...`, completed all16 episodes on five consumed roads, including
+ordinary four layouts/two roads. The
+[result](../../experiments/koi-nominal-trajectory-v1-result.json), SHA`b020c3cb...`,
+is **REJECTED / NOT ADOPTED**: finishes7/8->7/8, damage/collision decisions/hit
+objects0->0, all38 baseline windows and43 common return followups preserved, but
+ordinary max lateral+0.068713%, path only-0.014782%, issued steering integral
++4.193204% and steering variation+4.125609%. Common-return bound worsens; kept7
+lap mean+20ms and3/3184000015+140ms fail efficiency. Road0013 remains exact no-op,
+so no improvement on both ordinary geometries is established.
+
+Discard this efficiency-regressing candidate from adoption and further repeats;
+preserve its source/run/result as negative evidence. The exact submission baseline
+and collision-shield v1 remain immutable and rehash unchanged. No root Agent,
+fresh/protected/Track4 geometry, upload, model confirmation or official action.
+The existing KOI analysis
+[section26](../architecture/koi-baseline-analysis-2026-09-30.md#26-separate-nominal-trajectory-selection-2026-10-02)
+records the source diagnosis, fixed gates and outcome. Fixed-demand steering and
+centroid-only flank selection are observed source deficiencies; the new model
+planner's cost is not evidence of shorter real closed-loop driving.
+
+The [independent primary audit](../../experiments/koi-nominal-trajectory-v1-audit.json)
+rehashes all64 primary files and frozen inventories, reproduces the result and all15
+gates, and confirms only4/2132 nominal actions changed. Selected complete rejoin
+plans actually abort after one/two holds; fallback transitions and later inherited
+steering costs were not included in the original trajectory-bank cost. No artifact
+discrepancy or reason for a driving repeat was found.
+
+## Minimum-Intervention Collision Shield (2026-10-01)
+
+**Historical user packaging designation (15:45 UTC):** keep the v1 research result
+**NOT_ADOPTED** and its failed+20ms efficiency gate unchanged, but designate the
+exact frozen v1 separately as an **experimental submission candidate** for imminent
+obstacle-collision DNF prevention. Ordinary-overavoidance reduction is a separate
+follow-up, not part of this candidate. No tuning, added recovery, or extra driving
+evaluation. Local package
+[`koi-collision-shield-v1-experimental-submission.zip`](../../submissions/koi-collision-shield-v1-experimental-submission.zip),
+SHA`c9e376a0...`, preserves shield source`ad772bde...` and all crossing dependencies
+byte-for-byte. The [receipt](../../submissions/koi-collision-shield-v1-experimental-submission.receipt.json)
+records static/ZIP checks and64 exact synthetic CPU21 action/diagnostic comparisons,
+zero simulator resets and unchanged prior ZIPs/root/v2/result. This is a packaging
+designation, not a baseline replacement, research-gate pass, upload or confirmation.
+
+**Current user direction:** close long-lived collision_recovery development as
+FAILED / NOT ADOPTED; preserve its evidence and keep crossing_projection fixed.
+Implement a separate pixel-only `CollisionShieldAgent`, not recovery v2, and test
+only the same six already-consumed TRAIN cells (five road seeds), with ordinary
+controls and corner/obstacle challenges. No Track4 geometry, protected/fresh cells,
+root Agent change, steering-release change or official action.
+
+The independent runtime uses a .32s lagged footprint projection: candidate steering
+for only the actual .08s hold, then assumed baseline continuation. Only a predicted
+baseline collision triggers the collision-free finite steering grid; minimize
+action deviation plus a soft observed-road penalty, with unchanged pedals.
+Immediate handback on clear/unknown/infeasible prediction; at most six changed
+actions per encounter. Three observed threat-associated clear decisions rearm;
+unresolved threat dropout disables rearming until reset, never retains control.
+No heading recovery or reward-budget inference. Pixel projection is not a safety
+guarantee, and already collision-free baseline overavoidance remains untouched.
+
+The [frozen six-pair A/B](../../runs/koi-collision-shield-v1/protocol.json),
+SHA`afeeb356...`, completed all12 episodes with exact logged-state/pixel/raw prefixes.
+The [result](../../experiments/koi-collision-shield-v1-result.json) shows an important
+consumed-TRAIN safety signal: finishes3/6->5/6, kept3/lost0/gained2, damage1.4->0,
+collision-positive decisions7->0 and hit objects2->0, with no new hit. Only17/1639
+candidate decisions changed in16 bursts; longest burst2 actions/.16s, largest encounter5
+changed actions. Physical minimum clearance-.012577->.990591m; longest full-offroad
+duration stays1.14s. Aggregate full-offroad occupancy1.20->1.28s.
+
+**NOT ADOPTED under the frozen gate, not a rejection of the safety signal.**
+The preserved3/3184000002 lap slows17.68->17.86s (+180ms), exceeding the predeclared
+per-kept-lap+20ms limit; all other gates pass. The three kept laps average+40ms and
+path+.714544m. Two ordinary controls retain2/2 finishes and no hits, but lateral
+integral64.843274->65.955569m*s and path+0.582198m across the two do NOT demonstrate
+less overavoidance. One control is an exact no-op; the other changes4 decisions,
+finishes60ms faster but has higher max lateral6.691664->6.901651m. Remaining
+2/3184000006 noncollision departure begins within the identical115-decision prefix,
+before its first shield intervention. Do not infer a new heading-recovery remedy.
+
+No gate relaxation, policy tuning, repeat, new cell or promotion follows this result.
+Runtime/evaluator/analysis and preserved-regression checks:51 tests+31 subtests PASS;
+both frozen arms pass zero-reset CPU21 preflight. The
+[independent primary audit](../../experiments/koi-collision-shield-v1-audit.json)
+rehashes all48 episode/raw/decision/process files and205 frozen inventory pins,
+independently reproduces the metrics and all9 gate outcomes, and finds no artifact
+discrepancy. Encounter bookkeeping may persist across baseline actions; it is not
+continuous intervention. All six episodes end with conservative rearm blocked.
+See
+[implementation and outcome](../architecture/koi-baseline-analysis-2026-09-30.md#25-minimum-intervention-collision-shield).
+
+## Crossing-Based Collision Recovery (2026-10-01)
+
+**Current user direction:** crossing_projection is the KOI comparison baseline.
+Preserve steering-release v2 and its submission derivative unchanged; do not
+extend near_release or infer adoption from its reported public-track finishes.
+The user authorized focused consumed TRAIN development, not official evaluation.
+
+**Closed by the newer user direction above; no further state-machine extension.**
+The separate pixel-only `CollisionRecoveryAgent` directly wraps frozen crossing
+ZIP `a4b35c56...`, with emergency collision priority, soft road boundaries,
+explicit heading alignment, nearest-edge re-entry and stable handback. It has no
+steering-release dependency. The [six-pair result](../../experiments/koi-collision-recovery-v1-result.json)
+is **NOT ADOPTED**: baseline3/6 versus candidate2/6 finishes, one gained and two
+lost, one new hit on a baseline-clean object. Damage1.4->1.0 and collision-positive
+decisions7->5 do not offset this. Longest all-wheels-offroad duration1.14->7.96s;
+three candidate departures never regain road contact. The only mutually finished
+lap slows19.96->23.84s. No repeat is warranted as a claimed improvement.
+
+This follows a separate rejected v2-based priority-only [initial test](../../experiments/koi-collision-priority-v1-result.json)
+(4/6->3/6 finishes), preserved with its frozen source. Both are outcome-selected,
+reused TRAIN comparisons, not fresh generalization. Root Agent, crossing and v2
+sources/ZIPs remain unchanged. The [recovery diagnosis](../../experiments/koi-collision-recovery-diagnosis-v1.json)
+distinguishes collision stall, backward on-road travel and unrecovered departure;
+physical road reacquisition alone is not heading-safe recovery.
+
+Official Participants `dfb7a2d...` confirms retirement on101 consecutive decisions
+whose summed raw reward is negative (`counter > 100`), NOT101 physics ticks or a
+wheel-contact predicate. Agent receives no reward/counter; runtime recovery timers
+are explicitly proxies. The passive evaluator records the exact decision counter
+and physical contact loss separately. See KOI architecture section24 for details.
+
+## Frozen v2 Generalization Rejection (2026-10-01)
+
+**Current user direction: stop all further work; documentation only.** User visual
+observation: ordinary obstacles still provoke excessive lateral avoidance in v2,
+occasionally enough to leave the road. It is reduced versus before but remains
+visibly excessive. Margin reduction and steering-release have not resolved this
+problem and are currently on hold. Future reconsideration belongs at the
+**avoidance trajectory / side-selection** stage, not further release/margin tuning.
+
+**User-directed freeze:** steering-release v2 ZIP
+`b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce`,
+its runtime/parameters/manifest, crossing_projection source-reconstructed baseline
+and root Agent remain unchanged. The old24 TRAIN conditions (tracks1/2/3 x
+38300-38303 and50300-50303) are closed to further tuning or evaluation.
+
+The completed attempt was authorized as one separately frozen **nonprotected
+TRAIN/dev generalization A/B**, not protected confirmation, blind or official evaluation.
+The [zero-reset exposure audit](../../experiments/koi-steering-generalization-v1-exposure.json)
+cleared and claimed24 new road seeds3184000001-3184000024 across tracks1/2/3;
+these are72 obstacle-layout pairs, not72 independent roads. Its freshness scope is
+candidate-lineage-unseen, not project-global never-used:15 unrelated legacy PPO
+sampling uncertainties remain disclosed. No protected observations were read.
+Separate audit/evaluate/analyze adapters preserve every old source/result artifact.
+Predeclare coverage, finish/safety, lateral/avoidance/path/return/lap and geometry
+consistency gates. The completed matched prefix now supplies irreversible
+predeclared safety counterexamples: **NOT A GENERALIZED ADOPTION CANDIDATE**.
+A future correction must be a separate candidate, not an in-placev2 update or
+automatic next run. No correction or further environment interaction is made.
+
+**Original execution incomplete, negative evidence decisive:** the [frozen protocol](../../experiments/koi-steering-generalization-v1.json)
+SHA`ccc6720f...`, [independent review](../../experiments/koi-steering-generalization-v1-preflight-review.json)
+SHA`67157ff6...` and [mandatory forensic guard](../../experiments/koi-steering-generalization-v1-evidence-guard.json)
+SHA`74597759...` passed zero-reset validation. New-study regression checks passed
+135 tests plus20 subtests. Serial CPU21 A/B ended naturally with `child_timeout`;
+the [guarded result](../../experiments/koi-steering-generalization-v1-result.json)
+SHA`2572e09dfc8dd4a1399a1168ea15692b6be946cbb20a72b18d0532ea00d5843d`
+preserves95 valid completed episodes, one queued/bootstrap timeout and48 unrun
+slots from144 planned. Outputs/reset ledger remain under
+`runs/koi-steering-generalization-v1/`. Do not edit pinned sources, restart or
+relabel partial exposure. Only guarded finalization is authoritative; the raw loader's
+failure-time partial-pin omission remains explicitly documented and tested.
+
+Freshness auditing adds wall cost beyond the historical resource reference. The
+fixed4584.848s budget was not changed. The final slot3/3184000016/v2 timed out in
+2.123655s without episode/raw/decision files; its reset intent/process/logs remain
+conservatively recorded, not fresh. The reviewed boundary manager refused before
+any lock/signal because the operator had already finalized. Prepared continuation
+and composite code was never frozen or run; no successful boundary receipt exists.
+The144-slot/24-road plan is **not complete** and cannot be relabeled passed.
+
+The [matched diagnosis](../../experiments/koi-steering-generalization-v1-diagnosis-result.json)
+excludes the unmatched baseline episode: **47 matched pairs on16 new roads**, each
+with identical geometry/initial state+pixels/first10 actual actions. B41/47 versus
+C40/47 finishes; kept36/lost5/gained4/neither2. All five losses are valid natural
+episodes (four off-track, one crash), distinct from the operational tail. They span
+four geometries:3/3184000004,1/3184000005,1+3/3184000013,2/3184000014. Two new
+baseline-clean hits are objects2 and4 in the first two cells. Appending unexecuted
+cells cannot erase these strict lost-finish/no-new-hit counterexamples, so no
+additionalv2 evaluation/partial retry is needed to reject generalized promotion.
+
+Matched damage4.4->3.4, collision-positive decisions22->17 and hit objects5->4
+(282 objects per arm) improve in aggregate but hide two per-cell regressions and
+two new hits. Whole-episode centerline lateral proxy max29.9527->260.0025m.
+On173 preserved windows of190 baseline-eligible windows, conditional equal-cell
+lateral-10.4390%, avoidance integral-15.9312%, duration-3.5129%, path+0.0378% and
+actual steer integral-2.7570%; the missing17 windows invalidate survivor-based
+adoption. All12 eligible measured geometries have negative lateral/integral means,
+but this does not establish the safety/completion chain. Common return censors
+increase37->43 on235 followups;20 of255 baseline followups are lost. Kept36 laps
+19.091111->19.037222s (-53.889ms) omit five baseline finishes and cannot offset them.
+
+[Independent postrun audit](../../experiments/koi-steering-generalization-v1-postrun-audit.json)
+SHA`c4bd5b11...` exactly reproduces the guarded result and validates every source/
+raw/stream/process/ledger/model binding. [Five-failure audit](../../experiments/koi-steering-generalization-v1-failure-audit-result.json)
+SHA`55897acf...` confirms exact action/physical/raw prefix and divergent PRE-state
+equality: first changes are near_release steps43/41/70/93/33, with no generation
+suppression in any loss. All17 release-held decisions and selected-object passages
+remain sampled collision-free; contacts are DIFFERENT later unreleased objects,
+and three failures instead lose road/heading recovery after passage. Do not infer
+immediate released-object contact or blame the dormant generation correction.
+
+The local selected-object lag proxy has no road/heading recovery or next-object
+safety condition. Trajectory/perception-feedback mediation is a plausible but
+untested mechanism, not a proven unique cause. The former release road-recovery
+H1 is deferred with the steering-release approach. Future reconsideration is at
+avoidance trajectory/side-selection; no current implementation, tuning, checks or
+evaluation. Detailed observation/
+hypothesis and geometry tables are in KOI architecture section23. `off_track` is
+a reward-streak/simulator-termination label, not a wheel-contact predicate.
+
+Postrun audit publication conservatively makes the frozen broad root-metadata
+scanner report `HOLD` for its consumed outcome identities. Preserve it unchanged;
+no exclusion/waiver/freshness relabel is added and no further reset is attempted.
+This does not invalidate the already verified negative counterexamples. The
+planned24-road matrix remains incomplete; no population/official generalization
+claim is made, but strict generalized adoption is conclusively rejected.
+
+The consumed-r2 section below is historical supporting evidence, not permission
+to reuse its24 conditions. Its former future-confirmation wording is superseded
+only by this user-authorized TRAIN generalization scope.
+
+## KOI Steering Generation/Hold/Release (2026-10-01)
+
+**User-directed closure:** all minimum-clearance variants are FAILED / NOT
+ADOPTED. Both speed-target adjustment and safety-margin reduction directions are
+closed; do not reopen them as steering-release tuning. Preserve prior source,
+ZIP, protocols, negative results and audits. Crossing_projection remains the
+fixed source-reconstructed KOI baseline; no root Agent or official-model change.
+
+**Final r2: INTERNAL ADOPTION CANDIDATE, not a baseline replacement or official
+model.** The [completed result](../../experiments/koi-steering-release-ab-r2-result.json)
+and [frozen protocol](../../runs/koi-steering-release-ab-20261001-r2/protocol.json)
+cover all48 slots on the same24 consumed TRAIN layouts (tracks1/2/3 x
+38300-38303 and50300-50303; eight geometry seeds). All17 gates pass: B21/C24
+finishes, kept21/lost0/gained3, damage1.4->0, collision-positive decisions7->0,
+whole-episode hit objects2->0 and no new hit. All119 baseline fixed windows across
+21 cells and all136 comparable return followups are retained.
+
+Primary equal-cell relative changes are max lateral-12.544446%, avoidance
+duration-3.312396%, avoidance integral-17.805737%, path-0.169631% and actual steer
+integral-5.367767%. Duration does NOT meet5%; the avoidance gate passes through
+integral, with lateral/integral each qualifying on seven geometry seeds. The38300
+reset-seam cells are excluded from these window means, not from finish/safety or
+the matched21 laps:19.054285714->19.016190476s (-38.095238ms). Candidate's own24-lap
+mean is unmatched. Full144-object prospective return statuses are B113 returned/
+23 next-entry censored/6 unpassed/2 invalid versus C125 returned/17 next-entry
+censored/1 fixed-time censored/1 invalid. On the common136 followups, censors
+fall23->19; onset-delay/censored-bound mixture0.726180453->0.666090505s is
+descriptive, not an unbiased144-object return mean, KM or RMST estimate.
+
+The evidenced mechanism is avoidance steering generation/hold/release, not
+clearance magnitude. The
+[source-exact diagnosis](../../experiments/koi-steering-release-baseline-diagnosis-v1.json)
+reconstructs all5703 decisions/22779 ticks with zero issued/sum residual; it retains
+all144 objects and finds36 same-object projection-off/laterally-separated/outward
+avoidance cases. Old transverse fixture extents are unarchived: conservative yaw
+bounds plus observed exact fixture clearance are not counterfactual safety proof;
+new observer transverse intervals are measured separately. Missing projection or
+detector dropout is not safe clearance/rear-clear. The
+[first48-slot A/B](../../runs/koi-steering-release-ab-20261001-v1/protocol.json)
+completed: its [result](../../experiments/koi-steering-release-ab-v1-result.json)
+and [independent audit](../../experiments/koi-steering-release-ab-v1-audit.json)
+find23 candidate finishes vs21, but kept20/lost1/gained3 and two new hit objects,
+so NOT ADOPTED. Conditional117-window lateral/integral gains cannot offset two
+missing baseline windows or lost return coverage. Both fail-cell diagnoses find
+later inherited subpixel-motion flank flips, not contacts during released holds.
+Explicitv2 ZIPb1911d7d.../source52f54099.../term helpercb1149b0... suppresses ONLY
+a same-component motion-only flip when the current offset sign still favors the
+selected flank; all unambiguous/sign-crossing choices
+and coefficients/targets/margins remain unchanged. DefaultFalse preserves oldv1;
+all9 frozen baseline dependencies remain byte-identical, including original6px
+band and all margins/targets. Recorded final preflight:525 tests+28subtests and
+actual CPU21 source smoke pass. The small correction was actually reevaluated
+over the full r2, not inferred from the two diagnosed failures alone.
+The zero-reset publisher-schema failure and v1a identical-policy fix are preserved.
+The [final independent raw audit](../../experiments/koi-steering-release-ab-r2-audit.json)
+rehashes all48 episode/raw/process sets,158 frozen copies,1046 evidence pins,
+both model inventories and96 ledger rows, and independently reproduces all17 PASS
+gates with zero formula/return mismatches. Its source/post-generation distinction
+and all144-object safety/136-return denominators are preserved. Both-returned109
+conditional onset means are0.724220183->0.646972477s, not a136/144-object mean.
+CPU21 deterministic rebuild reproduces the same final ZIPb1911d7d....
+See the [final analysis](../architecture/koi-baseline-analysis-2026-09-30.md#22-final-r2-internal-adoption-candidate)
+and [evidence index](../experiments/INDEX.md#koi-steering-lifecycle-2026-10-01).
+The successful steering hypothesis is not closed for lack of improvement, but
+consumed TRAIN evidence does not establish fresh/generalized performance. The
+only next gate is separately user-authorized future confirmation with provenance
+and exposure checks; no evaluation is queued automatically and no fresh cells are
+promised. Crossing_projection stays FIXED and root Agent remains unchanged.
+
+## KOI Minimum-Clearance Result (Closed, 2026-09-30)
+
+**User-directed closure:** adaptive-v1 is FAILED / NOT ADOPTED and its
+speed-target hypothesis is closed. Preserve its frozen implementation, ZIP and
+negative A/B evidence; do not pursue another adaptive speed-target variant.
+`ContactContinuityAgent('crossing_projection')` is the fixed KOI improvement
+baseline, reconstructed from immutable `c4e224d` sources, not restoration of the
+missing original crossing ZIP.
+
+**Minimum-clearance candidates NOT ADOPTED:** all three separate48-slot A/B
+comparisons completed on only the same24 consumed TRAIN layouts, tracks1/2/3 x
+38300-38303 and50300-50303 (eight geometry seeds). The isolated steering candidate
+uses detected obstacle bounds, skin-inclusive full hull/wheel footprint, supported
+asphalt and minimum lateral target, not a steering multiplier. Baseline speed
+targets/pedal calculation and all frozen dependencies are unchanged.
+
+2026-10-01 user direction closes all variants as failed and ends safety-margin
+reduction; the following is preserved historical evidence, not a next tuning gate.
+
+[v1 result](../../experiments/koi-minimum-clearance-ab-v1-result.json) preserves21
+finishes and damage1.4/collision7 but changes only5 decisions, with+0.038408%
+cell-weighted path and+8.571429ms kept-lap mean change. A diagnosed full-command
+versus actual.08s action-hold mismatch was directly corrected in separatev2;
+[r2 result](../../experiments/koi-minimum-clearance-ab-r2-result.json) loses one
+baseline finish and adds a new obstacle hit, so fails safety regardless of its
+surviving-window path decrease. Original results/ZIPs/source copies are preserved.
+
+The geometry-derived current-projection clearance correctionv3, ZIP
+`594fca15005ec38cc67801824e9725fc84da440c2309083f02a24955b0ab8fca`,
+requires a supported target lane, safe applied.08s command and projected full
+footprint separation on the intended flank. The [final r3 result](../../experiments/koi-minimum-clearance-ab-r3-result.json)
+restores21/24 finishes, kept21/lost0/gained0, per-cell damage/collision unchanged,
+no new hit and all119 baseline windows. Cell-weighted path reduction is only
+0.138079%, below the predeclared2%/two-geometry gate; matched21-lap mean is
+2.857143ms slower. Max lateral grows9.334206->9.608379 units and steering metrics
+do not improve. Final335 tests+28 subtests and independent source reviews pass.
+The [final primary audit](../../experiments/koi-minimum-clearance-ab-r3-audit.json)
+rehashes all48 episode/raw pairs,150 source copies and both model inventories,
+independently verifies every gate, and confirms3/38301's restored221 decisions/
+881 raw records exactly match the recorded baseline. Completed138-passage minimum
+clearance falls1.371783->0.662154 units; all144-object safety still preserves the
+two preexisting hit objects. No real return_centerline calls occurred. Of144
+return rows,118 per arm are window-exit censored; only one both-returned pair
+has0.24->0.28s, not a cohort improvement.
+No meaningful shorter/safe route or early-return improvement is established;
+crossing_projection stays fixed, not replaced by any candidate. All three frozen
+results, negative evidence and audits are routed from the experiment index.
+No fresh/protected/official action, new-road claim, root Agent change or Git write.
+See the [active KOI analysis](../architecture/koi-baseline-analysis-2026-09-30.md#15-minimum-clearance-가설과-adaptive-v1-종료).
+
+## KOI Adaptive Avoidance A/B (Closed, 2026-09-30)
+
+The user-directed first unchanged comparison completed all 48 episodes on only
+the already-consumed TRAIN cohorts: tracks1/2/3 x38300-38303 and50300-50303.
+There are 24 matched layout cells but only eight road geometry seeds. Both the
+frozen crossing source reconstruction and adaptive-v1 ZIP finished21/24, with
+kept21/lost0/gained0, total damage1.4 and seven collision-positive decisions each.
+No operational error, censor or newly hit baseline-clean obstacle was found.
+This does not reproduce the missing original crossing ZIP or historical report.
+
+**Adaptive-v1 is not adopted:** mutually finished mean lap time increased
+19.05429->19.07905s. The 120 valid common-entry obstacle pairs across21 cells
+averaged0.649009->0.649890s; the cell-weighted mean change was+0.000839s, not a
+reduction and below20ms raw timing resolution. Only7/5710 candidate decisions
+changed pedals. One clean full physical passage had actual minimum44.162,
+but the predeclared valid-common-entry/two-geometry speed gate was not met;
+the seam-ambiguous38300 cohort remains excluded from common-entry statistics.
+Do not confuse a target/peak above44 with sustained replicated passage speed.
+Models/ZIPs remain unchanged; no tuning, second run, fresh/protected evaluation
+or official action occurred. See the [frozen result](../../experiments/koi-adaptive-ab-v1-result.json)
+and [measurement plan and interpretation](../architecture/koi-baseline-analysis-2026-09-30.md#13-사용자-지정-consumed-train-ab-검증).
+The [independent primary audit](../../experiments/koi-adaptive-ab-v1-audit.json)
+verifies all48 episode/raw hashes and distinguishes138 completed-passage speeds
+(mean of segment means42.94373->43.00255) from the140-encounter summary containing
+two incomplete encounters. Its one real above44 case has unchanged passage time.
+The designated KOI improvement baseline remains crossing_projection; no other
+research line's status or official-model designation is changed by this result.
+
+## RLPD Coupled Recovery In Progress (2026-09-29)
+
+The user authorized and resumed TRAIN-only curve-entry overspeed / steering-speed
+coupling recovery validation after a Kilo-only restart. This authorization
+supersedes the historical migration pause below for this RLPD iteration only.
+Current collection uses only consumed G0 track-1 geometries 4272000001-4272000012;
+confirmation/blind/private cells and official actions remain out of scope.
+
+The [closed-loop validation result](../../experiments/rlpd-recovery-validation-v1-result.json)
+now covers 42 completed branches, 18,411 decisions and 43 reset intents including
+one externally killed duplicate attempt with unknown extra cost. The
+[separate continuation](../../experiments/rlpd-coupled-recovery-r2.json) reused
+28 immutable traces and collected only the missing 14. Full steering/pedal
+Oracle feedback for 12/25 decisions preceded original-actor continuation to real
+episode end, with lateral error, speed, damage and progress followed for at least
+five seconds after handoff. Historical archive divergence was not repaired.
+
+At 12 decisions, 2/10 failures became finishes but 2/4 finished-parent controls
+were harmed; at 25 decisions, 3/10 became finishes and 2/4 controls were harmed.
+Only one and three rescues respectively also passed local qualification. This
+supports state-specific recovery data, not unconditional Oracle repair.
+
+Partial primary receipts already show that an unchanged actor can pass the
+five-second local condition and fail later. Learning therefore requires actual
+paired full-finish rescue plus local qualification, with preserved-finish harm
+controls. The data window includes the executed intervention and first 63 actor
+decisions after handoff, not unexecuted Oracle proposals. Strict preparation
+produced 665 accepted rows (653 unique), including 339 unique failure-support
+rows across three geometries. Matched 8,192-decision raw-SAC fine-tuning of two
+V5-seed50 learner-state copies completed under the
+[frozen learning protocol](../../experiments/rlpd-recovery-learning-v1.json):
+32online/32prior control versus 32online/16prior/16recovery. Contemporary
+pixel-only finish/curve-entry evaluation completed 36 uncensored episodes in a
+corrected r2 after a summary-field error stopped the retained first attempt.
+Finishes are V5 5/12, matched control 4/12 and recovery replay 1/12. Recovery lost
+all five original finishes and gained one different road; its prospective
+curve-associated terminal failures are 1/12 versus source 1/12 and control 0/12.
+The Q-only replay intervention is rejected. See the
+[verified full evaluation](../../experiments/rlpd-recovery-evaluation-v1-result.json).
+All three current
+critics still prefer their own actor on the 87 Oracle failure-support images;
+this is a ranking diagnostic, not evidence that the teacher is optimal or that
+driving performance failed. See the
+[action comparison](../../experiments/rlpd-recovery-action-comparison-v1-result.json).
+The next isolated iteration adds joint native deterministic-mean guidance only
+on proven failure Oracle rows, plus frozen-original-mean retention on prior and
+handoff/preserved-control rows. It keeps raw SAC/environment reward unchanged
+and reports extra actor optimizer work separately. It completed 8,192 decisions,
+8,191 SAC updates and 8,191 extra actor updates under the
+[guided child protocol](../../experiments/rlpd-recovery-guided-learning-v1.json)
+after independent review and actual-data zero-reset preflight; 164 tests and
+33 subtests passed. The [actual-visit regression review](../../experiments/rlpd-recovery-regression-review-v1-result.json)
+shows changed heading/steering visits and lost handoff retention, not a uniform
+saturation shift or a blanket speed/brake-only mechanism. The
+[guided result checkpoint](../../experiments/rlpd-recovery-guided-v1-result.json)
+records successful export/hash checks and markedly lower joint error on the
+87 selected failure Oracle images. The full comparison nevertheless finished
+original 5/12 versus guided 2/12, losing four original finishes and preserving
+only one. The sparse curve-terminal proxy fell 1 to 0 while mean progress fell
+0.6944 to 0.4804, so the guided intervention is rejected too. Action matching is
+not closed-loop improvement. See the [verified guided evaluation](../../experiments/rlpd-recovery-guided-evaluation-v1-result.json).
+The third isolated iteration freezes the original encoder/critics/temperature
+and fits only actor correction with explicit initial/successful-path protection.
+It completed 2,048 offline actor updates with all declared frozen components
+bitwise unchanged, then finished 24 uncensored evaluation episodes. Completion
+is tied at 5/12, but four original finishes were lost and four different roads
+gained; damage and curve-terminal counts increased. It fails the preservation/
+improvement gate. See the [actor-only outcome](../../experiments/rlpd-recovery-actor-only-evaluation-v1-result.json).
+The fourth hypothesis uses the original actor as exact default when inactive
+and a pixel-feature local-support gate to invoke the learned joint correction
+for a held 12-decision sequence. Protected calibration prevents fresh triggers
+on its sampled reference points, not harm guarantees during active holds or
+whole episodes. The gate is now built with 87/87 covered prototypes and no fresh
+trigger on 16,023 reference queries; inactive actions were source-exact. Its
+[frozen protocol](../../experiments/rlpd-local-recovery-gate-v1.json) and independent
+review passed, and the full suite passed 225 tests plus 37 subtests. Original-
+versus-gated evaluation completed 24 uncensored episodes: original5/12 versus
+gated6/12, all five old finishes retained and geometry4272000010 gained. Mean
+damage0.2->0.05 and progress0.6944->0.7566 improve; sparse curve-terminal counts
+remain1/1. This is the first retained consumed-TRAIN improvement, not fresh
+generalization. The [unchanged-policy repeat](../../experiments/rlpd-local-recovery-gate-evaluation-repeat-v1-result.json)
+reproduced the same counts and aggregates. The [primary trigger-path review](../../experiments/rlpd-local-recovery-gate-trajectory-review-v1-result.json)
+verified only60/4896 decisions used correction: two12-decision holds rescue
+geometry10, then383 source-only decisions finish. At5.04s after its first
+trigger, heading is -0.049rad, speed21.99m/s, lateral2.28m, damage0, progress0.2465
+versus source heading2.937rad/progress0.1549. All five preserved finishes had no
+gate activity and exact trajectories. This closes the internal recovery-data
+validation gate, not a fresh-road/independent-training or official-model gate.
+See the [verified local-gate outcome](../../experiments/rlpd-local-recovery-gate-evaluation-v1-result.json).
+No geometry/pose/Oracle inputs
+are allowed at runtime and no fresh generalization is claimed.
+There is
+no fresh-road improvement or candidate promotion. See the
+[active RLPD iteration](../plans/rlpd-completion-first-research-2026-09-26.md).
+
+The [zero-reset precursor review](../../experiments/rlpd-recovery-precursor-review-v1-result.json)
+confirms heading/lateral thresholds occur in successful controls too. Seed52's
+archived traces lack curvature and same-state Oracle actions, so overspeed and
+steering opposition are unassessed rather than inferred from old actors.
+The [foundation checks](../../experiments/rlpd-recovery-foundation-check-v1-result.json)
+establish synthetic code/checkpoint feasibility only, not driving performance.
+
+Last refreshed: 2026-10-02 for rejected stateless bounded magnitude and user-directed
+overavoidance closure, preserving the exact submission baseline. This is the
 current-state source of truth, not an experiment changelog. Evidence and
 historical decisions are linked below.
 
@@ -14,6 +564,30 @@ should be launched during migration. See the detailed
 Git-external transfer inventory and deletion gate. A Git push alone is not
 proof this instance can be removed.
 
+**New-instance environment check (2026-09-28):** The previous training receipts
+record RTX 5070 Ti (compute capability 12.0) and Torch 2.11.0+cu128; the new
+host has RTX 4060 Ti (8.9) and Torch 2.1.0+cu121. Python 3.11.14 and driver
+580.173.02 match. Core dependencies, native Box2D, isolated regression tests,
+CUDA/cuDNN and source/resource preflight passed. More importantly, the actual
+RLPD batch-64, TD-MPC2 batch-256 and DrQ 32:32 batch-64 update paths all ran
+on generated data with finite GPU metrics, without constructing or resetting
+the HAIC environment; synthetic checkpoint and actor-load checks also passed.
+**Development and a new, separately identified TRAIN runtime appear technically
+feasible**, but this does not reproduce the old Torch/GPU environment, establish
+long-run throughput, validate the whole artifact transfer, or make either
+partial learner exactly resumable. The isolated `/tmp/kilo/haic-cpu21`
+Torch 2.1.0+cpu interpreter is restored and import-checked with CUDA disabled.
+It has since run TD-MPC2's source-bound CPU diagnostic for 16 capped episodes
+on four already-consumed TRAIN cells; this is internal evaluation only, not
+official Agent packaging or acceptance. The interpreter remains ephemeral and
+shared.
+Keep the migration stop:
+no learner run or evaluation cell until a new user instruction, restored-evidence
+verification and the relevant frozen protocol/exposure/resource gates. See the
+[historical inventory](../../experiments/instance-migration-training-packages-2026-09-27.txt),
+[initial validation](../../talk/messages/20260928T072107Z-k8v2-new-instance-gpu-validation.md)
+and [synthetic training checks](../../talk/messages/20260928T074037Z-k8v2-synthetic-training-feasibility.md).
+
 ## Current Position
 
 **DrQ-v2 is CLOSED by user direction (2026-09-29).** Do not initiate further
@@ -25,6 +599,7 @@ ZIP and all negative-result evidence; see the
 
 | Area | Current status |
 |---|---|
+| TD-MPC2 current research status | **Temporarily PAUSED by user direction on 2026-09-30 to focus on other ideas.** Scheduled resource follow-up cancelled; no active TD operator. The next raw-MSE reward-head-only control is implemented but unexecuted: final-source v3 benchmark, experiment protocol and real run are absent. No automatic restart when memory recovers; explicit user reopening is required. Earlier negative gates and artifacts remain preserved. See the [detailed paused plan](../plans/active/tdmpc2-pixel-online-baseline.md#user-requested-focus-pause-2026-09-30). |
 | DrQ-v2 speed-only follow-up | **CLOSED with the entire DrQ-v2 line by user direction.** A frozen pad-4 seed1 brake-only inference intervention failed to preserve completed roads on 32 repeatedly reused development cells: track1 5/16 control versus 3/16 treatment (three lost finishes), track2 1/8 versus 0/8 (one lost), track3 0/8 in both arms. Only two mutually completed track1 laps shortened by 1.74/1.28 seconds; no cross-track speed result exists. The 128-episode CPU21 run passed two-reload parity and action-trace hashes. Do not deploy or pursue another DrQ speed hypothesis. The original actor/local ZIP and evidence remain unchanged. See the [`frozen result`](../../experiments/drqv2-speed-reused-development-v1-result.json) and [closure decision](../decisions/INDEX.md#close-the-drq-v2-research-line). |
 | Validated internal baseline | Native DrQ-v2 control with augmentation pad 4. Two unique control actors, one per training seed, were evaluated on two fresh internal confirmation cohorts; the recorded control outcomes range from 4 to 7 finishes in 32 cells. |
 | Active research direction | DreamerV3 is CLOSED. Other algorithm work is listed separately below; there is no active Dreamer experiment or implementation task. |
@@ -34,12 +609,500 @@ ZIP and all negative-result evidence; see the
 | DrQ-v2 training-only geometry study | Completed: consumed-road failure analysis, blind-safe seed audit, 120 distinct TRAIN roads + 16 separate TRAIN-DIAGNOSTIC roads in six measured families, static/finish-logic sanity, and 272 sealed frozen actor diagnostics. The same 136 training-only roads gave 10 both-actor finishes, 74 provisional boundary, 50 difficult-with-progress, 2 unresolved and zero selected malformed geometries. No new learner training or held-out/blind action. See `docs/experiments/drqv2-geometry-augmentation-v1.md`. |
 | DrQ-v2 geometry-mix fine-tuning | All six frozen r6 online-only runs completed 32,768 additional decisions and 22,768 updates each, sampling TRAIN only. On the same 16 previously designated TRAIN-DIAGNOSTIC roads, canonical repeat-0 finishes were uniform 1/32, failure-weighted 4/32, and easy-retention 3/32 across the two learner seeds; the unchanged source actors finished 11/32. This is descriptive, unranked development evidence, not fresh generalization, confirmation, blind, or official HAIC performance; no weights were selected or promoted. r4/r5 partial attempts remain preserved and are not resumed or counted. See the r6 [`active plan`](../plans/active/drqv2-geometry-mix-plan.md), [`protocol`](../../experiments/drqv2-geometry-mix-v1-r6.json), six run `result.json` files, and [`diagnostic manifest`](../../runs/20260925-drqv2-geometry-mix-v1-r6/train-diagnostic/manifest.json). |
 | DrQ-v2 r7 source retention | Twelve frozen 32:32 source/online TRAIN runs completed the r6 budget with and without one pre-fixed actor preservation loss. On the same 16 reused TRAIN-DIAGNOSTIC roads, r7a kept 1/3/1 of the eleven source-success actor/road cells and gained 2/7/4; r7b kept 4/1/5 and gained 5/7/5 (uniform/failure-weighted/easy-retention). All six arms lost at least six old successes; the predeclared >=9 kept and >=2 gained retention contract failed despite higher total finishes. No model promotion or fresh held-out/confirmation/blind/official action. See the [`r7 evidence report`](../experiments/drqv2-retention-r7.md), [`result`](../../experiments/drqv2-retention-r7-result.json), and [`384-episode trace manifest`](../../runs/20260926-drqv2-retention-r7/train-diagnostic/manifest.json). |
-| DrQ-v2 final-source retention and migration stop | Offline longitudinal parity passed 5,998 archived source actions/666 prior state hashes; full old replay scan found far fewer feature-near middle/corner/late/finish-approach than early states, without identifying a causal mechanism. Both final-source-policy TRAIN pools sealed 100,000 decisions each. **Five of six** matched 32:32, lambda=0.5 learners completed; seed1/easy-retention stopped for instance migration after a valid step-16,384 checkpoint, although the retained TRAIN ledger extends to step 21,037/gradient 11,037. There is no exact restart implementation, completed sixth result, all-six sample audit or final-source TRAIN-DIAGNOSTIC episode. The fixed >=9/11 retained AND >=2/21 gained gate remains **unevaluated**, not failed or passed. All DrQ work is paused for migration; no automatic new experiment or restart. Transfer Git-external source/control/final pools, five complete arms and the entire partial sixth directory. See the [detailed DrQ handoff](../experiments/drqv2-final-source-replay-v1.md) and [migration stop receipt](../../experiments/drqv2-final-source-replay-v1-migration-stop.json). |
-| Independent TD-MPC2 pixel baseline | Paper/current-official-source faithful 5M-size-class world model, episodic termination and MPPI are isolated from DrQ/PPO; HAIC alone requires four-channel grayscale/64px and action conversion. The first frozen reused-TRAIN pilot recorded 10,061 decisions and 10,000 pretraining plus 60 later updates but failed at a next-episode planner reset because an inference tensor was zeroed outside inference mode. Its 29 completed episodes had no finishes and no complete planned episode; within-replay model fit cannot establish driving benefit. The regression is repaired and tested. Separate v2 full source/resource preflight passed once with zero resets, but shared disk had only 5.5GiB free against its unchanged >=5GiB floor and continued peer writes, so v2 has NOT run. No TD-MPC2 candidate, held-out or official action. See the [`active plan`](../plans/active/tdmpc2-pixel-online-baseline.md), [`v1 failure`](../../experiments/tdmpc2-reused-train-pilot-v1-failure.json), and [`v2 exposure`](../../experiments/tdmpc2-reused-train-pilot-v2-exposure.json). |
+| DrQ-v2 final-source retention and reconstruction r1 rev2 | Offline parity passed 5,998 archived source actions/666 prior state hashes; both frozen source TRAIN pools contain 100,000 decisions. Five of six original learners completed; the 21,037-decision partial arm and stale step-16,384 checkpoint remain immutable and cannot be resumed exactly. The user explicitly reopened this line. Revision 2 binds the terminal TD-MPC2 v2 TRAIN and 16-episode CPU diagnostic on four already-consumed track-1 cells. A first seed0/uniform launch failed before environment creation; its pinned failure/runtime receipts show 0 resets, decisions, or updates. After the duplicate Torch interop setup was removed from the child launcher, the revision-2 preflights passed with zero interaction. Seed0/uniform then completed 32,768 decisions/22,768 updates on RTX 4060 Ti/Torch 2.11.0+cu128; its 67 TRAIN episodes/cells and eight checkpoint/actor/sample-trace hashes verify. The 120 parent catalog seeds are reused, not fresh. Five arms remain; no six-arm sample audit or final-source diagnostic exists yet. The >=9/11 kept AND >=2/21 gained retention gate is **unevaluated**. See the [child protocol](../../experiments/drqv2-final-source-replay-reconstruction-r1.json), [exposure receipt](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/preflight-exposure-audit.json), [zero-interaction setup failure](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/preflight-failure-20260928T104204Z-seed0-uniform.json), [arm0 result](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/learner-0-uniform-final_source/result.json), [DrQ report](../experiments/drqv2-final-source-replay-v1.md), [active plan](../plans/active/drqv2-geometry-mix-plan.md), [sample adapter](../../scripts/audit_drq_final_source_reconstruction_samples.py), and [diagnostic adapter](../../scripts/diagnose_drq_final_source_reconstruction.py). |
+| Independent TD-MPC2 pixel baseline | Paper-faithful 5M-size-class model, episodic termination and MPPI use the TD-MPC2-only HAIC pixel/action adapter. V1 stopped at 10,061 decisions after a planner-reset inference-tensor failure; its 29 episodes had no finishes and the checkpoint is provenance-only. User-directed v2 from scratch passed restore/exposure/source/resource gates and ended at a valid episode boundary: 12,058 decisions, 37 episodes, 12,057 updates (10,000 pretraining; 2,057 post-seed), and 1,629.3 seconds. It stopped because 1,942 decisions remained, fewer than the frozen 2,000-step max episode. All 37 TRAIN episodes had no finish; the reset regression did not recur. The run used the new RTX 4060 Ti/Torch 2.1.0+cu121, not the previous runtime. Source-bound Torch 2.1 CPU export passed with zero resets. The 16-episode capped diagnostic on the same four consumed TRAIN cells had prior 0/8 finishes, 0 censored, mean progress 0.05252/reward -46.904; MPPI 0/8 finishes, 1/8 censored at 500 steps, mean progress 0.03487/reward -50.155. The evaluator marks `capped_finish_comparison_valid: false`; these reused-TRAIN proxies establish no strategy benefit/failure or generalization. No fresh, confirmation, blind, official or promotion action. See the [`active plan`](../plans/active/tdmpc2-pixel-online-baseline.md), [`v1 failure`](../../experiments/tdmpc2-reused-train-pilot-v1-failure.json), [`v2 exposure`](../../experiments/tdmpc2-reused-train-pilot-v2-exposure.json), [`v2 result`](../../runs/tdmpc2-reused-train-20260927-v2/result.json), and [`paired diagnostic`](../../runs/tdmpc2-reused-train-20260927-v2/evaluation-result.json). |
 | User-directed pixel RLPD pilot | V2 is closed stop/hold. The separate long-horizon v1 passed screen, strict confirmation, and blind; RLPD seed 11 at 131,072 steps remains an internal candidate. Entropy V1–V3 aborted before interaction. V4 consumed fresh teacher/student runs but stopped before screen on source-hash drift; its held-outs are retired. V5 used fresh prior data and four 131,072-step target-arm runs; its screen had 29/192 canonical finishes and passed all target/seed gates. Strict confirmations were author-target 17/32 and 7/32 versus +1.5 target 6/32 and 6/32; all were eligible and operationally clean. Author-target passed the paired dominance gate, and its selected seed-50 actor finished 7/24 on the internal blind (mean progress 0.657). This remains two-seed internal evidence, not an official result. See `docs/experiments/INDEX.md`. |
 | Pixel RLPD completion-first G0 | Complete TRAIN-only observational diagnosis: two frozen actors on 12 shared geometries, 24 episodes and 10,049 decisions; each finished 3/12 and failed 9/12. Contact and centerline-distance events also occurred on successful controls; the 20-decision low-directed-motion event appeared only on nonfinishes in this cohort. No causal remedy or learner experiment is selected. All cells are consumed; see `experiments/rlpd-g0-completion-v1-result.json`. |
-| Best single-model designation | No official or competition-confirmed model is designated. Pixel RLPD seed 11 is an internal, limited-geometry blind-tested candidate only. See `docs/results/MODEL_STATUS.md`. |
-| Official external state | This repository has no committed official server submission identifier, public-track result, or model-confirmation receipt. A local package archive is not proof of an official submission. |
+| Current submission baseline | User-designated crossing_projection + collision-shield v1, ZIP`c9e376a0...`, as of2026-10-02. Pixel RLPD seed11 retains its historical internal-study candidate status, not the submission baseline. See `docs/results/MODEL_STATUS.md`. |
+| Official external state | User reports Track4 finished in18.4s and6th overall at2026-10-02T01:36:47Z, bound by the user to the selected ZIP. No site submission ID, server receipt, independent package-to-result verification or model-confirmation receipt is recorded. This update is not an upload or server confirmation. |
+
+**Latest DrQ final-source status (2026-09-28 14:03 UTC; supersedes the earlier DrQ table row):** revision-2 child preflight passed. Four of six arms completed full TRAIN budgets: all three source-seed-0 mixtures and seed1/uniform. Their result/step/episode/checkpoint/actor/sample-trace artifacts independently verify; all cells are from the reused parent TRAIN catalog. Two source-seed-1 arms remain, next failure-weighted. Per the user's pause request no DrQ process is active. The prior partial arm/setup failure remain preserved; no child sample audit, 192-episode diagnostic or retention-gate decision exists. See the [revision-2 protocol](../../experiments/drqv2-final-source-replay-reconstruction-r1.json), [arm results](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/), and [DrQ report](../experiments/drqv2-final-source-replay-v1.md).
+
+**DrQ resumption update (2026-09-29; supersedes the 4/6 status above):**
+The user reopened development and both remaining source-seed-1 TRAIN arms
+completed 32,768 decisions and 22,768 updates each under the same revision-2
+protocol. All six child results now exist; the last two arms' checkpoint,
+actor and sample-trace hashes were independently rechecked, with no OOM or
+protected-cell action. The source-bound six-arm CPU21 sample audit then stopped
+on the first `seed0/uniform` online warmup comparison: its first 10,000 replay
+`frames` were not byte-identical to the historical r7b comparator. This is a
+**provenance gate failure**, not a learner or retention outcome. No passing
+sample receipt or 192-episode TRAIN-DIAGNOSTIC output exists; the fixed
+>=9/11 kept AND >=2/21 gained gate remains **unevaluated**. The original
+migration-partial arm remains immutable. See the [audit HOLD](../../talk/messages/20260929T074909Z-t8p3-drq-sixarm-audit-hold.md)
+and [DrQ report](../experiments/drqv2-final-source-replay-v1.md). Do not run
+the diagnostic or infer cross-runtime bitwise comparability until the audit
+discrepancy is characterized under a separately source-bound decision.
+
+**Latest DrQ final-source outcome (2026-09-29 09:43 UTC; supersedes the
+earlier DrQ HOLD as the operational status, not as an original-audit pass):**
+All six revision-2 TRAIN learners remain complete. The original six-arm
+sample audit **failed** on cross-runtime historical warmup byte parity and
+its receipt remains absent. A distinct [source-pinned postrun r2 protocol](../../experiments/drqv2-final-source-replay-reconstruction-postrun-r2.json)
+passed its separate zero-reset six-arm replay provenance audit
+([receipt](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/pre-evaluation-postrun-r2-sample-audit.json))
+and CPU21 zero-reset preflight, then completed exactly 192 episodes (96
+deterministic canonical pairs) on 16 **previously consumed** track-1
+TRAIN-DIAGNOSTIC roads. Its [manifest](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2/manifest.json)
+SHA-256 is `e159681ede6f07f1432d5f1b5484bf7c584581704585d8c27f10688bf016dd9f`;
+all 195 listed output hashes independently verify. Per mixture, from 11
+known source-success and 21 source-failure actor/road cells, uniform kept
+2/11 and gained 4/21, failure-weighted kept 5/11 and gained 7/21, and
+easy-retention kept 6/11 and gained 6/21. **None meets kept >=9/11 AND
+gained >=2/21** even as a descriptive development signal. The original
+matched replay-only gate is not repaired or causally evaluated; the new
+cross-GPU trajectories and unproven child replay pixel parity limit this
+to reused-TRAIN descriptive evidence. No DrQ candidate selection, fresh,
+confirmation/blind or official evaluation is opened. See the
+[result note](../../talk/messages/20260929T094736Z-t8p3-drq-r2-diagnostic-no-signal.md)
+and [full report](../experiments/drqv2-final-source-replay-v1.md).
+
+**TD-MPC2 current status (2026-09-30): PAUSED to focus on other ideas.**
+The user explicitly stopped this research line and cancelled its scheduled
+follow-up. The 00:25 UTC resource wakeup was cancelled; no active TD
+operator or pending continuation is left. Do not restart automatically
+when memory recovers or on delayed delivery of an old alert. A new explicit
+user direction is required to reopen this line. The next unexecuted idea
+was a reward-head-only objective control (categorical CE -> decoded raw
+reward MSE), starting from the original overshoot100k parent, not the
+failed adapted model. Actual MSE checkpoint loads, updates and resets
+remain zero; no final-source v3 benchmark, frozen MSE protocol or MSE
+run exists. See the [detailed paused experiment and restart boundary](../plans/active/tdmpc2-pixel-online-baseline.md#user-requested-focus-pause-2026-09-30)
+for exact hypothesis, data split, source hashes, budgets, unresolved
+memory estimate, and fit/excluded/action-choice gates. Completed
+negative results below remain evidence; this is a focus pause, not
+a performance verdict on the unexecuted MSE treatment.
+
+**Historical TD-MPC2 direction (2026-09-28; superseded by the focus pause above):**
+The user classifies v2 as operational but undertrained (only 2,057 online
+post-seed updates), not a failed algorithm. A separately frozen comparison
+of 3D independent and 2D exclusive-pedal iid seed actions completed on the
+same four already-consumed obstacle-enabled track-1 TRAIN roads, twice each.
+Mean progress was 0.06897 for 3D versus 0.03682 for 2D (7/8 paired 3D wins),
+with zero finish/damage in either arm. 2D had less negative whole-episode raw
+return but shorter episodes; the predeclared progress-first rule selects 3D
+for a new, separate ~100k from-scratch run. This is reused-TRAIN action-source
+diagnosis, not trained-policy or generalization evidence. The independent
+[100k TRAIN protocol](../../experiments/tdmpc2-long-reused-train-v1.json)
+(SHA-256 `bc1a2746845cbef89275c9b51163c273955ef1664fe833da35ed17e534e8c885`)
+passed the zero-reset preflight and started from scratch at 2026-09-28 15:44 UTC
+in `runs/tdmpc2-long-20260928-v1/`. It **stopped partially** at 10,020
+decisions/updates (28 complete TRAIN episodes, 279 decisions in the open
+episode) with an action-bounds `ValueError` after pretraining. No 20k/40k/70k/100k
+checkpoint, exact resume, or longer-budget learning conclusion exists. Its
+[partial failure receipt](../../experiments/tdmpc2-long-reused-train-v1-failure.json)
+preserves ledger hashes. All 10,020 applied actions were valid; an unbounded
+float32 MPPI weighted-elite **diagnostic mean** has a reproduced one-ULP
+overflow mechanism. The failing next-state value itself was not logged, so
+this is a strong inference rather than a direct measurement. A new run must
+use the separately source-pinned correction and path. That corrected
+[retry v2 protocol](../../experiments/tdmpc2-long-reused-train-v2.json) at
+SHA-256 `d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec`
+passed zero-reset preflight and started a separate persistent TRAIN run in
+`runs/tdmpc2-long-20260928-v2/` at 16:27 UTC. Its first 20k whole-episode
+checkpoint at **20,099 decisions/updates**, second at **40,024**, third at
+**70,361** and final at **100,354** are sealed. Training completed normally
+in 17,459 wall seconds; the separate predeclared CPU full-episode reused-
+TRAIN evaluation is running.
+The [frozen 20k result](../../experiments/tdmpc2-long-reused-train-v2-20k-result.json)
+reports 0/67 finishes on reused training roads and identical-anchor H3
+reward-ranking **24/40** informative pairs versus the v2 pilot's 25/40.
+The fixed 256-window TRAIN seed probe has 0/768 positive terminal labels,
+so its low termination loss does not verify event detection. The
+[frozen 40k result](../../experiments/tdmpc2-long-reused-train-v2-40k-result.json)
+reports 0/124 cumulative TRAIN finishes (0/57 in the 20k-to-40k interval).
+Those later episodes progressed farther on average (0.182) and earned more
+raw return (+36.36), but were longer and had higher damage (0.158), so this
+is not a matched policy gain. The SAME replay probe's reward MAE worsened
+0.059 to 0.088, and same-anchor H3 return ranking remained **24/40** versus
+the pilot's 25/40. Neither 20k nor 40k proves world-model survival,
+learning failure or >=50% completion; the final source-bounded result follows.
+A [separately balanced terminal replay probe](../../experiments/tdmpc2-long-v2-balanced-terminal-20k40k.json)
+used the SAME 67 positive raw-termination and 335 ordinary-negative
+transitions at both checkpoints. The true-next encoded image path recognized
+0/67 positives at each checkpoint, whereas the model-predicted rollout latent
+path recognized 42/67 then 43/67 (both 335/335 specificity). The probe
+contains no finishes or plain time limits; this is an in-TRAIN latent-path
+diagnostic, neither proof of an algorithm bug nor finish-event detection.
+The [frozen 70k result](../../experiments/tdmpc2-long-reused-train-v2-70k-result.json)
+has **0/220** cumulative TRAIN finishes. Its 96 episodes since 40k averaged
+progress 0.3463, raw return +213.62, damage 0.3979; 19/96 reached half
+progress, five reached three-quarters, none finished. On the SAME twelve
+reconstructed TRAIN anchors the H3 reward-return rank improved to **33/40**
+informative pairs versus 24/40 at 20k/40k and 25/40 in the pilot. This is
+a source-verified directional **within-TRAIN model survival signal**, not
+independent-road replication, MPPI/Q validation or frozen-policy completion.
+The balanced predicted-latent terminal probe recalls 53/67 raw endings at
+70k while true-next-image recall remains 0/67; no finish/timeout cases
+occur. Q spread scale rose to 133.12. Do not retune H, MPPI or reward before
+the predeclared full-episode evaluation.
+The next active TRAIN episode ledger records the [first single finish](../../talk/messages/20260928T200236Z-k3p7-tdmpc-first-training-finish.md)
+at decision 74,216 on one reused road, 646 decisions, raw return 692.61,
+damage 0.2 and `finished=true`; the evolving-policy denominator at that
+boundary was 1/232 completed TRAIN episodes. This happened *after* the
+70k checkpoint and is not evidence that the frozen 70k model finishes,
+replicates, or approaches >=50%. Continue unchanged to 100k.
+By decision/update 88,684 the still-updating TRAIN learner had
+[four completed-road events](../../talk/messages/20260928T204539Z-k3p7-tdmpc-four-training-finishes.md)
+in 275 completed episodes, all four in the 55 episodes since 70k and
+spread over three of its four repeatedly trained geometries. These
+on-policy events are not a frozen-actor completion rate; no 100k model
+was available at that intermediate decision boundary.
+The [completed 100k model result](../../experiments/tdmpc2-long-reused-train-v2-100k-result.json)
+at 100,354 decisions/updates and 307 episodes binds all four checkpoint,
+training/step-ledger and read-only diagnostic SHAs. All 14/307 evolving-
+policy TRAIN finishes occurred among the 87 episodes after70k, spread over
+all four reused roads (**14/87**, *not* frozen-policy finish rate). The
+identical-anchor H3 raw-return ranking is **31/40** at100k versus pilot
+25/40,20k/40k24/40,70k33/40: directional within-TRAIN reward-model signal,
+not independent generalization. Fixed seed probe reward MAE 0.05184 is
+below constant 0.37949 but has no positive terminal labels; balanced
+predicted-latent raw termination recall is 59/67, true-next 0/67,
+without finish/time-limit examples. The
+[full-episode evaluation protocol](../../experiments/tdmpc2-full-consumed-train-v1.json)
+SHA `874d01d1396697efc9e4b119b0cd9ce8189fe36fa8d44773dcc13d30ab9ddbcd`
+passed zero-reset CPU preflight and [completed 16/16 full episodes](../../experiments/tdmpc2-full-consumed-train-v1-result.json)
+on **only** those same four consumed roads, x2 repeats each for prior and
+MPPI. The frozen final actor had **prior 0/8 finishes and MPPI 0/8**, with
+no censored episodes. MPPI had mean progress 0.507/raw return +385.93/damage
+0.45 versus prior 0.327/+237.73/0.35; CPU action latency means 0.739s
+versus 0.00193s. Same road/reset conditions do not match trajectories.
+The evolving training collector's 14/87 late finishes cannot replace either
+frozen 0/8 denominator. The 100k baseline is operational and its in-TRAIN
+reward-model rank rose to 31/40, but local full-episode policy completion
+remains weak; this does not prove TD-MPC2 intrinsically failed or measure
+fresh-road >=50% performance. The separate
+[single-axis damage-target protocol](../../experiments/tdmpc2-damage-shaping-v1.json)
+SHA `4f037f39ac7ab4f56961723478048a72d604972c86be17b9b0b9dc5786cbd2c8`
+passed zero-reset preflight, runtime/resource checks and 88 synthetic TD
+tests, then started from scratch in `runs/tdmpc2-damage-20260928-v1/`
+on the SAME four consumed TRAIN roads. Only replay's training reward is
+changed; official raw environment return/progress/damage/finish, H=3,
+5M/batch256/default MPPI/10k seed and 100k budget remain unchanged. The
+[first treatment 20k checkpoint](../../experiments/tdmpc2-damage-shaping-v1-20k-result.json)
+is sealed at 20,149 decisions/updates and 68 completed TRAIN episodes
+(0 finishes). Across all 20,149 steps damage delta is zero: raw and
+replay-target reward sums both equal -3,976.78, so the penalty DID NOT FIRE
+before this model was saved. The first actual +0.2 damage/one-unit target
+cost was logged later at decision 22,123. No frozen treatment-policy
+evaluation or evidence of shaping benefit exists yet. The separate shaped-
+target [40k checkpoint](../../experiments/tdmpc2-damage-shaping-v1-40k-result.json)
+now seals 40,154 decisions/updates, 131 completed TRAIN episodes and **0/131
+finishes**. Since20k, 63 episodes averaged raw progress0.1805, raw return
++47.20, damage0.206; 0/63 finished. Exactly 65 step damage increments
+summed to13.0, so raw-minus-training reward sum is 65.0; primary raw reward
+is unmodified. The seed-fixed probe has zero damage and zero terminal
+positives, so its training-target MAE0.04874 neither measures penalized
+states nor proves policy benefit. Baseline and treatment first planned
+actions diverged *before* any penalty; one-seed differences are not causal
+or transition matched. The [sealed 70k result](../../experiments/tdmpc2-damage-shaping-v1-70k-result.json)
+at 70,481 decisions/updates records 2/203 evolving TRAIN episode finishes,
+both on ONE reused road (2/72 since40k). The latter 72 averaged raw
+progress0.402, raw return+226.98 and damage0.394; cumulative replay-only
+penalty was 207 units from 207 positive damage steps. This is neither a
+frozen-policy finish rate nor causal proof of the shaping hypothesis.
+The [completed damage-only 100k source](../../experiments/tdmpc2-damage-shaping-v1-100k-result.json)
+sealed at 100,186 decisions/updates, 286 evolving-policy TRAIN episodes
+(10 finishes, eight of 83 episodes since70k across three reused roads) and
+exactly 391 replay-only penalty units from 391 positive damage increments.
+Those in-training outcomes are not the final model's rate. Its separately
+[source-bound frozen CPU full-episode result](../../experiments/tdmpc2-damage-full-consumed-train-v1-result.json)
+finished **prior 0/8 and MPPI 2/8**, with both MPPI successes being two
+repeats of ONE heavily trained road; all 16 episodes ended uncensored.
+This failed the predeclared local MPPI >=4/8 threshold and cannot establish
+fresh-road, protected or official >=50% generalization. RAW-target frozen
+baseline MPPI/prior each finished0/8 under matched road/reset conditions,
+but trajectories differ and the two training runs' FIRST planned actions
+forked BEFORE any damage cost, so an attributable shaping improvement is
+unproven. MPPI mean damage remained0.45 under both learning objectives.
+The separate shaped-
+checkpoint CPU evaluator's earlier source-level
+[HOLD was resolved](../../talk/messages/20260928T232547Z-k3p7-tdmpc-damage-evaluator-code-ready.md):
+it now binds shaped replay/probe/producer raw telemetry to complete ledgers,
+exact reset-intent phases and baseline source hashes, and 123 synthetic
+tests passed. A distinct SHA-bound completed-treatment evaluation protocol
+then passed zero-reset preflight and produced the valid 16-episode RAW
+outcome above; it did not modify the frozen raw-baseline evaluator or
+protected roads.
+The [seed-boundary comparison](../../talk/messages/20260928T232052Z-k3p7-tdmpc-damage-first-plan-fork.md)
+matched all 28 complete random-action seed episodes and decision10,000's
+action/raw reward, but the very first planned action at decision10,001
+differs BEFORE any observed damage penalty. No 10k model/RNG snapshot exists,
+so the cause is unknown: matching source settings is not a transition-
+matched or causal single-seed treatment comparison. Preserve the completed
+source; stronger controls are needed before attributing any difference
+solely to shaping.
+The [no-reset seed replay byte audit](../../experiments/tdmpc2-raw-vs-damage-seed-parity-v1.json)
+used strict SHA-bound RAW and DAMAGE 20k checkpoint replays: **0/10,000**
+differences in seed actions, raw rewards, pre/next pixel stacks or
+termination flags, and the same 256 frozen seed-probe windows/IDs/bytes.
+This strengthens input-data parity, not equivalence of missing 10k model/
+optimizer/RNG states or a causal explanation for the first planned fork.
+The [no-reset frozen 100k CPU/GPU probe](../../experiments/tdmpc2-final-100k-freeze-parity-v1.json)
+strict-loaded identical weights and aligned four archived TRAIN pixel-shift
+fixtures: all nine latent/prior/reward/Q/termination output types met fixed
+numeric tolerances (maximum latent difference 5.60e-6, decoded Q 1.45e-4).
+With identical CPU pre-plan RNG and warm-start, MPPI selected the same elite;
+training-only final Gaussian changed the resulting action by L2 0.0823 on
+one archived state. This does not prove why frozen evaluation finished 0/8:
+historical stochastic augmentation, full-episode CPU/GPU trajectories and
+evaluation failure actions are unavailable from these fixed probes.
+The [frozen result](../../experiments/tdmpc2-exploration-v2-result.json)
+and [updated plan](../plans/active/tdmpc2-pixel-online-baseline.md) contain
+denominators, tradeoffs, ordered diagnostics and future mismatch hypothesis;
+v2's original protocol/checkpoint remain untouched. No confirmation, blind,
+official or promotion action is opened.
+
+The separate [v2 read-only H=3 logged-sequence score](../../experiments/tdmpc2-v2-logged-ranking-diagnostic.json)
+found 37 replay episode-start returns indistinguishable to 1e-6, making all
+666 across-start rankings ties. It performed zero resets and is not a verified
+same-state prefix branch or a world-model survival/failure signal.
+
+The separate [parity-checked v2 branch result](../../experiments/tdmpc2-v2-prefix-branches-v1-result.json)
+did yield distinguishable H=3 returns at later within-TRAIN anchors: 12
+predeclared anchors, five candidate suffixes, 72 reused-road resets, 80/120
+real-return ties and 25 concordant versus 15 discordant informative pairs
+(62.5%) across seven informative anchors. Accessible reconstructed prefix
+states, raw commands and pixels matched before every branch; historical
+hidden Box2D solver-state identity is not proven. Pairwise observations are
+dependent; 20k/40k ranked 24/40, one pair below the pilot, whereas 70k
+ranked 33/40 and final100k 31/40 on the SAME fixed pairs. The improvement
+over the short pilot is within reused TRAIN roads, not a fresh-road result.
+
+**TD-MPC2 H=5 action-choice gate (2026-09-29):** The separate
+[logged H5 screen](../../experiments/tdmpc2-h5-logged-v1-result.json)
+passed a weak in-replay reward/termination gate without resets; it did not
+test action choice. The subsequently [frozen five-action real branch result](../../experiments/tdmpc2-h5-branches-v1-result.json)
+completed 72 consumed-TRAIN resets at 12 reconstructed anchors on the same
+four roads, all 60 five-step suffixes, with accessible prefix parity and
+no early endings. Of 120 within-anchor actual H5 return pairs, 29 tied.
+The predeclared reward-only gate **passed narrowly** (56/91 concordant,
+four informative roads, >60%). But on the SAME five candidate actions and
+actual H5 outcomes, H3 reward scored 63/91 while H5 reward scored 56/91;
+the terminal/Q-including sampled-policy planner-score proxy scored H3
+**65/91** and H5 **51/91**. At the fixed twelve anchors H3/H5 planner
+top-choice tied for best real H5 return on 8/12 and 7/12, respectively.
+The old three-action H3 receipt is not a matched comparator for these new
+five-action outcomes. The one-draw planner proxy used different randomly
+selected Q-head pairs at 10/12 anchors, so the 65/91 versus 51/91 difference
+does not isolate horizon or establish full-MPPI policy inferiority; mean
+selected-action H5 regret differed by only 0.00395. Dependent pairs, four
+repeatedly trained roads and unknown historical hidden Box2D state further
+restrict inference. The separate [read-only all-ten-fixed-critic-pairs control](../../experiments/tdmpc2-h5-fixed-q-v1-result.json)
+held each Q pair and bootstrap-policy RNG stream constant across horizons:
+H3 ordered 63-72/91 versus H5 42-53/91 across all ten pairs, 0 new resets.
+This strengthens the **five fixed candidates** decision hold, not a claim
+about full MPPI policy or a horizon-only causal mechanism.
+**Do not launch H5 full-episode MPPI** based solely on the necessary reward
+gate: actual planner choice quality is not sufficiently positive. The
+subsequent one-axis [frozen H3 training-mode action-noise result](../../experiments/tdmpc2-h3-noise-full-consumed-train-v1-result.json)
+changed only final-action `eval_mode=True` to `False` on the unchanged RAW100k
+checkpoint/MPPI. It completed all **8/8** full episodes on the same four
+consumed TRAIN roads x2, with **2/8 finishes on two distinct roads**, zero
+censor and peak action latency 3.994s. This missed the fixed >=4/8 across
+>=2 roads local gate. The historical frozen H3 no-noise result was 0/8,
+but RNG, actions and trajectories diverge; no matched causal improvement,
+independent-road generalization or explanation of evolving-TRAIN finishes
+is established. The next selected hypothesis is limited TRAIN **road
+coverage** from repeated four-road training; a new candidate-specific
+cross-lane-consumed TRAIN reuse inventory passed synthetic safety checks
+but is **BLOCKED** on unresolved typed legacy/result-only metadata and an
+unconditional fail-closed entry. A [proposed 24-road manifest](../../experiments/tdmpc2-consumed-train-24-proposal-v1.json)
+selected from catalog order is metadata only, not a cell claim: its
+inventory confirmed 24 TRAIN IDs/four per family and 921 typed exposure
+rows but classifies numerous known TD/DrQ TRAIN records as ambiguous.
+This cannot certify reuse OR prove all 24 cells collide. No diverse
+training reset was made; coverage remains untested. Do not turn catalog
+membership into clearance.
+The subsequent [all-five-head Q-average H3 diagnostic](../../experiments/tdmpc2-h3-all-q-v1-result.json)
+on the SAME 12 consumed branch anchors was 65/91 concordant real-H5
+pairs (versus original stochastic H3 65/91), with 9/12 tied-best
+choices and regret 0.79416 (versus 8/12 and 0.79535). It failed the
+predeclared >=66/91 concordance requirement, so no all-Q full-episode
+evaluation was run. The next model-level hypothesis is counterfactual
+multi-step reward/latent target quality using ONLY the original four
+consumed TRAIN roads, subject to isolated learner/preflight validation;
+the H5 per-discounted-step branch reward error rose from H3 0.330 to
+H5 0.397. This is a mechanism hypothesis, not causal evidence. The fresh
+multi-track diagnostic audit remains BLOCKED and no protected cells opened.
+The isolated [no-reset reward-overshoot replay audit](../../experiments/tdmpc2-reward-overshoot-target-audit-v1-result.json)
+passed its predeclared data gate: 99,126 of 99,740 eligible H3 TRAIN
+windows (99.38%) contain both logged steps 4/5, and all four old roads
+have nonconstant suffix rewards. A separate reward-overshoot replay/
+learner module passed 38 focused synthetic and original regression tests
+without changing the frozen base modules. This is **data/code feasibility
+only**: the separate `scripts/train_tdmpc2_reward_overshoot.py` runner
+passed 63 synthetic/base tests and independent read-only review found
+no blocking invariant violation. A host/container NVIDIA PID-namespace
+bug and a self-GPU-utilization false alarm were fixed BEFORE the
+[synthetic CUDA benchmark](../../experiments/tdmpc2-reward-overshoot-throughput-v1-result.json):
+full `learner.update(replay)` timing extrapolated 18,693 seconds, under
+the predeclared <20,600-second resource screen and unchanged 21,600-second
+TRAIN wall cap. This is synthetic speed, **not learned performance**.
+The separate [variant protocol](../../experiments/tdmpc2-reward-overshoot-train-v1.json)
+passed a zero-reset SHA/runtime/resource preflight; four exact consumed
+TRAIN cells were independently rechecked for active claims and declared
+as **non-exclusive, already-consumed TRAIN reuse**. An exclusive new
+from-scratch [H3/RAW run](../../experiments/tdmpc2-reward-overshoot-train-v1-result.json)
+finished at the first >=100k whole-episode checkpoint (100,159
+decisions/updates; 309 episodes; 19,902 seconds <21,600-second cap).
+Its separately [SHA-bound no-reset real-branch score](../../experiments/tdmpc2-overshoot-old-branch-score-v1-result.json)
+matched the SAME 12 anchors/60 candidate action bytes and actual H5
+outcomes: H5 reward rank rose **56/91 -> 74/91**, H3-prefix rank
+**31/40 -> 34/40**, and 4/4 roads' H5 rank did not regress. But
+H5 absolute error per discounted step worsened **0.39668 -> 0.40691**,
+so the *predeclared four-way development gate FAILS*. Mean H5 return
+underprediction also increased (-1.084 -> -1.368). The positive rank
+is internal TRAIN action-order evidence, NOT a matched learner-policy
+generalization or official score; its unchanged H3 default-MPPI
+eight-full-episode evaluator remains DORMANT under this failed gate.
+Collector finishes are not frozen-policy finishes. Diagnose the observed
+rank-versus-magnitude split before choosing a distinct one-axis
+intervention; reward calibration/dynamics/Q are hypotheses, not causes.
+
+**TD-MPC2 post-100k mechanism split (2026-09-29):** The separate
+[no-reset terminal/Q decomposition](../../experiments/tdmpc2-overshoot-planner-terms-v1-result.json)
+reproduced old/new reward scores on those SAME 60 actual five-action
+branches. No predicted termination crossed the planner's threshold;
+terminal gating changed no reward ordering. New H5 reward ranked
+**74/91**, but each of ten fixed Q-head pairs reduced the complete
+planner score to **31-36/91** with top-choice regret **2.076** versus
+reward-only **0.502**. This is five fixed choices, NOT full MPPI's 512
+proposals or a fresh-policy result. The independent [reward-blind,
+same-episode positive-event probe](../../experiments/tdmpc2-overshoot-positive-events-v1-result.json)
+passed its separate head-mechanism screen on 4/4 old TRAIN roads:
+new true-observation-latent positive-event bias -1.15 to -1.37 raw
+reward/step and MAE 1.40-1.53 versus original head MAE 0.47-0.59.
+Its initial probe had a REAL old307/new309 episode-ID mismatch and
+failed zero-load preflight; the corrected source/tests then passed and
+the final receipt required 0 resets/updates. Old model was scored on
+its own replay and new model on old replay; this is not a causal
+reward-head attribution. Prioritize action choice: a **new single-axis
+H5 planner Q-weight 1->0** was evaluated in a separate
+[source-bound real five-action branch result](../../experiments/tdmpc2-overshoot-q0-branches-v1-result.json)
+on disjoint ORIGINAL RAW episode4..7 anchors over the same four
+consumed TRAIN roads. All **72 reset intents**/60 full H5 suffixes
+completed; 93 informative actual-H5 pairs and 27 real ties. New
+H5 Q0 score ranked **68/93 (73.1%)**, better than every fixed-Q1
+pair's **39-41/93**, but below H3 Q0's **70/93** on the SAME outcomes.
+H5 Q0 tied the best actual action on **7/12**, below the predeclared
+8/12, and mean H5 regret 1.279 exceeded H3 Q0's 1.028. Thus the
+entire Q0 gate **FAILED** despite partial pairwise improvement: no H5
+Q0 or original H5 full-policy episode was released. An independent
+4/4 same-cell audit verified consumed TRAIN reuse; original RAW
+complete ledger/checkpoint and source were rehashed before EACH reset.
+Accessible prefix parity is not a hidden Box2D solver-state proof,
+and five fixed candidates are not the complete MPPI policy. The
+head-only positive-event target remains a candidate *hypothesis* but
+requires its own isolated TRAIN-only design, evaluation and failure
+rules. Original overshoot four-way FAIL and blocked fresh-grid isolation
+remain unchanged; no official/protected model confirmation exists.
+
+**Head-only adaptation data gate:** Its first predeclared adaptation-
+excluded original RAW ep12..19 split FAILED the >=100 positive-event
+labels per road screen at 38/87/38/39, with **zero optimizer steps**.
+A separately fixed v2 TRAIN-only split ep12..43 has
+144/199/137/151 positive labels across the same roads, passing
+*only* data sufficiency; ep44..306 is proposed fitting data and
+ep8..11 remains excluded for a possible third real branch cohort.
+The [source-bound v2 head-only pilot](../../experiments/tdmpc2-head-only-adaptation-v2-result.json)
+now completed **512 updates**, zero environment resets, in 367.66s
+under its 1800s cap; non-head tensors were bitwise unchanged.
+It **FAILED** the adaptation-excluded error gate on 0/4 qualifying
+roads: positive-event MAE worsened on every road (1.06-1.68 before,
+2.27-2.53 after), and nonpositive MAE worsened beyond0.05 on3 roads.
+Its training CE decreased but is not calibration or driving evidence.
+No old-branch preservation score, new ep8..11 branch reset or policy
+evaluation is authorized for that adapted checkpoint. A synthetic CUDA
+forecast passed separately; real no-load integration caught and fixed
+forecast boolean metadata being mistaken for a numeric resource field
+before any checkpoint load. Previously exposed source TRAIN episodes
+are not independent holdouts. Next diagnose fit/excluded state, action
+phase and reward-distribution shift, not assume a head-only remedy.
+Original RAW ledger recount: fittingep44..306 has28,518 positive
+events/86,581 decisions (32.94%); excludedep12..43 has631/9,929
+(6.36%), including388/6,156 random and243/3,773 early-planned
+decisions. The split differs in collection maturity as well as action
+mode. A new zero-update frozen-head fit-versus-transfer diagnostic is
+being prepared to test whether raw calibration improved even IN fitting
+data; do not explain the excluded FAIL by distribution shift alone or
+spend the reserved episode8..11 branch resets.
+That [frozen-head no-update audit](../../experiments/tdmpc2-head-fit-transfer-v1-result.json)
+now rejects a transfer-only explanation: on86,581 fitting targets,
+naturalCE improved1.5066->1.2208 but positive rawMAE and absolute
+bias worsened onALL4 roads (fitgate0/4). Next objective-only control
+starts from ORIGINAL overshoot parent, not failed adapted head:
+CE->standard decoded rawrewardMSE with split/sampler/optimizer/
+512-update budget unchanged. Isolated MSE code passed91 combinedtests
+and independent finalization review; no actual MSE adaptation yet.
+Its memory readiness gate is BLOCKED: observed raw cgroup headroom
+35.39GB versus fixed sourcepeak+24GiB requirement42.67GB. Older
+generated benchmark receipts were tied to superseded source and cannot
+release finalsource; a new v3 source-matched benchmark/protocol is
+would be required if the user explicitly reopened the line. Automatic
+resource checks are now cancelled. The 42.67 GB bound used the full
+100k peak plus an agent-selected 24 GiB reserve; it is not a measured
+head-only requirement or official rule. Its conservatism was acknowledged
+in the user's follow-up, with no code or budget revision authorized.
+The current stop is to focus on other ideas, not a memory-wait queue.
+
+**TD-MPC2 continuation objective (user direction, 2026-09-28):** Continue
+isolated learning and evaluation iterations toward >=50% **full-episode**
+finishes and the strongest project model. The first longer-budget run was a
+10,020-decision *operational partial failure*, not an algorithm learning
+verdict; its diagnostic overflow was corrected in a separately source-pinned
+retry completed at 100,354 decisions. Cycling its four already-consumed
+track-1 TRAIN roads cannot
+demonstrate unseen-road completion even if those roads eventually finish.
+After a corrected 100k run, predeclare a separate, cross-lane-audited
+training-excluded TRAIN-only diagnostic with multiple track IDs and complete
+2,000-decision episodes, explicit finish denominators and matched frozen-model
+reference cells; **no such fresh cells are certified or allocated yet**.
+Existing catalog reservations and TD partial reset-intent records require a
+TD-aware cross-lane audit; the RLPD G1 claim CLI does not scan TD
+`training.jsonl` and cannot clear TD allocations. See the
+[allocation audit](../../talk/messages/20260928T164442Z-k3p7-tdmpc-train-grid-audit.md).
+An isolated TD read-only candidate auditor now checks known claims,
+catalog reservations, partial reset intents and protected IDs, but
+intentionally **always reports `BLOCKED`** until legacy exposure/result-only
+coverage is independently closed. It cannot reserve roads or authorize
+evaluation; its [scope/result note](../../talk/messages/20260928T170516Z-k3p7-tdmpc-cell-auditor-blocked.md)
+records the missing gate.
+The separate [reused multi-track feasibility assessment](../../talk/messages/20260928T192157Z-k3p7-tdmpc-reused-multitrack-path.md)
+suggests a lower-tier TD-training-excluded, **cross-lane-consumed** TRAIN
+catalog cohort could be predeclared after the 100k source result and a
+different, lineage-bound reuse audit. No cells have been selected or
+cleared; the fresh-grid BLOCKED status is unchanged, and even 12/24
+finishes there would not prove unseen-road or official performance.
+The currently best
+independently evaluated RLPD seed-11 actor finished 12/24 screen, 12/32 on a
+different confirmation cohort and 9/24 blind: those cohorts cannot be pooled
+or reused for TD tuning, and 50% generalization is not established. See the
+[TD-MPC2 active plan](../plans/active/tdmpc2-pixel-online-baseline.md) for the
+bounded stepwise gate. Official model confirmation and submission remain
+separate user-authorized actions.
+
+**Local TRAIN resource gate provenance (2026-09-29):** The
+[current official Participants README](https://github.com/2026-HAIC/Participants)
+limits the *submitted* CPU Agent (1,024 MB participant process, 10s import/
+construction, 5s reset/act); it does not prescribe a minimum free RAM,
+disk, idle GPU/CPU, or wall-time limit for local training. Full resource
+rules on the dynamic official website could not be retrieved. The pilot
+16 GiB raw-cgroup/5 GiB disk/7,200s and later long/DAMAGE 16 GiB raw-cgroup
+and disk/21,600s were locally source-pinned safety/budget choices, not user-
+supplied or universal thresholds. Prior TD v2 was held at ~14.2 GiB raw
+cgroup FREE despite ~25 GiB potentially reclaimable inactive file cache;
+its prior learner failure was a planner-reset bug, not a proven OOM.
+Reapplying an initial FREE-RAM/disk floor after the same learner grows replay
+and writes snapshots can cause an avoidable non-resumable stop; conversely
+the completed raw100k run reached ~16,124 MiB peak RSS and wrote ~6.74 GB
+of snapshots, so no blanket fail-open is safe. Future studies follow the
+[measured incremental-capacity workflow](../workflows/run-experiment.md),
+with this [origin audit](../../talk/messages/20260929T022000Z-k3p7-resource-floor-origin-result.md)
+as context. Current DAMAGE source/protocol and other frozen/teammate-owned
+studies retain their own executable gates unchanged; this documentation
+correction is NOT a retroactive change to the active run or an official
+model action.
 
 ## DreamerV3 Research Line: CLOSED
 
@@ -389,14 +1452,92 @@ No G1 seed batch, claim, frozen protocol or environment reset has been allocated
 Additional RLPD-only G1 preparation is synthetic: a blocked-by-default
 collector skeleton checks future audit/claim/source identity and preserves all
 48 attempted, censored or unrun slots; a separate image-review module seals
-opaque pixel-only packets and restricted mappings before outcome joining.
-Thirty focused synthetic tests pass. The real collector remains disabled
-because a mid-episode four-core-hour stop cannot yet be enforced by the
-source-pinned G0 `run_cell`; no pixel trigger, genuine blinded annotation or
-positive/finished-parent G1 coverage has been established. Two conditional
-candidate-relevant G1 auditor false-pass shapes (`{start,end}` seed ranges and
-self-protocol exclusions) are awaiting peer-owner correction. No new G1
-interaction or policy promotion is justified by these preparatory files.
+opaque pixel-only packets and restricted mappings before outcome joining. The
+candidate-scoped G1 auditor now fails closed on candidate-relevant `{start,end}`
+seed ranges (conservative inclusive overlap because endpoint semantics are
+unknown), self-protocol exclusion overlap, and unknown exclusion fields. Its
+28-test regression suite and the unchanged collector/coverage/image-review
+suite (30 tests) pass synthetically on the new host; see the
+[auditor correction result](../../talk/messages/20260928T081534Z-u3k9-rlpd-auditor-fix-result.md).
+Destination hashes for the seed-11 actor and V5 seed-50 actor/checkpoint match
+their recorded SHA receipts, but this is only a targeted subset: the full RLPD
+`runs/` and protected `evaluations/` closure has no destination tree-checksum
+manifest, and the `transferred/` RLPD/evaluation mirror has no readable payload.
+The original proposed G1 design treated full restoration verification as an
+execution gate; the separately directed new-host study below uses targeted
+SHA-bound inputs without claiming whole-tree restoration.
+These checks do not establish road freshness, genuine blinded annotation, or a
+pixel trigger. The historical capped collector was disabled because a
+mid-episode four-core-hour stop could not be enforced by the source-pinned
+G0 `run_cell`;
+positive/finished-parent G1 coverage also remained unestablished. At that
+pre-2026-09-29 snapshot no G1 seed batch, claim, frozen protocol or reset
+existed; the separately authorized live study is recorded below.
+
+**2026-09-29 RLPD immediate TRAIN restart:** The user removed the *local*
+four-core-hour research cap for a separate experiment, not for the already
+disabled G1 collector. A new [source-bound protocol](../../experiments/rlpd-reused-train-immediate-v1.json)
+ran exactly one already-consumed G0 track-1/4272000001 TRAIN episode using
+the unchanged V5 seed-50 actor. [Old G0](../../runs/20260926-rlpd-g0-completion-v1/cells.jsonl)
+recorded off_track/456; the [new run](../../runs/20260929-rlpd-reused-train-immediate-v1/result.json)
+recorded finished/531. Initial pixels matched, but next frames first diverged
+at zero-based decision 33; the tiny first native-action difference is observed,
+not a causal explanation. The [bounded evidence result](../../experiments/rlpd-reused-train-immediate-v1-result.json)
+binds both trace SHAs and limitations. No learner/policy update, new road,
+G1 coverage, protected cell or official action occurred. Whole-tree RLPD
+restoration remains unverified; the historical capped G1 collector was still
+disabled at the time of this separate repeat.
+Independent review found no current source/actor/trace hash mismatch, but
+future v1 freezes do not enforce historical G0 source equality and an ENOSPC
+failure can strand its attempt receipt. Preserve this completed source/protocol
+unchanged; use a corrected new operator for any later repeat.
+
+**2026-09-29 RLPD real G1 collection and learner complete, validation next:**
+The [uncapped source-bound G1 TRAIN protocol](../../experiments/rlpd-g1-newhost-20260929-v1.json)
+consumed 24 newly claimed track-1 roads, 48/48 source-actor episodes, zero
+censored/unrun. The [result](../../experiments/rlpd-g1-newhost-20260929-v1-result.json)
+and [manifest](../../runs/20260929-rlpd-g1-newhost-v1/manifest.json) bind 48/48
+trace/receipt hashes: frozen V5 seed-50 finished 12/24, seed-11 11/24;
+paired road outcomes were 7 both finish, 5 primary only, 4 comparator only,
+8 neither. This is observational TRAIN collection, not a treatment comparison
+or official score. No image review was sealed. At least five <209-decision
+slots cannot provide the frozen anchor-200-plus-eight ordinary pixel window;
+required `unknown` labels make this cohort's zero-unknown G1 coverage `pass`
+unreachable. Do not retroactively change the rubric or top up any of its roads.
+
+Separately the [new-host learner result](../../experiments/rlpd-newhost-reused-train-20260929-v1-result.json)
+binds authentic V5 prior bytes, 33 current source hashes and 131,072 online
+decisions/130,072 actor-critic gradient steps on the 12 already consumed G0
+TRAIN roads. Both saved actor exports (65,536 and 131,072 decisions) and full
+checkpoints match their SHA receipts and strict-load on CPU. These training
+interactions, including 19 finished episodes during an evolving policy, are
+NOT either frozen export's finish rate. G1 roads were not learner inputs.
+
+**Post-training TRAIN sanity is negative:** The final new-host and V5 actors
+passed bit-exact double CPU reload/native adapter preflight with no reset. The
+[frozen same-host paired screen](../../experiments/rlpd-newhost-train-screen-20260929-v1-result.json)
+completed 24/24 episodes on the 12 ALREADY CONSUMED G0 TRAIN roads, one V5
+seed-50 and one new-host seed-52 final actor per matching road. The new actor
+finished 1/12, V5 5/12 (1 both, 0 new-only, 4 V5-only, 7 neither), with
+zero censored slots and independently verified cell/trace hashes. The negative
+in-sample result does NOT identify a training cause or imply fresh-road
+generalization: seed-52 learned online on these roads, V5 learned on a
+different 4-track/64-seed pool and drove G0 later without updates. Historical
+G0 V5 finished 3/12 vs 5/12 in this contemporaneous run with four road
+outcome flips, so old G0 cannot replace the current comparator. Immediate
+same-host first-40-decision traces show higher new-host |steer|/brake and
+lower speed, but the resulting paths diverge. Exploratory no-reset CPU
+inference on 10,049 identically reconstructed archived G0 TRAIN preaction
+pixel stacks gives mean brake .2401 final131072 versus .0968 step65536;
+the final action brakes more on 9,057/10,049 common inputs, without a
+constant-action collapse. Step65536 has NO measured finish rate. The cause
+of poorer final driving remains an untested early-control/retention hypothesis,
+not a proven critic or adapter defect: V5 and newhost use the same actor-update
+code and V5 also shows finite Q/gradient spikes. Do not promote the final
+actor or open protected cells. A future *separately frozen* TRAIN treatment
+must test whether it preserves V5 finishes as well as rescuing failures.
+Historical whole-tree restore remains unverified; confirmation/blind/official
+cells stay closed.
 
 ## Competition Schedule And Access
 

@@ -1,0 +1,148 @@
+{
+  "schema": "koi-avoidance-magnitude-v1-primary-audit",
+  "verification_utc": "2026-10-02T13:11:35.794673+00:00",
+  "status": "PASS_VERIFIED_REJECTION",
+  "verdict": "REJECTED",
+  "adopted": false,
+  "discrepancies": [],
+  "evidence": {
+    "study": "runs/koi-avoidance-magnitude-v1",
+    "protocol_sha256": "1456126e31bdbcfce1e3d158bf032990820a4b46fa85dba49dd401031769b890",
+    "result": "experiments/koi-avoidance-magnitude-v1-result.json",
+    "result_sha256": "55d489f9418d2aceb786ceaede343a9b4a07b7ea2a23ea503e880d701dad2d01",
+    "episode_report_sha256": "614c36f43136e3c0e4a2bb228fa12b94a118bd7e3a48945fd1872c5c1084a568",
+    "reset_ledger_sha256": "fd480f8620191eb238ee306718768814e30e97ec32b45f4ba8fe76f65fac9aa9",
+    "preflight_sha256": "719fa72e8d79a83d3fca8fbf1be8c013292ab1bc9a98ec131fb4a6eb59c37eac",
+    "frozen_analyzer_sha256": "10eea05c0e604c383ec1257947c476e9c92b7c7fd4ac9c7d0da5e4e81b63367f",
+    "frozen_evaluator_sha256": "094530de1789e00b6798bb76b6d61b4fd9a51d52df36bfa6b2d80d3cdf08efbb"
+  },
+  "integrity": {
+    "study_root_files_rehashed": 63,
+    "episode_raw_decision_process_resource_stdout_stderr_files": 56,
+    "operator_artifact_files": 4,
+    "other_study_root_files": ["protocol.json", "episode-report.json", "baseline.zip"],
+    "primary_pin_map_sha256": "9b95fb404215c489db925b2899970ca7e6d978304906bf77bbde39cababddd6a",
+    "pin_map_definition": "SHA256 of UTF-8 json.dumps(study-root filename -> actual SHA256, sort_keys=True, separators=(',', ':')) for all63 files.",
+    "verified_inventory_counts": {"source_original": 24, "source_copy": 24, "environment": 142,
+      "consumed_evidence": 72, "preservation": 20, "runtime_review": 10,
+      "extracted_model_and_zip_members": 11, "additional_package_protected_artifacts": 19, "champion_checksum_entries": 19},
+    "all_pins_and_sizes_match": true,
+    "cpu21_executable_pin_matches": true,
+    "pure_frozen_source_reanalysis_equals_result": true,
+    "all_study_root_files_accounted_for": true,
+    "recorded_resource_assessments_recomputed": 24,
+    "root_agent_sha256": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "champion_zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+    "unchanged_final_shield_sha256": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "prior_steering_release_v2_zip_sha256": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce",
+    "prior_nominal_trajectory_source_sha256": "63cdc2e95a7d985a188d23f79979a79a7c3dddcd46d310d5071aa5d25ff9408a",
+    "prior_nominal_trajectory_result_sha256": "b020c3cbf45d212ac10d95ef17543d4ab45d5052c6a422c3e1b2627cd5c9c2b0"
+  },
+  "basis": [
+    "In-memory python -B only: frozen-source pure analysis plus independent JSON/JSONL hash and numeric reductions; no new audit framework or policy execution.",
+    "Reduce collision-positive decisions from raw-tick OR, reconstruct capped .2 collision damage transitions, and count hits from touching contacts OR sampled clearance<=0 for every object, including unpassed objects.",
+    "Compare exact catalogs, initial full observer states/pixels, all equal-action raw/full observer/pixel prefixes, and first differing action PRE-states.",
+    "Recompute fixed windows and prospective/common-horizon returns with existing pure geometry helpers; independently integrate held issued steering over clipped actual intervals and jumps strictly inside windows, without endpoint-zero jumps.",
+    "Independently reproduce all17 gate outcomes from primary-verified reductions. Independent floating-point comparisons use relative1e-12/absolute1e-10 tolerance; integer gates and pure result equality are exact."
+  ],
+  "scope_and_contract": {
+    "cells": [[1, 3184000013], [1, 3184000015], [2, 3184000015], [3, 3184000015]],
+    "episodes": 8,
+    "matched_pairs": 4,
+    "actual_road_geometries": 2,
+    "road_geometry_sha256": {
+      "3184000013": "0d3b83e786cf7a0ab3382194c0d50da1e868621bfac4f5e26019ccb5c331ac02",
+      "3184000015": "2f46082767383f5945aeeeaa844cc1697dc7ea163f8bcc417e789c13ccd35573"
+    },
+    "reset_intents": 8,
+    "episode_ends": 8,
+    "exact_serial_schedule_one_reset_each_no_hidden_retry": true,
+    "omitted_or_unmatched_episodes": 0,
+    "natural_crash_episode_retained": true,
+    "candidate_instance_keys": ["nominal", "last"],
+    "logged_decisions_with_once_called_original_and_nominal": 1806,
+    "candidate_driver_hidden": true,
+    "executed_action_feedback": false,
+    "new_plan_recovery_release_or_evaluator_state": false,
+    "all_original_nominal_final_tap_bounds_and_pedals_match_contract": true,
+    "changed_nominal_is_unchanged_v1_shield_input": true,
+    "proposal_magnitude_bounds_hold": true,
+    "raw_pre_and_wrapper_post_damage_counter_phases_bind": true,
+    "fresh_protected_or_track4_cells": false,
+    "study_is_consumed_train_not_generalization": true
+  },
+  "independent_safety": {
+    "arm_order": ["baseline", "candidate"],
+    "finishes": [4, 3], "damage": [0.0, 1.4], "collision_positive_decisions": [0, 7],
+    "hit_objects": [0, 3], "physical_contact_events": [0, 4],
+    "all_objects_including_unpassed": [24, 24], "unpassed_objects": [0, 5],
+    "decisions": [986, 820], "raw_ticks": [3938, 3276]
+  },
+  "per_cell": [
+    {"track_id": 1, "seed": 3184000013, "finishes": [true, true], "damage": [0.0, 0.2], "collision_decisions": [0, 1], "hit_object_ids": [[], [4]], "equal_action_prefix_decisions": 69, "candidate_complete_windows": 6, "paired_return_followups": 6, "kept_lap_delta_ms": 80},
+    {"track_id": 1, "seed": 3184000015, "finishes": [true, false], "damage": [0.0, 1.0], "collision_decisions": [0, 5], "hit_object_ids": [[], [1]], "equal_action_prefix_decisions": 57, "candidate_complete_windows": 1, "paired_return_followups": 1, "kept_lap_delta_ms": null},
+    {"track_id": 2, "seed": 3184000015, "finishes": [true, true], "damage": [0.0, 0.0], "collision_decisions": [0, 0], "hit_object_ids": [[], []], "equal_action_prefix_decisions": 31, "candidate_complete_windows": 6, "paired_return_followups": 6, "kept_lap_delta_ms": -340},
+    {"track_id": 3, "seed": 3184000015, "finishes": [true, true], "damage": [0.0, 0.2], "collision_decisions": [0, 1], "hit_object_ids": [[], [1]], "equal_action_prefix_decisions": 50, "candidate_complete_windows": 6, "paired_return_followups": 6, "kept_lap_delta_ms": -100}
+  ],
+  "efficiency_denominators": {
+    "required_cells": 4,
+    "complete_efficiency_cells": 3,
+    "valid_four_cell_cohort": false,
+    "required_baseline_windows": 24,
+    "retained_paired_windows": 19,
+    "required_baseline_return_followups": 24,
+    "paired_common_return_followups": 19,
+    "missing_required_windows_and_followups": 5,
+    "conditional_three_cell_relative_means": {
+      "max_lateral": -0.48188963452561695,
+      "path": -0.00526375407586769,
+      "steering_integral": -0.12230623565877054,
+      "steering_variation": 0.026377679242184735
+    },
+    "full_episode_held_steering_and_jump_checks": 8,
+    "complete_object_window_held_steering_and_jump_checks": 43,
+    "descriptive_19_pair_fixed_window_variation_delta": -1.3712861987296492,
+    "variation_gate_invalid_due_to_missing_windows": true,
+    "common_19_return_censors": [5, 1],
+    "common_19_descriptive_bound_sums_s": [13.131535025654394, 9.258960704134434],
+    "kept_lap_pairs": 3,
+    "kept_lap_deltas_ms": [80, -340, -100],
+    "survivor_conditional_kept_lap_mean_ms": -120.0,
+    "lost_finishes": 1,
+    "kept_1_3184000013_lap_violates_20ms_limit": true,
+    "missing_followups_or_survivor_mean_receive_no_adoption_credit": true
+  },
+  "gates": {
+    "independently_reproduced": 17,
+    "passed": 7,
+    "failed": 10,
+    "all_outcomes_equal_frozen_result": true,
+    "checks": {
+      "complete_matched_evidence": true, "ordinary_geometry_consistency": true,
+      "no_lost_finish": false, "per_cell_damage_collision_nonincrease": false,
+      "no_new_hit": false, "unchanged_shield_contract": true,
+      "stateless_magnitude_action_decomposition": true, "baseline_windows_retained": false,
+      "return_coverage_retained": false, "return_censors_nonincrease": true,
+      "common_return_bound_nonincrease": true, "steering_variation_nonincrease": false,
+      "every_kept_lap_within_20ms": false, "matched_lap_mean_reduction_20ms": true,
+      "ordinary_max_lateral_reduction": false, "ordinary_path_reduction": false,
+      "ordinary_steering_integral_reduction": false
+    }
+  },
+  "audit_actions": {
+    "agent_constructions": 0, "policy_action_calls": 0,
+    "simulator_constructions": 0, "simulator_resets": 0,
+    "driving_or_policy_replay": false, "official_action": false,
+    "frozen_source_protocol_result_or_output_edits": false,
+    "only_added_file": "experiments/koi-avoidance-magnitude-v1-audit.json"
+  },
+  "limitations": [
+    "Outcome-selected consumed TRAIN on four layouts/two roads, not fresh validation or official ranking.",
+    "Finish/lap flags are reduced from bound episode records, not an independent finish-tracker or policy/environment replay.",
+    "Logged contract flags and source hashes constrain state/feedback; prefix equality covers recorded state/pixels, not hidden solver serialization.",
+    "Sampled contact/clearance evidence is not a continuous-time safety guarantee.",
+    "Conditional three-cell efficiency means and common19-return diagnostics do not satisfy the required four-cell/24-object followup cohort.",
+    "The kept-three-lap -120ms mean omits one lost finish and hides the +80ms regression at1/3184000013; no adoption credit.",
+    "No detailed failure chronology, unique causal mechanism, unexecuted rescue claim, retuning or repeat follows from this audit."
+  ]
+}

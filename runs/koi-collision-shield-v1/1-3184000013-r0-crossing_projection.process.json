@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/tmp/kilo/haic-cpu21/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import sys; sys.path.insert(0,sys.argv[1]); from scripts.evaluate_koi_collision_shield import worker; worker(sys.argv[2],int(sys.argv[3]),sys.argv[4],import_only=sys.argv[5]==\"True\")",
+    "/workspace/HAIC-Money/runs/koi-collision-shield-v1/source",
+    "/workspace/HAIC-Money/runs/koi-collision-shield-v1",
+    "9",
+    "afeeb356ff1fae1e74b6606ab81073c1e10ebebefddf90ae945596e2c922ea8b",
+    "False"
+  ],
+  "protocol_sha256": "afeeb356ff1fae1e74b6606ab81073c1e10ebebefddf90ae945596e2c922ea8b",
+  "wall_time_s": 20.758416255936027,
+  "error": null
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "koi-avoidance-magnitude-v1-runtime-review",
+  "written_utc": "2026-10-02T12:18:20Z",
+  "status": "RUNTIME_REVIEW_PASS_NO_DRIVING_CLAIM",
+  "scope": "Zero-reset synthetic runtime checks only; evaluator/analyzer and closed-loop efficiency are not assessed here.",
+  "simulator_constructions": 0,
+  "simulator_resets": 0,
+  "official_action": false,
+  "source_sha256": {
+    "haic/algorithms/koi/avoidance_magnitude.py": "1305f1f7010779a8c5481e14bd1b7de26fde189e74dd9ad470984be9f813389e",
+    "tests/test_koi_avoidance_magnitude.py": "6d7c5bbd5067c91827dcb5b8813facf7e7565f06f918083c8de49769f8a33ae0",
+    "haic/algorithms/koi/steering_terms.py": "cb1149b03e489c81babda7171349483961b82d367748e717a21b3a5dfe82bbe7",
+    "haic/algorithms/koi/minimum_clearance.py": "19286801899f1a28ce5662636875e5c3a173fe4bf244bd3b29dfa9942ee2ab07"
+  },
+  "preservation_sha256": {
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "haic/algorithms/koi/collision_shield.py": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "submissions/20261002-crossing-projection-collision-shield-v1-baseline/submission.zip": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+    "submissions/koi-steering-release-v2.zip": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce",
+    "haic/algorithms/koi/nominal_trajectory.py": "63cdc2e95a7d985a188d23f79979a79a7c3dddcd46d310d5071aa5d25ff9408a"
+  },
+  "tests": [
+    {
+      "command": "python -m pytest -q tests/test_koi_avoidance_magnitude.py tests/test_koi_collision_shield.py tests/test_koi_steering_terms.py tests/test_koi_minimum_clearance.py tests/test_koi_nominal_trajectory.py tests/test_koi_trajectory_rollout.py tests/test_koi_steering_release.py",
+      "passed_tests": 200,
+      "passed_subtests": 24,
+      "failed_tests": 0,
+      "wall_s": 3.33
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -B -m pytest -q -p no:cacheprovider tests/test_koi_avoidance_magnitude.py tests/test_koi_collision_shield.py tests/test_koi_steering_terms.py",
+      "independent_reviewer": "ses_f037f1bc8ffe4z8z3zBaS38T3l",
+      "passed_tests": 113,
+      "failed_tests": 0,
+      "wall_s": 1.51
+    }
+  ],
+  "resolved_pre_freeze_finding": {
+    "problem": "Endpoint-only lateral risk missed an inherited crossing interval whose current and projected endpoints both cleared the footprint.",
+    "correction": "Conservatively enclose current-to-projected transverse bbox sweep without adding state or changing any footprint allowance.",
+    "synthetic_exact_source_fixture": {
+      "current_centroid_yx": [45.5, 36.5],
+      "projected_obstacle_x": 47.0,
+      "hud_speed": 70.0,
+      "required_clearance_m": 0.0,
+      "ttc_less_than_s": 0.08,
+      "corrected_collision_risk": 1.0,
+      "corrected_avoidance_magnitude": 0.55,
+      "nominal_action_byte_exact": true
+    },
+    "closed_loop_counterexample": false
+  },
+  "verified_contract": {
+    "candidate_instance_keys": ["nominal", "last"],
+    "nominal_calls_per_decision": 1,
+    "new_plan_or_recovery_release_state": false,
+    "executed_action_feedback": false,
+    "pedals_unchanged": true,
+    "inherited_side_unchanged": true,
+    "shield_source_unchanged": true,
+    "shield_is_final_layer": true,
+    "source_clip_float32_impact_priority_preserved": true,
+    "same_skin_full_footprint_and_raster_padding": true,
+    "magnitude_bounds": "0 <= magnitude <= current identified legacy avoidance term"
+  },
+  "limitations": [
+    "Swept transverse enclosure can overestimate risk because longitudinal/motion correlation is not modeled.",
+    "Pixel geometry, HUD speed, geometric demand and unchanged shield projection are proxies, not physical safety guarantees.",
+    "No driving result, fresh-road generalization, candidate adoption or baseline replacement follows from this receipt."
+  ]
+}

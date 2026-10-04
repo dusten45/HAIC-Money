@@ -1,0 +1,168 @@
+{
+  "baseline_id": "crossing-projection-collision-shield-v1-baseline-20261002",
+  "status": "FROZEN_SUBMISSION_BASELINE_BY_USER_DESIGNATION",
+  "frozen_at_utc": "2026-10-02T01:42:24.392649+00:00",
+  "original_package": "submissions/koi-collision-shield-v1-experimental-submission.zip",
+  "zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+  "policy_source_sha256": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+  "source_authority": "exact submitted ZIP, not the current worktree",
+  "official_result": {
+    "evidence": "USER_REPORTED_OFFICIAL_RESULT",
+    "reported_at_utc": "2026-10-02T01:36:47Z",
+    "track_id": 4,
+    "finished": true,
+    "lap_seconds": 18.4,
+    "overall_rank_at_report": 6,
+    "submission_id": null,
+    "server_receipt": null,
+    "independently_verified": false,
+    "package_binding": "user identifies this previously packaged v1 as the successful submission",
+    "site_confirmation": "NOT_REPORTED"
+  },
+  "research_verdict": "NOT_ADOPTED",
+  "research_result_sha256": "25819a469f5e44dec9ae216feb67e38ca06cbc6ab71ee9440a7772e97a048ea5",
+  "research_gate_note": "Original +20ms efficiency failure unchanged; submission baseline designation is separate.",
+  "purpose": "imminent obstacle-collision DNF prevention; no additional overavoidance tuning",
+  "runtime": {
+    "python": "3.11",
+    "platform": "Linux",
+    "device": "CPU",
+    "direct_packages": {
+      "numpy": "1.26.0",
+      "opencv-python": "4.8.1.78"
+    },
+    "extra_requirements_in_zip": false,
+    "external_weights": false,
+    "parameter_authority": "All policy constants and inline parameters are in exact source/ member bytes.",
+    "shield_top_level_parameter_expressions": [
+      {
+        "names": [
+          "ACTION_SECONDS"
+        ],
+        "expression": ".08"
+      },
+      {
+        "names": [
+          "HORIZON_ACTIONS"
+        ],
+        "expression": "4"
+      },
+      {
+        "names": [
+          "MAX_INTERVENTION_ACTIONS"
+        ],
+        "expression": "6"
+      },
+      {
+        "names": [
+          "REARM_CLEAR_ACTIONS"
+        ],
+        "expression": "3"
+      },
+      {
+        "names": [
+          "MAX_BOX_AGE"
+        ],
+        "expression": "2"
+      },
+      {
+        "names": [
+          "X_SCALE",
+          "Y_SCALE",
+          "WHEELBASE"
+        ],
+        "expression": "1.3608, 1.701, 3.24"
+      },
+      {
+        "names": [
+          "HALF_WIDTH"
+        ],
+        "expression": "1.1 + .28 * math.cos(.4) + .54 * math.sin(.4) + .01"
+      },
+      {
+        "names": [
+          "FRONT",
+          "REAR"
+        ],
+        "expression": "2.61, 2.41"
+      },
+      {
+        "names": [
+          "ROAD_COST_WEIGHT"
+        ],
+        "expression": ".01"
+      }
+    ]
+  },
+  "submission_members": [
+    "agent.py",
+    "haic_agent/__init__.py",
+    "haic_agent/acceleration_envelope_runtime.py",
+    "haic_agent/collision_shield_runtime.py",
+    "haic_agent/contact_continuity_runtime.py",
+    "haic_agent/corridor_agent.py",
+    "haic_agent/far_hazard_runtime.py",
+    "haic_agent/fast_completion_coordination.py",
+    "haic_agent/fixed_high_speed_recovery_v2.py",
+    "haic_agent/fixed_high_speed_runtime.py",
+    "haic_agent/pixel_features.py"
+  ],
+  "files_sha256": {
+    "provenance/package.receipt.json": "d84b55afe2abbdf697716a44c80f9d4326b3657c5f5054ce7bfc8a47900e3cad",
+    "provenance/package_operator.py": "741dc396a4c22d4436d26f832c71dbeb418a67c3cc9a545695ea0f4d4c0ce930",
+    "provenance/research-protocol.json": "afeeb356ff1fae1e74b6606ab81073c1e10ebebefddf90ae945596e2c922ea8b",
+    "provenance/research-result.json": "25819a469f5e44dec9ae216feb67e38ca06cbc6ab71ee9440a7772e97a048ea5",
+    "restore.py": "cec50eda1f5de1ec23b1fe5c26eb763a5c62f22b3a633c58903a1a66f220af62",
+    "runtime-requirements.txt": "6e33461cf5480c0d542450bcd7f4c7e9038067d5ce1c1da139c3e8ecbbdb481f",
+    "source/agent.py": "fd07d794bf502fd9d6e2b95d36bf78f39955b51609d7fbbb42fdb9b9ab19c48e",
+    "source/haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+    "source/haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "source/haic_agent/collision_shield_runtime.py": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "source/haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+    "source/haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "source/haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "source/haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "source/haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "source/haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "source/haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "submission.zip": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801"
+  },
+  "preserved_external_artifacts_sha256": {
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "experiments/koi-collision-shield-v1-result.json": "25819a469f5e44dec9ae216feb67e38ca06cbc6ab71ee9440a7772e97a048ea5",
+    "haic/algorithms/koi/collision_shield.py": "ad772bde9a9c3f4596fdfc742e7cac33f1b605ff52a2b3f76fbd4b75d6361d96",
+    "haic/algorithms/koi/steering_release.py": "52f540993eecc4453d36900b726f8fb54bda189e58b0c3e5eb6126ac3fcdd54b",
+    "runs/koi-steering-generalization-v1/crossing-projection-source-reconstruction.zip": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "submissions/20260919T135436Z_baseline1-final/submission.zip": "2b0e1c319f4a883407bde1822d6470d99c917870c48f27fc0aa231804ee99aad",
+    "submissions/20260929T100923330496Z_drqv2-pad4-control-seed1/submission.zip": "88b2dcfd9d40350e23116419eef462f1f3e2833947d2f980ddfe5ae7657a5fd7",
+    "submissions/koi-adaptive-avoidance-v1.zip": "5f7057a432074d2e7215f5d2aeb863aafc4d557d9ba93c9fb3d34ee2b46e679c",
+    "submissions/koi-collision-shield-v1-experimental-submission.receipt.json": "d84b55afe2abbdf697716a44c80f9d4326b3657c5f5054ce7bfc8a47900e3cad",
+    "submissions/koi-collision-shield-v1-experimental-submission.zip": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+    "submissions/koi-minimum-clearance-v1.zip": "ddadbc512b02469f96d04785f27c7a74045ad0f26582c779780a750aac17a73e",
+    "submissions/koi-minimum-clearance-v2.zip": "64cecc0bf52426622d094664ebd8130fb4f9f6b132b78754130d98e627d47e2a",
+    "submissions/koi-minimum-clearance-v3.zip": "594fca15005ec38cc67801824e9725fc84da440c2309083f02a24955b0ab8fca",
+    "submissions/koi-steering-release-v1.zip": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+    "submissions/koi-steering-release-v1a.zip": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+    "submissions/koi-steering-release-v2-submission.zip": "705f3844c044f962e348bf7afdc824889f55a714eeedaaefa13c3f577ac57efd",
+    "submissions/koi-steering-release-v2.zip": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce"
+  },
+  "restore_commands": {
+    "verify": "python restore.py verify --bundle .",
+    "exact_copy": "python restore.py restore --bundle . --output /existing/path/submission.zip",
+    "from_sources": "python restore.py rebuild --bundle . --output /existing/path/rebuilt.zip"
+  },
+  "restoration_note": "Prefer exact-copy restore. Rebuild verifies the original ZIP hash and fails closed on codec drift. Outputs must be new paths outside the bundle.",
+  "build_runtime": {
+    "python": "3.11.14",
+    "zlib": "1.3.1"
+  },
+  "new_agent_execution": false,
+  "new_simulator_evaluation": false,
+  "external_action": false,
+  "validation": {
+    "member_hashes_match_receipt": true,
+    "original_artifacts_unchanged": true,
+    "source_rebuild_byte_identical": true,
+    "environment_resets": 0
+  }
+}

@@ -3,6 +3,107 @@
 Only durable choices that prevent future agents from repeating the same debate are
 listed here. Protocol/result artifacts remain the detailed evidence.
 
+## Close KOI Overavoidance Optimization
+
+**Context:** On2026-10-02 the user authorized one separate reaction-based bounded
+nominal steering-magnitude hypothesis, preserving frozen crossing_projection plus
+collision-shield v1. The user explicitly required discarding the candidate and
+ending overavoidance optimization if meaningful safe efficiency was absent or a
+regression appeared. Margin reduction, steering-release, persistent planning and
+long recovery/release-state extensions were excluded.
+
+**Evidence:** The [frozen four-pair consumed ordinary TRAIN A/B](../../runs/koi-avoidance-magnitude-v1/protocol.json)
+completed all8 episodes/two roads. Its [primary result](../../experiments/koi-avoidance-magnitude-v1-result.json)
+is REJECTED: finishes4->3, damage0->1.4, collision decisions0->7 and hit objects0->3
+among all24 objects/arm. Five baseline windows and return followups are lost.
+Conditional three-retained-cell lateral/path/steering means and kept-lap-120ms
+cannot offset safety/coverage regressions; road0013 also increases path, steering
+integral/variation and lap+80ms. Detailed boundaries are in
+[architecture section27](../architecture/koi-baseline-analysis-2026-09-30.md#27-stateless-bounded-avoidance-magnitude-2026-10-02).
+The [independent primary audit](../../experiments/koi-avoidance-magnitude-v1-audit.json)
+verifies the same rejection and all17 gates without policy execution or reset.
+
+**Decision:** Discard bounded magnitude v1 as FAILED / NOT ADOPTED and close
+overavoidance optimization. Preserve source/protocol/raw/result and prior negative
+evidence; no retuning, repeats, controller extension or gate relaxation. The exact
+submitted champion`c9e376a0...`, shield`ad772bde...` and root Agent remain unchanged.
+This closes the user-scoped research direction, not a theoretical impossibility
+claim about all obstacle avoidance. Other research lanes are unaffected.
+
+**Revisit condition:** Only an explicit new user instruction can reopen this
+direction. No model promotion, upload or official confirmation is authorized.
+
+## Designate Crossing Plus Shield v1 as Submission Baseline
+
+**Context:** At2026-10-02T01:36:47Z the user reported that the current official
+crossing_projection + collision-shield v1 submission finished Track4 in18.4s and
+ranked6th overall, and explicitly designated it the new submission baseline.
+
+**Evidence boundary:** This is a user-reported official result with user-bound ZIP
+SHA-256`c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801`,
+not independent package-to-result verification. No site submission ID, server
+receipt or model-confirmation receipt was supplied. See the
+[submission ledger](../competition/submissions.md#current-submission-baseline-2026-10-02).
+
+**Decision:** Adopt this exact package as the **submission baseline**, separately
+from the original research [NOT_ADOPTED result](../../experiments/koi-collision-shield-v1-result.json)
+and failed+20ms efficiency gate, which remain unchanged. Preserve it under
+`submissions/20261002-crossing-projection-collision-shield-v1-baseline/`; exact
+ZIP/member checks and standalone restoration/source rebuild reproduce its pinned
+hash without policy execution. Retain the original experimental
+ZIP/receipt, standalone crossing, all previous candidates and root Agent unchanged.
+This records selection, not a new upload, server confirmation or research-gate pass.
+
+**Boundary:** No retuning or evaluation is authorized here. A future baseline
+replacement requires a separate explicit designation; official external actions
+retain their separate authorization and source-recheck requirements.
+
+## Close KOI Minimum-Clearance and Margin Reduction
+
+**Context:** On 2026-10-01 the user explicitly ended all minimum-clearance
+variants as failed/nonadopted and stopped safety-margin reduction alongside the
+already closed speed-target direction.
+
+**Evidence:** The preserved [v1](../../experiments/koi-minimum-clearance-ab-v1-result.json),
+[r2](../../experiments/koi-minimum-clearance-ab-r2-result.json) and
+[r3](../../experiments/koi-minimum-clearance-ab-r3-result.json) consumed-TRAIN
+comparisons do not meet their improvement gates. R2 loses a baseline finish;
+r3 restores safety but not meaningful path/lap/steering improvement, verified by
+its [independent audit](../../experiments/koi-minimum-clearance-ab-r3-audit.json).
+
+**Decision:** All minimum-clearance variants are FAILED / NOT ADOPTED; preserve
+all frozen sources/artifacts and stop margin shrinking. Crossing_projection
+remains fixed. The separately authorized avoidance-steering generation/hold/
+release hypothesis changes only steering lifecycle after source/trace diagnosis,
+not margin or speed target, and does not automatically promote any candidate.
+
+**Revisit condition:** Only an explicit new user instruction may reopen the
+speed-target or margin-reduction directions. No official action is authorized.
+
+## Close KOI Adaptive-v1 and Fix the Crossing Baseline
+
+**Context:** On 2026-09-30 the user explicitly rejected adaptive-v1 and ended
+the speed-target adjustment direction, while authorizing a separate obstacle
+minimum-clearance/path hypothesis.
+
+**Evidence:** The [unchanged consumed-TRAIN A/B](../../experiments/koi-adaptive-ab-v1-result.json)
+and [independent primary audit](../../experiments/koi-adaptive-ab-v1-audit.json)
+preserve completion and contact outcomes but fail the declared improvement gate.
+The [KOI analysis](../architecture/koi-baseline-analysis-2026-09-30.md#14-첫-unchanged-ab-결과-채택하지-않음)
+records its measurement limitations and missing original crossing ZIP boundary.
+
+**Decision:** Adaptive-v1 is FAILED / NOT ADOPTED. Preserve all sources, ZIPs
+and negative evidence; do not pursue further speed-target tuning. Fix
+`ContactContinuityAgent('crossing_projection')` as the KOI improvement baseline.
+A separate footprint/obstacle/road-boundary steering candidate must demonstrate
+preserved finishes and safety plus shorter avoidance paths before internal
+candidate judgment; it does not automatically replace the baseline or authorize
+official action. Other model lines are unaffected.
+
+**Revisit condition:** Only an explicit new user instruction may reopen the
+speed-target direction. The minimum-clearance iteration was subsequently closed
+by the decision above; the new steering-lifecycle hypothesis is not reopening.
+
 ## Preserve the Official Environment Boundary
 
 **Context:** Local research can make modified physics or environment behavior look

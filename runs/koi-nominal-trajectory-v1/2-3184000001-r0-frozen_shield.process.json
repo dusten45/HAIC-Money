@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/tmp/kilo/haic-cpu21/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import sys; sys.path.insert(0,sys.argv[1]); from scripts.evaluate_koi_nominal_trajectory import worker; worker(sys.argv[2],int(sys.argv[3]),sys.argv[4],import_only=sys.argv[5]==\"True\")",
+    "/workspace/HAIC-Money/runs/koi-nominal-trajectory-v1/source",
+    "/workspace/HAIC-Money/runs/koi-nominal-trajectory-v1",
+    "4",
+    "77bda836df249b08d0a0863a82ffbf7f0016123e76fa97046a2393515ad38078",
+    "False"
+  ],
+  "protocol_sha256": "77bda836df249b08d0a0863a82ffbf7f0016123e76fa97046a2393515ad38078",
+  "wall_time_s": 23.107669956050813,
+  "error": null
+}
