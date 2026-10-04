@@ -7,13 +7,23 @@ Participants repository override it whenever they differ.
 
 | Scope | Source | Last verified | Version / note |
 |---|---|---|---|
-| Technical contract | [Participants README at `1c11db8`](https://github.com/2026-HAIC/Participants/blob/1c11db8afc2fbfcfb610672b7ee0ecd122c97741/README.md) | 2026-09-26 (rechecked) | Official `main` commit `1c11db8afc2fbfcfb610672b7ee0ecd122c97741`; README blob `4fd6bc02ddf6064bd09d3bbaaa8fa57253ab65be` |
-| Current site and operating schedule | [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/) and loaded [official bundle](https://scholarships-hardwood-headers-influenced.trycloudflare.com/assets/index-DpQFAxcW.js) | 2026-09-26 (rechecked) | Replacement site is reachable; displayed schedule matches the prior snapshot, but fixed upload text still says three submissions per day |
+| Technical contract | [Participants README at `dfb7a2de`](https://github.com/2026-HAIC/Participants/blob/dfb7a2de2178825ca5c5ce20bab01ba67052ba31/README.md) | 2026-09-29 (rechecked) | Official `main` commit `dfb7a2de2178825ca5c5ce20bab01ba67052ba31`; README-only removal of a public-track seed instruction; packaging and CPU interface limits still match the prior snapshot |
+| Current site and operating schedule | [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/) and loaded [official bundle](https://scholarships-hardwood-headers-influenced.trycloudflare.com/assets/index-DpQFAxcW.js) | 2026-09-29 (rechecked) | Replacement site is reachable; displayed schedule matches the prior snapshot, but fixed upload text still says three submissions per day |
 | Reported submission quota | User-provided competition update | 2026-09-26 (reported) | Owner reports five per team per KST day; public site text still says three; effective authenticated limit unverified |
 | Historical operating schedule, former quota, model-selection policy | [previous website](https://ships-duo-ethical-saver.trycloudflare.com/) and [previous bundle](https://ships-duo-ethical-saver.trycloudflare.com/assets/index-YpEsg9KV.js) | 2026-09-23T06:30:22Z | Prior site snapshot, not current quota; the site supplied no deployment commit |
 | Historical public-track snapshot | [`/api/tracks`](https://ships-duo-ethical-saver.trycloudflare.com/api/tracks) and per-track [`/api/ranking`](https://ships-duo-ethical-saver.trycloudflare.com/api/ranking?trackId=1) | 2026-09-23T06:30:22Z | Tracks 1 and 2 were exposed as public at verification time; this is not a current track count |
 
 ## Latest Site Availability Check
+
+On 2026-09-29, the same website and loaded application bundle were reachable
+again. The bundle continues to show three submissions per KST day and midnight
+reset in its fixed upload copy; this does **not** establish the effective
+server-configured team limit. Unauthenticated `/api/admin/settings` and
+`/api/teams/me` requests returned 401. The owner-reported five remains
+unverified from public sources, so check the authenticated quota immediately
+before any explicitly approved upload. The currently linked Participants
+README is at `dfb7a2de`; its technical ZIP and CPU interface limits did not
+change in this recheck.
 
 On 2026-09-26, the replacement [competition website](https://scholarships-hardwood-headers-influenced.trycloudflare.com/)
 and its [public `/api/tracks`](https://scholarships-hardwood-headers-influenced.trycloudflare.com/api/tracks)
@@ -40,7 +50,7 @@ Refresh these sources before official submission, model confirmation, a mock eve
 the final deadline, or first official evaluation after another public track is
 released.
 
-## Site-Verified Operating Schedule (2026-09-26)
+## Site-Verified Operating Schedule (2026-09-29)
 
 All site times below are KST (`+09:00`), with UTC shown for auditability.
 
