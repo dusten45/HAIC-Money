@@ -1,5 +1,27 @@
 # Current Research State
 
+## Apex opposite-strategy research (2026-10-05 KST)
+
+The user authorized the independent `agents/apex_2026/` lane from main `0a887f5`
+on branch `research/apex-2026-opposite-20261005`. This authorization applies to
+this lane despite historical pauses below. Root learned agent, earlier releases,
+and official simulator are preserved. The original 04:00 KST deadline was
+explicitly removed. See [active plan](../plans/active/apex-2026-opposite.md),
+[lane design](../../agents/apex_2026/DESIGN.md), and
+[experiment ledger](../../agents/apex_2026/results/line-experiments.json).
+
+Current approach extracts free space from observations and optimizes a continuous
+path, then uses pixel-derived speed/yaw with physical steering and braking.
+An independent joint-action rollout family remains separate. Fresh required
+baselines finished root 0/4 and arrival-speed release 3/4. The continuous-path
+candidate finished all four in 18.32/22.80/20.18/18.42 seconds, zero damage;
+adding instantaneous HUD yaw improved those same cells to
+17.14/21.42/19.48/17.92 seconds, zero damage. Development screens are in progress.
+These are consumed-development results, not the original 10–13-second objective.
+No final candidate is adopted. Holdout is unallocated and unopened; allocation
+requires a committed and pushed source/configuration freeze. No official action.
+
+
 ## RLPD Coupled Recovery In Progress (2026-09-29)
 
 The user authorized and resumed TRAIN-only curve-entry overspeed / steering-speed

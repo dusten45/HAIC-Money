@@ -1,5 +1,13 @@
 # Experiment Evidence Index
 
+## Apex opposite-strategy lane — 2026-10-05 KST
+
+Independent pixel-only continuous-path and action-rollout research, preserving main.
+See [lane README](../../agents/apex_2026/README.md), [prospective protocol](../../agents/apex_2026/DESIGN.md),
+and [active plan](../plans/active/apex-2026-opposite.md). Fresh baseline/test evidence
+and all failed trials are retained. Original 10–13-second objective remains unmet;
+final candidate and holdout validation are pending.
+
 ## RLPD Coupled Recovery (2026-09-29)
 
 - [Pixel-local gate protocol](../../experiments/rlpd-local-recovery-gate-v1.json):
