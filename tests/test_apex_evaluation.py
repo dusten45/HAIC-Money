@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from agents.apex_2026.evaluate import (
-    MANDATORY_CELLS, assess, pace_profile, validate_action,
+    MANDATORY_CELLS, assess, end_reason, pace_profile, rejection_streak, validate_action,
 )
 
 
@@ -61,3 +61,24 @@ def test_invalid_actions_are_rejected_without_clipping(action):
 def test_valid_action_is_float32_and_unmodified():
     action = validate_action([-0.4, 0.6, 0.2])
     np.testing.assert_array_equal(action, np.asarray([-0.4, 0.6, 0.2], np.float32))
+
+
+def test_only_distinct_real_rejections_relax_the_next_trial():
+    mandatory, extra = cells()
+    mandatory[0] = row(*MANDATORY_CELLS[0], finished=False)
+    reports = [{"freeze": {"source_sha256": f"candidate-{i}", "parameters": {},
+                           "selected_profile_seconds": 13}, "rows": mandatory} for i in range(3)]
+    assert rejection_streak(reports) == 3
+    assert pace_profile(rejection_streak(reports)) == 15
+    with pytest.raises(ValueError, match="repeat"):
+        rejection_streak(reports + [reports[0]])
+    reports[-1]["freeze"]["selected_profile_seconds"] = 18
+    with pytest.raises(ValueError, match="prospective"):
+        rejection_streak(reports)
+
+
+def test_playfield_termination_is_not_a_time_limit():
+    assert end_reason({}, finished=False, terminated=True, truncated=False) == "terminated"
+    assert end_reason({}, finished=False, terminated=False, truncated=True) == "time_limit"
+    assert end_reason({"retire_reason": "crash"}, finished=False, terminated=True, truncated=False) == "crash"
+    assert end_reason({}, finished=True, terminated=False, truncated=True) is None

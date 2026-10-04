@@ -29,8 +29,9 @@ small, measurable starting point; evidence determines which candidate is kept.
 - Strict pace limit is 13 seconds. After three consecutive development rejects,
   a new prospective profile permits 15 seconds; after another three, 18 seconds.
   A profile change never edits past outcomes or claims the original target met.
-- A candidate passes a profile only with four mandatory finishes and at least
-  90% additional finishes, with at least 75% on every track ID. Inference bounds,
+- A candidate passes a profile only with four mandatory finishes within its pace
+  limit and at least 90% additional finishes within that limit, with at least
+  75% on every track ID. Inference bounds,
   finite actions, CPU limits, and honest completion rules are never relaxed.
 - Source, parameters, environment hashes, and action traces bind every receipt.
   Exact cold repeats and an extracted ZIP run verify the final artifact.

@@ -5,6 +5,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import importlib.util
+from importlib.metadata import version
 import json
 from pathlib import Path
 import subprocess
@@ -20,7 +21,9 @@ DEVELOPMENT_SEEDS = (2867319041, 359018627, 1764402399, 4029571806)
 HOLDOUT_SEEDS = (3249018572, 1097358264, 2376840915, 798412603)
 ENV_FILES = ("env_wrapper.py", "damage.py", "core/track_variables.py",
              "core/vendor/car_racing.py", "core/vendor/car_dynamics.py",
-             "core/finish_line.py", "core/obstacle_contacts.py")
+             "core/finish_line.py", "core/obstacle_contacts.py",
+             "local_simulator/environment.py", "local_simulator/schema.py",
+             "local_simulator/custom_environment.py", "agents/apex_2026/evaluate.py")
 
 
 def digest(path):
@@ -36,10 +39,50 @@ def validate_action(action):
     return value
 
 
+def end_reason(info, *, finished, terminated, truncated):
+    if finished:
+        return None
+    if info.get("retire_reason"):
+        return info["retire_reason"]
+    if terminated:
+        return "terminated"
+    return "time_limit" if truncated else "max_steps"
+
+
 def pace_profile(consecutive_rejections):
     if type(consecutive_rejections) is not int or consecutive_rejections < 0:
         raise ValueError("rejections must be a nonnegative integer")
     return (13, 15, 18)[min(2, consecutive_rejections // 3)]
+
+
+def rejection_streak(reports):
+    """Apply a prospective profile only to distinct completed development trials."""
+    streak, seen = 0, set()
+    for report in reports:
+        freeze = report["freeze"]
+        if freeze.get("suite") == "holdout":
+            raise ValueError("holdout cannot drive development relaxation")
+        identity = (freeze["source_sha256"], json.dumps(freeze["parameters"], sort_keys=True))
+        if identity in seen:
+            raise ValueError("a repeat cannot count as another rejection")
+        seen.add(identity)
+        limit = pace_profile(streak)
+        if freeze.get("selected_profile_seconds", 13) != limit:
+            raise ValueError("prior receipt disagrees with prospective profile")
+        rows = report["rows"]
+        mandatory = [r for r in rows if (r["track_id"], r["seed"]) in MANDATORY_CELLS]
+        if len(mandatory) != 4 or len({(r["track_id"], r["seed"]) for r in mandatory}) != 4:
+            raise ValueError("prior receipt lacks mandatory coverage")
+        if any(r.get("error") for r in rows):
+            raise ValueError("operational errors are not performance rejections")
+        if len(rows) > 4:
+            passed = assess(mandatory, [r for r in rows if r not in mandatory], limit_seconds=limit)["passed"]
+        else:
+            passed = all(r["finished"] and r.get("lap_time_ms") is not None
+                         and 0 < r["lap_time_ms"] <= limit * 1000
+                         and r.get("progress", 0) >= .95 for r in mandatory)
+        streak = 0 if passed else streak + 1
+    return streak
 
 
 def assess(mandatory, extra, *, limit_seconds):
@@ -130,7 +173,8 @@ def run_cell(source, params, track, seed, *, max_steps=2000, trace_path=None):
                                "speed": float(np.linalg.norm(raw.car.hull.linearVelocity)),
                                "position": list(raw.car.hull.position), "angle": raw.car.hull.angle,
                                "collision": bool(info.get("collision", False)),
-                               "debug": getattr(agent, "debug", {})})
+                               "debug": {name: float(getattr(agent, name)) for name in
+                                         ("last_speed", "last_target", "last_steer") if hasattr(agent, name)}})
             if terminated or truncated:
                 break
         finish = raw.finish_time_s
@@ -138,7 +182,8 @@ def run_cell(source, params, track, seed, *, max_steps=2000, trace_path=None):
                "lap_time_ms": round(1000 * (finish - start_time)) if finish is not None else None,
                "progress": float(info.get("progress", 0)), "collision_count": contacts,
                "damage": float(info.get("damage", 0)),
-               "retire_reason": None if finish is not None else (info.get("retire_reason") or "max_steps"),
+               "retire_reason": end_reason(info, finished=finish is not None,
+                                           terminated=terminated, truncated=truncated),
                "steps": step + 1, "initialization_ms": init_ms, "reset_ms": reset_ms,
                "action_latency_max_ms": max_act_ms, "peak_worker_rss_mib": _peak_worker_rss_mib(),
                "offtrack_samples": offroad, "partial_offtrack_samples": partial,
@@ -165,6 +210,8 @@ def main():
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--max-steps", type=int, default=2000)
     parser.add_argument("--trace-dir", type=Path)
+    parser.add_argument("--prior-receipts", nargs="*", type=Path, default=[],
+                        help="ordered distinct development receipts supporting prospective relaxation")
     parser.add_argument("--worker", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.worker:
@@ -172,22 +219,33 @@ def main():
         return
     if args.output is None:
         parser.error("--output is required")
-    if args.output.exists():
-        parser.error("output exists; use a new path to preserve prior receipts")
+    freeze_path = args.output.with_suffix(".freeze.json")
+    if args.output.exists() or freeze_path.exists():
+        parser.error("output or freeze exists; use a new path to preserve prior receipts")
     params = json.loads(args.params)
     if not isinstance(params, dict) or args.workers < 1 or args.max_steps < 1:
         parser.error("invalid parameters, workers, or max-steps")
     source = args.source.resolve()
     source_hash = digest(source)
     env_hashes = {p: digest(ROOT / p) for p in ENV_FILES}
+    prior_reports = [json.loads(p.read_text(encoding="utf-8")) for p in args.prior_receipts]
+    prior_streak = rejection_streak(prior_reports)
+    selected_limit = pace_profile(prior_streak)
     seeds = DEVELOPMENT_SEEDS if args.suite == "development" else HOLDOUT_SEEDS
     cells = list(MANDATORY_CELLS)
     if args.suite != "mandatory":
         cells += [(track, seed) for seed in seeds for track in range(1, 5)]
     freeze = {"source_sha256": source_hash, "parameters": params, "suite": args.suite,
-              "environment_sha256": env_hashes, "cells": cells, "max_steps": args.max_steps}
+              "environment_sha256": env_hashes, "cells": cells, "max_steps": args.max_steps,
+              "selected_profile_seconds": selected_limit, "consecutive_rejections": prior_streak,
+              "prior_receipts": [{"path": str(p.resolve()), "sha256": digest(p)} for p in args.prior_receipts],
+              "runtime_versions": {name: version(name) for name in ("numpy", "gymnasium", "torch", "opencv-python")},
+              "python_version": sys.version}
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.with_suffix(".freeze.json").write_text(json.dumps(freeze, indent=2), encoding="utf-8")
+    with freeze_path.open("x", encoding="utf-8") as file:
+        json.dump(freeze, file, indent=2)
+    cell_dir = args.output.with_suffix(".cells")
+    cell_dir.mkdir(exist_ok=False)
 
     def run(pair):
         track, seed = pair
@@ -198,10 +256,17 @@ def main():
         command = [sys.executable, "-m", "agents.apex_2026.evaluate", "--worker", json.dumps(payload)]
         result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=300)
         if result.returncode:
-            raise RuntimeError(f"worker {pair} failed: {result.stderr[-3000:]}")
-        row = json.loads(result.stdout)
+            row = {"track_id": track, "seed": seed, "finished": False,
+                   "lap_time_ms": None, "progress": 0.0, "collision_count": 0,
+                   "damage": 0.0, "retire_reason": "worker_error",
+                   "source_sha256": source_hash, "parameters": params,
+                   "error": result.stderr[-3000:]}
+        else:
+            row = json.loads(result.stdout)
         if row["source_sha256"] != source_hash or digest(source) != source_hash:
             raise RuntimeError("source changed after freeze")
+        with (cell_dir / f"track-{track}-seed-{seed}.json").open("x", encoding="utf-8") as file:
+            json.dump(row, file, indent=2)
         print(json.dumps({k: row[k] for k in ("track_id", "seed", "finished", "lap_time_ms", "progress", "collision_count")}), flush=True)
         return row
 
@@ -211,10 +276,13 @@ def main():
         raise RuntimeError("official environment changed during evaluation")
     report = {"freeze": freeze, "rows": rows}
     if args.suite != "mandatory":
-        report["profiles"] = {str(limit): assess(rows[:4], rows[4:], limit_seconds=limit)
-                              for limit in (13, 15, 18)}
+        report["verdict"] = assess(rows[:4], rows[4:], limit_seconds=selected_limit)
+    else:
+        report["screen_passed"] = all(r["finished"] and r["lap_time_ms"] <= selected_limit * 1000 for r in rows)
     args.output.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"receipt: {args.output}")
+    if any(r.get("error") for r in rows):
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
