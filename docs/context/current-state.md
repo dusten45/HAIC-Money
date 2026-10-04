@@ -1,5 +1,14 @@
 # Current Research State
 
+## Apex v2 active — renewed user authorization (2026-10-05 KST)
+
+The user requested creative, decisive further improvement after the v1 report.
+New structural work is isolated under [agents/apex_2026/v2](../../agents/apex_2026/v2/README.md).
+V1 frozen source/results remain unchanged and unadopted. All exposed old24 cells
+are consumed regression data; v2 holdout24 is unallocated until final freeze.
+See the [prospective design](../../agents/apex_2026/v2/DESIGN.md).
+
+
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)
 
 The user-authorized `agents/apex_2026/` lane completed on branch

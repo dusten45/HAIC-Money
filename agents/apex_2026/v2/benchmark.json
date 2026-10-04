@@ -1,0 +1,154 @@
+{
+  "protocol": "apex-2026-structural-v2",
+  "authorized_by": "User explicitly requests renewed creative and decisive performance improvement after v1 final report.",
+  "created_at": "2026-10-04T19:01:35.015712+00:00",
+  "baseline_commit": "ded9391fdc71292bed00efd69fed7716113767dd",
+  "protected_frozen_baseline": "agents/apex_2026/candidate/agent.py",
+  "required": [
+    {
+      "track_id": 1,
+      "seed": 516237
+    },
+    {
+      "track_id": 2,
+      "seed": 644062
+    },
+    {
+      "track_id": 3,
+      "seed": 1007
+    },
+    {
+      "track_id": 4,
+      "seed": 18800
+    }
+  ],
+  "consumed_regression": [
+    {
+      "track_id": 1,
+      "seed": 3601050001
+    },
+    {
+      "track_id": 1,
+      "seed": 3601050002
+    },
+    {
+      "track_id": 1,
+      "seed": 3601050003
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050001
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050002
+    },
+    {
+      "track_id": 2,
+      "seed": 3601050003
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050001
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050002
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050003
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050001
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050002
+    },
+    {
+      "track_id": 4,
+      "seed": 3601050003
+    },
+    {
+      "track_id": 1,
+      "seed": 2541631106
+    },
+    {
+      "track_id": 1,
+      "seed": 1991198892
+    },
+    {
+      "track_id": 1,
+      "seed": 3731157233
+    },
+    {
+      "track_id": 2,
+      "seed": 4031370700
+    },
+    {
+      "track_id": 2,
+      "seed": 3941966027
+    },
+    {
+      "track_id": 2,
+      "seed": 1244362167
+    },
+    {
+      "track_id": 3,
+      "seed": 4019195530
+    },
+    {
+      "track_id": 3,
+      "seed": 4111953688
+    },
+    {
+      "track_id": 3,
+      "seed": 3615151447
+    },
+    {
+      "track_id": 4,
+      "seed": 3491511754
+    },
+    {
+      "track_id": 4,
+      "seed": 3841519481
+    },
+    {
+      "track_id": 4,
+      "seed": 1172828284
+    }
+  ],
+  "consumed_regression_origins": [
+    "12 previously consumed v1 development cells",
+    "12 exposed and completed v1 holdout cells, permanently consumed; no fresh generalization claim from v2 reuse"
+  ],
+  "original_target_lap_ms": [
+    10000,
+    13000
+  ],
+  "matched_improvement_gate": {
+    "required_finishes": 4,
+    "consumed_regression_finishes": 24,
+    "required_mean_lap_ms_at_most": 18530,
+    "required_mean_must_be_strictly_better": true,
+    "description": "Rescue both known failures while retaining all prior successes, and improve required mean. Literal goal reported separately."
+  },
+  "new_holdout": {
+    "status": "unallocated_unopened",
+    "count": 24,
+    "seeds_per_track": 6,
+    "tracks": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "allocate_only_after_pushed_final_candidate_freeze": true,
+    "required_finishes_for_corroboration": 23,
+    "no_post_holdout_tuning": true
+  },
+  "deadline": null,
+  "official_actions_authorized": false
+}
