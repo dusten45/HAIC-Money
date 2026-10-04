@@ -1,0 +1,316 @@
+{
+  "scope": "12 saved-pixel preflight cases; zero environment resets, no driving performance claim.",
+  "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "source_dependency_inventory": {
+    "/workspace/HAIC-Money/agents/apex_2026/v2/beam_refined_agent.py": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+    "/tmp/apex-v2-beam-r5/source.py": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/diagnostics/beam_refinement_preflight.py": "3a0b1e913c11695769eade65054da8d0ba6975f91b5b90e826670201a8a8780a"
+  },
+  "input_sha256": {
+    "/tmp/apex-v2-beam-r5/stall_capture/observations.npz": "0a90854415483c9bdb3125a7269e4bbdc8e825e9550e82796d989ec7d19ab653",
+    "/tmp/apex-v2-beam-r5/t3-s4111953688.jsonl": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0",
+    "/tmp/apex-v2-beam-r3/t3-s4111953688.jsonl": "a876261132ff4f9d745acf00668f0c508fdcebb78b8d3fdb05df904b243ef988",
+    "/tmp/apex-final-frozen/required/t1-s516237-frames/0100.png": "ec8454b42570d1055d50a4b6c1f8ac023641d570862b44aab5be93bc529e7712",
+    "/tmp/apex-final-frozen/required/t2-s644062-frames/0100.png": "21bb7f87e82918f18f58d218c874524a2d8fafaf86b62319c7f2862e559fe3ae",
+    "/tmp/apex-final-frozen/required/t3-s1007-frames/0100.png": "2aac4ca2f02035aab20d431e264281d6f9b34984ba061b6b3171745d856e06fb",
+    "/tmp/apex-final-frozen/required/t4-s18800-frames/0100.png": "6b88a4c1674d20925a29076997ca91d59998b564ee265a532c767e56ea5f8bd6",
+    "/tmp/apex-final-frozen/required/t1-s516237-frames/0000.png": "e71cd7e77a7d869dfd90ef4061904f698d1345072fbbbc2ca17af32f583226dd"
+  },
+  "observer_objective_collision_margin_unchanged": true,
+  "count_metadata_note": "unsafe_count accumulates actual prefix raw-tick unsafe-cell counts; completion rollouts are separate node copies. Original candidate rankings/costs remain exact in all12 comparisons.",
+  "raw_tick_bound": 224,
+  "cases": [
+    {
+      "case": "R5_stall_120",
+      "original_action": [
+        0.16901178658008575,
+        0.0,
+        0.0
+      ],
+      "action": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -30.538041688655543,
+      "cost": -43.95090987843033,
+      "shift": 2,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.4811206269987451,
+      "act_s": 1.5370488759981527,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": false,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R5_stall_121",
+      "original_action": [
+        0.16901178658008575,
+        0.0,
+        0.0
+      ],
+      "action": [
+        0.029011782258749008,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -30.538041688655543,
+      "cost": -43.95090987843033,
+      "shift": 2,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.461442141000589,
+      "act_s": 1.5314144610019866,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": false,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R3_collision_window_134",
+      "original_action": [
+        0.002541898749768734,
+        0.0,
+        0.0
+      ],
+      "action": [
+        0.002541898749768734,
+        0.0,
+        0.0
+      ],
+      "original_cost": -134.66092522083696,
+      "cost": -134.66092522083696,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.816730810998706,
+      "act_s": 2.8754279259992472,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R3_collision_window_135",
+      "original_action": [
+        0.16352532804012299,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        0.16352532804012299,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -135.49514433144316,
+      "cost": -135.49514433144316,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.6686898389998532,
+      "act_s": 2.7565593920007814,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R3_collision_window_136",
+      "original_action": [
+        0.012401568703353405,
+        0.0,
+        0.0
+      ],
+      "action": [
+        0.012401568703353405,
+        0.0,
+        0.0
+      ],
+      "original_cost": -146.64276239340796,
+      "cost": -146.64276239340796,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.5664658559981035,
+      "act_s": 2.6988313229994674,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R3_collision_window_137",
+      "original_action": [
+        -0.02970968559384346,
+        0.0,
+        0.0
+      ],
+      "action": [
+        -0.02970968559384346,
+        0.0,
+        0.0
+      ],
+      "original_cost": -119.72382346857538,
+      "cost": -119.72382346857538,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.57161040900246,
+      "act_s": 2.72041867200096,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "R3_collision_window_138",
+      "original_action": [
+        0.011341008357703686,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        0.011341008357703686,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": 3303.971111601198,
+      "cost": 3303.971111601198,
+      "shift": 0,
+      "original_collision_count": 17,
+      "collision_count": 17,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.778294828000071,
+      "act_s": 2.8673107870017702,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "public stack plus priorfloat32actions/predictedslip"
+    },
+    {
+      "case": "required1_static_frame100",
+      "original_action": [
+        -0.2830333709716797,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        -0.2830333709716797,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -134.45361687419063,
+      "cost": -134.45361687419063,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.5428417540024384,
+      "act_s": 1.626578597999469,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "repeated single public PNG, zero action memory; synthetic preflight only"
+    },
+    {
+      "case": "required2_static_frame100",
+      "original_action": [
+        -0.04311148449778557,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        -0.04311148449778557,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -126.9823045593148,
+      "cost": -126.9823045593148,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 2.560691479000525,
+      "act_s": 2.640358100001322,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "repeated single public PNG, zero action memory; synthetic preflight only"
+    },
+    {
+      "case": "required3_static_frame100",
+      "original_action": [
+        -0.13253839313983917,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        -0.13253839313983917,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -135.4768033899162,
+      "cost": -135.4768033899162,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.5222481970013177,
+      "act_s": 1.5971121229995333,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "repeated single public PNG, zero action memory; synthetic preflight only"
+    },
+    {
+      "case": "required4_static_frame100",
+      "original_action": [
+        0.14035050570964813,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        0.14035050570964813,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -142.60553019946718,
+      "cost": -142.60553019946718,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.7386724999996659,
+      "act_s": 1.794409251997422,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "repeated single public PNG, zero action memory; synthetic preflight only"
+    },
+    {
+      "case": "required1_static_start",
+      "original_action": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "action": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "original_cost": -8.221749474646973,
+      "cost": -8.221749474646973,
+      "shift": 0,
+      "original_collision_count": 0,
+      "collision_count": 0,
+      "added_raw_ticks": 224,
+      "baseline_act_s": 1.3612353389980854,
+      "act_s": 1.4129531830003543,
+      "within_5s": true,
+      "unchanged_full_action_memory_diagnostics_parity": true,
+      "initialization": "repeated single public PNG, zero action memory; synthetic preflight only"
+    }
+  ],
+  "maximum_act_s": 2.8754279259992472,
+  "no_runtime_source_drift": true
+}

@@ -1,0 +1,84 @@
+{
+  "authorized_changes_only_ast_verified": true,
+  "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "script_sha256": "16ab87f8618a02c39729b5db8d800a68ff53597dd04192cbc0fd7cbc977dc899",
+  "resets": 0,
+  "fixture_sha256": {
+    "r5_stall_120_121.json": "4524f93c5a33a3f40de61b4b9393d1729d20cc2ef9b98e5e3fef5b53db6e3093",
+    "r5_stall_120_121.npz": "456042dd775fe15c4bd4633997fb04715a1ca87bb4f60409d4258de836a683c4"
+  },
+  "legal_lattice_actions": 56,
+  "exact_prefix_count_checks": 56,
+  "exact_snapshot_restore_checks": 56,
+  "extra_raw_ticks": 224,
+  "immutable_original_and_initial": true,
+  "selected_shift": 2,
+  "original_cost": -30.538041688655543,
+  "selected_cost": -43.95090987843033,
+  "original_unsafe_count": 0,
+  "selected_unsafe_count": 0,
+  "proposal_results": [
+    {
+      "shift": 1,
+      "depth": 7,
+      "cost": -38.0699822134788,
+      "unsafe_count": 0
+    },
+    {
+      "shift": 2,
+      "depth": 7,
+      "cost": -43.95090987843033,
+      "unsafe_count": 0
+    },
+    {
+      "shift": 3,
+      "depth": 7,
+      "cost": 4764.445329284896,
+      "unsafe_count": 24
+    },
+    {
+      "shift": 4,
+      "depth": 7,
+      "cost": 2775.030007917144,
+      "unsafe_count": 14
+    },
+    {
+      "shift": 5,
+      "depth": 7,
+      "cost": -15.950195909289246,
+      "unsafe_count": 0
+    },
+    {
+      "shift": 6,
+      "depth": 7,
+      "cost": 1980.186970078549,
+      "unsafe_count": 10
+    },
+    {
+      "shift": 7,
+      "depth": 7,
+      "cost": 3.729287009288985,
+      "unsafe_count": 0
+    }
+  ],
+  "instrumented_act_seconds": 1.545222079002997,
+  "action": [
+    0.029011782258749008,
+    0.699999988079071,
+    0.0
+  ],
+  "limitations": [
+    "Instrumented latency includes audit overhead; use separate source-bound preflight for resource assessment.",
+    "One saved stall observation exercises seven proposals; not a closed-loop performance claim.",
+    "Existing shadow snapshot/restore semantics are preserved; no physics model accuracy claim.",
+    "Saved-case maximum below5s does not guarantee full-episode worst-case latency; five required-frame probes use a repeated static image stack."
+  ],
+  "independent_lane_preflight": {
+    "path": "/workspace/HAIC-Money/agents/apex_2026/v2/results/beam-refined-r6-preflight.json",
+    "sha256": "7a036372203d5a747c995c1de1b144cc61cea6c6cb2de7f273ce66a29087d95d",
+    "cases": 12,
+    "rejected_full_action_memory_diagnostics_parity_cases": 10,
+    "maximum_act_seconds": 2.8754279259992472,
+    "timed_by": "rollout_agent"
+  }
+}

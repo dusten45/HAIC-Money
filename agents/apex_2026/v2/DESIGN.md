@@ -66,5 +66,10 @@ ledger. official_rules: shield_agent/tests/ledger. evaluation_harness: read-only
 failure diagnostic and later matched suites. Root: protocol, source archives,
 motion-observation experiments, selection and final evidence. Parallel runs use
 at most one worker per controller during exploration to fit available CPUs.
+When only one fixed candidate remains under evaluation, its independent cells
+may use two single-thread evaluator processes under the measured four-CPU quota.
+Record concurrency and thread settings prospectively. The actual5s action limit
+still applies, all resource failures count, and no failed run is replaced.
+This operational allowance changes no completion, speed or holdout gate.
 Root also owns isolated force-budget, brake-authority and actuator-domain probes.
 shadow_physics owns shadow runtime, calibration diagnostics and tests.

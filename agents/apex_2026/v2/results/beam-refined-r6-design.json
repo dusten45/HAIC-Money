@@ -1,0 +1,82 @@
+{
+  "variant": "beam-refined-r6",
+  "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "source_archive": "agents/apex_2026/v2/results/beam_refined_sources/cc0543c2bebb.py",
+  "config": {},
+  "helper_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "parent_source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+  "planned_cells": [
+    [
+      3,
+      4111953688
+    ],
+    [
+      1,
+      516237
+    ],
+    [
+      2,
+      644062
+    ],
+    [
+      3,
+      1007
+    ],
+    [
+      4,
+      18800
+    ],
+    [
+      2,
+      4031370700
+    ]
+  ],
+  "prospective_initial_cells": [
+    [
+      3,
+      4111953688
+    ],
+    [
+      1,
+      516237
+    ]
+  ],
+  "conditional_remaining_cells": [
+    [
+      2,
+      644062
+    ],
+    [
+      3,
+      1007
+    ],
+    [
+      4,
+      18800
+    ],
+    [
+      2,
+      4031370700
+    ]
+  ],
+  "new_holdout": false,
+  "driving_resets": 0,
+  "hypothesis": "Temporal refinement recovers a lower-cost feasible lattice sequence that the unchanged beam feedback-completion heuristic prunes.",
+  "treatment": [
+    "Run original R5beam unchanged except passive cumulative unsafe_count metadata in node returns.",
+    "Construct shifts1..7 exclusively from the original winning8-action sequence; append coast tails holding original final steering intent.",
+    "Each proposal starts from the same original pixel-initialized state. At each stage project desired steer to that proposal-state pursuit+[-.14,0,.14], clipped\u00b1.4; nearest entry with sorted-first ties.",
+    "Use unchanged physics, observer, fullarea+1pixel collisionmask, objective and gas/brake lattice.",
+    "Choose strict lower actual full-horizon cost only when cumulative unsafe-cell count is no greater than original winner; stable ties retain current/original.",
+    "At most7*8*4=224 additional raw prediction ticks. No iterative composition or forced acceleration."
+  ],
+  "preflight": {
+    "result": "agents/apex_2026/v2/results/beam-refined-r6-preflight.json",
+    "actual_stored_stacks": 7,
+    "repeated_static_png_stacks": 5,
+    "interpretation": "Selected model-cost improvement and saved-input parity/latency only, not driving performance.",
+    "maximum_act_s": 2.8754279259992472
+  },
+  "known_unmodified_limitation": "Lowest positive HUDspeed/RPM quantization can inject phantom kinetic energy into stationary reconstructions; this observer issue remains separate.",
+  "next_gate": "Commit/push checkpoint, then parent authorization for exactly initial2 fresh exploratory episodes. Remaining4 require subsequent review; no hidden/reset retries."
+}
