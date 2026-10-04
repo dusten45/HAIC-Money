@@ -8,3 +8,17 @@ runs/*/checkpoints/*.pkl filter=lfs diff=lfs merge=lfs -text
 runs/*/*.pt filter=lfs diff=lfs merge=lfs -text
 evaluations/**/candidates/*.zip filter=lfs diff=lfs merge=lfs -text
 submissions/*/submission.zip filter=lfs diff=lfs merge=lfs -text
+
+# Keep source-bound camera evaluation bytes stable across Windows and Linux.
+/agent.py text eol=lf
+/tools/compare_camera_policy_competition_v3.py text eol=lf
+/tools/competition_camera_gate_v3.py text eol=lf
+/tools/evaluate_bare_generalization.py text eol=lf
+/action_smoothing.py text eol=lf
+/action_representation.py text eol=lf
+/env_wrapper.py text eol=lf
+/damage.py text eol=lf
+/core/*.py text eol=lf
+/core/vendor/*.py text eol=lf
+/local_simulator/*.py text eol=lf
+/experiments/camera-policy-competition-v3*.json text eol=lf
