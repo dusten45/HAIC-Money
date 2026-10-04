@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import importlib
 import json
 from pathlib import Path
@@ -15,6 +16,28 @@ from unittest.mock import patch
 
 def subject():
     return importlib.import_module("tools.compare_reused_screen_candidate_only")
+
+
+@contextmanager
+def archived_v6_identity(module):
+    """Keep archived V6 identity valid while checking current runtime files stay fixed."""
+    _, _, freeze, _ = module.dev._historical_records()
+    runtime = {
+        key: {name: module.fresh.digest(module.fresh.ROOT / name)
+              for name in freeze[key]}
+        for key in ("helper_sha256", "environment_sha256")
+    }
+    check_frozen_inputs = module.fresh.check_frozen_inputs
+
+    def check_current_inputs(identity, paths):
+        # V6's frozen helpers/environment predate the current checkout. Keep
+        # source, model, protocol, harness, and runtime stability checks real.
+        adjusted = {**identity, **runtime}
+        check_frozen_inputs(adjusted, paths)
+
+    with patch.object(module.fresh, "build_identity", return_value=freeze), \
+         patch.object(module.fresh, "check_frozen_inputs", side_effect=check_current_inputs):
+        yield
 
 
 class ScreenSelectionTests(unittest.TestCase):
@@ -107,11 +130,12 @@ class OriginalReceiptTests(unittest.TestCase):
         module = subject()
         track, seed = 3, 2973604766
         snapshot = module.ARTIFACTS / "v7-development/snapshots/_TemporalEncounterController.py"
-        identity = module.build_identity(snapshot, "_TemporalEncounterController", [(track, seed)])
         paths = {"baseline": module.dev.V6_CONTROL, "v6": module.dev.V6_CANDIDATE,
                  "v7": snapshot, "model": module.dev.MODEL}
         _, _, freeze, summary = module.dev._historical_records()
-        with tempfile.TemporaryDirectory() as directory:
+        with archived_v6_identity(module), tempfile.TemporaryDirectory() as directory:
+            identity = module.build_identity(snapshot, "_TemporalEncounterController", [(track, seed)])
+            self.assertEqual(len(identity["original_receipt_sha256"]), 2)
             copied = Path(directory)
             for arm in ("control", "candidate"):
                 source = module.fresh.cell_path(module.V6_RUN, "screen", arm, track, seed, 0)
@@ -120,6 +144,8 @@ class OriginalReceiptTests(unittest.TestCase):
                 shutil.copy2(source, target)
             target = module.fresh.cell_path(copied, "screen", "candidate", track, seed, 0)
             envelope = json.loads(target.read_text(encoding="utf-8"))
+            with patch.object(module, "V6_RUN", copied):
+                module.check_inputs(identity, paths, freeze, summary)
             envelope["row"]["action_trace_sha256"] = "0" * 64
             envelope["digest"] = module.hashlib.sha256(module.fresh._canonical(
                 {"identity": envelope["identity"], "row": envelope["row"]})).hexdigest()
@@ -164,7 +190,6 @@ class CandidateOnlyComparisonTests(unittest.TestCase):
         module = subject()
         snapshot = module.ARTIFACTS / "v7-development/snapshots/_TemporalEncounterController.py"
         cells = [(3, 2973604766)]
-        identity = module.build_identity(snapshot, "_TemporalEncounterController", cells)
         paths = {"baseline": module.dev.V6_CONTROL, "v6": module.dev.V6_CANDIDATE,
                  "v7": snapshot, "model": module.dev.MODEL}
         classes = {**module.dev.CLASSES, "v7": "_TemporalEncounterController"}
@@ -173,11 +198,15 @@ class CandidateOnlyComparisonTests(unittest.TestCase):
                     "initialization_ms": 1, "reset_ms": 1, "action_latency_max_ms": 1,
                     "peak_worker_rss_mib": 100, "error": None}
         module.OUTPUT_PARENT.mkdir(parents=True, exist_ok=True)
-        with tempfile.TemporaryDirectory(dir=module.OUTPUT_PARENT) as directory:
+        with archived_v6_identity(module), tempfile.TemporaryDirectory(dir=module.OUTPUT_PARENT) as directory:
+            identity = module.build_identity(snapshot, "_TemporalEncounterController", cells)
             with patch.object(module, "_run_cold_episode", return_value=measured) as worker:
                 module.run_cells(Path(directory), identity, paths, classes, cells)
                 self.assertEqual(worker.call_count, 1)
                 self.assertEqual(worker.call_args.args[-3:], ("v7", 3, 2973604766))
+                self.assertTrue(module.dev.cell_path(Path(directory), "v7", 3, 2973604766).is_file())
+                for arm in ("baseline", "v6"):
+                    self.assertFalse(module.dev.cell_path(Path(directory), arm, 3, 2973604766).exists())
 
 
 if __name__ == "__main__":
