@@ -181,9 +181,6 @@ class Agent:
             road_cost = np.minimum(road_cost, start_cost + 30)
             road_cost = np.where(visible, road_cost, previous_cost + 8)
             score += checked * (1.4 * np.maximum(0, 3.1 - margin) ** 2 + 0.028 * np.maximum(0, speed - self.MAX_SPEED) ** 2)
-            # Full throttle while turning can destabilize the rear axle even
-            # when the constant-curvature trajectory itself is road-safe.
-            score += checked * 0.003 * (self.gases * speed * yaw_rate) ** 2
             score += checked * 0.06 * (speed * speed * np.abs(curvature) / 18.0) ** 2
             distance += active * speed * dt
             # Potential reduction is the progress reward; this also permits

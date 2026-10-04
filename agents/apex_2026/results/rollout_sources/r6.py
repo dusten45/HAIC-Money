@@ -20,12 +20,12 @@ class Agent:
         self.speed = 0.0
         self.last_diagnostics = {}
         steer, pedal, taper = np.meshgrid(
-            np.linspace(-1.0, 1.0, 25), np.arange(6), np.array([0.45, 1.0]),
+            np.linspace(-1.0, 1.0, 25), np.arange(4), np.array([0.45, 1.0]),
             indexing='ij',
         )
         self.steers = steer.ravel()
-        self.gases = np.array([1.0, 0.35, 0.1, 0.0, 0.0, 0.0])[pedal.ravel()]
-        self.brakes = np.array([0.0, 0.0, 0.0, 0.0, 0.35, 0.8])[pedal.ravel()]
+        self.gases = np.array([1.0, 0.35, 0.0, 0.0])[pedal.ravel()]
+        self.brakes = np.array([0.0, 0.0, 0.35, 0.8])[pedal.ravel()]
         self.tapers = taper.ravel()
         self.yy, self.xx = np.mgrid[:74, :84]
 
@@ -181,9 +181,6 @@ class Agent:
             road_cost = np.minimum(road_cost, start_cost + 30)
             road_cost = np.where(visible, road_cost, previous_cost + 8)
             score += checked * (1.4 * np.maximum(0, 3.1 - margin) ** 2 + 0.028 * np.maximum(0, speed - self.MAX_SPEED) ** 2)
-            # Full throttle while turning can destabilize the rear axle even
-            # when the constant-curvature trajectory itself is road-safe.
-            score += checked * 0.003 * (self.gases * speed * yaw_rate) ** 2
             score += checked * 0.06 * (speed * speed * np.abs(curvature) / 18.0) ** 2
             distance += active * speed * dt
             # Potential reduction is the progress reward; this also permits

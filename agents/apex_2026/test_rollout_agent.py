@@ -118,3 +118,64 @@ def test_small_orange_obstacle_survives_road_mask_smoothing():
     cv2.circle(frame, (42, 43), 1, (0.299 * 255 + 0.587 * 165) / 255, -1)
     fields = load_agent()._fields(frame)
     assert fields[0][43, 42] == 0, 'Morphological smoothing must not erase small obstacles'
+
+
+def test_pixel_motion_recovers_rotation_and_lateral_slip():
+    agent = load_agent()
+    assert hasattr(agent, '_motion'), 'Stateful rollouts need pixel motion estimates'
+    rng = np.random.default_rng(182)
+    previous = cv2.GaussianBlur(rng.uniform(0.25, 0.72, (84, 84)).astype(np.float32), (3, 3), 0)
+    center = np.array([42.0, 63.0])
+    theta = -0.08
+    rotation = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
+    scale = np.diag([agent.PIXELS_X, agent.PIXELS_Y])
+    linear = scale @ rotation @ np.linalg.inv(scale)
+    translation = center - linear @ center + np.array([-8 * agent.PIXELS_X * 0.08, 30 * agent.PIXELS_Y * 0.08])
+    affine = np.column_stack([linear, translation]).astype(np.float32)
+    current = cv2.warpAffine(previous, affine, (84, 84))
+    estimate = agent._motion(previous, current)
+    assert estimate[2]
+    assert abs(estimate[0] - 1.0) < 0.15
+    assert abs(estimate[1] - np.arctan2(8.0, 30.0)) < 0.12
+
+
+def test_pixel_motion_without_texture_falls_back_safely():
+    agent = load_agent()
+    assert hasattr(agent, '_motion'), 'Motion estimation needs a no-texture fallback'
+    empty = np.full((84, 84), 0.4, np.float32)
+    estimate = agent._motion(empty, empty)
+    assert np.isfinite(estimate[:2]).all()
+    assert not estimate[2]
+
+
+def test_incoming_yaw_changes_planned_steering_on_same_current_road():
+    current = observation(speed=35)[-1]
+    for y in range(8, 60, 13):
+        for x in (7, 19, 64, 76):
+            current[y:y + 5, x:x + 5] = 0.69
+    matrix = cv2.getRotationMatrix2D((42, 63), -5, 1)
+    previous = cv2.warpAffine(current, matrix, (84, 84), borderMode=cv2.BORDER_REPLICATE)
+    stationary = load_agent().act(np.stack([current] * 4))
+    spinning = load_agent().act(np.stack([previous, previous, previous, current]))
+    assert spinning[0] < stationary[0] - 0.05
+
+
+def test_stopped_car_can_plan_around_small_near_obstacle():
+    frame = observation()[-1]
+    cv2.circle(frame, (42, 52), 1, 0.68, -1)
+    action = load_agent().act(np.stack([frame] * 4))
+    assert action[1] >= 0.09, 'A slow feasible trajectory should escape a stationary local optimum'
+    assert abs(action[0]) > 0.1
+
+
+def test_high_incoming_yaw_avoids_power_oversteer_at_low_speed():
+    current = observation(speed=20)[-1]
+    for y in range(8, 60, 13):
+        for x in (7, 19, 64, 76):
+            current[y:y + 5, x:x + 5] = 0.69
+    previous = cv2.warpAffine(current, cv2.getRotationMatrix2D((42, 63), -15, 1),
+                             (84, 84), borderMode=cv2.BORDER_REPLICATE)
+    agent = load_agent()
+    action = agent.act(np.stack([previous, previous, previous, current]))
+    assert agent.last_diagnostics['yaw_rate'] > 2.0
+    assert action[1] <= 0.36
