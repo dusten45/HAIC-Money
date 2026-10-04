@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T21:06:06.298114+00:00",
-  "analysis_sha256": "da30be1bd53098b83796301ac841b8ddb56b7354ae253091e67e78fd2b867898",
+  "generated_at": "2026-10-04T21:19:45.122891+00:00",
+  "analysis_sha256": "6d2e6d1fd8d9d02684b4a9e756fc2faef1fd86ca9f28cdedc5d68d73fc278612",
   "benchmark_sha256": "c52da67c7dfaf9bcc700a7ed4a5ac462558934c177d75585c6701fbc83166f33",
   "registry": {
     "actuator-r0": {
@@ -1546,6 +1546,72 @@
         ]
       },
       "interpretation": "Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets."
+    },
+    "beam-refined-r6": {
+      "folders": [
+        "/tmp/apex-v2-beam-refined-r6"
+      ],
+      "expected_cells": [
+        [
+          1,
+          516237
+        ],
+        [
+          2,
+          644062
+        ],
+        [
+          3,
+          1007
+        ],
+        [
+          4,
+          18800
+        ],
+        [
+          2,
+          4031370700
+        ],
+        [
+          3,
+          4111953688
+        ]
+      ],
+      "scope": "screen6_initial2_authorized",
+      "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+      "config": {},
+      "checkpoint": "6bc2a3a",
+      "authorized_cells": [
+        [
+          3,
+          4111953688
+        ],
+        [
+          1,
+          516237
+        ]
+      ],
+      "conditional_review_cells": [
+        [
+          2,
+          644062
+        ],
+        [
+          3,
+          1007
+        ],
+        [
+          4,
+          18800
+        ],
+        [
+          2,
+          4031370700
+        ]
+      ],
+      "authorization_manifest": "/tmp/apex-v2-beam-refined-r6/screen-manifest.json",
+      "full24_authorized": false,
+      "interpretation": "Six cells declared; only oldT3 and required1 initially authorized with two independent singlethread workers under4CPU quota. Remaining4 require separate review/authorization; no automatic full24."
     },
     "beam-r5": {
       "folders": [
@@ -21298,6 +21364,398 @@
       "groups": [],
       "execution_status": "not_executed_no_primary_receipts",
       "warning": "No candidate-evaluation primary receipts; planned benchmark cells remain missing. Any explicitly recorded diagnostic reset is separate."
+    },
+    {
+      "label": "beam-refined-r6",
+      "allocation": {
+        "folders": [
+          "/tmp/apex-v2-beam-refined-r6"
+        ],
+        "expected_cells": [
+          [
+            1,
+            516237
+          ],
+          [
+            2,
+            644062
+          ],
+          [
+            3,
+            1007
+          ],
+          [
+            4,
+            18800
+          ],
+          [
+            2,
+            4031370700
+          ],
+          [
+            3,
+            4111953688
+          ]
+        ],
+        "scope": "screen6_initial2_authorized",
+        "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+        "config": {},
+        "checkpoint": "6bc2a3a",
+        "authorized_cells": [
+          [
+            3,
+            4111953688
+          ],
+          [
+            1,
+            516237
+          ]
+        ],
+        "conditional_review_cells": [
+          [
+            2,
+            644062
+          ],
+          [
+            3,
+            1007
+          ],
+          [
+            4,
+            18800
+          ],
+          [
+            2,
+            4031370700
+          ]
+        ],
+        "authorization_manifest": "/tmp/apex-v2-beam-refined-r6/screen-manifest.json",
+        "full24_authorized": false,
+        "interpretation": "Six cells declared; only oldT3 and required1 initially authorized with two independent singlethread workers under4CPU quota. Remaining4 require separate review/authorization; no automatic full24."
+      },
+      "groups": [
+        {
+          "candidate_key": "247d6a15bfd6c11e9096549fce950b118068c2492ff2cd204b4afbaee4ae9307",
+          "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+          "config": {},
+          "agent_paths": [
+            "/tmp/apex-v2-beam-refined-r6/source.py"
+          ],
+          "runtime_inventories": {
+            "c91fe66c6041375e0532ffe1425218742d5556ca2fa26141604bd96bd49c2ef1": {
+              "before_sha256": "68dbbbb0c13546b998d3c66d1ff05ad8c19ba8e03976c0aad7dd0ad198665cd0",
+              "after_sha256": "b6548c1ca76534f0c256496421c871c3ba6c2788f074b7049dca874448edebd9",
+              "before_count": 127,
+              "after_count": 145,
+              "changed_paths": [],
+              "note": "Full path-to-hash maps remain in SHA-bound primary receipts; protocol verifies them before aggregation."
+            }
+          },
+          "whole_declared_scope": {
+            "expected": 6,
+            "expected_cells": [
+              [
+                1,
+                516237
+              ],
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ],
+              [
+                2,
+                4031370700
+              ],
+              [
+                3,
+                4111953688
+              ]
+            ],
+            "observed": 2,
+            "completed": 2,
+            "incomplete": 0,
+            "missing": 4,
+            "unique_attempts": 2,
+            "repeat_attempts": 0,
+            "raw_finished": 2,
+            "finished": 2,
+            "dnf": 0,
+            "finished_median_ms": 16150.0,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 2,
+            "progress_at_least95_completed": 2,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 2,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T21:11:19.469377+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 18020
+              },
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T21:11:19.473939+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "required4_coverage": {
+            "expected": 4,
+            "expected_cells": [
+              [
+                1,
+                516237
+              ],
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ]
+            ],
+            "observed": 1,
+            "completed": 1,
+            "incomplete": 0,
+            "missing": 3,
+            "unique_attempts": 1,
+            "repeat_attempts": 0,
+            "raw_finished": 1,
+            "finished": 1,
+            "dnf": 0,
+            "finished_median_ms": 14280,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 1,
+            "progress_at_least95_completed": 1,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 1,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T21:11:19.473939+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "authorized_phase_summary": {
+            "expected": 2,
+            "expected_cells": [
+              [
+                3,
+                4111953688
+              ],
+              [
+                1,
+                516237
+              ]
+            ],
+            "observed": 2,
+            "completed": 2,
+            "incomplete": 0,
+            "missing": 0,
+            "unique_attempts": 2,
+            "repeat_attempts": 0,
+            "raw_finished": 2,
+            "finished": 2,
+            "dnf": 0,
+            "finished_median_ms": 16150.0,
+            "all_cells_finish": true,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 2,
+            "progress_at_least95_completed": 2,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 2,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T21:11:19.469377+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 18020
+              },
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T21:11:19.473939+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "conditional_phase_summary": {
+            "expected": 4,
+            "expected_cells": [
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ],
+              [
+                2,
+                4031370700
+              ]
+            ],
+            "observed": 0,
+            "completed": 0,
+            "incomplete": 0,
+            "missing": 4,
+            "unique_attempts": 0,
+            "repeat_attempts": 0,
+            "raw_finished": 0,
+            "finished": 0,
+            "dnf": 0,
+            "finished_median_ms": null,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 0,
+            "progress_at_least95_completed": 0,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 0,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": []
+          },
+          "consumed_declared_scope": {
+            "expected": 2,
+            "expected_cells": [
+              [
+                2,
+                4031370700
+              ],
+              [
+                3,
+                4111953688
+              ]
+            ],
+            "observed": 1,
+            "completed": 1,
+            "incomplete": 0,
+            "missing": 1,
+            "unique_attempts": 1,
+            "repeat_attempts": 0,
+            "raw_finished": 1,
+            "finished": 1,
+            "dnf": 0,
+            "finished_median_ms": 18020,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 1,
+            "progress_at_least95_completed": 1,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 1,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T21:11:19.469377+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 18020
+              }
+            ]
+          },
+          "warnings": [],
+          "receipts": [
+            {
+              "receipt": "/tmp/apex-v2-beam-refined-r6/t1-s516237.json",
+              "receipt_sha256": "4d7c0c959784fe3d0d64679ddfcd8e7ef7f7818923118e29eb48c4214cedf620",
+              "track_id": 1,
+              "seed": 516237,
+              "status": "completed",
+              "started_at": "2026-10-04T21:11:19.473939+00:00",
+              "ended_at": "2026-10-04T21:17:22.711180+00:00",
+              "finished": true,
+              "lapTimeMs": 14280,
+              "start_t": 1.0200000000000005,
+              "finish_time_s": 15.299999999999763,
+              "end_t": 15.319999999999762,
+              "progress": 1.0,
+              "damage": 0.0,
+              "resource_eligible": true,
+              "retire_reason": null,
+              "finish_qualified": true,
+              "finish_qualified_time_s": 14.419999999999781,
+              "invalid_actions": 0,
+              "act_timeout_count": 0,
+              "error": null
+            },
+            {
+              "receipt": "/tmp/apex-v2-beam-refined-r6/t3-s4111953688.json",
+              "receipt_sha256": "76019e37dc041494ec78195cd3a981e7ef5e76964f4181e242db2b2e1ca884e4",
+              "track_id": 3,
+              "seed": 4111953688,
+              "status": "completed",
+              "started_at": "2026-10-04T21:11:19.469377+00:00",
+              "ended_at": "2026-10-04T21:18:34.732755+00:00",
+              "finished": true,
+              "lapTimeMs": 18020,
+              "start_t": 1.0200000000000005,
+              "finish_time_s": 19.039999999999683,
+              "end_t": 19.039999999999683,
+              "progress": 1.0,
+              "damage": 0.0,
+              "resource_eligible": true,
+              "retire_reason": null,
+              "finish_qualified": true,
+              "finish_qualified_time_s": 18.079999999999703,
+              "invalid_actions": 0,
+              "act_timeout_count": 0,
+              "error": null
+            }
+          ]
+        }
+      ]
     },
     {
       "label": "beam-r5",

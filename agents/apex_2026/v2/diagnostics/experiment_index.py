@@ -64,6 +64,13 @@ def default_registry():
             'recorded_preimpact_first_actions_unchanged':19, 'recorded_preimpact_first_actions_checked':19,
             'state_mask_2x2_unsafe_pixel_counts':[0,4,2,2]},
         'interpretation':'Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets.'}
+    registry['beam-refined-r6']={'folders':['/tmp/apex-v2-beam-refined-r6'], 'expected_cells':SCREEN6, 'scope':'screen6_initial2_authorized',
+        'source_sha256':'cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425', 'config':{}, 'checkpoint':'6bc2a3a',
+        'authorized_cells':[(3,4111953688),(1,516237)],
+        'conditional_review_cells':[(2,644062),(3,1007),(4,18800),(2,4031370700)],
+        'authorization_manifest':'/tmp/apex-v2-beam-refined-r6/screen-manifest.json',
+        'full24_authorized':False,
+        'interpretation':'Six cells declared; only oldT3 and required1 initially authorized with two independent singlethread workers under4CPU quota. Remaining4 require separate review/authorization; no automatic full24.'}
     registry['beam-r5']={'folders':['/tmp/apex-v2-beam-r5'], 'expected_cells':SCREEN6, 'scope':'screen6_initial2_authorized',
         'source_sha256':'4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57', 'config':{}, 'checkpoint':'81f60fa',
         'authorized_cells':[(3,4111953688),(1,516237)],
