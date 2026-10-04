@@ -1,0 +1,90 @@
+{
+  "type": "bounded negative motion-estimation study; observer-only candidate",
+  "models": [
+    {
+      "name": "centerline registration V1",
+      "source_sha256": "8bfdc01f73f3952ae03750a0902dacee9a32eefd06a04b4a02a0f9f3616c8f1d",
+      "focused_tests_at_freeze": 6
+    },
+    {
+      "name": "two-edge confidence V2",
+      "source_sha256": "97fe8719664b329cac389bcb52c690138e3d17a47d4ff4a4e652b4708b49073c",
+      "focused_tests_at_freeze": 8
+    }
+  ],
+  "v5_prefix_exact_and_unchanged": true,
+  "v5_source_sha256": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+  "reverse_patch_sha256": "bd80f9ab00765cf808c170e804db7b007e38b05459593078065dd176f383ca32",
+  "reverse_patch_reconstructs_v1_exactly": true,
+  "receipts": [
+    {
+      "file": "motion-v1-prefix.json",
+      "sha256": "31ffa48e6f7fa8726b3822a5622803a246172f4d5a4e4659c5251c6f06bb9a9c",
+      "summary": {
+        "samples": 120,
+        "confident_high_speed_samples": 69,
+        "motion_latency_max_ms": 12.191267000162043,
+        "true_large_slip_samples": 5,
+        "large_slip_confident_samples": 1,
+        "heading_mae_deg": 1.0402021122082556,
+        "heading_p90_deg": 1.7885048650588236,
+        "lateral_velocity_mae_mps": 1.1013937486079382,
+        "lateral_velocity_p90_mps": 2.0750746554832733
+      }
+    },
+    {
+      "file": "motion-v1-cache-prefix.json",
+      "sha256": "8b130fb0817a33b232d5771f0a1dc53d1d5e29d82990ec804834a1c148150c47",
+      "summary": {
+        "samples": 120,
+        "confident_high_speed_samples": 69,
+        "motion_latency_max_ms": 12.124007997044828,
+        "true_large_slip_samples": 5,
+        "large_slip_confident_samples": 1,
+        "heading_mae_deg": 1.0402021122082556,
+        "heading_p90_deg": 1.7885048650588236,
+        "lateral_velocity_mae_mps": 1.1013937486079382,
+        "lateral_velocity_p90_mps": 2.0750746554832733
+      }
+    },
+    {
+      "file": "motion-v2-prefix.json",
+      "sha256": "c8b26239d25890c0033839d1479c9a424dbb47a50972beae7ccbd7b8aa057b17",
+      "summary": {
+        "samples": 120,
+        "confident_high_speed_samples": 65,
+        "true_large_slip_samples": 5,
+        "large_slip_confident_samples": 0,
+        "false_confident_large_slip_samples": 0,
+        "false_confident_large_slip_steps": [],
+        "motion_latency_max_ms": 12.055715997121297,
+        "heading_mae_deg": 0.8414329820456627,
+        "heading_p90_deg": 1.4287889846800548,
+        "lateral_velocity_mae_mps": 0.9467322737094929,
+        "lateral_velocity_p90_mps": 1.842444477006411
+      }
+    }
+  ],
+  "camera_cache_sha256": "ea81a917725c54d5a6e6bdadfff7ccc888cb08f324ab47f507b92ee2b687ed9d",
+  "unique_diagnostic_prefix": {
+    "track_id": 4,
+    "seed": 18800,
+    "decisions": 120,
+    "driver": "frozen V5 exact saved actions",
+    "replays": 2,
+    "reason_for_second_replay": "cache observation-only arrays for second offline model"
+  },
+  "new_candidate_simulation_screens": 0,
+  "new_holdout_opened": false,
+  "old_holdout_consumed": true,
+  "truth_enters_inference": false,
+  "control_change": false,
+  "formal_adoption": false,
+  "conclusion": "Motion accuracy is good when supported, but the estimate disappears at large slip. V1 also reported false high-confidence large slip. V2 removed that false confidence and lost all five true large-slip samples. No control experiment is justified by this prefix.",
+  "limits": [
+    "Only one mandatory prefix; no generalization evidence.",
+    "HUD speed supplies a longitudinal-distance prior; straight-road displacement is not fully observable.",
+    "Rapid rotation, clipped edges, branching roads and changing support invalidate registration.",
+    "Heading estimates average finite camera intervals; endpoint correction assumes roughly steady body yaw."
+  ]
+}

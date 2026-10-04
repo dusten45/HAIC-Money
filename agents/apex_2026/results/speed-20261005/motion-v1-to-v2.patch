@@ -1,0 +1,41 @@
+--- a/agents/apex_2026/fast_motion_agent.py
++++ b/agents/apex_2026/fast_motion_agent.py
+@@ -393,0 +394,26 @@
++    def _register_boundaries(self, previous, current, distance, rotation):
++        result = self._register(previous[:2], current[:2], distance, rotation)
++        if not result["confidence"]:
++            return result
++        old_y, new_y = previous[0], current[0]
++        cosine, sine = np.cos(rotation), np.sin(rotation)
++        errors = []
++        for boundary in (2, 3):
++            old_x, observed = previous[boundary], current[boundary]
++            predicted_x = old_x*cosine-old_y*sine-result["dx"]
++            predicted_y = old_x*sine+old_y*cosine-result["dy"]
++            if np.any(np.diff(predicted_y) <= .02):
++                return {**result, "confidence": 0.}
++            support = ((new_y >= 3.) & (new_y <= 23.) &
++                       (new_y >= predicted_y[0]+1.) & (new_y <= predicted_y[-1]-1.))
++            if np.count_nonzero(support) < 8:
++                return {**result, "confidence": 0.}
++            residual = np.abs(np.interp(new_y[support],predicted_y,predicted_x)-observed[support])
++            errors.append(float(np.median(residual)+.25*np.mean(residual)))
++        boundary_error = max(errors)
++        if boundary_error > .45:
++            return {**result, "confidence": 0., "boundary_error": boundary_error}
++        quality = max(0.,1.-max(0.,boundary_error-.25)/.50)
++        return {**result, "confidence": result["confidence"]*quality,
++                "boundary_error": boundary_error}
++
+@@ -402 +428 @@
+-        middle = []
++        middle, refined_left, refined_right = [], [], []
+@@ -411 +437,4 @@
+-        return ahead[valid], np.asarray(middle)
++            refined_left.append((left_edge-41.5)/self.PX_X)
++            refined_right.append((right_edge-41.5)/self.PX_X)
++        return (ahead[valid], np.asarray(middle), np.asarray(refined_left),
++                np.asarray(refined_right))
+@@ -438 +467 @@
+-            result = self._register(roads[-1-span], roads[-1], distance, rotation)
++            result = self._register_boundaries(roads[-1-span], roads[-1], distance, rotation)
