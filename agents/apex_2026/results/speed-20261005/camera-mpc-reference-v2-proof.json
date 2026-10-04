@@ -1,0 +1,27 @@
+{
+  "classification": "research geometry integration correction; no agent or driving benchmark",
+  "helper_sha256": "565d398e4e55c1e8bb5dad5d38e6ffa2c1a42eb5a8675832c2103f1197741920",
+  "parent_sha256": "82c8d5a5a956ec782e4c468f7e705ac55556327393a1ff0dfcf0e29c73bea86f",
+  "test_sha256": "20a2e560756ec2a124d0d2c006201261e61be1ef6792ae8984dd49c76c55b257",
+  "patch_sha256": "c2a10e26e0b069461773227d63e39c2070805271d063162bb4d59dc725cec745",
+  "old_proof_sha256": "4993144587b883097fac04cb23b48917bfde83bf83fd39f8ec0bbf9c1c3b5d76",
+  "tests_passed": 10,
+  "new_driving_episodes": 0,
+  "regression": "Prior velocity window underbounded semi-implicit post-velocity pose displacement, pinning progress and overstating known-prefix endpoint margin",
+  "correction": "max(norm(v[i-1]),norm(v[i]))*dt + supplied uncertainty",
+  "synthetic_acceleration_regression": {
+    "v1": {
+      "progress_m": 0.0,
+      "reference_front_slack_m": 1.4000000000000004,
+      "violating": false
+    },
+    "v2": {
+      "progress_m": 2.0,
+      "reference_front_slack_m": -0.5999999999999996,
+      "violating": true
+    }
+  },
+  "preserved_checkpoint": ".haic-artifacts/apex-speed-20261005/camera-mpc-reference-v1",
+  "sourceagent_edits": false,
+  "holdout_opened": false
+}

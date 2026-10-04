@@ -1,0 +1,57 @@
+{
+  "classification": "camera-only reference/cost research proof; no candidate or driving episode",
+  "helper_sha256": "82c8d5a5a956ec782e4c468f7e705ac55556327393a1ff0dfcf0e29c73bea86f",
+  "fixture_sha256": "189df3d93b59625eef8fc82e9fa403a33efdbf7d3d60c795948bc79791c5005b",
+  "test_sha256": "2c8f96929c66ca76f72660d6608fa6dd012b721ab42e7454be92615c290d2775",
+  "tests_passed": 9,
+  "new_driving_episodes": 0,
+  "synthetic_tests": [
+    "lateral offset no central return",
+    "hairpin branch bounded projection",
+    "CCW actual predicted yaw",
+    "interior grass and image end",
+    "rectangle stronger than center disk",
+    "braking terminal reserve",
+    "frozen wrapper and nonfinite rejection",
+    "supported prefix ending on asphalt rejected"
+  ],
+  "saved_camera_rows": [
+    {
+      "frame": 149,
+      "mode": "constant emitted-steer camera geometry only",
+      "steer": -0.1385689,
+      "minimum_road_slack_m": -0.4180027246111466,
+      "minimum_reference_front_slack_m": 50.17055860780421,
+      "progress_m": 7.199873973324774,
+      "violating_tick_count": 3
+    },
+    {
+      "frame": 149,
+      "mode": "constant emitted-steer camera geometry only",
+      "steer": -0.102999568,
+      "minimum_road_slack_m": 0.024099567525311283,
+      "minimum_reference_front_slack_m": 49.99203205295279,
+      "progress_m": 7.367634622767106,
+      "violating_tick_count": 0
+    },
+    {
+      "frame": 154,
+      "mode": "constant emitted-steer camera geometry only",
+      "steer": -0.3259100914,
+      "minimum_road_slack_m": -0.8864592144310284,
+      "minimum_reference_front_slack_m": 21.22018759196605,
+      "progress_m": 6.690882223788847,
+      "violating_tick_count": 11
+    },
+    {
+      "frame": 154,
+      "mode": "constant emitted-steer camera geometry only",
+      "steer": -0.4,
+      "minimum_road_slack_m": 0.21802453013391165,
+      "minimum_reference_front_slack_m": 20.99048760744544,
+      "progress_m": 6.9505155135914904,
+      "violating_tick_count": 0
+    }
+  ],
+  "limitation": "Constant-arc poses are synthetic diagnostics, not validated four-tire model rollouts. Projection progress never establishes collision safety; field holes and absent circles remain perception uncertainty."
+}

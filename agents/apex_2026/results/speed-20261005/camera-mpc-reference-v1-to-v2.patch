@@ -1,0 +1,9 @@
+--- camera_mpc_reference.py.v1
++++ camera_mpc_reference.py.v2
+@@ -36 +36,2 @@
+-    cannot advance more than predicted speed*dt plus supplied uncertainty.
++    cannot advance more than max(prior,post speed)*dt plus supplied
++    uncertainty, respecting semi-implicit post-velocity pose integration.
+@@ -45 +46 @@
+-        advance=0. if i==0 else float(np.linalg.norm(velocity[i-1])*dt+projection_uncertainty_m)
++        advance=0. if i==0 else float(max(np.linalg.norm(velocity[i-1]),np.linalg.norm(velocity[i]))*dt+projection_uncertainty_m)
