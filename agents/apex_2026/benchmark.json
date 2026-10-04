@@ -1891,6 +1891,100 @@
           }
         ],
         "adopted": false
+      },
+      {
+        "receipt_path": "agents/apex_2026/results/speed-20261005/predictive-v1.json",
+        "receipt_sha256": "78dcfaf1c98a88ce5de440ef8bc69c2b44caa1a54935efda070fecf7953df3c2",
+        "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+        "suite": "mandatory",
+        "role": "benchmark",
+        "mandatory_rows": [
+          {
+            "track_id": 1,
+            "seed": 516237,
+            "finished": true,
+            "lap_time_ms": 15180,
+            "progress": 1.0,
+            "collision_count": 0,
+            "damage": 0.0,
+            "retire_reason": null,
+            "steps": 190,
+            "initialization_ms": 1.1328230029903352,
+            "reset_ms": 0.03845200262730941,
+            "action_latency_max_ms": 1963.7496549985372,
+            "peak_worker_rss_mib": 94.93359375,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+            "parameters": {},
+            "action_trace_sha256": "a6549cd45e4a57755bac1eb5225b09d89e1c749b64accc2dba698d045b841ba6",
+            "error": null
+          },
+          {
+            "track_id": 2,
+            "seed": 644062,
+            "finished": true,
+            "lap_time_ms": 19340,
+            "progress": 1.0,
+            "collision_count": 0,
+            "damage": 0.0,
+            "retire_reason": null,
+            "steps": 242,
+            "initialization_ms": 0.9196749961120076,
+            "reset_ms": 0.04594599886331707,
+            "action_latency_max_ms": 2033.7929089946556,
+            "peak_worker_rss_mib": 95.23828125,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+            "parameters": {},
+            "action_trace_sha256": "6106c0de9dd81c4b0560052dd72c770cca05c5e7000cab978b64769cf0586a5c",
+            "error": null
+          },
+          {
+            "track_id": 3,
+            "seed": 1007,
+            "finished": true,
+            "lap_time_ms": 16960,
+            "progress": 1.0,
+            "collision_count": 0,
+            "damage": 0.0,
+            "retire_reason": null,
+            "steps": 212,
+            "initialization_ms": 0.8766240061959252,
+            "reset_ms": 0.03453499812167138,
+            "action_latency_max_ms": 2041.703677001351,
+            "peak_worker_rss_mib": 94.94921875,
+            "offtrack_samples": 0,
+            "partial_offtrack_samples": 0,
+            "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+            "parameters": {},
+            "action_trace_sha256": "d53e65ca5cbe7e55fddc0bbe7e6615afc2c2bd3e645cb33405f409859fee9f75",
+            "error": null
+          },
+          {
+            "track_id": 4,
+            "seed": 18800,
+            "finished": true,
+            "lap_time_ms": 18060,
+            "progress": 0.989247311827957,
+            "collision_count": 1,
+            "damage": 0.2,
+            "retire_reason": null,
+            "steps": 226,
+            "initialization_ms": 0.9583969949744642,
+            "reset_ms": 0.04643700231099501,
+            "action_latency_max_ms": 1951.2067910036421,
+            "peak_worker_rss_mib": 94.2734375,
+            "offtrack_samples": 4,
+            "partial_offtrack_samples": 13,
+            "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+            "parameters": {},
+            "action_trace_sha256": "fab87df3819976b62bf66668abacf3782ccda20b2182f8c9d457007979c8d2b0",
+            "error": null
+          }
+        ],
+        "adopted": false
       }
     ],
     "component_checkpoint_tests": {
@@ -1899,7 +1993,7 @@
       "duration_s": 14.14,
       "scope": "before standalone predictive-agent integration"
     },
-    "predictive_agent_laps_measured": false,
+    "predictive_agent_laps_measured": true,
     "root_and_official_sources_preserved": true
   }
 }
