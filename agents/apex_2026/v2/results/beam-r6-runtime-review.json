@@ -1,0 +1,158 @@
+{
+  "scope": "Read-only existing initial2 R6 episodes and older R3profile; no new model calls, heavy benchmarks, resets or runtime edits.",
+  "analysis_sha256": "ddc3c66287f69156b9fa86f8d179398ecab47161ca7e10a786ab80653dc02632",
+  "input_sha256": {
+    "/tmp/apex-v2-beam-refined-r6/t1-s516237.json": "4d7c0c959784fe3d0d64679ddfcd8e7ef7f7818923118e29eb48c4214cedf620",
+    "/tmp/apex-v2-beam-refined-r6/t1-s516237.jsonl": "6be64ea906cad9a22c733163560e5d796d10fe0d6090261c614edee2e3a59d2a",
+    "/tmp/apex-v2-beam-refined-r6/t3-s4111953688.json": "76019e37dc041494ec78195cd3a981e7ef5e76964f4181e242db2b2e1ca884e4",
+    "/tmp/apex-v2-beam-refined-r6/t3-s4111953688.jsonl": "a1483006fe435e75737704d951bf29090bdbabadc8b343b7817c38190ea89c31",
+    "agents/apex_2026/v2/results/beam-profile.json": "18f916ab84cba89f7d534c3839150971d5a715c7a467606062ea86773a813fb9",
+    "agents/apex_2026/v2/results/beam-speed-gain.json": "e9203163914bfe3930bdc8d696cc260518a46e0170d784613d4bbc2f4003b411"
+  },
+  "episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "actions": 179,
+      "lapTimeMs": 14280,
+      "time_percentiles_s": {
+        "50": 1.849300427002163,
+        "90": 2.7866671804004004,
+        "95": 2.9196591842010093,
+        "99": 3.2467997778782594,
+        "100": 4.3849155269999756
+      },
+      "actions_over4s": 1,
+      "timeout_count": 0,
+      "remaining_margin_to5s": 0.6150844730000244,
+      "maximum_step": 30,
+      "ticks_min": 8288,
+      "ticks_max": 8576,
+      "ticks_at_maximum_latency": 8564
+    },
+    {
+      "track_id": 3,
+      "seed": 4111953688,
+      "actions": 226,
+      "lapTimeMs": 18020,
+      "time_percentiles_s": {
+        "50": 1.7495298989997536,
+        "90": 2.4827610415013623,
+        "95": 2.7193331549988216,
+        "99": 3.653629152000576,
+        "100": 4.031586721997883
+      },
+      "actions_over4s": 1,
+      "timeout_count": 0,
+      "remaining_margin_to5s": 0.9684132780021173,
+      "maximum_step": 27,
+      "ticks_min": 7256,
+      "ticks_max": 8576,
+      "ticks_at_maximum_latency": 8564
+    }
+  ],
+  "worst_case_prediction_tick_accounting": {
+    "beam_expansion": 2052,
+    "feedback_completions": 6300,
+    "temporal_refinement": 224,
+    "total": 8576,
+    "assumption": "Every pursuit lattice has3 distinct steering choices; depth8,width8,3pedals. Clipping can reduce actual count.",
+    "refinement_fraction": 0.026119402985074626
+  },
+  "profile_scope": "One older R3 saved frame: footprint was25point sampling, not current full-area+1pixel SAT; its fractions cannot be asserted for R6.",
+  "existing_profile_seconds": {
+    "total": 3.001,
+    "completion_cumulative": 2.238,
+    "physics_step_cumulative": 1.679,
+    "old_sampled_footprint_cumulative": 0.533,
+    "projection_cumulative": 0.266
+  },
+  "existing_projection_cache_evidence": {
+    "cases": 2000,
+    "bitwise_parity": true,
+    "process_cpu_seconds": {
+      "original": [
+        0.09285818200000001,
+        0.07597955700000003,
+        0.08259268599999997,
+        0.08352632599999998,
+        0.07875452300000008
+      ],
+      "cached": [
+        0.05752923700000001,
+        0.05408235100000003,
+        0.04692242899999999,
+        0.06554456099999995,
+        0.04885750499999997
+      ]
+    },
+    "median_speedup": 1.527165229928705,
+    "scope": "Staticgeometrycache only; no wholeagentactionparity claim. Cases synthetically sample projectioninputs, not simulator episodes."
+  },
+  "parity_limit": "The2000case result covers a local projection function only; no whole-agent exact-behavior claim or currentR6 speedup is established.",
+  "exact_preserving_opportunities": [
+    {
+      "priority": 1,
+      "change": "Cache per-observation projection geometry: segment starts/deltas, squared denominators, arclength increments and math.atan2 headings.",
+      "reason": "These arrays are unchanged across thousands of projection calls; existing2000-case static probe has bitwise parity and1.527x local speedup.",
+      "bounded_expectation": "Oldprofile projection was8.9% oftotal; applying its measured local ratio implies only about3.1% end-to-end saving there. CurrentR6 benefit unmeasured.",
+      "validation": "Preserve numerical operation ordering/math.atan2; bitwise projection outputs and all saved action/full-state parity before a new source freeze."
+    },
+    {
+      "priority": 2,
+      "change": "Keep cheap current circular broadphase; when it finds possible unsafe cells, reuse exact transformed fixture polygons for a tighter global pixel AABB and integral-image rejection before SAT.",
+      "reason": "Circle bounds overestimate long hull width, sending safe near-edge poses into raster-cell SAT. Cells outside all exact polygon AABBs cannot contribute to current count.",
+      "bounded_expectation": "Potentially helps expensive edge/obstacle states; no measured speedup or implementation yet.",
+      "validation": "Use identical polygon transforms, include boundary-touch cells and outside-image cells, preserve union counting; exact unsafe-count parity and whole-act/state parity on saved boundary/rotation/wheel cases."
+    },
+    {
+      "priority": 3,
+      "change": "Only after evaluation finishes, profile one saved slow R6 input under controlled single-thread resources to attribute walltime between current SAT, physics and completion work.",
+      "reason": "Current latency tails cannot be explained using older sampled-footprint profile; avoid optimizing from stale fractions.",
+      "bounded_expectation": "Measurement only, no new driving reset. Full-state transition memoization is not approved without hidden solver-state audit and observed cache hits."
+    }
+  ],
+  "structural_target_context": [
+    {
+      "track_id": 1,
+      "source": "historical R3, not current R6",
+      "observed_lap_s": 14.04,
+      "observed_distance_m": 966.5405290793184,
+      "observed_mean_speed": 68.84191802559361,
+      "observed_max_speed": 88.92315298067176,
+      "mean_speed_needed_for13s_same_distance": 74.34927146763988,
+      "mean_speed_needed_for10s_same_distance": 96.65405290793184,
+      "constant100m_s_distance_only_lower_bound_s": 9.665405290793183
+    },
+    {
+      "track_id": 2,
+      "source": "historical R3, not current R6",
+      "observed_lap_s": 17.24,
+      "observed_distance_m": 1138.47426511212,
+      "observed_mean_speed": 66.03679031972969,
+      "observed_max_speed": 88.11783045238622,
+      "mean_speed_needed_for13s_same_distance": 87.57494347016308,
+      "mean_speed_needed_for10s_same_distance": 113.847426511212,
+      "constant100m_s_distance_only_lower_bound_s": 11.3847426511212
+    },
+    {
+      "track_id": 3,
+      "source": "historical R3, not current R6",
+      "observed_lap_s": 15.8,
+      "observed_distance_m": 1050.9131891218153,
+      "observed_mean_speed": 66.51349298239451,
+      "observed_max_speed": 87.51840610157595,
+      "mean_speed_needed_for13s_same_distance": 80.83947608629349,
+      "mean_speed_needed_for10s_same_distance": 105.09131891218153,
+      "constant100m_s_distance_only_lower_bound_s": 10.509131891218153
+    }
+  ],
+  "structural_followups": [
+    "For10\u201313s, improving wall-clock inference alone does not lower simulated lap time. It supplies resource headroom while preserving controls.",
+    "Historical R3 higher/middle-turn bins carry87% of its speed gain. Remaining gains need verified corner-entry/exit trajectories and less route distance, not merely more straight throttle.",
+    "On the observed R3track2 route,13s requires87.57m/s mean, almost its88.12m/s peak;10s would require113.85m/s mean, above the public100m/s translation ceiling. This is conditional on that route, not a global impossibility claim.",
+    "A bounded future structural study can separate target-envelope limits from search limits by offline model-feasible path/speed plans, retaining RPM/state uncertainty and collision checks. Do not raise lateral/braking gains blindly.",
+    "Lowest-positive HUD speed/RPM bins remain ambiguous; propagate an interval/confidence at near-rest instead of repeatedly injecting estimated wheel energy. Keep this separate from unchanged R6 until its frozen evaluation finishes."
+  ],
+  "conclusion": "Observed max4.385s leaves0.615s(12.3%) below5s, so there is limited but positive measured headroom, not a worst-case guarantee. Prefer pure geometry caching/exact collision broadphase over reducing search width/depth, skipping collision ticks or approximate dynamics."
+}
