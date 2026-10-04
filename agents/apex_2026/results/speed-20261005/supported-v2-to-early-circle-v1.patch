@@ -1,0 +1,48 @@
+--- a/source.py
++++ b/source.py
+@@ -707 +707 @@
+-class Agent(_ClearRidgeReference):
++class _ClearSupportedReference(_ClearRidgeReference):
+@@ -724,0 +725,42 @@
++
++
++class Agent(_ClearSupportedReference):
++    """Include antialiased inner circle pixels with unchanged shape/context gates."""
++
++    def _circles(self, frame, road):
++        _, _, rows, lefts, rights = road
++        allowed = np.zeros((84, 84), dtype=bool)
++        for row in range(10, 72):
++            left = float(np.interp(row, rows[::-1], lefts[::-1]))
++            right = float(np.interp(row, rows[::-1], rights[::-1]))
++            allowed[row, max(0, int(left+1)):min(84, int(right))] = True
++        bright = (frame >= .60) & (frame <= .705) & allowed
++        seen = np.zeros_like(bright)
++        circles = []
++        for y0, x0 in zip(*np.nonzero(bright)):
++            if seen[y0, x0]:
++                continue
++            seen[y0, x0] = True
++            stack, pixels = [(int(y0), int(x0))], []
++            while stack:
++                y, x = stack.pop(); pixels.append((y, x))
++                for ny, nx in ((y-1,x), (y+1,x), (y,x-1), (y,x+1)):
++                    if 0 <= ny < 84 and 0 <= nx < 84 and bright[ny,nx] and not seen[ny,nx]:
++                        seen[ny,nx] = True; stack.append((ny,nx))
++            if not 4 <= len(pixels) <= 48:
++                continue
++            ys, xs = np.asarray(pixels).T
++            width, height = xs.max()-xs.min()+1, ys.max()-ys.min()+1
++            aspect = width*self.PX_Y/(height*self.PX_X)
++            if not (2 <= width <= 8 and 2 <= height <= 9 and .65 <= aspect <= 1.9):
++                continue
++            x, y = float(xs.mean()), float(ys.mean())
++            surrounding = 0
++            for py, px in ((y,x-4), (y,x+4), (y-5,x), (y+5,x)):
++                iy, ix = int(round(py)), int(round(px))
++                if 0 <= iy < 73 and 0 <= ix < 84 and .32 <= frame[iy,ix] <= .51:
++                    surrounding += 1
++            if surrounding >= 3:
++                circles.append(((self.CAR_Y-y)/self.PX_Y, (x-self.CAR_X)/self.PX_X))
++        return sorted(circles)
++
