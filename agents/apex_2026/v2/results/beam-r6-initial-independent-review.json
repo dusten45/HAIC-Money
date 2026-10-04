@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-04T21:22:50.357585+00:00",
+  "scope": "Independent read-only review of the completed R6 initial two cells, not the subsequent screen or full24. No environment resets, runtime edits or heavy tests.",
+  "source_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "config": {},
+  "source_checkpoint": "6bc2a3a",
+  "checkpoint_source_bytes_verified": true,
+  "checkpoint_note": "git show 6bc2a3a:agents/apex_2026/v2/beam_refined_agent.py hashes to the same source. Receipt commit660c924 includes later documentation; it is not a candidate byte mismatch.",
+  "verified_artifact_sha256": {
+    "/tmp/apex-v2-beam-refined-r6/source.py": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/results/beam_refined_sources/cc0543c2bebb.py": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "/tmp/apex-v2-beam-refined-r6/initial-two-operator.json": "537a675f5f1294186d0e9ef5b8ad79e2ddf8b2d6fb9a916ed1d303a7b5d0cf24",
+    "/tmp/apex-v2-beam-refined-r6/screen-manifest.json": "b1e3c28d73c5289a7c05d9c32e17ee962a277d3feb86d47a6fd010434f822f9c",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/results/beam-r6-initial-screen.json": "77508a42d41711d4e002b9d1b5f9994609fa78aded1ba99d4e375421c3fc0cbd",
+    "/tmp/apex-v2-beam-r5/t3-s4111953688.jsonl": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+    "/tmp/apex-v2-beam-r5/t1-s516237.jsonl": "ee9de11fa8444bcbe772b0df6a75d8315d34a67af05abb9268267374ed31a704"
+  },
+  "evidence": [
+    {
+      "cell": [
+        3,
+        4111953688
+      ],
+      "receipt": "/tmp/apex-v2-beam-refined-r6/t3-s4111953688.json",
+      "receipt_sha256": "76019e37dc041494ec78195cd3a981e7ef5e76964f4181e242db2b2e1ca884e4",
+      "trace": "/tmp/apex-v2-beam-refined-r6/t3-s4111953688.jsonl",
+      "trace_sha256": "a1483006fe435e75737704d951bf29090bdbabadc8b343b7817c38190ea89c31",
+      "started_at": "2026-10-04T21:11:19.469377+00:00",
+      "ended_at": "2026-10-04T21:18:34.732755+00:00",
+      "trace_rows": 226,
+      "valid_policy_rows": 226,
+      "refinement_selected_rows": 1,
+      "selected_plan_unsafe_rows": 1,
+      "selected_plan_unsafe_max": 2,
+      "flow_invalid_rows": 106,
+      "lap_time_ms": 18020,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 4.031586721997883,
+      "act_timeout_count": 0,
+      "runtime_before_after_drift": []
+    },
+    {
+      "cell": [
+        1,
+        516237
+      ],
+      "receipt": "/tmp/apex-v2-beam-refined-r6/t1-s516237.json",
+      "receipt_sha256": "4d7c0c959784fe3d0d64679ddfcd8e7ef7f7818923118e29eb48c4214cedf620",
+      "trace": "/tmp/apex-v2-beam-refined-r6/t1-s516237.jsonl",
+      "trace_sha256": "6be64ea906cad9a22c733163560e5d796d10fe0d6090261c614edee2e3a59d2a",
+      "started_at": "2026-10-04T21:11:19.473939+00:00",
+      "ended_at": "2026-10-04T21:17:22.711180+00:00",
+      "trace_rows": 179,
+      "valid_policy_rows": 179,
+      "refinement_selected_rows": 0,
+      "selected_plan_unsafe_rows": 4,
+      "selected_plan_unsafe_max": 15,
+      "flow_invalid_rows": 85,
+      "lap_time_ms": 14280,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 4.3849155269999756,
+      "act_timeout_count": 0,
+      "runtime_before_after_drift": []
+    }
+  ],
+  "count_definitions": {
+    "valid_policy_rows": "Trace rows with policy_diagnostics.valid true. Both traces have all rows valid.",
+    "refinement_selected_rows": "Valid rows with refinement_shift > 0; this denotes selection of a lower-cost shifted complete sequence, not necessarily a changed first action.",
+    "selected_plan_unsafe_rows": "Valid rows with refined_collision_count > 0. Counts predicted footprint/collision-mask violations across the selected 32 raw-tick horizon, not observed collisions, unique obstacle contacts, or actual damage.",
+    "selected_plan_unsafe_max": "Maximum recorded refined_collision_count among valid rows.",
+    "flow_invalid_rows": "Valid rows where flow_valid is false; slip is propagated from the internal predictor rather than newly measured by LK."
+  },
+  "old_failure_first_divergence": {
+    "cell": [
+      3,
+      4111953688
+    ],
+    "step": 83,
+    "prior82_driving_rows_equal": true,
+    "before_state_equal": true,
+    "r5_action": [
+      -0.07738076150417328,
+      0.0,
+      0.6499999761581421
+    ],
+    "r6_action": [
+      0.06261923909187317,
+      0.699999988079071,
+      0.0
+    ],
+    "refinement_shift": 6,
+    "original_cost": -20.481925886056644,
+    "selected_cost": -66.00956507689907,
+    "original_unsafe_count": 0,
+    "selected_unsafe_count": 0
+  },
+  "required1_comparison": {
+    "driving_rows": 179,
+    "exact_equal": true,
+    "compared_fields": [
+      "step",
+      "action",
+      "before",
+      "after",
+      "reward"
+    ],
+    "excluded_fields": [
+      "inference_s",
+      "policy_diagnostics"
+    ],
+    "r5_trace_sha256": "ee9de11fa8444bcbe772b0df6a75d8315d34a67af05abb9268267374ed31a704",
+    "r6_trace_sha256": "6be64ea906cad9a22c733163560e5d796d10fe0d6090261c614edee2e3a59d2a"
+  },
+  "conclusions": {
+    "finished": 2,
+    "expected_initial": 2,
+    "in_target_window": 0,
+    "remaining_screen_at_initial_snapshot": 4,
+    "full24_claim": false,
+    "causal_scope": "The isolated source change first alters the old failure trajectory at decision83 and the new trajectory finishes. This supports this consumed-cell rescue; it does not establish general pruning completeness or observer correctness."
+  },
+  "remaining_risks": [
+    "Initial2 comprises one heavily reused failure cell and one preserved REQUIRED cell. Remaining screen4, full consumed24 and the REQUIRED4 mean gate remain outside this evidence.",
+    "Keep historical full24_authorized:false and INITIAL2_COMPLETE_HOLD as initial-snapshot facts; record later authorization/results separately.",
+    "The unchanged base objective permits unsafe predicted plans. Refinement collision ceiling is relative to the original winner, not an absolute safety requirement.",
+    "Low-speed HUD/RPM quantization, partially observed wheel state and predicted-slip propagation remain unchanged. One rescue does not resolve the observation problem.",
+    "Maximum measured act4.384915526999976s leaves about0.615s below5s. Zero timeouts and zero cgroup throttling delta do not guarantee later-state or machine-load performance.",
+    "Before final corroboration follow unchanged protocol: choose one source, freeze source/config/dependencies, execute fresh validation and required repeats, then allocate fresh holdout. No initial-screen result establishes10\u201313s achievement."
+  ]
+}
