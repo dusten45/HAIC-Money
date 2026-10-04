@@ -1,0 +1,333 @@
+{
+  "purpose": "offline consumed-layout geometric feasibility relaxation; no laps or Agent",
+  "worlds_created": 0,
+  "physics_steps": 0,
+  "holdout_opened": false,
+  "official_source_sha256": {
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204"
+  },
+  "helper_sha256": "03b984fe88537e38f70fe197302173e362a8f28e6b52a277ea0ddd5bde116b31",
+  "rear_clear_receipt_sha256": "9dc20efcf6e34bb763d935dcd1b43e6d2b389872fe533d813d44010580ad52d5",
+  "rear_clear_source_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "conditional_contact_radius_m": 3.0,
+  "conditional_closing_segment_cap_m": 10.0,
+  "conditional_speed_cap_m_s": 100.0,
+  "assumptions": [
+    "nominal rigid vehicle joints for the 3m COM contact-radius model",
+    "collision-free ordinary Box2D integration and COM-preserving internal corrections",
+    "post-warmup starting COM near nominal finish center for the 10m closing segment",
+    "2m integration-stage COM displacement per .02s is NOT a global TOI/contact theorem"
+  ],
+  "rows": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "tile_count": 280,
+      "required_unique_tiles": 266,
+      "allowed_omitted_tiles": 14,
+      "track_generation_attempts": 1,
+      "geometry_sha256": "3cba00530f6f6888655046c99d2ae2a9a76ffc5f239f4f84138f0cae7280ac18",
+      "track_points_sha256": "ee8494e6adcab94d202c5a02d1a062427e5a0d0278dcd946c4fd05cacbf74cf5",
+      "official_centerline_polygon_length_m": 983.5000000000005,
+      "sampled_rear_clear_path_length_m_approx": 968.5951366091398,
+      "rear_clear_finish_time_s": 15.54,
+      "rear_clear_trace_sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa",
+      "rear_clear_actions_sha256_verified_against_receipt": "a1be4b54b6881232e5c3bde46725edba394c3d976fe1cf84d2fca339fd806611",
+      "rear_clear_trace_last_physics_time_s": 15.539999999999736,
+      "rear_clear_trace_first_physics_time_s": 0.08000000000000007,
+      "reconstructed_tile_count_matches_all_trace_progress": true,
+      "tile_projection_integral_certificate": {
+        "lower_m": 863.6557963921856,
+        "upper_m": 865.4762596510659,
+        "midpoint_estimate_m": 864.5660280216258,
+        "total_quadrature_error_bound_m": 0.9102306294401806,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 377.7562409467464,
+        "angle_bins": 1024,
+        "contact_radius_m": 3.0,
+        "start_included": true
+      },
+      "conditional_COM_path_lower_bound_m": 853.6557963921856,
+      "conditional_100m_s_time_lower_bound_s": 8.536557963921856,
+      "wheel_network_integral_certificate": {
+        "lower_m": 876.3547257803508,
+        "upper_m": 878.1751890392312,
+        "midpoint_estimate_m": 877.264957409791,
+        "total_quadrature_error_bound_m": 0.9102306294401806,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 377.7562409467464,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.628276253029822,
+        "start_included": false
+      },
+      "four_wheel_total_path_geometry_lower_bound_m": 430.5373628901754,
+      "conditional_4x100m_s_network_time_lower_bound_s": 1.0763434072254385,
+      "all_tile_raw_projection_integral_certificate": {
+        "lower_m": 916.4135172448781,
+        "upper_m": 918.2339805037585,
+        "midpoint_estimate_m": 917.3237488743181,
+        "total_quadrature_error_bound_m": 0.9102306294401806,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 377.7562409467464,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.0,
+        "start_included": false
+      },
+      "distance_budgets_without_startup_or_turn_penalty": [
+        {
+          "target_s": 10.0,
+          "100m_s_budget_m": 1000.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 10.5,
+          "100m_s_budget_m": 1050.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 11.0,
+          "100m_s_budget_m": 1100.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 13.0,
+          "100m_s_budget_m": 1300.0,
+          "sampled_path_required_cut_fraction": 0.0
+        }
+      ]
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "tile_count": 336,
+      "required_unique_tiles": 320,
+      "allowed_omitted_tiles": 16,
+      "track_generation_attempts": 1,
+      "geometry_sha256": "c9374f7e2af6f2816ed91a30fdd7d069675f4e1ecc1257021b69929eb6019671",
+      "track_points_sha256": "ae0a2b97ae7832d9448fff29b08a72a6ecc246e3635b4854b5abe54b266c07bb",
+      "official_centerline_polygon_length_m": 1179.5000000001578,
+      "sampled_rear_clear_path_length_m_approx": 1159.330610376354,
+      "rear_clear_finish_time_s": 18.72,
+      "rear_clear_trace_sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5",
+      "rear_clear_actions_sha256_verified_against_receipt": "790570eea380d59a7815af36b0defdc0674c943bff69ba87d5f39233fe036c6f",
+      "rear_clear_trace_last_physics_time_s": 18.739999999999668,
+      "rear_clear_trace_first_physics_time_s": 0.08000000000000007,
+      "reconstructed_tile_count_matches_all_trace_progress": true,
+      "tile_projection_integral_certificate": {
+        "lower_m": 893.8812385231803,
+        "upper_m": 895.8295082252064,
+        "midpoint_estimate_m": 894.8553733741933,
+        "total_quadrature_error_bound_m": 0.9741338510129594,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 404.27681714463444,
+        "angle_bins": 1024,
+        "contact_radius_m": 3.0,
+        "start_included": true
+      },
+      "conditional_COM_path_lower_bound_m": 883.8812385231803,
+      "conditional_100m_s_time_lower_bound_s": 8.838812385231803,
+      "wheel_network_integral_certificate": {
+        "lower_m": 906.687270013137,
+        "upper_m": 908.6355397151631,
+        "midpoint_estimate_m": 907.66140486415,
+        "total_quadrature_error_bound_m": 0.9741338510129594,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 404.27681714463444,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.628276253029822,
+        "start_included": false
+      },
+      "four_wheel_total_path_geometry_lower_bound_m": 445.7036350065685,
+      "conditional_4x100m_s_network_time_lower_bound_s": 1.1142590875164213,
+      "all_tile_raw_projection_integral_certificate": {
+        "lower_m": 961.6723410618055,
+        "upper_m": 963.6206107638315,
+        "midpoint_estimate_m": 962.6464759128185,
+        "total_quadrature_error_bound_m": 0.9741338510129594,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 404.27681714463444,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.0,
+        "start_included": false
+      },
+      "distance_budgets_without_startup_or_turn_penalty": [
+        {
+          "target_s": 10.0,
+          "100m_s_budget_m": 1000.0,
+          "sampled_path_required_cut_fraction": 0.1374332817147219
+        },
+        {
+          "target_s": 10.5,
+          "100m_s_budget_m": 1050.0,
+          "sampled_path_required_cut_fraction": 0.094304945800458
+        },
+        {
+          "target_s": 11.0,
+          "100m_s_budget_m": 1100.0,
+          "sampled_path_required_cut_fraction": 0.05117660988619399
+        },
+        {
+          "target_s": 13.0,
+          "100m_s_budget_m": 1300.0,
+          "sampled_path_required_cut_fraction": 0.0
+        }
+      ]
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "tile_count": 309,
+      "required_unique_tiles": 294,
+      "allowed_omitted_tiles": 15,
+      "track_generation_attempts": 1,
+      "geometry_sha256": "841c31cb9b57122e1fa0d46404c4eec9ce99875e4a6336ac22de132d3034d396",
+      "track_points_sha256": "9629ee44b33055884e2d0f3d1e1c90972bd17708c9d296d705caa5f9a233d37b",
+      "official_centerline_polygon_length_m": 1085.0000001926635,
+      "sampled_rear_clear_path_length_m_approx": 1070.4459181422592,
+      "rear_clear_finish_time_s": 16.56,
+      "rear_clear_trace_sha256": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6",
+      "rear_clear_actions_sha256_verified_against_receipt": "9cba2e7a18384dcd9de3987158f3516b510c2582e029c63963dc03b6f619bf33",
+      "rear_clear_trace_last_physics_time_s": 16.579999999999714,
+      "rear_clear_trace_first_physics_time_s": 0.08000000000000007,
+      "reconstructed_tile_count_matches_all_trace_progress": true,
+      "tile_projection_integral_certificate": {
+        "lower_m": 876.4848006897349,
+        "upper_m": 878.4479011514801,
+        "midpoint_estimate_m": 877.4663509206075,
+        "total_quadrature_error_bound_m": 0.9815492308726275,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 407.3542855689867,
+        "angle_bins": 1024,
+        "contact_radius_m": 3.0,
+        "start_included": true
+      },
+      "conditional_COM_path_lower_bound_m": 866.4848006897349,
+      "conditional_100m_s_time_lower_bound_s": 8.66484800689735,
+      "wheel_network_integral_certificate": {
+        "lower_m": 889.2180826990575,
+        "upper_m": 891.1811831608027,
+        "midpoint_estimate_m": 890.19963292993,
+        "total_quadrature_error_bound_m": 0.9815492308726275,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 407.3542855689867,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.628276253029822,
+        "start_included": false
+      },
+      "four_wheel_total_path_geometry_lower_bound_m": 436.96904134952877,
+      "conditional_4x100m_s_network_time_lower_bound_s": 1.092422603373822,
+      "all_tile_raw_projection_integral_certificate": {
+        "lower_m": 937.1448053831555,
+        "upper_m": 939.1079058449005,
+        "midpoint_estimate_m": 938.126355614028,
+        "total_quadrature_error_bound_m": 0.9815492308726275,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 407.3542855689867,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.0,
+        "start_included": false
+      },
+      "distance_budgets_without_startup_or_turn_penalty": [
+        {
+          "target_s": 10.0,
+          "100m_s_budget_m": 1000.0,
+          "sampled_path_required_cut_fraction": 0.06580988067525806
+        },
+        {
+          "target_s": 10.5,
+          "100m_s_budget_m": 1050.0,
+          "sampled_path_required_cut_fraction": 0.01910037470902104
+        },
+        {
+          "target_s": 11.0,
+          "100m_s_budget_m": 1100.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 13.0,
+          "100m_s_budget_m": 1300.0,
+          "sampled_path_required_cut_fraction": 0.0
+        }
+      ]
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "tile_count": 279,
+      "required_unique_tiles": 266,
+      "allowed_omitted_tiles": 13,
+      "track_generation_attempts": 1,
+      "geometry_sha256": "eebeac60ecddcc79d636c669da06c5ef94d68250cbd0e49755bdb2c4b1db2b31",
+      "track_points_sha256": "b9d9f26f4dc466e9a832671cc3e3b3f367c331901006c500fa0194a98fd64d77",
+      "official_centerline_polygon_length_m": 979.8235310090868,
+      "sampled_rear_clear_path_length_m_approx": 953.1299442130742,
+      "rear_clear_finish_time_s": 18.14,
+      "rear_clear_trace_sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67",
+      "rear_clear_actions_sha256_verified_against_receipt": "56d8caf42c8de896179e95f254afb5a2299aa83cee559e0a55ffa8b1fc35a0b9",
+      "rear_clear_trace_last_physics_time_s": 18.15999999999968,
+      "rear_clear_trace_first_physics_time_s": 0.08000000000000007,
+      "reconstructed_tile_count_matches_all_trace_progress": true,
+      "tile_projection_integral_certificate": {
+        "lower_m": 774.9252439964263,
+        "upper_m": 776.546460470791,
+        "midpoint_estimate_m": 775.7358522336085,
+        "total_quadrature_error_bound_m": 0.8106072371824039,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 336.4113806965408,
+        "angle_bins": 1024,
+        "contact_radius_m": 3.0,
+        "start_included": true
+      },
+      "conditional_COM_path_lower_bound_m": 764.9252439964263,
+      "conditional_100m_s_time_lower_bound_s": 7.649252439964263,
+      "wheel_network_integral_certificate": {
+        "lower_m": 787.4994278747934,
+        "upper_m": 789.120644349158,
+        "midpoint_estimate_m": 788.3100361119756,
+        "total_quadrature_error_bound_m": 0.8106072371824039,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 336.4113806965408,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.628276253029822,
+        "start_included": false
+      },
+      "four_wheel_total_path_geometry_lower_bound_m": 386.1097139373967,
+      "conditional_4x100m_s_network_time_lower_bound_s": 0.9652742848434918,
+      "all_tile_raw_projection_integral_certificate": {
+        "lower_m": 829.4155633823358,
+        "upper_m": 831.0367798567006,
+        "midpoint_estimate_m": 830.2261716195181,
+        "total_quadrature_error_bound_m": 0.8106072371824039,
+        "floating_roundoff_guard_m_not_machine_verified": 1e-06,
+        "lipschitz_per_radian_m": 336.4113806965408,
+        "angle_bins": 1024,
+        "contact_radius_m": 0.0,
+        "start_included": false
+      },
+      "distance_budgets_without_startup_or_turn_penalty": [
+        {
+          "target_s": 10.0,
+          "100m_s_budget_m": 1000.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 10.5,
+          "100m_s_budget_m": 1050.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 11.0,
+          "100m_s_budget_m": 1100.0,
+          "sampled_path_required_cut_fraction": 0.0
+        },
+        {
+          "target_s": 13.0,
+          "100m_s_budget_m": 1300.0,
+          "sampled_path_required_cut_fraction": 0.0
+        }
+      ]
+    }
+  ]
+}

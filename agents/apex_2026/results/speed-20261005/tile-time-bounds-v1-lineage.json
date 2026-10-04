@@ -1,0 +1,42 @@
+{
+  "classification": "offline_consumed_geometry_conditional_math_checkpoint",
+  "is_agent_trial": false,
+  "is_new_lap": false,
+  "worlds_created_by_this_helper": 0,
+  "physics_steps_by_this_helper": 0,
+  "holdout_opened": false,
+  "git_operations_by_this_lane": 0,
+  "bindings": {
+    "agents/apex_2026/research/speed_20261005/tile_time_lower_bound.py": "03b984fe88537e38f70fe197302173e362a8f28e6b52a277ea0ddd5bde116b31",
+    "agents/apex_2026/tests/test_tile_time_lower_bound.py": "9f16135a0cea1dda820c3b044da44bde2c4711445a543e3f1afa615c301b6b8c",
+    "agents/apex_2026/results/speed-20261005/tile-time-bounds-v1.json": "47d0df18c499c405f4635eb03322d60490555e922efa69d1242ca1d1c888b9ff",
+    "agents/apex_2026/results/speed-20261005/tile-time-bounds-v1.md": "907c03cc2b3ae463c593acfeddbc11cd18f50ca971eda471ad4c6e499fa72b6e",
+    "agents/apex_2026/results/speed-20261005/rear-clear-v1.json": "9dc20efcf6e34bb763d935dcd1b43e6d2b389872fe533d813d44010580ad52d5",
+    "agents/apex_2026/results/speed-20261005/feasibility-audit.json": "bcc90a1bbc0317f663f543f0f8d1ad1e4e8c2f895add9e7e7923f484688fdbc0",
+    ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-1-seed-516237.json": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa",
+    ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-2-seed-644062.json": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5",
+    ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-3-seed-1007.json": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6",
+    ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-4-seed-18800.json": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67"
+  },
+  "official_source_sha256": {
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204"
+  },
+  "additional_unverified_model_assumptions_required_for_preserved_numeric_bounds": [
+    "The timed COM path includes exactly the chosen nominal start point; actual spawn/post-warmup equality was not verified.",
+    "All precredited warmup tile expanded polygons intersect the timed COM path; existing audit records 2 untimed credits per mandatory geometry."
+  ],
+  "interpretation": "8.537/8.839/8.665/7.649s are bounds of the explicitly conditional hypothetical model, not unconditional official timed-lap bounds. Bounds below10 prove neither impossibility nor feasibility. No actual shorter route witness was constructed.",
+  "review": {
+    "algorithm_and_geometry_sink": "independent read-only math audit passed",
+    "start_and_warmup_credit_gaps": "explicitly disclosed in report and lineage; helper/numeric JSON preserved unchanged",
+    "floating_roundoff": "1e-6m practical allowance, not machine-verified interval arithmetic"
+  },
+  "verification": {
+    "focused_command": "PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest -q agents/apex_2026/tests/test_tile_time_lower_bound.py",
+    "focused_result": "8 passed in 0.18s",
+    "python_version": "3.11.16",
+    "helper_report_official_trace_hashes_recomputed": true
+  }
+}
