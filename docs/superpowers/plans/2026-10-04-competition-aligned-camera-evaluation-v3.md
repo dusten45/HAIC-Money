@@ -17,6 +17,8 @@
 - Cross the same geometry seeds with track IDs 1–4; use 8/16/8 seeds for screen/confirmation/blind and 2/4/2 repeat pairs. Seed derivation is SHA256 of name, one-time random salt, phase and index. Confirm freshness against all documented experiment seeds before binding.
 - Phase RETAIN requires net completed laps at least 3/6/3, lost control finishes at most 2/4/2, candidate total crashes no greater than control, candidate contacts and damage no greater than control, candidate mean progress at least control, and candidate shared-finish total time no more than 1.10 times control. Empty shared-finish sets skip only that time ratio. All cells and repeats must validate without operational error. The combined 128 canonical pairs must have at least 18 net additional finishes before activation.
 - The metrics and source checks are fixed before seed generation. Per-cell contacts and rare both-DNF progress losses remain reported, but do not veto an otherwise better aggregate competition result. This is an explicit decision change from v2, justified by the official finish-first ranking and applied only to new data.
+- The consumed v2 screen would retrospectively pass these v3 screen gates. State that post-data fact plainly in the final result; it is not v3 evidence and does not reverse v2's REJECT decision.
+- Require the exact f12 agent blob SHA256 `291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61`, `_BoundedSideHoldController`, and root `model.pt` path before generating salt. Import no unpinned executable v1/v2 runner helpers. Validate duplicate/unexpected receipt coordinates and every repeat's runtime metrics.
 - Official limits: import/init 10 s, reset/action 5 s, process 1,024 MiB; action shape `(3,)`, finite steer `[-1,1]`, gas/brake `[0,1]`; max steps 2,000, frame skip 4. Never edit `core/`, `env_wrapper.py`, or `damage.py`.
 - Preserve user untracked videos, old submissions, and `submission.zip`. Commit/push each coherent verified checkpoint. Do not create a new worktree or top-level task for delegation.
 
@@ -27,6 +29,7 @@
 - Confirmation and blind cannot run before their predecessor retains under the fixed v3 gate, regardless of how strong the aggregate looked.
 - A source byte, model, helper, environment, runner or decision-engine change after binding must abort before and after every phase.
 - A repeat pair must compare action hashes and outcome fields but must never count as a new statistical observation.
+- A fresh checkout must reconstruct ignored source snapshots from the pinned Git blob and selector without changing the bound salt or overwriting a mismatched existing snapshot.
 
 ---
 
@@ -51,6 +54,7 @@
 - [ ] Write failing tests for template validation, fresh unique seed generation, selector-only source construction, sealed phase ordering, byte tampering and exact repeat checks.
 - [ ] Run tests and confirm the expected failures.
 - [ ] Implement the v3 runner with new name/path/hash identity and fixed Task 1 gate; keep v2 files immutable.
+- [ ] Implement `restore-snapshots` from the pinned committed source, and verify source/model/helper/environment/runner/gate hashes again after report and seal paths, including resumed phases with no new jobs.
 - [ ] Run focused tests and preflight; review diff and run `git diff --check`.
 - [ ] Commit and push the runner, tests and unbound template.
 - [ ] Bind a one-time v3 salt and 8/16/8 new seeds to the committed source and runner; verify no historical collision and commit/push the immutable protocol before any v3 simulation.
@@ -64,5 +68,6 @@
 - [ ] Run screen cold workers and audit every receipt, input hash, repeat and summary.
 - [ ] If screen RETAIN, freeze finalist; run confirmation and audit it. If confirmation RETAIN, seal and run blind, then audit it.
 - [ ] Apply combined 18-finish gate only after all three phases retain; if any gate fails, record rejection and keep active route unchanged.
+- [ ] Recompute all three summaries from validated receipts, verify both predecessor seals and matching identities, and report per-track and per-geometry outcomes plus the retrospective v2-screen disclosure.
 - [ ] If all gates retain, change only the bare selector to the exact frozen candidate class; verify Agent action parity on registered repeat cells and static submission constraints.
 - [ ] Run focused and broad available tests, inspect staged diff, commit and push result and any validated selector change. Do not overwrite the user's existing `submission.zip`.
