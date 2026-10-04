@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "hypothesis": "Compare jointsteering/pedals fromfirstobservedobstaclehazard; preserve advancing exit instead ofbrake-onlystationarybackup.",
+  "source_hashes": {
+    "agents/apex_2026/v2/obstacle_steering_agent.py": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+    "agents/apex_2026/v2/obstacle_shield_agent.py": "f22a6d43229d6ab60d65aa25e22584929e9395bd436598fc8d50be0aff9efaed",
+    "agents/apex_2026/v2/recovery_agent.py": "842e6c2f7f0e004f249e16819eb5ee131958353b3cf9fa42369277a4ddb8cccd",
+    "agents/apex_2026/candidate/agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agents/apex_2026/v2/test_obstacle_steering_agent.py": "8e332acb6a04a50719b9c4b35534a229ffc7ce08bc18e3cc0b29da31460fdc4c"
+  },
+  "snapshot": "/tmp/apex-v2-obstacle-steering-r0/source.py",
+  "snapshot_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+  "tests": {
+    "command": ".venv/bin/python -m unittest agents.apex_2026.v2.test_obstacle_steering_agent -v",
+    "passed": 4,
+    "combined_command": ".venv/bin/python -m unittest agents.apex_2026.v2.test_obstacle_steering_agent agents.apex_2026.v2.test_obstacle_shield_agent agents.apex_2026.v2.test_recovery_agent -q",
+    "combined_passed": 17,
+    "log": "/tmp/apex-v2-obstacle-steering-r0/tests.log",
+    "log_sha256": "7e1b4e1abbe8b0ecd22890b7ca2b1d85a3c60bbdf94dfbb0a565d30036826fd5"
+  },
+  "constraints": {
+    "horizon_s": 0.32,
+    "raw_step_s": 0.02,
+    "nominal_command_hold_s": 0.08,
+    "continuation": "nominalhazardtriggerusespathcontinuation; candidatejointbranchesholdsteer.32s andscorecurrentpatharclength/lateral/heading",
+    "candidates": "nominalsteer offsets\u00b1.18/.36,straight,HUDwheel; nominalpedals/coast/brake.15/.3/.4/.7",
+    "obstacle_mask": "rawdetectedcomponentswithoutdilation",
+    "roadedge_trigger": false,
+    "recovery": "r1 unchanged,bypassesobstacleshieldwhileactive",
+    "runtime_inputs": "publicpixelHUD/flow andpastactionslip/throttle memory only",
+    "candidate_command_hold_s": 0.32,
+    "cost": "(lateral/3m)^2 +.5heading^2 +(advance_deficit/nominal_advance)^2 +(terminalspeed_deficit/max(speed,8))^2 +.15(steerdeviation/.4)^2 +.03pedaldeviation^2; prefercollisionfree advance>.3m,terminalspeed>1m/s whenavailable"
+  },
+  "limitations": [
+    "Roadgrip/no-damage andunsignedRPM assumptions",
+    "Unknownflow propagatedslip cannot validate longhorizonforecast",
+    "Pixelobstacle raster/fullfixtureprojection may alias",
+    "No futureunobserved obstacles modeled",
+    "Matchedconsumedregression only; no newholdout"
+  ],
+  "baseline_comparator": "/tmp/apex-v2-recovery-r1 historical,not rerun",
+  "cells": [
+    {
+      "track": 1,
+      "seed": 516237,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 16780,
+      "reason": null,
+      "steps": 210,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t1-s516237.json",
+      "receipt_sha256": "f16fc91277e9e6271596fcac127017eda8541f11965461186f0486df4f3108ca",
+      "trace_sha256": "e68858a4518c8d37b5f3b447a5dd7d27104feab6c67a6cba0c27aa2a236e5ce0",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 16780,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.10546875,
+      "inference_max_s": 0.22775541699957103,
+      "joint_interventions": []
+    },
+    {
+      "track": 2,
+      "seed": 644062,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 20720,
+      "reason": null,
+      "steps": 260,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t2-s644062.json",
+      "receipt_sha256": "ad3e4b2ef20d843b66287ea9e90609c463a592a40f043b42fbf414c7971394ac",
+      "trace_sha256": "157a65ae29b8bf7dfe4edba39520ce2a19a2c28aea92bb84ae71993fd971f804",
+      "shield_actions": 1,
+      "shield_action_fraction": 0.0038461538461538464,
+      "shield_duration_s": 0.08,
+      "first_shield_step": 218,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [
+        0.32
+      ],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 20680,
+      "lap_delta_ms": 40,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.4296875,
+      "inference_max_s": 0.4091586040012771,
+      "joint_interventions": [
+        {
+          "step": 218,
+          "action": [
+            -0.041665248572826385,
+            0.0,
+            0.15000000596046448
+          ],
+          "nominal": [
+            -0.041665248572826385,
+            0.0,
+            0.2132568359375
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 16,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 37,
+            "backup_advance_m": 16.876540337798865,
+            "backup_lateral_m": 0.15157210379882297,
+            "backup_terminal_speed": 54.25859451293945,
+            "backup_cost": 0.018309065519937717,
+            "backup_position": [
+              -2.2316486835479736,
+              19.377714157104492
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "track": 3,
+      "seed": 1007,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 18560,
+      "reason": null,
+      "steps": 233,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t3-s1007.json",
+      "receipt_sha256": "5208674a6d092fe49b9c7e2b1bf7f403062b1338d2f4ca12590185b739f29c3a",
+      "trace_sha256": "800519bf49027008424b827452834b6fe217b80e359549db42c009fc5559182c",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 18560,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 98.66796875,
+      "inference_max_s": 0.13338735100114718,
+      "joint_interventions": []
+    },
+    {
+      "track": 4,
+      "seed": 18800,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 17880,
+      "reason": null,
+      "steps": 224,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t4-s18800.json",
+      "receipt_sha256": "58bbfc886f240c1cd9624e646496f8d7ad500fd5701d28c33c4549195ae61593",
+      "trace_sha256": "09a350799ca487446a3587726beef8598f30b4a54906d30c44fd971b7e7eb0d1",
+      "shield_actions": 2,
+      "shield_action_fraction": 0.008928571428571428,
+      "shield_duration_s": 0.16,
+      "first_shield_step": 108,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [
+        0.24,
+        0.2
+      ],
+      "recovery_actions": 0,
+      "baseline_lap_ms": 18100,
+      "lap_delta_ms": -220,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 99.0078125,
+      "inference_max_s": 0.2980192409995652,
+      "joint_interventions": [
+        {
+          "step": 108,
+          "action": [
+            -0.15812259912490845,
+            0.0,
+            0.15000000596046448
+          ],
+          "nominal": [
+            -0.23511599004268646,
+            0.0,
+            0.20502929389476776
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 12,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 23,
+            "backup_advance_m": 12.680461801760032,
+            "backup_lateral_m": 1.0443704540157437,
+            "backup_terminal_speed": 35.1426887512207,
+            "backup_cost": 0.2134013502096772,
+            "backup_position": [
+              -4.301675796508789,
+              12.551750183105469
+            ]
+          }
+        },
+        {
+          "step": 109,
+          "action": [
+            -0.15812259912490845,
+            0.0,
+            0.15000000596046448
+          ],
+          "nominal": [
+            -0.2788955867290497,
+            0.0,
+            0.20449218153953552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 10,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 20,
+            "backup_advance_m": 11.571657318489088,
+            "backup_lateral_m": 0.14327418286467783,
+            "backup_terminal_speed": 31.304420471191406,
+            "backup_cost": 0.1298573761124162,
+            "backup_position": [
+              -3.9894444942474365,
+              11.361852645874023
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "track": 2,
+      "seed": 4031370700,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 19960,
+      "reason": null,
+      "steps": 250,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t2-s4031370700.json",
+      "receipt_sha256": "2e95590de72e2fd8dd6d48a5ca9bec5eb7fdd9af992a77ac51c5ab7671e8b01e",
+      "trace_sha256": "9b8605086398bc065a41d45ccdb8a9c1aa7724660d760ebeaf0e7b35b2cdddc0",
+      "shield_actions": 0,
+      "shield_action_fraction": 0.0,
+      "shield_duration_s": 0.0,
+      "first_shield_step": null,
+      "no_collision_free_backup": 0,
+      "trigger_time_to_impact_s": [],
+      "recovery_actions": 44,
+      "baseline_lap_ms": 19960,
+      "lap_delta_ms": 0,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 96.87109375,
+      "inference_max_s": 0.06437717500011786,
+      "joint_interventions": []
+    },
+    {
+      "track": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 326,
+      "source_sha256": "0b320eb464143c40769f22216153a642b7d58b37c006e855fe279cbf2c414b6e",
+      "receipt": "/tmp/apex-v2-obstacle-steering-r0/t3-s4111953688.json",
+      "receipt_sha256": "b5af5ad0e8b95bbefa444ebfeff285f57c5d5dd315aaf516e2c1e8e6298b2313",
+      "trace_sha256": "9d10a7fc6fc33ab6947b30e9ce36878e413b519d39796448c5861304f571414c",
+      "shield_actions": 4,
+      "shield_action_fraction": 0.012269938650306749,
+      "shield_duration_s": 0.32,
+      "first_shield_step": 67,
+      "no_collision_free_backup": 1,
+      "trigger_time_to_impact_s": [
+        0.32,
+        0.26,
+        0.28,
+        0.02
+      ],
+      "recovery_actions": 173,
+      "baseline_lap_ms": null,
+      "lap_delta_ms": null,
+      "baseline_prefix_identical": true,
+      "peak_memory_mib": 97.3828125,
+      "inference_max_s": 0.361045228999501,
+      "joint_interventions": [
+        {
+          "step": 67,
+          "action": [
+            0.0,
+            0.0,
+            0.09091796725988388
+          ],
+          "nominal": [
+            -0.016450684517621994,
+            0.0,
+            0.09091796725988388
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 16,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 33,
+            "backup_advance_m": 14.001331772325958,
+            "backup_lateral_m": 0.12995321891279257,
+            "backup_terminal_speed": 48.641788482666016,
+            "backup_cost": 0.04566002914402513,
+            "backup_position": [
+              -0.6130989193916321,
+              16.873817443847656
+            ]
+          }
+        },
+        {
+          "step": 68,
+          "action": [
+            0.0,
+            0.0,
+            0.21328124403953552
+          ],
+          "nominal": [
+            -0.03719617798924446,
+            0.0,
+            0.21328124403953552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 13,
+            "backup_hit_tick": null,
+            "trials": 38,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 22,
+            "backup_advance_m": 11.28970741526491,
+            "backup_lateral_m": 0.06532039973529853,
+            "backup_terminal_speed": 34.629459381103516,
+            "backup_cost": 0.015344796971870054,
+            "backup_position": [
+              0.08717630058526993,
+              14.186490058898926
+            ]
+          }
+        },
+        {
+          "step": 99,
+          "action": [
+            0.027764709666371346,
+            0.0,
+            0.21120604872703552
+          ],
+          "nominal": [
+            0.10150054842233658,
+            0.0,
+            0.21120604872703552
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 14,
+            "backup_hit_tick": null,
+            "trials": 44,
+            "backup_found": true,
+            "joint_branch": true,
+            "moving_backups": 25,
+            "backup_advance_m": 13.29939930743261,
+            "backup_lateral_m": 0.12968038214824557,
+            "backup_terminal_speed": 39.81168746948242,
+            "backup_cost": 0.11438381264833539,
+            "backup_position": [
+              1.2329071760177612,
+              15.753402709960938
+            ]
+          }
+        },
+        {
+          "step": 148,
+          "action": [
+            -0.45019039511680603,
+            0.0,
+            0.699999988079071
+          ],
+          "nominal": [
+            -0.45019039511680603,
+            0.0,
+            0.1923828125
+          ],
+          "preview": {
+            "active": true,
+            "nominal_hit_tick": 1,
+            "backup_hit_tick": 1,
+            "trials": 4,
+            "backup_found": false,
+            "joint_branch": true,
+            "joint_trials": 44,
+            "moving_backups": 0,
+            "backup_advance_m": null
+          }
+        }
+      ]
+    }
+  ],
+  "status": "partialmechanism only;5/6 cleanfinished,oldT3failed differently;unadopted",
+  "durable_source_archive": "agents/apex_2026/v2/results/obstacle_steering_sources/0b320eb46414.py",
+  "findings": [
+    "Required4clean mean18.485s versusP1/recovery18.53; requiredonly3shieldactions.",
+    "T4brake-onlydeadlock disappears;2jointinterventions108/109 steer\u2212.158/brake.15, finish17.88s versusP1 18.10.",
+    "OldT2recovery remains19.96s zero damage, shieldinactive.",
+    "OldT3DNF zero damage atprogress.498: interventions67/68/99, then148 nobackupfound fullbrake; earlieroffroad/recoveryloop replacesoriginalcontacttrap.",
+    "FirstoldT3trigger67 was not needed by historicalP1, whichsurvivedpastthatobstacle; fixedvisiblepathprediction may overtrigger when futureP1replans. Modelstate error also possible; no preciseattribution established."
+  ],
+  "required_mean_ms": 18485.0
+}
