@@ -1,0 +1,30 @@
+--- a/agents/apex_2026/safety_agent.py
++++ b/agents/apex_2026/safety_agent.py
+@@ -3281,7 +3281,7 @@
+             self.mode = 'guided'
+             speed = max(self._metric._speed(frame), float(robust._pace_speed))
+             steer = float(robust_action[0])
+-            if self.mode != previous_mode:
++            if not hazard and self.mode != previous_mode:
+                 steer = float(np.clip(steer, previous_steer - self.transition_steer_step,
+                                       previous_steer + self.transition_steer_step))
+             action = self._steering_pedals(metric_action, steer=steer,
+@@ -3296,7 +3296,7 @@
+                         float(robust_target) + self.hazard_speed_margin))
+                 action = self._hazard_pedals(action, robust_action,
+                     speed=speed, target=target)
+-        elif self.mode != previous_mode:
++        elif not hazard and self.mode != previous_mode:
+             action = np.asarray(action, dtype=np.float32).copy()
+             action[0] = np.clip(float(action[0]),
+                 previous_steer - self.transition_steer_step,
+@@ -3325,6 +3325,9 @@
+     @staticmethod
+     def _hazard_pedals(action, robust_action, *, speed, target):
+         action = np.asarray(action, dtype=np.float32).copy()
++        # Corridor control can request a crawl even below its target speed.
++        # Retain that approach constraint as well as any explicit braking.
++        action[1] = min(float(action[1]), float(robust_action[1]))
+         action[2] = max(float(action[2]), float(robust_action[2]))
+         if target is not None and np.isfinite(target):
+             error = float(target) - float(speed)
