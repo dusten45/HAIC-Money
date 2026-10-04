@@ -1,0 +1,31 @@
+{
+  "step": 120,
+  "actual_displacement80ms": 0.002508758974630383,
+  "predicted_displacement80ms": 0.323049715646003,
+  "hud_speed": 1.9828769873920709,
+  "actual_speed": 0.031375379967097355,
+  "omegas": [
+    8.030918876709164,
+    7.345885074852443,
+    9.577635022099255,
+    9.362948945983195
+  ],
+  "predicted_speed_after": 3.9498252868652344,
+  "action": [
+    0.16901178658008575,
+    0.0,
+    0.0
+  ],
+  "scope": "No reset. Observedpixels/actioncarry only forprediction. Actualdiagnostics used only forcomparison.",
+  "hashes": {
+    "/tmp/apex-v2-beam-r5/t3-s4111953688.jsonl": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+    "/tmp/apex-v2-beam-r5/stall_capture/observations.npz": "0a90854415483c9bdb3125a7269e4bbdc8e825e9550e82796d989ec7d19ab653",
+    "/tmp/apex-v2-beam-r5/source.py": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+    "agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56"
+  },
+  "limitations": [
+    "No currenttruewheelRPM captured; syntheticpixelbin equivalence establishesambiguity, notexactwheelstate.",
+    "This predictionresidual does not alone prove stationarypolicycausality. Independent beampruningcounterexample alsoexists.",
+    "Noobserver runtimefix or newenvironmentreset."
+  ]
+}

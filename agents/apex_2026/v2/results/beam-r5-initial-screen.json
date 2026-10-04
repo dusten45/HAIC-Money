@@ -1,0 +1,110 @@
+{
+  "status": "initial_two_screen_complete_source_HOLD",
+  "manifest": {
+    "planned_cells": [
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ]
+    ],
+    "authorized_initial_cells": [
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        516237
+      ]
+    ],
+    "config": {},
+    "before": {
+      "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+      "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+      "evaluator_sha256": "6c3f20be2600d221f66495bde8514bbac461ffef5617013564e432a683a38ffd"
+    },
+    "retries": 0,
+    "new_holdout": false,
+    "after": {
+      "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+      "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+      "evaluator_sha256": "6c3f20be2600d221f66495bde8514bbac461ffef5617013564e432a683a38ffd"
+    }
+  },
+  "planned_cells": 6,
+  "executed_cells": 2,
+  "remaining_cells_status": "conditional_unexecuted",
+  "episodes": [
+    {
+      "track_id": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "finish_qualified": false,
+      "lapTimeMs": null,
+      "progress": 0.3560371517027864,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "steps": 190,
+      "resource_eligible": true,
+      "inference_max_s": 2.8560865910003486,
+      "inference_mean_s": 1.5878171211314207,
+      "peak_memory_mib": 98.2578125,
+      "invalid_actions": 0,
+      "act_timeout_count": 0,
+      "receipt": "agents/apex_2026/v2/results/beam-r5/t3-s4111953688.json",
+      "trace": "/tmp/apex-v2-beam-r5/t3-s4111953688.jsonl",
+      "trace_sha256": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5"
+    },
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "finish_qualified": true,
+      "lapTimeMs": 14280,
+      "progress": 1.0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 179,
+      "resource_eligible": true,
+      "inference_max_s": 3.2289537669967103,
+      "inference_mean_s": 1.822706367631164,
+      "peak_memory_mib": 97.98046875,
+      "invalid_actions": 0,
+      "act_timeout_count": 0,
+      "receipt": "agents/apex_2026/v2/results/beam-r5/t1-s516237.json",
+      "trace": "/tmp/apex-v2-beam-r5/t1-s516237.jsonl",
+      "trace_sha256": "ee9de11fa8444bcbe772b0df6a75d8315d34a67af05abb9268267374ed31a704"
+    }
+  ],
+  "finished": 1,
+  "qualified": 1,
+  "original10to13s_count": 0,
+  "new_holdout": false,
+  "runtime_changed": false,
+  "limitations": [
+    "Two prespecified consumed screen cells, not fullsix or generalization.",
+    "R4 was offline-only, not a drivingfailure.",
+    "1pixelmargin does not establish a formaluncertainty bound orcontinuous collisionguarantee.",
+    "Any later screen/fullregression requiresparentauthorization."
+  ]
+}
