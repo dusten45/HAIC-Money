@@ -112,6 +112,16 @@ def test_unmeasured_geometry_is_rejected_even_if_caller_requests_it(tmp_path):
         h.validate_binding(source, receipt, 1, 3249018572)
 
 
+def test_missing_outcome_fields_are_rejected_before_replay(tmp_path):
+    h = helper()
+    source, receipt, _ = frozen_files(tmp_path)
+    content = json.loads(receipt.read_text())
+    content['rows'][0].pop('finished')
+    receipt.write_text(json.dumps(content))
+    with pytest.raises(ValueError, match='semantic fields'):
+        h.validate_binding(source, receipt, 1, 516237)
+
+
 def test_action_trace_matches_evaluator_float32_byte_order(tmp_path):
     h = helper()
     _, _, actions = frozen_files(tmp_path)

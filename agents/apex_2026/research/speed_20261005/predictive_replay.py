@@ -56,6 +56,8 @@ def validate_binding(source, receipt, track, seed):
     if not isinstance(params, dict):
         raise ValueError('frozen parameters must be an object')
     for row in rows:
+        if any(key not in row for key in SEMANTIC_FIELDS):
+            raise ValueError('original row is missing semantic fields')
         if row['source_sha256'] != source_sha:
             raise ValueError('row source hash disagrees with freeze')
         if row['parameters'] != params:
@@ -259,6 +261,7 @@ def run_replay(source, receipt, track, seed, output, cameras):
                   rows=rows,
                   limits=['Replay latencies include diagnostic host conditions and are not official certification.',
                           'Wall-clock planning budgets may cause action divergence; divergence is an integrity failure.',
+                          'Diagnostic statuses are observed in this replay; exact actions do not prove identical original planning branches.',
                           'Missing or nonfinite diagnostic fields are explicitly represented, not imputed.',
                           'Camera arrays precede act; observer state follows the single emitted-action advance.'])
     with output.open('x') as stream:
