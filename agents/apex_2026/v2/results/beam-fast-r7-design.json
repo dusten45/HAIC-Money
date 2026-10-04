@@ -1,0 +1,45 @@
+{
+  "variant": "R7 FAST",
+  "status": "implementation and tiny tests only; full preflight pending worker end; no episodes authorized",
+  "parent_source": "agents/apex_2026/v2/beam_refined_agent.py",
+  "parent_sha256": "cc0543c2bebbec0f2c1917a60b4e506cdd3da5bd562131e7090ae2bb55d65425",
+  "source": "agents/apex_2026/v2/beam_fast_agent.py",
+  "source_sha256": "777fc393ba5fd4565adabf5d1c73a1409a1caf9b8927f8fc14a604a158b5c7c5",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "config": {},
+  "hypothesis": "Reduce computation with unchanged observation estimator, objective, action order, collision semantics and logical checked-tick diagnostics. No prospective driving gain claim.",
+  "changes": [
+    "Per-act static projection starts/deltas/denominators/arc-deltas/headings cache. Identical query arithmetic order.",
+    "Per-act complete action-prefix float.hex keys plus terminal flag. At most2144 entries. Every hit restores cached physical snapshot and returns fresh state/sequence/node containers; priority metadata not cached. Invalid observations also clear caches."
+  ],
+  "state_scope": "Physical snapshot/controller state parity required. Fuel-spent and wheel-phase counters omitted from restore are unused in runtime physics/control; no ALL internal state parity claim. Box2D hidden solver state remains full-act parity validation risk.",
+  "accounting": "Original collision_checked_raw_ticks and refinement_raw_ticks remain logical counts. Added hits/misses/entries, memo_skipped_raw_ticks=4*hits, actual_search_raw_ticks=4*misses exclude final selected-action propagation.",
+  "bound": {
+    "entries": 2144,
+    "logical_raw_ticks": 8576,
+    "expected_gain": "Unmeasured current runtime; nominal repeated-prefix structural estimate around10%, not a benchmark."
+  },
+  "tests": {
+    "red": "ModuleNotFoundError before implementation",
+    "green": "4 passed in0.26s",
+    "coverage": [
+      "Projection equality100 deterministic cases",
+      "Memo hit exact physical restore and fresh mutable containers",
+      "Terminal flag and signed-zero keys",
+      "Cap and invalid-observation reset",
+      "Uncached original vs miss/hit physical-node parity"
+    ]
+  },
+  "preflight_pending": [
+    "Original vs FAST full stored-observation action, carry state, original diagnostics and sequence/cost exact equality",
+    "Real cache hits and physical snapshot parity across full search",
+    "Current full SAT profile and serial paired act timings after workers stop",
+    "Independent review and root checkpoint before any reset"
+  ],
+  "excluded": [
+    "No tighter polygon AABB",
+    "No early completion rejection",
+    "No altered search width/objective/action lattice",
+    "No HUD low-bin correction"
+  ]
+}
