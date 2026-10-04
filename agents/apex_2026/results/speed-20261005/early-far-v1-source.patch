@@ -1,0 +1,78 @@
+diff --git a/agents/apex_2026/fast_early_far_agent.py b/agents/apex_2026/fast_early_far_agent.py
+index d3361ae..e5dc9fa 100644
+--- a/agents/apex_2026/fast_early_far_agent.py
++++ b/agents/apex_2026/fast_early_far_agent.py
+@@ -880 +880 @@ class _ArcClearReference(_ArcGuardReference):
+-class Agent(_ArcClearReference):
++class _RearClearReference(_ArcClearReference):
+@@ -898,0 +899,70 @@ class Agent(_ArcClearReference):
++
++
++class Agent(_RearClearReference):
++    """Inspect fully observed far circles; retain all parent control and memory."""
++
++    def _circles(self, frame, road):
++        circles = super()._circles(frame, road)
++        _, _, rows, lefts, rights = road
++        allowed = np.zeros((84, 84), dtype=bool)
++        for row in range(int(np.ceil(rows.min())), min(72, int(rows.max())+1)):
++            left = float(np.interp(row, rows[::-1], lefts[::-1]))
++            right = float(np.interp(row, rows[::-1], rights[::-1]))
++            allowed[row, max(0, int(left+1)):min(84, int(right))] = True
++        bright = (frame >= .60) & (frame <= .705) & allowed
++        seen = np.zeros_like(bright)
++        # Start only above the parent ROI, but follow the entire component.
++        # Cropping a component here would bias its center and disguise strips.
++        for y0, x0 in zip(*np.nonzero(bright[:10])):
++            if seen[y0, x0]:
++                continue
++            seen[y0, x0] = True
++            stack, pixels = [(int(y0), int(x0))], []
++            while stack:
++                y, x = stack.pop(); pixels.append((y, x))
++                for ny, nx in ((y-1,x), (y+1,x), (y,x-1), (y,x+1)):
++                    if 0 <= ny < 84 and 0 <= nx < 84 and bright[ny,nx] and not seen[ny,nx]:
++                        seen[ny,nx] = True; stack.append((ny,nx))
++            if not 4 <= len(pixels) <= 20:
++                continue
++            ys, xs = np.asarray(pixels).T
++            x0, x1, y0, y1 = int(xs.min()), int(xs.max()), int(ys.min()), int(ys.max())
++            width, height = x1-x0+1, y1-y0+1
++            if not (2 <= width <= 5 and 2 <= height <= 6 and len(pixels) >= .5*width*height):
++                continue
++            x, y = float(xs.mean()), float(ys.mean())
++            # Known1.2m radius plus half-pixel center uncertainty. A2x4 core
++            # is a valid quantized ellipse even though its aspect is .625.
++            uncertainty = .5*np.hypot(1./self.PX_X, 1./self.PX_Y)
++            radial = np.hypot((xs-x)/self.PX_X, (ys-y)/self.PX_Y)
++            if float(radial.max()) > 1.2+uncertainty:
++                continue
++            halo = frame[max(0,y0-1):min(84,y1+2), max(0,x0-1):min(84,x1+2)]
++            if float(frame[ys,xs].max()) < .655 or float(halo.max()) >= .78:
++                continue
++            surrounding = 0
++            for py, px in ((y,x-4), (y,x+4), (y-5,x), (y+5,x)):
++                iy, ix = int(round(py)), int(round(px))
++                if 0 <= iy < 73 and 0 <= ix < 84 and .32 <= frame[iy,ix] <= .51:
++                    surrounding += 1
++            if surrounding < 3:
++                continue
++            rx, ry = 1.2*self.PX_X+.5, 1.2*self.PX_Y+.5
++            if not (rows.min() <= y-ry and y+ry <= rows.max() and 0 <= x-rx and x+rx <= 83):
++                continue
++            # Piecewise-linear boundary extrema occur at endpoints or row knots.
++            support_rows = np.r_[y-ry, rows[(rows >= y-ry) & (rows <= y+ry)], y+ry]
++            left = np.interp(support_rows, rows[::-1], lefts[::-1])
++            right = np.interp(support_rows, rows[::-1], rights[::-1])
++            if np.min(x-rx-left) < 1. or np.min(right-x-rx) < 1.:
++                continue
++            # Replace only the parent centroid cropped from this same component.
++            # Independent current hazards and the inherited pass memory survive.
++            kept = []
++            for distance, lateral in circles:
++                px = self.CAR_X+lateral*self.PX_X
++                py = self.CAR_Y-distance*self.PX_Y
++                if not (x0-.5 <= px <= x1+.5 and y0-.5 <= py <= y1+.5):
++                    kept.append((distance, lateral))
++            circles = kept+[((self.CAR_Y-y)/self.PX_Y, (x-self.CAR_X)/self.PX_X)]
++        return sorted(circles)

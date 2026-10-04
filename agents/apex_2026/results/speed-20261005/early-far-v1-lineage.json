@@ -1,0 +1,103 @@
+{
+  "source_sha256": "1835002767a09f6f3839d6e9695c0a0d3b9b7ee47722ee06e7b7bad7cb4580fb",
+  "parent_source_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "parameters": {},
+  "receipt_sha256": "2a9d75a238785f47fe1523430636d070673e39e678f7bbac634eec1731e561e9",
+  "frozen_sources_unchanged": true,
+  "screen_passed": false,
+  "original_target_met": false,
+  "adopted": false,
+  "new_episodes": 4,
+  "new_holdout_opened": false,
+  "comparison": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "parent_finished": true,
+      "parent_lap_time_ms": 15540,
+      "candidate_finished": true,
+      "candidate_lap_time_ms": 15600,
+      "delta_ms": 60,
+      "first_action_difference_step": 28,
+      "parent_action_at_difference": [
+        -0.006721861194819212,
+        1.0,
+        0.0
+      ],
+      "candidate_action_at_difference": [
+        -0.0021523148752748966,
+        1.0,
+        0.0
+      ],
+      "candidate_trace_file_sha256": "f61e2c5c73335f95b3c8294ddd7785522a3cdb50c7beae3bed8ea263a3de8f04",
+      "parent_trace_file_sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "parent_finished": true,
+      "parent_lap_time_ms": 18720,
+      "candidate_finished": true,
+      "candidate_lap_time_ms": 18800,
+      "delta_ms": 80,
+      "first_action_difference_step": 166,
+      "parent_action_at_difference": [
+        0.05233971029520035,
+        0.30000001192092896,
+        0.0
+      ],
+      "candidate_action_at_difference": [
+        0.05151161924004555,
+        1.0,
+        0.0
+      ],
+      "candidate_trace_file_sha256": "ebc729fba0e69b34d5e27b124a9de6de0d9949308edb9b284101f757286b21fc",
+      "parent_trace_file_sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "parent_finished": true,
+      "parent_lap_time_ms": 16560,
+      "candidate_finished": true,
+      "candidate_lap_time_ms": 16740,
+      "delta_ms": 180,
+      "first_action_difference_step": 41,
+      "parent_action_at_difference": [
+        -0.02714519016444683,
+        0.3499999940395355,
+        0.0
+      ],
+      "candidate_action_at_difference": [
+        -0.02586728148162365,
+        0.3499999940395355,
+        0.0
+      ],
+      "candidate_trace_file_sha256": "04a76336eb1ff181006f7a5f030b3f727b4be5acf1376fcaf02469b8fa868f05",
+      "parent_trace_file_sha256": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "parent_finished": true,
+      "parent_lap_time_ms": 18140,
+      "candidate_finished": false,
+      "candidate_lap_time_ms": null,
+      "delta_ms": null,
+      "first_action_difference_step": 22,
+      "parent_action_at_difference": [
+        -0.16004182398319244,
+        0.1599999964237213,
+        0.0
+      ],
+      "candidate_action_at_difference": [
+        -0.12476662546396255,
+        0.1599999964237213,
+        0.0
+      ],
+      "candidate_trace_file_sha256": "fa6ab735536683fd98ea154a4ea42c09cef96e779a310fa12772e03efd1184f2",
+      "parent_trace_file_sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67"
+    }
+  ],
+  "interpretation": "Perception lead is observed in saved parent cameras, but this fixed integration slows first3 and loses mandatory track4. No pace/completion gain is supported. Trace divergence alone does not establish the later road-loss cause."
+}
