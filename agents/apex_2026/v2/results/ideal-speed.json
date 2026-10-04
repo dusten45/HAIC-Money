@@ -1,0 +1,1461 @@
+{
+  "schema_version": 1,
+  "scope": "P1 required4 observed GPS trajectories only; zero resets; no new holdout access",
+  "analysis_sha256": "802c1856e5382d69ee0a72523d29fbbe8705216c999908c5667bab374adbbb7f",
+  "public_dynamics_sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+  "mass_measurement_source": "agents/apex_2026/results/feasibility.json",
+  "mass_measurement_source_sha256": "bc48e94e8e69fa9a42eab3364395433d8321bab283de50d05240a7fb795b3d91",
+  "resolution_m": 0.5,
+  "constants": {
+    "total_mass": 7.3019199669361115,
+    "wheel_rotational_inertia": 1.6,
+    "wheel_radius": 0.54,
+    "rolling_effective_mass": 29.249793766661764,
+    "engine_acceleration_numerator": 2735.0620191784787,
+    "engine_acceleration_denominator_offset": 2.7,
+    "four_wheel_total_friction_COM_accel": 219.1204515038475,
+    "rear_pair_friction_COM_accel": 109.56022575192375,
+    "rolling_brake_acceleration_per_unit_command": 303.8957799087198
+  },
+  "assumptions": [
+    "Fixed GPS chord path, including actual deviations, truncated at true finish timestamp; not centerline or a globally shortest legal path.",
+    "GPS curvature estimated from three-point circumcircles; quadratic spatial fits with8m/16m radius are sensitivity checks that may erase real curvature. Endpoints extrapolate nearest curvature.",
+    "Initial measured speed, unrestricted terminal speed. Global future curvature known; ideal instantaneous tracking, no steering limits, no obstacles, no damage, no grass, no throttle ramp.",
+    "Independent lateral and longitudinal bounds deliberately omit their shared friction circle and axle torque/traction allocation: optimistic relaxation, not dynamically feasible.",
+    "Engine acceleration2735/(v+2.7) uses rolling effective mass M+4I/r\u00b2. It is an approximate steady rolling model, not a universal transient bound. Driven rear-pair COM friction clips acceleration at2F/M.",
+    "Braking219m/s\u00b2 is optimistic4F/M COM bound. Partial-brake rolling relation\u2248303.9*b is not applicable at b>=.9, which locks wheel angular velocity. Simultaneous cornering reduces available braking.",
+    "max100 retains approximate Box2D2m/raw20ms translation restriction. maxNone explicitly removes that official numerical restriction: engine-only counterfactual, NOT an official permitted speed upgrade.",
+    "Neither baseline nor mechanics result is a guaranteed lower bound or executable lap. Finite GPS sampling, curvature fits, rolling approximation and ideal tracking can bias in either direction.",
+    "Marginal savings ranges compare factorial settings; they overlap and must not be summed. Actual minus baseline proxy is not an identified removable controller loss."
+  ],
+  "episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "observed_lap_s": 16.78,
+      "source_receipt": "/tmp/apex-final-frozen/required/t1-s516237.json",
+      "receipt_sha256": "05a233db5648d6050e74ed1b1e2690186eaf47134eae09206b240bf685d03a2d",
+      "trace_sha256": "08f99eef41c37313049ae057e0343f409f88ddddb12efde3aa9caf121bcb24ef",
+      "observed_chord_distance_m": 982.8545402304434,
+      "initial_speed_m_s": 8.400719036912778e-11,
+      "curvature_sensitivity": {
+        "None": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.012215362191633087,
+            0.04374202610652891,
+            0.06210686428984001
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 15.942235922136573,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                87.15152247870155
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 15.942235922136573,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                87.15152247870155
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.538403218363324,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                94.0768274903732
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.538403218363324,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                94.0768274903732
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 12.38869458225354,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 12.337952748042504,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                110.14361367327278
+              ],
+              "fraction_distance_speed_gt100": 0.12970498474059008
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 12.177679790692334,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 12.074880409922567,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                114.91866842685724
+              ],
+              "fraction_distance_speed_gt100": 0.20142421159715163
+            }
+          },
+          "baseline_proxy_s": 15.942235922136573,
+          "mechanics_capped_proxy_s": 12.177679790692334,
+          "mechanics_unbounded_counterfactual_s": 12.074880409922567,
+          "observed_minus_baseline_proxy_s": 0.8377640778634277,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.3607234276709903,
+              "maximum_s": 3.6042831740940695
+            },
+            "braking": {
+              "minimum_s": 0.2110147915612064,
+              "maximum_s": 0.403832703773249
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.10279938076976691
+            }
+          }
+        },
+        "8.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.01214411830124474,
+            0.04500607205323951,
+            0.06266834635121214
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 16.026224652489333,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                87.07130200598004
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 16.026224652489333,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                87.07130200598004
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.617580341421881,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                93.95760523760812
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.617580341421881,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                93.95760523760812
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 12.434039823979386,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 12.382790314204158,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                110.37759562641271
+              ],
+              "fraction_distance_speed_gt100": 0.12970498474059014
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 12.212055727022108,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 12.112955796839959,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                114.69979135694315
+              ],
+              "fraction_distance_speed_gt100": 0.1963377416073246
+            }
+          },
+          "baseline_proxy_s": 16.026224652489333,
+          "mechanics_capped_proxy_s": 12.212055727022108,
+          "mechanics_unbounded_counterfactual_s": 12.112955796839959,
+          "observed_minus_baseline_proxy_s": 0.7537753475106683,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.4055246143997735,
+              "maximum_s": 3.643434338285175
+            },
+            "braking": {
+              "minimum_s": 0.2219840969572786,
+              "maximum_s": 0.4086443110674516
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.09909993018214891
+            }
+          }
+        },
+        "16.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.011427350320747619,
+            0.043258222610714145,
+            0.065321571362696
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 15.563918638728076,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                89.79027662585716
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 15.563918638728076,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                89.79027662585716
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.197316248700133,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                93.84671092678023
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.197316248700133,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                93.84671092678023
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 12.271635173702538,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 12.158036600796697,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                113.4780754407099
+              ],
+              "fraction_distance_speed_gt100": 0.20803662258392674
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 12.06701954525711,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 11.89738681712252,
+              "speed_min_max_m_s": [
+                8.400719036912778e-11,
+                116.8033914074512
+              ],
+              "fraction_distance_speed_gt100": 0.28026449643947093
+            }
+          },
+          "baseline_proxy_s": 15.563918638728076,
+          "mechanics_capped_proxy_s": 12.06701954525711,
+          "mechanics_unbounded_counterfactual_s": 11.89738681712252,
+          "observed_minus_baseline_proxy_s": 1.2160813612719252,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.1302967034430225,
+              "maximum_s": 3.405882037931379
+            },
+            "braking": {
+              "minimum_s": 0.2046156284454277,
+              "maximum_s": 0.3666023900279427
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.16963272813459085
+            }
+          }
+        }
+      }
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "observed_lap_s": 20.68,
+      "source_receipt": "/tmp/apex-final-frozen/required/t2-s644062.json",
+      "receipt_sha256": "ba861510e77eea6eee42e34904d19893d27f8c475cce0decd88fd59958510fbd",
+      "trace_sha256": "4039022fe2ac0ec2e033d9b77b513c0e905e190e9c07f6f996d30ede68fbd400",
+      "observed_chord_distance_m": 1187.0568027275087,
+      "initial_speed_m_s": 6.277208398515288e-11,
+      "curvature_sensitivity": {
+        "None": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.014358370777560914,
+            0.055376017004355044,
+            0.09500455448119823
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 20.358663782211288,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.97675717378779
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 20.358663782211288,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.97675717378779
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 19.760671497960452,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 19.750531342804905,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                106.78569120881788
+              ],
+              "fraction_distance_speed_gt100": 0.025684210526315792
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 15.834224691443517,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 15.81540132019666,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                107.85370138610298
+              ],
+              "fraction_distance_speed_gt100": 0.04926315789473682
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.451560726050241,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.391581670425328,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                113.65026022210674
+              ],
+              "fraction_distance_speed_gt100": 0.09431578947368424
+            }
+          },
+          "baseline_proxy_s": 20.358663782211288,
+          "mechanics_capped_proxy_s": 15.451560726050241,
+          "mechanics_unbounded_counterfactual_s": 15.391581670425328,
+          "observed_minus_baseline_proxy_s": 0.321336217788712,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 4.309110771910211,
+              "maximum_s": 4.543262462014628
+            },
+            "braking": {
+              "minimum_s": 0.3826639653932755,
+              "maximum_s": 0.6081324394063827
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.0599790556249129
+            }
+          }
+        },
+        "8.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.015061255945373657,
+            0.05649791828920821,
+            0.09478719454211763
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 20.491850579724762,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.82049974945741
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 20.491850579724762,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.82049974945741
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 19.8851444115868,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 19.87542418251001,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                106.6420062242674
+              ],
+              "fraction_distance_speed_gt100": 0.024842105263157898
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 15.849852318192287,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 15.831063909093434,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                107.60797069346994
+              ],
+              "fraction_distance_speed_gt100": 0.050526315789473614
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.473867577814028,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.413794952261078,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                113.49076253600795
+              ],
+              "fraction_distance_speed_gt100": 0.1002105263157896
+            }
+          },
+          "baseline_proxy_s": 20.491850579724762,
+          "mechanics_capped_proxy_s": 15.473867577814028,
+          "mechanics_unbounded_counterfactual_s": 15.413794952261078,
+          "observed_minus_baseline_proxy_s": 0.18814942027523784,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 4.411276833772773,
+              "maximum_s": 4.660786670631328
+            },
+            "braking": {
+              "minimum_s": 0.375984740378259,
+              "maximum_s": 0.6164263972147523
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.06007262555294979
+            }
+          }
+        },
+        "16.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.01502105084802732,
+            0.05572935555563295,
+            0.09850442113595398
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 20.14573338368,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.78559172638286
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 20.14573338368,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                98.78559172638286
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 19.606780883355942,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 19.597705480112378,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                106.3768609980678
+              ],
+              "fraction_distance_speed_gt100": 0.02442105263157895
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 15.675527026938166,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 15.64935534541544,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                107.39313550128442
+              ],
+              "fraction_distance_speed_gt100": 0.06989473684210527
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 15.327260094957882,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 15.24964421164107,
+              "speed_min_max_m_s": [
+                6.277208398515288e-11,
+                112.99612965305984
+              ],
+              "fraction_distance_speed_gt100": 0.12757894736842104
+            }
+          },
+          "baseline_proxy_s": 20.14573338368,
+          "mechanics_capped_proxy_s": 15.327260094957882,
+          "mechanics_unbounded_counterfactual_s": 15.24964421164107,
+          "observed_minus_baseline_proxy_s": 0.53426661632,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 4.2795207883980595,
+              "maximum_s": 4.4963780382645595
+            },
+            "braking": {
+              "minimum_s": 0.3482669319802838,
+              "maximum_s": 0.5480279035676219
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.07761588331681146
+            }
+          }
+        }
+      }
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "observed_lap_s": 18.56,
+      "source_receipt": "/tmp/apex-final-frozen/required/t3-s1007.json",
+      "receipt_sha256": "972ebfa379d17e1bb302f39934a26061cb81d8573a7d7c425fed3e0227d7103c",
+      "trace_sha256": "ff3d66e5d1a3feb778371c240b6f00742dd6a97bee0f9d4cea5fff35632b10d0",
+      "observed_chord_distance_m": 1093.1033416578814,
+      "initial_speed_m_s": 1.0624401161491337e-10,
+      "curvature_sensitivity": {
+        "None": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.012930044730450925,
+            0.051318788498967975,
+            0.09182501871043558
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 18.202877617378896,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                94.96599575891338
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 18.202877617378896,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                94.96599575891338
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 17.719437971433344,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 17.719411932945135,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.26938140063757
+              ],
+              "fraction_distance_speed_gt100": 0.0013717421124828755
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 14.199583828470516,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 14.128743468324387,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                112.95491821725518
+              ],
+              "fraction_distance_speed_gt100": 0.13854595336076816
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.941834411599483,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.789621916515827,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                120.21496300929485
+              ],
+              "fraction_distance_speed_gt100": 0.2208504801097394
+            }
+          },
+          "baseline_proxy_s": 18.202877617378896,
+          "mechanics_capped_proxy_s": 13.941834411599483,
+          "mechanics_unbounded_counterfactual_s": 13.789621916515827,
+          "observed_minus_baseline_proxy_s": 0.3571223826211032,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.77760355983386,
+              "maximum_s": 4.074134149054508
+            },
+            "braking": {
+              "minimum_s": 0.25774941687103237,
+              "maximum_s": 0.48346568443376015
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.1522124950836563
+            }
+          }
+        },
+        "8.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.012879562242573379,
+            0.05239311156068252,
+            0.09062372541682202
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 18.30649535676553,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                94.63513335849171
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 18.30649535676553,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                94.63513335849171
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 17.807165670761137,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                99.9723106341132
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 17.807165670761137,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                99.9723106341132
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 14.240419110743446,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 14.172017080429566,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                112.8166002439878
+              ],
+              "fraction_distance_speed_gt100": 0.13625971650663013
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.97108270107679,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.822131331473734,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                120.07753039963376
+              ],
+              "fraction_distance_speed_gt100": 0.21810699588477359
+            }
+          },
+          "baseline_proxy_s": 18.30649535676553,
+          "mechanics_capped_proxy_s": 13.97108270107679,
+          "mechanics_unbounded_counterfactual_s": 13.822131331473734,
+          "observed_minus_baseline_proxy_s": 0.25350464323446786,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.8360829696843464,
+              "maximum_s": 4.134478276335965
+            },
+            "braking": {
+              "minimum_s": 0.2693364096666553,
+              "maximum_s": 0.4993296860043941
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.148951369603056
+            }
+          }
+        },
+        "16.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.012409660165279347,
+            0.0524668560410917,
+            0.09430824193519112
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 18.086333167848878,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                96.38253547198245
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 18.086333167848878,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                96.38253547198245
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 17.60676425538855,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 17.606736317565503,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.24887532681686
+              ],
+              "fraction_distance_speed_gt100": 0.0018289894833105182
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 14.266991463362782,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 14.177111847375164,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                114.95910886096517
+              ],
+              "fraction_distance_speed_gt100": 0.13351623228166448
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.99325893516798,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.79825042830459,
+              "speed_min_max_m_s": [
+                1.0624401161491337e-10,
+                122.62863844423399
+              ],
+              "fraction_distance_speed_gt100": 0.21764974851394603
+            }
+          },
+          "baseline_proxy_s": 18.086333167848878,
+          "mechanics_capped_proxy_s": 13.99325893516798,
+          "mechanics_unbounded_counterfactual_s": 13.79825042830459,
+          "observed_minus_baseline_proxy_s": 0.47366683215112104,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.613505320220572,
+              "maximum_s": 3.909221320473714
+            },
+            "braking": {
+              "minimum_s": 0.2737325281948024,
+              "maximum_s": 0.4795968502833752
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.19500850686339
+            }
+          }
+        }
+      }
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "observed_lap_s": 18.1,
+      "source_receipt": "/tmp/apex-final-frozen/required/t4-s18800.json",
+      "receipt_sha256": "60a07286e0717112d06aae0b0db7c2bb15e158be28cdaf1418c4e58cedd30336",
+      "trace_sha256": "cd19a24ab06c2ff22a49e7139e4ed72d6361a6f1cc2e441dfb8a2f613136676f",
+      "observed_chord_distance_m": 996.6306615998029,
+      "initial_speed_m_s": 8.5487536571298e-11,
+      "curvature_sensitivity": {
+        "None": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.017424880149252583,
+            0.058515292484711885,
+            0.12003831296486497
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 17.590145235342924,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                99.1780457919593
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 17.590145235342924,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                99.1780457919593
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 17.230443222682737,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 17.22522626370261,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                104.80957842014992
+              ],
+              "fraction_distance_speed_gt100": 0.021564694082246743
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 13.572623913910347,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 13.490629301188484,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                115.64638490276411
+              ],
+              "fraction_distance_speed_gt100": 0.11033099297893682
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.264971384230883,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.12922883904708,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                117.41732403985861
+              ],
+              "fraction_distance_speed_gt100": 0.17001003009027088
+            }
+          },
+          "baseline_proxy_s": 17.590145235342924,
+          "mechanics_capped_proxy_s": 13.264971384230883,
+          "mechanics_unbounded_counterfactual_s": 13.12922883904708,
+          "observed_minus_baseline_proxy_s": 0.5098547646570779,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.9654718384518546,
+              "maximum_s": 4.099515934154439
+            },
+            "braking": {
+              "minimum_s": 0.3076525296794639,
+              "maximum_s": 0.3649189716403143
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.13574254518380258
+            }
+          }
+        },
+        "8.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.017901878402937076,
+            0.06030041501928281,
+            0.10761475433807369
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 17.657364135179165,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                99.12990490974273
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 17.657364135179165,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                99.12990490974273
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 17.278431802346866,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 17.2733182431612,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                104.76641352694958
+              ],
+              "fraction_distance_speed_gt100": 0.021564694082246743
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 13.588623239395176,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 13.509112825716054,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                115.54499650388577
+              ],
+              "fraction_distance_speed_gt100": 0.10832497492477429
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.275831612524767,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.142167058143581,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                117.31894085280433
+              ],
+              "fraction_distance_speed_gt100": 0.16700100300902707
+            }
+          },
+          "baseline_proxy_s": 17.657364135179165,
+          "mechanics_capped_proxy_s": 13.275831612524767,
+          "mechanics_unbounded_counterfactual_s": 13.142167058143581,
+          "observed_minus_baseline_proxy_s": 0.4426358648208364,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 4.002600189822099,
+              "maximum_s": 4.148251309463111
+            },
+            "braking": {
+              "minimum_s": 0.31279162687040873,
+              "maximum_s": 0.3840458920179657
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0,
+              "maximum_s": 0.13366455438118585
+            }
+          }
+        },
+        "16.0": {
+          "curvature_abs_per_m_p50_p90_max": [
+            0.015540065156029785,
+            0.06258692775819294,
+            0.0989534123054918
+          ],
+          "scenarios": {
+            "lat100.000_brake65.000_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 17.27405092894543,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake65.000_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 17.272510484871482,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                102.3910274195045
+              ],
+              "fraction_distance_speed_gt100": 0.013039117352056172
+            },
+            "lat100.000_brake219.120_max100.0": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 16.905562924692784,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat100.000_brake219.120_maxNone": {
+              "lateral_accel": 100.0,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 16.89416835927767,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                107.12622071138861
+              ],
+              "fraction_distance_speed_gt100": 0.03259779338014042
+            },
+            "lat219.120_brake65.000_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": 100.0,
+              "time_s": 13.53599362989683,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake65.000_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 65.0,
+              "speed_limit": null,
+              "time_s": 13.445159714165667,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                117.7603825350569
+              ],
+              "fraction_distance_speed_gt100": 0.10932798395185558
+            },
+            "lat219.120_brake219.120_max100.0": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": 100.0,
+              "time_s": 13.249548472985568,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                100.0
+              ],
+              "fraction_distance_speed_gt100": 0.0
+            },
+            "lat219.120_brake219.120_maxNone": {
+              "lateral_accel": 219.1204515038475,
+              "brake_accel": 219.1204515038475,
+              "speed_limit": null,
+              "time_s": 13.08274102399668,
+              "speed_min_max_m_s": [
+                8.5487536571298e-11,
+                123.45130075300955
+              ],
+              "fraction_distance_speed_gt100": 0.1720160481444333
+            }
+          },
+          "baseline_proxy_s": 17.27405092894543,
+          "mechanics_capped_proxy_s": 13.249548472985568,
+          "mechanics_unbounded_counterfactual_s": 13.08274102399668,
+          "observed_minus_baseline_proxy_s": 0.8259490710545698,
+          "axis_saving_range_across_other_factor_settings_s": {
+            "lateral": {
+              "minimum_s": 3.6560144517072164,
+              "maximum_s": 3.8273507707058148
+            },
+            "braking": {
+              "minimum_s": 0.2864451569112614,
+              "maximum_s": 0.37834212559381086
+            },
+            "speed_limiter": {
+              "minimum_s": 0.0015404440739494873,
+              "maximum_s": 0.16680744898888733
+            }
+          }
+        }
+      }
+    }
+  ]
+}

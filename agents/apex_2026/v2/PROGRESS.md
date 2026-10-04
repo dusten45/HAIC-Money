@@ -28,3 +28,27 @@ Four focused tests pass for the brake/actuator probes. They check branch behavio
 not physical guarantees; actual simulation receipts determine rejection.
 Ongoing work targets duplicated obstacle clearance and state-aware physical
 prediction. Neither has yet established a matched improvement.
+
+Further isolated screens preserve the same conclusion:
+
+| Candidate | Required finishes | Required laps, seconds | Prior failure probes |
+|---|---:|---|---:|
+| Current calibrated HUD | 3/4 | 16.48 / 20.04 / 18.38 / DNF | 1/2 |
+| HUD + measured-yaw/wheel throttle cap | 4/4 | 16.54 / 20.32 / 18.44 / 18.52 | 0/2 |
+| Internal physics pedal allocator | 1/4 | DNF / 21.50 / DNF / DNF | 0/2 |
+
+These are new simulations, recorded in speed-experiments.json,
+yaw-experiments.json and exact-pedal-r0.json. The yaw variant's required mean
+18.455s is a small speed gain, not a matched generalization improvement.
+
+No-reset [speed-budget diagnosis](results/speed-budget.json) attributes71–83%
+of required driving time to path/tracking curvature limits. Apparent unnecessary
+braking occupies only0–0.40s perlap, so a scalar pedal fix cannot explain the
+3.78–7.68s reductions needed for13s. Racing-line and continuation planning are
+the next structural hypotheses; observation accuracy alone is insufficient.
+
+The independent internal physics helper uses the public force equations, but its
+state reconstruction is approximate. Reverse or saturated wheel indicators are
+ambiguous; joint angular rates, contact and damage are not fully observed.
+The published0.4s residual audit uses zero slip when flow fails, while controllers
+may propagate modeled slip. It does not validate long dropout sequences.
