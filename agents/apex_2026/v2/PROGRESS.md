@@ -91,7 +91,8 @@ Terrain r8 finishes22/24 consumed regression cells (20 new episodes plus four
 source-matched screen receipts), with finished median16.59s. Required mean18.205s
 is faster, but the24/24 completion gate fails. Ground-observation r9 corrects
 vehicle-sprite contamination using historical public frames; its8/8 screen and
-required mean18.28s do not yet establish full regression performance.
+required mean18.28s fall to21/24 in full regression. It rescues one r8 failure
+but loses two r8 successes, so the observation change is not adopted.
 
 Beam r3 ranks each action prefix using a feedback continuation to the same
 0.64s horizon, correcting a reproduced premature-pruning counterexample.

@@ -1,6 +1,6 @@
 # V2 experiment scoreboard
 
-Receipt snapshot: 2026-10-04T20:26:01.458674+00:00. No new resets.
+Receipt snapshot: 2026-10-04T20:34:41.311430+00:00. No new resets.
 
 Explicit planned scopes retain missing and started cells. DNF means completed without a finish. Required4 coverage is reported even for smaller diagnostic allocations. Each source + exact config is separate; source/dependency verification failures invalidate aggregate finish claims.
 
@@ -14,10 +14,11 @@ Explicit planned scopes retain missing and started cells. DNF means completed wi
 | predictive-r1 bb5f395 | 0/4 | DNF / DNF / DNF / DNF | screen6: 0/6 | 0/2 | 0 / 0 | 0 / 0 | 0 |
 | obstacle-shield-r0 070ccc2 | 3/4 | 16.78 / 20.76 / 18.56 / DNF | screen6: 4/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
 | obstacle-steering-r0 1121447 | 4/4 | 16.78 / 20.72 / 18.56 / 17.88 | screen6: 5/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
+| obstacle-road-r0 7b21335 | 4/4 | 16.78 / 20.68 / 18.56 / 17.86 | screen6: 5/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
 | kinematic-r0 7e2087e | 1/4 | 15.42 / DNF / DNF / DNF | screen6: 1/6 | 0/2 | 0 / 0 | 0 / 0 | 0 |
 | beam-r1 acbb747 | 0/4 | DNF / DNF / DNF / DNF | screen6: 0/6 | 0/2 | 0 / 0 | 6 / 0 | 0 |
 | beam-r2 aa2198a | 0/4 | DNF / DNF / DNF / DNF | screen6: 0/6 | 0/2 | 0 / 0 | 0 / 0 | 0 |
-| beam-r3 952c7c0 | 3/4 | 14.04 / 17.24 / 15.80 / pending | screen6: 3/6 | 0/2 | 1 / 2 | 0 / 0 | 0 |
+| beam-r3 952c7c0 | 4/4 | 14.04 / 17.24 / 15.80 / 14.94 | screen6: 5/6 | 1/2 | 1 / 0 | 0 / 0 | 0 |
 | recovery-r0 08c6ff9 | 4/4 | 16.78 / 20.68 / 18.56 / 18.10 | screen6: 4/6 | 0/2 | 0 / 0 | 0 / 0 | 1 |
 | recovery-r1 e83b363 | 4/4 | 16.78 / 20.68 / 18.56 / 18.10 | screen6: 5/6 | 1/2 | 0 / 0 | 0 / 0 | 0 |
 | shield-r0 51775a9 | 3/4 | 21.28 / 28.12 / 25.66 / DNF | screen6: 5/6 | 2/2 | 0 / 0 | 0 / 0 | 1 |
@@ -36,7 +37,7 @@ Explicit planned scopes retain missing and started cells. DNF means completed wi
 | geodesic-r1 dde6bf2 | 4/4 | 18.74 / 22.18 / 20.64 / 19.92 | required4+full_consumed_regression24: 26/28 | 22/24 | 0 / 0 | 0 / 0 | 0 |
 | terrain-r8 f8039f6 | 4/4 | 16.62 / 20.66 / 18.50 / 17.04 | required4+full_consumed_regression24: 26/28 | 22/24 | 0 / 0 | 0 / 0 | 0 |
 | curvature-memory-r0 bfcc592 | 4/4 | 18.30 / 21.66 / 19.98 / 18.06 | screen9: 7/9 | 3/5 | 0 / 0 | 0 / 0 | 0 |
-| terrain-grounded-r9 2361296 | 4/4 | 16.74 / 20.72 / 18.64 / 17.02 | required4+full_consumed_regression24: 8/28 | 4/24 | 1 / 19 | 0 / 0 | 0 |
+| terrain-grounded-r9 2361296 | 4/4 | 16.74 / 20.72 / 18.64 / 17.02 | required4+full_consumed_regression24: 25/28 | 21/24 | 0 / 0 | 0 / 0 | 0 |
 | obstacle-steering-audit 1121447 | 0/4 | — / — / — / — | diagnostic1_not_benchmark: 0/1 | 0/1 | 0 / 0 | 0 / 0 | 0 |
 | curvature-memory-bugfix-untested | 0/4 | — / — / — / — | counterfactual_only_no_driving: 0/0 | — | 0 / 0 | 0 / 0 | awaiting receipts |
 | motion-registration-baseline-diagnostic f54347e | 1/4 | 16.78 / — / — / — | diagnostic1: 1/1 | — | 0 / 0 | 0 / 0 | 0 |
@@ -45,7 +46,7 @@ V1 historical baseline (not new v2 validation):
 - historical_required4: 4/4 finishes; completed 4; missing 0.
 - historical_consumed24: 22/24 finishes; completed 24; missing 0.
 
-Unregistered primary receipts: 6. Add an explicit registry allocation before comparing them.
+Unregistered primary receipts: 0. Add an explicit registry allocation before comparing them.
 
 The geodesic full24 regression includes its two earlier probes exactly once. Overlapping required/screen summaries must not be added together. Retry policy: deduplicate the same episode, then select the earliest started attempt per cell; preserve all attempts, never choose the fastest finish.
 

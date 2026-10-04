@@ -27,7 +27,7 @@ SCREEN8 = SCREEN6+GEODESIC_LOSSES
 def default_registry():
     registry = {}
     six = ['actuator-r0','brake-r0','exact-pedal-r0','force-r0','friction-envelope-r0',
-        'predictive-r1','obstacle-shield-r0','obstacle-steering-r0','kinematic-r0','beam-r1','beam-r2','beam-r3','recovery-r0','recovery-r1','shield-r0','shield-r1','speed-r0','yaw-r0']
+        'predictive-r1','obstacle-shield-r0','obstacle-steering-r0','obstacle-road-r0','kinematic-r0','beam-r1','beam-r2','beam-r3','recovery-r0','recovery-r1','shield-r0','shield-r1','speed-r0','yaw-r0']
     four = ['geodesic-r0','geodesic-frenet-r5','predictive-r0']
     eight = ['fallback-r1','geodesic-r2','geodesic-frenet-r6','geodesic-footprint-r7','racing-r3','racing-r4']
     for names, cells, scope in [(six,SCREEN6,'screen6'),(four,REQUIRED,'required4'),(eight,SCREEN8,'screen8')]:
