@@ -1,0 +1,4271 @@
+{
+  "is_legal_camera_candidate": false,
+  "is_lap_benchmark": false,
+  "new_driving_episodes": 0,
+  "new_holdout_opened": false,
+  "uniform_fixed_cases": 4,
+  "horizon_s": 0.72,
+  "model_sha256": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+  "helper_sha256": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded",
+  "official_sha256": {
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58"
+  },
+  "acceptance_thresholds": {
+    "max_hull_position_error_m": 0.5,
+    "max_speed_error_mps": 3.0,
+    "max_yaw_error_radps": 0.2,
+    "max_front_joint_error_rad": 0.01,
+    "stop_tick_difference_s": 0.04
+  },
+  "all_case_acceptance_passed": true,
+  "limits": [
+    "Exact privileged initial state; no camera estimation uncertainty.",
+    "Uniform asphalt without contacts, grass, damage or camera road boundaries.",
+    "Settled-turn initial speed is the measured value after fixed low-gas warmup, not its nominal starting speed.",
+    "Brake.9 resets axle spin before each tire update; this models a locked-wheel stop, not brake grip reservation.",
+    "A matched fixed tail does not certify geometry feasibility or safe legal predictive controls."
+  ],
+  "classification": "compact_privileged_fixed_uniform_asphalt_full_brake_tail_validation",
+  "compactor_source_sha256": "134c594902c1c222eaecb8c7aa61852126c7b3d93ab5708352ec08d26cc72c97",
+  "full_raw_receipt_sha256": "89501b4d73794db63dcacb654f7259641f155871bfa831696dbfe74a7bc0c026",
+  "fixed_validation_source_sha256": "5eabe53c68e77e9f6f3efafc52ab5e2d9da943c711bcaf5cc2c8e5e2a29cd915",
+  "full_raw_receipt_ignored_path": ".haic-artifacts/apex-speed-20261005/physics-brake-tail/physics-brake-tail-v1.json",
+  "preserved_raw_step_count": 144,
+  "rows": [
+    {
+      "configuration": {
+        "name": "straight70",
+        "nominal_initial_speed_mps": 70.0,
+        "joint": 0.0,
+        "warmup_steps": 0
+      },
+      "actual_initial_summary": {
+        "speed_mps": 70.0,
+        "body_yaw_radps": 0.0,
+        "body_sideslip_deg": 0.0,
+        "front_joint_rad": [
+          0.0,
+          0.0
+        ],
+        "rear_rolling_mps": [
+          70.0,
+          70.0
+        ],
+        "rear_longitudinal_slip_mps": [
+          0.0,
+          0.0
+        ],
+        "wheel_lateral_mps": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wheel_forward_mps": [
+          70.0,
+          70.0,
+          70.0,
+          70.0
+        ],
+        "instant_tire_force_local_N": [
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ]
+        ],
+        "instant_tire_demand_ratio": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "tail_command_world_joint_gas_brake": [
+        0.0,
+        0.0,
+        0.9
+      ],
+      "predicted_stop_speed_half_yaw_tenth_s": 0.32,
+      "actual_stop_speed_half_yaw_tenth_s": 0.32,
+      "maximum_error_over_all36_raw_steps": {
+        "max_hull_position_error_m": 1.0075862193295218e-05,
+        "max_speed_error_mps": 4.9228575022652876e-05,
+        "max_yaw_error_radps": 1.736588181447159e-08,
+        "max_front_joint_error_rad": 1.2889862788245665e-13,
+        "stop_tick_difference_s": 0.0
+      },
+      "acceptance_passed": {
+        "max_hull_position_error_m": true,
+        "max_speed_error_mps": true,
+        "max_yaw_error_radps": true,
+        "max_front_joint_error_rad": true,
+        "stop_tick_difference_s": true
+      },
+      "raw_step_pose_error_speed_yaw_rows": [
+        {
+          "time_s": 0.02,
+          "predicted_hull_xy_m": [
+            -3.83707155661974e-12,
+            1.312351819398461
+          ],
+          "actual_hull_xy_m": [
+            -7.864597861839684e-12,
+            1.3123518228530884
+          ],
+          "predicted_speed_mps": 65.61759096992304,
+          "actual_speed_mps": 65.61759185791016,
+          "predicted_body_yaw_radps": 2.3844835756213333e-09,
+          "actual_body_yaw_radps": 8.385085958906302e-10,
+          "predicted_integrated_relative_heading_rad": 4.768967151242667e-11,
+          "actual_integrated_relative_heading_rad": 1.6770171917812604e-11,
+          "absolute_error": {
+            "speed_error_mps": 8.879871131739492e-07,
+            "yaw_error_radps": 1.5459749797307031e-09,
+            "body_sideslip_error_deg": 2.055861881096927e-09,
+            "front_joint_error_rad": 1.2889862788245665e-13,
+            "rear_longitudinal_slip_error_mps": 8.906100390504434e-07,
+            "max_per_tire_force_vector_error_N": 2.956694920566555e-08,
+            "hull_position_error_m": 3.4546298206914793e-09,
+            "hull_angle_error_rad": 3.091949945583619e-11
+          }
+        },
+        {
+          "time_s": 0.04,
+          "predicted_hull_xy_m": [
+            -1.1069869814552604e-11,
+            2.5370554581953826
+          ],
+          "actual_hull_xy_m": [
+            -1.3854140057389941e-11,
+            2.537055492401123
+          ],
+          "predicted_speed_mps": 61.23518193984609,
+          "actual_speed_mps": 61.23517608642578,
+          "predicted_body_yaw_radps": 4.614367631653439e-09,
+          "actual_body_yaw_radps": -1.6409306205500407e-11,
+          "predicted_integrated_relative_heading_rad": 1.3997702414549544e-10,
+          "actual_integrated_relative_heading_rad": 1.6441985793702596e-11,
+          "absolute_error": {
+            "speed_error_mps": 5.853420312007529e-06,
+            "yaw_error_radps": 4.630776937858939e-09,
+            "body_sideslip_error_deg": 7.368491848013427e-09,
+            "front_joint_error_rad": 2.5240226575462543e-15,
+            "rear_longitudinal_slip_error_mps": 5.858496116672995e-06,
+            "max_per_tire_force_vector_error_N": 1.0102590019698355e-07,
+            "hull_position_error_m": 3.4205740575628614e-08,
+            "hull_angle_error_rad": 1.235350374844311e-10
+          }
+        },
+        {
+          "time_s": 0.06,
+          "predicted_hull_xy_m": [
+            -2.1245020587999528e-11,
+            3.6741109163907657
+          ],
+          "actual_hull_xy_m": [
+            -1.9443668897167754e-11,
+            3.6741106510162354
+          ],
+          "predicted_speed_mps": 56.85277290976914,
+          "actual_speed_mps": 56.852760314941406,
+          "predicted_body_yaw_radps": 6.68242698143511e-09,
+          "actual_body_yaw_radps": 1.7493284381817076e-12,
+          "predicted_integrated_relative_heading_rad": 2.7362556377419765e-10,
+          "actual_integrated_relative_heading_rad": 1.647697236246623e-11,
+          "absolute_error": {
+            "speed_error_mps": 1.2594827737189007e-05,
+            "yaw_error_radps": 6.6806776529969285e-09,
+            "body_sideslip_error_deg": 1.5044169391470918e-08,
+            "front_joint_error_rad": 2.5500435096859064e-16,
+            "rear_longitudinal_slip_error_mps": 1.2602178408371856e-05,
+            "max_per_tire_force_vector_error_N": 1.8302517374668742e-07,
+            "hull_position_error_m": 2.6537453035658443e-07,
+            "hull_angle_error_rad": 2.57148577332282e-10
+          }
+        },
+        {
+          "time_s": 0.08,
+          "predicted_hull_xy_m": [
+            -3.3893739180725256e-11,
+            4.72351819398461
+          ],
+          "actual_hull_xy_m": [
+            -2.459943360122452e-11,
+            4.723517417907715
+          ],
+          "predicted_speed_mps": 52.470363879692194,
+          "actual_speed_mps": 52.47034454345703,
+          "predicted_body_yaw_radps": 8.578955337813236e-09,
+          "actual_body_yaw_radps": -3.934757725264186e-14,
+          "predicted_integrated_relative_heading_rad": 4.4520467053046234e-10,
+          "actual_integrated_relative_heading_rad": 1.6476185410921174e-11,
+          "absolute_error": {
+            "speed_error_mps": 1.9336235162370485e-05,
+            "yaw_error_radps": 8.578994685390488e-09,
+            "body_sideslip_error_deg": 2.4908974704654567e-08,
+            "front_joint_error_rad": 4.336808689942018e-17,
+            "rear_longitudinal_slip_error_mps": 1.9345672015447235e-05,
+            "max_per_tire_force_vector_error_N": 2.837778498775067e-07,
+            "hull_position_error_m": 7.760768952481999e-07,
+            "hull_angle_error_rad": 4.2872851675581516e-10
+          }
+        },
+        {
+          "time_s": 0.1,
+          "predicted_hull_xy_m": [
+            -4.852799830721005e-11,
+            5.685277290976915
+          ],
+          "actual_hull_xy_m": [
+            -2.932465381633165e-11,
+            5.685276031494141
+          ],
+          "predicted_speed_mps": 48.087954849615244,
+          "actual_speed_mps": 48.087928771972656,
+          "predicted_body_yaw_radps": 1.0291234199418306e-08,
+          "actual_body_yaw_radps": 4.8355408422524025e-15,
+          "predicted_integrated_relative_heading_rad": 6.510293545188285e-10,
+          "actual_integrated_relative_heading_rad": 1.647628212173802e-11,
+          "absolute_error": {
+            "speed_error_mps": 2.6077642587551964e-05,
+            "yaw_error_radps": 1.0291229363877464e-08,
+            "body_sideslip_error_deg": 3.67534699841348e-08,
+            "front_joint_error_rad": 1.3877787807814457e-17,
+            "rear_longitudinal_slip_error_mps": 2.6088962947312666e-05,
+            "max_per_tire_force_vector_error_N": 4.0228671293422305e-07,
+            "hull_position_error_m": 1.2594827742205688e-06,
+            "hull_angle_error_rad": 6.345530897218789e-10
+          }
+        },
+        {
+          "time_s": 0.12,
+          "predicted_hull_xy_m": [
+            -6.463614106431889e-11,
+            6.559388207367681
+          ],
+          "actual_hull_xy_m": [
+            -3.361932954248914e-11,
+            6.559386253356934
+          ],
+          "predicted_speed_mps": 43.705545819538294,
+          "actual_speed_mps": 43.70551300048828,
+          "predicted_body_yaw_radps": 1.1802809240831192e-08,
+          "actual_body_yaw_radps": -1.3051057181514658e-16,
+          "predicted_integrated_relative_heading_rad": 8.870855393354524e-10,
+          "actual_integrated_relative_heading_rad": 1.6476279511526583e-11,
+          "absolute_error": {
+            "speed_error_mps": 3.281905001273344e-05,
+            "yaw_error_radps": 1.1802809371341764e-08,
+            "body_sideslip_error_deg": 5.0352827951238225e-08,
+            "front_joint_error_rad": 3.469446951953614e-18,
+            "rear_longitudinal_slip_error_mps": 3.283203310644467e-05,
+            "max_per_tire_force_vector_error_N": 5.379378605967432e-07,
+            "hull_position_error_m": 1.954010747231262e-06,
+            "hull_angle_error_rad": 8.706092745385027e-10
+          }
+        },
+        {
+          "time_s": 0.14,
+          "predicted_hull_xy_m": [
+            -8.167781365319627e-11,
+            7.345850943156908
+          ],
+          "actual_hull_xy_m": [
+            -3.7483349757394535e-11,
+            7.345848083496094
+          ],
+          "predicted_speed_mps": 39.323136789461344,
+          "actual_speed_mps": 39.323097229003906,
+          "predicted_body_yaw_radps": 1.3092482406278818e-08,
+          "actual_body_yaw_radps": 1.7046149288604894e-17,
+          "predicted_integrated_relative_heading_rad": 1.1489351874610287e-09,
+          "actual_integrated_relative_heading_rad": 1.647627985244957e-11,
+          "absolute_error": {
+            "speed_error_mps": 3.956045743791492e-05,
+            "yaw_error_radps": 1.3092482389232668e-08,
+            "body_sideslip_error_deg": 6.545996308703728e-08,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.957485916572523e-05,
+            "max_per_tire_force_vector_error_N": 6.902880148282996e-07,
+            "hull_position_error_m": 2.8596608142668025e-06,
+            "hull_angle_error_rad": 1.132458922664079e-09
+          }
+        },
+        {
+          "time_s": 0.16,
+          "predicted_hull_xy_m": [
+            -9.90780676605766e-11,
+            8.044665498344596
+          ],
+          "actual_hull_xy_m": [
+            -4.091671446104783e-11,
+            8.044661521911621
+          ],
+          "predicted_speed_mps": 34.940727759384394,
+          "actual_speed_mps": 34.94068145751953,
+          "predicted_body_yaw_radps": 1.413286540159844e-08,
+          "actual_body_yaw_radps": -2.599519583240613e-22,
+          "predicted_integrated_relative_heading_rad": 1.4315924954929976e-09,
+          "actual_integrated_relative_heading_rad": 1.647627985244437e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.63018648630964e-05,
+            "yaw_error_radps": 1.41328654015987e-08,
+            "body_sideslip_error_deg": 8.179969107617425e-08,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 4.6317411012353205e-05,
+            "max_per_tire_force_vector_error_N": 8.592459641187724e-07,
+            "hull_position_error_m": 3.976432975320154e-06,
+            "hull_angle_error_rad": 1.415116230696048e-09
+          }
+        },
+        {
+          "time_s": 0.18,
+          "predicted_hull_xy_m": [
+            -1.162204527211111e-10,
+            8.655831872930746
+          ],
+          "actual_hull_xy_m": [
+            -4.392997077218297e-11,
+            8.655826568603516
+          ],
+          "predicted_speed_mps": 30.558318729307445,
+          "actual_speed_mps": 30.558269500732422,
+          "predicted_body_yaw_radps": 1.4888218708962905e-08,
+          "actual_body_yaw_radps": 6.4960168320860046e-12,
+          "predicted_integrated_relative_heading_rad": 1.7293568696722558e-09,
+          "actual_integrated_relative_heading_rad": 1.660620018908609e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.9228575022652876e-05,
+            "yaw_error_radps": 1.4881722692130819e-08,
+            "body_sideslip_error_deg": 9.905383071943723e-08,
+            "front_joint_error_rad": 1.0234868508263162e-15,
+            "rear_longitudinal_slip_error_mps": 4.92449520592686e-05,
+            "max_per_tire_force_vector_error_N": 1.0451874867981256e-06,
+            "hull_position_error_m": 5.304327230386211e-06,
+            "hull_angle_error_rad": 1.712750708781425e-09
+          }
+        },
+        {
+          "time_s": 0.2,
+          "predicted_hull_xy_m": [
+            -1.3243893479889722e-10,
+            9.179350066915354
+          ],
+          "actual_hull_xy_m": [
+            -4.651146134904138e-11,
+            9.179344177246094
+          ],
+          "predicted_speed_mps": 26.175909699230495,
+          "actual_speed_mps": 26.175861358642578,
+          "predicted_body_yaw_radps": 1.5311075610763157e-08,
+          "actual_body_yaw_radps": 6.46473673204806e-12,
+          "predicted_integrated_relative_heading_rad": 2.035578381887519e-09,
+          "actual_integrated_relative_heading_rad": 1.673549492372705e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.8340587916584354e-05,
+            "yaw_error_radps": 1.530461087403111e-08,
+            "body_sideslip_error_deg": 1.1687406826420518e-07,
+            "front_joint_error_rad": 9.471590178833367e-16,
+            "rear_longitudinal_slip_error_mps": 4.835743009579119e-05,
+            "max_per_tire_force_vector_error_N": 1.2503103433741337e-06,
+            "hull_position_error_m": 5.889669261365904e-06,
+            "hull_angle_error_rad": 2.0188428800143194e-09
+          }
+        },
+        {
+          "time_s": 0.22,
+          "predicted_hull_xy_m": [
+            -1.470085952654972e-10,
+            9.615220080298425
+          ],
+          "actual_hull_xy_m": [
+            -4.8682391451393414e-11,
+            9.615213394165039
+          ],
+          "predicted_speed_mps": 21.793500669153545,
+          "actual_speed_mps": 21.793453216552734,
+          "predicted_body_yaw_radps": 1.5336641537266922e-08,
+          "actual_body_yaw_radps": 1.9493020045335818e-11,
+          "predicted_integrated_relative_heading_rad": 2.3423112126328573e-09,
+          "actual_integrated_relative_heading_rad": 1.712535532463377e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.745260081051583e-05,
+            "yaw_error_radps": 1.5317148517221586e-08,
+            "body_sideslip_error_deg": 1.3483351976777851e-07,
+            "front_joint_error_rad": 2.9472951856845953e-15,
+            "rear_longitudinal_slip_error_mps": 4.746947111300415e-05,
+            "max_per_tire_force_vector_error_N": 1.478670954587691e-06,
+            "hull_position_error_m": 6.686133386336849e-06,
+            "hull_angle_error_rad": 2.3251858004334094e-09
+          }
+        },
+        {
+          "time_s": 0.24,
+          "predicted_hull_xy_m": [
+            -1.591355891180521e-10,
+            9.963441913079956
+          ],
+          "actual_hull_xy_m": [
+            -5.03765917869714e-11,
+            9.963434219360352
+          ],
+          "predicted_speed_mps": 17.411091639076595,
+          "actual_speed_mps": 17.41104507446289,
+          "predicted_body_yaw_radps": 1.4872748924639586e-08,
+          "actual_body_yaw_radps": -6.6072429645569475e-12,
+          "predicted_integrated_relative_heading_rad": 2.639766191125649e-09,
+          "actual_integrated_relative_heading_rad": 1.699321046534263e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.656461370444731e-05,
+            "yaw_error_radps": 1.4879356167604143e-08,
+            "body_sideslip_error_deg": 1.5249688570459168e-07,
+            "front_joint_error_rad": 1.0443035325380379e-15,
+            "rear_longitudinal_slip_error_mps": 4.6580973727117225e-05,
+            "max_per_tire_force_vector_error_N": 1.7437624531548787e-06,
+            "hull_position_error_m": 7.693719605286636e-06,
+            "hull_angle_error_rad": 2.6227728954661314e-09
+          }
+        },
+        {
+          "time_s": 0.26,
+          "predicted_hull_xy_m": [
+            -1.6794884599051544e-10,
+            10.224015565259949
+          ],
+          "actual_hull_xy_m": [
+            -5.166522765165382e-11,
+            10.224006652832031
+          ],
+          "predicted_speed_mps": 13.028682608999645,
+          "actual_speed_mps": 13.028636932373047,
+          "predicted_body_yaw_radps": 1.3779805596254851e-08,
+          "actual_body_yaw_radps": 6.785288043237303e-12,
+          "predicted_integrated_relative_heading_rad": 2.915362303050746e-09,
+          "actual_integrated_relative_heading_rad": 1.7128916226207377e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.567662659837879e-05,
+            "yaw_error_radps": 1.3773020308211614e-08,
+            "body_sideslip_error_deg": 1.6927532540248367e-07,
+            "front_joint_error_rad": 1.078998002057574e-15,
+            "rear_longitudinal_slip_error_mps": 4.5691784384516154e-05,
+            "max_per_tire_force_vector_error_N": 2.073225194668742e-06,
+            "hull_position_error_m": 8.91242791820988e-06,
+            "hull_angle_error_rad": 2.8982333381376192e-09
+          }
+        },
+        {
+          "time_s": 0.28,
+          "predicted_hull_xy_m": [
+            -1.725043556454714e-10,
+            10.396941036838403
+          ],
+          "actual_hull_xy_m": [
+            -5.249978229926455e-11,
+            10.396931648254395
+          ],
+          "predicted_speed_mps": 8.646273578922695,
+          "actual_speed_mps": 8.646228790283203,
+          "predicted_body_yaw_radps": 1.1823976459273233e-08,
+          "actual_body_yaw_radps": -6.7070962499193865e-12,
+          "predicted_integrated_relative_heading_rad": 3.1518418322362106e-09,
+          "actual_integrated_relative_heading_rad": 1.699477430120899e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.478863949231027e-05,
+            "yaw_error_radps": 1.1830683555523152e-08,
+            "body_sideslip_error_deg": 1.8468846163196035e-07,
+            "front_joint_error_rad": 1.0581813203458523e-15,
+            "rear_longitudinal_slip_error_mps": 4.480164586695423e-05,
+            "max_per_tire_force_vector_error_N": 2.5775957845222615e-06,
+            "hull_position_error_m": 9.388584008774631e-06,
+            "hull_angle_error_rad": 3.1348469822644586e-09
+          }
+        },
+        {
+          "time_s": 0.3,
+          "predicted_hull_xy_m": [
+            -1.7185704366789948e-10,
+            10.482218327815318
+          ],
+          "actual_hull_xy_m": [
+            -5.2931437011238813e-11,
+            10.482208251953125
+          ],
+          "predicted_speed_mps": 4.263864548845746,
+          "actual_speed_mps": 4.263820648193359,
+          "predicted_body_yaw_radps": 8.535940463359382e-09,
+          "actual_body_yaw_radps": 6.8198853682421845e-12,
+          "predicted_integrated_relative_heading_rad": 3.3225606415033984e-09,
+          "actual_integrated_relative_heading_rad": 1.7131172008573835e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.3900652386241745e-05,
+            "yaw_error_radps": 8.52912057799114e-09,
+            "body_sideslip_error_deg": 1.9933348954405858e-07,
+            "front_joint_error_rad": 1.1102230246251565e-15,
+            "rear_longitudinal_slip_error_mps": 4.391004192072501e-05,
+            "max_per_tire_force_vector_error_N": 0.003600624176649506,
+            "hull_position_error_m": 1.0075862193295218e-05,
+            "hull_angle_error_rad": 3.3054294561442224e-09
+          }
+        },
+        {
+          "time_s": 0.32,
+          "predicted_hull_xy_m": [
+            -1.606683145014155e-10,
+            10.490883024934497
+          ],
+          "actual_hull_xy_m": [
+            -5.308276040949522e-11,
+            10.490873336791992
+          ],
+          "predicted_speed_mps": 0.433234855958998,
+          "actual_speed_mps": 0.4332304894924165,
+          "predicted_body_yaw_radps": -2.824510940551426e-10,
+          "actual_body_yaw_radps": -1.710585284531163e-10,
+          "predicted_integrated_relative_heading_rad": 3.3169116196222957e-09,
+          "actual_integrated_relative_heading_rad": 1.3710001439511508e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.36646658152906e-06,
+            "yaw_error_radps": 1.113925656020263e-10,
+            "body_sideslip_error_deg": 2.6306532166234663e-07,
+            "front_joint_error_rad": 2.6314020407092187e-14,
+            "rear_longitudinal_slip_error_mps": 8.758116543994277e-06,
+            "max_per_tire_force_vector_error_N": 0.0007181655787564104,
+            "hull_position_error_m": 9.688142505723868e-06,
+            "hull_angle_error_rad": 3.303201586513502e-09
+          }
+        },
+        {
+          "time_s": 0.34,
+          "predicted_hull_xy_m": [
+            -1.6043339562161523e-10,
+            10.491763411439592
+          ],
+          "actual_hull_xy_m": [
+            -3.510980395304841e-11,
+            10.491753578186035
+          ],
+          "predicted_speed_mps": 0.04401932525474411,
+          "actual_speed_mps": 0.04401875659823418,
+          "predicted_body_yaw_radps": 3.411108881166876e-10,
+          "actual_body_yaw_radps": -1.7024770926354904e-08,
+          "predicted_integrated_relative_heading_rad": 3.3237338373846296e-09,
+          "actual_integrated_relative_heading_rad": -3.267854170875866e-10,
+          "absolute_error": {
+            "speed_error_mps": 5.686565099360941e-07,
+            "yaw_error_radps": 1.736588181447159e-08,
+            "body_sideslip_error_deg": 8.734601292009212e-07,
+            "front_joint_error_rad": 1.4016565685892601e-14,
+            "rear_longitudinal_slip_error_mps": 7.555312241391832e-07,
+            "max_per_tire_force_vector_error_N": 6.199765854812345e-05,
+            "hull_position_error_m": 9.833253557988508e-06,
+            "hull_angle_error_rad": 3.6505193249434524e-09
+          }
+        },
+        {
+          "time_s": 0.36,
+          "predicted_hull_xy_m": [
+            -1.5985200086920846e-10,
+            10.49185286412186
+          ],
+          "actual_hull_xy_m": [
+            -6.55950849193232e-11,
+            10.491843223571777
+          ],
+          "predicted_speed_mps": 0.0044726341134157035,
+          "actual_speed_mps": 0.004472558386623974,
+          "predicted_body_yaw_radps": -8.152967145963278e-11,
+          "actual_body_yaw_radps": 6.34838936974802e-09,
+          "predicted_integrated_relative_heading_rad": 3.322103243955437e-09,
+          "actual_integrated_relative_heading_rad": -1.998176296926262e-10,
+          "absolute_error": {
+            "speed_error_mps": 7.572679172965224e-08,
+            "yaw_error_radps": 6.429919041207653e-09,
+            "body_sideslip_error_deg": 1.3473348081852387e-05,
+            "front_joint_error_rad": 2.220446049250313e-16,
+            "rear_longitudinal_slip_error_mps": 1.0699296454710905e-07,
+            "max_per_tire_force_vector_error_N": 8.82713211460372e-06,
+            "hull_position_error_m": 9.640550083139837e-06,
+            "hull_angle_error_rad": 3.5219209618828677e-09
+          }
+        },
+        {
+          "time_s": 0.38,
+          "predicted_hull_xy_m": [
+            -1.5994069721949915e-10,
+            10.491861953064408
+          ],
+          "actual_hull_xy_m": [
+            -5.919942314136506e-11,
+            10.491852760314941
+          ],
+          "predicted_speed_mps": 0.00045444712740874867,
+          "actual_speed_mps": 0.00045443532872020367,
+          "predicted_body_yaw_radps": 2.850620046070644e-11,
+          "actual_body_yaw_radps": -9.258609989792888e-10,
+          "predicted_integrated_relative_heading_rad": 3.322673367964651e-09,
+          "actual_integrated_relative_heading_rad": -2.1833484967221198e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1798688544998725e-08,
+            "yaw_error_radps": 9.543671994399952e-10,
+            "body_sideslip_error_deg": 3.099323180926808e-05,
+            "front_joint_error_rad": 1.3877787807814457e-17,
+            "rear_longitudinal_slip_error_mps": 1.3999810866355614e-08,
+            "max_per_tire_force_vector_error_N": 1.157959928418343e-06,
+            "hull_position_error_m": 9.19274946708759e-06,
+            "hull_angle_error_rad": 3.5410082736751998e-09
+          }
+        },
+        {
+          "time_s": 0.4,
+          "predicted_hull_xy_m": [
+            -1.5990004436716747e-10,
+            10.491862876556857
+          ],
+          "actual_hull_xy_m": [
+            -6.020761667002716e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 4.617462246477946e-05,
+          "actual_speed_mps": 4.617351441994075e-05,
+          "predicted_body_yaw_radps": -8.72314988903591e-12,
+          "actual_body_yaw_radps": 3.1094132824094345e-10,
+          "predicted_integrated_relative_heading_rad": 3.3224989049668702e-09,
+          "actual_integrated_relative_heading_rad": -2.1211602310739312e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1080448387098293e-09,
+            "yaw_error_radps": 3.1966447812997936e-10,
+            "body_sideslip_error_deg": 3.33619709429119e-05,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 3.083862442685814e-09,
+            "max_per_tire_force_vector_error_N": 2.570720485890787e-07,
+            "hull_position_error_m": 9.162567599406149e-06,
+            "hull_angle_error_rad": 3.5346150074272837e-09
+          }
+        },
+        {
+          "time_s": 0.42,
+          "predicted_hull_xy_m": [
+            -1.5991130039099889e-10,
+            10.491862970389368
+          ],
+          "actual_hull_xy_m": [
+            -5.975064887309145e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 4.691625562520544e-06,
+          "actual_speed_mps": 4.691481990470654e-06,
+          "predicted_body_yaw_radps": 2.7866192765701117e-12,
+          "actual_body_yaw_radps": -1.0542564737869853e-10,
+          "predicted_integrated_relative_heading_rad": 3.3225546373524015e-09,
+          "actual_integrated_relative_heading_rad": -2.1422453605496708e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.4357204989054538e-10,
+            "yaw_error_radps": 1.0821226665526864e-10,
+            "body_sideslip_error_deg": 0.0001793553001389253,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 4.117167119521226e-10,
+            "max_per_tire_force_vector_error_N": 3.740993989941833e-08,
+            "hull_position_error_m": 9.2564001109442e-06,
+            "hull_angle_error_rad": 3.536779275381183e-09
+          }
+        },
+        {
+          "time_s": 0.44,
+          "predicted_hull_xy_m": [
+            -1.5990754913016537e-10,
+            10.491862979923328
+          ],
+          "actual_hull_xy_m": [
+            -5.988665119360803e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 4.7669800517993546e-07,
+          "actual_speed_mps": 4.7668746107863167e-07,
+          "predicted_body_yaw_radps": -8.775581569406377e-13,
+          "actual_body_yaw_radps": 3.154900646284986e-11,
+          "predicted_integrated_relative_heading_rad": 3.3225370861892625e-09,
+          "actual_integrated_relative_heading_rad": -2.1359355592571008e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.0544101303789995e-11,
+            "yaw_error_radps": 3.2426564619790495e-11,
+            "body_sideslip_error_deg": 0.000526851102541496,
+            "front_joint_error_rad": 1.5265566588595902e-16,
+            "rear_longitudinal_slip_error_mps": 1.0361199544389667e-10,
+            "max_per_tire_force_vector_error_N": 9.772008490160004e-09,
+            "hull_position_error_m": 9.265934070341865e-06,
+            "hull_angle_error_rad": 3.536130895495452e-09
+          }
+        },
+        {
+          "time_s": 0.46,
+          "predicted_hull_xy_m": [
+            -1.5990871158425246e-10,
+            10.491862980892037
+          ],
+          "actual_hull_xy_m": [
+            -5.984479578557966e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 4.843544846330131e-08,
+          "actual_speed_mps": 4.843430191938894e-08,
+          "predicted_body_yaw_radps": 2.776625667539923e-13,
+          "actual_body_yaw_radps": -1.0108977890888049e-11,
+          "predicted_integrated_relative_heading_rad": 3.3225426394405978e-09,
+          "actual_integrated_relative_heading_rad": -2.1379573548352783e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1465439123682912e-12,
+            "yaw_error_radps": 1.038664045764204e-11,
+            "body_sideslip_error_deg": 0.0015556949282388036,
+            "front_joint_error_rad": 1.249000902703301e-16,
+            "rear_longitudinal_slip_error_mps": 2.4091268613377843e-11,
+            "max_per_tire_force_vector_error_N": 2.5042645717734087e-09,
+            "hull_position_error_m": 9.266902779899287e-06,
+            "hull_angle_error_rad": 3.536338509337269e-09
+          }
+        },
+        {
+          "time_s": 0.48,
+          "predicted_hull_xy_m": [
+            -1.599083415139599e-10,
+            10.491862980990463
+          ],
+          "actual_hull_xy_m": [
+            -5.985822948417763e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 4.921339385427013e-09,
+          "actual_speed_mps": 4.921228331590362e-09,
+          "predicted_body_yaw_radps": -8.77170360652882e-14,
+          "actual_body_yaw_radps": 3.186165524124429e-12,
+          "predicted_integrated_relative_heading_rad": 3.3225408850998764e-09,
+          "actual_integrated_relative_heading_rad": -2.1373201217304535e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.110538366512818e-13,
+            "yaw_error_radps": 3.2738825601897173e-12,
+            "body_sideslip_error_deg": 0.0050124359641611155,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 7.247809253271714e-12,
+            "max_per_tire_force_vector_error_N": 7.680085847659712e-10,
+            "hull_position_error_m": 9.267001206055248e-06,
+            "hull_angle_error_rad": 3.536273028194934e-09
+          }
+        },
+        {
+          "time_s": 0.5,
+          "predicted_hull_xy_m": [
+            -1.5990845815838027e-10,
+            10.491862981000464
+          ],
+          "actual_hull_xy_m": [
+            -5.985401063668405e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.000383420709201e-10,
+          "actual_speed_mps": 5.000265927244284e-10,
+          "predicted_body_yaw_radps": 2.7725105316175012e-14,
+          "actual_body_yaw_radps": -1.0059261366587857e-12,
+          "predicted_integrated_relative_heading_rad": 3.322541439601983e-09,
+          "actual_integrated_relative_heading_rad": -2.1375213069577851e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1749346491667169e-14,
+            "yaw_error_radps": 1.0336512419749607e-12,
+            "body_sideslip_error_deg": 0.015363501744725387,
+            "front_joint_error_rad": 8.326672684688674e-17,
+            "rear_longitudinal_slip_error_mps": 2.234808104681915e-12,
+            "max_per_tire_force_vector_error_N": 2.390034403530484e-10,
+            "hull_position_error_m": 9.2670112069443e-06,
+            "hull_angle_error_rad": 3.536293788756089e-09
+          }
+        },
+        {
+          "time_s": 0.52,
+          "predicted_hull_xy_m": [
+            -1.5990842125940307e-10,
+            10.49186298100148
+          ],
+          "actual_hull_xy_m": [
+            -5.98553429043136e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.08069702187892e-11,
+          "actual_speed_mps": 5.080570289891898e-11,
+          "predicted_body_yaw_radps": -8.7617120986141e-15,
+          "actual_body_yaw_radps": 3.1774417623940676e-13,
+          "predicted_integrated_relative_heading_rad": 3.322541264367741e-09,
+          "actual_integrated_relative_heading_rad": -2.1374577581225373e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.2673198702205737e-15,
+            "yaw_error_radps": 3.2650588833802084e-13,
+            "body_sideslip_error_deg": 0.047952245808308314,
+            "front_joint_error_rad": 1.3877787807814457e-16,
+            "rear_longitudinal_slip_error_mps": 7.012279428575033e-13,
+            "max_per_tire_force_vector_error_N": 7.520962736346296e-11,
+            "hull_position_error_m": 9.267012223020396e-06,
+            "hull_angle_error_rad": 3.536287396272909e-09
+          }
+        },
+        {
+          "time_s": 0.54,
+          "predicted_hull_xy_m": [
+            -1.5990843291674922e-10,
+            10.491862981001583
+          ],
+          "actual_hull_xy_m": [
+            -5.985500983740621e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.162300589111662e-12,
+          "actual_speed_mps": 5.16218927837504e-12,
+          "predicted_body_yaw_radps": 2.769038551962047e-15,
+          "actual_body_yaw_radps": -1.0041421090890151e-13,
+          "predicted_integrated_relative_heading_rad": 3.322541319748512e-09,
+          "actual_integrated_relative_heading_rad": -2.137477840964719e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1131073662222352e-16,
+            "yaw_error_radps": 1.0318324946086356e-13,
+            "body_sideslip_error_deg": 0.14888641504569508,
+            "front_joint_error_rad": 1.3877787807814457e-17,
+            "rear_longitudinal_slip_error_mps": 2.2110585060066124e-13,
+            "max_per_tire_force_vector_error_N": 2.3735505305281002e-11,
+            "hull_position_error_m": 9.267012326049096e-06,
+            "hull_angle_error_rad": 3.5362894500551244e-09
+          }
+        },
+        {
+          "time_s": 0.56,
+          "predicted_hull_xy_m": [
+            -1.59908429232183e-10,
+            10.491862981001594
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.245214930613111e-13,
+          "actual_speed_mps": 5.245270150982031e-13,
+          "predicted_body_yaw_radps": -8.751067285191132e-16,
+          "actual_body_yaw_radps": 3.1722803501893146e-14,
+          "predicted_integrated_relative_heading_rad": 3.3225413022463773e-09,
+          "actual_integrated_relative_heading_rad": -2.1374714964040187e-10,
+          "absolute_error": {
+            "speed_error_mps": 5.522036891985622e-18,
+            "yaw_error_radps": 3.259791023041226e-14,
+            "body_sideslip_error_deg": 0.4633235809031638,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 6.980965117644115e-14,
+            "max_per_tire_force_vector_error_N": 7.496104116340956e-12,
+            "hull_position_error_m": 9.267012336707237e-06,
+            "hull_angle_error_rad": 3.536288766419175e-09
+          }
+        },
+        {
+          "time_s": 0.58,
+          "predicted_hull_xy_m": [
+            -1.5990843039658198e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.32946197718449e-14,
+          "actual_speed_mps": 5.3310008496825684e-14,
+          "predicted_body_yaw_radps": 2.7656402360740015e-16,
+          "actual_body_yaw_radps": -1.002669406784942e-14,
+          "predicted_integrated_relative_heading_rad": 3.322541307777658e-09,
+          "actual_integrated_relative_heading_rad": -2.1374735017428323e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.538872498078559e-17,
+            "yaw_error_radps": 1.030325809145682e-14,
+            "body_sideslip_error_deg": 1.439930161473001,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 2.2053757905470264e-14,
+            "max_per_tire_force_vector_error_N": 2.3685561329486313e-12,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.5362889939950605e-09
+          }
+        },
+        {
+          "time_s": 0.6,
+          "predicted_hull_xy_m": [
+            -1.599084300285867e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.415071767005212e-15,
+          "actual_speed_mps": 5.430676856177326e-15,
+          "predicted_body_yaw_radps": -8.740363107165348e-17,
+          "actual_body_yaw_radps": 3.173090028983595e-15,
+          "predicted_integrated_relative_heading_rad": 3.3225413060295854e-09,
+          "actual_integrated_relative_heading_rad": -2.1374728671248265e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.560508917211372e-17,
+            "yaw_error_radps": 3.2604936600552483e-15,
+            "body_sideslip_error_deg": 4.472794414999253,
+            "front_joint_error_rad": 1.5265566588595902e-16,
+            "rear_longitudinal_slip_error_mps": 6.974155239166793e-15,
+            "max_per_tire_force_vector_error_N": 7.492127402629635e-13,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.536288770202383e-09
+          }
+        },
+        {
+          "time_s": 0.62,
+          "predicted_hull_xy_m": [
+            -1.5990843014488498e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.502151034074755e-16,
+          "actual_speed_mps": 5.654578101504878e-16,
+          "predicted_body_yaw_radps": 2.762253631051646e-17,
+          "actual_body_yaw_radps": -1.0168331952673968e-15,
+          "predicted_integrated_relative_heading_rad": 3.322541306582036e-09,
+          "actual_integrated_relative_heading_rad": -2.1374730704914656e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.5242706743012263e-17,
+            "yaw_error_radps": 1.0444557315779133e-15,
+            "body_sideslip_error_deg": 13.714637651449028,
+            "front_joint_error_rad": 1.3877787807814457e-17,
+            "rear_longitudinal_slip_error_mps": 2.2208926764782756e-15,
+            "max_per_tire_force_vector_error_N": 2.3909091065187193e-13,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.536288770754834e-09
+          }
+        },
+        {
+          "time_s": 0.64,
+          "predicted_hull_xy_m": [
+            -1.5990843010813066e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.591557349515233e-17,
+          "actual_speed_mps": 6.99068393356205e-17,
+          "predicted_body_yaw_radps": -8.729664158042883e-18,
+          "actual_body_yaw_radps": 3.321175422723525e-16,
+          "predicted_integrated_relative_heading_rad": 3.3225413064074428e-09,
+          "actual_integrated_relative_heading_rad": -2.1374730040679572e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.3991265840468162e-17,
+            "yaw_error_radps": 3.408472064303954e-16,
+            "body_sideslip_error_deg": 38.063748688918004,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 7.183273741758464e-16,
+            "max_per_tire_force_vector_error_N": 7.758922060983563e-14,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.5362887705802404e-09
+          }
+        },
+        {
+          "time_s": 0.66,
+          "predicted_hull_xy_m": [
+            -1.5990843011974634e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.691515964721613e-18,
+          "actual_speed_mps": 1.4899566223422284e-17,
+          "predicted_body_yaw_radps": 2.7588719932424278e-18,
+          "actual_body_yaw_radps": -1.0385539125967451e-16,
+          "predicted_integrated_relative_heading_rad": 3.3225413064626203e-09,
+          "actual_integrated_relative_heading_rad": -2.1374730248390355e-10,
+          "absolute_error": {
+            "speed_error_mps": 9.208050258700672e-18,
+            "yaw_error_radps": 1.0661426325291693e-16,
+            "body_sideslip_error_deg": 71.20498728229136,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 2.293392180184332e-16,
+            "max_per_tire_force_vector_error_N": 2.4594408835242276e-14,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.536288770635418e-09
+          }
+        },
+        {
+          "time_s": 0.68,
+          "predicted_hull_xy_m": [
+            -1.5990843011607552e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 5.88176891477502e-19,
+          "actual_speed_mps": 4.280546777824432e-18,
+          "predicted_body_yaw_radps": -8.718977449882972e-19,
+          "actual_body_yaw_radps": 3.282739052810595e-17,
+          "predicted_integrated_relative_heading_rad": 3.3225413064451825e-09,
+          "actual_integrated_relative_heading_rad": -2.1374730182735574e-10,
+          "absolute_error": {
+            "speed_error_mps": 3.6923698863469294e-18,
+            "yaw_error_radps": 3.369928827309425e-17,
+            "body_sideslip_error_deg": 93.36715980048129,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 7.21217736525781e-17,
+            "max_per_tire_force_vector_error_N": 7.74487142899938e-15,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.53628877061798e-09
+          }
+        },
+        {
+          "time_s": 0.7000000000000001,
+          "predicted_hull_xy_m": [
+            -1.5990843011723564e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 6.872448445807132e-20,
+          "actual_speed_mps": 1.3533711047087662e-18,
+          "predicted_body_yaw_radps": 2.7554945845626197e-19,
+          "actual_body_yaw_radps": -1.0373997144008253e-17,
+          "predicted_integrated_relative_heading_rad": 3.3225413064506935e-09,
+          "actual_integrated_relative_heading_rad": -2.137473020348357e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.284646620250695e-18,
+            "yaw_error_radps": 1.0649546602464516e-17,
+            "body_sideslip_error_deg": 118.94662996805181,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 2.2794121087525814e-17,
+            "max_per_tire_force_vector_error_N": 2.448283171633089e-15,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.5362887706234912e-09
+          }
+        },
+        {
+          "time_s": 0.72,
+          "predicted_hull_xy_m": [
+            -1.5990843011686879e-10,
+            10.491862981001596
+          ],
+          "actual_hull_xy_m": [
+            -5.985512085970868e-11,
+            10.491853713989258
+          ],
+          "predicted_speed_mps": 1.2797271149341332e-20,
+          "actual_speed_mps": 4.2613626713790934e-19,
+          "predicted_body_yaw_radps": -8.70830373115591e-20,
+          "actual_body_yaw_radps": 3.2785967390980826e-18,
+          "predicted_integrated_relative_heading_rad": 3.322541306448952e-09,
+          "actual_integrated_relative_heading_rad": -2.1374730196926377e-10,
+          "absolute_error": {
+            "speed_error_mps": 4.13338995988568e-19,
+            "yaw_error_radps": 3.3656797764096418e-18,
+            "body_sideslip_error_deg": 151.44999397082947,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 7.203599711039259e-18,
+            "max_per_tire_force_vector_error_N": 7.73674437230526e-16,
+            "hull_position_error_m": 9.267012338483594e-06,
+            "hull_angle_error_rad": 3.5362887706217496e-09
+          }
+        }
+      ]
+    },
+    {
+      "configuration": {
+        "name": "straight100",
+        "nominal_initial_speed_mps": 100.0,
+        "joint": 0.0,
+        "warmup_steps": 0
+      },
+      "actual_initial_summary": {
+        "speed_mps": 100.0,
+        "body_yaw_radps": 0.0,
+        "body_sideslip_deg": 0.0,
+        "front_joint_rad": [
+          0.0,
+          0.0
+        ],
+        "rear_rolling_mps": [
+          100.0,
+          100.0
+        ],
+        "rear_longitudinal_slip_mps": [
+          0.0,
+          0.0
+        ],
+        "wheel_lateral_mps": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "wheel_forward_mps": [
+          100.0,
+          100.0,
+          100.0,
+          100.0
+        ],
+        "instant_tire_force_local_N": [
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0
+          ]
+        ],
+        "instant_tire_demand_ratio": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "tail_command_world_joint_gas_brake": [
+        0.0,
+        0.0,
+        0.9
+      ],
+      "predicted_stop_speed_half_yaw_tenth_s": 0.46,
+      "actual_stop_speed_half_yaw_tenth_s": 0.46,
+      "maximum_error_over_all36_raw_steps": {
+        "max_hull_position_error_m": 2.6471614853441728e-05,
+        "max_speed_error_mps": 9.641842694918523e-05,
+        "max_yaw_error_radps": 2.8054643681269374e-08,
+        "max_front_joint_error_rad": 1.289020973294086e-13,
+        "stop_tick_difference_s": 0.0
+      },
+      "acceptance_passed": {
+        "max_hull_position_error_m": true,
+        "max_speed_error_mps": true,
+        "max_yaw_error_radps": true,
+        "max_front_joint_error_rad": true,
+        "stop_tick_difference_s": true
+      },
+      "raw_step_pose_error_speed_yaw_rows": [
+        {
+          "time_s": 0.02,
+          "predicted_hull_xy_m": [
+            -3.83707155661974e-12,
+            1.912351819398461
+          ],
+          "actual_hull_xy_m": [
+            -7.864597861839684e-12,
+            1.9123518466949463
+          ],
+          "predicted_speed_mps": 95.61759096992304,
+          "actual_speed_mps": 95.61759185791013,
+          "predicted_body_yaw_radps": 2.3844835756213333e-09,
+          "actual_body_yaw_radps": 8.385085958906302e-10,
+          "predicted_integrated_relative_heading_rad": 4.768967151242667e-11,
+          "actual_integrated_relative_heading_rad": 1.6770171917812604e-11,
+          "absolute_error": {
+            "speed_error_mps": 8.879870847522398e-07,
+            "yaw_error_radps": 1.5459749797307031e-09,
+            "body_sideslip_error_deg": 1.9666614258713102e-09,
+            "front_joint_error_rad": 1.289020973294086e-13,
+            "rear_longitudinal_slip_error_mps": 8.906100390504434e-07,
+            "max_per_tire_force_vector_error_N": 2.406243739519644e-08,
+            "hull_position_error_m": 2.72964855914403e-08,
+            "hull_angle_error_rad": 3.091950292528314e-11
+          }
+        },
+        {
+          "time_s": 0.04,
+          "predicted_hull_xy_m": [
+            -1.1210771689438566e-11,
+            3.7370554581953828
+          ],
+          "actual_hull_xy_m": [
+            -1.401168070458425e-11,
+            3.7370553016662598
+          ],
+          "predicted_speed_mps": 91.23518193984609,
+          "actual_speed_mps": 91.23517608642575,
+          "predicted_body_yaw_radps": 4.66438329188267e-09,
+          "actual_body_yaw_radps": -1.5257123689438323e-11,
+          "predicted_integrated_relative_heading_rad": 1.4097733735008007e-10,
+          "actual_integrated_relative_heading_rad": 1.6465029444023837e-11,
+          "absolute_error": {
+            "speed_error_mps": 5.853420333323811e-06,
+            "yaw_error_radps": 4.679640415572108e-09,
+            "body_sideslip_error_deg": 7.331965577116407e-09,
+            "front_joint_error_rad": 2.3696322681843185e-15,
+            "rear_longitudinal_slip_error_mps": 5.858551119786171e-06,
+            "max_per_tire_force_vector_error_N": 8.453767502616446e-08,
+            "hull_position_error_m": 1.5652912302163326e-07,
+            "hull_angle_error_rad": 1.2451228580567915e-10
+          }
+        },
+        {
+          "time_s": 0.06,
+          "predicted_hull_xy_m": [
+            -2.1818981052006068e-11,
+            5.4741109163907655
+          ],
+          "actual_hull_xy_m": [
+            -1.9888424240832592e-11,
+            5.4741106033325195
+          ],
+          "predicted_speed_mps": 86.85277290976913,
+          "actual_speed_mps": 86.85276031494138,
+          "predicted_body_yaw_radps": 6.83882716394647e-09,
+          "actual_body_yaw_radps": 5.841745273280075e-13,
+          "predicted_integrated_relative_heading_rad": 2.7775388062900945e-10,
+          "actual_integrated_relative_heading_rad": 1.6476712934570398e-11,
+          "absolute_error": {
+            "speed_error_mps": 1.2594827751399862e-05,
+            "yaw_error_radps": 6.838242989419142e-09,
+            "body_sideslip_error_deg": 1.5176978978718113e-08,
+            "front_joint_error_rad": 1.1622647289044608e-16,
+            "rear_longitudinal_slip_error_mps": 1.260235043787361e-05,
+            "max_per_tire_force_vector_error_N": 1.5771821184372058e-07,
+            "hull_position_error_m": 3.130582459991001e-07,
+            "hull_angle_error_rad": 2.6127717174284997e-10
+          }
+        },
+        {
+          "time_s": 0.08,
+          "predicted_hull_xy_m": [
+            -3.5356325027582376e-11,
+            7.123518193984609
+          ],
+          "actual_hull_xy_m": [
+            -2.5467850051086316e-11,
+            7.1235175132751465
+          ],
+          "predicted_speed_mps": 82.47036387969217,
+          "actual_speed_mps": 82.470344543457,
+          "predicted_body_yaw_radps": 8.905946093736732e-09,
+          "actual_body_yaw_radps": -1.1667448555690782e-14,
+          "predicted_integrated_relative_heading_rad": 4.558728025037441e-10,
+          "actual_integrated_relative_heading_rad": 1.6476479585599284e-11,
+          "absolute_error": {
+            "speed_error_mps": 1.9336235169475913e-05,
+            "yaw_error_radps": 8.905957761185288e-09,
+            "body_sideslip_error_deg": 2.53969475060504e-08,
+            "front_joint_error_rad": 1.3877787807814457e-17,
+            "rear_longitudinal_slip_error_mps": 1.9346031677969222e-05,
+            "max_per_tire_force_vector_error_N": 2.490733332226e-07,
+            "hull_position_error_m": 6.807094622026587e-07,
+            "hull_angle_error_rad": 4.3939631566218954e-10
+          }
+        },
+        {
+          "time_s": 0.1,
+          "predicted_hull_xy_m": [
+            -5.151247307783194e-11,
+            8.685277290976913
+          ],
+          "actual_hull_xy_m": [
+            -3.075073529146266e-11,
+            8.68527603149414
+          ],
+          "predicted_speed_mps": 78.08795484961522,
+          "actual_speed_mps": 78.08792877197263,
+          "predicted_body_yaw_radps": 1.0862755857845224e-08,
+          "actual_body_yaw_radps": 5.69602604913764e-16,
+          "predicted_integrated_relative_heading_rad": 6.731279196606486e-10,
+          "actual_integrated_relative_heading_rad": 1.6476490977651384e-11,
+          "absolute_error": {
+            "speed_error_mps": 2.6077642587551964e-05,
+            "yaw_error_radps": 1.086275528824262e-08,
+            "body_sideslip_error_deg": 3.78657429118199e-08,
+            "front_joint_error_rad": 1.214306433183765e-17,
+            "rear_longitudinal_slip_error_mps": 2.6089591585787275e-05,
+            "max_per_tire_force_vector_error_N": 3.578121604679294e-07,
+            "hull_position_error_m": 1.259482772468937e-06,
+            "hull_angle_error_rad": 6.56651432819094e-10
+          }
+        },
+        {
+          "time_s": 0.12,
+          "predicted_hull_xy_m": [
+            -6.99702967100589e-11,
+            10.159388207367678
+          ],
+          "actual_hull_xy_m": [
+            -3.573719098426409e-11,
+            10.15938663482666
+          ],
+          "predicted_speed_mps": 73.70554581953826,
+          "actual_speed_mps": 73.70551300048825,
+          "predicted_body_yaw_radps": 1.2705012409285866e-08,
+          "actual_body_yaw_radps": -1.404311639684543e-17,
+          "predicted_integrated_relative_heading_rad": 9.272281678463659e-10,
+          "actual_integrated_relative_heading_rad": 1.6476490696789057e-11,
+          "absolute_error": {
+            "speed_error_mps": 3.2819050005628014e-05,
+            "yaw_error_radps": 1.2705012423328982e-08,
+            "body_sideslip_error_deg": 5.2453266603688394e-08,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.283302548595657e-05,
+            "max_per_tire_force_vector_error_N": 4.832834116282209e-07,
+            "hull_position_error_m": 1.572541018663578e-06,
+            "hull_angle_error_rad": 9.107516810048114e-10
+          }
+        },
+        {
+          "time_s": 0.14,
+          "predicted_hull_xy_m": [
+            -9.040386153489571e-11,
+            11.545850943156905
+          ],
+          "actual_hull_xy_m": [
+            -4.042710610718814e-11,
+            11.545848846435547
+          ],
+          "predicted_speed_mps": 69.3231367894613,
+          "actual_speed_mps": 69.3230972290039,
+          "predicted_body_yaw_radps": 1.4427031953528662e-08,
+          "actual_body_yaw_radps": 9.440705631224687e-22,
+          "predicted_integrated_relative_heading_rad": 1.2157688069169391e-09,
+          "actual_integrated_relative_heading_rad": 1.647649069680794e-11,
+          "absolute_error": {
+            "speed_error_mps": 3.9560457395282356e-05,
+            "yaw_error_radps": 1.4427031953527717e-08,
+            "body_sideslip_error_deg": 6.902317554559278e-08,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.957632712570103e-05,
+            "max_per_tire_force_vector_error_N": 6.248383932914364e-07,
+            "hull_position_error_m": 2.096721358909017e-06,
+            "hull_angle_error_rad": 1.1992923200753846e-09
+          }
+        },
+        {
+          "time_s": 0.16,
+          "predicted_hull_xy_m": [
+            -1.1247622265753022e-10,
+            12.844665498344591
+          ],
+          "actual_hull_xy_m": [
+            -4.482059168253727e-11,
+            12.8446626663208
+          ],
+          "predicted_speed_mps": 64.94072775938434,
+          "actual_speed_mps": 64.94068145751953,
+          "predicted_body_yaw_radps": 1.602146393830124e-08,
+          "actual_body_yaw_radps": 5.979732900087176e-23,
+          "predicted_integrated_relative_heading_rad": 1.536198085682964e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490696809136e-11,
+          "absolute_error": {
+            "speed_error_mps": 4.6301864813358407e-05,
+            "yaw_error_radps": 1.602146393830118e-08,
+            "body_sideslip_error_deg": 8.743107048436076e-08,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 4.631948841904432e-05,
+            "max_per_tire_force_vector_error_N": 7.818383825864142e-07,
+            "hull_position_error_m": 2.8320237913969075e-06,
+            "hull_angle_error_rad": 1.5197215988414094e-09
+          }
+        },
+        {
+          "time_s": 0.18,
+          "predicted_hull_xy_m": [
+            -1.358369927811705e-10,
+            14.055831872930739
+          ],
+          "actual_hull_xy_m": [
+            -4.891753668800902e-11,
+            14.055828094482422
+          ],
+          "predicted_speed_mps": 60.558318729307395,
+          "actual_speed_mps": 60.558265686035156,
+          "predicted_body_yaw_radps": 1.7479005215251198e-08,
+          "actual_body_yaw_radps": -1.6817925646231475e-28,
+          "predicted_integrated_relative_heading_rad": 1.8857781899879878e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490696809136e-11,
+          "absolute_error": {
+            "speed_error_mps": 5.3043272238539885e-05,
+            "yaw_error_radps": 1.7479005215251198e-08,
+            "body_sideslip_error_deg": 1.0752238071352208e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 5.3062499141276476e-05,
+            "max_per_tire_force_vector_error_N": 9.536608307993752e-07,
+            "hull_position_error_m": 3.7784483178931936e-06,
+            "hull_angle_error_rad": 1.869301703146433e-09
+          }
+        },
+        {
+          "time_s": 0.2,
+          "predicted_hull_xy_m": [
+            -1.601196429326782e-10,
+            15.179350066915347
+          ],
+          "actual_hull_xy_m": [
+            -5.271805214590586e-11,
+            15.17934513092041
+          ],
+          "predicted_speed_mps": 56.175909699230445,
+          "actual_speed_mps": 56.17584991455078,
+          "predicted_body_yaw_radps": 1.87880318896556e-08,
+          "actual_body_yaw_radps": -1.2350585491773237e-29,
+          "predicted_integrated_relative_heading_rad": 2.2615388277811e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490696809136e-11,
+          "absolute_error": {
+            "speed_error_mps": 5.978467966372136e-05,
+            "yaw_error_radps": 1.87880318896556e-08,
+            "body_sideslip_error_deg": 1.291298786675486e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 5.9805346502628254e-05,
+            "max_per_tire_force_vector_error_N": 1.139712280309761e-06,
+            "hull_position_error_m": 4.9359949383958734e-06,
+            "hull_angle_error_rad": 2.2450623409395454e-09
+          }
+        },
+        {
+          "time_s": 0.22,
+          "predicted_hull_xy_m": [
+            -1.8493849103511363e-10,
+            16.215220080298415
+          ],
+          "actual_hull_xy_m": [
+            -5.6222027033925315e-11,
+            16.215213775634766
+          ],
+          "predicted_speed_mps": 51.793500669153495,
+          "actual_speed_mps": 51.793434143066406,
+          "predicted_body_yaw_radps": 1.9934118732477342e-08,
+          "actual_body_yaw_radps": -3.6740770675779805e-24,
+          "predicted_integrated_relative_heading_rad": 2.6602212024306468e-09,
+          "actual_integrated_relative_heading_rad": 1.647649069680906e-11,
+          "absolute_error": {
+            "speed_error_mps": 6.652608708890284e-05,
+            "yaw_error_radps": 1.9934118732477346e-08,
+            "body_sideslip_error_deg": 1.5207071857265356e-07,
+            "front_joint_error_rad": 1.1102230246251565e-16,
+            "rear_longitudinal_slip_error_mps": 6.654801462246951e-05,
+            "max_per_tire_force_vector_error_N": 1.3394523105719593e-06,
+            "hull_position_error_m": 6.304663651128244e-06,
+            "hull_angle_error_rad": 2.6437446045667897e-09
+          }
+        },
+        {
+          "time_s": 0.24,
+          "predicted_hull_xy_m": [
+            -2.098853291792026e-10,
+            17.163441913079946
+          ],
+          "actual_hull_xy_m": [
+            -5.942957237436985e-11,
+            17.163434982299805
+          ],
+          "predicted_speed_mps": 47.411091639076545,
+          "actual_speed_mps": 47.41101837158203,
+          "predicted_body_yaw_radps": 2.089940049179738e-08,
+          "actual_body_yaw_radps": -5.8566041729979465e-18,
+          "predicted_integrated_relative_heading_rad": 3.0782092122665943e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490579676978e-11,
+          "absolute_error": {
+            "speed_error_mps": 7.326749451408432e-05,
+            "yaw_error_radps": 2.0899400497653984e-08,
+            "body_sideslip_error_deg": 1.7614290403225625e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 7.32904838542936e-05,
+            "max_per_tire_force_vector_error_N": 1.552436456346461e-06,
+            "hull_position_error_m": 6.930780143433669e-06,
+            "hull_angle_error_rad": 3.0617326144027372e-09
+          }
+        },
+        {
+          "time_s": 0.26,
+          "predicted_hull_xy_m": [
+            -2.345256390423414e-10,
+            18.024015565259937
+          ],
+          "actual_hull_xy_m": [
+            -6.234057714493701e-11,
+            18.02400779724121
+          ],
+          "predicted_speed_mps": 43.028682608999596,
+          "actual_speed_mps": 43.028602600097656,
+          "predicted_body_yaw_radps": 2.166170429636661e-08,
+          "actual_body_yaw_radps": 5.860476205445307e-18,
+          "predicted_integrated_relative_heading_rad": 3.5114432981939267e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490696886503e-11,
+          "absolute_error": {
+            "speed_error_mps": 8.00089019392658e-05,
+            "yaw_error_radps": 2.1661704290506136e-08,
+            "body_sideslip_error_deg": 2.0112091138064394e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 8.003272981227383e-05,
+            "max_per_tire_force_vector_error_N": 1.7783931647752672e-06,
+            "hull_position_error_m": 7.768018727948145e-06,
+            "hull_angle_error_rad": 3.4949667003300696e-09
+          }
+        },
+        {
+          "time_s": 0.28,
+          "predicted_hull_xy_m": [
+            -2.583943469391252e-10,
+            18.79694103683839
+          ],
+          "actual_hull_xy_m": [
+            -6.495515236792926e-11,
+            18.796932220458984
+          ],
+          "predicted_speed_mps": 38.646273578922646,
+          "actual_speed_mps": 38.64618682861328,
+          "predicted_body_yaw_radps": 2.2193336325234824e-08,
+          "actual_body_yaw_radps": -5.856700539539309e-18,
+          "predicted_integrated_relative_heading_rad": 3.955310024698623e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490579752494e-11,
+          "absolute_error": {
+            "speed_error_mps": 8.675030936444728e-05,
+            "yaw_error_radps": 2.2193336331091524e-08,
+            "body_sideslip_error_deg": 2.2675035528859215e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 8.677472203544312e-05,
+            "max_per_tire_force_vector_error_N": 2.0173627883691552e-06,
+            "hull_position_error_m": 8.81637940820682e-06,
+            "hull_angle_error_rad": 3.938833426834766e-09
+          }
+        },
+        {
+          "time_s": 0.3,
+          "predicted_hull_xy_m": [
+            -2.809911023442882e-10,
+            19.482218327815303
+          ],
+          "actual_hull_xy_m": [
+            -6.727318702104412e-11,
+            19.482208251953125
+          ],
+          "predicted_speed_mps": 34.263864548845696,
+          "actual_speed_mps": 34.263771057128906,
+          "predicted_body_yaw_radps": 2.245933445782971e-08,
+          "actual_body_yaw_radps": 9.763045430477283e-23,
+          "predicted_integrated_relative_heading_rad": 4.404496713855217e-09,
+          "actual_integrated_relative_heading_rad": 1.6476490579754445e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.349171678962875e-05,
+            "yaw_error_radps": 2.245933445782961e-08,
+            "body_sideslip_error_deg": 2.5274129160882875e-07,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.351642205501776e-05,
+            "max_per_tire_force_vector_error_N": 2.2699587860570304e-06,
+            "hull_position_error_m": 1.0075862180649094e-05,
+            "hull_angle_error_rad": 4.38802011599136e-09
+          }
+        },
+        {
+          "time_s": 0.32,
+          "predicted_hull_xy_m": [
+            -3.0177513777667896e-10,
+            20.07984743819068
+          ],
+          "actual_hull_xy_m": [
+            -6.930533924531801e-11,
+            20.079835891723633
+          ],
+          "predicted_speed_mps": 29.881455518768746,
+          "actual_speed_mps": 29.881359100341797,
+          "predicted_body_yaw_radps": 2.2414846507793396e-08,
+          "actual_body_yaw_radps": 6.4960142300007906e-12,
+          "predicted_integrated_relative_heading_rad": 4.852793644011085e-09,
+          "actual_integrated_relative_heading_rad": 1.660641086435446e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.641842694918523e-05,
+            "yaw_error_radps": 2.2408350493563395e-08,
+            "body_sideslip_error_deg": 2.787523807571021e-07,
+            "front_joint_error_rad": 1.0234868508263162e-15,
+            "rear_longitudinal_slip_error_mps": 9.644308327949602e-05,
+            "max_per_tire_force_vector_error_N": 2.5376827405574425e-06,
+            "hull_position_error_m": 1.1546467048826193e-05,
+            "hull_angle_error_rad": 4.836187150053347e-09
+          }
+        },
+        {
+          "time_s": 0.34,
+          "predicted_hull_xy_m": [
+            -3.201599816251431e-10,
+            20.589828367964515
+          ],
+          "actual_hull_xy_m": [
+            -7.103984067668989e-11,
+            20.589815139770508
+          ],
+          "predicted_speed_mps": 25.499046488691796,
+          "actual_speed_mps": 25.498950958251953,
+          "predicted_body_yaw_radps": 2.200100288343383e-08,
+          "actual_body_yaw_radps": 6.463498139486212e-12,
+          "predicted_integrated_relative_heading_rad": 5.2928137016797614e-09,
+          "actual_integrated_relative_heading_rad": 1.6735680827144187e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.553043984311671e-05,
+            "yaw_error_radps": 2.1994539385294345e-08,
+            "body_sideslip_error_deg": 3.0440274078789643e-07,
+            "front_joint_error_rad": 1.033895191682177e-15,
+            "rear_longitudinal_slip_error_mps": 9.555464094290755e-05,
+            "max_per_tire_force_vector_error_N": 2.824725039904815e-06,
+            "hull_position_error_m": 1.3228194009188166e-05,
+            "hull_angle_error_rad": 5.276077977761957e-09
+          }
+        },
+        {
+          "time_s": 0.36,
+          "predicted_hull_xy_m": [
+            -3.355088574676094e-10,
+            21.012161117136813
+          ],
+          "actual_hull_xy_m": [
+            -7.249789657493011e-11,
+            21.01214599609375
+          ],
+          "predicted_speed_mps": 21.116637458614846,
+          "actual_speed_mps": 21.11654281616211,
+          "predicted_body_yaw_radps": 2.1137999655768782e-08,
+          "actual_body_yaw_radps": 1.949300616754801e-11,
+          "predicted_integrated_relative_heading_rad": 5.7155736947951375e-09,
+          "actual_integrated_relative_heading_rad": 1.7125540950495148e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.464245273704819e-05,
+            "yaw_error_radps": 2.1118506649601234e-08,
+            "body_sideslip_error_deg": 3.2922288505397677e-07,
+            "front_joint_error_rad": 2.9455604622086184e-15,
+            "rear_longitudinal_slip_error_mps": 9.46657045375332e-05,
+            "max_per_tire_force_vector_error_N": 3.1390076225929746e-06,
+            "hull_position_error_m": 1.5121043065291802e-05,
+            "hull_angle_error_rad": 5.698448060551085e-09
+          }
+        },
+        {
+          "time_s": 0.38,
+          "predicted_hull_xy_m": [
+            -3.471332053397139e-10,
+            21.34684568570757
+          ],
+          "actual_hull_xy_m": [
+            -7.361322662546854e-11,
+            21.34682846069336
+          ],
+          "predicted_speed_mps": 16.734228428537897,
+          "actual_speed_mps": 16.734134674072266,
+          "predicted_body_yaw_radps": 1.971252030770997e-08,
+          "actual_body_yaw_radps": -6.613507918390438e-12,
+          "predicted_integrated_relative_heading_rad": 6.109824100949337e-09,
+          "actual_integrated_relative_heading_rad": 1.699327079212734e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.375446563097967e-05,
+            "yaw_error_radps": 1.971913381562836e-08,
+            "body_sideslip_error_deg": 3.5272669111538656e-07,
+            "front_joint_error_rad": 9.488937413593135e-16,
+            "rear_longitudinal_slip_error_mps": 9.377614940220269e-05,
+            "max_per_tire_force_vector_error_N": 3.5027731787747248e-06,
+            "hull_position_error_m": 1.7225014213591064e-05,
+            "hull_angle_error_rad": 6.092830805289819e-09
+          }
+        },
+        {
+          "time_s": 0.4,
+          "predicted_hull_xy_m": [
+            -3.5430180260391293e-10,
+            21.593882073676788
+          ],
+          "actual_hull_xy_m": [
+            -7.445721816878859e-11,
+            21.593862533569336
+          ],
+          "predicted_speed_mps": 12.351819398460947,
+          "actual_speed_mps": 12.351726531982422,
+          "predicted_body_yaw_radps": 1.755212070503989e-08,
+          "actual_body_yaw_radps": 6.797704326516607e-12,
+          "predicted_integrated_relative_heading_rad": 6.460866515050135e-09,
+          "actual_integrated_relative_heading_rad": 1.7129224878657672e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.286647852491114e-05,
+            "yaw_error_radps": 1.7545323000713373e-08,
+            "body_sideslip_error_deg": 3.742803748208547e-07,
+            "front_joint_error_rad": 1.1084883011491797e-15,
+            "rear_longitudinal_slip_error_mps": 9.288578585753271e-05,
+            "max_per_tire_force_vector_error_N": 3.9673826881602224e-06,
+            "hull_position_error_m": 1.9540107454091245e-05,
+            "hull_angle_error_rad": 6.443737328092403e-09
+          }
+        },
+        {
+          "time_s": 0.42,
+          "predicted_hull_xy_m": [
+            -3.562869572932199e-10,
+            21.75327028104447
+          ],
+          "actual_hull_xy_m": [
+            -7.498124343641166e-11,
+            21.75324821472168
+          ],
+          "predicted_speed_mps": 7.969410368383997,
+          "actual_speed_mps": 7.969318389892578,
+          "predicted_body_yaw_radps": 1.4363535220314991e-08,
+          "actual_body_yaw_radps": -6.719574983243826e-12,
+          "predicted_integrated_relative_heading_rad": 6.748137219456435e-09,
+          "actual_integrated_relative_heading_rad": 1.6994833378992794e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.197849141884262e-05,
+            "yaw_error_radps": 1.4370254795298235e-08,
+            "body_sideslip_error_deg": 3.934534132846456e-07,
+            "front_joint_error_rad": 1.087671619437458e-15,
+            "rear_longitudinal_slip_error_mps": 9.199429130823944e-05,
+            "max_per_tire_force_vector_error_N": 4.738606953819435e-06,
+            "hull_position_error_m": 2.206632279035398e-05,
+            "hull_angle_error_rad": 6.731142369484683e-09
+          }
+        },
+        {
+          "time_s": 0.44,
+          "predicted_hull_xy_m": [
+            -3.525714055880521e-10,
+            21.825010307810608
+          ],
+          "actual_hull_xy_m": [
+            -7.523637268747052e-11,
+            21.82498550415039
+          ],
+          "predicted_speed_mps": 3.587001338307047,
+          "actual_speed_mps": 3.586910009384156,
+          "predicted_body_yaw_radps": 9.535941321362159e-09,
+          "actual_body_yaw_radps": 6.44145717668132e-12,
+          "predicted_integrated_relative_heading_rad": 6.938856045883678e-09,
+          "actual_integrated_relative_heading_rad": 1.712366252252642e-11,
+          "absolute_error": {
+            "speed_error_mps": 9.132892289098749e-05,
+            "yaw_error_radps": 9.529499864185478e-09,
+            "body_sideslip_error_deg": 4.120044772806731e-07,
+            "front_joint_error_rad": 1.033895191682177e-15,
+            "rear_longitudinal_slip_error_mps": 9.133941242778221e-05,
+            "max_per_tire_force_vector_error_N": 0.007489832560987916,
+            "hull_position_error_m": 2.4803660218837886e-05,
+            "hull_angle_error_rad": 6.921732410041069e-09
+          }
+        },
+        {
+          "time_s": 0.46,
+          "predicted_hull_xy_m": [
+            -3.39149211736669e-10,
+            21.83229953564758
+          ],
+          "actual_hull_xy_m": [
+            -1.2052947528928826e-10,
+            21.832275390625
+          ],
+          "predicted_speed_mps": 0.3644613918485904,
+          "actual_speed_mps": 0.36445215344429016,
+          "predicted_body_yaw_radps": -6.999829225089005e-10,
+          "actual_body_yaw_radps": 2.7354660758760474e-08,
+          "predicted_integrated_relative_heading_rad": 6.9248563874335e-09,
+          "actual_integrated_relative_heading_rad": 5.64216877697736e-10,
+          "absolute_error": {
+            "speed_error_mps": 9.238404300226932e-06,
+            "yaw_error_radps": 2.8054643681269374e-08,
+            "body_sideslip_error_deg": 4.710959685457682e-07,
+            "front_joint_error_rad": 4.0190073491430667e-14,
+            "rear_longitudinal_slip_error_mps": 1.8092604983976912e-05,
+            "max_per_tire_force_vector_error_N": 0.001483599306389922,
+            "hull_position_error_m": 2.414502257962634e-05,
+            "hull_angle_error_rad": 6.360639492006761e-09
+          }
+        },
+        {
+          "time_s": 0.48,
+          "predicted_hull_xy_m": [
+            -3.3940441717794754e-10,
+            21.83304016601607
+          ],
+          "actual_hull_xy_m": [
+            -6.458356072158722e-11,
+            21.83301544189453
+          ],
+          "predicted_speed_mps": 0.0370315184244967,
+          "actual_speed_mps": 0.037030629813671154,
+          "predicted_body_yaw_radps": 4.6242447398297226e-10,
+          "actual_body_yaw_radps": -1.3476102900256137e-08,
+          "predicted_integrated_relative_heading_rad": 6.93410487691316e-09,
+          "actual_integrated_relative_heading_rad": 2.946948196926133e-10,
+          "absolute_error": {
+            "speed_error_mps": 8.886108255473646e-07,
+            "yaw_error_radps": 1.3938527374239109e-08,
+            "body_sideslip_error_deg": 2.23226401494175e-06,
+            "front_joint_error_rad": 1.0685896612017132e-14,
+            "rear_longitudinal_slip_error_mps": 1.8972034196984566e-06,
+            "max_per_tire_force_vector_error_N": 0.00015558404197809456,
+            "hull_position_error_m": 2.4724121539172192e-05,
+            "hull_angle_error_rad": 6.639409941791917e-09
+          }
+        },
+        {
+          "time_s": 0.5,
+          "predicted_hull_xy_m": [
+            -3.386577218400541e-10,
+            21.83311541861552
+          ],
+          "actual_hull_xy_m": [
+            -7.276734770300664e-11,
+            21.83308982849121
+          ],
+          "predicted_speed_mps": 0.0037626299725967635,
+          "actual_speed_mps": 0.0037625490222126666,
+          "predicted_body_yaw_radps": -1.2097782913570956e-10,
+          "actual_body_yaw_radps": -1.903388557877861e-09,
+          "predicted_integrated_relative_heading_rad": 6.931685320330445e-09,
+          "actual_integrated_relative_heading_rad": 2.5662704853505607e-10,
+          "absolute_error": {
+            "speed_error_mps": 8.095038409689989e-08,
+            "yaw_error_radps": 1.7824107287421513e-09,
+            "body_sideslip_error_deg": 9.365966826585723e-06,
+            "front_joint_error_rad": 2.220446049250313e-16,
+            "rear_longitudinal_slip_error_mps": 1.872899488717869e-07,
+            "max_per_tire_force_vector_error_N": 1.5360298438264338e-05,
+            "hull_position_error_m": 2.559012431074171e-05,
+            "hull_angle_error_rad": 6.67505815636676e-09
+          }
+        },
+        {
+          "time_s": 0.52,
+          "predicted_hull_xy_m": [
+            -3.3879880143840064e-10,
+            21.83312306474234
+          ],
+          "actual_hull_xy_m": [
+            -7.614409103240405e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 0.00038230634100378316,
+          "actual_speed_mps": 0.00038229502388279515,
+          "predicted_body_yaw_radps": 4.085747078731229e-11,
+          "actual_body_yaw_radps": 1.0500395691837028e-10,
+          "predicted_integrated_relative_heading_rad": 6.932502469746192e-09,
+          "actual_integrated_relative_heading_rad": 2.5872712767342345e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1317120988008512e-08,
+            "yaw_error_radps": 6.414648613105799e-11,
+            "body_sideslip_error_deg": 2.3854819762005513e-05,
+            "front_joint_error_rad": 1.3877787807814457e-16,
+            "rear_longitudinal_slip_error_mps": 1.353615318574683e-08,
+            "max_per_tire_force_vector_error_N": 1.1101803995783026e-06,
+            "hull_position_error_m": 2.5606856600927447e-05,
+            "hull_angle_error_rad": 6.673775207909126e-09
+          }
+        },
+        {
+          "time_s": 0.54,
+          "predicted_hull_xy_m": [
+            -3.387417333644532e-10,
+            21.833123841635842
+          ],
+          "actual_hull_xy_m": [
+            -7.632317000627609e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 3.8844674984298594e-05,
+          "actual_speed_mps": 3.8843507354615054e-05,
+          "predicted_body_yaw_radps": -1.263863849945823e-11,
+          "actual_body_yaw_radps": -2.973773310932515e-11,
+          "predicted_integrated_relative_heading_rad": 6.932249696976203e-09,
+          "actual_integrated_relative_heading_rad": 2.5813237301123695e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.167629683539791e-09,
+            "yaw_error_radps": 1.709909460986692e-11,
+            "body_sideslip_error_deg": 1.9832630256805684e-05,
+            "front_joint_error_rad": 1.1102230246251565e-16,
+            "rear_longitudinal_slip_error_mps": 2.2551462204128915e-09,
+            "max_per_tire_force_vector_error_N": 1.849512398187773e-07,
+            "hull_position_error_m": 2.6383750101527906e-05,
+            "hull_angle_error_rad": 6.674117292635731e-09
+          }
+        },
+        {
+          "time_s": 0.56,
+          "predicted_hull_xy_m": [
+            -3.387582044051657e-10,
+            21.833123920572998
+          ],
+          "actual_hull_xy_m": [
+            -7.640099664030231e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 3.946857827871755e-06,
+          "actual_speed_mps": 3.946742253902892e-06,
+          "predicted_body_yaw_radps": 4.022788942720331e-12,
+          "actual_body_yaw_radps": 1.3636029805308425e-11,
+          "predicted_integrated_relative_heading_rad": 6.932330152755057e-09,
+          "actual_integrated_relative_heading_rad": 2.584050936073431e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1557396886324327e-10,
+            "yaw_error_radps": 9.613240862588094e-12,
+            "body_sideslip_error_deg": 3.368761873036583e-05,
+            "front_joint_error_rad": 5.551115123125783e-17,
+            "rear_longitudinal_slip_error_mps": 2.4963134176990995e-10,
+            "max_per_tire_force_vector_error_N": 2.0525754337380746e-08,
+            "hull_position_error_m": 2.6462687257002205e-05,
+            "hull_angle_error_rad": 6.673925077639737e-09
+          }
+        },
+        {
+          "time_s": 0.58,
+          "predicted_hull_xy_m": [
+            -3.3875280915094315e-10,
+            21.833123928593498
+          ],
+          "actual_hull_xy_m": [
+            -7.638489840644525e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.010250238863033e-07,
+          "actual_speed_mps": 4.010106238186303e-07,
+          "predicted_body_yaw_radps": -1.2683612285927483e-12,
+          "actual_body_yaw_radps": -4.314290244500363e-12,
+          "predicted_integrated_relative_heading_rad": 6.932304785530485e-09,
+          "actual_integrated_relative_heading_rad": 2.583188078024531e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.4400067672993671e-11,
+            "yaw_error_radps": 3.0459290159076145e-12,
+            "body_sideslip_error_deg": 4.15279210570274e-05,
+            "front_joint_error_rad": 8.326672684688674e-17,
+            "rear_longitudinal_slip_error_mps": 2.6657796856016474e-11,
+            "max_per_tire_force_vector_error_N": 2.2304868658081156e-09,
+            "hull_position_error_m": 2.6470707756821763e-05,
+            "hull_angle_error_rad": 6.673986085766481e-09
+          }
+        },
+        {
+          "time_s": 0.6,
+          "predicted_hull_xy_m": [
+            -3.387544917247192e-10,
+            21.83312392940843
+          ],
+          "actual_hull_xy_m": [
+            -7.639056054387083e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.074660826326772e-08,
+          "actual_speed_mps": 4.074508552819449e-08,
+          "predicted_body_yaw_radps": 4.0115599232635167e-13,
+          "actual_body_yaw_radps": 1.2467354622638926e-12,
+          "predicted_integrated_relative_heading_rad": 6.9323128086503315e-09,
+          "actual_integrated_relative_heading_rad": 2.583437425116984e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.5227350732328785e-12,
+            "yaw_error_radps": 8.45579469937541e-13,
+            "body_sideslip_error_deg": 0.00019199736562837546,
+            "front_joint_error_rad": 5.551115123125783e-17,
+            "rear_longitudinal_slip_error_mps": 4.71302526418392e-12,
+            "max_per_tire_force_vector_error_N": 4.0702409705320187e-10,
+            "hull_position_error_m": 2.647152268894347e-05,
+            "hull_angle_error_rad": 6.673969239890576e-09
+          }
+        },
+        {
+          "time_s": 0.62,
+          "predicted_hull_xy_m": [
+            -3.3875395735072367e-10,
+            21.833123929491233
+          ],
+          "actual_hull_xy_m": [
+            -7.63888952093339e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.140105943717722e-09,
+          "actual_speed_mps": 4.13997458565577e-09,
+          "predicted_body_yaw_radps": -1.2674660286891257e-13,
+          "actual_body_yaw_radps": -4.0210773621408846e-13,
+          "predicted_integrated_relative_heading_rad": 6.932310273718274e-09,
+          "actual_integrated_relative_heading_rad": 2.583357003569741e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.3135806195174288e-13,
+            "yaw_error_radps": 2.753611333451759e-13,
+            "body_sideslip_error_deg": 0.00044305139518210836,
+            "front_joint_error_rad": 5.551115123125783e-17,
+            "rear_longitudinal_slip_error_mps": 9.046540586060336e-13,
+            "max_per_tire_force_vector_error_N": 8.455040659327303e-11,
+            "hull_position_error_m": 2.6471605492041188e-05,
+            "hull_angle_error_rad": 6.673974698564296e-09
+          }
+        },
+        {
+          "time_s": 0.64,
+          "predicted_hull_xy_m": [
+            -3.387541259295719e-10,
+            21.833123929499646
+          ],
+          "actual_hull_xy_m": [
+            -7.638945032084621e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.2066022073549464e-10,
+          "actual_speed_mps": 4.206459350910131e-10,
+          "predicted_body_yaw_radps": 4.0059632166005464e-14,
+          "actual_body_yaw_radps": 1.2802720038632143e-13,
+          "predicted_integrated_relative_heading_rad": 6.9323110749109176e-09,
+          "actual_integrated_relative_heading_rad": 2.5833826090098184e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.4285644481534666e-14,
+            "yaw_error_radps": 8.796756822031596e-14,
+            "body_sideslip_error_deg": 0.0015946763385606584,
+            "front_joint_error_rad": 1.1102230246251565e-16,
+            "rear_longitudinal_slip_error_mps": 2.1227319490790088e-13,
+            "max_per_tire_force_vector_error_N": 2.1774170934519607e-11,
+            "hull_position_error_m": 2.6471613904867172e-05,
+            "hull_angle_error_rad": 6.673973057266285e-09
+          }
+        },
+        {
+          "time_s": 0.66,
+          "predicted_hull_xy_m": [
+            -3.387540726186026e-10,
+            21.833123929500502
+          ],
+          "actual_hull_xy_m": [
+            -7.638933929854375e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.2741665025212805e-11,
+          "actual_speed_mps": 4.274046773592968e-11,
+          "predicted_body_yaw_radps": -1.2659859269557129e-14,
+          "actual_body_yaw_radps": -4.0384789425345485e-14,
+          "predicted_integrated_relative_heading_rad": 6.932310821713732e-09,
+          "actual_integrated_relative_heading_rad": 2.583374532051933e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1972892831219891e-15,
+            "yaw_error_radps": 2.7724930155788357e-14,
+            "body_sideslip_error_deg": 0.0048104202005471676,
+            "front_joint_error_rad": 8.326672684688674e-17,
+            "rear_longitudinal_slip_error_mps": 6.249175113799683e-14,
+            "max_per_tire_force_vector_error_N": 6.571852160829418e-12,
+            "hull_position_error_m": 2.6471614761071172e-05,
+            "hull_angle_error_rad": 6.673973692247519e-09
+          }
+        },
+        {
+          "time_s": 0.68,
+          "predicted_hull_xy_m": [
+            -3.3875408946282324e-10,
+            21.833123929500587
+          ],
+          "actual_hull_xy_m": [
+            -7.638933929854375e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.3428160058965546e-12,
+          "actual_speed_mps": 4.342701429773959e-12,
+          "predicted_body_yaw_radps": 4.000984538464184e-15,
+          "actual_body_yaw_radps": 1.2753027156715575e-14,
+          "predicted_integrated_relative_heading_rad": 6.932310901733423e-09,
+          "actual_integrated_relative_heading_rad": 2.583377082657365e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.1457612259546784e-16,
+            "yaw_error_radps": 8.752042618251391e-15,
+            "body_sideslip_error_deg": 0.015057946104165828,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 1.8985507675734778e-14,
+            "max_per_tire_force_vector_error_N": 2.027958307951755e-12,
+            "hull_position_error_m": 2.64716148463363e-05,
+            "hull_angle_error_rad": 6.673973550222605e-09
+          }
+        },
+        {
+          "time_s": 0.7000000000000001,
+          "predicted_hull_xy_m": [
+            -3.3875408413904187e-10,
+            21.833123929500594
+          ],
+          "actual_hull_xy_m": [
+            -7.638933929854375e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.4125683693980493e-13,
+          "actual_speed_mps": 4.4124676983876377e-13,
+          "predicted_body_yaw_radps": -1.2644438933556318e-15,
+          "actual_body_yaw_radps": -4.036136981138685e-15,
+          "predicted_integrated_relative_heading_rad": 6.932310876444545e-09,
+          "actual_integrated_relative_heading_rad": 2.5833762754299684e-10,
+          "absolute_error": {
+            "speed_error_mps": 1.0067101041153131e-17,
+            "yaw_error_radps": 2.7716930877830533e-15,
+            "body_sideslip_error_deg": 0.04667006794302603,
+            "front_joint_error_rad": 8.326672684688674e-17,
+            "rear_longitudinal_slip_error_mps": 5.950320698956342e-15,
+            "max_per_tire_force_vector_error_N": 6.382208271297219e-13,
+            "hull_position_error_m": 2.6471614853441728e-05,
+            "hull_angle_error_rad": 6.673973524933727e-09
+          }
+        },
+        {
+          "time_s": 0.72,
+          "predicted_hull_xy_m": [
+            -3.3875408582149064e-10,
+            21.833123929500594
+          ],
+          "actual_hull_xy_m": [
+            -7.638933929854375e-11,
+            21.833097457885742
+          ],
+          "predicted_speed_mps": 4.4834434853371066e-14,
+          "actual_speed_mps": 4.483382558335238e-14,
+          "predicted_body_yaw_radps": 3.9960784379475917e-16,
+          "actual_body_yaw_radps": 1.2671143846429791e-15,
+          "predicted_integrated_relative_heading_rad": 6.932310884436702e-09,
+          "actual_integrated_relative_heading_rad": 2.5833765288528454e-10,
+          "absolute_error": {
+            "speed_error_mps": 6.092700186857062e-19,
+            "yaw_error_radps": 8.675065408482199e-16,
+            "body_sideslip_error_deg": 0.14572595921014922,
+            "front_joint_error_rad": 2.7755575615628914e-17,
+            "rear_longitudinal_slip_error_mps": 1.8677396146349214e-15,
+            "max_per_tire_force_vector_error_N": 2.0017285343131893e-13,
+            "hull_position_error_m": 2.6471614853441728e-05,
+            "hull_angle_error_rad": 6.673973532925884e-09
+          }
+        }
+      ]
+    },
+    {
+      "configuration": {
+        "name": "settled_turn_from70",
+        "nominal_initial_speed_mps": 70.0,
+        "joint": 0.06,
+        "warmup_steps": 50
+      },
+      "actual_initial_summary": {
+        "speed_mps": 75.29811873423698,
+        "body_yaw_radps": 1.4328992366790771,
+        "body_sideslip_deg": 0.18382284552403927,
+        "front_joint_rad": [
+          0.06000041961669922,
+          0.06000041961669922
+        ],
+        "rear_rolling_mps": [
+          74.03936893260236,
+          77.14722428019172
+        ],
+        "rear_longitudinal_slip_mps": [
+          0.3812095784522995,
+          0.3379864087636122
+        ],
+        "wheel_lateral_mps": [
+          2.2183002443710773,
+          2.497417692371341,
+          2.4301968380834396,
+          2.520527241462755
+        ],
+        "wheel_forward_mps": [
+          73.79095204552121,
+          76.93095124188677,
+          73.65815935415006,
+          76.80923787142811
+        ],
+        "instant_tire_force_local_N": [
+          [
+            -181.90062003842834,
+            -27.523285686339932
+          ],
+          [
+            -204.78825077444998,
+            -28.777159165757467
+          ],
+          [
+            -199.27614072284206,
+            31.25918543308856
+          ],
+          [
+            -206.68323379994592,
+            27.7148855186162
+          ]
+        ],
+        "instant_tire_demand_ratio": [
+          0.459927758086369,
+          0.5170006802758481,
+          0.5042823919648728,
+          0.5213328711899979
+        ]
+      },
+      "tail_command_world_joint_gas_brake": [
+        0.06000041961669922,
+        0.0,
+        0.9
+      ],
+      "predicted_stop_speed_half_yaw_tenth_s": 0.36,
+      "actual_stop_speed_half_yaw_tenth_s": 0.36,
+      "maximum_error_over_all36_raw_steps": {
+        "max_hull_position_error_m": 4.424501410612285e-05,
+        "max_speed_error_mps": 2.4313245924667548e-05,
+        "max_yaw_error_radps": 0.0006822436968071388,
+        "max_front_joint_error_rad": 3.5762786865234375e-07,
+        "stop_tick_difference_s": 0.0
+      },
+      "acceptance_passed": {
+        "max_hull_position_error_m": true,
+        "max_speed_error_mps": true,
+        "max_yaw_error_radps": true,
+        "max_front_joint_error_rad": true,
+        "stop_tick_difference_s": true
+      },
+      "raw_step_pose_error_speed_yaw_rows": [
+        {
+          "time_s": 0.02,
+          "predicted_hull_xy_m": [
+            0.0024783392643876745,
+            1.418319009793232
+          ],
+          "actual_hull_xy_m": [
+            0.0024738244778426677,
+            1.4183191838097544
+          ],
+          "predicted_speed_mps": 70.91779548675706,
+          "actual_speed_mps": 70.917788366353,
+          "predicted_body_yaw_radps": 1.3497384031845667,
+          "actual_body_yaw_radps": 1.3497174978256226,
+          "predicted_integrated_relative_heading_rad": 0.026994768063691336,
+          "actual_integrated_relative_heading_rad": 0.026994349956512453,
+          "absolute_error": {
+            "speed_error_mps": 7.1204040636985155e-06,
+            "yaw_error_radps": 2.0905358944167673e-05,
+            "body_sideslip_error_deg": 4.463194034109996e-05,
+            "front_joint_error_rad": 3.5762786865234375e-07,
+            "rear_longitudinal_slip_error_mps": 0.05738859506453764,
+            "max_per_tire_force_vector_error_N": 0.23987559628995075,
+            "hull_position_error_m": 4.51813891959943e-06,
+            "hull_angle_error_rad": 7.781192332689812e-07
+          }
+        },
+        {
+          "time_s": 0.04,
+          "predicted_hull_xy_m": [
+            0.004902379352658803,
+            2.748979976179038
+          ],
+          "actual_hull_xy_m": [
+            0.0049018845750945506,
+            2.7489777218870244
+          ],
+          "predicted_speed_mps": 66.53747312352175,
+          "actual_speed_mps": 66.53745686884905,
+          "predicted_body_yaw_radps": 1.269293000690209,
+          "actual_body_yaw_radps": 1.2692561149597168,
+          "predicted_integrated_relative_heading_rad": 0.052380628077495515,
+          "actual_integrated_relative_heading_rad": 0.052379472255706785,
+          "absolute_error": {
+            "speed_error_mps": 1.6254672701165873e-05,
+            "yaw_error_radps": 3.688573049220878e-05,
+            "body_sideslip_error_deg": 0.0001462912249472481,
+            "front_joint_error_rad": 2.384185791015625e-07,
+            "rear_longitudinal_slip_error_mps": 0.05069638903609075,
+            "max_per_tire_force_vector_error_N": 0.23285070917642606,
+            "hull_position_error_m": 2.3079508920700457e-06,
+            "hull_angle_error_rad": 1.7351789358688308e-06
+          }
+        },
+        {
+          "time_s": 0.06,
+          "predicted_hull_xy_m": [
+            0.007263656247302741,
+            3.991992656771165
+          ],
+          "actual_hull_xy_m": [
+            0.007260832405813211,
+            3.9919891224509163
+          ],
+          "predicted_speed_mps": 62.15715818769996,
+          "actual_speed_mps": 62.15714223392899,
+          "predicted_body_yaw_radps": 1.1913134575216549,
+          "actual_body_yaw_radps": 1.1912347078323364,
+          "predicted_integrated_relative_heading_rad": 0.07620689722792862,
+          "actual_integrated_relative_heading_rad": 0.07620416641235352,
+          "absolute_error": {
+            "speed_error_mps": 1.59537709762958e-05,
+            "yaw_error_radps": 7.874968931842474e-05,
+            "body_sideslip_error_deg": 0.0002995097927644963,
+            "front_joint_error_rad": 2.384185791015625e-07,
+            "rear_longitudinal_slip_error_mps": 0.04463986221302463,
+            "max_per_tire_force_vector_error_N": 0.22476296714689525,
+            "hull_position_error_m": 4.523881119003753e-06,
+            "hull_angle_error_rad": 3.55097548720984e-06
+          }
+        },
+        {
+          "time_s": 0.08,
+          "predicted_hull_xy_m": [
+            0.00955337566758585,
+            5.147366067494394
+          ],
+          "actual_hull_xy_m": [
+            0.009548700036631663,
+            5.147360756722441
+          ],
+          "predicted_speed_mps": 57.77685957030522,
+          "actual_speed_mps": 57.776851305041305,
+          "predicted_body_yaw_radps": 1.1154873206482026,
+          "actual_body_yaw_radps": 1.1153475046157837,
+          "predicted_integrated_relative_heading_rad": 0.09851664364089266,
+          "actual_integrated_relative_heading_rad": 0.09851111650466919,
+          "absolute_error": {
+            "speed_error_mps": 8.26526391506377e-06,
+            "yaw_error_radps": 0.0001398160324188602,
+            "body_sideslip_error_deg": 0.0005132881587259774,
+            "front_joint_error_rad": 1.1920928955078125e-07,
+            "rear_longitudinal_slip_error_mps": 0.03912776828328646,
+            "max_per_tire_force_vector_error_N": 0.21995722411183927,
+            "hull_position_error_m": 7.075720709172149e-06,
+            "hull_angle_error_rad": 6.497499840385501e-06
+          }
+        },
+        {
+          "time_s": 0.1,
+          "predicted_hull_xy_m": [
+            0.011762493238540284,
+            6.215108618018658
+          ],
+          "actual_hull_xy_m": [
+            0.01175049476930079,
+            6.215104415243567
+          ],
+          "predicted_speed_mps": 53.39658759047192,
+          "actual_speed_mps": 53.396579983230254,
+          "predicted_body_yaw_radps": 1.0414755765388493,
+          "actual_body_yaw_radps": 1.0412617921829224,
+          "predicted_integrated_relative_heading_rad": 0.11934615517166965,
+          "actual_integrated_relative_heading_rad": 0.11933635234832764,
+          "absolute_error": {
+            "speed_error_mps": 7.60724166326554e-06,
+            "yaw_error_radps": 0.0002137843559268937,
+            "body_sideslip_error_deg": 0.0007985897334723546,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.03411895369102069,
+            "max_per_tire_force_vector_error_N": 0.21545555429979632,
+            "hull_position_error_m": 1.2713244376078432e-05,
+            "hull_angle_error_rad": 1.0742192543711226e-05
+          }
+        },
+        {
+          "time_s": 0.12,
+          "predicted_hull_xy_m": [
+            0.01388176413365172,
+            7.195228250879613
+          ],
+          "actual_hull_xy_m": [
+            0.013868918247641915,
+            7.195224767591481
+          ],
+          "predicted_speed_mps": 49.016354315662824,
+          "actual_speed_mps": 49.01635410512399,
+          "predicted_body_yaw_radps": 0.9689088826424976,
+          "actual_body_yaw_radps": 0.9686132669448853,
+          "predicted_integrated_relative_heading_rad": 0.1387243328245196,
+          "actual_integrated_relative_heading_rad": 0.13870861768722534,
+          "absolute_error": {
+            "speed_error_mps": 2.105388361428595e-07,
+            "yaw_error_radps": 0.0002956156976123836,
+            "body_sideslip_error_deg": 0.0011850526440522202,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.029533218656418114,
+            "max_per_tire_force_vector_error_N": 0.2108849748328216,
+            "hull_position_error_m": 1.3309773986887913e-05,
+            "hull_angle_error_rad": 1.669503765433511e-05
+          }
+        },
+        {
+          "time_s": 0.14,
+          "predicted_hull_xy_m": [
+            0.015901760528812314,
+            8.087732586856827
+          ],
+          "actual_hull_xy_m": [
+            0.01588259051907981,
+            8.087727950764283
+          ],
+          "predicted_speed_mps": 44.63617403190662,
+          "actual_speed_mps": 44.63617731889712,
+          "predicted_body_yaw_radps": 0.8973816128735104,
+          "actual_body_yaw_radps": 0.8970013856887817,
+          "predicted_integrated_relative_heading_rad": 0.1566719650819898,
+          "actual_integrated_relative_heading_rad": 0.15664864540100099,
+          "absolute_error": {
+            "speed_error_mps": 3.286990498452269e-06,
+            "yaw_error_radps": 0.00038022718472863204,
+            "body_sideslip_error_deg": 0.0016629893651174399,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.02534641872116339,
+            "max_per_tire_force_vector_error_N": 0.20627246499921906,
+            "hull_position_error_m": 1.9722642500662335e-05,
+            "hull_angle_error_rad": 2.4282892048477223e-05
+          }
+        },
+        {
+          "time_s": 0.16,
+          "predicted_hull_xy_m": [
+            0.017812852392956824,
+            8.8926290812952
+          ],
+          "actual_hull_xy_m": [
+            0.017789543650247985,
+            8.892621335982982
+          ],
+          "predicted_speed_mps": 40.25606393605215,
+          "actual_speed_mps": 40.25606958564646,
+          "predicted_body_yaw_radps": 0.826442850410997,
+          "actual_body_yaw_radps": 0.825980007648468,
+          "predicted_integrated_relative_heading_rad": 0.17320082209020973,
+          "actual_integrated_relative_heading_rad": 0.17316824555397034,
+          "absolute_error": {
+            "speed_error_mps": 5.649594307044481e-06,
+            "yaw_error_radps": 0.00046284276252894774,
+            "body_sideslip_error_deg": 0.002239941187880845,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.02150960236257049,
+            "max_per_tire_force_vector_error_N": 0.20168949711763803,
+            "hull_position_error_m": 2.456190847703572e-05,
+            "hull_angle_error_rad": 3.359339147945839e-05
+          }
+        },
+        {
+          "time_s": 0.18,
+          "predicted_hull_xy_m": [
+            0.01960514249249634,
+            9.60992519927591
+          ],
+          "actual_hull_xy_m": [
+            0.01958215616390646,
+            9.609918681722913
+          ],
+          "predicted_speed_mps": 35.876045172352654,
+          "actual_speed_mps": 35.876060159233845,
+          "predicted_body_yaw_radps": 0.7555828774089282,
+          "actual_body_yaw_radps": 0.7550439238548279,
+          "predicted_integrated_relative_heading_rad": 0.1883124796383883,
+          "actual_integrated_relative_heading_rad": 0.1882691240310669,
+          "absolute_error": {
+            "speed_error_mps": 1.498688119028202e-05,
+            "yaw_error_radps": 0.0005389535541002743,
+            "body_sideslip_error_deg": 0.0029067822585666647,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.017987173401365908,
+            "max_per_tire_force_vector_error_N": 0.19700970671991244,
+            "hull_position_error_m": 2.3892463228204097e-05,
+            "hull_angle_error_rad": 4.441418581291323e-05
+          }
+        },
+        {
+          "time_s": 0.2,
+          "predicted_hull_xy_m": [
+            0.02126833834686659,
+            10.239628622965078
+          ],
+          "actual_hull_xy_m": [
+            0.02124470165135195,
+            10.239619737727846
+          ],
+          "predicted_speed_mps": 31.49614443100391,
+          "actual_speed_mps": 31.49616212288843,
+          "predicted_body_yaw_radps": 0.6842126293534541,
+          "actual_body_yaw_radps": 0.6836087107658386,
+          "predicted_integrated_relative_heading_rad": 0.2019967322254574,
+          "actual_integrated_relative_heading_rad": 0.20194129824638368,
+          "absolute_error": {
+            "speed_error_mps": 1.769188451916648e-05,
+            "yaw_error_radps": 0.0006039185876154374,
+            "body_sideslip_error_deg": 0.003641371353158007,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.014765739891863916,
+            "max_per_tire_force_vector_error_N": 0.19202330704351744,
+            "hull_position_error_m": 2.525155075422478e-05,
+            "hull_angle_error_rad": 5.6434145013328774e-05
+          }
+        },
+        {
+          "time_s": 0.22,
+          "predicted_hull_xy_m": [
+            0.022791528619075407,
+            10.781747514434526
+          ],
+          "actual_hull_xy_m": [
+            0.022764889058157767,
+            10.781740964116942
+          ],
+          "predicted_speed_mps": 27.11639651873576,
+          "actual_speed_mps": 27.116418093849447,
+          "predicted_body_yaw_radps": 0.6116314495741962,
+          "actual_body_yaw_radps": 0.610978364944458,
+          "predicted_integrated_relative_heading_rad": 0.2142293612169413,
+          "actual_integrated_relative_heading_rad": 0.21416086554527283,
+          "absolute_error": {
+            "speed_error_mps": 2.157511368849896e-05,
+            "yaw_error_radps": 0.000653084629738232,
+            "body_sideslip_error_deg": 0.004446021197912486,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.011824056804069727,
+            "max_per_tire_force_vector_error_N": 0.18654522590776795,
+            "hull_position_error_m": 2.7433061556537065e-05,
+            "hull_angle_error_rad": 6.95149110945259e-05
+          }
+        },
+        {
+          "time_s": 0.24,
+          "predicted_hull_xy_m": [
+            0.024162800488169545,
+            11.23629087724131
+          ],
+          "actual_hull_xy_m": [
+            0.02413337922994563,
+            11.236287764177842
+          ],
+          "predicted_speed_mps": 22.73684873251459,
+          "actual_speed_mps": 22.736869606020587,
+          "predicted_body_yaw_radps": 0.5369739404243261,
+          "actual_body_yaw_radps": 0.5362926125526428,
+          "predicted_integrated_relative_heading_rad": 0.22496884002542783,
+          "actual_integrated_relative_heading_rad": 0.22488671779632569,
+          "absolute_error": {
+            "speed_error_mps": 2.087350599566662e-05,
+            "yaw_error_radps": 0.0006813278716832905,
+            "body_sideslip_error_deg": 0.00529361526308314,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.009154500735490956,
+            "max_per_tire_force_vector_error_N": 0.18017822090114152,
+            "hull_position_error_m": 2.9585496440577956e-05,
+            "hull_angle_error_rad": 8.31378922494519e-05
+          }
+        },
+        {
+          "time_s": 0.26,
+          "predicted_hull_xy_m": [
+            0.02536856546652988,
+            11.603269104357702
+          ],
+          "actual_hull_xy_m": [
+            0.02533714740183468,
+            11.603264557231503
+          ],
+          "predicted_speed_mps": 18.357568886304254,
+          "actual_speed_mps": 18.35759023085872,
+          "predicted_body_yaw_radps": 0.45911605059301686,
+          "actual_body_yaw_radps": 0.4584338068962097,
+          "predicted_integrated_relative_heading_rad": 0.23415116103728817,
+          "actual_integrated_relative_heading_rad": 0.23405539393424987,
+          "absolute_error": {
+            "speed_error_mps": 2.1344554465230203e-05,
+            "yaw_error_radps": 0.0006822436968071388,
+            "body_sideslip_error_deg": 0.006166862340144519,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.006751051786221041,
+            "max_per_tire_force_vector_error_N": 0.17245694031963968,
+            "hull_position_error_m": 3.174541141426189e-05,
+            "hull_angle_error_rad": 9.68340261799927e-05
+          }
+        },
+        {
+          "time_s": 0.28,
+          "predicted_hull_xy_m": [
+            0.026392286458334357,
+            11.88269491148487
+          ],
+          "actual_hull_xy_m": [
+            0.026355547331704088,
+            11.882689521074223
+          ],
+          "predicted_speed_mps": 13.978661660908253,
+          "actual_speed_mps": 13.978679891371883,
+          "predicted_body_yaw_radps": 0.37649207068668855,
+          "actual_body_yaw_radps": 0.37584441900253296,
+          "predicted_integrated_relative_heading_rad": 0.24168100245102195,
+          "actual_integrated_relative_heading_rad": 0.24157228231430053,
+          "absolute_error": {
+            "speed_error_mps": 1.823046362936509e-05,
+            "yaw_error_radps": 0.0006476516841555924,
+            "body_sideslip_error_deg": 0.007032799313646976,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.004623589661683525,
+            "max_per_tire_force_vector_error_N": 0.16277410904750395,
+            "hull_position_error_m": 3.713246494012769e-05,
+            "hull_angle_error_rad": 0.00010981447799962574
+          }
+        },
+        {
+          "time_s": 0.3,
+          "predicted_hull_xy_m": [
+            0.027211774358867125,
+            12.07458518904192
+          ],
+          "actual_hull_xy_m": [
+            0.02717161838793647,
+            12.07458181746898
+          ],
+          "predicted_speed_mps": 9.600307369003676,
+          "actual_speed_mps": 9.600320070024177,
+          "predicted_body_yaw_radps": 0.28668321487638826,
+          "actual_body_yaw_radps": 0.2861170172691345,
+          "predicted_integrated_relative_heading_rad": 0.2474146667485497,
+          "actual_integrated_relative_heading_rad": 0.24729462265968322,
+          "absolute_error": {
+            "speed_error_mps": 1.2701020500216487e-05,
+            "yaw_error_radps": 0.0005661976072537378,
+            "body_sideslip_error_deg": 0.007876699977391155,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.0027902326949185152,
+            "max_per_tire_force_vector_error_N": 0.15353882007834177,
+            "hull_position_error_m": 4.029726424299789e-05,
+            "hull_angle_error_rad": 0.00012119445851088706
+          }
+        },
+        {
+          "time_s": 0.32,
+          "predicted_hull_xy_m": [
+            0.02779217473248874,
+            12.178965621502098
+          ],
+          "actual_hull_xy_m": [
+            0.027748003953024902,
+            12.178963059566344
+          ],
+          "predicted_speed_mps": 5.222879400002575,
+          "actual_speed_mps": 5.222880058319665,
+          "predicted_body_yaw_radps": 0.18525630614582844,
+          "actual_body_yaw_radps": 0.18483707308769226,
+          "predicted_integrated_relative_heading_rad": 0.25111979287146624,
+          "actual_integrated_relative_heading_rad": 0.2509913641214371,
+          "absolute_error": {
+            "speed_error_mps": 6.583170897300761e-07,
+            "yaw_error_radps": 0.0004192330581361814,
+            "body_sideslip_error_deg": 0.008759914850099193,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.0013037196448384414,
+            "max_per_tire_force_vector_error_N": 0.18469773898820727,
+            "hull_position_error_m": 4.424501410612285e-05,
+            "hull_angle_error_rad": 0.00012952130316823407
+          }
+        },
+        {
+          "time_s": 0.34,
+          "predicted_hull_xy_m": [
+            0.028058873302939435,
+            12.19588850265963
+          ],
+          "actual_hull_xy_m": [
+            0.028015394079596412,
+            12.195885812821839
+          ],
+          "predicted_speed_mps": 0.8475530072067353,
+          "actual_speed_mps": 0.8475286939608107,
+          "predicted_body_yaw_radps": 0.060700576645167065,
+          "actual_body_yaw_radps": 0.06053560972213745,
+          "predicted_integrated_relative_heading_rad": 0.2523338044043696,
+          "actual_integrated_relative_heading_rad": 0.2522020763158798,
+          "absolute_error": {
+            "speed_error_mps": 2.4313245924667548e-05,
+            "yaw_error_radps": 0.00016496692302961358,
+            "body_sideslip_error_deg": 0.01203349694199396,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.0002914403777602992,
+            "max_per_tire_force_vector_error_N": 0.04295755679700148,
+            "hull_position_error_m": 4.356234715746535e-05,
+            "hull_angle_error_rad": 0.0001328432913938471
+          }
+        },
+        {
+          "time_s": 0.36,
+          "predicted_hull_xy_m": [
+            0.02818168953594835,
+            12.197632635144878
+          ],
+          "actual_hull_xy_m": [
+            0.02813849247085276,
+            12.19762829320632
+          ],
+          "predicted_speed_mps": 0.08706517760731068,
+          "actual_speed_mps": 0.08705573884673089,
+          "predicted_body_yaw_radps": -0.014283316647648009,
+          "actual_body_yaw_radps": -0.014233515597879887,
+          "predicted_integrated_relative_heading_rad": 0.2520481380714166,
+          "actual_integrated_relative_heading_rad": 0.2519174060039222,
+          "absolute_error": {
+            "speed_error_mps": 9.438760579794092e-06,
+            "yaw_error_radps": 4.9801049768122274e-05,
+            "body_sideslip_error_deg": 0.016506778746233408,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.00012825586671885714,
+            "max_per_tire_force_vector_error_N": 0.015005663894320126,
+            "hull_position_error_m": 4.3414730947789344e-05,
+            "hull_angle_error_rad": 0.0001318487418882075
+          }
+        },
+        {
+          "time_s": 0.38,
+          "predicted_hull_xy_m": [
+            0.0281690516733204,
+            12.197803382147494
+          ],
+          "actual_hull_xy_m": [
+            0.028128368431320716,
+            12.19779931576869
+          ],
+          "predicted_speed_mps": 0.008641531041722737,
+          "actual_speed_mps": 0.008641124029715909,
+          "predicted_body_yaw_radps": 0.005024656742574945,
+          "actual_body_yaw_radps": 0.005008601117879152,
+          "predicted_integrated_relative_heading_rad": 0.2521486312062681,
+          "actual_integrated_relative_heading_rad": 0.2520175780262798,
+          "absolute_error": {
+            "speed_error_mps": 4.0701200682870253e-07,
+            "yaw_error_radps": 1.6055624695792553e-05,
+            "body_sideslip_error_deg": 7.127270144202669e-05,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.5121038804826477e-05,
+            "max_per_tire_force_vector_error_N": 0.0038439927840668016,
+            "hull_position_error_m": 4.088595866783092e-05,
+            "hull_angle_error_rad": 0.0001322060735171604
+          }
+        },
+        {
+          "time_s": 0.4,
+          "predicted_hull_xy_m": [
+            0.02817624021968168,
+            12.197822913357378
+          ],
+          "actual_hull_xy_m": [
+            0.02813548939610122,
+            12.197817010110759
+          ],
+          "predicted_speed_mps": 0.0009756965198399262,
+          "actual_speed_mps": 0.0009752447311468663,
+          "predicted_body_yaw_radps": -0.0015347080330182592,
+          "actual_body_yaw_radps": -0.001529641100205481,
+          "predicted_integrated_relative_heading_rad": 0.25211793704560775,
+          "actual_integrated_relative_heading_rad": 0.25198698520427565,
+          "absolute_error": {
+            "speed_error_mps": 4.517886930599166e-07,
+            "yaw_error_radps": 5.0669328127781604e-06,
+            "body_sideslip_error_deg": 0.04297815722688014,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1098380403871781e-05,
+            "max_per_tire_force_vector_error_N": 0.0012154460938175536,
+            "hull_position_error_m": 4.117618174540655e-05,
+            "hull_angle_error_rad": 0.00013214870027145054
+          }
+        },
+        {
+          "time_s": 0.42,
+          "predicted_hull_xy_m": [
+            0.028174348753660983,
+            12.197824222595093
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 9.405572797445656e-05,
+          "actual_speed_mps": 9.397494182102246e-05,
+          "predicted_body_yaw_radps": 0.0004905803587372279,
+          "actual_body_yaw_radps": 0.0004889714764431119,
+          "predicted_integrated_relative_heading_rad": 0.2521277486527825,
+          "actual_integrated_relative_heading_rad": 0.2519967646338045,
+          "absolute_error": {
+            "speed_error_mps": 8.078615343409866e-08,
+            "yaw_error_radps": 1.6088822941159701e-06,
+            "body_sideslip_error_deg": 0.09895307257017905,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.4483574873516495e-06,
+            "max_per_tire_force_vector_error_N": 0.000385331362827885,
+            "hull_position_error_m": 4.3327313751053614e-05,
+            "hull_angle_error_rad": 0.0001321851457030121
+          }
+        },
+        {
+          "time_s": 0.44,
+          "predicted_hull_xy_m": [
+            0.028174990995822213,
+            12.197824570530875
+          ],
+          "actual_hull_xy_m": [
+            0.02813548939610122,
+            12.197817010110759
+          ],
+          "predicted_speed_mps": 2.4647026443953052e-05,
+          "actual_speed_mps": 2.458494637382561e-05,
+          "predicted_body_yaw_radps": -0.00015446225615001956,
+          "actual_body_yaw_radps": -0.00015395255468320101,
+          "predicted_integrated_relative_heading_rad": 0.2521246594076595,
+          "actual_integrated_relative_heading_rad": 0.25199368558271085,
+          "absolute_error": {
+            "speed_error_mps": 6.208007012744259e-08,
+            "yaw_error_radps": 5.097014668185417e-07,
+            "body_sideslip_error_deg": 0.056757812192429924,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.0966609469220483e-06,
+            "max_per_tire_force_vector_error_N": 0.0001223286531049406,
+            "hull_position_error_m": 4.021860679854115e-05,
+            "hull_angle_error_rad": 0.00013219534210828776
+          }
+        },
+        {
+          "time_s": 0.46,
+          "predicted_hull_xy_m": [
+            0.02817479314856408,
+            12.197824538120818
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.1175987219635826e-06,
+          "actual_speed_mps": 6.0975639190546675e-06,
+          "predicted_body_yaw_radps": 4.88762627396539e-05,
+          "actual_body_yaw_radps": 4.871459532296285e-05,
+          "predicted_integrated_relative_heading_rad": 0.2521256369329143,
+          "actual_integrated_relative_heading_rad": 0.25199465987461733,
+          "absolute_error": {
+            "speed_error_mps": 2.0034802908915113e-08,
+            "yaw_error_radps": 1.616674166910468e-07,
+            "body_sideslip_error_deg": 0.022518463463526928,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.4633755975189246e-07,
+            "max_per_tire_force_vector_error_N": 3.875290465964503e-05,
+            "hull_position_error_m": 4.382395550839473e-05,
+            "hull_angle_error_rad": 0.00013221919304662322
+          }
+        },
+        {
+          "time_s": 0.48,
+          "predicted_hull_xy_m": [
+            0.02817485625972793,
+            12.197824556259578
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 2.0417329707765537e-06,
+          "actual_speed_mps": 2.035237970427829e-06,
+          "predicted_body_yaw_radps": -1.5440418339945612e-05,
+          "actual_body_yaw_radps": -1.5389154214062728e-05,
+          "predicted_integrated_relative_heading_rad": 0.25212532812454747,
+          "actual_integrated_relative_heading_rad": 0.25199435209153304,
+          "absolute_error": {
+            "speed_error_mps": 6.495000348724662e-09,
+            "yaw_error_radps": 5.1264125882884495e-08,
+            "body_sideslip_error_deg": 0.011960501898542475,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.0997476553358464e-07,
+            "max_per_tire_force_vector_error_N": 1.2294070041886346e-05,
+            "hull_position_error_m": 4.388938823127462e-05,
+            "hull_angle_error_rad": 0.0001322680125483977
+          }
+        },
+        {
+          "time_s": 0.5,
+          "predicted_hull_xy_m": [
+            0.028174836380193025,
+            12.197824551331038
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.314158126347242e-07,
+          "actual_speed_mps": 6.293637585256579e-07,
+          "predicted_body_yaw_radps": 4.880405172379423e-06,
+          "actual_body_yaw_radps": 4.864158654527273e-06,
+          "predicted_integrated_relative_heading_rad": 0.2521254257326509,
+          "actual_integrated_relative_heading_rad": 0.2519944493747061,
+          "absolute_error": {
+            "speed_error_mps": 2.0520541090662732e-09,
+            "yaw_error_radps": 1.6246517852149895e-08,
+            "body_sideslip_error_deg": 0.001440016701536706,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.484602476878251e-08,
+            "max_per_tire_force_vector_error_N": 3.896260664472877e-06,
+            "hull_position_error_m": 4.3868929898915e-05,
+            "hull_angle_error_rad": 0.0001322464113622246
+          }
+        },
+        {
+          "time_s": 0.52,
+          "predicted_hull_xy_m": [
+            0.02817484267025616,
+            12.19782455297051
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 2.0091578608278907e-07,
+          "actual_speed_mps": 2.002649222838828e-07,
+          "predicted_body_yaw_radps": -1.5423214161378066e-06,
+          "actual_body_yaw_radps": -1.5371703057098784e-06,
+          "predicted_integrated_relative_heading_rad": 0.2521253948862226,
+          "actual_integrated_relative_heading_rad": 0.2519944186313,
+          "absolute_error": {
+            "speed_error_mps": 6.508637989062587e-10,
+            "yaw_error_radps": 5.151110427928105e-09,
+            "body_sideslip_error_deg": 0.0051903174148151265,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1048301611621488e-08,
+            "max_per_tire_force_vector_error_N": 1.2352364276099905e-06,
+            "hull_position_error_m": 4.387541865077003e-05,
+            "hull_angle_error_rad": 0.00013221556493392406
+          }
+        },
+        {
+          "time_s": 0.54,
+          "predicted_hull_xy_m": [
+            0.028174840683183877,
+            12.197824552460713
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.335189096954244e-08,
+          "actual_speed_mps": 6.314530382784719e-08,
+          "predicted_body_yaw_radps": 4.874382158473523e-07,
+          "actual_body_yaw_radps": 4.858058559875644e-07,
+          "predicted_integrated_relative_heading_rad": 0.2521254046349869,
+          "actual_integrated_relative_heading_rad": 0.25199442834741714,
+          "absolute_error": {
+            "speed_error_mps": 2.0658714169525195e-10,
+            "yaw_error_radps": 1.6323598597878635e-09,
+            "body_sideslip_error_deg": 0.0038991253298803485,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.5019046107943694e-09,
+            "max_per_tire_force_vector_error_N": 3.915247775558595e-07,
+            "hull_position_error_m": 4.387337038972255e-05,
+            "hull_angle_error_rad": 0.00013222531369816437
+          }
+        },
+        {
+          "time_s": 0.56,
+          "predicted_hull_xy_m": [
+            0.02817484131126413,
+            12.197824552622677
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 2.0036595242411574e-08,
+          "actual_speed_mps": 1.9971051314321394e-08,
+          "predicted_body_yaw_radps": -1.5404790214396092e-07,
+          "actual_body_yaw_radps": -1.5353060689449194e-07,
+          "predicted_integrated_relative_heading_rad": 0.25212540155402885,
+          "actual_integrated_relative_heading_rad": 0.251994425276805,
+          "absolute_error": {
+            "speed_error_mps": 6.554392809018068e-11,
+            "yaw_error_radps": 5.172952494689794e-10,
+            "body_sideslip_error_deg": 0.0048683487432157335,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1098967451163892e-09,
+            "max_per_tire_force_vector_error_N": 1.2408829119491553e-07,
+            "hull_position_error_m": 4.38740179710174e-05,
+            "hull_angle_error_rad": 0.00013222223274023115
+          }
+        },
+        {
+          "time_s": 0.58,
+          "predicted_hull_xy_m": [
+            0.02817484111277757,
+            12.197824552571578
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.330740063152673e-09,
+          "actual_speed_mps": 6.31000500418143e-09,
+          "predicted_body_yaw_radps": 4.868495777009262e-08,
+          "actual_body_yaw_radps": 4.8521002327106544e-08,
+          "predicted_integrated_relative_heading_rad": 0.252125402527728,
+          "actual_integrated_relative_heading_rad": 0.251994426247225,
+          "absolute_error": {
+            "speed_error_mps": 2.0735058971242493e-11,
+            "yaw_error_radps": 1.6395544298607804e-10,
+            "body_sideslip_error_deg": 0.00392699767937188,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.5171860297346457e-10,
+            "max_per_tire_force_vector_error_N": 3.932350977091655e-08,
+            "hull_position_error_m": 4.387381333789679e-05,
+            "hull_angle_error_rad": 0.00013222320643935248
+          }
+        },
+        {
+          "time_s": 0.6,
+          "predicted_hull_xy_m": [
+            0.02817484117550828,
+            12.197824552587736
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 2.000913627895665e-09,
+          "actual_speed_mps": 1.994322833212278e-09,
+          "predicted_body_yaw_radps": -1.538625351982713e-08,
+          "actual_body_yaw_radps": -1.5334265413002868e-08,
+          "predicted_integrated_relative_heading_rad": 0.25212540222000296,
+          "actual_integrated_relative_heading_rad": 0.2519944259405397,
+          "absolute_error": {
+            "speed_error_mps": 6.590794683387108e-12,
+            "yaw_error_radps": 5.198810682426379e-11,
+            "body_sideslip_error_deg": 0.004499916666247827,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1149195320774747e-10,
+            "max_per_tire_force_vector_error_N": 1.2467172680442238e-08,
+            "hull_position_error_m": 4.387387801276759e-05,
+            "hull_angle_error_rad": 0.0001322228987141738
+          }
+        },
+        {
+          "time_s": 0.62,
+          "predicted_hull_xy_m": [
+            0.02817484115568325,
+            12.19782455258263
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.323462182190515e-10,
+          "actual_speed_mps": 6.302643290111102e-10,
+          "predicted_body_yaw_radps": 4.862630558390774e-09,
+          "actual_body_yaw_radps": 4.846163914606905e-09,
+          "predicted_integrated_relative_heading_rad": 0.25212540231725555,
+          "actual_integrated_relative_heading_rad": 0.251994426037463,
+          "absolute_error": {
+            "speed_error_mps": 2.081889207941269e-12,
+            "yaw_error_radps": 1.6466643783869025e-11,
+            "body_sideslip_error_deg": 0.004178353908471877,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.533446974569281e-11,
+            "max_per_tire_force_vector_error_N": 3.950064091346839e-09,
+            "hull_position_error_m": 4.3873857573401e-05,
+            "hull_angle_error_rad": 0.00013222299596682419
+          }
+        },
+        {
+          "time_s": 0.64,
+          "predicted_hull_xy_m": [
+            0.02817484116194846,
+            12.197824552584244
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 1.9984676037049017e-10,
+          "actual_speed_mps": 1.9918333791932852e-10,
+          "predicted_body_yaw_radps": -1.536772447234766e-09,
+          "actual_body_yaw_radps": -1.531550886113564e-09,
+          "predicted_integrated_relative_heading_rad": 0.2521254022865201,
+          "actual_integrated_relative_heading_rad": 0.25199442600683203,
+          "absolute_error": {
+            "speed_error_mps": 6.634224511616498e-13,
+            "yaw_error_radps": 5.221561121201992e-12,
+            "body_sideslip_error_deg": 0.004280888685073592,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1197509188302135e-11,
+            "max_per_tire_force_vector_error_N": 1.2522332991168335e-09,
+            "hull_position_error_m": 4.387386403281131e-05,
+            "hull_angle_error_rad": 0.00013222296523140997
+          }
+        },
+        {
+          "time_s": 0.66,
+          "predicted_hull_xy_m": [
+            0.028174841159968267,
+            12.197824552583734
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.315884076114108e-11,
+          "actual_speed_mps": 6.295004211627228e-11,
+          "predicted_body_yaw_radps": 4.856773934570753e-10,
+          "actual_body_yaw_radps": 4.840215450663266e-10,
+          "predicted_integrated_relative_heading_rad": 0.25212540229623365,
+          "actual_integrated_relative_heading_rad": 0.25199442601651245,
+          "absolute_error": {
+            "speed_error_mps": 2.0879864486879965e-13,
+            "yaw_error_radps": 1.6558483907487522e-12,
+            "body_sideslip_error_deg": 0.004323398557986025,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.5509462405132774e-12,
+            "max_per_tire_force_vector_error_N": 3.9702289145022147e-10,
+            "hull_position_error_m": 4.387386199186689e-05,
+            "hull_angle_error_rad": 0.00013222297494497326
+          }
+        },
+        {
+          "time_s": 0.68,
+          "predicted_hull_xy_m": [
+            0.028174841160594433,
+            12.197824552583892
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 1.996056762334762e-11,
+          "actual_speed_mps": 1.9894085967938707e-11,
+          "predicted_body_yaw_radps": -1.534921614417461e-10,
+          "actual_body_yaw_radps": -1.5296731936675911e-10,
+          "predicted_integrated_relative_heading_rad": 0.2521254022931638,
+          "actual_integrated_relative_heading_rad": 0.2519944260134531,
+          "absolute_error": {
+            "speed_error_mps": 6.648165540891391e-14,
+            "yaw_error_radps": 5.24842074986978e-13,
+            "body_sideslip_error_deg": 0.0039056670805877047,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1256436735759893e-12,
+            "max_per_tire_force_vector_error_N": 1.2586655531219077e-10,
+            "hull_position_error_m": 4.3873862637103004e-05,
+            "hull_angle_error_rad": 0.0001322229718752066
+          }
+        },
+        {
+          "time_s": 0.7000000000000001,
+          "predicted_hull_xy_m": [
+            0.02817484116039637,
+            12.197824552583844
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 6.308281478416372e-12,
+          "actual_speed_mps": 6.287235064237722e-12,
+          "predicted_body_yaw_radps": 4.8509245308532e-11,
+          "actual_body_yaw_radps": 4.834295810884903e-11,
+          "predicted_integrated_relative_heading_rad": 0.252125402294134,
+          "actual_integrated_relative_heading_rad": 0.25199442601441996,
+          "absolute_error": {
+            "speed_error_mps": 2.1046414178649705e-14,
+            "yaw_error_radps": 1.662871996829702e-13,
+            "body_sideslip_error_deg": 0.004459948946632153,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.567254452999929e-13,
+            "max_per_tire_force_vector_error_N": 3.988423824780627e-11,
+            "hull_position_error_m": 4.387386243302558e-05,
+            "hull_angle_error_rad": 0.00013222297284531948
+          }
+        },
+        {
+          "time_s": 0.72,
+          "predicted_hull_xy_m": [
+            0.028174841160458985,
+            12.19782455258386
+          ],
+          "actual_hull_xy_m": [
+            0.028131803785596432,
+            12.197816026144077
+          ],
+          "predicted_speed_mps": 1.9936523309219765e-12,
+          "actual_speed_mps": 1.9869805886577883e-12,
+          "predicted_body_yaw_radps": -1.5330729933315292e-11,
+          "actual_body_yaw_radps": -1.5278023637876892e-11,
+          "predicted_integrated_relative_heading_rad": 0.2521254022938274,
+          "actual_integrated_relative_heading_rad": 0.2519944260141144,
+          "absolute_error": {
+            "speed_error_mps": 6.671742264188142e-15,
+            "yaw_error_radps": 5.27062954384002e-14,
+            "body_sideslip_error_deg": 0.004142094646539363,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 1.1305136813502271e-13,
+            "max_per_tire_force_vector_error_N": 1.26403905925509e-11,
+            "hull_position_error_m": 4.387386249772439e-05,
+            "hull_angle_error_rad": 0.00013222297253867588
+          }
+        }
+      ]
+    },
+    {
+      "configuration": {
+        "name": "settled_turn100",
+        "nominal_initial_speed_mps": 100.0,
+        "joint": 0.06,
+        "warmup_steps": 30
+      },
+      "actual_initial_summary": {
+        "speed_mps": 99.96779257941898,
+        "body_yaw_radps": 1.9301362037658691,
+        "body_sideslip_deg": 0.7950981235713858,
+        "front_joint_rad": [
+          0.0603482723236084,
+          0.0603482723236084
+        ],
+        "rear_rolling_mps": [
+          98.52122229373961,
+          100.43348196657769
+        ],
+        "rear_longitudinal_slip_mps": [
+          0.5474858130741325,
+          0.5309062002223186
+        ],
+        "wheel_lateral_mps": [
+          3.995333070096258,
+          4.306849317508657,
+          4.351525923151307,
+          4.413169510382971
+        ],
+        "wheel_forward_mps": [
+          98.15213318447749,
+          99.90721090033841,
+          97.97373648066548,
+          99.90257576635537
+        ],
+        "instant_tire_force_local_N": [
+          [
+            -327.61731174789315,
+            0.5370852592858455
+          ],
+          [
+            -353.1616440357099,
+            0.006053229194037613
+          ],
+          [
+            -356.8251256984072,
+            44.89383667207886
+          ],
+          [
+            -361.87989985140365,
+            43.534308418230125
+          ]
+        ],
+        "instant_tire_demand_ratio": [
+          0.819044379969318,
+          0.882904110218966,
+          0.8990954721997804,
+          0.911222729104675
+        ]
+      },
+      "tail_command_world_joint_gas_brake": [
+        0.0603482723236084,
+        0.0,
+        0.9
+      ],
+      "predicted_stop_speed_half_yaw_tenth_s": 0.46,
+      "actual_stop_speed_half_yaw_tenth_s": 0.46,
+      "maximum_error_over_all36_raw_steps": {
+        "max_hull_position_error_m": 0.00017239986362120575,
+        "max_speed_error_mps": 0.0016455043676786296,
+        "max_yaw_error_radps": 0.017424693978769668,
+        "max_front_joint_error_rad": 8.344650268554688e-07,
+        "stop_tick_difference_s": 0.0
+      },
+      "acceptance_passed": {
+        "max_hull_position_error_m": true,
+        "max_speed_error_mps": true,
+        "max_yaw_error_radps": true,
+        "max_front_joint_error_rad": true,
+        "stop_tick_difference_s": true
+      },
+      "raw_step_pose_error_speed_yaw_rows": [
+        {
+          "time_s": 0.02,
+          "predicted_hull_xy_m": [
+            0.023657882000287955,
+            1.9115100055818541
+          ],
+          "actual_hull_xy_m": [
+            0.02368565148692925,
+            1.911508694539462
+          ],
+          "predicted_speed_mps": 95.58751989218015,
+          "actual_speed_mps": 95.58751781678919,
+          "predicted_body_yaw_radps": 1.8470709237227272,
+          "actual_body_yaw_radps": 1.8296462297439575,
+          "predicted_integrated_relative_heading_rad": 0.03694141847445454,
+          "actual_integrated_relative_heading_rad": 0.03659292459487915,
+          "absolute_error": {
+            "speed_error_mps": 2.075390966638224e-06,
+            "yaw_error_radps": 0.017424693978769668,
+            "body_sideslip_error_deg": 0.02001516152720839,
+            "front_joint_error_rad": 8.344650268554688e-07,
+            "rear_longitudinal_slip_error_mps": 0.12050850478838981,
+            "max_per_tire_force_vector_error_N": 0.6994105018316066,
+            "hull_position_error_m": 2.7800417631254877e-05,
+            "hull_angle_error_rad": 0.0003492925818153747
+          }
+        },
+        {
+          "time_s": 0.04,
+          "predicted_hull_xy_m": [
+            0.04633173918749067,
+            3.7353214920721864
+          ],
+          "actual_hull_xy_m": [
+            0.04638407320199622,
+            3.7353228772085805
+          ],
+          "predicted_speed_mps": 91.20726005251606,
+          "actual_speed_mps": 91.20721827996385,
+          "predicted_body_yaw_radps": 1.7675061005692179,
+          "actual_body_yaw_radps": 1.750748634338379,
+          "predicted_integrated_relative_heading_rad": 0.0722915404858389,
+          "actual_integrated_relative_heading_rad": 0.07160789728164674,
+          "absolute_error": {
+            "speed_error_mps": 4.1772552208385605e-05,
+            "yaw_error_radps": 0.016757466230838958,
+            "body_sideslip_error_deg": 0.03933849783020715,
+            "front_joint_error_rad": 7.152557373046875e-07,
+            "rear_longitudinal_slip_error_mps": 0.10617562998294261,
+            "max_per_tire_force_vector_error_N": 0.8135416791131073,
+            "hull_position_error_m": 5.2352341658285433e-05,
+            "hull_angle_error_rad": 0.0006851428570546769
+          }
+        },
+        {
+          "time_s": 0.06,
+          "predicted_hull_xy_m": [
+            0.06801542044622488,
+            5.471447785357759
+          ],
+          "actual_hull_xy_m": [
+            0.06808553685387198,
+            5.471452456247594
+          ],
+          "predicted_speed_mps": 86.82700730086293,
+          "actual_speed_mps": 86.82693719942402,
+          "predicted_body_yaw_radps": 1.691474228226745,
+          "actual_body_yaw_radps": 1.6753140687942505,
+          "predicted_integrated_relative_heading_rad": 0.1061210250503738,
+          "actual_integrated_relative_heading_rad": 0.10511417865753175,
+          "absolute_error": {
+            "speed_error_mps": 7.010143890795462e-05,
+            "yaw_error_radps": 0.016160159432494492,
+            "body_sideslip_error_deg": 0.057967253485450065,
+            "front_joint_error_rad": 4.76837158203125e-07,
+            "rear_longitudinal_slip_error_mps": 0.09144898099231114,
+            "max_per_tire_force_vector_error_N": 0.9258167094598777,
+            "hull_position_error_m": 7.027181393064678e-05,
+            "hull_angle_error_rad": 0.0010088300354200719
+          }
+        },
+        {
+          "time_s": 0.08,
+          "predicted_hull_xy_m": [
+            0.08870215933084769,
+            7.11990114091432
+          ],
+          "actual_hull_xy_m": [
+            0.08879219054185983,
+            7.119909454251912
+          ],
+          "predicted_speed_mps": 82.44676941583499,
+          "actual_speed_mps": 82.44666930017753,
+          "predicted_body_yaw_radps": 1.6187097763977716,
+          "actual_body_yaw_radps": 1.6030728816986084,
+          "predicted_integrated_relative_heading_rad": 0.13849522057832922,
+          "actual_integrated_relative_heading_rad": 0.13717563629150392,
+          "absolute_error": {
+            "speed_error_mps": 0.00010011565746026463,
+            "yaw_error_radps": 0.015636894699163184,
+            "body_sideslip_error_deg": 0.07599497434388702,
+            "front_joint_error_rad": 4.76837158203125e-07,
+            "rear_longitudinal_slip_error_mps": 0.07670987866524115,
+            "max_per_tire_force_vector_error_N": 1.036677274876875,
+            "hull_position_error_m": 9.041421646063633e-05,
+            "hull_angle_error_rad": 0.0013220447665616142
+          }
+        },
+        {
+          "time_s": 0.1,
+          "predicted_hull_xy_m": [
+            0.10838476527184193,
+            8.680692892304327
+          ],
+          "actual_hull_xy_m": [
+            0.1084891325473416,
+            8.680705308997833
+          ],
+          "predicted_speed_mps": 78.06655545622705,
+          "actual_speed_mps": 78.06642746862944,
+          "predicted_body_yaw_radps": 1.5489224861400672,
+          "actual_body_yaw_radps": 1.533744215965271,
+          "predicted_integrated_relative_heading_rad": 0.16947367030113056,
+          "actual_integrated_relative_heading_rad": 0.16785052061080935,
+          "absolute_error": {
+            "speed_error_mps": 0.00012798759760812572,
+            "yaw_error_radps": 0.015178270174796227,
+            "body_sideslip_error_deg": 0.09350009950665239,
+            "front_joint_error_rad": 4.76837158203125e-07,
+            "rear_longitudinal_slip_error_mps": 0.062283747567533965,
+            "max_per_tire_force_vector_error_N": 1.146635739677579,
+            "hull_position_error_m": 0.0001051032943004875,
+            "hull_angle_error_rad": 0.0016260369393141794
+          }
+        },
+        {
+          "time_s": 0.12,
+          "predicted_hull_xy_m": [
+            0.12705578325244904,
+            10.153833606842486
+          ],
+          "actual_hull_xy_m": [
+            0.12717759999681366,
+            10.1538537188216
+          ],
+          "predicted_speed_mps": 73.68637591142848,
+          "actual_speed_mps": 73.68621421502662,
+          "predicted_body_yaw_radps": 1.4817974158039784,
+          "actual_body_yaw_radps": 1.4670222997665405,
+          "predicted_integrated_relative_heading_rad": 0.19910961861721013,
+          "actual_integrated_relative_heading_rad": 0.19719096660614016,
+          "absolute_error": {
+            "speed_error_mps": 0.00016169640186092238,
+            "yaw_error_radps": 0.014775116037437863,
+            "body_sideslip_error_deg": 0.11053556658474761,
+            "front_joint_error_rad": 3.5762786865234375e-07,
+            "rear_longitudinal_slip_error_mps": 0.04842398908131429,
+            "max_per_tire_force_vector_error_N": 1.256033007304665,
+            "hull_position_error_m": 0.00012346582892171126,
+            "hull_angle_error_rad": 0.0019219564925763155
+          }
+        },
+        {
+          "time_s": 0.14,
+          "predicted_hull_xy_m": [
+            0.14470762548141725,
+            11.539333247660258
+          ],
+          "actual_hull_xy_m": [
+            0.14483689918112042,
+            11.53936080186744
+          ],
+          "predicted_speed_mps": 69.30624292770725,
+          "actual_speed_mps": 69.30605087327001,
+          "predicted_body_yaw_radps": 1.4169938837031646,
+          "actual_body_yaw_radps": 1.402575135231018,
+          "predicted_integrated_relative_heading_rad": 0.22744949629127342,
+          "actual_integrated_relative_heading_rad": 0.22524246931076053,
+          "absolute_error": {
+            "speed_error_mps": 0.0001920544372353561,
+            "yaw_error_radps": 0.014418748472146525,
+            "body_sideslip_error_deg": 0.12717322401819864,
+            "front_joint_error_rad": 4.76837158203125e-07,
+            "rear_longitudinal_slip_error_mps": 0.03535994102418272,
+            "max_per_tire_force_vector_error_N": 1.3651538979602378,
+            "hull_position_error_m": 0.0001321776220413821,
+            "hull_angle_error_rad": 0.002210815451734849
+          }
+        },
+        {
+          "time_s": 0.16,
+          "predicted_hull_xy_m": [
+            0.16133267836801934,
+            12.837201342818489
+          ],
+          "actual_hull_xy_m": [
+            0.1614667376907022,
+            12.837235083044316
+          ],
+          "predicted_speed_mps": 64.92617063189495,
+          "actual_speed_mps": 64.92594847614409,
+          "predicted_body_yaw_radps": 1.3541431226808727,
+          "actual_body_yaw_radps": 1.3400424718856812,
+          "predicted_integrated_relative_heading_rad": 0.2545323587448909,
+          "actual_integrated_relative_heading_rad": 0.25204331874847413,
+          "absolute_error": {
+            "speed_error_mps": 0.00022215575086192985,
+            "yaw_error_radps": 0.014100650795191516,
+            "body_sideslip_error_deg": 0.14343718703668706,
+            "front_joint_error_rad": 3.5762786865234375e-07,
+            "rear_longitudinal_slip_error_mps": 0.023262866059596377,
+            "max_per_tire_force_vector_error_N": 1.4743563706808944,
+            "hull_position_error_m": 0.00013824002617543436,
+            "hull_angle_error_rad": 0.0024931646378352212
+          }
+        },
+        {
+          "time_s": 0.18,
+          "predicted_hull_xy_m": [
+            0.17692338774141714,
+            14.04744716364399
+          ],
+          "actual_hull_xy_m": [
+            0.17706835265205534,
+            14.047490260688472
+          ],
+          "predicted_speed_mps": 60.54617558410457,
+          "actual_speed_mps": 60.54592392647505,
+          "predicted_body_yaw_radps": 1.2928443794095283,
+          "actual_body_yaw_radps": 1.2790319919586182,
+          "predicted_integrated_relative_heading_rad": 0.28038924633308143,
+          "actual_integrated_relative_heading_rad": 0.2776239585876465,
+          "absolute_error": {
+            "speed_error_mps": 0.0002516576295192863,
+            "yaw_error_radps": 0.01381238745091018,
+            "body_sideslip_error_deg": 0.15937302274009468,
+            "front_joint_error_rad": 2.384185791015625e-07,
+            "rear_longitudinal_slip_error_mps": 0.01836506040036312,
+            "max_per_tire_force_vector_error_N": 1.583901566144492,
+            "hull_position_error_m": 0.0001512355135521395,
+            "hull_angle_error_rad": 0.00276964603706098
+          }
+        },
+        {
+          "time_s": 0.2,
+          "predicted_hull_xy_m": [
+            0.1914723247521959,
+            15.170079916268877
+          ],
+          "actual_hull_xy_m": [
+            0.19162287230164132,
+            15.170129101462464
+          ],
+          "predicted_speed_mps": 56.16627740695214,
+          "actual_speed_mps": 56.16598994898168,
+          "predicted_body_yaw_radps": 1.2326590607384327,
+          "actual_body_yaw_radps": 1.2191146612167358,
+          "predicted_integrated_relative_heading_rad": 0.3050424275478501,
+          "actual_integrated_relative_heading_rad": 0.3020062518119812,
+          "absolute_error": {
+            "speed_error_mps": 0.00028745797045814925,
+            "yaw_error_radps": 0.013544399521696837,
+            "body_sideslip_error_deg": 0.17501404829243228,
+            "front_joint_error_rad": 3.5762786865234375e-07,
+            "rear_longitudinal_slip_error_mps": 0.027303490470849567,
+            "max_per_tire_force_vector_error_N": 1.693992822586289,
+            "hull_position_error_m": 0.00015837849573808432,
+            "hull_angle_error_rad": 0.003040951260008251
+          }
+        },
+        {
+          "time_s": 0.22,
+          "predicted_hull_xy_m": [
+            0.20497223421656674,
+            16.20510895269478
+          ],
+          "actual_hull_xy_m": [
+            0.20512818228428298,
+            16.205163481756923
+          ],
+          "predicted_speed_mps": 51.786499664070256,
+          "actual_speed_mps": 51.786182303569156,
+          "predicted_body_yaw_radps": 1.1731023234839217,
+          "actual_body_yaw_radps": 1.1598143577575684,
+          "predicted_integrated_relative_heading_rad": 0.3285044740175285,
+          "actual_integrated_relative_heading_rad": 0.3252025389671326,
+          "absolute_error": {
+            "speed_error_mps": 0.0003173605010999836,
+            "yaw_error_radps": 0.013287965726353379,
+            "body_sideslip_error_deg": 0.19035538746667768,
+            "front_joint_error_rad": 1.1920928955078125e-07,
+            "rear_longitudinal_slip_error_mps": 0.03492821772399424,
+            "max_per_tire_force_vector_error_N": 1.8050697851248085,
+            "hull_position_error_m": 0.00016520659321783807,
+            "hull_angle_error_rad": 0.003306777331737454
+          }
+        },
+        {
+          "time_s": 0.24,
+          "predicted_hull_xy_m": [
+            0.21741606621867682,
+            17.15254401102505
+          ],
+          "actual_hull_xy_m": [
+            0.21757364333584306,
+            17.152604985552923
+          ],
+          "predicted_speed_mps": 47.40687110231548,
+          "actual_speed_mps": 47.406514747038074,
+          "predicted_body_yaw_radps": 1.113631173770698,
+          "actual_body_yaw_radps": 1.1005982160568237,
+          "predicted_integrated_relative_heading_rad": 0.3507770974929425,
+          "actual_integrated_relative_heading_rad": 0.3472145032882691,
+          "absolute_error": {
+            "speed_error_mps": 0.00035635527740396356,
+            "yaw_error_radps": 0.01303295771387436,
+            "body_sideslip_error_deg": 0.20542120900652705,
+            "front_joint_error_rad": 2.384185791015625e-07,
+            "rear_longitudinal_slip_error_mps": 0.041104915134127396,
+            "max_per_tire_force_vector_error_N": 1.9172745961066182,
+            "hull_position_error_m": 0.0001689628388240404,
+            "hull_angle_error_rad": 0.0035676439101788304
+          }
+        },
+        {
+          "time_s": 0.26,
+          "predicted_hull_xy_m": [
+            0.2287969903703324,
+            18.012395499567045
+          ],
+          "actual_hull_xy_m": [
+            0.22895561156508837,
+            18.012460315813808
+          ],
+          "predicted_speed_mps": 43.027427442889916,
+          "actual_speed_mps": 43.02702480907112,
+          "predicted_body_yaw_radps": 1.053627596591921,
+          "actual_body_yaw_radps": 1.040859580039978,
+          "predicted_integrated_relative_heading_rad": 0.37184964942478094,
+          "actual_integrated_relative_heading_rad": 0.3680316948890686,
+          "absolute_error": {
+            "speed_error_mps": 0.0004026338187941292,
+            "yaw_error_radps": 0.01276801655194304,
+            "body_sideslip_error_deg": 0.220192971074038,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.0457462732033207,
+            "max_per_tire_force_vector_error_N": 2.0312358606470378,
+            "hull_position_error_m": 0.0001713529377344409,
+            "hull_angle_error_rad": 0.0038230352356329877
+          }
+        },
+        {
+          "time_s": 0.28,
+          "predicted_hull_xy_m": [
+            0.23910838981942195,
+            18.78467484770535
+          ],
+          "actual_hull_xy_m": [
+            0.2392667991895543,
+            18.784742878466268
+          ],
+          "predicted_speed_mps": 38.64821403218561,
+          "actual_speed_mps": 38.64776465198527,
+          "predicted_body_yaw_radps": 0.9923743003819699,
+          "actual_body_yaw_radps": 0.9798941612243652,
+          "predicted_integrated_relative_heading_rad": 0.39169713543242035,
+          "actual_integrated_relative_heading_rad": 0.3876295781135559,
+          "absolute_error": {
+            "speed_error_mps": 0.0004493802003366909,
+            "yaw_error_radps": 0.012480139157604708,
+            "body_sideslip_error_deg": 0.23466513616194007,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.04877284053447539,
+            "max_per_tire_force_vector_error_N": 2.147346749872569,
+            "hull_position_error_m": 0.00017239986362120575,
+            "hull_angle_error_rad": 0.004072633250413515
+          }
+        },
+        {
+          "time_s": 0.3,
+          "predicted_hull_xy_m": [
+            0.24834382801682686,
+            19.469394960517604
+          ],
+          "actual_hull_xy_m": [
+            0.24849809648115873,
+            19.46946943091866
+          ],
+          "predicted_speed_mps": 34.26928989699026,
+          "actual_speed_mps": 34.268787451634054,
+          "predicted_body_yaw_radps": 0.9290189790945496,
+          "actual_body_yaw_radps": 0.9168657660484314,
+          "predicted_integrated_relative_heading_rad": 0.41027751501431137,
+          "actual_integrated_relative_heading_rad": 0.4059668934345245,
+          "absolute_error": {
+            "speed_error_mps": 0.0005024453562043618,
+            "yaw_error_radps": 0.012153213046118161,
+            "body_sideslip_error_deg": 0.24879591867479078,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.050110018507883325,
+            "max_per_tire_force_vector_error_N": 2.2664223401080124,
+            "hull_position_error_m": 0.00017130265532249746,
+            "hull_angle_error_rad": 0.004315643867155661
+          }
+        },
+        {
+          "time_s": 0.32,
+          "predicted_hull_xy_m": [
+            0.2564969734603757,
+            20.06657083973867
+          ],
+          "actual_hull_xy_m": [
+            0.25664585954866936,
+            20.066646676134337
+          ],
+          "predicted_speed_mps": 29.890734210096817,
+          "actual_speed_mps": 29.890170927419188,
+          "predicted_body_yaw_radps": 0.8625197963665123,
+          "actual_body_yaw_radps": 0.8507515788078308,
+          "predicted_integrated_relative_heading_rad": 0.4275279109416416,
+          "actual_integrated_relative_heading_rad": 0.42298192501068116,
+          "absolute_error": {
+            "speed_error_mps": 0.0005632826776285071,
+            "yaw_error_radps": 0.011768217558681515,
+            "body_sideslip_error_deg": 0.2625359027614387,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.04970237916743514,
+            "max_per_tire_force_vector_error_N": 2.3896912054459576,
+            "hull_position_error_m": 0.0001670874806667298,
+            "hull_angle_error_rad": 0.004551059478323793
+          }
+        },
+        {
+          "time_s": 0.34,
+          "predicted_hull_xy_m": [
+            0.263561451593322,
+            20.5762204836643
+          ],
+          "actual_hull_xy_m": [
+            0.26370585968173366,
+            20.576298366894555
+          ],
+          "predicted_speed_mps": 25.512657149484788,
+          "actual_speed_mps": 25.512015908169136,
+          "predicted_body_yaw_radps": 0.7915582907083157,
+          "actual_body_yaw_radps": 0.780259370803833,
+          "predicted_integrated_relative_heading_rad": 0.44335907675580793,
+          "actual_integrated_relative_heading_rad": 0.4385871124267578,
+          "absolute_error": {
+            "speed_error_mps": 0.0006412413156517971,
+            "yaw_error_radps": 0.01129891990448273,
+            "body_sideslip_error_deg": 0.2758148352702001,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.04749901380467847,
+            "max_per_tire_force_vector_error_N": 2.5191561153071134,
+            "hull_position_error_m": 0.00016407161105314128,
+            "hull_angle_error_rad": 0.004777014034555549
+          }
+        },
+        {
+          "time_s": 0.36,
+          "predicted_hull_xy_m": [
+            0.2695305571515849,
+            20.998366284457905
+          ],
+          "actual_hull_xy_m": [
+            0.2696689871522686,
+            20.99844126060768
+          ],
+          "predicted_speed_mps": 21.135219394108738,
+          "actual_speed_mps": 21.13448212778648,
+          "predicted_body_yaw_radps": 0.714391503320612,
+          "actual_body_yaw_radps": 0.7036814093589783,
+          "predicted_integrated_relative_heading_rad": 0.4576469068222202,
+          "actual_integrated_relative_heading_rad": 0.45266074061393735,
+          "absolute_error": {
+            "speed_error_mps": 0.0007372663222575682,
+            "yaw_error_radps": 0.010710093961633693,
+            "body_sideslip_error_deg": 0.28855472492249135,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.04346273740069151,
+            "max_per_tire_force_vector_error_N": 2.658371588357331,
+            "hull_position_error_m": 0.00015743026432207813,
+            "hull_angle_error_rad": 0.004991233795181627
+          }
+        },
+        {
+          "time_s": 0.38,
+          "predicted_hull_xy_m": [
+            0.27439667148523483,
+            21.333037390620454
+          ],
+          "actual_hull_xy_m": [
+            0.27453072084036023,
+            21.333107634963945
+          ],
+          "predicted_speed_mps": 16.758670354334445,
+          "actual_speed_mps": 16.757813794799528,
+          "predicted_body_yaw_radps": 0.6285796378410788,
+          "actual_body_yaw_radps": 0.6186287999153137,
+          "predicted_integrated_relative_heading_rad": 0.47021849957904177,
+          "actual_integrated_relative_heading_rad": 0.4650333166122436,
+          "absolute_error": {
+            "speed_error_mps": 0.000856559534916812,
+            "yaw_error_radps": 0.009950837925765121,
+            "body_sideslip_error_deg": 0.30066410939402033,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.03755713575875497,
+            "max_per_tire_force_vector_error_N": 2.8142778185552757,
+            "hull_position_error_m": 0.0001513390148043773,
+            "hull_angle_error_rad": 0.005190213598817106
+          }
+        },
+        {
+          "time_s": 0.4,
+          "predicted_hull_xy_m": [
+            0.2781499787203927,
+            21.580274179562604
+          ],
+          "actual_hull_xy_m": [
+            0.2782743708259048,
+            21.58033617820735
+          ],
+          "predicted_speed_mps": 12.383432916217178,
+          "actual_speed_mps": 12.382413355174807,
+          "predicted_body_yaw_radps": 0.5304244692092994,
+          "actual_body_yaw_radps": 0.5214836597442627,
+          "predicted_integrated_relative_heading_rad": 0.4808269889632278,
+          "actual_integrated_relative_heading_rad": 0.47546298980712887,
+          "absolute_error": {
+            "speed_error_mps": 0.0010195610423711088,
+            "yaw_error_radps": 0.008940809465036725,
+            "body_sideslip_error_deg": 0.3121020259895282,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.02971967040910073,
+            "max_per_tire_force_vector_error_N": 3.001709849372484,
+            "hull_position_error_m": 0.00013898643050228938,
+            "hull_angle_error_rad": 0.00536908224020527
+          }
+        },
+        {
+          "time_s": 0.42,
+          "predicted_hull_xy_m": [
+            0.28077522068056915,
+            21.7401382473416
+          ],
+          "actual_hull_xy_m": [
+            0.2808911872786286,
+            21.7401829208094
+          ],
+          "predicted_speed_mps": 8.010329140828842,
+          "actual_speed_mps": 8.009073439854244,
+          "predicted_body_yaw_radps": 0.4135998182807625,
+          "actual_body_yaw_radps": 0.4060594141483307,
+          "predicted_integrated_relative_heading_rad": 0.48909898532884305,
+          "actual_integrated_relative_heading_rad": 0.48358417809009546,
+          "absolute_error": {
+            "speed_error_mps": 0.0012557009745979286,
+            "yaw_error_radps": 0.007540404132431788,
+            "body_sideslip_error_deg": 0.3231746394797135,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.019809497355903538,
+            "max_per_tire_force_vector_error_N": 3.25554702850329,
+            "hull_position_error_m": 0.0001242737727388818,
+            "hull_angle_error_rad": 0.005519945755173561
+          }
+        },
+        {
+          "time_s": 0.44,
+          "predicted_hull_xy_m": [
+            0.28224132653432044,
+            21.812741901700775
+          ],
+          "actual_hull_xy_m": [
+            0.28234326923840847,
+            21.812757516948334
+          ],
+          "predicted_speed_mps": 3.641404625989522,
+          "actual_speed_mps": 3.6397591216218435,
+          "predicted_body_yaw_radps": 0.2647347637198627,
+          "actual_body_yaw_radps": 0.2592858076095581,
+          "predicted_integrated_relative_heading_rad": 0.4943936806032403,
+          "actual_integrated_relative_heading_rad": 0.4887698942422866,
+          "absolute_error": {
+            "speed_error_mps": 0.0016455043676786296,
+            "yaw_error_radps": 0.005448956110304604,
+            "body_sideslip_error_deg": 0.33716004827428137,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.007366677908925201,
+            "max_per_tire_force_vector_error_N": 2.5666025786246087,
+            "hull_position_error_m": 0.00010313171613761508,
+            "hull_angle_error_rad": 0.005628917724822324
+          }
+        },
+        {
+          "time_s": 0.46,
+          "predicted_hull_xy_m": [
+            0.2827461124578292,
+            21.820310524391417
+          ],
+          "actual_hull_xy_m": [
+            0.2828434960845527,
+            21.820319560920602
+          ],
+          "predicted_speed_mps": 0.3773366082067297,
+          "actual_speed_mps": 0.37688084662121846,
+          "predicted_body_yaw_radps": -0.04554004801032241,
+          "actual_body_yaw_radps": -0.04423138499259949,
+          "predicted_integrated_relative_heading_rad": 0.49348287964303383,
+          "actual_integrated_relative_heading_rad": 0.48788526654243464,
+          "absolute_error": {
+            "speed_error_mps": 0.00045576158551124957,
+            "yaw_error_radps": 0.001308663017722922,
+            "body_sideslip_error_deg": 0.3607236068529396,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.004740211733763544,
+            "max_per_tire_force_vector_error_N": 0.5942740527437248,
+            "hull_position_error_m": 9.780199186770848e-05,
+            "hull_angle_error_rad": 0.005602768902372324
+          }
+        },
+        {
+          "time_s": 0.48,
+          "predicted_hull_xy_m": [
+            0.28272125824378236,
+            21.821038575800042
+          ],
+          "actual_hull_xy_m": [
+            0.2828168193263032,
+            21.82104752966395
+          ],
+          "predicted_speed_mps": 0.037102720142962634,
+          "actual_speed_mps": 0.03710170692159894,
+          "predicted_body_yaw_radps": 0.01836246773185335,
+          "actual_body_yaw_radps": 0.017905402928590775,
+          "predicted_integrated_relative_heading_rad": 0.4938501289976709,
+          "actual_integrated_relative_heading_rad": 0.4882433746010065,
+          "absolute_error": {
+            "speed_error_mps": 1.0132213636923626e-06,
+            "yaw_error_radps": 0.0004570648032625746,
+            "body_sideslip_error_deg": 0.27830707313641767,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.001091264429296697,
+            "max_per_tire_force_vector_error_N": 0.11513109302287115,
+            "hull_position_error_m": 9.597964456849275e-05,
+            "hull_angle_error_rad": 0.005611913551198944
+          }
+        },
+        {
+          "time_s": 0.5,
+          "predicted_hull_xy_m": [
+            0.28274657592708863,
+            21.821127538970472
+          ],
+          "actual_hull_xy_m": [
+            0.2828428214392549,
+            21.821135477927854
+          ],
+          "predicted_speed_mps": 0.004333786805953757,
+          "actual_speed_mps": 0.004313845412458708,
+          "predicted_body_yaw_radps": -0.00538882818508182,
+          "actual_body_yaw_radps": -0.005248920060694218,
+          "predicted_integrated_relative_heading_rad": 0.49374235243396924,
+          "actual_integrated_relative_heading_rad": 0.4881383961997926,
+          "absolute_error": {
+            "speed_error_mps": 1.9941393495048927e-05,
+            "yaw_error_radps": 0.000139908124387602,
+            "body_sideslip_error_deg": 0.4866557217720313,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 0.00032586440413565586,
+            "max_per_tire_force_vector_error_N": 0.03365177913567342,
+            "hull_position_error_m": 9.657238557874445e-05,
+            "hull_angle_error_rad": 0.005609160371591537
+          }
+        },
+        {
+          "time_s": 0.52,
+          "predicted_hull_xy_m": [
+            0.28274074346731126,
+            21.82113205430262
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 0.00033714124461862636,
+          "actual_speed_mps": 0.0003378740354061956,
+          "predicted_body_yaw_radps": 0.0017462585801847246,
+          "actual_body_yaw_radps": 0.0017015703488141298,
+          "predicted_integrated_relative_heading_rad": 0.49377727760557294,
+          "actual_integrated_relative_heading_rad": 0.4881724276067689,
+          "absolute_error": {
+            "speed_error_mps": 7.327907875692491e-07,
+            "yaw_error_radps": 4.468823137059475e-05,
+            "body_sideslip_error_deg": 0.5850837245995155,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.521824472263907e-05,
+            "max_per_tire_force_vector_error_N": 0.010706600185305807,
+            "hull_position_error_m": 9.544457938902034e-05,
+            "hull_angle_error_rad": 0.005610110895673204
+          }
+        },
+        {
+          "time_s": 0.54,
+          "predicted_hull_xy_m": [
+            0.2827428482162677,
+            21.821133964999873
+          ],
+          "actual_hull_xy_m": [
+            0.2828391775480217,
+            21.821142180891197
+          ],
+          "predicted_speed_mps": 9.995424912034467e-05,
+          "actual_speed_mps": 9.803214749596778e-05,
+          "predicted_body_yaw_radps": -0.0005473703780981424,
+          "actual_body_yaw_radps": -0.0005332965520210564,
+          "predicted_integrated_relative_heading_rad": 0.49376633019801097,
+          "actual_integrated_relative_heading_rad": 0.48816176167572845,
+          "absolute_error": {
+            "speed_error_mps": 1.9221016243768955e-06,
+            "yaw_error_radps": 1.407382607708594e-05,
+            "body_sideslip_error_deg": 0.45795916372738077,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.087039529587644e-05,
+            "max_per_tire_force_vector_error_N": 0.0033752565061407527,
+            "hull_position_error_m": 9.667906198547219e-05,
+            "hull_angle_error_rad": 0.0056097731148812
+          }
+        },
+        {
+          "time_s": 0.56,
+          "predicted_hull_xy_m": [
+            0.28274221390402765,
+            21.82113370260193
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 2.0486655326482427e-05,
+          "actual_speed_mps": 1.9943803348089096e-05,
+          "predicted_body_yaw_radps": 0.00017345759568023096,
+          "actual_body_yaw_radps": 0.00016900476475711912,
+          "predicted_integrated_relative_heading_rad": 0.4937697993499246,
+          "actual_integrated_relative_heading_rad": 0.4881651417710236,
+          "absolute_error": {
+            "speed_error_mps": 5.428519783933312e-07,
+            "yaw_error_radps": 4.452830923111842e-06,
+            "body_sideslip_error_deg": 0.29285967128743096,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.679347473048828e-06,
+            "max_per_tire_force_vector_error_N": 0.0010671541148530067,
+            "hull_position_error_m": 9.38485154136728e-05,
+            "hull_angle_error_rad": 0.005609904406687294
+          }
+        },
+        {
+          "time_s": 0.58,
+          "predicted_hull_xy_m": [
+            0.2827424179512086,
+            21.821133820463302
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 7.378487217950284e-06,
+          "actual_speed_mps": 7.193205464154942e-06,
+          "predicted_body_yaw_radps": -5.476945815390257e-05,
+          "actual_body_yaw_radps": -5.3362822654889897e-05,
+          "predicted_integrated_relative_heading_rad": 0.4937687039607615,
+          "actual_integrated_relative_heading_rad": 0.4881640745145705,
+          "absolute_error": {
+            "speed_error_mps": 1.8528175379534184e-07,
+            "yaw_error_radps": 1.4066354990126728e-06,
+            "body_sideslip_error_deg": 0.07556373615504697,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.0664436653552688e-06,
+            "max_per_tire_force_vector_error_N": 0.0003372311772514811,
+            "hull_position_error_m": 9.363667937681175e-05,
+            "hull_angle_error_rad": 0.005609881901130098
+          }
+        },
+        {
+          "time_s": 0.6,
+          "predicted_hull_xy_m": [
+            0.28274235387611135,
+            21.821133786789897
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 2.2262518745966944e-06,
+          "actual_speed_mps": 2.168762114553601e-06,
+          "predicted_body_yaw_radps": 1.73141175028634e-05,
+          "actual_body_yaw_radps": 1.6869527826202102e-05,
+          "predicted_integrated_relative_heading_rad": 0.4937690502431116,
+          "actual_integrated_relative_heading_rad": 0.48816441190512705,
+          "absolute_error": {
+            "speed_error_mps": 5.748976004309322e-08,
+            "yaw_error_radps": 4.445896766612983e-07,
+            "body_sideslip_error_deg": 0.02782080311884272,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.683095696887123e-07,
+            "max_per_tire_force_vector_error_N": 0.0001065716636178849,
+            "hull_position_error_m": 9.37029539455937e-05,
+            "hull_angle_error_rad": 0.0056098705556115736
+          }
+        },
+        {
+          "time_s": 0.62,
+          "predicted_hull_xy_m": [
+            0.2827423741726154,
+            21.821133797797682
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 7.14253398922895e-07,
+          "actual_speed_mps": 6.959726386559588e-07,
+          "predicted_body_yaw_radps": -5.471314653501739e-06,
+          "actual_body_yaw_radps": -5.330814929038752e-06,
+          "predicted_integrated_relative_heading_rad": 0.4937689408168185,
+          "actual_integrated_relative_heading_rad": 0.4881643052888285,
+          "absolute_error": {
+            "speed_error_mps": 1.8280760266936272e-08,
+            "yaw_error_radps": 1.404997244629874e-07,
+            "body_sideslip_error_deg": 0.006968304578961693,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.0609095954176846e-07,
+            "max_per_tire_force_vector_error_N": 3.3679953713096365e-05,
+            "hull_position_error_m": 9.368193584967171e-05,
+            "hull_angle_error_rad": 0.0056098803386079865
+          }
+        },
+        {
+          "time_s": 0.64,
+          "predicted_hull_xy_m": [
+            0.2827423677634737,
+            21.821133794356296
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 2.2460292251846024e-07,
+          "actual_speed_mps": 2.1883543591446252e-07,
+          "predicted_body_yaw_radps": 1.7291764614656601e-06,
+          "actual_body_yaw_radps": 1.6847741335368482e-06,
+          "predicted_integrated_relative_heading_rad": 0.4937689754003477,
+          "actual_integrated_relative_heading_rad": 0.48816433898431116,
+          "absolute_error": {
+            "speed_error_mps": 5.7674866039977185e-09,
+            "yaw_error_radps": 4.4402327928811885e-08,
+            "body_sideslip_error_deg": 0.0042642749296106786,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.672755365623725e-08,
+            "max_per_tire_force_vector_error_N": 1.0643860922705258e-05,
+            "hull_position_error_m": 9.368857032130685e-05,
+            "hull_angle_error_rad": 0.005609914922137138
+          }
+        },
+        {
+          "time_s": 0.66,
+          "predicted_hull_xy_m": [
+            0.282742369789565,
+            21.82113379544772
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 7.109914376181874e-08,
+          "actual_speed_mps": 6.927536157087909e-08,
+          "predicted_body_yaw_radps": -5.464725612229895e-07,
+          "actual_body_yaw_radps": -5.324405947249033e-07,
+          "predicted_integrated_relative_heading_rad": 0.49376896447089647,
+          "actual_integrated_relative_heading_rad": 0.4881643283354993,
+          "absolute_error": {
+            "speed_error_mps": 1.8237821909396562e-09,
+            "yaw_error_radps": 1.4031966498086196e-08,
+            "body_sideslip_error_deg": 0.0007026448959237541,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.056913982926298e-08,
+            "max_per_tire_force_vector_error_N": 3.3636872343058536e-06,
+            "hull_position_error_m": 9.368647274065181e-05,
+            "hull_angle_error_rad": 0.005609903992686016
+          }
+        },
+        {
+          "time_s": 0.68,
+          "predicted_hull_xy_m": [
+            0.28274236914931805,
+            21.821133795103183
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 2.245752339653137e-08,
+          "actual_speed_mps": 2.188127449889151e-08,
+          "predicted_body_yaw_radps": 1.7270445363417496e-07,
+          "actual_body_yaw_radps": 1.6826993487484287e-07,
+          "predicted_integrated_relative_heading_rad": 0.49376896792498554,
+          "actual_integrated_relative_heading_rad": 0.48816433170089796,
+          "absolute_error": {
+            "speed_error_mps": 5.762488976398581e-10,
+            "yaw_error_radps": 4.4345187593320806e-09,
+            "body_sideslip_error_deg": 0.0017070048379537184,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.660479383138452e-09,
+            "max_per_tire_force_vector_error_N": 1.0630145436430716e-06,
+            "hull_position_error_m": 9.368713555327477e-05,
+            "hull_angle_error_rad": 0.005609907446775031
+          }
+        },
+        {
+          "time_s": 0.7000000000000001,
+          "predicted_hull_xy_m": [
+            0.2827423693516664,
+            21.821133795212113
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 7.098612101324004e-09,
+          "actual_speed_mps": 6.91647161580767e-09,
+          "predicted_body_yaw_radps": -5.4580397007803384e-08,
+          "actual_body_yaw_radps": -5.317893680967245e-08,
+          "predicted_integrated_relative_heading_rad": 0.4937689668333776,
+          "actual_integrated_relative_heading_rad": 0.48816433063731923,
+          "absolute_error": {
+            "speed_error_mps": 1.8214048551633435e-10,
+            "yaw_error_radps": 1.401460198130934e-09,
+            "body_sideslip_error_deg": 0.0017076645560649695,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 3.05306056143464e-09,
+            "max_per_tire_force_vector_error_N": 3.359464319691092e-07,
+            "hull_position_error_m": 9.368692607041996e-05,
+            "hull_angle_error_rad": 0.005609906355167116
+          }
+        },
+        {
+          "time_s": 0.72,
+          "predicted_hull_xy_m": [
+            0.28274236928771934,
+            21.82113379517769
+          ],
+          "actual_hull_xy_m": [
+            0.28283582606634994,
+            21.82114035894558
+          ],
+          "predicted_speed_mps": 2.243269137841031e-09,
+          "actual_speed_mps": 2.185714635249101e-09,
+          "predicted_body_yaw_radps": 1.724926170189158e-08,
+          "actual_body_yaw_radps": 1.6806366076593804e-08,
+          "predicted_integrated_relative_heading_rad": 0.4937689671783628,
+          "actual_integrated_relative_heading_rad": 0.4881643309734466,
+          "absolute_error": {
+            "speed_error_mps": 5.7554502591930187e-11,
+            "yaw_error_radps": 4.428956252977764e-10,
+            "body_sideslip_error_deg": 0.0015141137713641228,
+            "front_joint_error_rad": 0.0,
+            "rear_longitudinal_slip_error_mps": 9.648563802819362e-10,
+            "max_per_tire_force_vector_error_N": 1.0616796570555923e-07,
+            "hull_position_error_m": 9.368699227327724e-05,
+            "hull_angle_error_rad": 0.005609906700152267
+          }
+        }
+      ]
+    }
+  ],
+  "faithful_copy_checks": [
+    "All144 exact pose/error/speed/yaw scalar rows copied from the frozen raw receipt.",
+    "All4 fixed configurations, recorded initial summaries and prospective gate results copied.",
+    "Raw forces/vectors remain in original SHA-bound artifact; no dynamics reruns."
+  ],
+  "derived_heading_note": "Relative headings are semiimplicit .02s sums of recorded endpoint yaw, not newly sampled hull-angle labels; angle-error consistency checked<1e-5rad.",
+  "initial_state_note": "The raw receipt stores complete initial summaries, not every Box2D state field; no missing private state is inferred."
+}

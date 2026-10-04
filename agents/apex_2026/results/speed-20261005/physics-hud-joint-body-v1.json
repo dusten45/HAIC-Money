@@ -1,0 +1,239 @@
+{
+  "classification": "privileged_stationary_body_and_joint_hud_calibration",
+  "is_legal_camera_candidate": false,
+  "is_driving_episode": false,
+  "world_steps": 0,
+  "source_sha256": "df8ee78e05d702a39395c4076129c551074d96fdd842cc08db7d40e2aa41edd1",
+  "render_helper_sha256": "1b55a86f460c78a27ca23e4c222bf71f264cb35dec05836a1ff5093eb3988f6a",
+  "official_sha256": {
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58"
+  },
+  "render_count": 1091,
+  "calibration": {
+    "body_slope": 0.08573317526988666,
+    "body_intercept": 0.3065159749445597,
+    "joint_positive": [
+      53.32976668292053,
+      0.3237707931261848
+    ],
+    "joint_negative": [
+      53.33307758282946,
+      0.11603323404605852
+    ]
+  },
+  "body_mass_roi": "frame[74:83,10:13].sum()",
+  "joint_mass_roi": "frame[75:81,32:51].sum(); world-positive when centroid<42",
+  "body_training": {
+    "speed_start_mps": 0.5,
+    "stop_inclusive_mps": 100.0,
+    "step_mps": 0.5
+  },
+  "joint_training": {
+    "absolute_delta_start_rad": 0.01,
+    "stop_inclusive_rad": 0.4,
+    "step_rad": 0.01
+  },
+  "body_validation": {
+    "speed_range_mps": [
+      0.0,
+      100.0
+    ],
+    "step_mps": 0.25,
+    "error_min_mps": -1.1351439683670643,
+    "error_max_mps": 1.5017800041794942,
+    "error_max_absolute_mps": 1.5017800041794942
+  },
+  "joint_validation": {
+    "joint_range_rad": [
+      -0.4,
+      0.4
+    ],
+    "step_rad": 0.002,
+    "error_min_rad": -0.004816193021201731,
+    "error_max_rad": 0.004762471184853567,
+    "error_max_absolute_rad": 0.004816193021201731
+  },
+  "checkpoints": {
+    "body": [
+      {
+        "true_speed_mps": 0.0,
+        "decoded_speed_mps": 0.0,
+        "error_mps": 0.0
+      },
+      {
+        "true_speed_mps": 10.0,
+        "decoded_speed_mps": 9.003695366462383,
+        "error_mps": -0.9963046335376173
+      },
+      {
+        "true_speed_mps": 20.0,
+        "decoded_speed_mps": 18.975354836046446,
+        "error_mps": -1.0246451639535543
+      },
+      {
+        "true_speed_mps": 30.0,
+        "decoded_speed_mps": 29.03849601680515,
+        "error_mps": -0.9615039831948486
+      },
+      {
+        "true_speed_mps": 40.0,
+        "decoded_speed_mps": 38.96441184986466,
+        "error_mps": -1.0355881501353394
+      },
+      {
+        "true_speed_mps": 50.0,
+        "decoded_speed_mps": 49.02755859249783,
+        "error_mps": -0.972441407502167
+      },
+      {
+        "true_speed_mps": 60.0,
+        "decoded_speed_mps": 59.04496169860645,
+        "error_mps": -0.9550383013935502
+      },
+      {
+        "true_speed_mps": 70.0,
+        "decoded_speed_mps": 69.0623592428406,
+        "error_mps": -0.9376407571594001
+      },
+      {
+        "true_speed_mps": 80.0,
+        "decoded_speed_mps": 78.9425342203128,
+        "error_mps": -1.057465779687206
+      },
+      {
+        "true_speed_mps": 90.0,
+        "decoded_speed_mps": 88.95993732642141,
+        "error_mps": -1.0400626735785892
+      },
+      {
+        "true_speed_mps": 100.0,
+        "decoded_speed_mps": 99.2517800041795,
+        "error_mps": -0.7482199958205058
+      }
+    ],
+    "joint": [
+      {
+        "true_joint_rad": -0.4,
+        "decoded_joint_rad": -0.4038557457469083,
+        "error_rad": -0.003855745746908279
+      },
+      {
+        "true_joint_rad": -0.36,
+        "decoded_joint_rad": -0.3640026046613451,
+        "error_rad": -0.0040026046613451105
+      },
+      {
+        "true_joint_rad": -0.31999999999999995,
+        "decoded_joint_rad": -0.3170906133231718,
+        "error_rad": 0.002909386676828163
+      },
+      {
+        "true_joint_rad": -0.2799999999999999,
+        "decoded_joint_rad": -0.27959043042435716,
+        "error_rad": 0.0004095695756427542
+      },
+      {
+        "true_joint_rad": -0.23999999999999988,
+        "decoded_joint_rad": -0.23635492624703366,
+        "error_rad": 0.003645073752966216
+      },
+      {
+        "true_joint_rad": -0.19999999999999984,
+        "decoded_joint_rad": -0.2012077037701526,
+        "error_rad": -0.0012077037701527515
+      },
+      {
+        "true_joint_rad": -0.1599999999999998,
+        "decoded_joint_rad": -0.1578251420286541,
+        "error_rad": 0.0021748579713457006
+      },
+      {
+        "true_joint_rad": -0.11999999999999977,
+        "decoded_joint_rad": -0.11870730748363933,
+        "error_rad": 0.0012926925163604386
+      },
+      {
+        "true_joint_rad": -0.07999999999999974,
+        "decoded_joint_rad": -0.07929535166351612,
+        "error_rad": 0.0007046483364836209
+      },
+      {
+        "true_joint_rad": -0.0399999999999997,
+        "decoded_joint_rad": -0.04039810304566664,
+        "error_rad": -0.0003981030456669393
+      },
+      {
+        "true_joint_rad": 3.3306690738754696e-16,
+        "decoded_joint_rad": 0.0,
+        "error_rad": -3.3306690738754696e-16
+      },
+      {
+        "true_joint_rad": 0.04000000000000037,
+        "decoded_joint_rad": 0.04040259087259898,
+        "error_rad": 0.0004025908725986127
+      },
+      {
+        "true_joint_rad": 0.0800000000000004,
+        "decoded_joint_rad": 0.07930225436875972,
+        "error_rad": -0.0006977456312406843
+      },
+      {
+        "true_joint_rad": 0.12000000000000044,
+        "decoded_joint_rad": 0.1187166570220317,
+        "error_rad": -0.0012833429779687405
+      },
+      {
+        "true_joint_rad": 0.16000000000000048,
+        "decoded_joint_rad": 0.1578369201401097,
+        "error_rad": -0.002163079859890782
+      },
+      {
+        "true_joint_rad": 0.2000000000000005,
+        "decoded_joint_rad": 0.20122217522396935,
+        "error_rad": 0.0012221752239688355
+      },
+      {
+        "true_joint_rad": 0.24000000000000055,
+        "decoded_joint_rad": 0.23637157976431958,
+        "error_rad": -0.003628420235680968
+      },
+      {
+        "true_joint_rad": 0.2800000000000006,
+        "decoded_joint_rad": 0.2796097681541523,
+        "error_rad": -0.00039023184584829895
+      },
+      {
+        "true_joint_rad": 0.3200000000000006,
+        "decoded_joint_rad": 0.31711227919651347,
+        "error_rad": -0.002887720803487148
+      },
+      {
+        "true_joint_rad": 0.36000000000000065,
+        "decoded_joint_rad": 0.36402718299647896,
+        "error_rad": 0.004027182996478307
+      },
+      {
+        "true_joint_rad": 0.4000000000000007,
+        "decoded_joint_rad": 0.4038827983055274,
+        "error_rad": 0.0038827983055267357
+      }
+    ]
+  },
+  "behavioral_checks_passed": [
+    "A zero camera HUD decodes zero body speed and joint.",
+    "Both world-joint signs are preserved at independent .03/.06/.3 cases.",
+    "Independent quarter-m/s and .002rad grids meet declared raster-error bounds.",
+    "Joint measurement is independent of body speed, and vice versa."
+  ],
+  "initial_body_validation_note": "The first1.5m/s raster assertion failed; the reported bound is1.6m/s.",
+  "limits": [
+    "Stationary official raster calibration only; no laps or control test.",
+    "Body magnitude and joint cannot directly measure body lateral velocity.",
+    "Finite sampling understates continuous plateau width near each raster boundary.",
+    "Fits are valid for the measured 0..100m/s and +/-.4rad unoccluded HUD."
+  ]
+}
