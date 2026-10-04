@@ -1,0 +1,58 @@
+{
+  "classification": "fixed_synthetic_guard_compatibility_diagnostic_not_physical_impossibility",
+  "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+  "analysis_source_sha256": "68aba7ab8691b7e303360bc2509d227e23e12d02a1f08ece44d9974ed70eeba7",
+  "public_width_source": "core/vendor/car_racing.py: SCALE=6, TRACK_WIDTH=40/SCALE",
+  "public_width_source_sha256": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+  "road_half_width_m": 6.666666666666667,
+  "body_half_width_m": 1.6,
+  "full_body_road_margin_m": 1.9,
+  "center_circle_guard_m": 3.7,
+  "rectangle_circle_radius_plus_margin_m": 1.95,
+  "largest_aligned_road_supported_center_offset_m": 3.1666666666666665,
+  "minimum_center_guard_passing_offset_m": 3.7,
+  "gap_between_necessary_passing_and_supported_offsets_m": 0.5333333333333337,
+  "maximum_road_margin_at_center_guard_pass_m": 1.3666666666666663,
+  "rows": [
+    {
+      "center_offset_m": 0.0,
+      "frozen_road_slack_m": 3.1666666666666647,
+      "frozen_obstacle_slack_m": -3.7,
+      "actual_envelope_circle_clearance_m": -2.8
+    },
+    {
+      "center_offset_m": 2.8,
+      "frozen_road_slack_m": 0.3666666666666645,
+      "frozen_obstacle_slack_m": -0.9000000000000004,
+      "actual_envelope_circle_clearance_m": -2.220446049250313e-16
+    },
+    {
+      "center_offset_m": 3.1666666666666665,
+      "frozen_road_slack_m": 0.0,
+      "frozen_obstacle_slack_m": -0.5333333333333337,
+      "actual_envelope_circle_clearance_m": 0.3666666666666665
+    },
+    {
+      "center_offset_m": 3.55,
+      "frozen_road_slack_m": -0.3833333333333322,
+      "frozen_obstacle_slack_m": -0.15000000000000036,
+      "actual_envelope_circle_clearance_m": 0.7499999999999998
+    },
+    {
+      "center_offset_m": 3.7,
+      "frozen_road_slack_m": -0.5333333333333343,
+      "frozen_obstacle_slack_m": 0.0,
+      "actual_envelope_circle_clearance_m": 0.9000000000000001
+    }
+  ],
+  "new_world_steps": 0,
+  "new_driving_episodes": 0,
+  "new_control_searches": 0,
+  "new_holdout_opened": false,
+  "limits": [
+    "Fixed straight aligned synthetic crossing, not any mandatory track map or a lap.",
+    "The 1.9m guard outside the whole body conflicts with the circle guard at a centered crossing.",
+    "Physical vehicle dynamics, swept trajectory, camera errors and adoption are not tested.",
+    "No candidate or frozen component is changed; changing margins requires separate justified validation."
+  ]
+}

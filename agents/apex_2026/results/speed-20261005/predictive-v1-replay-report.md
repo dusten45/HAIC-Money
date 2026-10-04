@@ -128,4 +128,3 @@ emitted trajectories in these two repeats, but they do not prove identical
 internal planning branches in the original SCREEN, especially with a
 wall-clock planner budget. The cached support classifier localizes gates
 on those same replay inputs; it provides no new driving-performance claim.
-
