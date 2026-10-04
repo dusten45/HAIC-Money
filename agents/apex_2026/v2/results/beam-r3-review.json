@@ -1,0 +1,168 @@
+{
+  "scope": "Independent read-only review of immutable Beam R3. Zero environment resets, zero episodes, no candidate changes. This reproducer executes zero physics steps; the separately reported existing snapshot test advances only its internal shadow model.",
+  "source": {
+    "path": "/workspace/HAIC-Money/agents/apex_2026/v2/results/beam_sources/aef90410f8ad.py",
+    "sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa"
+  },
+  "runtime_dependency": {
+    "path": "/workspace/HAIC-Money/agents/apex_2026/v2/shadow_physics.py",
+    "sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56"
+  },
+  "reproducer": {
+    "path": "/workspace/HAIC-Money/agents/apex_2026/v2/diagnostics/beam_r3_review.py",
+    "sha256": "da1f588f004225277bf203853015016a9a55d2da5895e878c1ec68997329581e"
+  },
+  "footprint_counterexample": {
+    "blocked_pixel_yx": [
+      64,
+      42
+    ],
+    "pose_xy_heading": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "sample_violations": 0,
+    "blocked_pixel_metric_center": [
+      0.0,
+      -0.5878894767783657
+    ],
+    "center_inside_actual_hull": true,
+    "limitation": "Synthetic one-pixel mask hole establishes sampling incompleteness, not a reproduced official obstacle collision."
+  },
+  "rpm_ambiguity_counterexamples": [
+    {
+      "true_omega_rad_s": 20.0,
+      "decoded": [
+        19.572847445471098,
+        18.95098381435087,
+        20.716124496164174,
+        20.35513728363522
+      ],
+      "bottom_pixel_max": 0.0235294122248888,
+      "ambiguous": true
+    },
+    {
+      "true_omega_rad_s": 100.0,
+      "decoded": [
+        96.59484518742151,
+        95.24780980825922,
+        97.60508289232428,
+        97.17143904093075
+      ],
+      "bottom_pixel_max": 0.027450980618596077,
+      "ambiguous": true
+    },
+    {
+      "true_omega_rad_s": 200.0,
+      "decoded": [
+        194.60805597466458,
+        193.2237176124512,
+        195.32228537468902,
+        194.45868331199023
+      ],
+      "bottom_pixel_max": 0.027450980618596077,
+      "ambiguous": true
+    },
+    {
+      "true_omega_rad_s": 300.0,
+      "decoded": [
+        299.3324854500586,
+        297.1991732386973,
+        299.3401157376961,
+        299.3523991927332
+      ],
+      "bottom_pixel_max": 0.027450980618596077,
+      "ambiguous": true
+    }
+  ],
+  "findings": [
+    {
+      "location": "beam_agent.py:183,240-248",
+      "severity": "important",
+      "finding": "25 point samples can miss blocked pixels inside the hull. The rectangle also does not enclose fully steered front wheels.",
+      "next_test": "Rasterized hull/wheel polygon coverage at several headings; retain this interior-hole regression."
+    },
+    {
+      "location": "beam_agent.py:334",
+      "severity": "diagnostic",
+      "finding": "The negative-RPM crop threshold fires on ordinary positive bar resampling bleed. This flag does not currently affect action selection.",
+      "next_test": "Separate synthetic positive, zero, negative and saturated bars before interpreting ambiguity frequency."
+    },
+    {
+      "location": "beam_agent.py:261-307",
+      "severity": "limitation",
+      "finding": "Collision is a finite penalty; beam pruning and a 0.64-second horizon do not guarantee collision avoidance or stopping viability. Full-horizon completion fixes a ranking inconsistency but is still approximate.",
+      "next_test": "Distinguish selected collision count, existence of a collision-free candidate, and out-of-horizon stopping feasibility."
+    },
+    {
+      "location": "beam_agent.py:330-348; shadow_physics.py:263-284",
+      "severity": "limitation",
+      "finding": "Invalid flow propagates predicted slip; all wheels have road contact and undamaged grip. Reverse/saturated RPM, per-wheel joint states and relative joint velocities remain partially unobserved.",
+      "next_test": "Bound reconstruction error across prolonged flow loss and surface/damage changes before claiming state-exact predictions."
+    },
+    {
+      "location": "beam_agent.py:290-307",
+      "severity": "limitation",
+      "finding": "No internal time budget guarantees return before 5 seconds. The three completed receipts pass; other states and machine load remain unverified.",
+      "next_test": "Use actual act maxima and timeout counts from every completed receipt, not mean runtime."
+    }
+  ],
+  "runtime_boundary": "Inspected candidate and shadow imports contain no prohibited imports and no live simulator dependency. Package parents are namespace packages. Diagnostic renderer imports do not enter candidate runtime.",
+  "selected_existing_tests": {
+    "command": ".venv/bin/python -m pytest -q agents/apex_2026/v2/test_beam_agent.py -k \"snapshot or objective or invalid_observation or textured\"",
+    "passed": 5,
+    "deselected": 3
+  },
+  "evidence": [
+    {
+      "receipt": "/tmp/apex-v2-beam-r3/t1-s516237.json",
+      "receipt_sha256": "9dfc811b3ecc550c236a54b9442166da5ddf25ed6e95fecfe1ab531a3f29add3",
+      "trace": "/tmp/apex-v2-beam-r3/t1-s516237.jsonl",
+      "trace_sha256": "7c6d5aab2d87a4e087b4b51c4a0b588813f53c80a67b771bb6d17f12c5fb0f9a",
+      "trace_rows": 176,
+      "valid_policy_rows": 176,
+      "flow_invalid_rows": 82,
+      "rpm_ambiguous_rows": 175,
+      "lap_time_ms": 14040,
+      "damage": 0.0,
+      "inference_max_s": 3.1181792200004566,
+      "act_timeout_count": 0,
+      "resource_eligible": true,
+      "peak_memory_mib": 97.9140625
+    },
+    {
+      "receipt": "/tmp/apex-v2-beam-r3/t2-s644062.json",
+      "receipt_sha256": "3dfdb323e4e94a5a0d163dc09ca1e224b4f09eed0b607fb958f1faf0c4b49b32",
+      "trace": "/tmp/apex-v2-beam-r3/t2-s644062.jsonl",
+      "trace_sha256": "7192f21120b58f8f061c80c59702f285efbfd0026449ebe4630f3074fa53d2a0",
+      "trace_rows": 216,
+      "valid_policy_rows": 216,
+      "flow_invalid_rows": 103,
+      "rpm_ambiguous_rows": 215,
+      "lap_time_ms": 17240,
+      "damage": 0.0,
+      "inference_max_s": 3.2097184590002144,
+      "act_timeout_count": 0,
+      "resource_eligible": true,
+      "peak_memory_mib": 97.16796875
+    },
+    {
+      "receipt": "/tmp/apex-v2-beam-r3/t3-s1007.json",
+      "receipt_sha256": "7a4a0ccd48c12f61e533d8240e1ddce6ba8384374b6717350d1ff4c8f61049c0",
+      "trace": "/tmp/apex-v2-beam-r3/t3-s1007.jsonl",
+      "trace_sha256": "dd0481b353fd6808c292417fac2d43deab30bb0cd00376e79c6733a284411b7d",
+      "trace_rows": 198,
+      "valid_policy_rows": 198,
+      "flow_invalid_rows": 91,
+      "rpm_ambiguous_rows": 197,
+      "lap_time_ms": 15800,
+      "damage": 0.0,
+      "inference_max_s": 4.037592407001284,
+      "act_timeout_count": 0,
+      "resource_eligible": true,
+      "peak_memory_mib": 97.22265625
+    }
+  ],
+  "interpretation": "Three actual clean finishes and passing resource receipts are preserved. No promotion or 10-13-second target achievement follows from this review. Later batch cells are outside this frozen review evidence."
+}

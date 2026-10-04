@@ -1,0 +1,15 @@
+{
+  "source_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+  "footprint_approximation": {
+    "used_rectangle_halfwidth_m": 1.4,
+    "public_front_wheel_outer_support_at_max_steer_m": 1.5681829831674792,
+    "public_front_wheel_parameters_m": {
+      "anchor_x": 1.1,
+      "halfwidth": 0.28,
+      "radius": 0.54,
+      "angle_limit_rad": 0.4
+    }
+  },
+  "interpretation": "Current sampled rectangle is not an exact enclosure of fully steered front wheels. It is also conservative in empty hull corners. Source is frozen during the six-cell screen; no formal continuous or full-shape safety claim.",
+  "runtime_scope": "CPU internal predicted-body snapshots only. Official environment state never read by agent."
+}
