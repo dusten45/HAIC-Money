@@ -27,7 +27,7 @@ SCREEN8 = SCREEN6+GEODESIC_LOSSES
 def default_registry():
     registry = {}
     six = ['actuator-r0','brake-r0','exact-pedal-r0','force-r0','friction-envelope-r0',
-        'predictive-r1','obstacle-shield-r0','beam-r1','beam-r2','recovery-r0','recovery-r1','shield-r0','shield-r1','speed-r0','yaw-r0']
+        'predictive-r1','obstacle-shield-r0','obstacle-steering-r0','kinematic-r0','beam-r1','beam-r2','beam-r3','recovery-r0','recovery-r1','shield-r0','shield-r1','speed-r0','yaw-r0']
     four = ['geodesic-r0','geodesic-frenet-r5','predictive-r0']
     eight = ['fallback-r1','geodesic-r2','geodesic-frenet-r6','geodesic-footprint-r7','racing-r3','racing-r4']
     for names, cells, scope in [(six,SCREEN6,'screen6'),(four,REQUIRED,'required4'),(eight,SCREEN8,'screen8')]:
@@ -40,6 +40,19 @@ def default_registry():
         'expected_cells':REQUIRED+regression, 'scope':'required4+full_consumed_regression24'}
     registry['geodesic-footprint-r7'] = {'folders':['/tmp/apex-v2-geodesic-footprint-r7','/tmp/apex-v2-geodesic-footprint-r7-regression'],
         'expected_cells':REQUIRED+regression, 'scope':'required4+full_consumed_regression24'}
+    registry['terrain-r8'] = {'folders':['/tmp/apex-v2-terrain-r8','/tmp/apex-v2-terrain-r8-regression'],
+        'expected_cells':REQUIRED+regression, 'scope':'required4+full_consumed_regression24'}
+    registry['curvature-memory-r0'] = {'folders':['/tmp/apex-v2-curvature-memory-r0'],
+        'expected_cells':SCREEN8+[(1,3601050001)], 'scope':'screen9'}
+    registry['terrain-grounded-r9'] = {'folders':['/tmp/apex-v2-terrain-grounded-r9','/tmp/apex-v2-terrain-grounded-r9-regression'],
+        'expected_cells':REQUIRED+regression, 'scope':'required4+full_consumed_regression24'}
+    registry['obstacle-steering-audit'] = {'folders':['/tmp/apex-v2-obstacle-steering-audit'],
+        'expected_cells':[(3,4111953688)], 'scope':'diagnostic1_not_benchmark', 'benchmark_inclusion':False,
+        'interpretation':'Image/state capture only; 326-action parity audit. Do not add to original screen6 or treat as independent validation.'}
+    registry['curvature-memory-bugfix-untested'] = {'folders':[], 'expected_cells':[],
+        'scope':'counterfactual_only_no_driving', 'source_archive':'agents/apex_2026/v2/results/curvature_memory_sources/b6c66310a58b.py',
+        'source_sha256':hashlib.sha256((ROOT/'agents/apex_2026/v2/results/curvature_memory_sources/b6c66310a58b.py').read_bytes()).hexdigest(),
+        'benchmark_inclusion':False, 'interpretation':'Bug-fixed source used for counterfactual analysis only; no driving receipt, not evaluated.'}
     registry['motion-registration-baseline-diagnostic'] = {'folders':['/tmp/apex-v2-motion-registration'],
         'expected_cells':[REQUIRED[0]], 'scope':'diagnostic1'}
     return registry
@@ -91,6 +104,8 @@ def summarize_selection(rows, expected):
         'finished_median_ms':median([r['lapTimeMs'] for r in good]) if good and not warnings else None,
         'all_cells_finish':len(good)==len(expected) and not warnings,
         'target10_13_count':sum(10000<=r['lapTimeMs']<=13000 for r in good) if not warnings else None,
+        'finish_qualified_completed':sum(r.get('finish_qualified') is True for r in complete),
+        'progress_at_least95_completed':sum((r.get('progress') or 0)>=.95 for r in complete),
         'invalid_action_failure_count':sum(r.get('retire_reason')=='invalid_action' for r in complete),
         'resource_ineligible_completed':sum(r.get('resource_eligible') is False for r in complete),
         'resource_eligible_completed':sum(r.get('resource_eligible') is True for r in complete),
@@ -112,7 +127,7 @@ def read_primary(path):
 
 
 def compact(path, row, sha):
-    keys = ['track_id','seed','status','started_at','ended_at','finished','lapTimeMs','start_t','finish_time_s','end_t','progress','damage','resource_eligible','retire_reason','invalid_actions','act_timeout_count','error']
+    keys = ['track_id','seed','status','started_at','ended_at','finished','lapTimeMs','start_t','finish_time_s','end_t','progress','damage','resource_eligible','retire_reason','finish_qualified','finish_qualified_time_s','invalid_actions','act_timeout_count','error']
     return dict(receipt=str(path),receipt_sha256=sha,**{k:row.get(k) for k in keys})
 
 
@@ -134,7 +149,7 @@ def build(registry):
             key = digest([row.get('provenance',{}).get('agent_sha256'),row.get('config',{})])
             groups.setdefault(key,[]).append((path,row,sha))
         if not groups:
-            variants.append({'label':label,'allocation':allocation,'groups':[], 'warning':'No primary receipts yet; planned cells remain missing'})
+            variants.append({'label':label,'allocation':allocation,'groups':[], 'execution_status':'not_executed_no_primary_receipts', 'warning':'No primary receipts yet; planned cells remain missing, no simulator run is inferred'})
             continue
         output_groups = []
         for key, items in groups.items():
@@ -225,7 +240,7 @@ def markdown(result):
         '.venv/bin/python agents/apex_2026/v2/diagnostics/experiment_index.py', '```', '',
         'Use `--registry path.json` to replace the manual registry with `{label: {folders: [...], expected_cells: [[track,seed],...], scope: "..."}}`. Expected cells must be declared explicitly; new folders are not auto-promoted.',
         '', '[Primary receipt index](results/experiment-index.json) · [Generator](diagnostics/experiment_index.py)',
-        '', 'Finished-only medians in JSON are descriptive and never replace the full declared denominator. No candidate is promoted by this table.']
+        '', 'Diagnostic partitions are excluded from benchmark totals and do not constitute independent validation. Counterfactual-only sources have no driving evidence.', '', 'Finished-only medians in JSON are descriptive and never replace the full declared denominator. No candidate is promoted by this table.']
     return '\n'.join(lines)+'\n'
 
 

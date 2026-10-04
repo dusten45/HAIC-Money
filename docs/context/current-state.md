@@ -14,6 +14,10 @@ The [complete v2 scoreboard](../../agents/apex_2026/v2/EXPERIMENTS.md) separates
 all small screens, execution failures and full regression results. R6's8/8 screen
 fell to20/24 in broader testing; recovery r1 rescues one old failure while
 preserving required laps, but its other old failure remains unresolved.
+Terrain r8's full consumed regression is22/24, below the24/24 gate despite
+required mean18.205s. The independent beam r3 has newly finished required1–3
+in14.04/17.24/15.80s without damage; its remaining screen and full regression
+are pending. These partial speed gains do not authorize selection or holdout.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)

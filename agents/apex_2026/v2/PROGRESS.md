@@ -80,3 +80,24 @@ a measured disappearance of a still-upcoming bend constraint; beam completion
 rollouts address a reproduced early-braking branch-pruning counterexample;
 bounded terrain planning examines short shoulder use under normal95%-tile and
 finish-crossing rules. None has yet established a matched improvement.
+
+The curvature-memory intervention is now rejected: it retained the diagnosed
+constraint, but still collided and finished only7/9 screen cells. The later
+invalid-observation state-reset fix is tested separately and has no attributed
+driving result. Road-constrained obstacle steering prevents the earlier departure
+but stops before the unresolved obstacle; its5/6 result is also unadopted.
+
+Terrain r8 finishes22/24 consumed regression cells (20 new episodes plus four
+source-matched screen receipts), with finished median16.59s. Required mean18.205s
+is faster, but the24/24 completion gate fails. Ground-observation r9 corrects
+vehicle-sprite contamination using historical public frames; its8/8 screen and
+required mean18.28s do not yet establish full regression performance.
+
+Beam r3 ranks each action prefix using a feedback continuation to the same
+0.64s horizon, correcting a reproduced premature-pruning counterexample.
+Fresh required1–3 laps are14.04/17.24/15.80s, all damage-free and resource-eligible;
+the remaining screen cells are pending. These partial results are promising,
+not original-target achievement or candidate selection. The largest measured
+action so far is4.038s against the5s hard limit. Sampled footprint, partially
+observed tire state and short horizon remain explicit limitations. All138 v2
+unit tests passed at checkpointd0b3cfa; driving validation remains decisive.
