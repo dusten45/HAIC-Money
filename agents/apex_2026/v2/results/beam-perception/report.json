@@ -1,0 +1,132 @@
+{
+  "episodes_run_by_analysis": 0,
+  "capture_receipt": "/tmp/apex-v2-beam-r3/failure_capture/receipt.json",
+  "sha256": {
+    "/tmp/apex-v2-beam-r3/source.py": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "/tmp/apex-v2-beam-r3/t3-s4111953688.jsonl": "a876261132ff4f9d745acf00668f0c508fdcebb78b8d3fdb05df904b243ef988",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0"
+  },
+  "events": [
+    {
+      "step": 130,
+      "obstacle_pixels": 0,
+      "bbox": null,
+      "collision": false
+    },
+    {
+      "step": 131,
+      "obstacle_pixels": 0,
+      "bbox": null,
+      "collision": false
+    },
+    {
+      "step": 132,
+      "obstacle_pixels": 0,
+      "bbox": null,
+      "collision": false
+    },
+    {
+      "step": 133,
+      "obstacle_pixels": 0,
+      "bbox": null,
+      "collision": false
+    },
+    {
+      "step": 134,
+      "obstacle_pixels": 11,
+      "bbox": [
+        40,
+        9,
+        43,
+        12
+      ],
+      "collision": false
+    },
+    {
+      "step": 135,
+      "obstacle_pixels": 11,
+      "bbox": [
+        40,
+        19,
+        42,
+        22
+      ],
+      "collision": false
+    },
+    {
+      "step": 136,
+      "obstacle_pixels": 10,
+      "bbox": [
+        37,
+        30,
+        39,
+        33
+      ],
+      "collision": false
+    },
+    {
+      "step": 137,
+      "obstacle_pixels": 10,
+      "bbox": [
+        35,
+        41,
+        37,
+        44
+      ],
+      "collision": false
+    },
+    {
+      "step": 138,
+      "obstacle_pixels": 7,
+      "bbox": [
+        37,
+        52,
+        39,
+        54
+      ],
+      "collision": true
+    },
+    {
+      "step": 139,
+      "obstacle_pixels": 0,
+      "bbox": null,
+      "collision": true
+    }
+  ],
+  "actual_endpoint_checks": [
+    {
+      "step": 137,
+      "footprint": "sparse",
+      "obstacle_samples": 0,
+      "outside_free_samples": 0
+    },
+    {
+      "step": 137,
+      "footprint": "dense",
+      "obstacle_samples": 0,
+      "outside_free_samples": 0
+    },
+    {
+      "step": 138,
+      "footprint": "sparse",
+      "obstacle_samples": 1,
+      "outside_free_samples": 1
+    },
+    {
+      "step": 138,
+      "footprint": "dense",
+      "obstacle_samples": 6,
+      "outside_free_samples": 6
+    }
+  ],
+  "findings": [
+    "Distinct on-road obstacle correctly segmented134-138, before first collision138; no roadside/grass merger in these frames.",
+    "Obstacle vanishes139 after impact; bright detector excludes y>=61 and vehicle overlaps, so this disappearance does not explain first collision.",
+    "At actual after138 pose transformed into before138 camera, sparse25 footprint detects1 obstacle sample and dense.1m footprint detects6. Actual after137 detects0 for both. Thus simple sparse-sampling miss is not established.",
+    "Thresholded bright core is not a guaranteed physical obstacle silhouette; raster/pose uncertainty remains. Shadow lane owns predicted trajectory comparison."
+  ],
+  "limits": [
+    "Pixel image/mask conclusions use captured stacks; actual pose/collision are privileged offline diagnostics only.",
+    "No new simulator reset; capture was separately authorized single recorded-action replay."
+  ]
+}

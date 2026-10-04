@@ -1,0 +1,88 @@
+{
+  "capture_owner": "shadow_physics",
+  "capture_reset_count_reported": 1,
+  "capture_script_reported_checks": {
+    "absolute_position_l2_tolerance": 0.0001,
+    "after_position_steps_inclusive": [
+      1,
+      160
+    ]
+  },
+  "files_sha256": {
+    "/tmp/apex-v2-beam-r3/capture_failure.py": "6dec31e9d4b4ac6105ef18cf022c24143c9e17a1c54ac76a4328c7172fc605a8",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0",
+    "/tmp/apex-v2-beam-r3/failure_capture/receipt.json": "b53b8f874fbb03cbe5cbcc9ae3309b43559b160fb5dedf279dd9fde5c41724ad",
+    "/tmp/apex-v2-beam-r3/failure_capture/truth.json": "ad7e1946856bb420afcdbd6e10605392e12cd26784fed8568f48a0b834873588",
+    "/tmp/apex-v2-beam-r3/source.py": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "/tmp/apex-v2-beam-r3/t3-s4111953688.json": "7a7396458f36b571c1693c5965e4238cd3d9914d4d49f2f81f161ae05a16cfff",
+    "/tmp/apex-v2-beam-r3/t3-s4111953688.jsonl": "a876261132ff4f9d745acf00668f0c508fdcebb78b8d3fdb05df904b243ef988"
+  },
+  "limitations": [
+    "No separately retained replay actions; script directly casts recorded actions to float32, verified lossless.",
+    "After-position values for all 160 steps were not saved; completion receipt reports tolerance checks, not bitwise equality.",
+    "Full-state equality is established only for the 41 saved dictionaries, not the whole 160-step replay or 249-step original episode.",
+    "Public observation stacks were not saved in the original run, so their original-run pixel parity cannot be independently checked.",
+    "Additional velocity, wheel, RPM and gas telemetry is diagnostic-only and has no original-trace counterpart for exact parity.",
+    "Source checks reflect current files; capture script did not snapshot source hashes at replay start."
+  ],
+  "original_episode_steps": 249,
+  "schema_version": 1,
+  "scope": "Read-only verification of existing diagnostic replay evidence; no new evaluation or reset",
+  "seed": 4111953688,
+  "source_sha256": {
+    "beam": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "evaluator": "6c3f20be2600d221f66495bde8514bbac461ffef5617013564e432a683a38ffd",
+    "official": {
+      "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "local_runner.py": "d6a22ca4e8fb4978f7c6858de1859d26585728bce80d673c60d9906046602aae"
+    },
+    "shadow": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56"
+  },
+  "track_id": 3,
+  "verification_resets": 0,
+  "verified": {
+    "current_evaluator_and_official_sources_match_original": true,
+    "exact_previous_after_states": {
+      "count": 41,
+      "steps_inclusive": [
+        119,
+        159
+      ]
+    },
+    "exact_saved_before_states": {
+      "count": 41,
+      "steps_inclusive": [
+        120,
+        160
+      ]
+    },
+    "float32_action_conversion_lossless": {
+      "count": 160,
+      "steps_inclusive": [
+        1,
+        160
+      ]
+    },
+    "observation_dtype": "float32",
+    "observation_index": "decision_step - 120; stack BEFORE action",
+    "observation_range": [
+      0.0,
+      0.9921568632125854
+    ],
+    "observation_shape": [
+      41,
+      4,
+      84,
+      84
+    ]
+  },
+  "verifier_sha256": "5a35bf0c25f89f3ad183d0963e145a0da8099457db3093b47dfb801e351b662a"
+}

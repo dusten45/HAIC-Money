@@ -1,0 +1,23 @@
+{
+  "source_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+  "capture_artifacts": {
+    "/tmp/apex-v2-beam-r3/failure_capture/state_residuals.json": "d579db321333813bf8c472fd8e9763f8f54687cab0381fe3640913e0bb015e41",
+    "/tmp/apex-v2-beam-r3/failure_capture/receipt.json": "b53b8f874fbb03cbe5cbcc9ae3309b43559b160fb5dedf279dd9fde5c41724ad",
+    "/tmp/apex-v2-beam-r3/failure_capture/truth.json": "ad7e1946856bb420afcdbd6e10605392e12cd26784fed8568f48a0b834873588",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0"
+  },
+  "first_damage_step": 138,
+  "first_damage": 0.2,
+  "second_damage_step": 139,
+  "second_damage": 0.4,
+  "observations": [
+    "At132\u2013138, observable-initialized exact shadow80msposition residual .065\u2013.148m. Gross currentstate error is not established as the first collision cause.",
+    "At140\u2013144, postcollision true slip grows .05\u2192.312rad while carried pixel-modelslip .001\u2192.035rad; position residual grows .42\u21921.05m. This follows firstdamage and explains degraded recovery prediction, not initial collision.",
+    "At154\u2013249 repeated initial coast with future gas in beam sequence produces deterministic stationary procrastination. This is downstream of collision at138/139 and braking tostop149."
+  ],
+  "limitations": [
+    "Offline truevelocity/RPM/wheelstate are used only to diagnose residuals, never policyinputs.",
+    "Positionparity checkedall160 to1e-4; fullstate/action249parity notclaimed.",
+    "Footprint/mask vs obstaclegeometry atfirstcollision under independentreview."
+  ]
+}

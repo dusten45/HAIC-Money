@@ -1,0 +1,10 @@
+from pathlib import Path
+import numpy as np,json,math
+from agents.apex_2026.v2.beam_agent import Agent
+from agents.apex_2026.v2.shadow_physics import ShadowCar,decode_wheel_omega
+p=Path('/tmp/apex-v2-beam-r3');rows=[json.loads(x) for x in (p/'t3-s4111953688.jsonl').read_text().splitlines()];truth=json.loads((p/'failure_capture/truth.json').read_text());obs=np.load(p/'failure_capture/observations.npz')['observations'];agent=Agent({});out=[]
+for i,t in enumerate(truth):
+ step=t['step'];r=rows[step-1];diag=r['policy_diagnostics'];h=t['before']['heading_rad'];v=t['velocity'];lat=math.cos(h)*v[0]+math.sin(h)*v[1];fwd=-math.sin(h)*v[0]+math.cos(h)*v[1];true_slip=math.atan2(lat,fwd);frame=obs[i,-1];_,flow_slip,valid=agent.road._motion(obs[i,-2],frame);est_slip=flow_slip if valid else rows[step-2]['policy_diagnostics']['predicted_slip'];est_slip=float(np.clip(est_slip,-.7,.7));model=ShadowCar();model.reset(diag['speed']*math.cos(est_slip),-diag['yaw_rate'],float(np.clip(-diag['wheel_angle'],-.4,.4)),lateral_speed=diag['speed']*math.sin(est_slip),throttle=t['gas'][2],omegas=decode_wheel_omega(frame));pr=model.step(r['action'],4);dx=r['after']['position'][0]-r['before']['position'][0];dy=r['after']['position'][1]-r['before']['position'][1];actual=[math.cos(h)*dx+math.sin(h)*dy,-math.sin(h)*dx+math.cos(h)*dy];err=np.linalg.norm(np.array(pr[:2])-actual)
+ item={'step':step,'true_slip':true_slip,'estimated_slip':est_slip,'flow_valid':valid,'true_speed':t['before']['speed_m_s'],'hud_speed':diag['speed'],'true_yaw':t['before']['angular_velocity'],'hud_yaw':-diag['yaw_rate'],'true_rpm':t['omega'],'hud_rpm':decode_wheel_omega(frame).tolist(),'position_error_80ms':float(err),'predicted_position':list(pr[:2]),'actual_position':actual,'damage':r['after']['info']['damage']};out.append(item)
+ if 132<=step<=145:print(step,'slip',round(true_slip,3),round(est_slip,3),'speed',round(item['true_speed'],1),round(diag['speed'],1),'err',round(err,3),'damage',item['damage'])
+(p/'failure_capture/state_residuals.json').write_text(json.dumps(out,indent=2))
