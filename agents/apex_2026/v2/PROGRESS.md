@@ -142,3 +142,12 @@ zero invalid actions/timeouts. Required1 reproduces all179 R5 actions and drivin
 states exactly. These are two fresh episodes on sourcecc0543c2bebb, not the
 whole six-cell screen. Remaining4 are authorized; full24 and holdout stay gated.
 See [initial receipts and source binding](results/beam-r6-initial-screen.json).
+
+The next R6 required2/3 receipts finish17.82/16.70s with zero damage, but
+each records one action timeout and one invalid action, making both resource-
+ineligible. These outcomes remain failures of the execution gate; no replacement
+runs or full24 are authorized. The original remaining two screen cells continue.
+R7 is an isolated runtime-only cache hypothesis: static projection geometry and
+complete-prefix transitions within one act, cap2144, unchanged action order and
+objective. Four small parity tests pass; full-action/state/sequence parity and
+measured savings remain prerequisites before any new driving episode.

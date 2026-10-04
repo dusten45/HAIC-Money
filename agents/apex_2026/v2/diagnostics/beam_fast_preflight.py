@@ -61,8 +61,54 @@ def main():
             initialization='public stack plus prior float32 actions/predicted slip' if rows is not None else 'repeated single public PNG, zero action memory; synthetic preflight only')
         records.append(record)
         print(name,'shift',record['shift'],'cost',record['cost'],'seconds',round(latency,3),flush=True)
+    class AuditedFast(refined.Agent):
+        # Diagnostic instrumentation only: records whether refinement reuses a
+        # prefix cached by search. All calls delegate to unchanged runtime.
+        def _refine(self,*args):
+            self.search_keys=frozenset(self._transition_cache)
+            self.cross_phase_hits=0
+            self.in_refinement=True
+            try:
+                return super()._refine(*args)
+            finally:
+                self.in_refinement=False
+
+        def _advance(self,node,action,reference,arc,targets,free,terminal):
+            key=(tuple(tuple(float(v).hex() for v in a)
+                       for a in node['sequence']+[action]),bool(terminal))
+            cross_hit=(getattr(self,'in_refinement',False)
+                       and key in self.search_keys and key in self._transition_cache)
+            result=super()._advance(node,action,reference,arc,targets,free,terminal)
+            if cross_hit:self.cross_phase_hits+=1
+            return result
+
+    left=original.Agent();right=AuditedFast()
+    first=cases[0]
+    carried_state(left,first[2],first[3]);carried_state(right,first[2],first[3])
+    sequential=[]
+    for name,observation,rows,step in cases[:2]:
+        # Step121 deliberately receives step120 policy memory; no trace-based
+        # reinitialization occurs here. These fixed recorded observations are
+        # a parity test, not a counterfactual closed-loop driving trajectory.
+        previous_cache=right._transition_cache
+        base_action=left.act(observation);action=right.act(observation)
+        assert right._transition_cache is not previous_cache
+        assert np.array_equal(action,base_action)
+        assert (right.slip,right.throttle,right.last_steer)==(left.slip,left.throttle,left.last_steer)
+        assert right.snapshot(right.shadow)==left.snapshot(left.shadow)
+        assert {k:v for k,v in right.diagnostics.items() if k not in new_fields}==left.diagnostics
+        sequential.append(dict(step=step,action=action.tolist(),
+            sequence=right.diagnostics['beam_sequence'],cost=right.diagnostics['beam_cost'],
+            unsafe_count=right.diagnostics['refined_collision_count'],
+            throttle=right.throttle,slip=right.slip,
+            cross_phase_cache_hits=right.cross_phase_hits,
+            all_action_carry_physical_snapshot_legacy_diagnostics_exact=True,
+            cache_replaced_at_act_entry=True))
+    assert sum(r['cross_phase_cache_hits'] for r in sequential)>0
     assert inventory=={p:sha(Path(p)) for p in inventory}
-    result=dict(scope='12 saved-pixel preflight cases; zero environment resets, no driving performance claim.',
+    result=dict(scope='12 independent saved-pixel contexts plus sequential120→121; zero environment resets, no driving performance claim.',
+        cases=records,sequential_cases=sequential,
+        prefix_contract='Cache fixed to initial state/reference/targets/mask within one act only; cleared before every observation including invalid ones.',
         source_sha256=sha(RUNTIME),source_dependency_inventory=inventory,input_sha256=inputs,
         observer_objective_collision_margin_unchanged=True,
         state_scope='Physical snapshot/controller state; unused fuel-spent/wheel-phase counters not claimed equal.',
