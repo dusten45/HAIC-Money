@@ -1,0 +1,618 @@
+{
+  "source_sha256": "a9d086321e34d686d4a5115472f55dbb190e0a1daa88b649afc1a421aab99ce9",
+  "new_driving_episodes": 0,
+  "selection": "Camera prefixes track2 frames0..169 / track4 frames0..149; retain ego track-center distance <=4.8m and available ridge",
+  "summary": {
+    "raw": {
+      "samples": 1085,
+      "curvature_mae_per_m": 0.008451677837688534,
+      "curvature_bias_per_m": -0.0002359782897408448,
+      "heading_mae_deg": 1.298002774100819,
+      "speed_cap_mean_difference_mps": -1.3128383163004782,
+      "speed_cap_p10_difference_mps": -6.4791608273248835,
+      "speed_cap_p90_difference_mps": 2.5248905461295132,
+      "excess_braking_samples": 125,
+      "unsafe_extra_speed_samples": 75
+    },
+    "smooth5": {
+      "samples": 1085,
+      "curvature_mae_per_m": 0.007948287909366454,
+      "curvature_bias_per_m": -0.0001706325687151504,
+      "heading_mae_deg": 1.2621428022437986,
+      "speed_cap_mean_difference_mps": -1.202737324202784,
+      "speed_cap_p10_difference_mps": -6.244804120711464,
+      "speed_cap_p90_difference_mps": 2.0851803909678854,
+      "excess_braking_samples": 120,
+      "unsafe_extra_speed_samples": 71
+    },
+    "smooth7": {
+      "samples": 1085,
+      "curvature_mae_per_m": 0.007162066527414546,
+      "curvature_bias_per_m": -0.00016048892195402362,
+      "heading_mae_deg": 1.2170135956699697,
+      "speed_cap_mean_difference_mps": -0.8939511284959879,
+      "speed_cap_p10_difference_mps": -4.083307682405103,
+      "speed_cap_p90_difference_mps": 2.3360372412103203,
+      "excess_braking_samples": 101,
+      "unsafe_extra_speed_samples": 65
+    },
+    "supported58": {
+      "samples": 1037,
+      "curvature_mae_per_m": 0.007633715115047578,
+      "curvature_bias_per_m": -7.980553939426776e-05,
+      "heading_mae_deg": 1.1210907120227889,
+      "speed_cap_mean_difference_mps": -0.9353129007428052,
+      "speed_cap_p10_difference_mps": -5.372328150202741,
+      "speed_cap_p90_difference_mps": 1.9146455823997164,
+      "excess_braking_samples": 107,
+      "unsafe_extra_speed_samples": 65
+    }
+  },
+  "subsets": {
+    "clear_confident": {
+      "raw": {
+        "samples": 565,
+        "curvature_mae_per_m": 0.007153017300660073,
+        "curvature_bias_per_m": -0.000553463822685161,
+        "heading_mae_deg": 1.2349362721781671,
+        "speed_cap_mean_difference_mps": -1.386302476989698,
+        "speed_cap_p10_difference_mps": -2.986490566709327,
+        "speed_cap_p90_difference_mps": 0.2927232626611777,
+        "excess_braking_samples": 48,
+        "unsafe_extra_speed_samples": 30
+      },
+      "smooth5": {
+        "samples": 565,
+        "curvature_mae_per_m": 0.006895161456493783,
+        "curvature_bias_per_m": -0.00044072911949957045,
+        "heading_mae_deg": 1.213223798814955,
+        "speed_cap_mean_difference_mps": -1.3354298590333629,
+        "speed_cap_p10_difference_mps": -3.6366460099353697,
+        "speed_cap_p90_difference_mps": 0.5608181850618238,
+        "excess_braking_samples": 50,
+        "unsafe_extra_speed_samples": 29
+      },
+      "smooth7": {
+        "samples": 565,
+        "curvature_mae_per_m": 0.006328127945613128,
+        "curvature_bias_per_m": -0.0003471420011272067,
+        "heading_mae_deg": 1.184933629201277,
+        "speed_cap_mean_difference_mps": -1.098592129882528,
+        "speed_cap_p10_difference_mps": -2.5880650921683177,
+        "speed_cap_p90_difference_mps": 0.9598931957996215,
+        "excess_braking_samples": 46,
+        "unsafe_extra_speed_samples": 26
+      },
+      "supported58": {
+        "samples": 533,
+        "curvature_mae_per_m": 0.005825865119717022,
+        "curvature_bias_per_m": -0.0004707098733546389,
+        "heading_mae_deg": 0.9700486248797805,
+        "speed_cap_mean_difference_mps": -0.6439217856347191,
+        "speed_cap_p10_difference_mps": -2.231547055122462,
+        "speed_cap_p90_difference_mps": 0.0,
+        "excess_braking_samples": 34,
+        "unsafe_extra_speed_samples": 26
+      }
+    },
+    "actual_turns": {
+      "raw": {
+        "samples": 331,
+        "curvature_mae_per_m": 0.01194359529584461,
+        "curvature_bias_per_m": -0.0005851705703743924,
+        "heading_mae_deg": 1.915170052312649,
+        "speed_cap_mean_difference_mps": -0.10067444168031563,
+        "speed_cap_p10_difference_mps": -9.101243026102253,
+        "speed_cap_p90_difference_mps": 10.134983794772417,
+        "excess_braking_samples": 57,
+        "unsafe_extra_speed_samples": 75
+      },
+      "smooth5": {
+        "samples": 331,
+        "curvature_mae_per_m": 0.011067008565665726,
+        "curvature_bias_per_m": -0.00038311921620211965,
+        "heading_mae_deg": 1.835337895024459,
+        "speed_cap_mean_difference_mps": -0.1732286534906481,
+        "speed_cap_p10_difference_mps": -8.651747029070329,
+        "speed_cap_p90_difference_mps": 9.785756457719174,
+        "excess_braking_samples": 57,
+        "unsafe_extra_speed_samples": 71
+      },
+      "smooth7": {
+        "samples": 331,
+        "curvature_mae_per_m": 0.009951256284278365,
+        "curvature_bias_per_m": -0.0003074302149057873,
+        "heading_mae_deg": 1.745640409904957,
+        "speed_cap_mean_difference_mps": 0.034003983940802014,
+        "speed_cap_p10_difference_mps": -9.104813307620304,
+        "speed_cap_p90_difference_mps": 9.239929329336867,
+        "excess_braking_samples": 54,
+        "unsafe_extra_speed_samples": 65
+      },
+      "supported58": {
+        "samples": 303,
+        "curvature_mae_per_m": 0.010774609971855439,
+        "curvature_bias_per_m": -0.00010846306873786723,
+        "heading_mae_deg": 1.6286155402125846,
+        "speed_cap_mean_difference_mps": 0.19612599458040017,
+        "speed_cap_p10_difference_mps": -8.344058032999314,
+        "speed_cap_p90_difference_mps": 10.10124796655074,
+        "excess_braking_samples": 49,
+        "unsafe_extra_speed_samples": 65
+      }
+    }
+  },
+  "residual_uncertainty_diagnostic": {
+    "raw": {
+      "samples": 331,
+      "within_three_sigma": 302,
+      "curvature_error_residual_correlation": 0.19032388721326837
+    },
+    "smooth7": {
+      "samples": 331,
+      "within_three_sigma": 232,
+      "curvature_error_residual_correlation": 0.24758876275605807
+    }
+  },
+  "truth_method": "Official center polyline resampled at1m arclength; same weighted quadratic +/-7m curvature fit, local nearest-route projection. This is a smoothed reference, not exact tire-required curvature.",
+  "method_parameters": {
+    "curvature_fit_halfwindow_m": 7.0,
+    "fit_weight_sigma_m": 5.0,
+    "smoothing_halfwindows_m": [
+      5.0,
+      7.0
+    ],
+    "depth_support_min_m": 5.8,
+    "lateral_accel_mps2": 190.0,
+    "cruise_cap_mps": 100.0,
+    "truth_polyline_resample_m": 1.0,
+    "clear_circle_age_min_frames": 12
+  },
+  "helper_sha256": "b09f9014dea4e8801c0163c0d98799b4898213d67fbb4e84dcf4075160266c55",
+  "excluded_frames": 46,
+  "total_point_windows": 1087,
+  "full_data_sha256": "7cce5e2a776fe67bd0f0338be4f3e31ea692546a779013b12609e03499742a67",
+  "representative_worst_rows": [
+    {
+      "track": 2,
+      "step": 162,
+      "at_m": 10.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 64,
+      "ego_center_gap_m": 0.537746811402506,
+      "ridge_point_gap_m": 0.6058720351564186,
+      "truth": {
+        "curvature": 0.015579731468782361,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": -0.09605113517361198,
+        "heading_error_deg": -22.18175552158256,
+        "speed_cap_mps": 44.475982381865066,
+        "fit_residual_rms_m": 0.08271181667214572,
+        "curvature_sigma_per_m": 0.007856091774592455
+      },
+      "smooth5": {
+        "curvature": -0.09590735872764694,
+        "heading_error_deg": -22.196987105231045,
+        "speed_cap_mps": 44.50930726951024,
+        "fit_residual_rms_m": 0.08088585833191671,
+        "curvature_sigma_per_m": 0.007678635281808583
+      },
+      "smooth7": {
+        "curvature": -0.0825604618055517,
+        "heading_error_deg": -19.954865344226057,
+        "speed_cap_mps": 47.97232239957345,
+        "fit_residual_rms_m": 0.07249136375504744,
+        "curvature_sigma_per_m": 0.006942450472111019
+      }
+    },
+    {
+      "track": 2,
+      "step": 163,
+      "at_m": 4.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 65,
+      "ego_center_gap_m": 2.7235843500440287,
+      "ridge_point_gap_m": 1.4386406915465049,
+      "truth": {
+        "curvature": 0.01671334368965934,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.10317295703588443,
+        "heading_error_deg": -3.428196059617901,
+        "speed_cap_mps": 42.91349255814399,
+        "fit_residual_rms_m": 0.4791753970018542,
+        "curvature_sigma_per_m": 0.06470428202164155
+      },
+      "smooth5": {
+        "curvature": 0.10209391593255844,
+        "heading_error_deg": -3.408013403238595,
+        "speed_cap_mps": 43.139675051862085,
+        "fit_residual_rms_m": 0.485138138869426,
+        "curvature_sigma_per_m": 0.06532518354180097
+      },
+      "smooth7": {
+        "curvature": 0.1033197676344771,
+        "heading_error_deg": -2.9022224379670667,
+        "speed_cap_mps": 42.8829930937499,
+        "fit_residual_rms_m": 0.47356336805023713,
+        "curvature_sigma_per_m": 0.06174315407344667
+      }
+    },
+    {
+      "track": 2,
+      "step": 92,
+      "at_m": 26.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 19,
+      "ego_center_gap_m": 0.2711802473408645,
+      "ridge_point_gap_m": 1.0068300023161578,
+      "truth": {
+        "curvature": -2.870425056462154e-17,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.08002742239873316,
+        "heading_error_deg": -17.831897146419724,
+        "speed_cap_mps": 48.72562135570993,
+        "fit_residual_rms_m": 0.2541379540524675,
+        "curvature_sigma_per_m": 0.020270853973132108
+      },
+      "smooth5": {
+        "curvature": 0.07525920705663351,
+        "heading_error_deg": -18.084052845240382,
+        "speed_cap_mps": 50.24547790970634,
+        "fit_residual_rms_m": 0.2081612711306371,
+        "curvature_sigma_per_m": 0.014500369139608022
+      },
+      "smooth7": {
+        "curvature": 0.06366998616483845,
+        "heading_error_deg": -17.953875482635762,
+        "speed_cap_mps": 54.62726063622416,
+        "fit_residual_rms_m": 0.16224433582508024,
+        "curvature_sigma_per_m": 0.01102024327667396
+      }
+    },
+    {
+      "track": 2,
+      "step": 44,
+      "at_m": 26.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 1044,
+      "ego_center_gap_m": 0.34954663333212277,
+      "ridge_point_gap_m": 0.4053773524878762,
+      "truth": {
+        "curvature": -3.5868919550458247e-17,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.07250038129604305,
+        "heading_error_deg": -8.030386094023582,
+        "speed_cap_mps": 51.19253727222085,
+        "fit_residual_rms_m": 0.22692805606663144,
+        "curvature_sigma_per_m": 0.019038876502725087
+      },
+      "smooth5": {
+        "curvature": 0.07153665102030972,
+        "heading_error_deg": -8.439989170763708,
+        "speed_cap_mps": 51.53621248124492,
+        "fit_residual_rms_m": 0.17685520456647189,
+        "curvature_sigma_per_m": 0.014009255646201507
+      },
+      "smooth7": {
+        "curvature": 0.06265905907722713,
+        "heading_error_deg": -8.544373936852407,
+        "speed_cap_mps": 55.06616934026977,
+        "fit_residual_rms_m": 0.10739148137247852,
+        "curvature_sigma_per_m": 0.007726683522857027
+      },
+      "supported58": {
+        "curvature": -0.0,
+        "heading_error_deg": -0.11030574313258734,
+        "speed_cap_mps": 100.0,
+        "fit_residual_rms_m": 2.5815299586305613e-14,
+        "curvature_sigma_per_m": 0.0
+      }
+    },
+    {
+      "track": 4,
+      "step": 80,
+      "at_m": 26.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 26,
+      "ego_center_gap_m": 0.273109132929667,
+      "ridge_point_gap_m": 0.4115684629052775,
+      "truth": {
+        "curvature": 0.017447756185406667,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.08714417575597232,
+        "heading_error_deg": -7.794652051308237,
+        "speed_cap_mps": 46.69362780343798,
+        "fit_residual_rms_m": 0.1138432981149634,
+        "curvature_sigma_per_m": 0.008759344118327041
+      },
+      "smooth5": {
+        "curvature": 0.08784481641801226,
+        "heading_error_deg": -8.429675700260255,
+        "speed_cap_mps": 46.50704337643817,
+        "fit_residual_rms_m": 0.10605909348825768,
+        "curvature_sigma_per_m": 0.008097291635387525
+      },
+      "smooth7": {
+        "curvature": 0.07750584923069825,
+        "heading_error_deg": -8.443230522157373,
+        "speed_cap_mps": 49.51189639161216,
+        "fit_residual_rms_m": 0.07211510297849068,
+        "curvature_sigma_per_m": 0.005432631056698535
+      },
+      "supported58": {
+        "curvature": 0.05633300324533837,
+        "heading_error_deg": -5.037805063933577,
+        "speed_cap_mps": 58.07581965142246,
+        "fit_residual_rms_m": 0.026926569360777197,
+        "curvature_sigma_per_m": 0.006349354392534909
+      }
+    },
+    {
+      "track": 4,
+      "step": 99,
+      "at_m": 4.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 1,
+      "ego_center_gap_m": 3.745293140989278,
+      "ridge_point_gap_m": 2.7082805055220853,
+      "truth": {
+        "curvature": 0.06632982080513203,
+        "speed_cap_mps": 53.52077437403307
+      },
+      "raw": {
+        "curvature": 0.13586207977663536,
+        "heading_error_deg": -2.172533151344349,
+        "speed_cap_mps": 37.396217002227466,
+        "fit_residual_rms_m": 0.1584506351728216,
+        "curvature_sigma_per_m": 0.02108832599115356
+      },
+      "smooth5": {
+        "curvature": 0.13893139787194386,
+        "heading_error_deg": -2.04039232527142,
+        "speed_cap_mps": 36.980825188595986,
+        "fit_residual_rms_m": 0.1258971132499509,
+        "curvature_sigma_per_m": 0.015935647400199243
+      },
+      "smooth7": {
+        "curvature": 0.1281635842151025,
+        "heading_error_deg": -1.722424319172771,
+        "speed_cap_mps": 38.502991930152525,
+        "fit_residual_rms_m": 0.13002214145439445,
+        "curvature_sigma_per_m": 0.007813595503645382
+      }
+    },
+    {
+      "track": 4,
+      "step": 83,
+      "at_m": 4.0,
+      "road_confident": true,
+      "camera_circle_count": 1,
+      "recent_circle_age": 0,
+      "ego_center_gap_m": 1.0603681167429893,
+      "ridge_point_gap_m": 0.07103902876480454,
+      "truth": {
+        "curvature": 0.024155498539338238,
+        "speed_cap_mps": 88.68880390788692
+      },
+      "raw": {
+        "curvature": 0.09250141972594843,
+        "heading_error_deg": 5.384280825286543,
+        "speed_cap_mps": 45.321325312903575,
+        "fit_residual_rms_m": 0.1959300053104969,
+        "curvature_sigma_per_m": 0.018668737982020976
+      },
+      "smooth5": {
+        "curvature": 0.08786217263914384,
+        "heading_error_deg": 5.226099013633901,
+        "speed_cap_mps": 46.502449668068294,
+        "fit_residual_rms_m": 0.1349162321424496,
+        "curvature_sigma_per_m": 0.013228102675086758
+      },
+      "smooth7": {
+        "curvature": 0.08114092784512013,
+        "heading_error_deg": 4.93477641062053,
+        "speed_cap_mps": 48.39013299297513,
+        "fit_residual_rms_m": 0.10664774439506597,
+        "curvature_sigma_per_m": 0.010040757051464
+      },
+      "supported58": {
+        "curvature": 0.09250141972594843,
+        "heading_error_deg": 5.384280825286543,
+        "speed_cap_mps": 45.321325312903575,
+        "fit_residual_rms_m": 0.1959300053104969,
+        "curvature_sigma_per_m": 0.018668737982020976
+      }
+    },
+    {
+      "track": 4,
+      "step": 112,
+      "at_m": 10.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 14,
+      "ego_center_gap_m": 3.8035444186189507,
+      "ridge_point_gap_m": 0.5215308518023895,
+      "truth": {
+        "curvature": 0.0046541465353197396,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.06354998988413421,
+        "heading_error_deg": 9.602168580773602,
+        "speed_cap_mps": 54.678810421524965,
+        "fit_residual_rms_m": 0.1278446889836293,
+        "curvature_sigma_per_m": 0.007248362253351754
+      },
+      "smooth5": {
+        "curvature": 0.06349184622046429,
+        "heading_error_deg": 9.698249015281577,
+        "speed_cap_mps": 54.70384118554106,
+        "fit_residual_rms_m": 0.10811855387159826,
+        "curvature_sigma_per_m": 0.005625538008040756
+      },
+      "smooth7": {
+        "curvature": 0.058012115265728144,
+        "heading_error_deg": 9.363522674544758,
+        "speed_cap_mps": 57.22917033341893,
+        "fit_residual_rms_m": 0.09304092029974445,
+        "curvature_sigma_per_m": 0.004880689817914647
+      }
+    },
+    {
+      "track": 2,
+      "step": 99,
+      "at_m": 4.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 1,
+      "ego_center_gap_m": 4.388888708183239,
+      "ridge_point_gap_m": 0.3129126334286191,
+      "truth": {
+        "curvature": -3.0974344415406634e-17,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": -0.057299166749932906,
+        "heading_error_deg": -10.852535218064364,
+        "speed_cap_mps": 57.584108452088884,
+        "fit_residual_rms_m": 0.1338073374146408,
+        "curvature_sigma_per_m": 0.017312727825179477
+      },
+      "smooth5": {
+        "curvature": -0.053129314942938655,
+        "heading_error_deg": -10.676305663150014,
+        "speed_cap_mps": 59.80117157803119,
+        "fit_residual_rms_m": 0.08692982841164446,
+        "curvature_sigma_per_m": 0.011990970812753235
+      },
+      "smooth7": {
+        "curvature": -0.04819418645530492,
+        "heading_error_deg": -10.06784372227566,
+        "speed_cap_mps": 62.78840829583612,
+        "fit_residual_rms_m": 0.02770414667178872,
+        "curvature_sigma_per_m": 0.003362718813023057
+      }
+    },
+    {
+      "track": 2,
+      "step": 164,
+      "at_m": 10.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 66,
+      "ego_center_gap_m": 4.754250739753358,
+      "ridge_point_gap_m": 0.226700242985513,
+      "truth": {
+        "curvature": 0.002630844208350884,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": -0.0541423115422117,
+        "heading_error_deg": -5.078400390064331,
+        "speed_cap_mps": 59.23909344015154,
+        "fit_residual_rms_m": 0.2679671587625996,
+        "curvature_sigma_per_m": 0.02586308166148383
+      },
+      "smooth5": {
+        "curvature": -0.05074889896667267,
+        "heading_error_deg": -4.96700311108786,
+        "speed_cap_mps": 61.18760977391803,
+        "fit_residual_rms_m": 0.26767441601918596,
+        "curvature_sigma_per_m": 0.02604756430637003
+      },
+      "smooth7": {
+        "curvature": -0.05538576507510156,
+        "heading_error_deg": -5.675225732397053,
+        "speed_cap_mps": 58.570336728849874,
+        "fit_residual_rms_m": 0.18030928013188988,
+        "curvature_sigma_per_m": 0.016703477102715206
+      }
+    },
+    {
+      "track": 4,
+      "step": 112,
+      "at_m": 4.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 14,
+      "ego_center_gap_m": 3.8035444186189507,
+      "ridge_point_gap_m": 2.46509341199748,
+      "truth": {
+        "curvature": 0.005138282593869512,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": -0.04464429952713777,
+        "heading_error_deg": 13.377416601939812,
+        "speed_cap_mps": 65.23697184574651,
+        "fit_residual_rms_m": 0.28703482917010464,
+        "curvature_sigma_per_m": 0.021510501340779458
+      },
+      "smooth5": {
+        "curvature": -0.04574124830252261,
+        "heading_error_deg": 13.253012221527857,
+        "speed_cap_mps": 64.44998108017842,
+        "fit_residual_rms_m": 0.2757094419602842,
+        "curvature_sigma_per_m": 0.021429645767062185
+      },
+      "smooth7": {
+        "curvature": -0.03712146037746748,
+        "heading_error_deg": 12.63359039571832,
+        "speed_cap_mps": 71.54252663250311,
+        "fit_residual_rms_m": 0.2044404209458378,
+        "curvature_sigma_per_m": 0.015676402864300918
+      }
+    },
+    {
+      "track": 4,
+      "step": 76,
+      "at_m": 10.0,
+      "road_confident": true,
+      "camera_circle_count": 0,
+      "recent_circle_age": 22,
+      "ego_center_gap_m": 4.6826241571598155,
+      "ridge_point_gap_m": 0.6083084000941881,
+      "truth": {
+        "curvature": 0.002968359148939232,
+        "speed_cap_mps": 100.0
+      },
+      "raw": {
+        "curvature": 0.05177772601858985,
+        "heading_error_deg": 5.898886734202391,
+        "speed_cap_mps": 60.57665858406021,
+        "fit_residual_rms_m": 0.17714115199401495,
+        "curvature_sigma_per_m": 0.012456227635171372
+      },
+      "smooth5": {
+        "curvature": 0.050754996641639245,
+        "heading_error_deg": 5.983696114049204,
+        "speed_cap_mps": 61.18393414208065,
+        "fit_residual_rms_m": 0.13691007336649377,
+        "curvature_sigma_per_m": 0.007948156995018949
+      },
+      "smooth7": {
+        "curvature": 0.04660272270168831,
+        "heading_error_deg": 6.019532858931981,
+        "speed_cap_mps": 63.85150750626716,
+        "fit_residual_rms_m": 0.09225015321923027,
+        "curvature_sigma_per_m": 0.005138636957814602
+      }
+    }
+  ]
+}
