@@ -1,0 +1,56 @@
+{
+  "classification": "causal_existing_camera_state_geometry_export_not_lap",
+  "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+  "script_sha256": "baade78f533024c7ce3d68cd1405ee32139e909d93f2c8a67bf1d96b24116c1e",
+  "input_inspection_sha256": "d1732aaebf0faff8775175d6946eea2c5a533d3e3affdbbcae871d8c0311f431",
+  "input_camera_sha256": "dbb7a5c1adc6ea2624fcefc1cf33507f48ed40cc7d28c69c251f22b10f63088b",
+  "fixture_sha256": "da2519edc6176887838a92c4ac9286fcbc084cc464ff1d54b1eb6ca795850311",
+  "truth_for_initialization": false,
+  "past_actions_are_logged_legal_prefix": true,
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "cases": [
+    {
+      "step": 20,
+      "past_actions_seen": 20,
+      "sensor": {
+        "speed_mps": 56.48342885619924,
+        "body_yaw_radps": 2.0920169475258215,
+        "joint_rad": 0.181220834798726,
+        "rear_rolling_mps": [
+          56.143364912627845,
+          58.91673061628641
+        ],
+        "speed_innovation_mps": 1.1083567085144992,
+        "yaw_innovation_radps": 0.017920869715348342,
+        "rear_innovation_max_mps": 1.1318520447528826,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "scenario_count": 3
+    },
+    {
+      "step": 40,
+      "past_actions_seen": 40,
+      "sensor": {
+        "speed_mps": 86.48988845470033,
+        "body_yaw_radps": -0.027863323214895642,
+        "joint_rad": 0.0017235307355372555,
+        "rear_rolling_mps": [
+          87.2509476823501,
+          87.73073988250135
+        ],
+        "speed_innovation_mps": -1.0639084076947682,
+        "yaw_innovation_radps": -0.05433202050023481,
+        "rear_innovation_max_mps": 0.9881135013722258,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "scenario_count": 3
+    }
+  ]
+}

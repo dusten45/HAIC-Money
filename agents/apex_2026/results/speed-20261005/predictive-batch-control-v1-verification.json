@@ -1,0 +1,42 @@
+{
+  "classification": "new_independent_fixed_batch_policy_helper_verified_offline",
+  "source_sha256": "263909e1163fdce76e6704246e7a612c7b940f40dab89a34338bd1c57bfbaeca",
+  "parent_scalar_sha256": "341c61575651774cd5b582c644e47da021fc27737f43cb606b1a57fa561caf99",
+  "batch_model_sha256": "8ae7239b81d9b41e649e2ef704c3a6bbf3a8b2a933ed499b7bf13f566cb82d53",
+  "frozen_standalone_reference_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+  "parent_prefix_exact_except_class_alias": true,
+  "focus_test_command": "MPLCONFIGDIR=/tmp/haic-mpl PYGAME_HIDE_SUPPORT_PROMPT=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest agents/apex_2026/tests/test_predictive_batch_control.py -q",
+  "focus_test_exit_code": 0,
+  "observed_focus_test_summary": "8 passed in 8.17s",
+  "independent_audit": {
+    "agent": "/root/brake_reserve/batch_semantic_audit",
+    "source_sha256": "263909e1163fdce76e6704246e7a612c7b940f40dab89a34338bd1c57bfbaeca",
+    "static_formula_discrepancy_found": false,
+    "class_alias_ast_equal": true,
+    "finite_differential_cases": 2,
+    "actions_per_case": 3,
+    "supplied_states_per_case": 3,
+    "elapsed_s": 0.244,
+    "all_scalar_result_fields_matched": true,
+    "float_abs_tolerance": 1e-10,
+    "float_rel_tolerance": 1e-12,
+    "files_edited": false,
+    "world_steps": 0
+  },
+  "files_sha256": {
+    "agents/apex_2026/research/speed_20261005/predictive_batch_control.py": "263909e1163fdce76e6704246e7a612c7b940f40dab89a34338bd1c57bfbaeca",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_control_fixture.py": "baade78f533024c7ce3d68cd1405ee32139e909d93f2c8a67bf1d96b24116c1e",
+    "agents/apex_2026/research/speed_20261005/predictive_batch_control_profile.py": "e076e0367c599c27f364808ee8832efe59bf21f82ed29de70333e729daca4603",
+    "agents/apex_2026/tests/test_predictive_batch_control.py": "6ea6a01e5b1206628b41f6dea0a50ae0cde63a1a16b45c7a215a5d15baf8dd05",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-control-v1-cameras.npz": "da2519edc6176887838a92c4ac9286fcbc084cc464ff1d54b1eb6ca795850311",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-control-v1-cameras.json": "a1b1bbace9a94f74711ffa10d119c58c1074c94f9a783a65c3396e0115fa0ee1",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-control-v1-profile.json": "2d31496fe6f1a652a3d0078ede1a0d8ea12a2b244ea070e45fe9ad8351fe83df",
+    "agents/apex_2026/results/speed-20261005/predictive-batch-control-v1-report.md": "fbf52462353c18c03f229f781ad6d2c44f83e326b3c2f74b10956b141802f4dd"
+  },
+  "source_freeze": ".haic-artifacts/apex-speed-20261005/predictive-batch-control-v1",
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "policy_changed": false,
+  "standalone_candidate_changed": false,
+  "original_early_10s_goal_achieved": false
+}

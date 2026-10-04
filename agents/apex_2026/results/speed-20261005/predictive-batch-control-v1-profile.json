@@ -1,0 +1,204 @@
+{
+  "classification": "fixed_existing_camera_and_supplied_state_policy_profile_not_lap",
+  "source_sha256": {
+    "standalone_reference": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+    "scalar_model": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+    "batch_model": "8ae7239b81d9b41e649e2ef704c3a6bbf3a8b2a933ed499b7bf13f566cb82d53",
+    "scalar_planner": "341c61575651774cd5b582c644e47da021fc27737f43cb606b1a57fa561caf99",
+    "batch_planner": "263909e1163fdce76e6704246e7a612c7b940f40dab89a34338bd1c57bfbaeca",
+    "geometry": "565d398e4e55c1e8bb5dad5d38e6ffa2c1a42eb5a8675832c2103f1197741920",
+    "profile": "e076e0367c599c27f364808ee8832efe59bf21f82ed29de70333e729daca4603"
+  },
+  "fixture_sha256": "da2519edc6176887838a92c4ac9286fcbc084cc464ff1d54b1eb6ca795850311",
+  "all_sources_unchanged": true,
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "policy_changed": false,
+  "cases": [
+    {
+      "name": "existing_camera_step20_three_scenarios",
+      "timings": {
+        "scalar": {
+          "field_and_geometry_setup_ms": 7.9137679931591265,
+          "planner_with_geometry_evaluation_ms": 2022.604723002587,
+          "total_ms": 2030.518490995746
+        },
+        "batch": {
+          "field_and_geometry_setup_ms": 3.225066997401882,
+          "planner_with_geometry_evaluation_ms": 854.5730449986877,
+          "total_ms": 857.7981119960896
+        }
+      },
+      "total_speedup": 2.367128654865823,
+      "scalar_policy_result": {
+        "feasible": true,
+        "action": [
+          -0.15155474841594696,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -18.28121786119632,
+        "worst_progress_m": 18.324308424130237,
+        "predicted_terminal_speed_mps": 61.63040141668551,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 12.586650462713017,
+        "backup_duration_s": 0.28,
+        "candidate_count": 72,
+        "feasible_count": 56,
+        "scenario_count": 3,
+        "model_steps": 4943,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_policy_result": {
+        "feasible": true,
+        "action": [
+          -0.15155474841594696,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -18.28121786119632,
+        "worst_progress_m": 18.324308424130237,
+        "predicted_terminal_speed_mps": 61.63040141668551,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 12.586650462713017,
+        "backup_duration_s": 0.28,
+        "candidate_count": 72,
+        "feasible_count": 56,
+        "scenario_count": 3,
+        "model_steps": 4943,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 30,
+        "batched_model_rows": 5479
+      },
+      "every_scalar_result_field_matched": true
+    },
+    {
+      "name": "existing_camera_step40_three_scenarios",
+      "timings": {
+        "scalar": {
+          "field_and_geometry_setup_ms": 2.717014998779632,
+          "planner_with_geometry_evaluation_ms": 1078.8852640034747,
+          "total_ms": 1081.6022790022544
+        },
+        "batch": {
+          "field_and_geometry_setup_ms": 3.0758069988223724,
+          "planner_with_geometry_evaluation_ms": 654.8457830067491,
+          "total_ms": 657.9215900055715
+        }
+      },
+      "total_speedup": 1.6439683625416441,
+      "scalar_policy_result": {
+        "feasible": true,
+        "action": [
+          -0.0014088933821767569,
+          0.0,
+          0.25
+        ],
+        "reason": "feasible",
+        "score": -23.190223540937136,
+        "worst_progress_m": 23.19756471919249,
+        "predicted_terminal_speed_mps": 61.09124075509501,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 21.513985868774522,
+        "backup_duration_s": 0.38,
+        "candidate_count": 72,
+        "feasible_count": 16,
+        "scenario_count": 3,
+        "model_steps": 2757,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_policy_result": {
+        "feasible": true,
+        "action": [
+          -0.0014088933821767569,
+          0.0,
+          0.25
+        ],
+        "reason": "feasible",
+        "score": -23.190223540937136,
+        "worst_progress_m": 23.19756471919249,
+        "predicted_terminal_speed_mps": 61.09124075509501,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 21.513985868774522,
+        "backup_duration_s": 0.38,
+        "candidate_count": 72,
+        "feasible_count": 16,
+        "scenario_count": 3,
+        "model_steps": 2757,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 36,
+        "batched_model_rows": 4498
+      },
+      "every_scalar_result_field_matched": true
+    },
+    {
+      "name": "fixed_straight_100mps_three_scenarios",
+      "timings": {
+        "scalar": {
+          "field_and_geometry_setup_ms": 0.08754400187171996,
+          "planner_with_geometry_evaluation_ms": 1083.3058940042974,
+          "total_ms": 1083.3934380061692
+        },
+        "batch": {
+          "field_and_geometry_setup_ms": 0.09093999688047916,
+          "planner_with_geometry_evaluation_ms": 629.9407510014134,
+          "total_ms": 630.0316909982939
+        }
+      },
+      "total_speedup": 1.7195856232081235,
+      "scalar_policy_result": {
+        "feasible": true,
+        "action": [
+          0.0,
+          0.1599999964237213,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -31.999352952042308,
+        "worst_progress_m": 31.999771019899697,
+        "predicted_terminal_speed_mps": 100.0,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 29.83229953564758,
+        "backup_duration_s": 0.46,
+        "candidate_count": 72,
+        "feasible_count": 18,
+        "scenario_count": 3,
+        "model_steps": 2832,
+        "rejected_max_violation_m": 1.9
+      },
+      "batch_policy_result": {
+        "feasible": true,
+        "action": [
+          0.0,
+          0.1599999964237213,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -31.999352952042308,
+        "worst_progress_m": 31.999771019899697,
+        "predicted_terminal_speed_mps": 100.0,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 29.83229953564758,
+        "backup_duration_s": 0.46,
+        "candidate_count": 72,
+        "feasible_count": 18,
+        "scenario_count": 3,
+        "model_steps": 2832,
+        "rejected_max_violation_m": 1.9,
+        "batch_calls": 39,
+        "batched_model_rows": 4560
+      },
+      "every_scalar_result_field_matched": true
+    }
+  ],
+  "limits": [
+    "Single fixed measurement per case on this shared host, no worst-case timing proof.",
+    "Actual camera cases include rebuilding their distance field and all rollout/backup geometry.",
+    "Camera decoding, observer update, ridge extraction and scenario construction are outside timers.",
+    "Synthetic case constructs a supplied field, not camera perception.",
+    "Pure finite predictor/geometry callbacks are required; eager batch errors may differ on scalar-unvisited rows.",
+    "No standalone agent changed, no episodes run, no pace or safety certificate."
+  ]
+}
