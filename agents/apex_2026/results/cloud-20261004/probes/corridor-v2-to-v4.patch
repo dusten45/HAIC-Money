@@ -1,49 +1,21 @@
 --- a/agents/apex_2026/corridor_agent.py
 +++ b/agents/apex_2026/corridor_agent.py
-@@ -291,6 +291,11 @@
-     ROAD_LOW = 0.24
-     ROAD_HIGH = 0.52
-     OBSTACLE_LOW = 0.54
+@@ -293,0 +294,5 @@
 +    # Official RGB(255,165,0) maps to gray171/255 after camera resizing.
 +    # Keep antialias pixels in the component, but require an orange-like
 +    # peak rather than accepting compact pieces of a white/red curb.
 +    OBSTACLE_CORE_LOW = 0.655
 +    OBSTACLE_CORE_HIGH = 0.705
-     MAX_STEER = 0.48
-     STRAIGHT_MAX_STEER = 0.16
-     STRAIGHT_CENTER_DEADBAND = 1.25
-@@ -403,8 +408,10 @@
-                 min_x = max_x = start_x
-                 min_y = max_y = start_y
-                 sum_x = sum_y = area = 0
+@@ -405,0 +411 @@
 +                peak = 0.0
-                 while stack:
-                     x, y = stack.pop()
+@@ -407,0 +414 @@
 +                    peak = max(peak, float(frame[y, x]))
-                     area += 1
-                     sum_x += x
-                     sum_y += y
-@@ -424,6 +431,7 @@
-                 box_height = max_y - min_y + 1
-                 if not (
-                     4 <= area <= 80
+@@ -426,0 +434 @@
 +                    and self.OBSTACLE_CORE_LOW <= peak <= self.OBSTACLE_CORE_HIGH
-                     and 2 <= box_width <= 9
-                     and 2 <= box_height <= 10
-                     # World-scaled compactness rejects horizontal and vertical
-@@ -1813,6 +1821,8 @@
-         bbox = min(xs), min(ys), max(xs), max(ys)
-         if (
-             not 4 <= len(pixels) <= 80
+@@ -1815,0 +1824,2 @@
 +            or not cls.OBSTACLE_CORE_LOW <= max(float(frame[py, px])
 +                                               for px, py in pixels) <= cls.OBSTACLE_CORE_HIGH
-             or not 2 <= bbox[2] - bbox[0] + 1 <= 9
-             or not 2 <= bbox[3] - bbox[1] + 1 <= 10
-             or abs(float(np.mean(xs)) - x) > 1.5
-@@ -1822,71 +1832,59 @@
-         return bbox
- 
-     @classmethod
+@@ -1825,6 +1835,9 @@
 -    def _visible_edges(
 -        cls,
 -        frame: np.ndarray,
@@ -59,7 +31,7 @@
 +        inside this observed envelope. Separate road branches and unrelated
 +        pixel gaps are never joined or filled from neighboring image rows.
 +        """
-         asphalt = (frame >= cls.ROAD_LOW) & (frame <= cls.ROAD_HIGH)
+@@ -1832,2 +1845,18 @@
 -        edges = {}
 -        obscured = {}
 +        # Only measured circle pixels can join asphalt runs. Resizing adds
@@ -80,7 +52,7 @@
 +                                     max(0, px - 1):min(84, px + 2)].any()):
 +                        occlusion[py, px] = True
 +        spans = {}
-         for row in range(22, 59):
+@@ -1835,5 +1864,2 @@
 -            center = cls._center_at(float(row), centers)
 -            lo = max(0, int(np.floor(center - 18.0)))
 -            hi = min(83, int(np.ceil(center + 18.0)))
@@ -88,7 +60,7 @@
 -            if len(xs) < 6 or xs[0] <= lo or xs[-1] >= hi:
 +            points = np.flatnonzero(asphalt[row])
 +            if points.size < 6:
-                 continue
+@@ -1841,6 +1867,12 @@
 -            gaps = np.flatnonzero(np.diff(xs) > 1)
 -            if any(
 -                not (bbox[1] <= row <= bbox[3]
@@ -107,7 +79,7 @@
 +                    runs.append((left, right, count))
 +            runs = [run for run in runs if run[2] >= 6]
 +            if not runs:
-                 continue
+@@ -1848,42 +1880,8 @@
 -            span = float(xs[0]), float(xs[-1])
 -            if bbox[1] <= row <= bbox[3]:
 -                obscured[row] = span
@@ -158,44 +130,20 @@
 +            left, right, _count = min(runs, key=distance)
 +            spans[row] = float(left), float(right)
 +        return spans
- 
-     def _nearest_obstacle(
-         self,
-@@ -1911,7 +1909,7 @@
-         return obstacle
- 
-     def _corridor_curve_center(self, row: float) -> float | None:
+@@ -1914 +1912 @@
 -        """Interpolate measured midpoints; extrapolate at most five near rows.
 +        """Interpolate visible-envelope midpoints; extend at most five near rows.
- 
-         The near extension anchors steering at ego row63. It supplies no road
-         edge or clearance evidence: every checked row still needs real edges.
-@@ -1968,9 +1966,9 @@
-                               far_y: int, bbox) -> float | None:
-         """Check the oriented hull against the obstacle and observed road.
- 
+@@ -1971,3 +1969,3 @@
 -        Body/obstacle separation is checked at every center row. The complete
 -        hull road polygon is additionally checked where it lies within the
 -        finite measured horizon; no unknown edge is invented.
 +        Body/obstacle separation and full-hull viewport bounds are checked at
 +        every center row. The visible part of its road footprint is checked
 +        within the finite measured horizon; no unknown edge is invented.
-         """
-         px_x, px_y = 1.3608, 1.701
-         x = self._corridor_path_x(row, target, near_y)
-@@ -1993,7 +1991,7 @@
-         if obstacle_margin < 0:
-             return None
-         margin = obstacle_margin * px_x
+@@ -1996 +1994 @@
 -        if far_y + 5 <= row <= 53:
 +        if far_y <= row <= 58:
-             edge_rows = list(range(far_y, 59))
-             vertices = [
-                 (x + px_x * (longitudinal_corner * sine + lateral_corner * cosine),
-@@ -2001,14 +1999,19 @@
-                 for longitudinal_corner, lateral_corner in
-                 ((-2.4, -1.2), (-2.4, 1.2), (2.6, 1.2), (2.6, -1.2))
-             ]
+@@ -2004,3 +2002,4 @@
 -            lowest = min(vertex[1] for vertex in vertices)
 -            highest = max(vertex[1] for vertex in vertices)
 -            if lowest < far_y or highest > 58:
@@ -203,16 +151,11 @@
 +            # space beyond the image. This bound applies to the whole hull,
 +            # including poses at the finite longitudinal horizon endpoints.
 +            if any(vertex[0] < .25 or vertex[0] > 82.75 for vertex in vertices):
-                 return None
+@@ -2007,0 +2007,2 @@
 +            lowest = max(far_y, min(vertex[1] for vertex in vertices))
 +            highest = min(58., max(vertex[1] for vertex in vertices))
-             # Both the polygon and observed road edges are piecewise linear.
-             # Their extrema occur at hull vertices or integer road rows;
-             # checking these breakpoints also catches intrusion between corners.
+@@ -2011 +2012,3 @@
 -            check_rows = sorted(set([vertex[1] for vertex in vertices] +
 +            check_rows = sorted(set([lowest, highest] +
 +                                    [vertex[1] for vertex in vertices
 +                                     if lowest <= vertex[1] <= highest] +
-                                     list(range(math.ceil(lowest), math.floor(highest) + 1))))
-             for check_row in check_rows:
-                 intersections = []

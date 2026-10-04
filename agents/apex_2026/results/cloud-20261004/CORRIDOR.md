@@ -14,11 +14,17 @@ V3 replaced the artificial center ±18-pixel edge search with contiguous runs
 over the full camera width. A span touching x0/x83 bounds only visible asphalt;
 it invents no offscreen road. Separate runs join only for measured obstacle
 occlusion, and missing rows are never interpolated. V4 requires a compact
-component peak compatible with official orange RGB(255,165,0), which the
-official grayscale transform renders as 171/255. Only an actual .52–.54 pixel
+component peak compatible with official orange RGB(255,165,0); saved camera
+raster samples have peaks of 171/255. Only an actual .52–.54 pixel
 within one pixel of the measured bright component can extend its occlusion.
 This fixes saved-frame curb competition and antialias topology without
 padding road edges or relaxing hull margins.
+
+Calibration erratum: applying OpenCV RGB-to-gray directly to the pure orange
+color yields 173/255; 171/255 is the observed saved raster peak after rendering
+and resizing. The preserved V4 source comment overstates that relationship.
+Its .655–.705 peak band contains both values. This documentation correction
+preserves the source bytes and the hashes of all recorded trials.
 
 ## Fresh benchmark screens
 
@@ -99,7 +105,9 @@ known limitation; the proposed correction belongs to a separate candidate.
 Compact exact receipts are `probes/corridor-v{1,2,3,4}-{target,mandatory}.json`.
 `probes/corridor-provenance.json` binds their hashes and source versions.
 Reversible source patches `corridor-v{1,2,3}-to-v4.patch` reconstruct each
-earlier source exactly; V2/V3 test patches preserve their test suites. Source,
+earlier source exactly; V2/V3 test patches preserve their test suites. V1/V2
+source patches use zero context to avoid blank-line whitespace warnings;
+the manifest also binds each source/test patch SHA256. Source,
 test and package snapshots and full traces remain in ignored cloud artifacts.
 The submission ZIP contains only `agent.py`, passes syntax/member integrity,
 and is 27,493 bytes; this is not a Linux cold-import certification.
