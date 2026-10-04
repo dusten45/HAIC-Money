@@ -1,0 +1,68 @@
+{
+  "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+  "base_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+  "review_script_sha256": "63cf132ac11a7eaaf356cb635c3414f877fd686b7aa0296403c6aa5e8e58e2e4",
+  "observation_sha256": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0",
+  "resets": 0,
+  "ast_identical_after_removing_only_mask_helper_and_two_act_changes": true,
+  "independent_three_by_three_minimum_oracle_cases": 100,
+  "mask_mutation": false,
+  "initial_pose_cases": 41,
+  "nonzero_initial_pose_costs": [
+    {
+      "step": 144,
+      "raw_cost": 0,
+      "margin_cost": 1
+    },
+    {
+      "step": 145,
+      "raw_cost": 0,
+      "margin_cost": 4
+    },
+    {
+      "step": 146,
+      "raw_cost": 0,
+      "margin_cost": 4
+    },
+    {
+      "step": 147,
+      "raw_cost": 0,
+      "margin_cost": 3
+    },
+    {
+      "step": 148,
+      "raw_cost": 0,
+      "margin_cost": 1
+    }
+  ],
+  "ordering": "path/geodesic and speed targets use original free mask; current occlusion fill precedes erosion; only search collision mask changes",
+  "boundary": "Explicit zero border; outside-image remains unsafe. One Chebyshev pixel margin: approximately .735m horizontal and .588m forward at fixed image scale.",
+  "cache": "New independent array per action, never mutated during search; identity-based integral cache contract preserved.",
+  "limits": [
+    "One pixel is an empirical raster-resolution margin, not a proven pose or segmentation error bound.",
+    "20ms sampling still leaves between-sample motion unchecked.",
+    "Postimpact steps144-148 already violate the eroded margin at the current pose; no feasible-continuation guarantee.",
+    "Agent.act timing supplied by separately source-bound shadow preflight; reviewer did not rerun it.",
+    "No track episodes or policy inputs from privileged evaluator telemetry.",
+    "Measured21calls below5seconds do not guarantee worst-case latency; more eroded pixels invoke costly SAT more often."
+  ],
+  "stored_observation_preflight": {
+    "path": "/tmp/apex-v2-beam-r5/preflight.json",
+    "sha256": "5337bcbb49119c0fce3518520b8c7133dbfa33aadf1af708603af79a72964119",
+    "timed_by": "shadow_physics",
+    "count": 21,
+    "maximum_act_seconds": 2.8736773720011115,
+    "max_latency_step": 134,
+    "selected_sequence_nonzero_unsafe": [
+      {
+        "step": 138,
+        "selected_sequence_unsafe": 17
+      },
+      {
+        "step": 145,
+        "selected_sequence_unsafe": 27
+      }
+    ],
+    "scope": "Saved R3 observations with reconstructed R3 action memory; individual calls, not closed-loop R5 episodes."
+  }
+}

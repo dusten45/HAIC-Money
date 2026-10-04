@@ -1,0 +1,84 @@
+{
+  "status": "source_frozen_preflight_complete_HOLD_no_episodes",
+  "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+  "parent_r4_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "config": {},
+  "single_change": "After existing carocclusion fill, erode collisionfree mask once with3x3 ones,constantzero exterior. Preserve originalroadmask/path and entireR4 search/cost/physics/state/actionset.",
+  "rationale": "Measured shortprediction residual and rasterboundary changes independently invalidate previouszero-margin137sequence. A fixed1pixelmargin tests this mechanism without radius tuning.",
+  "risk_semantics": "R4 fullfixture unionunsafepixelcellcount and200multiplier unchanged; unsafe region expandsby1pixel Chebyshev radius.",
+  "tests": {
+    "RED": 2,
+    "R5": 4,
+    "R4": 6,
+    "R3": 8,
+    "passed_total": 18,
+    "independent_random_mask_cases": 100
+  },
+  "preflight": {
+    "stored_decisions": 21,
+    "max_act_s": 2.8736773720011115,
+    "first_stored_action_divergence": 127,
+    "preimpact_selected_sequence_unsafe": {
+      "120": 0,
+      "121": 0,
+      "122": 0,
+      "123": 0,
+      "124": 0,
+      "125": 0,
+      "126": 0,
+      "127": 0,
+      "128": 0,
+      "129": 0,
+      "130": 0,
+      "131": 0,
+      "132": 0,
+      "133": 0,
+      "134": 0,
+      "135": 0,
+      "136": 0,
+      "137": 0
+    }
+  },
+  "limitations": [
+    "1pixelmargin is a bounded designchoice, not a proven uncertainty bound or generalcollisionguarantee.",
+    "21stored observations come fromR3 trajectories; choices do not establish closedloop outcomes.",
+    "Atstored138 robustsearch returns17unsafe samples because alreadyinfeasible under lattice; at14527unsafe. No new emergencycontroller added.",
+    "Stationaryprocrastination at154 persists; not changed in thisaxis.",
+    "PreviousR4 remains offline-only, never evaluateddriving and not a drivingfailure.",
+    "5s hardact limit stillmust be measured in anyfutureepisodes; currentmax2.874s notworstcase proof."
+  ],
+  "prospective_screen": {
+    "cells_order": [
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ]
+    ],
+    "status": "await_parent_checkpoint_and_authorization",
+    "retries": 0,
+    "new_holdout": false,
+    "act_limit_s": 5
+  },
+  "environment_resets": 0
+}

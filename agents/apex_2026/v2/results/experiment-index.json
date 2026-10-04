@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:38:50.385046+00:00",
-  "analysis_sha256": "0b8488005b556c298a650683931bc2e0b66ef41b457e02cf0ceadc71ddc8a25c",
+  "generated_at": "2026-10-04T20:53:34.620883+00:00",
+  "analysis_sha256": "5e62ec0855ecb9891b2a87559f9bebe6f9fcb13253fd60aa453d0db5694da343",
   "benchmark_sha256": "c52da67c7dfaf9bcc700a7ed4a5ac462558934c177d75585c6701fbc83166f33",
   "registry": {
     "actuator-r0": {
@@ -1515,6 +1515,46 @@
       "source_sha256": "b6c66310a58b88bc778f79dd6b9123944d99be3ee826ed7ffa41f13dd62340ba",
       "benchmark_inclusion": false,
       "interpretation": "Bug-fixed source used for counterfactual analysis only; no driving receipt, not evaluated."
+    },
+    "beam-r4-offline": {
+      "folders": [],
+      "expected_cells": [],
+      "scope": "offline_counterfactual_no_episodes",
+      "benchmark_inclusion": false,
+      "source_archive": "agents/apex_2026/v2/results/beam_sources/c3e002805c86.py",
+      "source_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+      "checkpoint": "783e951",
+      "new_environment_resets": 0,
+      "evidence_sha256": {
+        "beam-r4-design.json": "99f18257f24db348e95d4a74b13918f474a23d6d199a35928fc627ae7c2dbe95",
+        "beam-area-geometry-review.json": "b9bdead784ea99dbd1ad0f86289ad8468d6910b5fce937af19a8524fa0d06639",
+        "beam-r4-earlier_actions.json": "1df494f672d361f0d3bce58949fda962e7a9b618178e185275a363e8b56170d2",
+        "beam-r4-candidates.json": "61037779f62129e71268b4eca528d003ad53e0b4a87959e3780daa6a75689fd8",
+        "beam-r4-state_mask_ablation.json": "1d63d8e759549bbf142f6babef7ed3d036289fc2a9997aece5ec3af86ca284a9"
+      },
+      "offline_evidence": {
+        "tests_passed": 14,
+        "geometry_checks": 120,
+        "geometry_mismatches": 0,
+        "recorded_preimpact_first_actions_unchanged": 19,
+        "recorded_preimpact_first_actions_checked": 19,
+        "state_mask_2x2_unsafe_pixel_counts": [
+          0,
+          4,
+          2,
+          2
+        ]
+      },
+      "interpretation": "Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets."
+    },
+    "beam-r5-preflight": {
+      "folders": [],
+      "expected_cells": [],
+      "scope": "offline_preflight_active_no_episodes",
+      "benchmark_inclusion": false,
+      "new_environment_resets": 0,
+      "source_status": "not_frozen_in_this_index",
+      "interpretation": "Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim."
     },
     "motion-registration-baseline-diagnostic": {
       "folders": [
@@ -21069,6 +21109,58 @@
         "source_sha256": "b6c66310a58b88bc778f79dd6b9123944d99be3ee826ed7ffa41f13dd62340ba",
         "benchmark_inclusion": false,
         "interpretation": "Bug-fixed source used for counterfactual analysis only; no driving receipt, not evaluated."
+      },
+      "groups": [],
+      "execution_status": "not_executed_no_primary_receipts",
+      "warning": "No primary receipts yet; planned cells remain missing, no simulator run is inferred"
+    },
+    {
+      "label": "beam-r4-offline",
+      "allocation": {
+        "folders": [],
+        "expected_cells": [],
+        "scope": "offline_counterfactual_no_episodes",
+        "benchmark_inclusion": false,
+        "source_archive": "agents/apex_2026/v2/results/beam_sources/c3e002805c86.py",
+        "source_sha256": "c3e002805c8649868acd8309ace11eb1cef586475058f472f1b95348243bebfe",
+        "checkpoint": "783e951",
+        "new_environment_resets": 0,
+        "evidence_sha256": {
+          "beam-r4-design.json": "99f18257f24db348e95d4a74b13918f474a23d6d199a35928fc627ae7c2dbe95",
+          "beam-area-geometry-review.json": "b9bdead784ea99dbd1ad0f86289ad8468d6910b5fce937af19a8524fa0d06639",
+          "beam-r4-earlier_actions.json": "1df494f672d361f0d3bce58949fda962e7a9b618178e185275a363e8b56170d2",
+          "beam-r4-candidates.json": "61037779f62129e71268b4eca528d003ad53e0b4a87959e3780daa6a75689fd8",
+          "beam-r4-state_mask_ablation.json": "1d63d8e759549bbf142f6babef7ed3d036289fc2a9997aece5ec3af86ca284a9"
+        },
+        "offline_evidence": {
+          "tests_passed": 14,
+          "geometry_checks": 120,
+          "geometry_mismatches": 0,
+          "recorded_preimpact_first_actions_unchanged": 19,
+          "recorded_preimpact_first_actions_checked": 19,
+          "state_mask_2x2_unsafe_pixel_counts": [
+            0,
+            4,
+            2,
+            2
+          ]
+        },
+        "interpretation": "Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets."
+      },
+      "groups": [],
+      "execution_status": "not_executed_no_primary_receipts",
+      "warning": "No primary receipts yet; planned cells remain missing, no simulator run is inferred"
+    },
+    {
+      "label": "beam-r5-preflight",
+      "allocation": {
+        "folders": [],
+        "expected_cells": [],
+        "scope": "offline_preflight_active_no_episodes",
+        "benchmark_inclusion": false,
+        "new_environment_resets": 0,
+        "source_status": "not_frozen_in_this_index",
+        "interpretation": "Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim."
       },
       "groups": [],
       "execution_status": "not_executed_no_primary_receipts",

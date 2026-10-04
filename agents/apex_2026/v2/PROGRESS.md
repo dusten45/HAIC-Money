@@ -109,3 +109,19 @@ most of their8.94s total gain to higher sustained speed; estimated route length
 falls1.6–4.1%. About87% of saved time is in middle/high-turn bins. Less repeated
 braking and more coasting support a momentum-preservation explanation, not a
 proven isolated causal effect. See [source-bound analysis](results/beam-speed-gain.json).
+
+The R3 failure has a concrete pixel-domain collision-check counterexample:
+at decision138/rawtick3 the predicted front-left wheel overlaps a detected
+obstacle cell while the25 sampled points report zero. Exact full-fixture area
+checking (R4) fixes this detector, passes14 related tests and120 independent
+geometry cases, but preserves all19 captured pre-impact first actions. R4 has
+zero new driving episodes and is not presented as a closed-loop improvement.
+An offline state/mask ablation shows either the small state residual or the next
+pixel boundary alone breaks the previous zero-clearance plan. The shifted old
+plan also collides, rejecting action-lattice omission as the sole explanation.
+
+R5 tests one pixel of collision-mask clearance while retaining the raw road
+planner, physics, action search and other cost terms. This margin is an empirical
+resolution allowance, not a formal uncertainty bound. No radius sweep or forced
+acceleration is combined with it. Fresh driving is gated on fixed-source tests,
+stored-observation checks and the unchanged5s inference limit.

@@ -53,6 +53,20 @@ def default_registry():
         'scope':'counterfactual_only_no_driving', 'source_archive':'agents/apex_2026/v2/results/curvature_memory_sources/b6c66310a58b.py',
         'source_sha256':hashlib.sha256((ROOT/'agents/apex_2026/v2/results/curvature_memory_sources/b6c66310a58b.py').read_bytes()).hexdigest(),
         'benchmark_inclusion':False, 'interpretation':'Bug-fixed source used for counterfactual analysis only; no driving receipt, not evaluated.'}
+    r4_source='agents/apex_2026/v2/results/beam_sources/c3e002805c86.py'
+    r4_evidence_names=['beam-r4-design.json','beam-area-geometry-review.json','beam-r4-earlier_actions.json','beam-r4-candidates.json','beam-r4-state_mask_ablation.json']
+    r4_evidence={name:hashlib.sha256((ROOT/'agents/apex_2026/v2/results'/name).read_bytes()).hexdigest() for name in r4_evidence_names}
+    registry['beam-r4-offline']={'folders':[], 'expected_cells':[], 'scope':'offline_counterfactual_no_episodes',
+        'benchmark_inclusion':False, 'source_archive':r4_source,
+        'source_sha256':hashlib.sha256((ROOT/r4_source).read_bytes()).hexdigest(), 'checkpoint':'783e951',
+        'new_environment_resets':0, 'evidence_sha256':r4_evidence,
+        'offline_evidence':{'tests_passed':14, 'geometry_checks':120, 'geometry_mismatches':0,
+            'recorded_preimpact_first_actions_unchanged':19, 'recorded_preimpact_first_actions_checked':19,
+            'state_mask_2x2_unsafe_pixel_counts':[0,4,2,2]},
+        'interpretation':'Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets.'}
+    registry['beam-r5-preflight']={'folders':[], 'expected_cells':[], 'scope':'offline_preflight_active_no_episodes',
+        'benchmark_inclusion':False, 'new_environment_resets':0, 'source_status':'not_frozen_in_this_index',
+        'interpretation':'Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim.'}
     registry['motion-registration-baseline-diagnostic'] = {'folders':['/tmp/apex-v2-motion-registration'],
         'expected_cells':[REQUIRED[0]], 'scope':'diagnostic1'}
     return registry
@@ -217,6 +231,8 @@ def markdown(result):
         '', '| Candidate | Required4 finishes | Required lap times (s; T1–4) | Declared scope finishes | Consumed subset | Pending / missing | Code / resource failures | Warnings |',
         '|---|---:|---|---|---|---:|---|---|']
     for variant in result['variants']:
+        if variant['allocation'].get('benchmark_inclusion') is False and not variant['groups']:
+            continue
         if not variant['groups']:
             total=len(variant['allocation']['expected_cells'])
             lines.append(f"| {variant['label']} | 0/4 | — / — / — / — | {variant['allocation']['scope']}: 0/{total} | — | 0 / {total} | 0 / 0 | awaiting receipts |")
@@ -231,6 +247,11 @@ def markdown(result):
             consumed_text=f"{cs['finished']}/{cs['expected']}" if cs else '—'
             label=variant['label']+' '+g['candidate_key'][:7]
             lines.append(f"| {label} | {r['finished'] if r['finished'] is not None else 'INVALID'}/4 | {' / '.join(times)} | {variant['allocation']['scope']}: {a['finished'] if a['finished'] is not None else 'INVALID'}/{a['expected']} | {consumed_text} | {a['incomplete']} / {a['missing']} | {a['invalid_action_failure_count']} / {a['resource_ineligible_completed']} | {warn} |")
+    lines += ['', 'Offline/nonbenchmark sources (no driving episodes):']
+    for variant in result['variants']:
+        a=variant['allocation']
+        if a.get('benchmark_inclusion') is False and not variant['groups']:
+            lines.append(f"- **{variant['label']}**: {a.get('interpretation',a['scope'])}")
     lines += ['', 'V1 historical baseline (not new v2 validation):']
     for name,b in result['historical_v1_baseline'].items():
         s=b['summary'];lines.append(f"- {name}: {s['finished']}/{s['expected']} finishes; completed {s['completed']}; missing {s['missing']}.")
