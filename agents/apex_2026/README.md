@@ -1,5 +1,9 @@
 # Apex 2026: opposite-strategy research
 
+Final result: [REPORT.md](REPORT.md). The [frozen standalone candidate](candidate/agent.py)
+finishes required4/4 and development12/12, but holdout10/12 misses the predeclared
+11/12 gate. The10–13s objective is unmet. It remains experimental and unadopted.
+
 Created from main `0a887f5` on 2026-10-05 KST by user authorization.
 The requested prior `CONTEXT.md` and `agents/apex_2026/` did not exist on
 either the initial checkout or fetched main. This is a new experiment, not a

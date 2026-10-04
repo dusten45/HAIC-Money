@@ -1,26 +1,24 @@
 # Current Research State
 
-## Apex opposite-strategy research (2026-10-05 KST)
+## Apex opposite-strategy cycle closed (2026-10-05 KST)
 
-The user authorized the independent `agents/apex_2026/` lane from main `0a887f5`
-on branch `research/apex-2026-opposite-20261005`. This authorization applies to
-this lane despite historical pauses below. Root learned agent, earlier releases,
-and official simulator are preserved. The original 04:00 KST deadline was
-explicitly removed. See [active plan](../plans/active/apex-2026-opposite.md),
-[lane design](../../agents/apex_2026/DESIGN.md), and
-[experiment ledger](../../agents/apex_2026/results/line-experiments.json).
+The user-authorized `agents/apex_2026/` lane completed on branch
+`research/apex-2026-opposite-20261005`, preserving main/root agent and official
+simulator. The user removed the clock deadline. See the
+[final report](../../agents/apex_2026/REPORT.md), [frozen candidate](../../agents/apex_2026/candidate/agent.py),
+and [source-bound summary](../../agents/apex_2026/results/final-summary.json).
 
-Current approach extracts free space from observations and optimizes a continuous
-path, then uses pixel-derived speed/yaw with physical steering and braking.
-An independent joint-action rollout family remains separate. Fresh required
-baselines finished root 0/4 and arrival-speed release 3/4. The continuous-path
-candidate finished all four in 18.32/22.80/20.18/18.42 seconds, zero damage;
-adding instantaneous HUD yaw improved those same cells to
-17.14/21.42/19.48/17.92 seconds, zero damage. Development screens are in progress.
-These are consumed-development results, not the original 10–13-second objective.
-No final candidate is adopted. Holdout is unallocated and unopened; allocation
-requires a committed and pushed source/configuration freeze. No official action.
-
+The pixel-only continuous-path/HUD/rolling-pedal candidate was frozen and pushed
+in `cdf675e` before all final validation and unseen allocation. Fresh required
+laps are16.78/20.68/18.56/18.10s, all damage-free; declared development finishes
+12/12 with median16.28s; four required repeats reproduce exact driving traces.
+The original10–13s objective is unmet. The one-time fresh holdout finishes10/12
+(median completed17.53s), below the prospective11/12 corroboration gate.
+**Candidate remains frozen, experimental and unadopted; no official action.**
+No policy was tuned after holdout. All holdout seeds are consumed, never fresh
+again. Negative trials and exact sources remain preserved.81 focused tests pass;
+pre-existing complete-suite errors are recorded separately. Further research
+must use a distinct validation cycle and must not recycle this holdout.
 
 ## RLPD Coupled Recovery In Progress (2026-09-29)
 

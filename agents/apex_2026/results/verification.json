@@ -1,0 +1,33 @@
+{
+  "recorded_at": "2026-10-04T18:52:54.210137+00:00",
+  "focused_test_command": ".venv/bin/python -m pytest -q agents/apex_2026",
+  "observed_result": "81 passed in 1.76s",
+  "focused_test_count": 81,
+  "focused_tests_result": "passed",
+  "test_sources_sha256": {
+    "agents/apex_2026/test_evaluate.py": "bfe694c8cdf593a6b627dd83821ea5b5cfcd2b99bb21f8ae5bbf572c70f46a51",
+    "agents/apex_2026/test_hud_dynamics.py": "fb2025745dc7587989e00f4d2dac61d2dccda452cd5132b039dbd7fce5907515",
+    "agents/apex_2026/test_line_agent.py": "a7adb5f6dddc3d8644a266f68f50734a9f66786cd6344cc55d98f364d91d255a",
+    "agents/apex_2026/test_pedal_agent.py": "7134b9ba1535018aa7e15dd6d6c52da20fe606a7e01549e3bbf8ca9ff88fe0be",
+    "agents/apex_2026/test_protocol.py": "fd4b6c2e0430e668d8a224761c105cb52fffdb9fde70d4b7d4781578b31f5ea7",
+    "agents/apex_2026/test_rollout_agent.py": "9795cbdacf5225e176f85d33b44c9b858a9b82d08039802a2a0045c93a79c195"
+  },
+  "candidate_synthetic_action_parity_checks": 135,
+  "candidate_agent_resets_in_synthetic_parity": 3,
+  "candidate_parity_simulator_resets": 0,
+  "independent_review": "results/final-review.json",
+  "protected_paths": [
+    "agent.py",
+    "model.pt",
+    "core",
+    "env_wrapper.py",
+    "damage.py",
+    "local_runner.py"
+  ],
+  "protected_comparison_base": "0a887f5",
+  "protected_tracked_diff_empty": true,
+  "root_model_materialized_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "existing_suite_result": "See baseline-tests.json: 1182 total,1161 passed,14 errors,7 skipped; preserved, not silently repaired.",
+  "existing_suite_artifact": "results/baseline-tests.json",
+  "scope": "Focused tests and packaging checks are not substitutes for fresh driving validation."
+}

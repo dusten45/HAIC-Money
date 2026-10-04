@@ -37,13 +37,17 @@ The current controller's positive throttle bias and brake switch leave no coast
 phase near target speed. Short brake/reacceleration sequences are measured;
 some follow genuine target changes, so not all are waste. Isolated unchanged
 Car dynamics support a rolling-state pedal model across20–90m/s, with much
-larger errors under tire saturation or slip. This motivates an explicitly
-separate pedal-allocation experiment, not an already proven lap improvement.
+larger errors under tire saturation or slip. The separate P1 pedal-allocation experiment subsequently finished required4/4
+and development12/12. Frozen holdout10/12 failed corroboration, so the observed
+local improvement is not a universal robustness claim. Failed optical flow
+represents unknown slip as zero; the rolling-model domain is not established
+on those frames.
 See [pedal evidence](results/pedal-allocation.json).
 
 Traction reservation originally depends on commanded steering. Current wheel
 angle and measured yaw may indicate larger lateral demand during reversals;
-a separate actual-state traction experiment tests that hypothesis. Calibrated
+the separate actual-state traction experiment rescued one development cell
+but failed required track4 and was rejected. Calibrated
 friction approximations are not formal stability guarantees.
 
 ## Independent rollout planner
@@ -62,6 +66,6 @@ No investigated candidate has completed all four required tracks in10–13s.
 The target demands a substantially different speed/line tradeoff; current
 centerline relaxations are diagnostics, not a proof that the target is impossible.
 Candidate selection uses repeatedly consumed required/development cells and
-therefore does not measure unseen-road generalization. A final source/configuration
-freeze must precede the one-time holdout. Historical or partially reused receipts
+therefore does not measure unseen-road generalization. The final source/configuration
+freeze preceded the one-time holdout, whose10/12 finishes failed the11/12 gate. Historical or partially reused receipts
 are labeled explicitly; final validation must be newly executed.

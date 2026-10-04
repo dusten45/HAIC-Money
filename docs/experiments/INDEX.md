@@ -6,7 +6,9 @@ Independent pixel-only continuous-path and action-rollout research, preserving m
 See [lane README](../../agents/apex_2026/README.md), [prospective protocol](../../agents/apex_2026/DESIGN.md),
 and [active plan](../plans/active/apex-2026-opposite.md). Fresh baseline/test evidence
 and all failed trials are retained. Original 10–13-second objective remains unmet;
-final candidate and holdout validation are pending.
+the frozen P1 candidate finishes required4/4 and development12/12, but
+holdout10/12 fails the11/12 gate. No adoption or post-holdout tuning.
+See the [final report](../../agents/apex_2026/REPORT.md).
 
 ## RLPD Coupled Recovery (2026-09-29)
 

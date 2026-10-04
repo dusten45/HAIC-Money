@@ -1,0 +1,110 @@
+{
+  "recorded_at": "2026-10-04T18:56:23.749009+00:00",
+  "candidate_id": "ce84033dc4c3f28a4023480ef4d4ca8e730058e0fd4c5c39380c1ccf48f5958b",
+  "freeze_commit": "cdf675e1811542f7999ebcc9510dd35e47541217",
+  "status": "frozen_experimental_not_adopted",
+  "original_target_met": false,
+  "local_fallback_qualification_met": true,
+  "holdout_corroboration_met": false,
+  "holdout_gate_required_finishes": 11,
+  "post_holdout_policy_changes": false,
+  "official_submission_or_confirmation": false,
+  "fresh_final_episode_count": 32,
+  "required_repeat_is_not_new_geometry": true,
+  "partitions": {
+    "required": {
+      "expected": 4,
+      "observed": 4,
+      "completed": 4,
+      "complete": true,
+      "finished": 4,
+      "finish_rate": 1.0,
+      "in_target_window": 0,
+      "driving_target_met": false,
+      "resource_eligible": true,
+      "original_target_met": false,
+      "finished_median_ms": 18330.0,
+      "finished_max_ms": 20680
+    },
+    "development": {
+      "expected": 12,
+      "observed": 12,
+      "completed": 12,
+      "complete": true,
+      "finished": 12,
+      "finish_rate": 1.0,
+      "in_target_window": 0,
+      "driving_target_met": false,
+      "resource_eligible": true,
+      "original_target_met": false,
+      "finished_median_ms": 16280.0,
+      "finished_max_ms": 17440
+    },
+    "required-repeat": {
+      "expected": 4,
+      "observed": 4,
+      "completed": 4,
+      "complete": true,
+      "finished": 4,
+      "finish_rate": 1.0,
+      "in_target_window": 0,
+      "driving_target_met": false,
+      "resource_eligible": true,
+      "original_target_met": false,
+      "finished_median_ms": 18330.0,
+      "finished_max_ms": 20680
+    },
+    "holdout": {
+      "expected": 12,
+      "observed": 12,
+      "completed": 12,
+      "complete": true,
+      "finished": 10,
+      "finish_rate": 0.8333333333333334,
+      "in_target_window": 0,
+      "driving_target_met": false,
+      "resource_eligible": true,
+      "original_target_met": false,
+      "finished_median_ms": 17530.0,
+      "finished_max_ms": 19300
+    }
+  },
+  "required_lap_time_ms": [
+    16780,
+    20680,
+    18560,
+    18100
+  ],
+  "required_seed_order": [
+    [
+      1,
+      516237
+    ],
+    [
+      2,
+      644062
+    ],
+    [
+      3,
+      1007
+    ],
+    [
+      4,
+      18800
+    ]
+  ],
+  "report_sha256": {
+    "required": "8e93fe9e941dead5883edf3dd9b64ee2c9c26bd00cbf7e92ee9123bd67fee8fb",
+    "development": "45eec3a5673dbaab2a39447bb40717e16d888b73cc90f3a12be004d7219a4d72",
+    "required-repeat": "49118501f9c308fe23ab9431c526d8085a408d21167ee3ae8331d517aadced84",
+    "holdout": "de5a120aad9fb96cec3352834a83fe77fd725c3002c307b252a5a0df1b296169"
+  },
+  "runtime_source_sha256": {
+    "agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97"
+  },
+  "remaining_limits": [
+    "Original required10\u201313s window was not achieved.",
+    "Holdout10/12 falls below prospective11/12 corroboration gate.",
+    "Unknown sideslip during optical-flow loss and limited visual anticipation remain unguaranteed."
+  ]
+}

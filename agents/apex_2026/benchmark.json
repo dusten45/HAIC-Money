@@ -71,7 +71,7 @@
   ],
   "development_audit": "Exact geometry seed strings absent from current and snapshot research/source/documentation metadata before allocation; no held-out results inspected.",
   "holdout": {
-    "status": "allocated_not_evaluated_after_pushed_freeze",
+    "status": "consumed_complete_no_post_holdout_tuning",
     "count": 12,
     "tracks": [
       1,
@@ -81,7 +81,10 @@
     ],
     "seeds_per_track": 3,
     "allocation": "random 32-bit geometry seeds only after frozen candidate commit; reject previously exposed/reserved seeds",
-    "manifest": "holdout.json"
+    "manifest": "holdout.json",
+    "result": "results/final-holdout.json",
+    "finished": 10,
+    "original_target_met": false
   },
   "frame_skip": 4,
   "max_steps": 2000,
@@ -89,7 +92,7 @@
     10000,
     13000
   ],
-  "candidate_status": "frozen_internal_candidate_pending_fresh_validation",
+  "candidate_status": "frozen_experimental_not_adopted_holdout_gate_failed",
   "deadline_utc": null,
   "deadline_amendment": "User explicitly removed time restrictions during session.",
   "candidate_id": "ce84033dc4c3f28a4023480ef4d4ca8e730058e0fd4c5c39380c1ccf48f5958b"
