@@ -4728,6 +4728,22 @@ class _BoundedSideHoldController(_HighSpeedBendPriorityController):
 class _ClearRoadRow42DropoutController(_BoundedSideHoldController):
     """Recover an observed clear-road bend when its reference row disappears."""
 
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._row42_recent_obstacle_valid = False
+        self._row42_current_hud_speed = None
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._row42_recent_obstacle_valid = False
+        self._row42_current_hud_speed = None
+
+    def _lost_road_action(self) -> np.ndarray:
+        # The inherited obstacle latch does not age on lost-road decisions.
+        # Invalidate only this correction's evidence, preserving parent state.
+        self._row42_recent_obstacle_valid = False
+        return super()._lost_road_action()
+
     def act(self, observation) -> np.ndarray:
         frame = self._frame(observation)
         self._row42_current_hud_speed = (
@@ -4743,13 +4759,22 @@ class _ClearRoadRow42DropoutController(_BoundedSideHoldController):
         centers: dict[int, float],
         obstacle: tuple[float, float, float] | None,
     ) -> float:
+        # Parent act calls this hook only after accepting the visible road.
+        if obstacle is not None:
+            self._row42_recent_obstacle_valid = True
         if (
             obstacle is None
             and not straight
             and 42 not in centers
             and all(row in centers for row in (54, 50, 46))
             and (
-                (self._obstacle_side != 0.0 and self._obstacle_missing <= 2)
+                (
+                    self._row42_recent_obstacle_valid
+                    and self._obstacle_side != 0.0
+                    # Evaluated before the parent's miss increment, so this
+                    # retains the first three clear visible-road decisions.
+                    and self._obstacle_missing <= 2
+                )
                 or (
                     self._row42_current_hud_speed is not None
                     and self._row42_current_hud_speed >= 30.0

@@ -68,10 +68,14 @@ def test_low_speed_without_recent_obstacle_keeps_parent_request():
 @pytest.mark.parametrize(
     "missing, expected", [(0, -0.328), (2, -0.328), (3, 0.084)],
 )
-def test_recent_obstacle_memory_qualifies_only_two_missing_decisions(
+def test_recent_obstacle_memory_qualifies_preincrement_missing_counts_zero_to_two(
     missing, expected,
 ):
     candidate = _candidate(hud_speed=29.0)
+    _request(
+        candidate, {54: 35.0, 50: 31.0, 46: 27.0}, steering=0.084,
+        obstacle=(33.0, 40.0, 41.5),
+    )
     candidate._obstacle_side = 1.0
     candidate._obstacle_missing = missing
 
@@ -107,6 +111,80 @@ def _clear_road_dropout_observation(speed=29.0):
     frame[54:61, 22:44] = 0.4
     frame[77:83, 10:13] = (0.27 + 0.085 * speed) / 18.0
     return np.repeat(frame[None], 4, axis=0)
+
+
+def _obstacle_observation():
+    observation = _clear_road_dropout_observation()
+    observation[:, 55:58, 30:33] = 0.9
+    return observation
+
+
+def _lost_observation(kind):
+    if kind == "road":
+        return np.full((4, 84, 84), 0.7, dtype=np.float32)
+    if kind == "shape":
+        return np.zeros((84, 84), dtype=np.float32)
+    if kind == "none":
+        return None
+    observation = _clear_road_dropout_observation()
+    observation[-1, 0, 0] = np.nan if kind == "nan" else 1.1
+    return observation
+
+
+@pytest.mark.parametrize("kind", ["road", "shape", "none", "nan", "range"])
+@pytest.mark.parametrize("lost_decisions", [1, 20])
+def test_lost_road_invalidates_recent_obstacle_qualification_without_parent_changes(
+    kind, lost_decisions,
+):
+    candidate = _candidate()
+    parent = agent._BoundedSideHoldController()
+    for controller in (candidate, parent):
+        controller.act(_obstacle_observation())
+    assert candidate._obstacle_side == 1.0
+    assert candidate._obstacle_missing == 0
+
+    for _ in range(lost_decisions):
+        np.testing.assert_array_equal(
+            candidate.act(_lost_observation(kind)),
+            parent.act(_lost_observation(kind)),
+        )
+    # The new qualification must not change inherited obstacle/speed latches.
+    assert candidate._obstacle_side == parent._obstacle_side == 1.0
+    assert candidate._obstacle_missing == parent._obstacle_missing == 0
+    for controller in (candidate, parent):
+        controller._last_steer = -0.203
+
+    action = candidate.act(_clear_road_dropout_observation())
+    np.testing.assert_array_equal(action, parent.act(_clear_road_dropout_observation()))
+    assert action[0] == pytest.approx(-0.133)
+
+
+def test_fresh_obstacle_after_road_loss_rearms_three_visible_missing_decisions():
+    candidate = _candidate()
+    candidate.act(_obstacle_observation())
+    candidate.act(_lost_observation("road"))
+    candidate.act(_obstacle_observation())
+
+    # Road steering is evaluated before the inherited miss counter advances:
+    # the retained <=2 predicate therefore covers three clear decisions.
+    for expected in (-0.273, -0.273, -0.273, -0.133):
+        candidate._last_steer = -0.203
+        action = candidate.act(_clear_road_dropout_observation())
+        assert action[0] == pytest.approx(expected)
+
+
+@pytest.mark.parametrize("after_reset", [False, True])
+def test_inherited_side_memory_alone_does_not_supply_camera_obstacle_evidence(after_reset):
+    candidate = _candidate()
+    if after_reset:
+        candidate.act(_obstacle_observation())
+        candidate.reset()
+    candidate._obstacle_side = 1.0
+    candidate._obstacle_missing = 0
+    candidate._last_steer = -0.203
+
+    action = candidate.act(_clear_road_dropout_observation())
+    assert action[0] == pytest.approx(-0.133)
 
 
 def test_high_camera_speed_enables_dropout_correction_with_inherited_steer_slew():
