@@ -807,6 +807,126 @@
         }
       ],
       "tests": "3 behavior tests pass; r1 narrowgap remains blocked by design for axis isolation."
+    },
+    {
+      "variant": "geodesic_r6_frenet_single_margin",
+      "source_snapshot": "/tmp/apex-v2-geodesic-frenet-r6/source.py",
+      "source_sha256": "b182dc495c41201e00bb983b933a7ac4afb972ee864432743c2af16480009142",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 8,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 17560.0,
+        "finished_max_ms": 21000
+      },
+      "required_protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 4,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 18130.0,
+        "finished_max_ms": 21000
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": true,
+          "lap_time_ms": 17800,
+          "progress": 1.0,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t1-s3601050002.json",
+          "receipt_sha256": "c7a6cc9f37c6d6e2477087486d6fcb603a0d3a3f1ca9a1d8ca3cf2302ed15b58"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 17140,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t1-s516237.json",
+          "receipt_sha256": "ac0e00c400f46168624ee5f733a145efb7273eba2b074007e945a60a52dbecc7"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "lap_time_ms": 16940,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t2-s4031370700.json",
+          "receipt_sha256": "1395874e8a778c6ea5c01bbe215672fcb12b0dbfaa1864db5acd003735a5d5ea"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21000,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t2-s644062.json",
+          "receipt_sha256": "7da38cd73486b562ddb77ede758ff13a8e4c61ddc270fe6636b2ddabfe0e9341"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 18940,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t3-s1007.json",
+          "receipt_sha256": "f76165d0debb1d287587ce98ccc9ea89e21e1871711217c1d06541f896fc8f48"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": true,
+          "lap_time_ms": 16600,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t3-s3601050003.json",
+          "receipt_sha256": "e2fa73ebfe39f191ae817ec3e583dc7d196023d4210b2323089fbc51cc9a227d"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": true,
+          "lap_time_ms": 19980,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t3-s4111953688.json",
+          "receipt_sha256": "d3d97ab4c64b2f5ead1771f9953fcaa820efe6d7b27ea0e2dd358b9115787389"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 17320,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r6/t4-s18800.json",
+          "receipt_sha256": "3fade9a2ca1fc7e589c3e1ee9e4da8c64686f5780b72f2b8557a161b6d3e6e5f"
+        }
+      ],
+      "hypothesis": "Interaction between independently tested Frenet refinement(r5) and single obstacle margin(r2). Only _free_space margin expression differs fromr5; control/speed/pedal remain unchanged.",
+      "observations": "8/8 finishes, requiredmean18.60s vsr1 20.37. All r2/r5 screen failures rescued, but requiredt2/t4 damage.4 each and consumedt1 damage.8 show inadequate collision margin. Continuous clearance is not certified: synthetic dense rastercheck2.8px vsnominal3; pixel rounding toleranceexplicit.",
+      "tests": "2 targeted tests pass; connectivity plus sampled3px vertex clearance, dense free-space nonintersection and pixel-rounding tolerance; r5method bodies unchanged except_free_space."
     }
   ]
 }
