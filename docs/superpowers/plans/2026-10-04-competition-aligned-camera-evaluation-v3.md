@@ -16,6 +16,7 @@
 - Candidate algorithm is byte-identical to the committed `f12c5b62c5f02bff4053e6f4775d202d79917938` source except the bare selector. No new tuning is permitted after v3 binding.
 - Cross the same geometry seeds with track IDs 1–4; use 8/16/8 seeds for screen/confirmation/blind and 2/4/2 repeat pairs. Seed derivation is SHA256 of name, one-time random salt, phase and index. Confirm freshness against all documented experiment seeds before binding.
 - Phase RETAIN requires net completed laps at least 3/6/3, lost control finishes at most 2/4/2, candidate total crashes no greater than control, candidate contacts and damage no greater than control, candidate mean progress at least control, and candidate shared-finish total time no more than 1.10 times control. Empty shared-finish sets skip only that time ratio. All cells and repeats must validate without operational error. The combined 128 canonical pairs must have at least 18 net additional finishes before activation.
+- Within a phase, reject a geometry seed if the candidate loses at least two control finishes across its four track IDs and its net finish delta on that seed is negative. Across all three phases, require the candidate finish count to be at least the control count separately for each of track IDs 1–4. These subgroup guards are fixed before v3 salt generation to protect reliability across track layouts.
 - The metrics and source checks are fixed before seed generation. Per-cell contacts and rare both-DNF progress losses remain reported, but do not veto an otherwise better aggregate competition result. This is an explicit decision change from v2, justified by the official finish-first ranking and applied only to new data.
 - The consumed v2 screen would retrospectively pass these v3 screen gates. State that post-data fact plainly in the final result; it is not v3 evidence and does not reverse v2's REJECT decision.
 - Require the exact f12 agent blob SHA256 `291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61`, `_BoundedSideHoldController`, and root `model.pt` path before generating salt. Import no unpinned executable v1/v2 runner helpers. Validate duplicate/unexpected receipt coordinates and every repeat's runtime metrics.
@@ -26,6 +27,7 @@
 
 - Missing, duplicated or invalid cold receipts must make a phase incomplete or rejected; a summary cannot silently omit a cell.
 - A single new crash can be allowed only if total candidate crashes do not exceed control; the report must still expose its cell and progress.
+- A phase must expose finish counts by geometry seed and track ID so the subgroup guards and every lost control finish can be audited.
 - Confirmation and blind cannot run before their predecessor retains under the fixed v3 gate, regardless of how strong the aggregate looked.
 - A source byte, model, helper, environment, runner or decision-engine change after binding must abort before and after every phase.
 - A repeat pair must compare action hashes and outcome fields but must never count as a new statistical observation.
@@ -39,7 +41,7 @@
 
 **Interfaces:** `compare_pairs(rows: list[dict], cells: list[tuple[int,int,int]], phase: str) -> dict` consumes the existing cold receipt schema and produces all gate metrics, flagged pairs, reasons and `RETAIN`/`REJECT`/`INCOMPLETE`. `combined_decision(phase_summaries: dict[str,dict]) -> dict` applies the 18-finish combined gate.
 
-- [ ] Write failing tests for each exact phase threshold, aggregate crash/contact/damage and progress/pace gates, empty shared finishes, invalid/missing rows, and repeat exclusion.
+- [ ] Write failing tests for each exact phase threshold, aggregate crash/contact/damage and progress/pace gates, geometry-seed loss clusters, combined track noninferiority, empty shared finishes, invalid/missing rows, and repeat exclusion.
 - [ ] Run the focused tests and confirm they fail for the missing module.
 - [ ] Implement only the fixed comparator and combined decision functions.
 - [ ] Run focused tests and confirm pass; inspect comparator source and its Git-byte hash.
