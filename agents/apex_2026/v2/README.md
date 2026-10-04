@@ -8,4 +8,6 @@ prediction, and comfort-only braking with explicit geometry/model feasibility.
 All old24 geometries are consumed regression data. New holdout24 remains
 unallocated until a single new candidate is frozen and pushed.
 
-No performance claim yet; experiments will record fresh source-bound evidence.
+See the [complete experiment scoreboard](EXPERIMENTS.md) and
+[mechanism/limitation record](PROGRESS.md). No candidate has passed the matched
+selection gate. Successful small screens are not full regression validation.

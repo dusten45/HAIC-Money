@@ -52,3 +52,18 @@ state reconstruction is approximate. Reverse or saturated wheel indicators are
 ambiguous; joint angular rates, contact and damage are not fully observed.
 The published0.4s residual audit uses zero slip when flow fails, while controllers
 may propagate modeled slip. It does not validate long dropout sequences.
+
+The complete [scoreboard](EXPERIMENTS.md) includes all source/configuration
+variants, execution defects, pending cells and reused receipts. It separates
+small screens from full regression coverage.
+
+Frenet refinement plus single clearance (r6) finished its initial8/8 screen,
+required mean18.60s, but the full consumed regression finished only20/24.
+It rescued both old failures while losing four old successes. Directional
+footprint r7 also finished8/8 with required mean18.575s; broader validation is
+in progress. Neither result meets the18.53s required-mean selection gate.
+
+Recovery r1 preserves all required P1 actions and laps exactly, and rescues the
+consumed track2 failure in19.96s without damage. Track3 remains trapped after a
+collision. This is a verified recovery mechanism, not a full24 result or adopted
+candidate. New holdout remains unopened.

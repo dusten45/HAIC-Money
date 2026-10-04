@@ -10,6 +10,10 @@ See the [prospective design](../../agents/apex_2026/v2/DESIGN.md).
 The [v2 progress record](../../agents/apex_2026/v2/PROGRESS.md) retains rejected
 force/brake/actuator probes and geodesic r1's22/24 consumed regression result.
 No matched improvement yet; geometry and observable-state physics work continues.
+The [complete v2 scoreboard](../../agents/apex_2026/v2/EXPERIMENTS.md) separates
+all small screens, execution failures and full regression results. R6's8/8 screen
+fell to20/24 in broader testing; recovery r1 rescues one old failure while
+preserving required laps, but its other old failure remains unresolved.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)
