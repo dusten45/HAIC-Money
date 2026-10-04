@@ -1,0 +1,184 @@
+--- fast_preview_agent.py
++++ fast_preview_pass_agent.py
+@@ -3250 +3250 @@
+-class Agent:
++class _BaseAgent:
+@@ -3392,0 +3393,178 @@
++
++
++class Agent(_BaseAgent):
++    """Try an ego-anchored metric pass only inside the currently visible road.
++
++    The geometric checks use an oriented conservative hull and the official
++    obstacle radius. They establish clearance in an interpolated camera model,
++    not complete tire, visibility or steering-lag safety on the real track.
++    Unchecked frames retain the inherited obstacle behavior.
++    """
++
++    def __init__(self, *args, pass_separation=4.0, pass_cruise=85.0, **kwargs):
++        if (not np.isfinite([pass_separation, pass_cruise]).all()
++                or not 3.5 <= pass_separation <= 5.0
++                or not 30.0 <= pass_cruise <= 100.0):
++            raise ValueError("pass separation needs3.5..5m and cruise30..100m/s")
++        self.pass_separation = float(pass_separation)
++        self.pass_cruise = float(pass_cruise)
++        super().__init__(*args, **kwargs)
++
++    def reset(self, observation=None):
++        super().reset(observation)
++        self.last_pass_plan = None
++        self._pass_side = 0.0
++        self._pass_misses = 0
++
++    @staticmethod
++    def _hull_road_margin(y, x, heading, ahead, lefts, rights):
++        """Check polygon extrema at all piecewise-linear road breakpoints."""
++        sine, cosine = np.sin(heading), np.cos(heading)
++        longitudinal = np.asarray([-2.4, -2.4, 2.6, 2.6])
++        # Front wheel center1.1m and its rotated .28x.54m body reach1.568m
++        # at the official .4-rad steering limit. This full-vehicle envelope
++        # covers that footprint in addition to the narrower painted hull.
++        lateral = np.asarray([-1.6, 1.6, 1.6, -1.6])
++        vx = x + longitudinal*sine + lateral*cosine
++        vy = y + longitudinal*cosine - lateral*sine
++        if vy.min() < ahead[0] or vy.max() > ahead[-1]:
++            return None
++        # A polygon side and an observed-road boundary are both linear between
++        # their combined breakpoints, so minima occur at these checked heights.
++        heights = np.unique(np.r_[vy, ahead[(ahead >= vy.min()) & (ahead <= vy.max())]])
++        intersections = np.full((4, len(heights)), np.nan)
++        for i in range(4):
++            j = (i+1) % 4
++            dy = vy[j]-vy[i]
++            if abs(dy) < 1e-9:
++                continue
++            valid = (heights >= min(vy[i],vy[j])-1e-9) & (heights <= max(vy[i],vy[j])+1e-9)
++            intersections[i,valid] = vx[i]+(heights[valid]-vy[i])*(vx[j]-vx[i])/dy
++        if np.any(~np.isfinite(intersections).any(axis=0)):
++            return None
++        low = np.nanmin(intersections,axis=0)
++        high = np.nanmax(intersections,axis=0)
++        margin = min(float(np.min(low-np.interp(heights,ahead,lefts))),
++                     float(np.min(np.interp(heights,ahead,rights)-high)))
++        return margin
++
++    def _curved_pass(self, road, bbox):
++        ahead, side, _, pixel_lefts, pixel_rights = road
++        obstacle_x = (.5*(bbox[0]+bbox[2])-42.0)/1.3608
++        obstacle_y = (63.0-.5*(bbox[1]+bbox[3]))/1.701
++        if not 4.0 <= obstacle_y <= 27.0:
++            return None
++        end = obstacle_y+3.0
++        if ahead[0] > -2.4 or ahead[-1] < end+2.7:
++            return None
++        fit = (ahead >= -2.0) & (ahead <= end+3.0)
++        if np.count_nonzero(fit) < 10 or np.max(np.diff(ahead[fit])) > 2.5:
++            return None
++        coefficients = np.polyfit(ahead[fit], side[fit], 3)
++        residual = abs(np.polyval(coefficients,ahead[fit])-side[fit])
++        # A branch jump or sparse hairpin is not a single certified road model.
++        if np.max(residual) > 1.5:
++            return None
++        derivative = np.polyder(coefficients)
++        second = np.polyder(derivative)
++        initial = -float(np.polyval(coefficients,0.0))
++        initial_derivative = -float(np.polyval(derivative,0.0))
++        bend_slope = float(np.polyval(derivative,obstacle_y))
++        switch = max(3.0, obstacle_y-4.0)
++        ys = np.unique(np.r_[np.arange(0.0,end,.35),end])
++        t = np.minimum(1.0,ys/switch)
++        h00,h10,h01 = 2*t**3-3*t**2+1, t**3-2*t**2+t, -2*t**3+3*t**2
++        h00d,h10d,h01d = 6*t*t-6*t, 3*t*t-4*t+1, -6*t*t+6*t
++        h00dd,h10dd,h01dd = 12*t-6, 6*t-4, -12*t+6
++        lefts = (pixel_lefts-42.0)/1.3608
++        rights = (pixel_rights-42.0)/1.3608
++        choices = []
++        for passing_side in (-1.0,1.0):
++            destination = obstacle_x+passing_side*self.pass_separation*np.sqrt(1+bend_slope*bend_slope)
++            goal = destination-float(np.polyval(coefficients,obstacle_y))
++            offset = h00*initial+h10*switch*initial_derivative+h01*goal
++            xs = np.polyval(coefficients,ys)+offset
++            slopes = np.polyval(derivative,ys)+(h00d*initial+h10d*switch*initial_derivative+h01d*goal)/switch
++            curves = np.polyval(second,ys)+(h00dd*initial+h10dd*switch*initial_derivative+h01dd*goal)/switch**2
++            slopes[ys >= switch] = np.polyval(derivative,ys[ys >= switch])
++            curves[ys >= switch] = np.polyval(second,ys[ys >= switch])
++            xs[0],slopes[0] = 0.0,0.0
++            headings = np.arctan(slopes)
++            curvature = abs(curves)/(1+slopes*slopes)**1.5
++            peak = float(curvature.max())
++            if peak > np.tan(.4)/3.24:
++                continue
++            # Closest separation on the complete sampled polyline, including
++            # between pose samples, is more conservative than checking only
++            # the one image row containing the circle center.
++            delta_x,delta_y = np.diff(xs),np.diff(ys)
++            fraction = np.clip(((obstacle_x-xs[:-1])*delta_x+(obstacle_y-ys[:-1])*delta_y)
++                               /(delta_x*delta_x+delta_y*delta_y),0.0,1.0)
++            separation = float(np.min(np.hypot(xs[:-1]+fraction*delta_x-obstacle_x,
++                                              ys[:-1]+fraction*delta_y-obstacle_y)))
++            if separation < 3.5:
++                continue
++            dx,dy = obstacle_x-xs,obstacle_y-ys
++            lat = dx*np.cos(headings)-dy*np.sin(headings)
++            long = dx*np.sin(headings)+dy*np.cos(headings)
++            outside_lat = np.maximum(abs(lat)-1.6,0.0)
++            outside_long = np.maximum(np.maximum(long-2.6,-long-2.4),0.0)
++            obstacle_margin = float(np.min(np.hypot(outside_lat,outside_long)-1.2))
++            if obstacle_margin < .75:
++                continue
++            margins = [self._hull_road_margin(y,x,heading,ahead,lefts,rights)
++                       for y,x,heading in zip(ys,xs,headings)]
++            if any(margin is None for margin in margins):
++                continue
++            road_margin = min(margins)
++            if road_margin < .30:
++                continue
++            score = road_margin-4*peak+(.40 if passing_side == self._pass_side else 0.0)
++            choices.append((score, {"side":passing_side,"x":xs,"y":ys,"heading":headings,
++                                   "road_margin":float(road_margin),"obstacle_margin":obstacle_margin,
++                                   "min_separation":separation,"max_curvature":peak,
++                                   "obstacle_distance":obstacle_y}))
++        return max(choices,key=lambda choice:choice[0])[1] if choices else None
++
++    def act(self, observation):
++        previous_emitted = self.last_steer
++        inherited = super().act(observation)
++        self.last_pass_plan = None
++        frame = self._metric._frame(observation)
++        road = None if frame is None else self._metric._road(frame)
++        bbox = self._robust._corridor_bbox
++        if road is None or bbox is None:
++            self._pass_misses += 1
++            if self._pass_misses > 4:
++                self._pass_side = 0.0
++            return inherited
++        self._pass_misses = 0
++        plan = self._curved_pass(road,bbox)
++        if plan is None:
++            return inherited
++        speed = max(float(self._metric.last_speed),float(self._robust._pace_speed))
++        preview = min(float(np.clip(5.5+self._metric.preview_time*speed,7.0,22.0)),
++                      max(4.0,plan["obstacle_distance"]),float(plan["y"][-1]))
++        x = float(np.interp(preview,plan["y"],plan["x"]))
++        pursuit = 2*x/(preview*preview+x*x)
++        limit = min(.4,float(np.arctan(3.24*self._metric.lateral_accel/max(speed*speed,100.0))))
++        desired = float(np.clip(np.arctan(3.24*pursuit),-limit,limit))
++        steer = float(previous_emitted+np.clip(desired-previous_emitted,-.24,.24))
++        target = min(self.pass_cruise,self._metric.cruise_speed,
++                     float(np.sqrt(self._metric.lateral_accel/max(plan["max_curvature"],.001))),
++                     float(np.sqrt(self._metric.lateral_accel/max(abs(pursuit),.001))),
++                     float(np.sqrt(3.24*self._metric.lateral_accel/max(abs(np.tan(steer)),.003))))
++        error = target-speed
++        if error < -2:
++            gas,brake = 0.0,float(np.clip(-error*.018,.04,.7))
++        else:
++            gas,brake = float(np.clip(.3+.055*error,0.0,1.0)),0.0
++        action = self._traction_pedals([steer,gas,brake],speed=speed)
++        self.mode = "curved_pass"
++        self.last_pass_plan = plan
++        self._pass_side = plan["side"]
++        self.last_target = float(target)
++        self.last_steer = float(action[0])
++        self._metric.last_steer = self._robust._last_steer = self.last_steer
++        self._robust._obstacle_side = self._pass_side
++        return action

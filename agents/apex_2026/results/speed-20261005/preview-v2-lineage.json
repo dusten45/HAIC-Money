@@ -1,0 +1,63 @@
+{
+  "source": "agents/apex_2026/fast_preview_pass_agent.py",
+  "source_sha256": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+  "source_bytes": 141675,
+  "base_source": "agents/apex_2026/fast_preview_agent.py",
+  "base_sha256": "a0cbdf690ead624597968ed8237e4712178dbc70af6b380f9fb6ed9cc3abb8ac",
+  "base_prefix_exact_except_class_rename": true,
+  "parameters": {},
+  "new_defaults": {
+    "pass_separation": 4.0,
+    "pass_cruise": 85.0
+  },
+  "inherited_defaults": "exactly preview-v1-lineage.json",
+  "vehicle_envelope": {
+    "lateral_halfwidth_m": 1.6,
+    "rear_m": 2.4,
+    "front_m": 2.6,
+    "minimum_road_margin_m": 0.3,
+    "official_obstacle_radius_m": 1.2,
+    "minimum_vehicle_circle_margin_m": 0.75,
+    "minimum_center_polyline_separation_m": 3.5
+  },
+  "focused_tests_passed": 22,
+  "combined_verification": {
+    "passed": 277,
+    "failed": 2,
+    "external_active_red_tests": [
+      "test_fast_path.py::test_antialiased_yaw_area_keeps_moderate_and_large_turn_magnitudes",
+      "test_fast_path.py::test_near_circle_already_outside_actual_turn_cannot_reverse_the_curve"
+    ]
+  },
+  "test_sha256": "981582d6ad9ed48d0f6471954c189affbf8aa329aada3528b4d3b3f829853981",
+  "snapshot": ".haic-artifacts/apex-speed-preview-v2/source.py",
+  "holdout_opened": false,
+  "promoted": false,
+  "original_target_met": false,
+  "driving_status": "complete; failed track4 completion and original pace",
+  "model_limits": [
+    "road/circle clearance is in parsed interpolated camera coordinates",
+    "geometric plan is not a dynamic tire or steering-lag certificate",
+    "accepted geometry intentionally replaces inherited hazard target/brake",
+    "future road after finite horizon remains unchecked",
+    "current visible bbox only; occlusions retain inherited route"
+  ],
+  "mandatory_receipt": "preview-v2-mandatory.json",
+  "mandatory_receipt_sha256": "a71d1440c5aa93ce109065eee757fdd664397682562e96a9d7b737ffeb6a9fc0",
+  "mandatory_finished": 3,
+  "mandatory_total": 4,
+  "mandatory_contacts": 1,
+  "mandatory_lap_times_ms": [
+    20200,
+    26080,
+    22820,
+    null
+  ],
+  "patch_sha256": "9052a52cb790b96c8ad41761bc9a71501edbc0e38f28d9af9ebab190288ab638",
+  "reverse_patch_verified_exact": true,
+  "later_root_focused_checkpoint": {
+    "passed": 57,
+    "failed": 0,
+    "scope": "test_fast_path, test_fast_braking V1, test_fast_preview, test_fast_preview_pass; after the two navigation RED regressions were fixed"
+  }
+}

@@ -1,0 +1,292 @@
+{
+  "classification": "consumed mandatory geometry replay diagnostic, not new validation",
+  "source_sha256": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+  "track_id": 4,
+  "seed": 18800,
+  "prefix_actions_exact": true,
+  "replayed_actions": 141,
+  "full_diagnostic_sha256": "4518ddd612fa41130018413859929d119733189c96cd001833e4753dc63c373e",
+  "mode_counts": {
+    "curved_pass": 7,
+    "guided": 3,
+    "metric": 93,
+    "robust": 38
+  },
+  "rows": [
+    {
+      "step": 92,
+      "mode": "guided",
+      "speed": 34.23591644044906,
+      "target": 44.997030641230786,
+      "action": [
+        -0.30800002813339233,
+        0.22942937910556793,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": 0.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 100,
+      "mode": "metric",
+      "speed": 46.41857060715725,
+      "target": 64.9970306412308,
+      "action": [
+        -0.046590737998485565,
+        0.30000001192092896,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": 0.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 108,
+      "mode": "metric",
+      "speed": 60.957719409276564,
+      "target": 75.61123143516566,
+      "action": [
+        0.10726446658372879,
+        0.30000001192092896,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": 0.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 110,
+      "mode": "curved_pass",
+      "speed": 60.957719409276564,
+      "target": 85.0,
+      "action": [
+        -0.06201091781258583,
+        0.30000001192092896,
+        0.0
+      ],
+      "bbox": [
+        41,
+        25,
+        44,
+        28
+      ],
+      "pass": {
+        "side": -1.0,
+        "road_margin": 2.9495115118551505,
+        "obstacle_margin": 1.1677555416817464,
+        "min_separation": 4.006745361104568,
+        "max_curvature": 0.024512266432471466
+      },
+      "side": -1.0,
+      "legacy_plan": true,
+      "obstacle_y": 21.457965902410347,
+      "road_horizon": 34.09758965314521,
+      "support_gap_max": 1.1757789535567333,
+      "road_fit_residual_max": 0.2911692391026799
+    },
+    {
+      "step": 111,
+      "mode": "curved_pass",
+      "speed": 63.35868100190108,
+      "target": 51.55935273296567,
+      "action": [
+        -0.11140572279691696,
+        0.0,
+        0.24049919843673706
+      ],
+      "bbox": [
+        41,
+        33,
+        43,
+        37
+      ],
+      "pass": {
+        "side": -1.0,
+        "road_margin": 2.941093351182234,
+        "obstacle_margin": 1.1704635792554001,
+        "min_separation": 4.009267865726313,
+        "max_curvature": 0.07147245298247197
+      },
+      "side": -1.0,
+      "legacy_plan": true,
+      "obstacle_y": 16.46090534979424,
+      "road_horizon": 34.09758965314521,
+      "support_gap_max": 1.1757789535567333,
+      "road_fit_residual_max": 0.2777731721669654
+    },
+    {
+      "step": 112,
+      "mode": "robust",
+      "speed": 56.11133467313113,
+      "target": 47.0,
+      "action": [
+        -0.0921187475323677,
+        0.0,
+        0.23820418119430542
+      ],
+      "bbox": [
+        43,
+        42,
+        45,
+        45
+      ],
+      "pass": null,
+      "side": -1.0,
+      "legacy_plan": true,
+      "obstacle_y": 11.46384479717813,
+      "road_horizon": 34.09758965314521,
+      "support_gap_max": 1.1757789535567316,
+      "road_fit_residual_max": 0.14641671633415615,
+      "left_candidate_curvature_per_m": 0.15667098305212154,
+      "right_candidate_curvature_per_m": 0.7378660515935809,
+      "joint_geometry_curvature_limit_per_m": 0.13049173417844498,
+      "rejection_stage": "required curvature exceeds physical0.4-rad joint limit; observed with print-only frozen-method instrumentation on saved camera"
+    },
+    {
+      "step": 116,
+      "mode": "robust",
+      "speed": 39.082298473436005,
+      "target": 40.0,
+      "action": [
+        0.009520009160041809,
+        0.03333333507180214,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": -1.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 120,
+      "mode": "metric",
+      "speed": 39.082298473436005,
+      "target": 68.87126329074547,
+      "action": [
+        0.022896690294146538,
+        0.317391961812973,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": 0.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 124,
+      "mode": "metric",
+      "speed": 46.41857060715725,
+      "target": 69.07131697581629,
+      "action": [
+        0.12832464277744293,
+        0.30000001192092896,
+        0.0
+      ],
+      "bbox": null,
+      "pass": null,
+      "side": 0.0,
+      "legacy_plan": false
+    },
+    {
+      "step": 128,
+      "mode": "robust",
+      "speed": 51.30941689419908,
+      "target": 18.0,
+      "action": [
+        0.0533333346247673,
+        0.0,
+        0.2799999713897705
+      ],
+      "bbox": [
+        34,
+        23,
+        36,
+        26
+      ],
+      "pass": null,
+      "side": 1.0,
+      "legacy_plan": false,
+      "obstacle_y": 22.633744855967077,
+      "road_horizon": 29.394473838918284,
+      "support_gap_max": 1.1757789535567333,
+      "road_fit_residual_max": 5.169462317415105
+    },
+    {
+      "step": 132,
+      "mode": "robust",
+      "speed": 26.988572814837603,
+      "target": 18.0,
+      "action": [
+        -0.226666659116745,
+        0.0,
+        0.11999999731779099
+      ],
+      "bbox": [
+        33,
+        44,
+        35,
+        47
+      ],
+      "pass": null,
+      "side": -1.0,
+      "legacy_plan": false,
+      "obstacle_y": 10.288065843621398,
+      "road_horizon": 17.636684303350968,
+      "support_gap_max": 1.1757789535567316,
+      "road_fit_residual_max": 4.807221254270191
+    },
+    {
+      "step": 136,
+      "mode": "robust",
+      "speed": 19.652306087433345,
+      "target": 18.0,
+      "action": [
+        -0.3199999928474426,
+        0.0,
+        0.03999999910593033
+      ],
+      "bbox": [
+        40,
+        53,
+        42,
+        56
+      ],
+      "pass": null,
+      "side": -1.0,
+      "legacy_plan": false,
+      "obstacle_y": 4.997060552616108,
+      "road_horizon": 17.636684303350968,
+      "support_gap_max": 1.1757789535567316,
+      "road_fit_residual_max": 0.9290536658313657
+    },
+    {
+      "step": 140,
+      "mode": "robust",
+      "speed": 2.534347123840228,
+      "target": 18.0,
+      "action": [
+        -0.3199999928474426,
+        0.03999999910593033,
+        0.0
+      ],
+      "bbox": [
+        13,
+        60,
+        15,
+        61
+      ],
+      "pass": null,
+      "side": -1.0,
+      "legacy_plan": false,
+      "obstacle_y": 1.469723691945914,
+      "road_horizon": 16.46090534979424,
+      "support_gap_max": 1.1757789535567316,
+      "road_fit_residual_max": null
+    }
+  ],
+  "conclusion": "Geometric path adoption does not establish closed-loop reachability. Shortening remaining distance tightens the reset-ego path; later single-valued road-fit branch residual causes inherited target18 fallback."
+}
