@@ -10,7 +10,28 @@ no active clock deadline. Continue toward the speed goal and stop immediately
 on an actual Codex weekly quota exhaustion error. Fast mode is an app setting
 and no available tool can change it from this session.
 
-## Initial hypotheses and fresh screens
+## Latest measured checkpoint
+
+RearClear V1 (`67a0fc1`, source093aaa77…) releases the post-pass cooldown only
+after confirmed camera rear clearance. Required laps are
+**15.54/18.72/16.56/18.14 s**, all zero contacts; focused family tests pass25.
+The small published ZIP (`b137beb`) has one exact root `agent.py`; packaging
+tests pass4 and isolated extracted import/reset/camera action passes.
+A new formal development20 evaluation cold-repeats all four mandatory action
+traces and finishes13/16 extras (pertrack3/4,4/4,3/4,3/4), with14 contacts.
+Only6/16 extras and2/4 mandatory laps meet the predefined18 s profile. The
+seven earlier rejects are historical profile evidence; this is the eighth
+formal reject. Original13 s and very early10 s goals remain unmet, no adoption.
+
+Most preserved mandatory trace samples lie at40–80 m/s; track4 spends28
+post-launch action samples below20 m/s. `rear-clear-speed-budget.json` binds
+this analysis to prior receipts and actions and is not new simulation evidence.
+Parallel current investigations cover actual stall entry, supported road-line
+curvature, vehicle force/steering dynamics and earlier obstacle perception.
+New holdout remains unopened. Earlier memory and arc controls are preserved;
+their outcomes are distinct sources, never mixed into synthetic performance.
+
+## Initial hypotheses and fresh screens (earlier)
 
 - Existing guarded preview averages about 40–45 m/s and brakes on 30–35% of
   decisions. Its HUD estimate agrees with true simulation speed within about

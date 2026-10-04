@@ -11,12 +11,16 @@ The user resumed work toward four early-10-second laps on 2026-10-05 KST.
 New source-bound mandatory screens and causal physics/camera diagnostics are
 in [`results/speed-20261005/PROGRESS.md`](results/speed-20261005/PROGRESS.md).
 No current candidate completes all four within 13 seconds, and none is adopted.
-Explicit ego road-support confidence finishes all four at
-15.04/24.22/19.86/19.96 s, exactly matching initial graph action hashes.
-A fresh component development benchmark repeats those required laps but
-finishes only 12/16 extras (track 3:1/4). Clear-road ridge with a distance-support
-prefix finishes 15.18/30.24/18.50/18.38 s, contacts 0/3/0/0. These are research
-candidates; current camera motion and committed-pass experiments continue.
+Latest `fast_rear_clear_agent.py` finishes **15.54/18.72/16.56/18.14 s** with
+zero contacts. A fresh formal development evaluation exactly repeats those
+mandatory actions but finishes only **13/16 extras** (3/4,4/4,3/4,3/4), of which
+6/16 meet the prospective 18-second profile. Both speed and reliability gates
+fail; all four very early-10-second laps remain unmet. Seven historical rejects
+are the profile basis; the latest evaluation is the eighth formal reject.
+The [downloadable ZIP](submissions/apex-rear-clear-v1-67a0fc1.zip) contains only
+this exact standalone `agent.py`. Integrity and isolated camera-action checks
+pass, but it is not officially certified or adopted. Current work targets
+road-loss stalls, unnecessary path bending and earlier obstacle planning.
 
 The user cancelled the subsequently imposed time cutoff; no clock deadline
 is active. Work continues toward the requested speed goal, with immediate stop

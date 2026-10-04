@@ -1,0 +1,902 @@
+{
+  "schema_version": 1,
+  "kind": "consumed_development_candidate_audit",
+  "created_utc": "2026-10-04T18:37:51.146816+00:00",
+  "candidate_source_commit": "67a0fc19d066195355b04d66de8d15a1943f1a89",
+  "candidate_source": {
+    "path": "agents/apex_2026/fast_rear_clear_agent.py",
+    "sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc"
+  },
+  "evaluator": {
+    "path": "agents/apex_2026/evaluate.py",
+    "sha256": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+  },
+  "historical_profile_basis": [
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r1-safety.json",
+      "sha256": "aa7f2819e34e16d0a348b660f9f01ee37cfc799e1ae67f4cba23500484baf9b9",
+      "source_sha256": "7b783070f26b108957f4d9c4c5658b411a7f03cb26690055cf2bdba13dde4c37",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r2-pace.json",
+      "sha256": "5ed26c239dd251c4135494c667765b4bd2e5ea2641e50157cd4c2c5ddd05c46d",
+      "source_sha256": "7fc32399068e80a35aefb7c2b4475663a6162a698db59f9341dd9c4ed9df3b6e",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r3-recovery.json",
+      "sha256": "0c1bda4e0af986f68edfc283f336bc658cb0de827d5683b7486f15e3451ff031",
+      "source_sha256": "63a4f8537a227f8ee52c898265e0cba4b2b2abdba4d64418603305ad669be1d3",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r4-preview.json",
+      "sha256": "ba9645355dc10e040e7012a078247919f21d5f922315c59a651821a455360206",
+      "source_sha256": "f0ccb11d8bcae690cb1a5b3ac98ea0ab9f727f85b9d7d488263c86760f92302d",
+      "parameters": {},
+      "selected_profile_seconds": 15,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r5-envelope.json",
+      "sha256": "8b55367593a23a58a5fe9c3a46fa3ed6d76e2e50016cec533b033e21eda3d3c9",
+      "source_sha256": "80a8feedf4b2feeabaed86f029498a3c7d1967289ba0f95f88a6efed0efdf087",
+      "parameters": {
+        "cruise_speed": 95.0,
+        "preview_time": 0.23,
+        "braking_accel": 60.0
+      },
+      "selected_profile_seconds": 15,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r6-corridor.json",
+      "sha256": "4c60287e712677775ae64fa19e17f688c4b9be6a5af703aac4c52ffb41d10454",
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "selected_profile_seconds": 15,
+      "passed": false,
+      "historical_not_new_validation": true
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r7-guarded-preview.json",
+      "sha256": "cba855e4c3239c4f43bba9a9b9b60e72db20fc0e59a0255de8be8337501d568c",
+      "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+      "parameters": {},
+      "selected_profile_seconds": 18,
+      "passed": false,
+      "historical_not_new_validation": true
+    }
+  ],
+  "historical_chain_all_prior_links_exact": true,
+  "baseline_mandatory_receipt": {
+    "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1.json",
+    "sha256": "9dc20efcf6e34bb763d935dcd1b43e6d2b389872fe533d813d44010580ad52d5"
+  },
+  "baseline_mandatory_freeze": {
+    "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1.freeze.json",
+    "sha256": "4be0b292232f94eb8e8926ebed7ee59987763011736a9e471ae3d187e3f86194"
+  },
+  "development_receipt": {
+    "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.json",
+    "sha256": "44a43f3e37b5a93a6a8f2e10c6c6ef47b41e3a8e1f82d08f75de56c684e94d12"
+  },
+  "development_freeze": {
+    "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.freeze.json",
+    "sha256": "782c583afe158e8b06f2ad8210709fa0d5c59d249569b2deda89150e4fc4e36e"
+  },
+  "run": {
+    "suite": "development",
+    "trial_role": "candidate",
+    "parameters": {},
+    "workers": 2,
+    "max_steps": 700,
+    "expected_cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        1,
+        2867319041
+      ],
+      [
+        2,
+        2867319041
+      ],
+      [
+        3,
+        2867319041
+      ],
+      [
+        4,
+        2867319041
+      ],
+      [
+        1,
+        359018627
+      ],
+      [
+        2,
+        359018627
+      ],
+      [
+        3,
+        359018627
+      ],
+      [
+        4,
+        359018627
+      ],
+      [
+        1,
+        1764402399
+      ],
+      [
+        2,
+        1764402399
+      ],
+      [
+        3,
+        1764402399
+      ],
+      [
+        4,
+        1764402399
+      ],
+      [
+        1,
+        4029571806
+      ],
+      [
+        2,
+        4029571806
+      ],
+      [
+        3,
+        4029571806
+      ],
+      [
+        4,
+        4029571806
+      ]
+    ],
+    "new_holdout_episodes": 0,
+    "extra_geometry_status": "previously consumed development seeds",
+    "selected_profile_seconds": 18,
+    "rejection_streak_before": 7,
+    "rejection_streak_after": 8,
+    "prospective_rejection_count_advanced": true
+  },
+  "environment": {
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+    "runtime_versions": {
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "torch": "2.1.0",
+      "opencv-python": "4.8.1.78",
+      "box2d-py": "2.3.5"
+    },
+    "files": {
+      "env_wrapper.py": {
+        "sha256": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "matches_freeze_and_baseline": true
+      },
+      "damage.py": {
+        "sha256": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "matches_freeze_and_baseline": true
+      },
+      "core/track_variables.py": {
+        "sha256": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "matches_freeze_and_baseline": true
+      },
+      "core/vendor/car_racing.py": {
+        "sha256": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "matches_freeze_and_baseline": true
+      },
+      "core/vendor/car_dynamics.py": {
+        "sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "matches_freeze_and_baseline": true
+      },
+      "core/finish_line.py": {
+        "sha256": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "matches_freeze_and_baseline": true
+      },
+      "core/obstacle_contacts.py": {
+        "sha256": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/environment.py": {
+        "sha256": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/schema.py": {
+        "sha256": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/custom_environment.py": {
+        "sha256": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+        "matches_freeze_and_baseline": true
+      },
+      "agents/apex_2026/evaluate.py": {
+        "sha256": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c",
+        "matches_freeze_and_baseline": true
+      }
+    },
+    "protected_root_and_official_files": {
+      "agent.py": {
+        "sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+        "matches_start_commit_14bb967": true
+      },
+      "env_wrapper.py": {
+        "sha256": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "matches_start_commit_14bb967": true
+      },
+      "damage.py": {
+        "sha256": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "matches_start_commit_14bb967": true
+      },
+      "core/track_variables.py": {
+        "sha256": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "matches_start_commit_14bb967": true
+      },
+      "core/vendor/car_racing.py": {
+        "sha256": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "matches_start_commit_14bb967": true
+      },
+      "core/vendor/car_dynamics.py": {
+        "sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "matches_start_commit_14bb967": true
+      },
+      "core/finish_line.py": {
+        "sha256": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "matches_start_commit_14bb967": true
+      },
+      "core/obstacle_contacts.py": {
+        "sha256": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "matches_start_commit_14bb967": true
+      }
+    }
+  },
+  "audit": {
+    "assertions_completed": true,
+    "unique_and_exact_20_cells": true,
+    "zero_operational_errors": true,
+    "source_parameters_environment_unchanged": true,
+    "all_actions_float32_hash_recomputed": true,
+    "all_actions_finite_and_bounded": true,
+    "all_trace_state_and_debug_finite": true,
+    "all_runtime_metrics_finite_within_limits": true,
+    "action_min": [
+      -0.4000000059604645,
+      0.0,
+      0.0
+    ],
+    "action_max": [
+      0.4000000059604645,
+      1.0,
+      0.6499999761581421
+    ],
+    "semantic_fields": [
+      "action_trace_sha256",
+      "collision_count",
+      "damage",
+      "error",
+      "finished",
+      "lap_time_ms",
+      "offtrack_samples",
+      "parameters",
+      "partial_offtrack_samples",
+      "progress",
+      "retire_reason",
+      "seed",
+      "source_sha256",
+      "steps",
+      "track_id"
+    ],
+    "mandatory_exact_repeats": [
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "lap_time_ms": 15540,
+        "action_trace_sha256": "a1be4b54b6881232e5c3bde46725edba394c3d976fe1cf84d2fca339fd806611",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-1-seed-516237.json",
+          "sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa"
+        }
+      },
+      {
+        "track_id": 2,
+        "seed": 644062,
+        "lap_time_ms": 18720,
+        "action_trace_sha256": "790570eea380d59a7815af36b0defdc0674c943bff69ba87d5f39233fe036c6f",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-2-seed-644062.json",
+          "sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5"
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 1007,
+        "lap_time_ms": 16560,
+        "action_trace_sha256": "9cba2e7a18384dcd9de3987158f3516b510c2582e029c63963dc03b6f619bf33",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-3-seed-1007.json",
+          "sha256": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6"
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 18800,
+        "lap_time_ms": 18140,
+        "action_trace_sha256": "56d8caf42c8de896179e95f254afb5a2299aa83cee559e0a55ffa8b1fc35a0b9",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-traces/track-4-seed-18800.json",
+          "sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67"
+        }
+      }
+    ],
+    "trace_bindings": [
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-1-seed-516237.json",
+          "sha256": "03b9d9bb8c09fcf8fb4f24733e41108396299007ed02a99cbce14c48b1bcc68c"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-1-seed-516237.json",
+          "sha256": "f88dc88b44cdffa3c181749ec25f19afc4a76fd5b556ee2d0784072aabd3c8fa"
+        },
+        "actions": 195,
+        "action_trace_sha256": "a1be4b54b6881232e5c3bde46725edba394c3d976fe1cf84d2fca339fd806611",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 15.539999999999736
+      },
+      {
+        "track_id": 2,
+        "seed": 644062,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-2-seed-644062.json",
+          "sha256": "e496e5d3431b06ef0f961d7d598175a4863510dcb3726fa580bea6391e04ffe6"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-2-seed-644062.json",
+          "sha256": "d3e444c1c15ee9aa38a758bf8c82bfb7eb01524784b86173132fceab390b54b5"
+        },
+        "actions": 235,
+        "action_trace_sha256": "790570eea380d59a7815af36b0defdc0674c943bff69ba87d5f39233fe036c6f",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.739999999999668
+      },
+      {
+        "track_id": 3,
+        "seed": 1007,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-3-seed-1007.json",
+          "sha256": "3251b167ec14f65bd976435f70cc18e8d8ec651e6d28d6e5516d4b2d7af59ff8"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-3-seed-1007.json",
+          "sha256": "a4dee8145c616d53a7331649db25ef0e466a8a59e3bf2e0a2215ede69a2510b6"
+        },
+        "actions": 208,
+        "action_trace_sha256": "9cba2e7a18384dcd9de3987158f3516b510c2582e029c63963dc03b6f619bf33",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.579999999999714
+      },
+      {
+        "track_id": 4,
+        "seed": 18800,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-4-seed-18800.json",
+          "sha256": "9a030688e8b3dce70e5a2d7ddf34eaedc5d6eb7a525c52f554f9369ce5f057be"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-4-seed-18800.json",
+          "sha256": "84d0ba8aa569e7019430c9c1b4a1e390e7de042c697155fccbcf3a3435cfaa67"
+        },
+        "actions": 227,
+        "action_trace_sha256": "56d8caf42c8de896179e95f254afb5a2299aa83cee559e0a55ffa8b1fc35a0b9",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.15999999999968
+      },
+      {
+        "track_id": 1,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-1-seed-2867319041.json",
+          "sha256": "1a838be7428a3cd2e55cae1a15c34fa4d50d673f918f569a551722b2e0ea0ce8"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-1-seed-2867319041.json",
+          "sha256": "09c2ad54e88081f4f859af52cd31106b7a27a0fbec3b632f54a5f10e48a5a57f"
+        },
+        "actions": 206,
+        "action_trace_sha256": "d39f1b51a9f5c8ea2e56bc2905cd663197dce436483b2ed28471db96f7eb13a8",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.459999999999717
+      },
+      {
+        "track_id": 2,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-2-seed-2867319041.json",
+          "sha256": "01409eb7017e0603ef12256aedff1e0f85425f253880aed326553f9f447eff80"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-2-seed-2867319041.json",
+          "sha256": "b03fc8d29214674d767ccfecafddc6d50d00c086b08cce700d30798735f427fa"
+        },
+        "actions": 203,
+        "action_trace_sha256": "4b82264fad5361c009e3a943a2b447a0fcd0da1fa6bc110b9224d688f6b7d0ae",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.21999999999972
+      },
+      {
+        "track_id": 3,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-3-seed-2867319041.json",
+          "sha256": "39ac7148c44f039f932f601d77567b83840d756fb26694b7e7606431c39ae5c4"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-3-seed-2867319041.json",
+          "sha256": "dd901a8a1b2ec659d4cc3a746f9161dfb4079026ac27a445738c94664f443cc3"
+        },
+        "actions": 259,
+        "action_trace_sha256": "ad9501f08079da72b7cd1602beb0cd6b3ffa4c2d577f3b97fb3086e95df2c601",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 20.679999999999627
+      },
+      {
+        "track_id": 4,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-4-seed-2867319041.json",
+          "sha256": "e5bec59535e0a53959c5c2189dc636366dde66e9f3003a07ba4df95149e2a7e9"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-4-seed-2867319041.json",
+          "sha256": "d9c3f1b341e7c9e2f87c1b5b5383ec8500d9eadea29a98ece66a60186e71784f"
+        },
+        "actions": 205,
+        "action_trace_sha256": "86a520347892b1fddf04e00218cabddd8e751cb721d3f0f68af3b4dccd065a0c",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.35999999999972
+      },
+      {
+        "track_id": 1,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-1-seed-359018627.json",
+          "sha256": "21f9c7852174b02b6ef43b935d3805cf36cbd2781df3181bcbbda1a6bd285c92"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-1-seed-359018627.json",
+          "sha256": "65e0b8730761ad6ba5e98cc427d1d02a43b049a4d182b64b94274b76432679e1"
+        },
+        "actions": 218,
+        "action_trace_sha256": "ed166a41b3b8c5c7cf64b190124ddf94ee16dec964d5c0adc6b12825a83e5bb1",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 17.439999999999696
+      },
+      {
+        "track_id": 2,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-2-seed-359018627.json",
+          "sha256": "26f739effc100ba895a5efb2f0abdb14a3af32740ad092aea3bd7034a48f30f4"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-2-seed-359018627.json",
+          "sha256": "8c474ff375efb2a103982a5da4f38e72ecf880acf095a8b136001d7a7d5d345b"
+        },
+        "actions": 249,
+        "action_trace_sha256": "92b9b676b6b2d4858c02fe25fac0687aa0a439242f0bc3117ae399bf71cdbe8b",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 19.919999999999643
+      },
+      {
+        "track_id": 3,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-3-seed-359018627.json",
+          "sha256": "399f00fe9bbb84c72a3782a4033599085956a0b05cc897acdb2d52f6ae39c97d"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-3-seed-359018627.json",
+          "sha256": "72a31e4d64d36eaf1d76c5309a46edbb288fae9da1273c872f8a8074e227ac02"
+        },
+        "actions": 309,
+        "action_trace_sha256": "875da189288210f2d0c9dd362364fb59ad98ae8f914ee4fb578580fbee8150a9",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 24.69999999999954
+      },
+      {
+        "track_id": 4,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-4-seed-359018627.json",
+          "sha256": "78905400e5f56d310da3c43fa55d73f0bfcc36633dbda3e440665de241448731"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-4-seed-359018627.json",
+          "sha256": "6d53323374288da4f4b1f84bffb439e204e876c9e8404353d231c3809f039fe9"
+        },
+        "actions": 200,
+        "action_trace_sha256": "65062aa2edc11b58c272beabe14335a434a7c71833136102b90e68d705c95899",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 15.959999999999727
+      },
+      {
+        "track_id": 1,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-1-seed-1764402399.json",
+          "sha256": "0a1257dce79e9372fbabf19bdcca3bc364c2e6c598e293e9bc37ce2722e1599b"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-1-seed-1764402399.json",
+          "sha256": "efdb949a3323105d9f7541b41b5706aab4b05f8786f1f1a416575233f2f09bfc"
+        },
+        "actions": 245,
+        "action_trace_sha256": "9402f5ac7bd7a78bb6b1f532f1b175efccb0ffcf5a5e74c0bb76a42edadd9b37",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 19.55999999999965
+      },
+      {
+        "track_id": 2,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-2-seed-1764402399.json",
+          "sha256": "366fbf970738f81edc4f0eac795a14c6bc2fb602f3510b6f2d17cd7058e147fc"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-2-seed-1764402399.json",
+          "sha256": "8fe28286d4a52d27563f75f9fb7c7f0d3f0e986f658fd80cf77f812970e8475d"
+        },
+        "actions": 202,
+        "action_trace_sha256": "6d7f0f05b9743864e91a859ad79beb42445394ddbeebcd61727741ade993e624",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.159999999999723
+      },
+      {
+        "track_id": 3,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-3-seed-1764402399.json",
+          "sha256": "05076658a34058172e1e2730c5389ec7d2308851f27055894bfdad65a291e77c"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-3-seed-1764402399.json",
+          "sha256": "42767bd0c9cf63a95936f3ce4298026ad75785c5605dcbe62c2ac107c9fe6c90"
+        },
+        "actions": 266,
+        "action_trace_sha256": "884cde32c593b0a5e97af6923830cf2aae1919efe877fdac256244f14a3e2d85",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 21.239999999999615
+      },
+      {
+        "track_id": 4,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-4-seed-1764402399.json",
+          "sha256": "a3e5e3bda0c132aad20fa5a557fd6b194f6cda4864bb379c95492d3393bdb323"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-4-seed-1764402399.json",
+          "sha256": "8d085d0fb6a2e13b01f07e7443956b21e3229dcc2a9851d608eaa934fa1db738"
+        },
+        "actions": 220,
+        "action_trace_sha256": "f084910526c0b598ab76e4469233c74060e9ec2ce80f200f916dbc43e9aadf6b",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 17.579999999999693
+      },
+      {
+        "track_id": 1,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-1-seed-4029571806.json",
+          "sha256": "3e882c5cfa713806ea797245e8a41ca7dd1e8003e0853382699cd0cea38002bb"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-1-seed-4029571806.json",
+          "sha256": "c04ade556cf96a5011664daeba934b49b02b613d65f91ddd3fd27164db607057"
+        },
+        "actions": 244,
+        "action_trace_sha256": "9f7331e1040a431430dda38a22654466e06c894c1b289050f00f4d52cff7b2f8",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 19.479999999999652
+      },
+      {
+        "track_id": 2,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-2-seed-4029571806.json",
+          "sha256": "f4522b46f7ab4bea96064a27603d33d13d547aeee8ab806864ed7ce69b59cb20"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-2-seed-4029571806.json",
+          "sha256": "d78d0f3df0fe504a798c5356c9fdad22d42b94c6f89bdb503456ae6b3d650a27"
+        },
+        "actions": 257,
+        "action_trace_sha256": "3a8c843534e5661987d214f81e0a2939cd79fdd24ba31f4a7f8b2315515441aa",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 20.51999999999963
+      },
+      {
+        "track_id": 3,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-3-seed-4029571806.json",
+          "sha256": "34a77099769597cffb338347002a4b27c7c5443832ee6e52cffd4e25986792bb"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-3-seed-4029571806.json",
+          "sha256": "5bf91ae2d6b098232716050ee39a1fcc72a2f4f7353aa9e9e500c5966b54762c"
+        },
+        "actions": 273,
+        "action_trace_sha256": "21fb5e2faaa7bc391b304e70547d3481425e8361c248d66b958ec84c9a52aaba",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 21.839999999999602
+      },
+      {
+        "track_id": 4,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/rear-clear-v1-development-candidate.cells/track-4-seed-4029571806.json",
+          "sha256": "5a4584d41ceb62c26ac490cd598d2e1a31fb14e2a7ad3a684704545245b6bcec"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/rear-clear-v1-development-candidate-traces/track-4-seed-4029571806.json",
+          "sha256": "4aabce798479e9cd896e87206b82de392b5087b17a47d2fae1d72e8e47502be1"
+        },
+        "actions": 209,
+        "action_trace_sha256": "31b7c0dd3fa1ab7636b1ed4afc412eec624772756fad1c53a3559c8546151d00",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.71999999999971
+      }
+    ]
+  },
+  "outcomes": {
+    "mandatory_finishes": 4,
+    "mandatory_cells": 4,
+    "mandatory_lap_time_ms": [
+      15540,
+      18720,
+      16560,
+      18140
+    ],
+    "mandatory_contacts": 0,
+    "extra_finishes": 13,
+    "extra_cells": 16,
+    "extra_per_track": {
+      "1": {
+        "finishes": 3,
+        "cells": 4,
+        "contacts": 3,
+        "finished_lap_time_ms": [
+          16440,
+          19540,
+          19460
+        ]
+      },
+      "2": {
+        "finishes": 4,
+        "cells": 4,
+        "contacts": 4,
+        "finished_lap_time_ms": [
+          16200,
+          19920,
+          16140,
+          20500
+        ]
+      },
+      "3": {
+        "finishes": 3,
+        "cells": 4,
+        "contacts": 1,
+        "finished_lap_time_ms": [
+          20660,
+          24700,
+          21220
+        ]
+      },
+      "4": {
+        "finishes": 3,
+        "cells": 4,
+        "contacts": 6,
+        "finished_lap_time_ms": [
+          16340,
+          15960,
+          17560
+        ]
+      }
+    },
+    "extra_contacts": 14,
+    "extra_finished_lap_min_ms": 15960,
+    "extra_finished_lap_max_ms": 24700,
+    "extra_failures": [
+      {
+        "track_id": 1,
+        "seed": 359018627,
+        "progress": 0.2578397212543554,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track",
+        "offtrack_samples": 120,
+        "partial_offtrack_samples": 135
+      },
+      {
+        "track_id": 3,
+        "seed": 4029571806,
+        "progress": 0.6199261992619927,
+        "collision_count": 1,
+        "damage": 0.2,
+        "retire_reason": "off_track",
+        "offtrack_samples": 115,
+        "partial_offtrack_samples": 135
+      },
+      {
+        "track_id": 4,
+        "seed": 4029571806,
+        "progress": 0.5793357933579336,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track",
+        "offtrack_samples": 0,
+        "partial_offtrack_samples": 2
+      }
+    ],
+    "mandatory_fast_13s": 0,
+    "extra_fast_13s": 0,
+    "mandatory_fast_18s": 2,
+    "extra_fast_18s": 6,
+    "selected_profile_verdict": {
+      "passed": false,
+      "original_target_met": false,
+      "pace_limit_seconds": 18,
+      "mandatory_finishes": 4,
+      "mandatory_cells": 4,
+      "extra_finishes": 13,
+      "extra_cells": 16,
+      "extra_fast_fraction": 0.375,
+      "per_track": {
+        "1": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.25
+        },
+        "2": {
+          "finishes": 4,
+          "cells": 4,
+          "fast_fraction": 0.5
+        },
+        "3": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "4": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.75
+        }
+      }
+    },
+    "original_13s_verdict": {
+      "passed": false,
+      "original_target_met": false,
+      "pace_limit_seconds": 13,
+      "mandatory_finishes": 4,
+      "mandatory_cells": 4,
+      "extra_finishes": 13,
+      "extra_cells": 16,
+      "extra_fast_fraction": 0.0,
+      "per_track": {
+        "1": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "2": {
+          "finishes": 4,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "3": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "4": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.0
+        }
+      }
+    },
+    "original_target_met": false,
+    "formally_adopted": false
+  },
+  "runtime": {
+    "local_worker_maxima": {
+      "initialization_ms": 0.6851340003777295,
+      "reset_ms": 0.017893995391204953,
+      "action_latency_max_ms": 47.73346699948888,
+      "peak_worker_rss_mib": 95.0390625
+    },
+    "limits": {
+      "initialization_ms": 10000,
+      "reset_ms": 5000,
+      "action_latency_max_ms": 5000,
+      "peak_worker_rss_mib": 1024
+    },
+    "numpy_preloaded_in_worker_initialization": true,
+    "official_submission_container_certified": false
+  },
+  "limits": [
+    "Consumed development coverage is not unseen validation.",
+    "The seven historical20-cell candidate failures supply the18s profile basis; they are not fresh validation.",
+    "No candidate or parameter selection on new holdout data occurred.",
+    "Local harness timings do not certify the official submission container.",
+    "Mandatory times exceed13s; the requested four early-10-second laps remain unmet."
+  ],
+  "audit_program": {
+    "sha256": "2cf55114044a9e5dce95763bb91cb15eb119675672db296ee1b7bcecc9794c94",
+    "location": "temporary inline audit; all checked inputs and actuals are bound above"
+  }
+}

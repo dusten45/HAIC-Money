@@ -112,18 +112,27 @@ was pushed before holdout: mandatory 21.92/27.64/26.14/23.74 s, development
 12/16 and holdout 15/16. Cold source and ZIP repeats exactly matched actions.
 Those are earlier fresh validations, not new measurements in the resumed phase.
 
-The current high-speed continuation is active, aiming at four early-10-second
-laps with less curve slowing. No new candidate is adopted or meets all four
-13-second laps. Fresh explicit road-support confidence reproduces initial
-graph actions and finishes 15.04/24.22/19.86/19.96 s. A separate fresh
-20-cell component development benchmark exactly repeats those mandatory
-actions but finishes only 12/16 extras (track 3 only 1/4). New clear-road ridge
-with a distance-support prefix finishes 15.18/30.24/18.50/18.38 s, contacts
-0/3/0/0. Selected bend geometry improves, but speed and obstacle tracking
-remain unresolved. Forecast propulsion finishes 15.72/26.20/23.96 s and
-fails track 4. These distinct sources cannot form a synthetic result.
-Committed-pass and camera motion-estimation investigations continue. Receipts,
-source bindings and causal diagnostics are in `results/speed-20261005/`.
+The active high-speed continuation targets four very early-10-second laps.
+No new source is adopted or meets all four 13-second laps. Latest rear-clear
+V1 source `093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc`
+is committed in `67a0fc1`: mandatory **15.54/18.72/16.56/18.14 s**, zero contacts.
+A fresh formal 20-cell development evaluation exactly repeats its four action
+traces and finishes 13/16 extras (3/4,4/4,3/4,3/4); only 6/16 extras meet 18 s.
+It fails both original and prospective relaxed profiles. The seven historical
+formal rejects supply the 18 s profile basis, not new measurements; this new
+distinct failure is the eighth formal reject. Its downloadable ZIP, committed
+in `b137beb`, contains exactly this standalone source, not an adopted agent.
+
+Memory-corridor V1 separately finishes 15.20/19.72/18.78/21.14 s and 13/16
+development extras. ArcClear V2 finishes 15.44/19.08/16.52/20.92 s, contacts
+0/0/0/1. Combining arc and memory regresses track 4 to 39.08 s. Committed-pass
+V3 finishes 19.42/25.22/21.50/22.74 s without contacts; a simple fast/pass
+selector loses track 1. These distinct sources cannot form a synthetic result.
+Current diagnostics separate road-loss recovery (rear-clear T4 actions144–172)
+from excessive reference curvature/normal curve caps and late obstacle planning.
+Most rear-clear driving is 40–80 m/s. Existing fixture replay and offline
+physics/path estimates are diagnostic, not fresh laps or impossibility proofs.
+Receipts and causal diagnostics live in `agents/apex_2026/results/speed-20261005/`.
 No new holdout has opened; the old holdout is consumed development data.
 
 The user cancelled the subsequently proposed 04:00 KST cutoff: **no active
