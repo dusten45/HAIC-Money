@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "experiment": "camera-option-planner-observational-calibration-v1",
+  "status": "DIAGNOSTIC_ONLY",
+  "source_screen": {
+    "protocol": "camera-policy-generalization-v1",
+    "status": "REJECTED_SCREEN",
+    "protocol_sha256": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+    "candidate_agent_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+    "screen_receipts": ".haic-artifacts/camera-policy-generalization-v1/run/screen-summary.json",
+    "exact_diagnostics_root": ".haic-artifacts/camera-policy-generalization-v1/diagnostics"
+  },
+  "scope": {
+    "candidate_exact_trajectories": 7,
+    "decision_samples": 2153,
+    "independent_geometry_groups": 4,
+    "track_ids": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "new_episodes": 0,
+    "holdout_unit": "geometry_seed across all track IDs",
+    "observation_only": true
+  },
+  "verification": {
+    "checks": "Frozen source/model/environment/protocol/screen receipt preflight; trace envelope digest; exact action SHA256, summary and off-road sample counts against each original receipt.",
+    "historical_driver_note": "The original diagnostic driver SHA256 differs from the current driver after later target additions; all other frozen identity fields and each stored trace digest matched.",
+    "receipts": [
+      {
+        "track_id": 1,
+        "geometry_seed": 1814481715,
+        "decisions": 460,
+        "original_receipt_sha256": "eb3930786780935287a0f40c19dd9b5a0d1da5f6fd2be3e93d896fa2aba34bed",
+        "exact_trace_sha256": "e428041de842f06c8c4271c4646be0303a69b4f08af06850d8cc24ccd1c444b0",
+        "action_trace_sha256": "b903cbb181bfd095517373b14485ae462265df605cb08fde4728528586b89598"
+      },
+      {
+        "track_id": 1,
+        "geometry_seed": 1460583390,
+        "decisions": 342,
+        "original_receipt_sha256": "0a92bb7770209a40901fbe54656ab9981335e44eccf5627ed3b291f588cd04ed",
+        "exact_trace_sha256": "adbfd907ed6132a383f47e00358b3191119c0194585d053768d283c08af9d169",
+        "action_trace_sha256": "5ef5d9985a0dbc76dc8476564b682d68fc419bbad4fb2b7ec441abc2664584eb"
+      },
+      {
+        "track_id": 2,
+        "geometry_seed": 1460583390,
+        "decisions": 290,
+        "original_receipt_sha256": "9156b84717ebb0b01fdadcfaf26eed902983db11a6665f91beac3ad3c79d3a14",
+        "exact_trace_sha256": "a65ea12cd443283cebba9a2fb9ed603aa81bf4d63a90ab75556074d7ff002dee",
+        "action_trace_sha256": "a3b9ae357edece731401a7b82a64d3701e5023b55d0626a603806b2b27650dbe"
+      },
+      {
+        "track_id": 2,
+        "geometry_seed": 2570310388,
+        "decisions": 232,
+        "original_receipt_sha256": "0aeac69ef43716b8f36628212bb1e605878dc9f9a1a73af6462b2de798f73e3f",
+        "exact_trace_sha256": "3ae42fc25764ccc7537c2192c0ff9d86b2a04eb8dac26b23f3e332cc644b7603",
+        "action_trace_sha256": "e165dab9a13e2026f38142171bc27a04787a51291dbc8b27111f401254cbc990"
+      },
+      {
+        "track_id": 4,
+        "geometry_seed": 1402259577,
+        "decisions": 143,
+        "original_receipt_sha256": "f0f5652c9707598357800a0a5374ddc95c40603d3bb3f089f77958825e8b88b9",
+        "exact_trace_sha256": "629be7c93dc5201aa8a3fd3aec7408ed82ec7c14858eb9554989f97ce96378ad",
+        "action_trace_sha256": "6a4de8bab096cb6852a33ed5616e639061633b809d5baccc4be43a2cd8076610"
+      },
+      {
+        "track_id": 1,
+        "geometry_seed": 2570310388,
+        "decisions": 305,
+        "original_receipt_sha256": "534f98a150c9315cbc51afefd4e8bc3c4af88c3a388b483e940ff46880ac2b9e",
+        "exact_trace_sha256": "967e57e15a9b665462bf0a69910429dc3e7e5d367e266e0bfcdbb8bec180b08f",
+        "action_trace_sha256": "d65eb4ca42ccf5f8c6985d5a215cbb73a4b7ba5110cafcd0c1adcc44612c791d"
+      },
+      {
+        "track_id": 3,
+        "geometry_seed": 1814481715,
+        "decisions": 381,
+        "original_receipt_sha256": "944b0f5c2596ea693423bbfd36c83b9d4857c70e42d05f9fd3e7ff3f52bce49e",
+        "exact_trace_sha256": "cff0656b1cd4942479e6c9bde7d3e23fea4c45a7b5a83914a7bcd7b15853971f",
+        "action_trace_sha256": "2afbda10b6e13ea45ea11110cd7ab741cb95e82898319b3737deb05b20a089c2"
+      }
+    ]
+  },
+  "calibration": {
+    "forecast": "Constant velocity from the two preceding observed camera features; 1 decision = 4 simulator frames.",
+    "envelope": "1 pixel plus the largest calibration-geometry 95th-percentile absolute residual; leave one geometry seed out at a time.",
+    "metrics": {
+      "near_road_center_row54_px": {
+        "h1": {
+          "samples": 2030,
+          "calibration_envelope_min": 2.5,
+          "calibration_envelope_max": 2.573,
+          "held_out_sample_coverage": 0.9877
+        },
+        "h2": {
+          "samples": 2029,
+          "calibration_envelope_min": 3.5,
+          "calibration_envelope_max": 4.0,
+          "held_out_sample_coverage": 0.9847
+        },
+        "h3": {
+          "samples": 2028,
+          "calibration_envelope_min": 5.0,
+          "calibration_envelope_max": 5.325,
+          "held_out_sample_coverage": 0.9773
+        }
+      },
+      "far_road_center_row42_px": {
+        "h1": {
+          "samples": 2025,
+          "calibration_envelope_min": 3.082,
+          "calibration_envelope_max": 3.35,
+          "held_out_sample_coverage": 0.9827
+        },
+        "h2": {
+          "samples": 2024,
+          "calibration_envelope_min": 5.5,
+          "calibration_envelope_max": 6.5,
+          "held_out_sample_coverage": 0.9753
+        },
+        "h3": {
+          "samples": 2023,
+          "calibration_envelope_min": 8.5,
+          "calibration_envelope_max": 9.55,
+          "held_out_sample_coverage": 0.9723
+        }
+      },
+      "obstacle_bbox_bottom_px": {
+        "h1": {
+          "samples": 650,
+          "calibration_envelope_min": 3.0,
+          "calibration_envelope_max": 3.0,
+          "held_out_sample_coverage": 0.9923
+        },
+        "h2": {
+          "samples": 625,
+          "calibration_envelope_min": 5.0,
+          "calibration_envelope_max": 6.0,
+          "held_out_sample_coverage": 0.9936
+        },
+        "h3": {
+          "samples": 600,
+          "calibration_envelope_min": 7.0,
+          "calibration_envelope_max": 8.0,
+          "held_out_sample_coverage": 0.9867
+        }
+      },
+      "camera_hud_speed_units": {
+        "h1": {
+          "samples": 2125,
+          "calibration_envelope_min": 5.983,
+          "calibration_envelope_max": 6.001,
+          "held_out_sample_coverage": 0.9807
+        },
+        "h2": {
+          "samples": 2125,
+          "calibration_envelope_min": 8.751,
+          "calibration_envelope_max": 10.901,
+          "held_out_sample_coverage": 0.9694
+        },
+        "h3": {
+          "samples": 2125,
+          "calibration_envelope_min": 13.595,
+          "calibration_envelope_max": 15.948,
+          "held_out_sample_coverage": 0.9685
+        }
+      }
+    },
+    "fast_visible_obstacle_subset": {
+      "definition": "Camera HUD speed >=45 and compact obstacle bbox visible at prediction origin.",
+      "far_road_center_row42_px": {
+        "h1": {
+          "samples": 63,
+          "calibration_envelope_min": 3.184,
+          "calibration_envelope_max": 5.7,
+          "held_out_sample_coverage": 0.9524
+        },
+        "h2": {
+          "samples": 63,
+          "calibration_envelope_min": 6.671,
+          "calibration_envelope_max": 10.5,
+          "held_out_sample_coverage": 0.9365
+        },
+        "h3": {
+          "samples": 63,
+          "calibration_envelope_min": 10.171,
+          "calibration_envelope_max": 13.671,
+          "held_out_sample_coverage": 0.9524
+        }
+      },
+      "left_road_edge_row42_px": {
+        "h1": {
+          "samples": 37,
+          "calibration_envelope_min": 2.78,
+          "calibration_envelope_max": 4.0,
+          "held_out_sample_coverage": 0.9459
+        },
+        "h2": {
+          "samples": 35,
+          "calibration_envelope_min": 4.14,
+          "calibration_envelope_max": 6.75,
+          "held_out_sample_coverage": 0.9429
+        },
+        "h3": {
+          "samples": 28,
+          "calibration_envelope_min": 8.4,
+          "calibration_envelope_max": 9.48,
+          "held_out_sample_coverage": 0.9286
+        }
+      },
+      "note": "Only 63 far-center windows and 28 left-edge windows remain at horizon 3. Several held-out coverages fall below 95%; groups are sparse and imbalanced."
+    }
+  },
+  "shadow_planner": {
+    "status": "IGNORED_DIAGNOSTIC_ONLY",
+    "synthetic_tests_passed": 10,
+    "physical_reachability_certified": false,
+    "limits": "Image-space road/bbox checks and 0.07 steering slew are necessary conditions only. The 0.4 px/row lateral bound and camera bbox TTC do not establish physical lateral response. Existing exact JSON lacks rendered/actual wheel-angle samples; emitted steer is not wheel angle."
+  },
+  "interpretation": "Observed residuals along actual candidate trajectories do not estimate counterfactual steering safety. Three-decision far-road and hazard-edge envelopes are too wide or sparsely covered for active pass certification. No active Agent route was changed.",
+  "ignored_artifacts": [
+    {
+      "path": ".haic-artifacts/next-policy-design/calibrate_consumed_motion.py",
+      "sha256": "a9f27c85d957fe0b1a235956c9ca78d364ecac339e8b5c671a583c231c3caf34"
+    },
+    {
+      "path": ".haic-artifacts/next-policy-design/consumed-motion-calibration.json",
+      "sha256": "a24275bb350b156bdeb8319b252612a2a2da91fd16d383c507105d2b40a71578"
+    },
+    {
+      "path": ".haic-artifacts/next-policy-design/consumed-motion-calibration.md",
+      "sha256": "ee8cd976737b13aa66a46e610eb5e488747e948b388bbe1c9bdd0b44ba0686df"
+    },
+    {
+      "path": ".haic-artifacts/next-policy-design/shadow_options.py",
+      "sha256": "300a525e6b51f9b3920ea49cf50a9793807cd173fd3fedecc59f92038074a25d"
+    },
+    {
+      "path": ".haic-artifacts/next-policy-design/test_shadow_options.py",
+      "sha256": "bcf41ed9e5e00219567edef612dc7fe43f654a8df3e6c7c76f7aad9f4351b471"
+    }
+  ]
+}
