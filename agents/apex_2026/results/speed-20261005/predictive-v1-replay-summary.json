@@ -1,0 +1,1086 @@
+{
+  "classification": "source-bound exact diagnostic replays of already measured mandatory SCREEN; not fresh candidate gates",
+  "candidate": {
+    "path": "agents/apex_2026/fast_predictive_agent.py",
+    "sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e"
+  },
+  "harness": {
+    "path": "agents/apex_2026/research/speed_20261005/predictive_replay.py",
+    "sha256": "20bae2a06835b0b0492b7be4a049d515c1e376239357b801c091afcec1ef946d"
+  },
+  "tests": {
+    "path": "agents/apex_2026/tests/test_predictive_replay.py",
+    "sha256": "cf43a2b39e0772e9378bd40edf212abbd9cd6dc7337f31b5950169b4b561f112"
+  },
+  "focused_helper_tests_passed": 18,
+  "original_screen": {
+    "path": "agents/apex_2026/results/speed-20261005/predictive-v1.json",
+    "sha256": "78dcfaf1c98a88ce5de440ef8bc69c2b44caa1a54935efda070fecf7953df3c2"
+  },
+  "replays": [
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "diagnostic": {
+        "path": ".haic-artifacts/apex-speed-20261005/predictive-v1-replay-track2/replay.json",
+        "sha256": "df0fb9f1c9f8e8eb483c9e73223f6270f3a94e8dd35a290968ff27eacccbbf12"
+      },
+      "camera": {
+        "path": ".haic-artifacts/apex-speed-20261005/predictive-v1-replay-track2/observations.npz",
+        "sha256": "d857f84fa96c22a25b8b115e5495a7992c409335e9278706a2d60a191a873fbe"
+      },
+      "camera_shape": [
+        242,
+        4,
+        84,
+        84
+      ],
+      "camera_dtype": "float32",
+      "camera_stack_sha256": "1c60c767ceebe6db1811d3f074c79ef65cc73840f560c839c90c1bd4d96f5944",
+      "all15_semantic_fields_exact": true,
+      "action_trace_sha256": "6106c0de9dd81c4b0560052dd72c770cca05c5e7000cab978b64769cf0586a5c",
+      "observer_single_advance_all_steps": true,
+      "finite_bounded_actions_and_cameras": true,
+      "summary": {
+        "steps": 242,
+        "status_counts": {
+          "fallback_low_speed": 6,
+          "predictive": 58,
+          "fallback_unsupported": 178
+        },
+        "predictive_active_steps": 58,
+        "predictive_active_fraction": 0.2396694214876033,
+        "action_latency_max_ms": 1895.2362820054987,
+        "action_latency_p95_ms": 1710.739714205556,
+        "model_calls_max": 4475,
+        "model_calls_sum": 206547
+      },
+      "initialization_ms": 1.1645749982562847,
+      "reset_ms": 0.04463399818632752,
+      "collisions": [],
+      "innovation_steps": [],
+      "predictive_to_fallback_transitions": [
+        {
+          "last_predictive_step": 7,
+          "first_fallback_step": 8,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 12,
+          "first_fallback_step": 13,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 17,
+          "first_fallback_step": 18,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 22,
+          "first_fallback_step": 23,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 37,
+          "first_fallback_step": 38,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 45,
+          "first_fallback_step": 46,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 57,
+          "first_fallback_step": 58,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 63,
+          "first_fallback_step": 64,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 83,
+          "first_fallback_step": 84,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 94,
+          "first_fallback_step": 95,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 106,
+          "first_fallback_step": 107,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 121,
+          "first_fallback_step": 122,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 139,
+          "first_fallback_step": 140,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 148,
+          "first_fallback_step": 149,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 151,
+          "first_fallback_step": 152,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 158,
+          "first_fallback_step": 159,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 171,
+          "first_fallback_step": 172,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 177,
+          "first_fallback_step": 178,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 180,
+          "first_fallback_step": 181,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 183,
+          "first_fallback_step": 184,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 205,
+          "first_fallback_step": 206,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 222,
+          "first_fallback_step": 223,
+          "fallback_status": "fallback_unsupported"
+        }
+      ]
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "diagnostic": {
+        "path": ".haic-artifacts/apex-speed-20261005/predictive-v1-replay-track4/replay.json",
+        "sha256": "2d39660d8518dbeb045c9f576cd6ab1d0ddd0cd8edc8e7b8e97c70a8689a83ec"
+      },
+      "camera": {
+        "path": ".haic-artifacts/apex-speed-20261005/predictive-v1-replay-track4/observations.npz",
+        "sha256": "f265e8c8d9c6d65c4e0dd4a595fedc1d8fd885285c4bede0de1cd62a47a25b24"
+      },
+      "camera_shape": [
+        226,
+        4,
+        84,
+        84
+      ],
+      "camera_dtype": "float32",
+      "camera_stack_sha256": "990e797cb1e2671c0734ec959619527bf32846fdc1db2c339897abce45097579",
+      "all15_semantic_fields_exact": true,
+      "action_trace_sha256": "fab87df3819976b62bf66668abacf3782ccda20b2182f8c9d457007979c8d2b0",
+      "observer_single_advance_all_steps": true,
+      "finite_bounded_actions_and_cameras": true,
+      "summary": {
+        "steps": 226,
+        "status_counts": {
+          "fallback_low_speed": 21,
+          "predictive": 41,
+          "fallback_unsupported": 151,
+          "fallback_no_feasible": 1,
+          "fallback_innovation": 12
+        },
+        "predictive_active_steps": 41,
+        "predictive_active_fraction": 0.18141592920353983,
+        "action_latency_max_ms": 2102.5352439974085,
+        "action_latency_p95_ms": 1666.372805751962,
+        "model_calls_max": 4402,
+        "model_calls_sum": 143597
+      },
+      "initialization_ms": 1.1265329958405346,
+      "reset_ms": 0.041717998101376,
+      "collisions": [
+        {
+          "step": 162,
+          "status": "fallback_unsupported",
+          "action": [
+            -0.4000000059604645,
+            0.0,
+            0.03999999910593033
+          ],
+          "pre_step_truth": {
+            "speed": 38.28521473124801,
+            "position": [
+              55.546077728271484,
+              -147.83856201171875
+            ],
+            "angle": 5.816871643066406,
+            "world_yaw_radps": 4.333106517791748
+          },
+          "sensor": {
+            "speed_mps": 38.96441380521115,
+            "body_yaw_radps": 4.3754529126592905,
+            "joint_rad": 0.40388279283946255,
+            "rear_rolling_mps": [
+              34.607346383512656,
+              42.54513469855818
+            ],
+            "speed_innovation_mps": 0.2678419860514012,
+            "yaw_innovation_radps": 0.011520676372355432,
+            "rear_innovation_max_mps": 1.2647739276538132,
+            "rear_bar_top_nonzero": false,
+            "yaw_beyond_calibration": false,
+            "dynamics_innovation_suspect": false,
+            "lateral_uncertainty_certified": false
+          },
+          "pass_debug": {
+            "lost_frames": 0,
+            "pass_side": -1,
+            "pass_missing": 0,
+            "pass_x": -3.1494079113126725,
+            "pass_y": 1.1757789535567313
+          }
+        }
+      ],
+      "innovation_steps": [
+        164,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        178,
+        184,
+        185,
+        213,
+        214
+      ],
+      "predictive_to_fallback_transitions": [
+        {
+          "last_predictive_step": 13,
+          "first_fallback_step": 14,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 19,
+          "first_fallback_step": 20,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 22,
+          "first_fallback_step": 23,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 39,
+          "first_fallback_step": 40,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 43,
+          "first_fallback_step": 44,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 50,
+          "first_fallback_step": 51,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 62,
+          "first_fallback_step": 63,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 65,
+          "first_fallback_step": 66,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 68,
+          "first_fallback_step": 69,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 93,
+          "first_fallback_step": 94,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 104,
+          "first_fallback_step": 105,
+          "fallback_status": "fallback_low_speed"
+        },
+        {
+          "last_predictive_step": 141,
+          "first_fallback_step": 142,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 149,
+          "first_fallback_step": 150,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 201,
+          "first_fallback_step": 202,
+          "fallback_status": "fallback_unsupported"
+        },
+        {
+          "last_predictive_step": 206,
+          "first_fallback_step": 207,
+          "fallback_status": "fallback_unsupported"
+        }
+      ]
+    }
+  ],
+  "combined_status_counts": {
+    "fallback_low_speed": 27,
+    "predictive": 99,
+    "fallback_unsupported": 329,
+    "fallback_no_feasible": 1,
+    "fallback_innovation": 12
+  },
+  "combined_predictive_active_fraction": 0.21153846153846154,
+  "t4_contact_window": [
+    {
+      "step": 147,
+      "status": "fallback_no_feasible",
+      "action": [
+        -0.014906000345945358,
+        1.0,
+        0.0
+      ],
+      "hud_speed_mps": 74.00244403754375,
+      "actual_pre_speed_mps": 74.77401104642577,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": 3.6743092298647855,
+        "pass_y": 4.997060552616108
+      },
+      "sensor": {
+        "speed_mps": 74.00244403754375,
+        "body_yaw_radps": 0.24170891784484116,
+        "joint_rad": 0.01032704757752741,
+        "rear_rolling_mps": [
+          77.08116132046102,
+          77.2529184796031
+        ],
+        "speed_innovation_mps": -0.8541071800115247,
+        "yaw_innovation_radps": 0.03840244335767465,
+        "rear_innovation_max_mps": 0.37412077676442834,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {
+        "feasible": false,
+        "action": null,
+        "reason": "no_feasible_candidate",
+        "candidate_count": 72,
+        "feasible_count": 0,
+        "scenario_count": 3,
+        "model_steps": 1152,
+        "rejected_max_violation_m": 1.9
+      },
+      "collision": false
+    },
+    {
+      "step": 148,
+      "status": "fallback_unsupported",
+      "action": [
+        0.03284153714776039,
+        1.0,
+        0.0
+      ],
+      "hud_speed_mps": 76.42674651352911,
+      "actual_pre_speed_mps": 77.4842082321009,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": 3.6743092298647855,
+        "pass_y": -1.1757789535567313
+      },
+      "sensor": {
+        "speed_mps": 76.42674651352911,
+        "body_yaw_radps": 0.3504439570403622,
+        "joint_rad": 0.01451850427531432,
+        "rear_rolling_mps": [
+          79.47405207871346,
+          79.87237388864834
+        ],
+        "speed_innovation_mps": -0.929715935946291,
+        "yaw_innovation_radps": 0.025387593658501906,
+        "rear_innovation_max_mps": 0.39487136216122565,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 149,
+      "status": "predictive",
+      "action": [
+        0.002841537119820714,
+        1.0,
+        0.0
+      ],
+      "hud_speed_mps": 81.45831731030614,
+      "actual_pre_speed_mps": 80.09447399791325,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 81.45831731030614,
+        "body_yaw_radps": -0.6077835707055304,
+        "joint_rad": -0.035986314513133465,
+        "rear_rolling_mps": [
+          81.86694283696589,
+          82.49182898664996
+        ],
+        "speed_innovation_mps": 1.7130259129790488,
+        "yaw_innovation_radps": -0.013184269637112944,
+        "rear_innovation_max_mps": 0.9293318823772125,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {
+        "feasible": true,
+        "action": [
+          0.002841537119820714,
+          1.0,
+          0.0
+        ],
+        "reason": "feasible",
+        "score": -26.837807856375516,
+        "worst_progress_m": 26.85002027993235,
+        "predicted_terminal_speed_mps": 88.53130903365995,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 22.036295749180297,
+        "backup_duration_s": 0.4,
+        "candidate_count": 72,
+        "feasible_count": 29,
+        "scenario_count": 3,
+        "model_steps": 3614,
+        "rejected_max_violation_m": 1.9
+      },
+      "collision": false
+    },
+    {
+      "step": 150,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.009834077209234238,
+        0.4213210642337799,
+        0.0
+      ],
+      "hud_speed_mps": 83.97410315951066,
+      "actual_pre_speed_mps": 82.64585256600067,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 83.97410315951066,
+        "body_yaw_radps": -0.08585534830826827,
+        "joint_rad": -0.0017214440395450594,
+        "rear_rolling_mps": [
+          84.85805692409767,
+          85.1112841624125
+        ],
+        "speed_innovation_mps": 1.2481753184855648,
+        "yaw_innovation_radps": 0.017396420511269772,
+        "rear_innovation_max_mps": 0.7655445530675706,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 151,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.070121631026268,
+        0.0,
+        0.0595865324139595
+      ],
+      "hud_speed_mps": 83.97410315951066,
+      "actual_pre_speed_mps": 83.64084313777424,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 83.97410315951066,
+        "body_yaw_radps": 0.19096588910955356,
+        "joint_rad": 0.01032704757752741,
+        "rear_rolling_mps": [
+          84.85805692409767,
+          85.1112841624125
+        ],
+        "speed_innovation_mps": -0.05379605809027055,
+        "yaw_innovation_radps": 0.01871566496405272,
+        "rear_innovation_max_mps": 0.23518309188560238,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 152,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.08921162039041519,
+        0.0,
+        0.4041396379470825
+      ],
+      "hud_speed_mps": 81.45831731030614,
+      "actual_pre_speed_mps": 81.99867836285328,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 81.45831731030614,
+        "body_yaw_radps": 1.4504801789147037,
+        "joint_rad": 0.07172821496781875,
+        "rear_rolling_mps": [
+          81.86694283696589,
+          82.49182898664996
+        ],
+        "speed_innovation_mps": -0.9136017267207848,
+        "yaw_innovation_radps": -0.002945274185986557,
+        "rear_innovation_max_mps": 1.0767310955642273,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 153,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.10636119544506073,
+        0.0,
+        0.3333280682563782
+      ],
+      "hud_speed_mps": 71.62388330791468,
+      "actual_pre_speed_mps": 71.77494916405925,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 71.62388330791468,
+        "body_yaw_radps": 1.7966200612332213,
+        "joint_rad": 0.09106774308044141,
+        "rear_rolling_mps": [
+          71.6971568302525,
+          74.63346338160147
+        ],
+        "speed_innovation_mps": -0.27484657124730916,
+        "yaw_innovation_radps": 0.005904488131712515,
+        "rear_innovation_max_mps": 0.6641322890251331,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 154,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.1363736242055893,
+        0.0,
+        0.2242036610841751
+      ],
+      "hud_speed_mps": 63.93930229190717,
+      "actual_pre_speed_mps": 63.587711485000845,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 63.93930229190717,
+        "body_yaw_radps": 2.0430861805764553,
+        "joint_rad": 0.10695115998027666,
+        "rear_rolling_mps": [
+          61.527369829047196,
+          66.77509668790033
+        ],
+        "speed_innovation_mps": 0.27336616734783803,
+        "yaw_innovation_radps": 0.02230872958542829,
+        "rear_innovation_max_mps": 0.6907757315830096,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 155,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.15630048513412476,
+        0.0,
+        0.1956445276737213
+      ],
+      "hud_speed_mps": 59.04495626708842,
+      "actual_pre_speed_mps": 58.097863816251255,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 59.04495626708842,
+        "body_yaw_radps": 2.3892260628949726,
+        "joint_rad": 0.13812971575736713,
+        "rear_rolling_mps": [
+          56.143364912627845,
+          60.881322639635776
+        ],
+        "speed_innovation_mps": 0.7985865468718245,
+        "yaw_innovation_radps": 0.0029615232771638134,
+        "rear_innovation_max_mps": 0.15834656061765173,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 156,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.21508590877056122,
+        0.0,
+        0.0425502210855484
+      ],
+      "hud_speed_mps": 53.96764332202277,
+      "actual_pre_speed_mps": 53.22910053002474,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 53.96764332202277,
+        "body_yaw_radps": 2.584949153502919,
+        "joint_rad": 0.15783691746819936,
+        "rear_rolling_mps": [
+          51.357583396122976,
+          56.29727551828479
+        ],
+        "speed_innovation_mps": 0.3911529709248498,
+        "yaw_innovation_radps": 0.0199307864535192,
+        "rear_innovation_max_mps": 0.31675207899155566,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 157,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.13030581176280975,
+        0.0,
+        0.28577250242233276
+      ],
+      "hud_speed_mps": 51.543341106750276,
+      "actual_pre_speed_mps": 52.081615233982845,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": 4.091461968939811,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 51.543341106750276,
+        "body_yaw_radps": 3.224673671733356,
+        "joint_rad": 0.21261999532326104,
+        "rear_rolling_mps": [
+          51.357583396122976,
+          56.29727551828479
+        ],
+        "speed_innovation_mps": -0.9686042195921161,
+        "yaw_innovation_radps": -0.018843866400933607,
+        "rear_innovation_max_mps": 1.6970881955033974,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 158,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.3703058063983917,
+        0.0,
+        0.09968718141317368
+      ],
+      "hud_speed_mps": 44.04172607676857,
+      "actual_pre_speed_mps": 44.95266608685184,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": -9.553203997648442,
+        "pass_y": 7.936507936507936
+      },
+      "sensor": {
+        "speed_mps": 44.04172607676857,
+        "body_yaw_radps": 2.135510966561044,
+        "joint_rad": 0.13033507697899743,
+        "rear_rolling_mps": [
+          42.982464321536725,
+          48.43890898010545
+        ],
+        "speed_innovation_mps": -1.1084976627635115,
+        "yaw_innovation_radps": 0.0137639885150449,
+        "rear_innovation_max_mps": 0.3547431336949387,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 159,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.3837974965572357,
+        0.13972778618335724,
+        0.0
+      ],
+      "hud_speed_mps": 41.52594078157889,
+      "actual_pre_speed_mps": 42.40748001067327,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 1,
+        "pass_x": -7.8625821400622975,
+        "pass_y": 7.120559677381981
+      },
+      "sensor": {
+        "speed_mps": 41.52594078157889,
+        "body_yaw_radps": 3.4185845029225064,
+        "joint_rad": 0.372410098609913,
+        "rear_rolling_mps": [
+          39.99135073165091,
+          45.81945357106021
+        ],
+        "speed_innovation_mps": -0.7841165622178039,
+        "yaw_innovation_radps": -0.008160581701208702,
+        "rear_innovation_max_mps": 0.2491122834935311,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 160,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.4000000059604645,
+        0.0,
+        0.07263116538524628
+      ],
+      "hud_speed_mps": 44.04172607676857,
+      "actual_pre_speed_mps": 42.61317029255991,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": -5.787037037037037,
+        "pass_y": 4.776601998824221
+      },
+      "sensor": {
+        "speed_mps": 44.04172607676857,
+        "body_yaw_radps": 4.15979507539562,
+        "joint_rad": 0.384249126431552,
+        "rear_rolling_mps": [
+          39.99135073165091,
+          48.43890898010545
+        ],
+        "speed_innovation_mps": 1.7470486645984025,
+        "yaw_innovation_radps": -0.015446844167006368,
+        "rear_innovation_max_mps": 1.6277714872448286,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 161,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.4000000059604645,
+        0.0,
+        0.06630896031856537
+      ],
+      "hud_speed_mps": 41.52594078157889,
+      "actual_pre_speed_mps": 40.307786170007425,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": -4.041740152851264,
+        "pass_y": 2.939447383891828
+      },
+      "sensor": {
+        "speed_mps": 41.52594078157889,
+        "body_yaw_radps": 4.424383678747884,
+        "joint_rad": 0.40388279283946255,
+        "rear_rolling_mps": [
+          37.00023721280023,
+          45.81945357106021
+        ],
+        "speed_innovation_mps": 1.0746013861637493,
+        "yaw_innovation_radps": 0.059069341859579794,
+        "rear_innovation_max_mps": 0.48134338737949633,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 162,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.4000000059604645,
+        0.0,
+        0.03999999910593033
+      ],
+      "hud_speed_mps": 38.96441380521115,
+      "actual_pre_speed_mps": 38.28521473124801,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": -3.1494079113126725,
+        "pass_y": 1.1757789535567313
+      },
+      "sensor": {
+        "speed_mps": 38.96441380521115,
+        "body_yaw_radps": 4.3754529126592905,
+        "joint_rad": 0.40388279283946255,
+        "rear_rolling_mps": [
+          34.607346383512656,
+          42.54513469855818
+        ],
+        "speed_innovation_mps": 0.2678419860514012,
+        "yaw_innovation_radps": 0.011520676372355432,
+        "rear_innovation_max_mps": 1.2647739276538132,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": true
+    },
+    {
+      "step": 163,
+      "status": "fallback_unsupported",
+      "action": [
+        -0.1600000113248825,
+        0.30000001192092896,
+        0.0
+      ],
+      "hud_speed_mps": 38.96441380521115,
+      "actual_pre_speed_mps": 37.83351749812852,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 1,
+        "pass_x": -3.621967013672508,
+        "pass_y": -0.7783090622953357
+      },
+      "sensor": {
+        "speed_mps": 38.96441380521115,
+        "body_yaw_radps": 4.109052058711153,
+        "joint_rad": 0.39983840496624545,
+        "rear_rolling_mps": [
+          31.61623293569712,
+          42.54513469855818
+        ],
+        "speed_innovation_mps": 1.4931403422306815,
+        "yaw_innovation_radps": -0.23666522153545433,
+        "rear_innovation_max_mps": 1.3095261353789667,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 164,
+      "status": "fallback_innovation",
+      "action": [
+        0.07999999076128006,
+        0.30000001192092896,
+        0.0
+      ],
+      "hud_speed_mps": 36.49437001739096,
+      "actual_pre_speed_mps": 37.3031885636117,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": -1,
+        "pass_missing": 0,
+        "pass_x": -3.4643487024439414,
+        "pass_y": -2.939447383891828
+      },
+      "sensor": {
+        "speed_mps": 36.49437001739096,
+        "body_yaw_radps": 3.7810346604016654,
+        "joint_rad": 0.1655580226114084,
+        "rear_rolling_mps": [
+          34.60734638351266,
+          45.81945357106021
+        ],
+        "speed_innovation_mps": -2.850076097395231,
+        "yaw_innovation_radps": 0.8585293867325943,
+        "rear_innovation_max_mps": 1.7921739094896338,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": true,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    },
+    {
+      "step": 165,
+      "status": "fallback_unsupported",
+      "action": [
+        0.3199999928474426,
+        0.6000000238418579,
+        0.0
+      ],
+      "hud_speed_mps": 38.96441380521115,
+      "actual_pre_speed_mps": 39.288222918609726,
+      "pass_state": {
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 1,
+        "pass_x": -3.8915893429646804,
+        "pass_y": null
+      },
+      "sensor": {
+        "speed_mps": 38.96441380521115,
+        "body_yaw_radps": 0.8071311554038479,
+        "joint_rad": -0.06363350754887338,
+        "rear_rolling_mps": [
+          37.00023721280023,
+          45.81945357106021
+        ],
+        "speed_innovation_mps": -1.4713102581323767,
+        "yaw_innovation_radps": 0.24064524266536969,
+        "rear_innovation_max_mps": 2.013056002018949,
+        "rear_bar_top_nonzero": false,
+        "yaw_beyond_calibration": false,
+        "dynamics_innovation_suspect": false,
+        "lateral_uncertainty_certified": false
+      },
+      "planner_result": {},
+      "collision": false
+    }
+  ],
+  "new_holdout_opened": false,
+  "additional_geometries_opened": false,
+  "source_and_environment_unchanged": true,
+  "original_13s_and_early10_goal_met": false,
+  "formally_adopted": false,
+  "limits": [
+    "Status/latency/modelcall measurements belong to the actual replays, not necessarily the original SCREEN internal planning branches.",
+    "Exact action hashes and15nonruntime fields prove the same emitted-action trajectory and outcome in these two repeats.",
+    "Unsupported is a broad camera-geometry gate; its internal reason requires a separate cached-input analysis.",
+    "The prior accepted model stop tail was discarded at fallback; prevention has not been tested or proved.",
+    "Three source uncertainty scenarios do not certify the full observation/state error box."
+  ]
+}

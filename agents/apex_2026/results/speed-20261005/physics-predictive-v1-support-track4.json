@@ -1,0 +1,5612 @@
+{
+  "classification": "read_only_exact_replay_camera_geometry_branch_localization",
+  "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+  "analysis_source_sha256": "739b99c517397ab89ef35fe8ac2a4f6d49165365617f61c978c2eca477578f7b",
+  "replay_path": ".haic-artifacts/apex-speed-20261005/predictive-v1-replay-track4/replay.json",
+  "replay_sha256": "2d39660d8518dbeb045c9f576cd6ab1d0ddd0cd8edc8e7b8e97c70a8689a83ec",
+  "camera_npz_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/predictive-v1-replay-track4/observations.npz",
+  "camera_npz_sha256": "f265e8c8d9c6d65c4e0dd4a595fedc1d8fd885285c4bede0de1cd62a47a25b24",
+  "new_act_calls": 0,
+  "new_planning_searches": 0,
+  "new_world_steps": 0,
+  "new_driving_episodes": 0,
+  "new_holdout_opened": false,
+  "truth_used_for_observer_initialization_or_update": false,
+  "all_rebuilt_sensors_exact": true,
+  "all_rebuilt_observer_states_exact": true,
+  "all_geometry_branch_decisions_match_replay": true,
+  "branch_counts": {
+    "not_geometry_eligible": 34,
+    "geometry_supported": 41,
+    "strict_dense_reference_unsupported": 140,
+    "initial_body_road_unsupported": 5,
+    "legacy_depth5p8_prefix_too_short": 4,
+    "parent_road_missing": 2
+  },
+  "unsupported_nearest_unknown_counts": {
+    "camera_visibility_boundary": 104,
+    "detected_circle_paint_or_halo": 35,
+    "bright_grass_or_unknown_paint": 6,
+    "no_pixel_localization": 6
+  },
+  "highest_speed_example_per_branch_and_pixel_kind": {
+    "strict_dense_reference_unsupported/camera_visibility_boundary": {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.6474854532726597,
+        36.99635395542255
+      ],
+      "strict_dense_min_depth_m": 0.040683081614486555,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8184608593922649,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.820558851326422,
+        "point_xy_m": [
+          0.647485453272659,
+          35.21857617764477
+        ]
+      },
+      "step": 47,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 96.55303024378907
+    },
+    "strict_dense_reference_unsupported/detected_circle_paint_or_halo": {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        3.6248475478746247,
+        36.37253474204826
+      ],
+      "strict_dense_min_depth_m": 0.664502294988777,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7141963827883122,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          25,
+          39
+        ],
+        "gray": 0.615686297416687,
+        "nearest_pixel_distance_m": 1.6341852578802438,
+        "point_xy_m": [
+          -1.0127514168247194,
+          21.22172459022348
+        ]
+      },
+      "step": 52,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    "initial_body_road_unsupported/detected_circle_paint_or_halo": {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        1.2807233940763383,
+        35.03570495704599
+      ],
+      "strict_dense_min_depth_m": 2.001332079991042,
+      "initial_road_slack_m": -0.560552616108174,
+      "initial_obstacle_slack_m": 0.12430922986478543,
+      "initial_front_slack_m": 32.341725864724765,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          65,
+          46
+        ],
+        "gray": 0.6313725709915161,
+        "nearest_pixel_distance_m": 1.339695431305617,
+        "point_xy_m": [
+          1.6,
+          -1.15
+        ]
+      },
+      "step": 148,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 76.42674651352911
+    },
+    "strict_dense_reference_unsupported/bright_grass_or_unknown_paint": {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        4.223033148703646,
+        36.44287484260814
+      ],
+      "strict_dense_min_depth_m": 0.5941621944288938,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8538767772492073,
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          5,
+          50
+        ],
+        "gray": 0.6549019813537598,
+        "nearest_pixel_distance_m": 1.74963205141363,
+        "point_xy_m": [
+          4.2181279961517,
+          33.547075306759
+        ]
+      },
+      "step": 81,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    "legacy_depth5p8_prefix_too_short/": {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "branch": "legacy_depth5p8_prefix_too_short",
+      "raw_ridge_nodes": 20,
+      "step": 155,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    "initial_body_road_unsupported/bright_grass_or_unknown_paint": {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -5.969943019377298,
+        35.01627300849462
+      ],
+      "strict_dense_min_depth_m": 2.020764028542413,
+      "initial_road_slack_m": -0.44148090319022515,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.58722716110469,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          58,
+          46
+        ],
+        "gray": 0.5137255191802979,
+        "nearest_pixel_distance_m": 1.3817900783569366,
+        "point_xy_m": [
+          1.6,
+          2.6
+        ]
+      },
+      "step": 218,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    "parent_road_missing/": {
+      "branch": "parent_road_missing",
+      "step": 111,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 29.038496538230884
+    }
+  },
+  "rows": [
+    {
+      "branch": "not_geometry_eligible",
+      "step": 0,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 0.0
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 1,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 6.442168737711796
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 2,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 9.003695714079537
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 3,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 11.51948118307779
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 4,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 16.413827859678705
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 5,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 18.975354836046446
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.04934806762632815,
+        35.00376447377452
+      ],
+      "strict_dense_min_depth_m": 2.03327256326252,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.41995024844835,
+      "branch": "geometry_supported",
+      "step": 6,
+      "actual_status": "predictive",
+      "camera_speed_mps": 24.00692577404295
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.04934806762632807,
+        35.00376447377452
+      ],
+      "strict_dense_min_depth_m": 2.03327256326252,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.41995024844835,
+      "branch": "geometry_supported",
+      "step": 7,
+      "actual_status": "predictive",
+      "camera_speed_mps": 26.522711069232628
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.04934806762632836,
+        35.00376447377452
+      ],
+      "strict_dense_min_depth_m": 2.03327256326252,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.41995024844835,
+      "branch": "geometry_supported",
+      "step": 8,
+      "actual_status": "predictive",
+      "camera_speed_mps": 29.038496538230884
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.04934806762632865,
+        35.00376447377452
+      ],
+      "strict_dense_min_depth_m": 2.03327256326252,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.41995024844836,
+      "branch": "geometry_supported",
+      "step": 9,
+      "actual_status": "predictive",
+      "camera_speed_mps": 33.97858461357092
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 10,
+      "actual_status": "predictive",
+      "camera_speed_mps": 36.49437001739096
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 11,
+      "actual_status": "predictive",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 12,
+      "actual_status": "predictive",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 13,
+      "actual_status": "predictive",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -2.263021309739713,
+        36.73322602136523
+      ],
+      "strict_dense_min_depth_m": 0.3038110156718005,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7590933474740624,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          40
+        ],
+        "gray": 0.40392157435417175,
+        "nearest_pixel_distance_m": 1.7759127600987088,
+        "point_xy_m": [
+          -1.713561191838582,
+          35.277943689562974
+        ]
+      },
+      "step": 14,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -7.277124864327146,
+        36.83676684159498
+      ],
+      "strict_dense_min_depth_m": 0.2002701954420581,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8650750896445902,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          34
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8665953017959906,
+        "point_xy_m": [
+          -5.803575907767821,
+          35.17196194739245
+        ]
+      },
+      "step": 15,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -17.721724337520413,
+        35.845176278688555
+      ],
+      "strict_dense_min_depth_m": 1.1918607583484802,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8529883147082087,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          19
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8544302156123882,
+        "point_xy_m": [
+          -16.828707957235945,
+          35.184048722328825
+        ]
+      },
+      "step": 16,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 24,
+      "reference_endpoint_xy_m": [
+        -28.211347857058296,
+        27.01528005651969
+      ],
+      "strict_dense_min_depth_m": 2.6528496738059015,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 47.05731878559871,
+      "branch": "geometry_supported",
+      "step": 17,
+      "actual_status": "predictive",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -28.478314926471825,
+        22.896275401272657
+      ],
+      "strict_dense_min_depth_m": 2.385882604392373,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 43.56469271378476,
+      "branch": "geometry_supported",
+      "step": 18,
+      "actual_status": "predictive",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        -28.266009211904585,
+        20.350440460056973
+      ],
+      "strict_dense_min_depth_m": 2.598188318959611,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 39.28143504517337,
+      "branch": "geometry_supported",
+      "step": 19,
+      "actual_status": "predictive",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -29.170805272794254,
+        18.75668547843471
+      ],
+      "strict_dense_min_depth_m": 1.6933922580699448,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.6933922580699448,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          31,
+          0
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.6943106268516992,
+        "point_xy_m": [
+          -29.170805272794254,
+          18.75668547843471
+        ]
+      },
+      "step": 20,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -28.803985561039838,
+        20.444581487430508
+      ],
+      "strict_dense_min_depth_m": 2.0602119698243597,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 33.777293580637455,
+      "branch": "geometry_supported",
+      "step": 21,
+      "actual_status": "predictive",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -24.993230959645057,
+        24.99975052114321
+      ],
+      "strict_dense_min_depth_m": 5.870966571219139,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.75651182562858,
+      "branch": "geometry_supported",
+      "step": 22,
+      "actual_status": "predictive",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        -25.68602640429787,
+        36.21570799531665
+      ],
+      "strict_dense_min_depth_m": 0.28370067284064127,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8572983989069436,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          10,
+          11
+        ],
+        "gray": 0.5137255191802979,
+        "nearest_pixel_distance_m": 1.7674219883688136,
+        "point_xy_m": [
+          -21.584042942881318,
+          29.857468925520074
+        ]
+      },
+      "step": 23,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -17.56808124928528,
+        36.2537440071856
+      ],
+      "strict_dense_min_depth_m": 0.17780881071191282,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8775694613141325,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          10,
+          20
+        ],
+        "gray": 0.5137255191802979,
+        "nearest_pixel_distance_m": 1.7490838845365346,
+        "point_xy_m": [
+          -15.035324773247945,
+          29.824465110063844
+        ]
+      },
+      "step": 24,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -11.699414852522855,
+        36.312674063488124
+      ],
+      "strict_dense_min_depth_m": 0.12806779020778813,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8606699985698467,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          11,
+          28
+        ],
+        "gray": 0.5490196347236633,
+        "nearest_pixel_distance_m": 1.685544018160135,
+        "point_xy_m": [
+          -9.71411660539996,
+          28.985437058990378
+        ]
+      },
+      "step": 25,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -6.8313868421515105,
+        36.93911833239945
+      ],
+      "strict_dense_min_depth_m": 0.09791870463758388,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8437978312095156,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          17,
+          33
+        ],
+        "gray": 0.5607843399047852,
+        "nearest_pixel_distance_m": 1.6839722740118437,
+        "point_xy_m": [
+          -5.648505161603902,
+          25.66304193257239
+        ]
+      },
+      "step": 26,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -3.0025574500078127,
+        35.00761175266808
+      ],
+      "strict_dense_min_depth_m": 0.17430922986478645,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7104675292649998,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          23,
+          37
+        ],
+        "gray": 0.5647059082984924,
+        "nearest_pixel_distance_m": 1.6360026456673953,
+        "point_xy_m": [
+          -3.5,
+          21.88888888888889
+        ]
+      },
+      "step": 27,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.820107134053858,
+        36.93046127331537
+      ],
+      "strict_dense_min_depth_m": 0.10657576372166347,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.757275608114681,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          30,
+          38
+        ],
+        "gray": 0.6235294342041016,
+        "nearest_pixel_distance_m": 1.6028303551512466,
+        "point_xy_m": [
+          -2.0316154409768554,
+          18.07940371467833
+        ]
+      },
+      "step": 28,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.6972568231382114,
+        36.877624997726876
+      ],
+      "strict_dense_min_depth_m": 0.15941203931016099,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7804141857801026,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          38,
+          39
+        ],
+        "gray": 0.5490196347236633,
+        "nearest_pixel_distance_m": 1.6118038477790875,
+        "point_xy_m": [
+          -1.6457585163367738,
+          13.185408885698306
+        ]
+      },
+      "step": 29,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.20249346560758127,
+        36.939808171040376
+      ],
+      "strict_dense_min_depth_m": 0.09722886599665846,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8090812136293786,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          46,
+          38
+        ],
+        "gray": 0.6274510025978088,
+        "nearest_pixel_distance_m": 1.702303610004887,
+        "point_xy_m": [
+          -1.7923032640920877,
+          8.736385859226703
+        ]
+      },
+      "step": 30,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.5543693841571149,
+        36.93593464317821
+      ],
+      "strict_dense_min_depth_m": 0.1011023938588288,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.710193125387146,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          55,
+          38
+        ],
+        "gray": 0.5686274766921997,
+        "nearest_pixel_distance_m": 1.5706097555444214,
+        "point_xy_m": [
+          -2.0,
+          3.4444444444444446
+        ]
+      },
+      "step": 31,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -0.8324035616979522,
+        35.00490034972676
+      ],
+      "strict_dense_min_depth_m": 2.032136687310276,
+      "initial_road_slack_m": -1.295414462081131,
+      "initial_obstacle_slack_m": -0.4918692645578062,
+      "initial_front_slack_m": 32.47950830233382,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          63,
+          39
+        ],
+        "gray": 0.5686274766921997,
+        "nearest_pixel_distance_m": 0.6127998634633093,
+        "point_xy_m": [
+          -1.6,
+          0.10000000000000009
+        ]
+      },
+      "step": 32,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -2.7480907942626414,
+        35.00194145148579
+      ],
+      "strict_dense_min_depth_m": 2.0350955855512463,
+      "initial_road_slack_m": 0.4589980320478495,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.47771686058911,
+      "branch": "geometry_supported",
+      "step": 33,
+      "actual_status": "predictive",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -2.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.037037037037035,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 34,
+      "actual_status": "predictive",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -2.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.037037037037035,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 35,
+      "actual_status": "predictive",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -2.349394659009997,
+        35.013116443612276
+      ],
+      "strict_dense_min_depth_m": 2.0239205934247604,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.44987562112088,
+      "branch": "geometry_supported",
+      "step": 36,
+      "actual_status": "predictive",
+      "camera_speed_mps": 76.42674651352911
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -1.5999999999999996,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.43960780543711,
+      "branch": "geometry_supported",
+      "step": 37,
+      "actual_status": "predictive",
+      "camera_speed_mps": 78.94253183044486
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -1.5580839562411528,
+        35.01689157408945
+      ],
+      "strict_dense_min_depth_m": 2.020145462947588,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.459558053885466,
+      "branch": "geometry_supported",
+      "step": 38,
+      "actual_status": "predictive",
+      "camera_speed_mps": 81.45831731030614
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -2.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.037037037037035,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 39,
+      "actual_status": "predictive",
+      "camera_speed_mps": 83.97410315951066
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -2.7475320446563236,
+        36.98700198558479
+      ],
+      "strict_dense_min_depth_m": 0.05003505145224632,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8278128292300244,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          38
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8378605050796846,
+        "point_xy_m": [
+          -2.7475320446563236,
+          35.20922420780701
+        ]
+      },
+      "step": 40,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 86.48988845470033
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -1.437445854951018,
+        35.06687085290828
+      ],
+      "strict_dense_min_depth_m": 1.9701661841287563,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.57725203688051,
+      "branch": "geometry_supported",
+      "step": 41,
+      "actual_status": "predictive",
+      "camera_speed_mps": 86.48988845470033
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -0.1209096051832716,
+        35.0238244320928
+      ],
+      "strict_dense_min_depth_m": 2.0132126049442345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 31.51624773016556,
+      "branch": "geometry_supported",
+      "step": 42,
+      "actual_status": "predictive",
+      "camera_speed_mps": 88.95993222079446
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.3679026821718038,
+        35.02785937980338
+      ],
+      "strict_dense_min_depth_m": 2.0091776572336544,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.54761935566757,
+      "branch": "geometry_supported",
+      "step": 43,
+      "actual_status": "predictive",
+      "camera_speed_mps": 91.52145943614899
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.8444587483226563,
+        36.96841647510634
+      ],
+      "strict_dense_min_depth_m": 0.06862056193069924,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8463983397084776,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8476567486014188,
+        "point_xy_m": [
+          0.6666809705448778,
+          35.19063869732856
+        ]
+      },
+      "step": 44,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.9963213626763283,
+        36.975826993458305
+      ],
+      "strict_dense_min_depth_m": 0.06121004357872806,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8340211581891783,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8385287872591463,
+        "point_xy_m": [
+          0.8635261102229944,
+          35.20301587884786
+        ]
+      },
+      "step": 45,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.9963213626763283,
+        36.975826993458305
+      ],
+      "strict_dense_min_depth_m": 0.06121004357872806,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8340211581891783,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.3960784375667572,
+        "nearest_pixel_distance_m": 1.8385287872591463,
+        "point_xy_m": [
+          0.8635261102229944,
+          35.20301587884786
+        ]
+      },
+      "step": 46,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.6474854532726597,
+        36.99635395542255
+      ],
+      "strict_dense_min_depth_m": 0.040683081614486555,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8184608593922649,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.820558851326422,
+        "point_xy_m": [
+          0.647485453272659,
+          35.21857617764477
+        ]
+      },
+      "step": 47,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 96.55303024378907
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 48,
+      "actual_status": "predictive",
+      "camera_speed_mps": 96.55303024378907
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 49,
+      "actual_status": "predictive",
+      "camera_speed_mps": 96.55303024378907
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        0.0,
+        31.0
+      ],
+      "strict_dense_min_depth_m": 6.037037037037036,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 28.4,
+      "branch": "geometry_supported",
+      "step": 50,
+      "actual_status": "predictive",
+      "camera_speed_mps": 99.25178208988243
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        1.3647106068930963,
+        36.91861979830878
+      ],
+      "strict_dense_min_depth_m": 0.11841723872825505,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8143181365006305,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          12,
+          40
+        ],
+        "gray": 0.6078431606292725,
+        "nearest_pixel_distance_m": 1.7678024252426066,
+        "point_xy_m": [
+          0.0,
+          29.0
+        ]
+      },
+      "step": 51,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 91.52145943614899
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        3.6248475478746247,
+        36.37253474204826
+      ],
+      "strict_dense_min_depth_m": 0.664502294988777,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7141963827883122,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          25,
+          39
+        ],
+        "gray": 0.615686297416687,
+        "nearest_pixel_distance_m": 1.6341852578802438,
+        "point_xy_m": [
+          -1.0127514168247194,
+          21.22172459022348
+        ]
+      },
+      "step": 52,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        6.056870662065363,
+        35.70803836887243
+      ],
+      "strict_dense_min_depth_m": 1.3289986681646078,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.874246657251639,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          37,
+          39
+        ],
+        "gray": 0.5176470875740051,
+        "nearest_pixel_distance_m": 1.8692594728483107,
+        "point_xy_m": [
+          -0.75,
+          14.11111111111111
+        ]
+      },
+      "step": 53,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        9.586623998174796,
+        36.91932244737822
+      ],
+      "strict_dense_min_depth_m": 0.1177145896588157,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8638400635601102,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          51,
+          38
+        ],
+        "gray": 0.5607843399047852,
+        "nearest_pixel_distance_m": 1.852312891108572,
+        "point_xy_m": [
+          -1.5,
+          5.888888888888889
+        ]
+      },
+      "step": 54,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 93.94576167314756
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 1,
+      "pass_missing": 0,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        14.77126863138151,
+        35.307991813589375
+      ],
+      "strict_dense_min_depth_m": 1.729045223447661,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.729045223447661,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          62
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7306293881410126,
+        "point_xy_m": [
+          14.77126863138151,
+          35.307991813589375
+        ]
+      },
+      "step": 55,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 96.55303024378907
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        16.4862911171755,
+        35.17828181796273
+      ],
+      "strict_dense_min_depth_m": 1.8587552190743066,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8587552190743066,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          64
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8859859321722414,
+        "point_xy_m": [
+          16.4862911171755,
+          35.17828181796273
+        ]
+      },
+      "step": 56,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 81.45831731030614
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        13.942336971285165,
+        36.843196304808224
+      ],
+      "strict_dense_min_depth_m": 0.19384073222881198,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8570205400028272,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          60
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8590512540877786,
+        "point_xy_m": [
+          13.314382550826728,
+          35.18001649703421
+        ]
+      },
+      "step": 57,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        9.575717367681868,
+        36.20609092536597
+      ],
+      "strict_dense_min_depth_m": 0.8309461116710654,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.736509519379871,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          55
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7376716711093372,
+        "point_xy_m": [
+          9.616745524849176,
+          35.300527517657166
+        ]
+      },
+      "step": 58,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        3.620706740477783,
+        36.68778408279824
+      ],
+      "strict_dense_min_depth_m": 0.34925295423879926,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8086695639707486,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          48
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8258768496600182,
+        "point_xy_m": [
+          4.159089732090874,
+          35.228367473066285
+        ]
+      },
+      "step": 59,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 31,
+      "reference_endpoint_xy_m": [
+        -27.618808474525974,
+        26.95309268736492
+      ],
+      "strict_dense_min_depth_m": 0.04477874227767603,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.80941061396568,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          35
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8132099480594988,
+        "point_xy_m": [
+          -5.026714782504515,
+          35.22762642307136
+        ]
+      },
+      "step": 60,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 27,
+      "reference_endpoint_xy_m": [
+        -28.9152399032678,
+        19.675771739885977
+      ],
+      "strict_dense_min_depth_m": 1.9489576275963976,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 54.03089215869223,
+      "branch": "geometry_supported",
+      "step": 61,
+      "actual_status": "predictive",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 24,
+      "reference_endpoint_xy_m": [
+        -28.90842211971391,
+        14.071364089316042
+      ],
+      "strict_dense_min_depth_m": 1.9557754111502852,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 47.14567277884041,
+      "branch": "geometry_supported",
+      "step": 62,
+      "actual_status": "predictive",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -29.770993603021356,
+        8.214514170753743
+      ],
+      "strict_dense_min_depth_m": 1.0932039278428434,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8923207412639007,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          48,
+          0
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.9033421304137041,
+        "point_xy_m": [
+          -28.971876789600294,
+          8.613809812936065
+        ]
+      },
+      "step": 63,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        -29.72346070389569,
+        6.12011728178785
+      ],
+      "strict_dense_min_depth_m": 1.1407368269685054,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7329933846574679,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          52,
+          0
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7334689153634044,
+        "point_xy_m": [
+          -29.131204146206727,
+          6.426183637859319
+        ]
+      },
+      "step": 64,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -28.94982475041792,
+        7.539728284787854
+      ],
+      "strict_dense_min_depth_m": 1.9143727804462782,
+      "initial_road_slack_m": 0.18335199850256112,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 33.792916406330534,
+      "branch": "geometry_supported",
+      "step": 65,
+      "actual_status": "predictive",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -29.92945125785017,
+        10.637527179179349
+      ],
+      "strict_dense_min_depth_m": 0.9347462730140276,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.826598276984451,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          45,
+          0
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.826603302640405,
+        "point_xy_m": [
+          -29.037599253879748,
+          10.586295408060598
+        ]
+      },
+      "step": 66,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 16,
+      "reference_endpoint_xy_m": [
+        -28.89518139974205,
+        15.370445079394576
+      ],
+      "strict_dense_min_depth_m": 1.9690161311221495,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 31.046122657185684,
+      "branch": "geometry_supported",
+      "step": 67,
+      "actual_status": "predictive",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -28.201093225290318,
+        22.349561991595714
+      ],
+      "strict_dense_min_depth_m": 2.663104305573877,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 33.418465002853225,
+      "branch": "geometry_supported",
+      "step": 68,
+      "actual_status": "predictive",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        -29.344695449108606,
+        33.06477917105494
+      ],
+      "strict_dense_min_depth_m": 1.5195020817555889,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8570516892086093,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          7,
+          0
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8630635688318835,
+        "point_xy_m": [
+          -29.00714584165559,
+          32.77226176072212
+        ]
+      },
+      "step": 69,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        -21.31847812028575,
+        36.428933278198926
+      ],
+      "strict_dense_min_depth_m": 0.6081037588381109,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8325109474131738,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          14
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8431698453576884,
+        "point_xy_m": [
+          -20.774067804327952,
+          35.20452608962386
+        ]
+      },
+      "step": 70,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -15.454034456927435,
+        36.98286174352687
+      ],
+      "strict_dense_min_depth_m": 0.05417529351016842,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7173551012841837,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          22
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7221814923833165,
+        "point_xy_m": [
+          -14.826080036469005,
+          35.319681935752854
+        ]
+      },
+      "step": 71,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -11.011504189020574,
+        36.27292600282132
+      ],
+      "strict_dense_min_depth_m": 0.764111034215714,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7937566144874755,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          28
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8172557540072805,
+        "point_xy_m": [
+          -10.57936583238726,
+          35.24328042254956
+        ]
+      },
+      "step": 72,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -7.1706074369543575,
+        36.78589922539119
+      ],
+      "strict_dense_min_depth_m": 0.2511378116458428,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7896496360333065,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          33
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8193165893355732,
+        "point_xy_m": [
+          -6.940967604521689,
+          35.24738740100373
+        ]
+      },
+      "step": 73,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -4.295110680696323,
+        36.96465200133182
+      ],
+      "strict_dense_min_depth_m": 0.07238503570521396,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8451961503156642,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          36
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8616354487087894,
+        "point_xy_m": [
+          -4.16231542824299,
+          35.19184088672137
+        ]
+      },
+      "step": 74,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -1.598248860106597,
+        36.96766098838626
+      ],
+      "strict_dense_min_depth_m": 0.06937604865077823,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.847152165869431,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          40
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8514510933986488,
+        "point_xy_m": [
+          -1.595819002607814,
+          35.18988487116761
+        ]
+      },
+      "step": 75,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.06217685828597602,
+        36.955857960769386
+      ],
+      "strict_dense_min_depth_m": 0.08117907626765057,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8401510590993593,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          42
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.867780461018655,
+        "point_xy_m": [
+          -0.3200748822675009,
+          35.196885977937676
+        ]
+      },
+      "step": 76,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.8767996820781527,
+        36.533908286712034
+      ],
+      "strict_dense_min_depth_m": 0.5031287503250029,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.745700149551805,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.755868307857204,
+        "point_xy_m": [
+          2.3932770914980237,
+          35.29133688748523
+        ]
+      },
+      "step": 77,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        5.168313116396159,
+        36.031066131179124
+      ],
+      "strict_dense_min_depth_m": 1.0059709058579107,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.848661554257751,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          49
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8685928696937386,
+        "point_xy_m": [
+          4.871838560223997,
+          35.188375482779286
+        ]
+      },
+      "step": 78,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        6.566971127619597,
+        35.87357609698033
+      ],
+      "strict_dense_min_depth_m": 1.1634609400567082,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8013066878956727,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          51
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8173154190419738,
+        "point_xy_m": [
+          6.373071033735671,
+          35.23573034914136
+        ]
+      },
+      "step": 79,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        5.90963949682871,
+        36.057621868001846
+      ],
+      "strict_dense_min_depth_m": 0.9794151690351902,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.871627032792693,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          50
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8716777792872814,
+        "point_xy_m": [
+          5.865112184666494,
+          35.16541000424434
+        ]
+      },
+      "step": 80,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        4.223033148703646,
+        36.44287484260814
+      ],
+      "strict_dense_min_depth_m": 0.5941621944288938,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8538767772492073,
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          5,
+          50
+        ],
+        "gray": 0.6549019813537598,
+        "nearest_pixel_distance_m": 1.74963205141363,
+        "point_xy_m": [
+          4.2181279961517,
+          33.547075306759
+        ]
+      },
+      "step": 81,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        1.0919759593246148,
+        36.64273359868909
+      ],
+      "strict_dense_min_depth_m": 0.3943034383479431,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8766125497109685,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          14,
+          47
+        ],
+        "gray": 0.5137255191802979,
+        "nearest_pixel_distance_m": 1.7825769535045075,
+        "point_xy_m": [
+          2.0709512468208513,
+          28.027595419102404
+        ]
+      },
+      "step": 82,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -1.4427819571104135,
+        36.7468324569834
+      ],
+      "strict_dense_min_depth_m": 0.2902045800536384,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.745686518538406,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          21,
+          45
+        ],
+        "gray": 0.5372549295425415,
+        "nearest_pixel_distance_m": 1.6432179738739825,
+        "point_xy_m": [
+          1.1333050987866702,
+          23.44535500286708
+        ]
+      },
+      "step": 83,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -3.4325340390191648,
+        36.53170850919869
+      ],
+      "strict_dense_min_depth_m": 0.505328527838348,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8352835740914695,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          30,
+          45
+        ],
+        "gray": 0.5843137502670288,
+        "nearest_pixel_distance_m": 1.803981565274945,
+        "point_xy_m": [
+          0.75,
+          18.333333333333332
+        ]
+      },
+      "step": 84,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -4.296549198992038,
+        36.57005209176772
+      ],
+      "strict_dense_min_depth_m": 0.46698494526931394,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.80339864076556,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          39,
+          45
+        ],
+        "gray": 0.5176470875740051,
+        "nearest_pixel_distance_m": 1.7601445784310359,
+        "point_xy_m": [
+          0.8518160229700005,
+          12.983237511810273
+        ]
+      },
+      "step": 85,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -5.800862952718554,
+        36.12368951816278
+      ],
+      "strict_dense_min_depth_m": 0.9133475188742577,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.778745798667522,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          47,
+          45
+        ],
+        "gray": 0.529411792755127,
+        "nearest_pixel_distance_m": 1.729925841210174,
+        "point_xy_m": [
+          1.067608308206667,
+          8.10241945056829
+        ]
+      },
+      "step": 86,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -4.435816035435175,
+        36.67158110114623
+      ],
+      "strict_dense_min_depth_m": 0.36545593589080566,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.6987517689433496,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          36
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.6988333138547107,
+        "point_xy_m": [
+          -4.42581606831015,
+          35.338285268093685
+        ]
+      },
+      "step": 87,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -2.819736414259705,
+        36.637228632992496
+      ],
+      "strict_dense_min_depth_m": 0.3998084040445408,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.788854571714763,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          38
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7890807959850468,
+        "point_xy_m": [
+          -2.9109971498387917,
+          35.24818246532227
+        ]
+      },
+      "step": 88,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.217915957078958,
+        35.973560129411275
+      ],
+      "strict_dense_min_depth_m": 1.063476907625759,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7134240403883523,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.72955879088385,
+        "point_xy_m": [
+          1.9688915224181511,
+          35.323612996648684
+        ]
+      },
+      "step": 89,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 76.42674651352911
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        8.055359084079312,
+        36.515091132607026
+      ],
+      "strict_dense_min_depth_m": 0.5219459044300089,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8078650979789095,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          52
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8170314223531983,
+        "point_xy_m": [
+          7.166335774516227,
+          35.229171939058126
+        ]
+      },
+      "step": 90,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        12.681640133718089,
+        36.96924897695804
+      ],
+      "strict_dense_min_depth_m": 0.06778806007899368,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7436203785678042,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          57
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7436256809998263,
+        "point_xy_m": [
+          11.01862758666841,
+          35.29341665846923
+        ]
+      },
+      "step": 91,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        9.715598397727685,
+        36.26495151138936
+      ],
+      "strict_dense_min_depth_m": 0.7720855256476709,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8831929220888421,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          55
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8899372003249593,
+        "point_xy_m": [
+          9.712725279509582,
+          35.15384411494819
+        ]
+      },
+      "step": 92,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        7.360528161933373,
+        29.305419241084206
+      ],
+      "strict_dense_min_depth_m": 6.480194948706076,
+      "initial_road_slack_m": 0.17430922986478325,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 27.53054802751431,
+      "branch": "geometry_supported",
+      "step": 93,
+      "actual_status": "predictive",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        -5.286311182099373,
+        36.90000624093536
+      ],
+      "strict_dense_min_depth_m": 0.0,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.6725066502368393,
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          11,
+          47
+        ],
+        "gray": 0.5803921818733215,
+        "nearest_pixel_distance_m": 1.5158226279669438,
+        "point_xy_m": [
+          4.470832942170442,
+          29.280575229984517
+        ]
+      },
+      "step": 94,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 30,
+      "reference_endpoint_xy_m": [
+        -28.867742078343248,
+        17.6441758530452
+      ],
+      "strict_dense_min_depth_m": 0.011200016852360934,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.767083174381998,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          19,
+          43
+        ],
+        "gray": 0.529411792755127,
+        "nearest_pixel_distance_m": 1.6630189115225587,
+        "point_xy_m": [
+          1.856109893571107,
+          24.638953475737566
+        ]
+      },
+      "step": 95,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 27,
+      "reference_endpoint_xy_m": [
+        -29.14996795577695,
+        12.38411629014722
+      ],
+      "strict_dense_min_depth_m": 0.0,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8882655213454702,
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          26,
+          42
+        ],
+        "gray": 0.5490196347236633,
+        "nearest_pixel_distance_m": 1.8650008567527474,
+        "point_xy_m": [
+          0.8093802269866904,
+          20.071692844247114
+        ]
+      },
+      "step": 96,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 25,
+      "reference_endpoint_xy_m": [
+        -28.76841453730351,
+        8.693039425177766
+      ],
+      "strict_dense_min_depth_m": 0.07524244600910301,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.744413783973576,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          34,
+          43
+        ],
+        "gray": 0.6431372761726379,
+        "nearest_pixel_distance_m": 1.659918966080051,
+        "point_xy_m": [
+          1.5606261676277224,
+          15.608848904312218
+        ]
+      },
+      "step": 97,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 24,
+      "reference_endpoint_xy_m": [
+        -29.81595833115613,
+        6.384082902739909
+      ],
+      "strict_dense_min_depth_m": 0.18241521276909817,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8440294154110881,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          42,
+          46
+        ],
+        "gray": 0.6549019813537598,
+        "nearest_pixel_distance_m": 1.7832176400459976,
+        "point_xy_m": [
+          3.788888888888889,
+          10.777777777777779
+        ]
+      },
+      "step": 98,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -28.89383463033906,
+        7.113421179310475
+      ],
+      "strict_dense_min_depth_m": 0.06661643063977708,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.6808641649521616,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          51,
+          49
+        ],
+        "gray": 0.5843137502670288,
+        "nearest_pixel_distance_m": 1.5198940357617665,
+        "point_xy_m": [
+          5.690101675425447,
+          5.636263767811498
+        ]
+      },
+      "step": 99,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        -29.451092386340314,
+        6.48878417082782
+      ],
+      "strict_dense_min_depth_m": 0.04036312169312101,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 0.13624338624338725,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          58,
+          51
+        ],
+        "gray": 0.6196078658103943,
+        "nearest_pixel_distance_m": 0.1490935263940327,
+        "point_xy_m": [
+          6.75,
+          3.0
+        ]
+      },
+      "step": 100,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "branch": "legacy_depth5p8_prefix_too_short",
+      "raw_ridge_nodes": 19,
+      "step": 101,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 1,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        -28.960743899769366,
+        0.5609074378562242
+      ],
+      "strict_dense_min_depth_m": 1.903453631094831,
+      "initial_road_slack_m": -0.4820843073749679,
+      "initial_obstacle_slack_m": 2.4351925909375494,
+      "initial_front_slack_m": 29.10896944783742,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          69,
+          39
+        ],
+        "gray": 0.7058823704719543,
+        "nearest_pixel_distance_m": 1.279223229184953,
+        "point_xy_m": [
+          -1.6,
+          -2.4
+        ]
+      },
+      "step": 102,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 11,
+      "reference_endpoint_xy_m": [
+        -28.569637357936138,
+        3.536863461479621
+      ],
+      "strict_dense_min_depth_m": 2.2945601729280596,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 27.398561477815626,
+      "branch": "geometry_supported",
+      "step": 103,
+      "actual_status": "predictive",
+      "camera_speed_mps": 36.49437001739096
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 11,
+      "reference_endpoint_xy_m": [
+        -28.261233684927184,
+        7.564677631960555
+      ],
+      "strict_dense_min_depth_m": 2.602963845937014,
+      "initial_road_slack_m": 0.6937905589677986,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 27.117295583303935,
+      "branch": "geometry_supported",
+      "step": 104,
+      "actual_status": "predictive",
+      "camera_speed_mps": 24.00692577404295
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 105,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 9.003695714079537
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 106,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 13.989525579228001
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 107,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 16.413827859678705
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 14,
+      "reference_endpoint_xy_m": [
+        -28.868870933273385,
+        18.309549325583273
+      ],
+      "strict_dense_min_depth_m": 1.9953265975908139,
+      "initial_road_slack_m": -1.3465140317460342,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 30.610301646985896,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          59,
+          45
+        ],
+        "gray": 0.572549045085907,
+        "nearest_pixel_distance_m": 0.6536414507805433,
+        "point_xy_m": [
+          1.6,
+          2.6
+        ]
+      },
+      "step": 108,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 21.491140218140412
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 16,
+      "reference_endpoint_xy_m": [
+        -29.6091308593379,
+        23.709620836985973
+      ],
+      "strict_dense_min_depth_m": 1.2550666715262968,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8262711036883743,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          23,
+          0
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.832397680583544,
+        "point_xy_m": [
+          -29.037926427175822,
+          23.36586228636818
+        ]
+      },
+      "step": 109,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 24.00692577404295
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -29.103854031299885,
+        31.551683436811523
+      ],
+      "strict_dense_min_depth_m": 1.7603434995643108,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7603434995643108,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          9,
+          0
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7710393845860917,
+        "point_xy_m": [
+          -29.103854031299885,
+          31.551683436811523
+        ]
+      },
+      "step": 110,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 26.522711069232628
+    },
+    {
+      "branch": "parent_road_missing",
+      "step": 111,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 29.038496538230884
+    },
+    {
+      "branch": "parent_road_missing",
+      "step": 112,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 29.038496538230884
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 113,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 18.975354836046446
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 114,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 9.003695714079537
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 115,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 11.51948118307779
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 116,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 11.51948118307779
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 117,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 13.989525579228001
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 118,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 13.989525579228001
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 119,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 16.413827859678705
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 120,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 16.413827859678705
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        3.663714818204449,
+        36.72238999455281
+      ],
+      "strict_dense_min_depth_m": 0.3146470424842205,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8668707569158294,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          46
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.869224706920416,
+        "point_xy_m": [
+          3.033226816254318,
+          35.17016628012121
+        ]
+      },
+      "step": 121,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 21.491140218140412
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        4.345342253851963,
+        36.66804814911742
+      ],
+      "strict_dense_min_depth_m": 0.3689888879196165,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8216993857287263,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          47
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8240955789414595,
+        "point_xy_m": [
+          3.7677759573636878,
+          35.21533765130831
+        ]
+      },
+      "step": 122,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 24.00692577404295
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        7.806803937787222,
+        36.97367292381291
+      ],
+      "strict_dense_min_depth_m": 0.06336411322412422,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.765546433666263,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          48
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.777699976802929,
+        "point_xy_m": [
+          4.20165481600863,
+          35.27149060337077
+        ]
+      },
+      "step": 123,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 29.038496538230884
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        8.186563774139788,
+        36.99586672326826
+      ],
+      "strict_dense_min_depth_m": 0.04117031376877704,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8203478831704891,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          50
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8241212441152304,
+        "point_xy_m": [
+          5.761626283231298,
+          35.21668915386655
+        ]
+      },
+      "step": 124,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 31.55428183342056
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 30,
+      "reference_endpoint_xy_m": [
+        29.79908258485553,
+        29.069375911304462
+      ],
+      "strict_dense_min_depth_m": 0.07187012005041538,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8064159840873901,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          53
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.808242147138498,
+        "point_xy_m": [
+          8.002234043501632,
+          35.230621052949644
+        ]
+      },
+      "step": 125,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 33.97858461357092
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        12.554168789786903,
+        36.704116241212766
+      ],
+      "strict_dense_min_depth_m": 0.3329207958242675,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.643042002203783,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          59
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.668320860597578,
+        "point_xy_m": [
+          12.203328943939553,
+          35.39399503483325
+        ]
+      },
+      "step": 126,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 26,
+      "reference_endpoint_xy_m": [
+        29.09532981929593,
+        24.103104276913893
+      ],
+      "strict_dense_min_depth_m": 1.0340058655953126,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8839809295951995,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          22,
+          83
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.9038779071655043,
+        "point_xy_m": [
+          28.245354755296034,
+          24.377998951173687
+        ]
+      },
+      "step": 127,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 25,
+      "reference_endpoint_xy_m": [
+        29.583745198822022,
+        21.049254893955172
+      ],
+      "strict_dense_min_depth_m": 0.5455904860692169,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8112597910652437,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          26,
+          83
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8332815093394916,
+        "point_xy_m": [
+          28.318075893826002,
+          21.46861033766452
+        ]
+      },
+      "step": 128,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 23,
+      "reference_endpoint_xy_m": [
+        28.784663980481444,
+        18.232869540706336
+      ],
+      "strict_dense_min_depth_m": 1.3446717044097949,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7665614727418075,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          32,
+          83
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7727570032105344,
+        "point_xy_m": [
+          28.362774212149436,
+          18.37265468860945
+        ]
+      },
+      "step": 129,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        29.32727608867329,
+        16.445328448692596
+      ],
+      "strict_dense_min_depth_m": 0.8020595962179488,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8898403702553412,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          34,
+          83
+        ],
+        "gray": 0.3960784375667572,
+        "nearest_pixel_distance_m": 1.9113827270923405,
+        "point_xy_m": [
+          28.239495314635903,
+          16.762635248050206
+        ]
+      },
+      "step": 130,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        29.692371412705707,
+        15.88110579379903
+      ],
+      "strict_dense_min_depth_m": 0.4369642721855401,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7764103315242894,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          36,
+          83
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7770067145862056,
+        "point_xy_m": [
+          28.352925353366945,
+          15.91905061791796
+        ]
+      },
+      "step": 131,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        29.480731538369668,
+        15.96922966167528
+      ],
+      "strict_dense_min_depth_m": 0.6486041465215782,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7588397117155767,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          36,
+          83
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7596115715530922,
+        "point_xy_m": [
+          28.370495973175665,
+          15.925128743171031
+        ]
+      },
+      "step": 132,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        28.49817074446575,
+        18.795758366357266
+      ],
+      "strict_dense_min_depth_m": 1.6311649404254833,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8479715699560346,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          31,
+          83
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8493078954748805,
+        "point_xy_m": [
+          28.281364114935204,
+          18.74217265369539
+        ]
+      },
+      "step": 133,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        28.645328208211964,
+        25.11705201574383
+      ],
+      "strict_dense_min_depth_m": 1.4840074766792712,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8595864885822249,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          21,
+          83
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.869071266369215,
+        "point_xy_m": [
+          28.26974919630902,
+          24.87941517092481
+        ]
+      },
+      "step": 134,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 23,
+      "reference_endpoint_xy_m": [
+        29.637646447925576,
+        35.23231393223582
+      ],
+      "strict_dense_min_depth_m": 0.49168923696566896,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7613165145403056,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          5,
+          83
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7647281448391996,
+        "point_xy_m": [
+          28.368019170350937,
+          33.987910298683225
+        ]
+      },
+      "step": 135,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        20.279550547502648,
+        35.92100991095222
+      ],
+      "strict_dense_min_depth_m": 1.1160271260848122,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8735516000213766,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          69
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8738821850469634,
+        "point_xy_m": [
+          19.80607260425169,
+          35.16348543701566
+        ]
+      },
+      "step": 136,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        14.554813858641321,
+        36.68759495767761
+      ],
+      "strict_dense_min_depth_m": 0.3494420793594231,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.801327084390329,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          61
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8016491288149816,
+        "point_xy_m": [
+          13.99643852019399,
+          35.23570995264671
+        ]
+      },
+      "step": 137,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        9.439259005082382,
+        36.37989485193206
+      ],
+      "strict_dense_min_depth_m": 0.6571421851049768,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7393009508073112,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          54
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.773287528038508,
+        "point_xy_m": [
+          9.163857505339692,
+          35.297736086229726
+        ]
+      },
+      "step": 138,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        6.021584672094992,
+        36.87491437567952
+      ],
+      "strict_dense_min_depth_m": 0.16212266135751238,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7003191781369575,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          50
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7026496007901808,
+        "point_xy_m": [
+          5.789842224133171,
+          35.33671785890008
+        ]
+      },
+      "step": 139,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        3.5042707052637465,
+        36.983359681232116
+      ],
+      "strict_dense_min_depth_m": 0.05367735580491968,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8397055242941436,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          47
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.843820179549721,
+        "point_xy_m": [
+          3.5511977421945984,
+          35.19733151274289
+        ]
+      },
+      "step": 140,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        0.8506519323736781,
+        31.003764473774517
+      ],
+      "strict_dense_min_depth_m": 6.014963202871773,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 28.508011550230464,
+      "branch": "geometry_supported",
+      "step": 141,
+      "actual_status": "predictive",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 2,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.10554125167735579,
+        36.96841647510634
+      ],
+      "strict_dense_min_depth_m": 0.06862056193069925,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8463983397084776,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          42
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8494122808838083,
+        "point_xy_m": [
+          0.10554125167735529,
+          35.19063869732856
+        ]
+      },
+      "step": 142,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.5962281799089668,
+        36.994530933133824
+      ],
+      "strict_dense_min_depth_m": 0.0425061039032127,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.828596743758998,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8310188040704347,
+        "point_xy_m": [
+          -0.6407140389166793,
+          35.20844029327804
+        ]
+      },
+      "step": 143,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -1.094458748322641,
+        36.96841647510634
+      ],
+      "strict_dense_min_depth_m": 0.06862056193069924,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8414316765411451,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8553462231521243,
+        "point_xy_m": [
+          -0.9616634958693082,
+          35.19560536049589
+        ]
+      },
+      "step": 144,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.7962281799089629,
+        36.994530933133824
+      ],
+      "strict_dense_min_depth_m": 0.042506103903212696,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.820283881680991,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8240024764689737,
+        "point_xy_m": [
+          -0.6184504021311862,
+          35.216753155356045
+        ]
+      },
+      "step": 145,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.5962281799089642,
+        36.994530933133824
+      ],
+      "strict_dense_min_depth_m": 0.0425061039032127,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8285967437589983,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.831018804070435,
+        "point_xy_m": [
+          -0.6407140389166768,
+          35.20844029327804
+        ]
+      },
+      "step": 146,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 147,
+      "actual_status": "fallback_no_feasible",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        1.2807233940763383,
+        35.03570495704599
+      ],
+      "strict_dense_min_depth_m": 2.001332079991042,
+      "initial_road_slack_m": -0.560552616108174,
+      "initial_obstacle_slack_m": 0.12430922986478543,
+      "initial_front_slack_m": 32.341725864724765,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          65,
+          46
+        ],
+        "gray": 0.6313725709915161,
+        "nearest_pixel_distance_m": 1.339695431305617,
+        "point_xy_m": [
+          1.6,
+          -1.15
+        ]
+      },
+      "step": 148,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 76.42674651352911
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 149,
+      "actual_status": "predictive",
+      "camera_speed_mps": 81.45831731030614
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -13.708289518657311,
+        36.954351291499385
+      ],
+      "strict_dense_min_depth_m": 0.046577476560831096,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.892502557420618,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          36
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.897538360879289,
+        "point_xy_m": [
+          -4.547322808236837,
+          35.14453447961642
+        ]
+      },
+      "step": 150,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 83.97410315951066
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 28,
+      "reference_endpoint_xy_m": [
+        -29.31661540976376,
+        19.917684023955147
+      ],
+      "strict_dense_min_depth_m": 0.008712854707132078,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7813436781320937,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          21,
+          8
+        ],
+        "gray": 0.5333333611488342,
+        "nearest_pixel_distance_m": 1.8005420298731072,
+        "point_xy_m": [
+          -23.203959084948448,
+          24.42912472833409
+        ]
+      },
+      "step": 151,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 83.97410315951066
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 26,
+      "reference_endpoint_xy_m": [
+        -29.82112533022808,
+        13.831789126449586
+      ],
+      "strict_dense_min_depth_m": 0.07946928487555144,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.677604957792275,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          30,
+          11
+        ],
+        "gray": 0.545098066329956,
+        "nearest_pixel_distance_m": 1.5867506288778928,
+        "point_xy_m": [
+          -21.25100005496892,
+          19.821948437485183
+        ]
+      },
+      "step": 152,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 81.45831731030614
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 24,
+      "reference_endpoint_xy_m": [
+        -29.660786430661478,
+        9.89643351947305
+      ],
+      "strict_dense_min_depth_m": 0.005850662199388054,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7681385160065721,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          35,
+          14
+        ],
+        "gray": 0.6509804129600525,
+        "nearest_pixel_distance_m": 1.7681437158440307,
+        "point_xy_m": [
+          -18.807993171236227,
+          16.456617215839913
+        ]
+      },
+      "step": 153,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -29.609215140675957,
+        8.149515797862493
+      ],
+      "strict_dense_min_depth_m": 0.008228283406515116,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7588864020004715,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          40,
+          17
+        ],
+        "gray": 0.6470588445663452,
+        "nearest_pixel_distance_m": 1.759144327353364,
+        "point_xy_m": [
+          -16.612659747323455,
+          13.551580869437062
+        ]
+      },
+      "step": 154,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "branch": "legacy_depth5p8_prefix_too_short",
+      "raw_ridge_nodes": 20,
+      "step": 155,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "branch": "legacy_depth5p8_prefix_too_short",
+      "raw_ridge_nodes": 19,
+      "step": 156,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 16,
+      "reference_endpoint_xy_m": [
+        -29.17659999233617,
+        11.717261012178952
+      ],
+      "strict_dense_min_depth_m": 0.09675695005922746,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.848447015973886,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          47,
+          28
+        ],
+        "gray": 0.5921568870544434,
+        "nearest_pixel_distance_m": 1.6836789906025156,
+        "point_xy_m": [
+          -9.347106506776086,
+          8.010033050242308
+        ]
+      },
+      "step": 157,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 14,
+      "reference_endpoint_xy_m": [
+        -28.307789046608804,
+        14.154051982721153
+      ],
+      "strict_dense_min_depth_m": 0.04004698288992599,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8809213207883515,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          51,
+          30
+        ],
+        "gray": 0.5803921818733215,
+        "nearest_pixel_distance_m": 1.7636063169447953,
+        "point_xy_m": [
+          -7.645806888764111,
+          5.73730198246144
+        ]
+      },
+      "step": 158,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 1,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        -29.386206686315553,
+        19.19280598338769
+      ],
+      "strict_dense_min_depth_m": 0.0,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.601111987883951,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          54,
+          32
+        ],
+        "gray": 0.5960784554481506,
+        "nearest_pixel_distance_m": 1.4697689072997828,
+        "point_xy_m": [
+          -6.472222222222222,
+          4.111111111111111
+        ]
+      },
+      "step": 159,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -29.25818408180986,
+        31.128250933410126
+      ],
+      "strict_dense_min_depth_m": 0.02915612991511251,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 0.5935269647482947,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          57,
+          34
+        ],
+        "gray": 0.5215686559677124,
+        "nearest_pixel_distance_m": 0.5428609635841375,
+        "point_xy_m": [
+          -5.75,
+          3.0
+        ]
+      },
+      "step": 160,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -16.17241114234137,
+        35.30042336611307
+      ],
+      "strict_dense_min_depth_m": 0.033744855967079955,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 0.11522633744855847,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          58,
+          35
+        ],
+        "gray": 0.572549045085907,
+        "nearest_pixel_distance_m": 0.15624372589922084,
+        "point_xy_m": [
+          -5.0,
+          3.0
+        ]
+      },
+      "step": 161,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "observed_circle_count": 1,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 0,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -3.222215235466531,
+        36.99162271220765
+      ],
+      "strict_dense_min_depth_m": 0.04541432482938519,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.5130228582605674,
+      "nearest_unknown": {
+        "kind": "detected_circle_paint_or_halo",
+        "pixel_row_column": [
+          60,
+          37
+        ],
+        "gray": 0.6039215922355652,
+        "nearest_pixel_distance_m": 1.3637945640634295,
+        "point_xy_m": [
+          -4.25,
+          3.0
+        ]
+      },
+      "step": 162,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 1,
+      "pass_side": -1,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        10.29296434924946,
+        36.96207432687889
+      ],
+      "strict_dense_min_depth_m": 0.074962710158146,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7398528719898876,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          55
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7437392115880879,
+        "point_xy_m": [
+          9.669558721911708,
+          35.29718416504715
+        ]
+      },
+      "step": 163,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 164,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 36.49437001739096
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        28.250769966437765,
+        21.487307691468658
+      ],
+      "strict_dense_min_depth_m": 1.8785657184534754,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8785657184534754,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          26,
+          83
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8971093482831245,
+        "point_xy_m": [
+          28.250769966437765,
+          21.487307691468658
+        ]
+      },
+      "step": 165,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 15,
+      "reference_endpoint_xy_m": [
+        29.933971374248863,
+        22.188113825854632
+      ],
+      "strict_dense_min_depth_m": 0.1953643106423789,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8434442321184596,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          27,
+          83
+        ],
+        "gray": 0.3960784375667572,
+        "nearest_pixel_distance_m": 1.8466621914891403,
+        "point_xy_m": [
+          28.28589145277278,
+          21.055050468214212
+        ]
+      },
+      "step": 166,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        29.035693378120534,
+        28.67348285904072
+      ],
+      "strict_dense_min_depth_m": 1.093642306770703,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8757780699103712,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          16,
+          83
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8889624317409863,
+        "point_xy_m": [
+          28.253557614980867,
+          27.853596119727367
+        ]
+      },
+      "step": 167,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 168,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 169,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 170,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 171,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 172,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 33.97858461357092
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 173,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 24.00692577404295
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 174,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 13.989525579228001
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 175,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 13.989525579228001
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 176,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 16.413827859678705
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 177,
+      "actual_status": "fallback_low_speed",
+      "camera_speed_mps": 18.975354836046446
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 178,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 21.491140218140412
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "branch": "legacy_depth5p8_prefix_too_short",
+      "raw_ridge_nodes": 19,
+      "step": 179,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 26.522711069232628
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -5.0931994381730314,
+        36.9470157755369
+      ],
+      "strict_dense_min_depth_m": 0.09002126150013783,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7242012046173931,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          33
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.724210620874833,
+        "point_xy_m": [
+          -6.6194549585605245,
+          35.312835832419644
+        ]
+      },
+      "step": 180,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 29.038496538230884
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.7965692577135479,
+        35.361586535562154
+      ],
+      "strict_dense_min_depth_m": 1.6754505014748833,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8642146034583487,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8729864467889148,
+        "point_xy_m": [
+          -0.915920240165521,
+          35.17282243357869
+        ]
+      },
+      "step": 181,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 31.55428183342056
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 26,
+      "reference_endpoint_xy_m": [
+        21.373275101818546,
+        36.9801153839952
+      ],
+      "strict_dense_min_depth_m": 0.05692165304183789,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.867763323765572,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          51
+        ],
+        "gray": 0.40392157435417175,
+        "nearest_pixel_distance_m": 1.8682905771364553,
+        "point_xy_m": [
+          6.658139572344906,
+          35.169273713271465
+        ]
+      },
+      "step": 182,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 33.97858461357092
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 27,
+      "reference_endpoint_xy_m": [
+        29.696980056903854,
+        36.854665207475584
+      ],
+      "strict_dense_min_depth_m": 0.08094465043638573,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7601490531417714,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          74
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7603100385114876,
+        "point_xy_m": [
+          23.49177271886403,
+          35.276887983895264
+        ]
+      },
+      "step": 183,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 38.96441380521115
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 184,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 41.52594078157889
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 185,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        28.610937518822332,
+        20.688003939900604
+      ],
+      "strict_dense_min_depth_m": 1.5183981660689092,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7402800102240776,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          28,
+          83
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7431265512100873,
+        "point_xy_m": [
+          28.38905567466716,
+          20.675709092049498
+        ]
+      },
+      "step": 186,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        28.9963363617057,
+        21.817543248763045
+      ],
+      "strict_dense_min_depth_m": 1.132999323185534,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7576381603880538,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          26,
+          83
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.766495850023818,
+        "point_xy_m": [
+          28.37169752450318,
+          21.575231028792256
+        ]
+      },
+      "step": 187,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        28.346379944140487,
+        24.23361690254576
+      ],
+      "strict_dense_min_depth_m": 1.7829557407507601,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7829557407507601,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          22,
+          83
+        ],
+        "gray": 0.3960784375667572,
+        "nearest_pixel_distance_m": 1.7876995742265218,
+        "point_xy_m": [
+          28.346379944140487,
+          24.23361690254576
+        ]
+      },
+      "step": 188,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        28.35247938370842,
+        28.845786026699336
+      ],
+      "strict_dense_min_depth_m": 1.7768563011828162,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7768563011828162,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          14,
+          83
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.777288689424801,
+        "point_xy_m": [
+          28.35247938370842,
+          28.845786026699336
+        ]
+      },
+      "step": 189,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 23,
+      "reference_endpoint_xy_m": [
+        27.34361556623359,
+        36.56644319151624
+      ],
+      "strict_dense_min_depth_m": 0.4705938455207937,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.784904598059219,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          78
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.81365517343601,
+        "point_xy_m": [
+          26.133373437073484,
+          35.25213243897782
+        ]
+      },
+      "step": 190,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 44.04172607676857
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        20.94978443655746,
+        36.99481697782982
+      ],
+      "strict_dense_min_depth_m": 0.04222005920721336,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8505609229211664,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          68
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8522212653795236,
+        "point_xy_m": [
+          19.02799953605124,
+          35.18647611411587
+        ]
+      },
+      "step": 191,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        14.644658049944399,
+        36.17781433857001
+      ],
+      "strict_dense_min_depth_m": 0.8592226984670247,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.821035459376722,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          61
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.822936380978844,
+        "point_xy_m": [
+          14.045603102351766,
+          35.216001577660315
+        ]
+      },
+      "step": 192,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 46.51177025565806
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        10.172752047309169,
+        36.041069802747955
+      ],
+      "strict_dense_min_depth_m": 0.99596723428908,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8450798279004874,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          55
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8792278358202983,
+        "point_xy_m": [
+          9.909823805842736,
+          35.19195720913655
+        ]
+      },
+      "step": 193,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        6.628513464302755,
+        36.62119098653122
+      ],
+      "strict_dense_min_depth_m": 0.41584605050581563,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7542538856178738,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          51
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7549721428312144,
+        "point_xy_m": [
+          6.563551764307963,
+          35.28278315141916
+        ]
+      },
+      "step": 194,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 49.0275558115606
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        4.1298670096022185,
+        36.951560423309914
+      ],
+      "strict_dense_min_depth_m": 0.08547661372712047,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.858798765720148,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          47
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.88782457093755,
+        "point_xy_m": [
+          4.004079997509195,
+          35.178238271316886
+        ]
+      },
+      "step": 195,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 51.543341106750276
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.1474854532726555,
+        36.99635395542255
+      ],
+      "strict_dense_min_depth_m": 0.040683081614486555,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8184608593922649,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.8193571163485935,
+        "point_xy_m": [
+          2.147485453272655,
+          35.21857617764477
+        ]
+      },
+      "step": 196,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.2512106819800004,
+        36.988825007873515
+      ],
+      "strict_dense_min_depth_m": 0.04821202916352017,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8210231437739663,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          43
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8545148046922504,
+        "point_xy_m": [
+          0.3840059344333337,
+          35.21601389326307
+        ]
+      },
+      "step": 197,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.34748545327264424,
+        36.99635395542255
+      ],
+      "strict_dense_min_depth_m": 0.040683081614486555,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8134941962249325,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          42
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8261580112546032,
+        "point_xy_m": [
+          -0.21469020081931153,
+          35.2235428408121
+        ]
+      },
+      "step": 198,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.5962281799089658,
+        36.994530933133824
+      ],
+      "strict_dense_min_depth_m": 0.0425061039032127,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8285967437589983,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8310188040704347,
+        "point_xy_m": [
+          -0.6407140389166783,
+          35.20844029327804
+        ]
+      },
+      "step": 199,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 63.93930229190717
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.7456228389189647,
+        36.98894343707058
+      ],
+      "strict_dense_min_depth_m": 0.048093599966453564,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.825871377744232,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.8259030880730818,
+        "point_xy_m": [
+          -0.7456228389189655,
+          35.2111656592928
+        ]
+      },
+      "step": 200,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -0.7275454838416036,
+        35.043258523897165
+      ],
+      "strict_dense_min_depth_m": 1.993778513139871,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.537644231443394,
+      "branch": "geometry_supported",
+      "step": 201,
+      "actual_status": "predictive",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -0.8392472903955667,
+        36.99568552984642
+      ],
+      "strict_dense_min_depth_m": 0.04135150719061808,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8152942003874333,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          41
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.818520644770909,
+        "point_xy_m": [
+          -0.6265830322661737,
+          35.221742836649604
+        ]
+      },
+      "step": 202,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -0.7275454838416036,
+        35.043258523897165
+      ],
+      "strict_dense_min_depth_m": 1.993778513139871,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.537644231443394,
+      "branch": "geometry_supported",
+      "step": 203,
+      "actual_status": "predictive",
+      "camera_speed_mps": 74.00244403754375
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -1.4467334682229929,
+        35.08030430090989
+      ],
+      "strict_dense_min_depth_m": 1.9567327361271467,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.66207747308427,
+      "branch": "geometry_supported",
+      "step": 204,
+      "actual_status": "predictive",
+      "camera_speed_mps": 76.42674651352911
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -0.25,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 205,
+      "actual_status": "predictive",
+      "camera_speed_mps": 78.94253183044486
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        0.0,
+        35.0
+      ],
+      "strict_dense_min_depth_m": 2.0370370370370345,
+      "initial_road_slack_m": 0.9910052910052869,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.4,
+      "branch": "geometry_supported",
+      "step": 206,
+      "actual_status": "predictive",
+      "camera_speed_mps": 81.45831731030614
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -2.3131451734479467,
+        36.72429747523895
+      ],
+      "strict_dense_min_depth_m": 0.31273956179808904,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7171555327437718,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          40
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.7204087358159939,
+        "point_xy_m": [
+          -1.5754738439052842,
+          35.319881504293264
+        ]
+      },
+      "step": 207,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 83.97410315951066
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        -11.631788794335977,
+        36.3707148898451
+      ],
+      "strict_dense_min_depth_m": 0.6663221471919396,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7800744675505658,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          28
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.810307121179109,
+        "point_xy_m": [
+          -9.958601485964385,
+          35.25696256948647
+        ]
+      },
+      "step": 208,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 86.48988845470033
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 25,
+      "reference_endpoint_xy_m": [
+        -29.585296853108968,
+        24.586177255860814
+      ],
+      "strict_dense_min_depth_m": 1.2789006777552274,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.731892586301682,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          21,
+          0
+        ],
+        "gray": 0.4000000059604645,
+        "nearest_pixel_distance_m": 1.734229536633927,
+        "point_xy_m": [
+          -29.132304944562513,
+          24.601357162213304
+        ]
+      },
+      "step": 209,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 86.48988845470033
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 23,
+      "reference_endpoint_xy_m": [
+        -29.803337218068847,
+        20.6668108537831
+      ],
+      "strict_dense_min_depth_m": 1.0608603127953522,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7293336537824286,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          28,
+          0
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7299347081188479,
+        "point_xy_m": [
+          -29.134863877081767,
+          20.621730023284318
+        ]
+      },
+      "step": 210,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 78.94253183044486
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 21,
+      "reference_endpoint_xy_m": [
+        -29.125665942863467,
+        18.77766991677912
+      ],
+      "strict_dense_min_depth_m": 1.7385315880007295,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7385315880007295,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          31,
+          0
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.738879713779432,
+        "point_xy_m": [
+          -29.125665942863467,
+          18.77766991677912
+        ]
+      },
+      "step": 211,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 20,
+      "reference_endpoint_xy_m": [
+        -29.152328263678037,
+        19.298017543345217
+      ],
+      "strict_dense_min_depth_m": 1.711869267186163,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.711869267186163,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          30,
+          0
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7149253275634413,
+        "point_xy_m": [
+          -29.152328263678037,
+          19.298017543345217
+        ]
+      },
+      "step": 212,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 213,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "branch": "not_geometry_eligible",
+      "step": 214,
+      "actual_status": "fallback_innovation",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 22,
+      "reference_endpoint_xy_m": [
+        -27.830618261183865,
+        36.93430374789716
+      ],
+      "strict_dense_min_depth_m": 0.10273328913987449,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8944256706662073,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          9
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.9080051505866302,
+        "point_xy_m": [
+          -24.02320748429895,
+          35.14261136637083
+        ]
+      },
+      "step": 215,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 19,
+      "reference_endpoint_xy_m": [
+        -16.789699449144763,
+        36.5240706740729
+      ],
+      "strict_dense_min_depth_m": 0.5129663629641343,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7616339843379374,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          20
+        ],
+        "gray": 0.4117647111415863,
+        "nearest_pixel_distance_m": 1.7684559819800927,
+        "point_xy_m": [
+          -16.32214522864145,
+          35.2754030526991
+        ]
+      },
+      "step": 216,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 53.96764332202277
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -10.561127048074601,
+        36.38872788769697
+      ],
+      "strict_dense_min_depth_m": 0.6483091493400612,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7476666386098847,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          28
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7512437528197546,
+        "point_xy_m": [
+          -10.39994078308615,
+          35.28937039842715
+        ]
+      },
+      "step": 217,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 17,
+      "reference_endpoint_xy_m": [
+        -5.969943019377298,
+        35.01627300849462
+      ],
+      "strict_dense_min_depth_m": 2.020764028542413,
+      "initial_road_slack_m": -0.44148090319022515,
+      "initial_obstacle_slack_m": null,
+      "initial_front_slack_m": 32.58722716110469,
+      "branch": "initial_body_road_unsupported",
+      "nearest_unknown": {
+        "kind": "bright_grass_or_unknown_paint",
+        "pixel_row_column": [
+          58,
+          46
+        ],
+        "gray": 0.5137255191802979,
+        "nearest_pixel_distance_m": 1.3817900783569366,
+        "point_xy_m": [
+          1.6,
+          2.6
+        ]
+      },
+      "step": 218,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 56.48342885619924
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        -2.327474712225157,
+        36.98996387034213
+      ],
+      "strict_dense_min_depth_m": 0.04707316669490499,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.8248492839135575,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          39
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8288207555705276,
+        "point_xy_m": [
+          -2.325044854726374,
+          35.21218775312348
+        ]
+      },
+      "step": 219,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        0.1879004655391537,
+        36.87338697406642
+      ],
+      "strict_dense_min_depth_m": 0.16365006297061402,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7148597882547592,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          42
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7163582510219846,
+        "point_xy_m": [
+          0.07170461964248634,
+          35.322177248782275
+        ]
+      },
+      "step": 220,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 59.04495626708842
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.029942813165453,
+        36.806133729760006
+      ],
+      "strict_dense_min_depth_m": 0.23090330727702896,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7493109646640512,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          44
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7633788205970142,
+        "point_xy_m": [
+          1.69202082156353,
+          35.28772607237298
+        ]
+      },
+      "step": 221,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 61.46925850408698
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.3770254197162046,
+        36.849550307545016
+      ],
+      "strict_dense_min_depth_m": 0.18748672949201775,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7392925975478302,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.740488041234833,
+        "point_xy_m": [
+          2.2690826835672273,
+          35.29774443948921
+        ]
+      },
+      "step": 222,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.4785282155756043,
+        36.855687844534934
+      ],
+      "strict_dense_min_depth_m": 0.18134919250210352,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.7325589177862488,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.7397253997487647,
+        "point_xy_m": [
+          2.3623323696789362,
+          35.30447811925079
+        ]
+      },
+      "step": 223,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 66.50082926827491
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.4379004655391507,
+        36.87338697406642
+      ],
+      "strict_dense_min_depth_m": 0.16365006297061402,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.714859788254759,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.718854552507848,
+        "point_xy_m": [
+          2.3217046196424835,
+          35.322177248782275
+        ]
+      },
+      "step": 224,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 69.06235646190338
+    },
+    {
+      "observed_circle_count": 0,
+      "constraint_circle_count": 0,
+      "pass_side": 0,
+      "pass_missing": 1,
+      "reference_nodes": 18,
+      "reference_endpoint_xy_m": [
+        2.1974306552791183,
+        36.96658253727106
+      ],
+      "strict_dense_min_depth_m": 0.07045449976597577,
+      "branch": "strict_dense_reference_unsupported",
+      "first_unsupported_depth_m": 1.843776651759003,
+      "nearest_unknown": {
+        "kind": "camera_visibility_boundary",
+        "pixel_row_column": [
+          0,
+          45
+        ],
+        "gray": 0.3921568691730499,
+        "nearest_pixel_distance_m": 1.8485631958217705,
+        "point_xy_m": [
+          2.071643643186095,
+          35.19326038527803
+        ]
+      },
+      "step": 225,
+      "actual_status": "fallback_unsupported",
+      "camera_speed_mps": 71.62388330791468
+    }
+  ],
+  "limits": [
+    "Nearest unknown pixel is a spectral/context diagnosis, not a semantic ground-truth grass label.",
+    "Parent passive camera geometry state is restored from its existing exact diagnostic snapshot.",
+    "No new control outcome or reliability gain is measured.",
+    "The strict field and all frozen candidate sources remain unchanged."
+  ]
+}
