@@ -1,0 +1,23 @@
+{
+  "format": "haic-tdmpc2-reward-overshoot-target-audit-summary-v1",
+  "status": "complete_replay_sufficiency_gate_passed_not_training_clearance",
+  "operator": "scripts/audit_tdmpc2_reward_overshoot_targets.py",
+  "operator_sha256": "62426f4c61818477a18e1643b1278819723f469a91160854f1f9189b1ab01289",
+  "operator_test_sha256": "57861320562e74eff24a8aa6067c364d6c42e157efcca620f39109610e9d3da7",
+  "source_raw100k_protocol_sha256": "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec",
+  "source_raw100k_result_sha256": "287470932dbba9a7eeed778a5be7762b736e6679d99fd29078c5103890a75a4b",
+  "source_raw100k_checkpoint_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "complete_cli_output_body_sha256": "bc95cc76f5fadeebaa316f240285f83382a8dcb945b9ab862c94c1cff76a3163",
+  "reproducible_cli": "PYTHONDONTWRITEBYTECODE=1 python -m scripts.audit_tdmpc2_reward_overshoot_targets",
+  "safety_evidence": {"synthetic_tests_passed": 13, "environment_resets": 0, "torch_load_calls": 0, "optimizer_steps": 0, "source_hashes_checked_before_and_after": true},
+  "source_ledger": {"step_rows": 100354, "episode_boundaries": 307, "raw_terminations": 293, "finished_truncations": 14, "ordinary_timeouts": 0},
+  "overall": {"h3_eligible_starts": 99740, "h5_extended_starts": 99126, "extension_fraction": 0.993843994385402},
+  "per_consumed_train_road": [
+    {"geometry_seed": 3910800001, "episodes": 77, "h3_eligible_starts": 24275, "h5_extended_starts": 24121, "two_step_discounted_reward_range": 19.93333333333352},
+    {"geometry_seed": 3910800004, "episodes": 77, "h3_eligible_starts": 25575, "h5_extended_starts": 25421, "two_step_discounted_reward_range": 21.21580547112466},
+    {"geometry_seed": 3910800034, "episodes": 77, "h3_eligible_starts": 23396, "h5_extended_starts": 23242, "two_step_discounted_reward_range": 19.687499999999968},
+    {"geometry_seed": 3910800085, "episodes": 76, "h3_eligible_starts": 26494, "h5_extended_starts": 26342, "two_step_discounted_reward_range": 20.1152737752163}
+  ],
+  "predeclared_gate": {"minimum_extension_fraction": 0.95, "minimum_informative_roads": 3, "minimum_suffix_range_exclusive": 0.1, "informative_roads": 4, "passed": true},
+  "limitations": "Counts describe the completed original RAW100k TRAIN replay, not the future online state distribution or a model/finish improvement. No candidate fresh/protected road or new training reset is certified. Check isolated H3 sample parity, gradients, resource throughput and source-bound trainer before any reset."
+}

@@ -1,0 +1,66 @@
+{
+  "format": "haic-tdmpc2-raw100k-h5-branches-v1",
+  "purpose": "consumed-TRAIN-same-reconstructed-accessible-state-H5-raw-reward",
+  "source": {
+    "protocol": {"path": "experiments/tdmpc2-long-reused-train-v2.json", "sha256": "d4e25fe336998357fec0194f6423e2e4b63808896b2267a0a0f43b04ad5cc5ec"},
+    "result": {"path": "runs/tdmpc2-long-20260928-v2/result.json", "sha256": "287470932dbba9a7eeed778a5be7762b736e6679d99fd29078c5103890a75a4b"},
+    "checkpoint": {"path": "runs/tdmpc2-long-20260928-v2/checkpoint-at-least-100000-step-100354.pt", "sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295"},
+    "training_ledger": {"path": "runs/tdmpc2-long-20260928-v2/training.jsonl", "sha256": "84f06ee4dcc8568bd5d384d1811252321ad5dc6a98ce19d18badb448d09123d7"},
+    "step_ledger": {"path": "runs/tdmpc2-long-20260928-v2/steps.jsonl", "sha256": "a94ce156afcb6e4f706474d6cf2d2ccb4754a868eb75a3eb4b53df5d2be37945"}
+  },
+  "logged_quality": {
+    "protocol": {"path": "experiments/tdmpc2-h5-logged-v1.json", "sha256": "202ba8a484bb1c787fcf4524c8d0373376362a0efb1de390a976a37d8b987223"},
+    "result": {"path": "runs/tdmpc2-long-v2-h5-logged-20260929-v1.json", "sha256": "47baa5b9196fa55ca4eff492cab0bf559fb7a819a6c6e0d88b8c9481db7df042"}
+  },
+  "source_sha256": {
+    "scripts/train_tdmpc2_long.py": "9121fee37b5beeeaf7f22f253ab0500896e514fa7e5a140a8257483116df9849",
+    "haic/algorithms/tdmpc2/__init__.py": "9b993133e8341c45c159cb75770dfa2897c0a22ea4cee8dde22a51af24ea5b97",
+    "haic/algorithms/tdmpc2/action_2d.py": "4b72f84a259c8dd9756501a7b6a9d7aa82c387e65ab28541b88122ed787c4b96",
+    "haic/algorithms/tdmpc2/haic_env.py": "e1b17451b862f26f9389992e907b37586a263d6470c3c8102857abdb592a4db2",
+    "haic/algorithms/tdmpc2/model.py": "a121d8688e5ab954abe2e6468ca84760e035f15b49004b695fc465696eb90c65",
+    "haic/algorithms/tdmpc2/replay.py": "bef63630556a1adbfb26278190c2549f4415ab1c90b5775d920187cfc4576254",
+    "haic/algorithms/tdmpc2/learner.py": "e0f1c814a5162b6cf34383a675ec10e768f3a046ac82c6500400cdfed23d2c9a",
+    "haic/algorithms/tdmpc2/planner.py": "e0c114570343fbd74f20611732c85766edbb1b33684527d2c7b37bda528eb009",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "scripts/diagnose_tdmpc2_h5_branches.py": "85742b0623c25e6ddb8c2291b274b012c21a5002082dc0c60e424dbcea2f3e88",
+    "scripts/diagnose_tdmpc2_checkpoint_losses.py": "ef6552479192e2e113951edb3bfbf7a4c87b3a508dd884c45ce6a270a0aebe6f",
+    "scripts/diagnose_tdmpc2_h5_logged.py": "ab266fd101dc6ad3584ebba835c6449b6a64ab82bd3822a93b782b5806c9df13",
+    "haic/algorithms/rlpd/prefix_parity.py": "44b57f5d441a4a13adbf630d43d83f4d46b6e309893ddac144cdb0d2aaabf66e",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50",
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23"
+  },
+  "runtime": {
+    "python": "3.11.14", "torch": "2.1.0+cu121", "numpy": "1.26.0", "opencv": "4.8.1",
+    "gymnasium": "0.29.1", "box2d": "2.3.5",
+    "box2d_native_sha256": "e70686ec6f9a94bc76af87a00281d228dbc6b723d8cf3a2388700f1a12e692fb",
+    "box2d_python_sha256": "2056cc5bf2cff1c97de7e203c48f57ba1d29c5d164ff529ab1e30184d85e629a",
+    "timelimit_source_sha256": "9d656be14bd94e07ed2abd1bfafe384f044c3684f85fa0644bfcb1facc040d81"
+  },
+  "anchors": [
+    {"episode_id": 0, "start_step": 16}, {"episode_id": 0, "start_step": 50}, {"episode_id": 0, "start_step": 100},
+    {"episode_id": 1, "start_step": 16}, {"episode_id": 1, "start_step": 50}, {"episode_id": 1, "start_step": 100},
+    {"episode_id": 2, "start_step": 16}, {"episode_id": 2, "start_step": 50}, {"episode_id": 2, "start_step": 100},
+    {"episode_id": 3, "start_step": 16}, {"episode_id": 3, "start_step": 50}, {"episode_id": 3, "start_step": 100}
+  ],
+  "candidates": {
+    "logged": null,
+    "coast": [[0.0, -1.0, -1.0], [0.0, -1.0, -1.0], [0.0, -1.0, -1.0], [0.0, -1.0, -1.0], [0.0, -1.0, -1.0]],
+    "gas": [[0.0, 1.0, -1.0], [0.0, 1.0, -1.0], [0.0, 1.0, -1.0], [0.0, 1.0, -1.0], [0.0, 1.0, -1.0]],
+    "brake": [[0.0, -1.0, 1.0], [0.0, -1.0, 1.0], [0.0, -1.0, 1.0], [0.0, -1.0, 1.0], [0.0, -1.0, 1.0]],
+    "left_gas": [[-0.5, 1.0, -1.0], [-0.5, 1.0, -1.0], [-0.5, 1.0, -1.0], [-0.5, 1.0, -1.0], [-0.5, 1.0, -1.0]]
+  },
+  "environment": {"track_id": 1, "geometry_seeds": [3910800001, 3910800004, 3910800034, 3910800085], "max_steps": 2000, "frame_skip": 4, "obstacles": true, "reward_shaping": false},
+  "horizon": 5, "discount": 0.995, "tie_tolerance": 0.000001,
+  "augmentation_seed": 834, "max_resets": 72,
+  "quality_gate": {"min_informative_real_pairs": 40, "min_informative_roads": 3, "min_concordance": 0.60}
+}

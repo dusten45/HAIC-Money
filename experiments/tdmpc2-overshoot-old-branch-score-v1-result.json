@@ -1,0 +1,45 @@
+{
+  "format": "haic-tdmpc2-overshoot-archived-branch-score-summary-v1",
+  "status": "complete_four_way_development_gate_failed",
+  "protocol": "experiments/tdmpc2-overshoot-old-branch-score-v1.json",
+  "protocol_sha256": "44edd04cc7a579c3867ed35f5763645d0c92b2971fd979d5d141ea87f5802aa8",
+  "operator": "scripts/score_tdmpc2_overshoot_archived_branches.py",
+  "operator_sha256": "b9489e90eb902a0bf5d4770431153b4a72e8b2b88b2a440b73778b99ae5255cc",
+  "operator_test_sha256": "8b713e728a8f68b50d00f0108a5e1070a30dcf9d56018306335a2543cbd6bb77",
+  "primary_receipt": "runs/tdmpc2-overshoot-old-branch-score-20260929-v1.json",
+  "primary_receipt_sha256": "ff9511b83952e92b14bd8f1aa9f7e93f34ea5670c13528a9179c5b159ae2c994",
+  "primary_body_sha256": "fbcfe3afa0ae6b3be8393d9b22cc5ed49f5889db34e247529aa6a33e92aaea94",
+  "new_model_checkpoint_sha256": "51b1da8c4e2c2584524a3d51ccbd82daa1121479c123237d2e809cbde1bcdaa0",
+  "original_five_action_branch_primary_sha256": "23f7e6898b362cd789b92d6a1f2f184e1de551596458ae08117058570f1bcefd",
+  "scope": "zero environment resets and zero optimizer updates; exact same 12 already-consumed TRAIN anchor pixels and 60 fixed five-action suffix bytes, 120 within-anchor real-H5 pairs of which 29 real ties and 91 informative; H3-prefix 40 informative and 80 ties",
+  "baseline_raw100k": {
+    "h5_reward_concordant": 56,
+    "h5_informative_pairs": 91,
+    "h3_prefix_concordant": 31,
+    "h3_prefix_informative_pairs": 40,
+    "h5_absolute_error_per_discounted_step": 0.39667698614253405,
+    "mean_predicted_minus_actual_h5_return": -1.0840867820076066
+  },
+  "overshoot100k": {
+    "h5_reward_concordant": 74,
+    "h5_informative_pairs": 91,
+    "h3_prefix_concordant": 34,
+    "h3_prefix_informative_pairs": 40,
+    "h5_absolute_error_per_discounted_step": 0.40691155269134205,
+    "mean_predicted_minus_actual_h5_return": -1.367786302652607,
+    "per_road_h5_concordant_old_new": [
+      {"geometry_seed": 3910800001, "informative_pairs": 23, "old": 13, "new": 19},
+      {"geometry_seed": 3910800004, "informative_pairs": 22, "old": 16, "new": 16},
+      {"geometry_seed": 3910800034, "informative_pairs": 23, "old": 12, "new": 18},
+      {"geometry_seed": 3910800085, "informative_pairs": 23, "old": 15, "new": 21}
+    ]
+  },
+  "predeclared_development_gate": {
+    "h5_reward_at_least_66_of_91": true,
+    "at_least_three_nonregressing_roads": true,
+    "h3_prefix_at_least_31_of_40": true,
+    "h5_normalized_error_strictly_below_0_39667698614253405": false,
+    "all_four_passed": false
+  },
+  "decision": "The 100k model improved actual five-action H5 reward ordering 56/91 -> 74/91, but worsened normalized absolute reward error 0.396676986 -> 0.406911553 and mean H5 underprediction. This is a mixed, dependent TRAIN-only result. Preserve the predeclared four-way FAIL and do NOT launch its conditional H3/default-MPPI eight-full-episode evaluator. No official/fresh/independent-road or model-promotion claim follows; diagnose why ranking improved while magnitude drifted and choose a distinct next hypothesis."
+}

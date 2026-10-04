@@ -1,0 +1,22 @@
+{
+  "format":"haic-tdmpc2-head-fit-transfer-summary-v1",
+  "status":"complete_fit_calibration_failed_transfer_only_rejected",
+  "protocol":"experiments/tdmpc2-head-fit-transfer-v1.json",
+  "protocol_sha256":"328390d512ac49351d017a5d99c981b9ed81e26b723e12589c9168af15691559",
+  "operator_sha256":"220d4735d9aaafeac6a9b3d93f9e2cf89f9a8aa9e5e98aaa72e022ce3ffff48f",
+  "primary_receipt":"runs/tdmpc2-head-fit-transfer-20260929-v1.json",
+  "primary_receipt_sha256":"6534cc588fa6f49b2bf2318b46beacc1a12845202f59acd260710c71052379ee",
+  "primary_body_sha256":"b38d829688df5fff9dc7f6dc2b860638d10d5f707a6b66291dd715cb92218557",
+  "environment_resets":0,
+  "optimizer_updates":0,
+  "frozen_model_bitwise_parity":true,
+  "unique_original_raw_targets":96510,
+  "phase_counts":{"fit_planned":86581,"excluded_random":6156,"excluded_early_planned":3773},
+  "fit_natural_ce":{"parent":1.5066221540473679,"adapted":1.2207945393857993},
+  "fit_25_75_uniform_road_ce":{"parent":1.4001865693477158,"adapted":1.1403048269277694},
+  "fit_per_road_positive_mae_improvement":[-0.2219589793711526,-0.1032923487751687,-0.2081026371378501,-0.0876643112611009],
+  "fit_per_road_positive_absolute_bias_improvement":[-0.3026836062323918,-0.1841457440074405,-0.2922686441210045,-0.1678651889023317],
+  "fit_per_road_nonpositive_mae_worsening":[-0.0594021717286111,-0.02026654212181178,-0.05009015257167613,-0.0386776557241506],
+  "predeclared_fit_gate":{"qualifying_roads":0,"minimum_qualifying_roads":3,"passed":false},
+  "decision":"Positive-event decoded raw calibration worsened on all four fitting roads despite improved categorical CE. Reject successful-fitting/transfer-only explanation. Next isolated objective control returns to original overshoot parent and changes only head loss to standard decoded raw reward MSE with identical split/sampler/optimizer/budget. Require separately frozen fit AND excluded gates before action-choice preservation or new branch. No causal representation defect, policy improvement, fresh-road or official claim follows."
+}

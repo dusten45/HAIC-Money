@@ -1,0 +1,38 @@
+{
+  "format": "haic-tdmpc2-h3-noise-full-consumed-train-summary-v1",
+  "status": "complete_valid_local_gate_failed",
+  "protocol": "experiments/tdmpc2-h3-noise-full-consumed-train-v1.json",
+  "protocol_sha256": "c82b9ac2b5f20d4b6115f07010d2c38d81c895eea7e35f17f2c288a7dca8d40d",
+  "operator": "scripts/evaluate_tdmpc2_h3_noise_train.py",
+  "operator_sha256": "64518efb0a33efdd33ccdcec44c7d140e6859e60f2f0bb57d3e178c22597e17c",
+  "operator_test_sha256": "56724066c73e5573eddacd9ed5a60e36a708581e56f8ad504e074ef53556ca98",
+  "primary_result": "runs/tdmpc2-h3-noise-full-train-20260929-v1/result.json",
+  "primary_result_sha256": "75e0d9dd4ec00298b261a56f55e73a3f580fd78aa51fe99321e4eddb757bed5b",
+  "primary_episode_ledger": "runs/tdmpc2-h3-noise-full-train-20260929-v1/episodes.jsonl",
+  "primary_episode_ledger_sha256": "acc89a2f2de37af8f7698672c862a755c4db907b6d539514f3b710b93f114a85",
+  "historical_h3_eval_mode_true": {"protocol": "experiments/tdmpc2-full-consumed-train-v1.json", "result": "experiments/tdmpc2-full-consumed-train-v1-result.json", "result_sha256": "3bc41dd2a35bfd488a6cd13a2778d9344f6929873edd77e701b067e31fd1366b", "mppi_finishes": 0, "mppi_episodes": 8, "censored": 0},
+  "source_model_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "intervention": "Use original frozen RAW100k H3 model, raw environment reward, 3D actions, same consumed four track-1 TRAIN roads and reset IDs, 512/24/6/64 MPPI; change only final planned action eval_mode=True to False to add training-mode Gaussian. Subsequent RNG consumption also changes.",
+  "safety_evidence": {"new_synthetic_tests_passed": 19, "combined_td_diagnostic_and_evaluator_synthetic_tests_passed": 147, "no_reset_preflight_resets": 0, "no_reset_preflight_torch_loads": 0, "independent_read_only_source_review": "no findings", "cpu_only_torch": "2.1.0+cpu", "max_action_latency_s": 3.993692609015852, "latency_limit_s": 5, "peak_process_rss_bytes": 6486913024},
+  "performance_evidence": {
+    "scope": "eight full episodes on four already-consumed track-1 TRAIN roads, two repeat seeds per road; no protected or official evaluation",
+    "completed_episodes": 8,
+    "reset_intents": 8,
+    "partial_events": 0,
+    "censored": 0,
+    "decisions": 2995,
+    "finishes": 2,
+    "distinct_finished_roads": 2,
+    "mean_progress": 0.7023945046314204,
+    "mean_raw_return": 546.3849220935178,
+    "mean_damage": 0.35000000000000003,
+    "per_road_finishes_out_of_two": [
+      {"geometry_seed": 3910800001, "finishes": 0},
+      {"geometry_seed": 3910800004, "finishes": 0},
+      {"geometry_seed": 3910800034, "finishes": 1},
+      {"geometry_seed": 3910800085, "finishes": 1}
+    ],
+    "predeclared_local_gate": {"min_finishes_out_of_eight": 4, "min_distinct_finished_roads": 2, "passed": false}
+  },
+  "decision": "The training-mode Gaussian H3 intervention finishes 2/8 across two repeatedly trained roads and fails the predeclared local 4/8 gate. Descriptively the historical frozen H3 no-Gaussian evaluator finished 0/8 under the same road/reset IDs, but the episodes are not matched action trajectories, and RNG consumption also changes after the first noisy action. Do not claim the Gaussian caused the training/evaluation finish gap or generalization. Next test a separate one-axis coverage hypothesis only after candidate-specific consumed-TRAIN audit, protocol freeze and safety checks."
+}

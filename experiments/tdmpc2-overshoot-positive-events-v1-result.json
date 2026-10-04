@@ -1,0 +1,27 @@
+{
+  "format": "haic-tdmpc2-overshoot-positive-event-summary-v1",
+  "status": "complete_reward_head_mechanism_screen_passed_no_policy_release",
+  "protocol": "experiments/tdmpc2-overshoot-positive-events-v1.json",
+  "protocol_sha256": "a82c901335914327b0f9d9fb896eb7cb4314bf4349f16030dab45a5fb6811e73",
+  "operator": "scripts/diagnose_tdmpc2_overshoot_positive_events.py",
+  "operator_sha256": "e557dab1b0b57742de4706c01fa9687af5cd709dd206f5ca78d5610fe63800eb",
+  "operator_test_sha256": "68c2e1532142555eb64e909611e0a9eb544f1cd972a03c076f28412c9c0f9065",
+  "primary_receipt": "runs/tdmpc2-overshoot-positive-events-20260929-v1.json",
+  "primary_receipt_sha256": "1ce5be167cfa77b88c80a381450e0d40c835387054c6709508e7fed8e78e33b6",
+  "primary_body_sha256": "e437ada13724278a7a9d9d6b9af9b937f7d7591217d7ae80f7dfd27b3709acda",
+  "reward_blind_manifest_sha256": "7f884988089a888ae07d3a09eaf5d40aeaa283bca9e4846a30c3bf78b64556ff",
+  "selected_replay_bytes_sha256": "d18601775ca4fea415103916b7b8d3d5182b601f07675f6d8b9e735ab55c3106",
+  "input": "original RAW100k complete replay and full ledger only, both original RAW100k and new reward-overshoot100k frozen checkpoint weights; 2048 reward-blind same-episode five-step starts per original four consumed TRAIN roads",
+  "windows": 8192,
+  "step_targets_with_overlap": 40960,
+  "environment_resets": 0,
+  "optimizer_updates": 0,
+  "per_road_true_latent_positive_reward": [
+    {"geometry_seed": 3910800001, "positive_targets": 3340, "nonpositive_targets": 6900, "old_mae": 0.5857579895859155, "new_mae": 1.5021123363054936, "new_mean_signed_bias": -1.346582113144333, "new_imagined_mae": 1.5756845986884056, "qualifies": true},
+    {"geometry_seed": 3910800004, "positive_targets": 2791, "nonpositive_targets": 7449, "old_mae": 0.5081840676316641, "new_mae": 1.406564069510995, "new_mean_signed_bias": -1.210229073463519, "new_imagined_mae": 1.4987353454045116, "qualifies": true},
+    {"geometry_seed": 3910800034, "positive_targets": 3237, "nonpositive_targets": 7003, "old_mae": 0.5414704647616351, "new_mae": 1.5296601536498884, "new_mean_signed_bias": -1.3673364660525846, "new_imagined_mae": 1.618770909475503, "qualifies": true},
+    {"geometry_seed": 3910800085, "positive_targets": 2867, "nonpositive_targets": 7373, "old_mae": 0.47110682020982564, "new_mae": 1.4011468559058602, "new_mean_signed_bias": -1.1543907050810702, "new_imagined_mae": 1.456935335255225, "qualifies": true}
+  ],
+  "predeclared_mechanism_gate": {"minimum_positive_and_nonpositive_targets_each_road": 100, "new_true_positive_bias_at_most": -0.25, "new_true_positive_mae_exceeds_old_by_at_least": 0.05, "minimum_qualifying_roads": 3, "qualifying_roads": 4, "passed": true},
+  "decision": "Positive raw reward events on true observed-pixel encodings are substantially underpredicted by the new model on all four previously consumed TRAIN roads; imagined rollouts worsen error somewhat more. This passes a mechanism screen for possible reward-head adaptation but does not identify the causal head weight versus encoder/training-distribution shift: the old model was evaluated on its own replay, the new model was not. More importantly the separately pinned five-candidate Q bootstrap term reverses new H5 reward ordering 74/91 to 31-36/91, so the next selected intervention tests H5 planner Q attenuation on NEW disjoint consumed-TRAIN branch anchors, not a premature head-only learner. Prior four-way reward-overshoot gate remains FAIL and neither it nor this diagnostic releases a frozen full-episode evaluator."
+}

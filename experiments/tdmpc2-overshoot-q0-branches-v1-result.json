@@ -1,0 +1,37 @@
+{
+  "format": "haic-tdmpc2-overshoot-q0-real-branches-summary-v1",
+  "status": "complete_disjoint_train_branch_gate_failed",
+  "protocol": "experiments/tdmpc2-overshoot-q0-branches-v1.json",
+  "protocol_sha256": "0d2d425c8ca7d1454577a8e8be488e9b3a89d610be145b3dbc82bd7ab22b3e20",
+  "operator": "scripts/diagnose_tdmpc2_overshoot_q0_branches.py",
+  "operator_sha256": "82fe29961cf70f9b2326e7fa6636fd2ab4868ed45946254905ec80cda5aa7088",
+  "operator_test_sha256": "b5e232d2f656f041ecd3e2d53747a2d7ed9428f56a684c0ae0377825f95cc8f0",
+  "planner_module": "haic/algorithms/tdmpc2/q_bootstrap.py",
+  "planner_module_sha256": "fd4e81e4365e6d9553e76ec9287c1d616c09489d0bf3cadb78b91fdca43792ff",
+  "primary_receipt": "runs/tdmpc2-overshoot-q0-branches-20260929-v1.json",
+  "primary_receipt_sha256": "f7ab0b57e7b1771f406c106f238ac16339b65cd93d920809a09a0b2f1a3ee7f7",
+  "primary_body_sha256": "dd8be3c8e514d9b8e41c96afaf916c31347388eb4aa3c69e47ef34a5a9cfefd4",
+  "source_overshoot100k_checkpoint_sha256": "51b1da8c4e2c2584524a3d51ccbd82daa1121479c123237d2e809cbde1bcdaa0",
+  "source_old_raw_replay_checkpoint_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "scope": "four previously consumed obstacle-enabled track-1 TRAIN roads, original RAW replay episode IDs 4-7 x start steps 16,50,100, disjoint from prior episode0-3 H5 branch anchors; no fresh/protected/official cell",
+  "safety_evidence": {"combined_synthetic_branch_and_planner_tests_passed": 110, "real_environment_resets_attempted": 72, "reset_intents": 72, "replay_bound_before_first_reset": true, "all_source_artifacts_rehashed_before_every_reset_and_final": true, "full_h5_suffixes": 60, "partial_or_early_terminal_suffixes": 0, "optimizer_updates": 0, "historical_hidden_box2d_solver_state_identity_proven": false, "resume_supported": false},
+  "actual_branch_outcomes": {"anchors": 12, "same_anchor_pairs": 120, "real_h5_ties_at_1e-6": 27, "informative_real_h5_pairs": 93, "informative_roads": 4},
+  "same_five_candidate_choice_quality": {
+    "h3_q0": {"concordant": 70, "discordant": 23, "informative_pairs": 93, "tied_best_actual_h5_choice": 7, "mean_real_h5_regret": 1.028467882472486},
+    "h5_q0": {"concordant": 68, "discordant": 25, "informative_pairs": 93, "tied_best_actual_h5_choice": 7, "tied_best_roads": 4, "mean_real_h5_regret": 1.279246663025931},
+    "h5_all_ten_fixed_q1_pairs": {"minimum_concordant": 39, "maximum_concordant": 41, "informative_pairs_each": 93, "minimum_mean_real_h5_regret": 1.501535290385587, "maximum_mean_real_h5_regret": 1.7729237224031307}
+  },
+  "predeclared_gate": {
+    "all_60_full_h5_suffixes": true,
+    "at_least_40_informative_pairs_on_three_roads": true,
+    "h5_q0_concordance_at_least_70_percent": true,
+    "h5_q0_concordance_strictly_above_all_ten_h5_q1_pairs": true,
+    "h5_q0_concordance_at_least_h3_q0_on_same_real_h5": false,
+    "h5_q0_tied_best_at_least_8_of_12": false,
+    "h5_q0_tied_best_across_at_least_two_roads": true,
+    "h5_q0_mean_regret_below_every_q1_pair": true,
+    "h5_q0_mean_regret_at_most_h3_q0": false,
+    "all_conditions_passed": false
+  },
+  "decision": "Changing H5 terminal Q-bootstrap weight from 1 to 0 improved five-fixed-candidate real H5-return ordering relative to all ten held-fixed Q1 pairs, but H5 Q0 was inferior to same-checkpoint H3 Q0 on matching real outcomes and missed the top-choice/regret conditions. The exact predeclared local TRAIN gate FAILS. Do not activate the prepared H5 Q0 eight-full-episode evaluator, do not reinterpret the earlier overshoot model-error FAIL, and do not infer full MPPI or independent-road/official performance from this cohort. Preserve the complete negative receipt and choose a distinct next hypothesis."
+}

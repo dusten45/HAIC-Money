@@ -192,12 +192,40 @@ class TdDiagnosticInventoryTests(unittest.TestCase):
                                             {"event": "episode", "geometry_seed": 90001,
                                              "track_id": 1}]))
 
+    def test_torn_td_journal_keeps_all_intact_reset_intents(self) -> None:
+        path = audit.TD_JOURNALS[0]
+        prefix = self.rows([{"event": "start", "protocol_sha256": "0" * 64},
+                            {"event": "reset_intent", "geometry_seed": 3000, "track_id": 1},
+                            {"event": "reset", "geometry_seed": 3000, "track_id": 1},
+                            {"event": "episode", "geometry_seed": 3000, "track_id": 1},
+                            {"event": "reset_intent", "geometry_seed": 3001, "track_id": 2}])
+        for suffix in (b'{"event":"reset",', b'{"event":"reset","geometry_seed":3001,"track_id":2}'):
+            with self.subTest(suffix=suffix):
+                self.write(path, prefix + suffix)
+                report = self.audit()
+                self.assertEqual(report["status"], "BLOCKED")
+                self.assertTrue({3000, 3001} <= {c["geometry_seed"] for c in report["collisions"]})
+                self.assertTrue(any(b["path"] == path for b in report["blockers"]))
+
     def test_unknown_range_candidate_blocks_and_disjoint_warns(self) -> None:
         path = "experiments/other-train-allocation.json"
         for value in ({"road_seed_range": {"start": 2990, "end": 3000}},
-                      {"road_seed_range": {"start": 2999, "count": 2}},
-                      {"road_seed_range": [2990, 3000]},
-                      {"road_seed_range": {"start": "unbounded", "end": 5000}}):
+                       {"road_seed_range": {"start": 2999, "count": 2}},
+                       {"road_seed_range": [2990, 3000]},
+                       {"road_seed_range": {"start": "unbounded", "end": 5000}},
+                       {"road_seed_range": {"start": 2990, "end": 4000}},
+                       {"road_seed_range": {"min": 2990, "max": 4000}},
+                       {"road_seed_min": 2990, "road_seed_max": 4000},
+                        {"training_seed_interval": {"from": 2990, "to": 4000}},
+                        {"training_seed_interval": {"start": 5000, "end": 6000,
+                                                     "from": 2990, "to": 4000}},
+                        {"training_seed_span": {"from": 2990, "to": 4000}},
+                        {"seedStart": 2990, "seedEnd": 4000},
+                       {"training_seed_interval": {"START": 5000, "start": 2990, "end": 4000}},
+                       {"road_seed_range": "unreviewed interval"},
+                       {"road_seed_start": 2990},
+                       {"road_seed_start": 5000},
+                       {"road_seed_count": 10}):
             with self.subTest(value=value):
                 self.write(path, value)
                 report = self.audit()
@@ -206,6 +234,354 @@ class TdDiagnosticInventoryTests(unittest.TestCase):
         report = self.audit()
         self.assertFalse(any(b["path"] == path for b in report["blockers"]))
         self.assertTrue(any(w["path"] == path for w in report["provenance_warnings"]))
+        for value in ({"road_seed_min": 5000, "road_seed_max": 6000},
+                      {"road_seed_start": 5000, "road_seed_end": 6000},
+                       {"road_seed_start": 5000, "road_seed_count": 3000},
+                       {"seedStart": 5000, "seedEnd": 6000},
+                      {"road_seed_range": {"start": 5000, "count": 3000}},
+                      {"training_seed_interval": {"from": 5000, "to": 6000}}):
+            with self.subTest(disjoint=value):
+                self.write(path, value)
+                report = self.audit()
+                self.assertFalse(any(b["path"] == path for b in report["blockers"]))
+                self.assertTrue(any(w["path"] == path for w in report["provenance_warnings"]))
+
+    def test_run_local_id_only_metadata_catches_unique_cross_track_road(self) -> None:
+        for name, value in (("config.json", {"config": {"excluded_training_seeds": [3000],
+                                                            "seed": 3001}}),
+                            ("protocol.json", {"partitions": {"screen": {"seeds": [3000]}}}),
+                            ("study_protocol.json", {"training_geometry_seeds": [3000]})):
+            with self.subTest(name=name):
+                path = f"runs/independent-training/{name}"
+                self.write(path, value)
+                report = self.audit()
+                hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+                self.assertIn(path, {source["path"] for source in hit["sources"]})
+                self.assertNotIn(3001, {c["geometry_seed"] for c in report["collisions"]})
+
+    def test_run_local_sampler_rng_is_ambiguous_not_proven_road(self) -> None:
+        for name in ("config.json", "protocol.json", "study_protocol.json",
+                     "run-config.json", "run_config.json"):
+            with self.subTest(name=name):
+                path = f"runs/unreviewed-train-source/{name}"
+                self.write(path, {"config": {"seed": 3000, "geometry_seed": 3001,
+                                             "rng_seeds": {"track_seed": 3002}}})
+                report = self.audit()
+                self.assertEqual(report["collisions"], [])
+                self.assertTrue(any(b["path"] == path and "unreviewed run-local" in b["reason"]
+                                    for b in report["blockers"]))
+                self.assertEqual(report["status"], "BLOCKED")
+
+    def test_explicit_road_exclusion_survives_ambiguous_sampler_in_same_config(self) -> None:
+        path = "runs/unreviewed-train-source/config.json"
+        self.write(path, {"config": {"excluded_training_seeds": [3000],
+                                     "seed": 3000, "geometry_seed": 3001}})
+        report = self.audit()
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertTrue(any(s["path"] == path and "TRAIN exclusion" in s["field"]
+                            for s in hit["sources"]))
+        self.assertNotIn(3001, {c["geometry_seed"] for c in report["collisions"]})
+        self.assertTrue(any(b["path"] == path and "unreviewed run-local" in b["reason"]
+                            for b in report["blockers"]))
+
+    def test_run_local_declared_road_roles_and_contradictory_partitions(self) -> None:
+        path = "runs/independent-training/study_protocol.json"
+        self.write(path, {"training_geometry_seeds": [3000],
+                          "partitions": {"screen": {"track_ids": [2], "seeds": [3001]}}})
+        report = self.audit()
+        for road, role in ((3000, "declared TRAIN road"), (3001, "declared screen")):
+            hit = next(c for c in report["collisions"] if c["geometry_seed"] == road)
+            self.assertTrue(any(s["path"] == path and role in s["field"] for s in hit["sources"]))
+        self.assertFalse(any(b["path"] == path for b in report["blockers"]))
+        self.write(path, {"partitions": {"screen": {"seeds": [3000], "partition": "BLIND"}}})
+        report = self.audit()
+        self.assertEqual(report["collisions"], [])
+        self.assertTrue(any(b["path"] == path and "contradictory partition" in b["reason"]
+                            for b in report["blockers"]))
+        self.write(path, {"training_geometry_seeds": [3000], "seed_role": "SAMPLER RNG"})
+        report = self.audit()
+        self.assertEqual(report["collisions"], [])
+        self.assertTrue(any(b["path"] == path and "contradictory run-local road" in b["reason"]
+                            for b in report["blockers"]))
+
+    def test_run_local_free_text_road_alias_is_not_silently_typed(self) -> None:
+        path = "runs/unreviewed-train-source/config.json"
+        self.write(path, {"note": "geometry_seed:3000 from unreviewed sampler log"})
+        report = self.audit()
+        self.assertEqual(report["collisions"], [])
+        self.assertTrue(any(b["path"] == path and "unreviewed run-local" in b["reason"]
+                            for b in report["blockers"]))
+
+    def test_diagnostic_named_experiment_protocol_is_not_skipped(self) -> None:
+        path = "experiments/other-train-diagnostic-protocol.json"
+        self.write(path, {"partitions": {"train_diagnostic": {"seeds": [3000]},
+                                          "blind": {"seeds": [3001]}}})
+        report = self.audit()
+        for road, role in ((3000, "train_diagnostic"), (3001, "blind")):
+            hit = next(c for c in report["collisions"] if c["geometry_seed"] == road)
+            self.assertTrue(any(s["path"] == path and role in s["field"] for s in hit["sources"]))
+        self.assertFalse(any(b["path"] == path for b in report["blockers"]))
+
+    def test_run_local_protocol_interior_interval_blocks_without_literal_id(self) -> None:
+        path = "runs/independent-training/protocol.json"
+        self.write(path, {"training_road_seed_range": {"start": 2990, "end": 4000}})
+        report = self.audit()
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertEqual(report["collisions"], [])
+        self.assertTrue(any(b["path"] == path for b in report["blockers"]))
+
+    def test_residual_partial_road_not_in_completed_episode_ledger(self) -> None:
+        folder = f"{audit._RESIDUAL}/iteration-2"
+        self.write(f"{folder}/episodes.jsonl", self.rows([
+            {"episode": 1, "geometry_seed": 91000, "track_id": 2, "decisions": 8},
+        ]))
+        self.write(f"{folder}/result.json", {
+            "completed_episodes": 1, "environment_decisions": 13,
+            "option_action_counts": {"KEEP": 13, "STEER_MINUS": 0, "STEER_PLUS": 0,
+                                     "COAST": 0, "BRAKE": 0},
+            "status": "completed_bounded_training_pilot",
+            "incomplete_final_episode": {"geometry_seed": 3000, "track_id": 4,
+                                         "decisions": 5,
+                                         "status": "budget_interrupted; not an episode outcome"},
+        })
+        report = self.audit()
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertEqual(hit["track_id"], 1)  # ID aliases across tracks.
+        self.assertTrue(any(s["path"] == f"{folder}/result.json" and "actual partial" in s["field"]
+                            for s in hit["sources"]))
+        self.assertTrue(any(b["path"] == f"{folder}/result.json" and b["field"] == "source binding"
+                            for b in report["blockers"]))
+        self.assertEqual(report["status"], "BLOCKED")
+
+    def test_residual_retry_counter_correction_and_torn_ledger_preserve_partial(self) -> None:
+        folder = f"{audit._RESIDUAL}/iteration-1-retry"
+        self.write(f"{folder}/episodes.jsonl", self.rows([
+            {"episode": 1, "geometry_seed": 91000, "track_id": 2, "decisions": 8},
+        ]))
+        self.write(f"{folder}/result.json", {
+            "completed_episodes": 1, "environment_decisions": 14,
+            "option_action_counts": {"KEEP": 13, "STEER_MINUS": 0, "STEER_PLUS": 0,
+                                     "COAST": 0, "BRAKE": 0},
+            "status": "completed_bounded_training_pilot",
+            "incomplete_final_episode": {"geometry_seed": 3000, "track_id": 4,
+                                         "decisions": 5,
+                                         "status": "budget_interrupted; not an episode outcome"},
+        })
+        self.write(f"{folder}/counter-audit.json", {
+            "status": "post-run-accounting-correction; original artifacts preserved",
+            "completed_episode_decisions": 8, "incomplete_final_episode_decisions": 5,
+            "actual_collector_step_calls": 13, "sum_of_per_option_action_counts": 13,
+            "result_json_environment_decisions_field": 14,
+        })
+        self.assertFalse(any(b["path"] == f"{folder}/result.json" and b["field"] == "TRAIN ledger/marker"
+                             for b in self.audit()["blockers"]))
+        self.write(f"{folder}/episodes.jsonl", self.rows([
+            {"episode": 1, "geometry_seed": 3002, "track_id": 2, "decisions": 8},
+        ]) + b"{torn")
+        report = self.audit()
+        self.assertTrue({3000, 3002} <= {c["geometry_seed"] for c in report["collisions"]})
+        self.assertTrue(any(b["path"] == f"{folder}/result.json" for b in report["blockers"]))
+
+    def test_positive_interaction_without_any_road_is_ambiguous(self) -> None:
+        folder = f"{audit._RESIDUAL}/iteration-1"
+        self.write(f"{folder}/episodes.jsonl", b"")
+        self.write(f"{folder}/failure.json", {
+            "environment_decisions_completed": 2,
+            "status": "implementation_smoke_failed; not a trained model or evaluation result",
+        })
+        report = self.audit()
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertEqual(report["collisions"], [])
+        self.assertTrue(any(b["path"] == f"{folder}/failure.json" and "no recorded road" in b["reason"]
+                            for b in report["blockers"]))
+
+    def test_zero_action_reset_remains_actual_road_not_released(self) -> None:
+        path = "runs/tdmpc2-exploration-20260928-v1/failure.json"
+        protocol = "experiments/tdmpc2-exploration-v1.json"
+        self.write(protocol, {"format": "haic-tdmpc2-exploration-v1"})
+        self.write(path, {"status": "aborted_after_first_reset_before_first_action",
+                          "reset_cell": {"track_id": 4, "geometry_seed": 3000},
+                          "attempted_episodes": 1, "decisions": 0,
+                          "protocol_sha256": self.sha(protocol)})
+        report = self.audit()
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertTrue(any(s["path"] == path and "actual reset; 0 decisions" in s["field"]
+                            for s in hit["sources"]))
+        self.assertFalse(any(b["path"] == path for b in report["blockers"]))
+
+    def final_source_fixture(self, decisions: int = 2, step_road: int = 3000) -> tuple[str, str, str, dict, dict]:
+        folder = f"{audit._FINAL_SOURCE}/seed0"
+        ledger = f"{folder}/episodes.jsonl"
+        self.write(ledger, self.rows([
+            {"event": "reset", "track_id": 4, "geometry_seed": 3000, "seed": 3000,
+             "source_seed": 0, "episode_id": 0, "partition": "TRAIN", "collection_step": 0},
+            {"event": "capped_partial", "track_id": 4, "geometry_seed": 3000, "seed": 3000,
+             "source_seed": 0, "episode_id": 0, "collection_step": decisions, "steps": decisions},
+        ]))
+        steps = f"{folder}/steps.jsonl"
+        self.write(steps, self.rows([{"episode_id": 0, "track_id": 4,
+                                     "geometry_seed": step_road}]) * decisions)
+        r6 = "experiments/drqv2-geometry-mix-v1-r6.json"
+        self.write(r6, {"format": "haic-drq-geometry-mix-study-v1"})
+        original_ledger = "runs/20260922-drq-augmentation-pad-v1-restart/control-seed0/episodes.jsonl"
+        self.write(original_ledger, self.rows([
+            {"event": "reset", "track_id": 1, "seed": 91000},
+            {"event": "end", "track_id": 1, "seed": 91000},
+        ]))
+        self.write(audit._FINAL_SOURCE_R7, {
+            "source_replay": {"0": {"episode_ledger_path": original_ledger,
+                                    "episode_ledger_sha256": self.sha(original_ledger)}},
+        })
+        self.write(audit._FINAL_SOURCE_COLLECTION, {
+            "r6_protocol_path": r6, "r6_protocol_sha256": self.sha(r6),
+            "decisions": 100000, "capacity": 100000,
+            "r7_protocol_path": audit._FINAL_SOURCE_R7,
+            "r7_protocol_sha256": self.sha(audit._FINAL_SOURCE_R7),
+            "catalog_sha256": self.sha(audit.CATALOG),
+            "sources": {"0": {"original_ledger_sha256": self.sha(original_ledger), "schedule_sha256": "b",
+                              "source_actor_sha256": "c", "source_checkpoint_sha256": "d",
+                              "collection_rng_seeds": {"action_noise_seed": 3001}}},
+        })
+        receipt = {"format": "haic-drq-final-source-pool-v1", "partition": "TRAIN",
+                   "source_seed": 0, "catalog_sha256": self.sha(audit.CATALOG),
+                   "collection_protocol_sha256": self.sha(audit._FINAL_SOURCE_COLLECTION),
+                   "episode_ledger_path": ledger, "episode_ledger_sha256": self.sha(ledger),
+                   "step_ledger_path": steps, "step_ledger_sha256": self.sha(steps),
+                   "completed": True, "decisions": decisions, "capacity": 100000,
+                   "scheduled_episodes_consumed": 1,
+                   "geometry_seeds": [3000], "original_ledger_sha256": self.sha(original_ledger),
+                   "schedule_sha256": "b",
+                   "source_actor_sha256": "c", "source_checkpoint_sha256": "d",
+                   "collection_rng_seeds": {"action_noise_seed": 3001}}
+        path = f"{folder}/receipt.json"
+        self.write(path, receipt)
+        source = {
+            "r6_protocol_path": r6, "r6_protocol_sha256": self.sha(r6),
+            "r7_protocol_path": audit._FINAL_SOURCE_R7,
+            "r7_protocol_sha256": self.sha(audit._FINAL_SOURCE_R7),
+            "collection_protocol_path": audit._FINAL_SOURCE_COLLECTION,
+            "collection_protocol_sha256": self.sha(audit._FINAL_SOURCE_COLLECTION),
+            "catalog_sha256": self.sha(audit.CATALOG),
+            "source_replay": {"0": {"receipt_path": path, "receipt_sha256": self.sha(path)}},
+            "runs": [{"rng_seeds": {key: 3001 for key in audit._FINAL_SOURCE_RNG}}],
+        }
+        self.write(audit._FINAL_SOURCE_PROTOCOL, source)
+        return path, ledger, steps, receipt, source
+
+    def test_final_source_partial_receipt_remains_unverified_and_preserves_reset(self) -> None:
+        path, ledger, steps, receipt, source = self.final_source_fixture()
+        report = self.audit()
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertTrue(any(s["path"] == ledger and "actual" in s["field"]
+                            for s in hit["sources"]))
+        self.assertFalse(any(s["path"] == path for s in hit["sources"]))
+        self.assertTrue(any(b["path"] == path and "fixed complete 100k" in b["reason"]
+                            for b in report["blockers"]))
+        self.assertNotIn(3001, {c["geometry_seed"] for c in report["collisions"]})
+        self.assertFalse(any(b["path"] in (path, audit._FINAL_SOURCE_COLLECTION,
+                                           audit._FINAL_SOURCE_PROTOCOL) and "sampler" in b["reason"]
+                             for b in report["blockers"]))
+        receipt["step_ledger_sha256"] = "0" * 64
+        self.write(path, receipt)
+        source["source_replay"]["0"]["receipt_sha256"] = self.sha(path)
+        self.write(audit._FINAL_SOURCE_PROTOCOL, source)
+        report = self.audit()
+        self.assertTrue(any(b["path"] == path and "step ledger SHA/count mismatch" in b["reason"]
+                            for b in report["blockers"]))
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertFalse(any(s["path"] == path for s in hit["sources"]))
+        receipt["step_ledger_sha256"] = self.sha(steps)
+        collection = json.loads((self.root / audit._FINAL_SOURCE_COLLECTION).read_text())
+        collection["decisions"] = 2
+        collection["capacity"] = 2
+        self.write(audit._FINAL_SOURCE_COLLECTION, collection)
+        receipt["collection_protocol_sha256"] = self.sha(audit._FINAL_SOURCE_COLLECTION)
+        self.write(path, receipt)
+        source["collection_protocol_sha256"] = self.sha(audit._FINAL_SOURCE_COLLECTION)
+        source["source_replay"]["0"]["receipt_sha256"] = self.sha(path)
+        self.write(audit._FINAL_SOURCE_PROTOCOL, source)
+        report = self.audit()
+        self.assertTrue(any(b["path"] == path and "fixed complete 100k" in b["reason"]
+                            for b in report["blockers"]))
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertFalse(any(s["path"] == path for s in hit["sources"]))
+        receipt["schedule_sha256"] = "changed-unreconciled-schedule"
+        self.write(path, receipt)
+        source["source_replay"]["0"]["receipt_sha256"] = self.sha(path)
+        self.write(audit._FINAL_SOURCE_PROTOCOL, source)
+        report = self.audit()
+        self.assertTrue(any(b["path"] == path and "source/schedule binding mismatch" in b["reason"]
+                            for b in report["blockers"]))
+
+    def test_final_source_full_count_fake_step_roads_never_verify_visited_receipt(self) -> None:
+        path, ledger, steps, _, _ = self.final_source_fixture(decisions=100000, step_road=3001)
+        report = self.audit()
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertTrue(any(b["path"] == path and "schedule parity not independently verified" in b["reason"]
+                            for b in report["blockers"]))
+        hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+        self.assertTrue(any(s["path"] == ledger for s in hit["sources"]))
+        self.assertFalse(any(s["path"] == path for s in hit["sources"]))
+        self.assertTrue(any(b["path"] == steps for b in report["blockers"]))
+
+    def test_residual_alias_and_action_counter_tamper_keep_known_tail(self) -> None:
+        folder = f"{audit._RESIDUAL}/iteration-2"
+        path = f"{folder}/result.json"
+        self.write(f"{folder}/episodes.jsonl", self.rows([
+            {"episode": 1, "geometry_seed": 91000, "track_id": 2, "decisions": 8,
+             "option_counts": {"KEEP": 8}},
+        ]))
+        result = {
+            "completed_episodes": 1, "environment_decisions": 13,
+            "option_action_counts": {"KEEP": 13, "STEER_MINUS": 0, "STEER_PLUS": 0,
+                                     "COAST": 0, "BRAKE": 0},
+            "status": "completed_bounded_training_pilot",
+            "incomplete_final_episode": {"geometry_seed": 3000, "track_id": 4,
+                                         "decisions": 5,
+                                         "status": "budget_interrupted; not an episode outcome"},
+        }
+        for change, reason in (({"unrecognized_road_ids": [3001]}, "unreviewed road identity alias"),
+                               ({"option_action_counts": {"KEEP": 14}}, "option action counts")):
+            with self.subTest(change=change):
+                self.write(path, {**result, **change})
+                report = self.audit()
+                hit = next(c for c in report["collisions"] if c["geometry_seed"] == 3000)
+                self.assertTrue(any(s["path"] == path for s in hit["sources"]))
+                self.assertTrue(any(b["path"] == path and reason in b["reason"]
+                                    for b in report["blockers"]))
+
+    def test_result_with_second_unknown_road_alias_cannot_be_typed(self) -> None:
+        folder = f"{audit._RESIDUAL}/iteration-2"
+        self.write(f"{folder}/episodes.jsonl", self.rows([
+            {"episode": 1, "geometry_seed": 91000, "track_id": 2, "decisions": 8},
+        ]))
+        self.write(f"{folder}/result.json", {
+            "completed_episodes": 1, "environment_decisions": 13,
+            "status": "completed_bounded_training_pilot", "unrecognized_road_ids": [3000],
+            "incomplete_final_episode": {"geometry_seed": 91001, "track_id": 4,
+                                         "decisions": 5,
+                                         "status": "budget_interrupted; not an episode outcome"},
+        })
+        report = self.audit()
+        self.assertTrue(any(b["path"] == f"{folder}/result.json" for b in report["blockers"]))
+        self.assertEqual(report["status"], "BLOCKED")
+
+    def test_unreviewed_result_files_are_not_opened_even_if_poisoned(self) -> None:
+        forbidden = ("runs/other-lane/result.json", "runs/other-lane/failure.json",
+                     "runs/other-lane/receipt.json", "runs/other-lane/blind/episodes.jsonl",
+                     "experiments/other-lane-result.json")
+        for path in forbidden:
+            self.write(path, b"PROTECTED POISON 3000")
+        original = Path.read_bytes
+
+        def guarded(path: Path) -> bytes:
+            self.assertNotIn(path.relative_to(self.root).as_posix(), forbidden)
+            return original(path)
+
+        with patch.object(Path, "read_bytes", guarded):
+            report = self.audit()
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertEqual(report["collisions"], [])
 
     def test_unrelated_metadata_drift_is_a_warning_not_a_collision(self) -> None:
         original = self.audit()

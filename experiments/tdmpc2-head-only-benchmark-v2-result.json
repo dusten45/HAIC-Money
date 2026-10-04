@@ -1,0 +1,22 @@
+{
+  "format": "haic-tdmpc2-head-only-benchmark-summary-v2",
+  "status": "complete_synthetic_cuda_resource_gate_passed",
+  "primary_receipt": "runs/tdmpc2-head-only-benchmark-20260929-v2.json",
+  "primary_receipt_sha256": "d0460343d725cbfdb9db0b41997f794237a42bdb7cd37f2eb9aae5246b25aa11",
+  "primary_body_sha256": "9287a8c30e601ab8234a3ad0e897c46b27aa6ae8f8758cfc15be6f40937c1075",
+  "operator_sha256": "788b3b96f9a9eebf408f8bea3aad861f90a0fa9aa9f08cb76557fb77a8f5d584",
+  "adapter_sha256": "c2a1626b3ab321100ae22579d1f665a2b3fdc69661d3cdcce796f4df715fc615",
+  "timed_full_head_updates": 128,
+  "warmup_head_updates": 32,
+  "timed_holdout_inference_batches": 32,
+  "forecast_holdout_batches": 86,
+  "mean_full_step_seconds": 0.2756132457398053,
+  "mean_inference_seconds": 0.004023528206744231,
+  "forecast_seconds_including_600s_io_reserve": 741.4600052445603,
+  "wall_cap_seconds_exclusive": 1800,
+  "peak_process_rss_bytes": 1116942336,
+  "peak_cuda_reserved_bytes": 197132288,
+  "environment_resets": 0,
+  "real_replay_reads": 0,
+  "interpretation": "Synthetic generated tensor operational budget only. It authorizes consideration of source-bound head pilot resource preflight, not model calibration, action-ranking performance, policy finish, official time/memory compliance or generalization. The separately completed real head-only pilot failed its excluded logged error gate."
+}

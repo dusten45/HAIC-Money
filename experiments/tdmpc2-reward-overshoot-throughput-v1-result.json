@@ -1,0 +1,22 @@
+{
+  "format": "haic-tdmpc2-reward-overshoot-throughput-summary-v1",
+  "status": "complete_synthetic_gpu_resource_gate_passed_not_training_result",
+  "operator": "scripts/benchmark_tdmpc2_reward_overshoot.py",
+  "operator_sha256": "ad313e27d1645a6b99032a12c9306f2e64d4cf06b7b683330cead212867b2e8a",
+  "operator_test_sha256": "25a799f2bca7a077d69399a9aa37b6e62a06b353a0fe5171d7f3037ad03092d8",
+  "primary_receipt": "runs/tdmpc2-reward-overshoot-throughput-20260929-v1.json",
+  "primary_receipt_sha256": "148b4cd953c85946d91b256f22997bb4709aaa790daea7c6985bb7178be2d4fd",
+  "primary_body_sha256": "0a232aa0ea36c5c6708f31175b7ba30c1820b14d8b72a189fe599aa4fa2c57e6",
+  "source_overshoot_module_sha256": "2a0c21abb909348d444e0418f84666119ff1032f56f5f1924a7ad7723d5d7b73",
+  "scope": "Only generated pixels/actions/rewards, original H3+size5 learner and isolated reward-overshoot learner on one GPU; no HAIC environment, original TRAIN replay, real model training, protected/official cell or policy evaluation",
+  "environment_resets": 0,
+  "real_replay_reads": 0,
+  "fixture": {"batch_size": 256, "horizon": 3, "model_size": 5, "generated_episodes": 307, "generated_transitions": 434, "valid_step4_targets_in_probe_batch": 255, "valid_step5_targets_in_probe_batch": 252},
+  "source_hashes_stable_before_and_after": true,
+  "replay_payload_hashes_stable_before_and_after": true,
+  "matched_sample_rng_after_both_arms": true,
+  "timing": {"scope": "full_update_with_replay_sample", "warmup_updates_each": 32, "timed_updates_each": 128, "base_mean_seconds_per_update": 0.07749085541581735, "variant_mean_seconds_per_update": 0.08978212048532441, "positive_delta_seconds_per_update": 0.01229126506950706},
+  "predeclared_forecast": {"historical_100k_elapsed_seconds": 17459.373508695047, "extrapolated_100354_update_seconds": 18692.85112348036, "strict_limit_seconds": 20600, "original_wall_cap_seconds": 21600, "passed": true},
+  "resource_observation": {"cgroup_headroom_bytes_before": 54560571392, "cgroup_headroom_bytes_after": 53686599680, "minimum_required_bytes": 25769803776, "cuda_peak_allocated_bytes": 358157312, "cuda_free_bytes_after": 15713107968, "minimum_cuda_reserve_bytes": 2147483648, "baseline_other_context_mib": 344, "baseline_gpu_utilization_percent": 3, "mid_gpu_utilization_percent_including_own_work": 64, "final_gpu_utilization_percent_including_own_work": 52},
+  "decision": "The no-environment compute feasibility threshold passed with source/fixture/RNG/telemetry checks. This is only a synthetic throughput forecast: generated replay has 434 transitions rather than actual 100k pixel-buffer locality, and active peer context may affect later long-run throughput. A separate strict trainer protocol/preflight, live resources, unmodified original 21,600-second cap and independent source review remain mandatory before a first reused-TRAIN simulator reset."
+}

@@ -1,0 +1,18 @@
+{
+  "format": "haic-tdmpc2-h3-all-q-read-only-summary-v1",
+  "status": "complete_local_decision_gate_failed",
+  "operator": "scripts/diagnose_tdmpc2_h3_all_q.py",
+  "operator_sha256": "64db0ccf30e66d3534cd50e2eac443b41e5e8ab77f82dc0066f4088219efecb0",
+  "operator_test_sha256": "4bbd1e1d9686a3d117b4bc81d63025a7e7d0961526285f1f48fee0f73e30acf9",
+  "parent_fixed_pair_operator_sha256": "c8034289ecc644f21066eed1e5ac10c794d91ad826ae12950f14a683af663630",
+  "parent_fixed_pair_result_sha256": "6b6bf566973c8a3b57b732343f4f6a74dbf8ec449f66d19c7e70a4af9f2e6219",
+  "source_branch_primary_sha256": "23f7e6898b362cd789b92d6a1f2f184e1de551596458ae08117058570f1bcefd",
+  "complete_cli_output_body_sha256": "36a3a5d3746b08ff6227cd26c94cca550730a865b466bb60a658405355129781",
+  "reproducible_cli": "PYTHONDONTWRITEBYTECODE=1 python -m scripts.diagnose_tdmpc2_h3_all_q",
+  "safety_evidence": {"synthetic_tests_including_parent": 29, "environment_resets": 0, "optimizer_steps": 0, "new_or_protected_cells": 0},
+  "scope": "five fixed actions per anchor on 12 already-consumed TRAIN anchor states; 91 informative actual H5 return pairs and 29 real ties; not a full MPPI search or policy evaluation",
+  "original_stochastic_h3_single_draw": {"concordant": 65, "informative_pairs": 91, "selected_best_real_h5_ties": 8, "eligible_anchors": 12, "mean_real_h5_regret": 0.7953492685094498},
+  "all_five_q_mean": {"concordant": 65, "discordant": 26, "predicted_ties": 0, "real_ties": 29, "informative_pairs": 91, "selected_best_real_h5_ties": 9, "eligible_anchors": 12, "mean_real_h5_regret": 0.7941604776833208},
+  "predeclared_decision_gate": {"min_concordant_pairs_out_of_91": 66, "min_tied_best_selections_out_of_12": 9, "max_mean_h5_regret_exclusive": 0.7953492685094498, "concordance_passed": false, "top_choice_passed": true, "regret_passed": true, "passed": false},
+  "decision": "Averaging all five decoded critic-head values rather than drawing two does not improve informative five-candidate actual H5-return ordering above the original one-draw H3 65/91. Two other descriptive screens passed, but all three were required before any H3 all-Q full episodes. Do not launch that evaluator. This consumed-TRAIN read-only test does not establish critic calibration, a causal horizon effect, full-policy benefit, fresh-road generalization or an official score."
+}

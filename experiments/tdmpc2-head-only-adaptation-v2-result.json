@@ -1,0 +1,29 @@
+{
+  "format": "haic-tdmpc2-head-only-adaptation-summary-v2",
+  "status": "complete_adaptation_excluded_gate_failed",
+  "protocol": "experiments/tdmpc2-head-only-adaptation-v2.json",
+  "protocol_sha256": "d2e7c833671c1e16e529172ed7b38ffc2be9a107a2c57242334277fac67a206b",
+  "benchmark_receipt": "runs/tdmpc2-head-only-benchmark-20260929-v2.json",
+  "benchmark_receipt_sha256": "d0460343d725cbfdb9db0b41997f794237a42bdb7cd37f2eb9aae5246b25aa11",
+  "primary_result": "runs/tdmpc2-head-only-20260929-v2/result.json",
+  "primary_result_sha256": "72b4f5019ca21f7c86dd5c8527a3af0739fc5349f8d88aa2637b4a368b59da4f",
+  "checkpoint": "runs/tdmpc2-head-only-20260929-v2/adapted-model.pt",
+  "checkpoint_sha256": "c8ba10ee4a1287bc3d26b76e645e66b9b020c74c749d060cc3fcd567fb611510",
+  "journal_sha256": "69f3cf37eb1257808e762c640d9253ca044604924a49393a71f9d2f5e6f9d318",
+  "optimizer_updates": 512,
+  "update_intents": 512,
+  "partial_events": 0,
+  "environment_resets": 0,
+  "elapsed_seconds": 367.65974563220516,
+  "wall_cap_seconds": 1800,
+  "nonhead_bitwise_parity": true,
+  "scope": "Only reward-head tensors adapted from overshoot100k copy; original RAW replay TRAIN episodes44..306 fit, episodes12..43 fitting-excluded, episodes8..11 unused by adaptation. All four roads previously consumed, not fresh generalization or policy evidence.",
+  "per_road_excluded_logged_positive_mae_before_after": [
+    {"geometry_seed":3910800001,"positive_targets":144,"before":1.3357184286707908,"after":2.465191349371,"nonpositive_mae_worsening":0.05914872378183012},
+    {"geometry_seed":3910800004,"positive_targets":199,"before":1.0582941694175778,"after":2.2940667430757915,"nonpositive_mae_worsening":0.06903244658899019},
+    {"geometry_seed":3910800034,"positive_targets":137,"before":1.6849094495231653,"after":2.5292878422009193,"nonpositive_mae_worsening":0.06987274891395977},
+    {"geometry_seed":3910800085,"positive_targets":151,"before":1.3890223204719507,"after":2.2708216893844404,"nonpositive_mae_worsening":0.022689010207030236}
+  ],
+  "predeclared_gate": {"minimum_qualifying_roads":3,"qualifying_roads":0,"positive_mae_improvement_required":0.1,"positive_absolute_bias_improvement_required":0.1,"nonpositive_mae_worsening_maximum":0.05,"passed":false},
+  "decision": "Completed pilot failed its fitting-excluded logged TRAIN error gate on all four roads, despite finite optimizer metrics and unchanged non-head tensors. Do not run prior real-branch preservation score, new episode8..11 branch resets or any full-policy evaluator for this adapted checkpoint. Training CE decreased (1.4617->1.1218), but is not excluded error or actual action-choice evidence. Diagnose data/representation/target mismatch before another distinct intervention; previous overshoot/Q0 gate failures remain unchanged."
+}

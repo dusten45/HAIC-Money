@@ -1,0 +1,43 @@
+{
+  "format": "haic-tdmpc2-raw100k-h5-branches-summary-v1",
+  "status": "complete_weak_reward_gate_passed_planner_gate_held",
+  "protocol": "experiments/tdmpc2-h5-branches-v1.json",
+  "protocol_sha256": "a29cbcd2e59687201a7b0fba68e119f596e88633e06a51300639bf78461b33c9",
+  "operator": "scripts/diagnose_tdmpc2_h5_branches.py",
+  "operator_sha256": "85742b0623c25e6ddb8c2291b274b012c21a5002082dc0c60e424dbcea2f3e88",
+  "operator_test_sha256": "d0ef20f0b235ca21a6044e98dc5cbad1ead4230834f4a28aacdd4637e913c765",
+  "primary_receipt": "runs/tdmpc2-raw100k-h5-branches-20260929-v1.json",
+  "primary_receipt_sha256": "23f7e6898b362cd789b92d6a1f2f184e1de551596458ae08117058570f1bcefd",
+  "source_model_sha256": "aa268b95a7398b18474fbbaea153fb5e20cc363345cf3c0e6176aaa9dc72c295",
+  "source_model_trained_horizon": 3,
+  "scope": "four previously consumed track-1 TRAIN roads; 12 reconstructed accessible anchors; no independent/fresh road or protected/official evaluation",
+  "preflight_environment_resets": 0,
+  "execution_environment_resets_attempted": 72,
+  "anchors": 12,
+  "full_h5_candidate_suffixes": 60,
+  "excluded_short_or_terminal_suffixes": 0,
+  "same_anchor_pairs": 120,
+  "real_h5_ties_at_1e-6": 29,
+  "informative_h5_pairs": 91,
+  "informative_roads": 4,
+  "predeclared_h5_reward_gate": {"required_informative_pairs": 40, "required_roads": 3, "required_strict_concordance_above": 0.6, "concordant": 56, "discordant": 35, "passed": true},
+  "matched_same_five_candidates_vs_real_h5": {
+    "h3_reward_only": {"concordant": 63, "discordant": 28, "informative_pairs": 91, "best_action_tied_at_1e-6": 6, "eligible_anchors": 12, "mean_real_h5_regret": 0.7623619923448293},
+    "h5_reward_only": {"concordant": 56, "discordant": 35, "informative_pairs": 91, "best_action_tied_at_1e-6": 5, "eligible_anchors": 12, "mean_real_h5_regret": 1.0016503841311974},
+    "h3_terminal_q_planner_score": {"concordant": 65, "discordant": 26, "informative_pairs": 91, "best_action_tied_at_1e-6": 8, "eligible_anchors": 12, "mean_real_h5_regret": 0.7953492685094498},
+    "h5_terminal_q_planner_score": {"concordant": 51, "discordant": 40, "informative_pairs": 91, "best_action_tied_at_1e-6": 7, "eligible_anchors": 12, "mean_real_h5_regret": 0.7993039300172543}
+  },
+  "h3_reward_vs_actual_h3_prefix_on_same_candidates": {"concordant": 31, "discordant": 9, "informative_pairs": 40, "real_ties": 80},
+  "same_candidate_rollout_error_diagnostic": {
+    "candidate_sequences": 60,
+    "h3_reward_return_mean_absolute_error": 0.9856206971770658,
+    "h5_reward_return_mean_absolute_error": 1.963650002976886,
+    "h3_absolute_error_per_discounted_step": 0.33018842293684836,
+    "h5_absolute_error_per_discounted_step": 0.39667698614253405,
+    "h3_mean_prediction_minus_real_return": -0.41196810666473704,
+    "h5_mean_prediction_minus_real_return": -1.0840867820076066,
+    "interpretation": "On the SAME 60 fixed counterfactual suffixes, normalized reward error and underprediction increase from H3 to H5. This does not isolate dynamics from reward-head or data-coverage error, and error alone is not an action-choice gate."
+  },
+  "decision": "The predeclared H5 reward-only necessary screen passed, but the one-draw fixed-candidate H5 planner-score ordering of SAME real H5 outcomes was 51/91 versus H3 65/91. This is not sufficiently positive action-choice evidence to launch H5 full episodes; it does NOT show a controlled horizon effect or prove full-policy H5 inferiority. Hold H5 MPPI evaluation and diagnose a separate single axis using the frozen H3 checkpoint and consumed TRAIN roads.",
+  "limitations": "Predicted planner scores evaluate only five fixed suffixes with one seeded sampled-prior Q draw per horizon; they are not full 512-proposal/six-refinement MPPI-selected trajectories. The score seed differs by horizon and the randomly chosen unordered Q-head pair differs on 10/12 anchors; bootstrap actions also differ, so planner-score differences cannot be attributed solely to horizon, Q or rollout. Pure reward-only H3/H5 on the same H5 outcomes is not confounded by Q-head selection but still cannot isolate dynamics from reward-head error. Pairwise comparisons depend on 12 anchors on only four repeatedly trained roads. Historical three-action branches and these five-action branches are not matched cross-run results; historical Box2D hidden state equality is not proven. No full-episode finish, policy performance or generalization claim follows."
+}
