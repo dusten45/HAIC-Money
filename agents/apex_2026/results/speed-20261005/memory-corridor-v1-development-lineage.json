@@ -1,0 +1,797 @@
+{
+  "schema_version": 1,
+  "kind": "consumed_development_benchmark_audit",
+  "created_utc": "2026-10-04T17:41:18.502535+00:00",
+  "candidate_source_commit": "42c10637f28ecaf9aaaa38ad782485240cb705c9",
+  "candidate_source": {
+    "path": "agents/apex_2026/fast_memory_corridor_agent.py",
+    "sha256": "377b925b98880c5ba55bf5179f79e37c4400f5883ae0ed800e601910d7df2474"
+  },
+  "evaluator": {
+    "path": "agents/apex_2026/evaluate.py",
+    "sha256": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+  },
+  "baseline_mandatory_receipt": {
+    "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1.json",
+    "sha256": "9763ff431fe3dc1f4a8deecc6acebbb41a70d2d9e5e2344abe4817f60e77ed49"
+  },
+  "baseline_mandatory_freeze": {
+    "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1.freeze.json",
+    "sha256": "95cc13644bab50aff093e229e3bb9e57c89dfb5ccea104a3667ba798d88824bf"
+  },
+  "development_receipt": {
+    "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.json",
+    "sha256": "adbbe5ed1f9f7e9bb8cc7a5afbd8dc443c73cc2fb793910c7ccc7773b4db3379"
+  },
+  "development_freeze": {
+    "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.freeze.json",
+    "sha256": "6954610d3a84a81f1adb0f69bd92eba6109420c93e384f311787d0ae2edbf824"
+  },
+  "run": {
+    "suite": "development",
+    "trial_role": "benchmark",
+    "parameters": {},
+    "workers": 2,
+    "max_steps": 700,
+    "expected_cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        1,
+        2867319041
+      ],
+      [
+        2,
+        2867319041
+      ],
+      [
+        3,
+        2867319041
+      ],
+      [
+        4,
+        2867319041
+      ],
+      [
+        1,
+        359018627
+      ],
+      [
+        2,
+        359018627
+      ],
+      [
+        3,
+        359018627
+      ],
+      [
+        4,
+        359018627
+      ],
+      [
+        1,
+        1764402399
+      ],
+      [
+        2,
+        1764402399
+      ],
+      [
+        3,
+        1764402399
+      ],
+      [
+        4,
+        1764402399
+      ],
+      [
+        1,
+        4029571806
+      ],
+      [
+        2,
+        4029571806
+      ],
+      [
+        3,
+        4029571806
+      ],
+      [
+        4,
+        4029571806
+      ]
+    ],
+    "new_holdout_episodes": 0,
+    "extra_geometry_status": "previously consumed development seeds",
+    "prospective_rejection_count_advanced": false
+  },
+  "environment": {
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+    "runtime_versions": {
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "torch": "2.1.0",
+      "opencv-python": "4.8.1.78",
+      "box2d-py": "2.3.5"
+    },
+    "files": {
+      "env_wrapper.py": {
+        "sha256": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "matches_freeze_and_baseline": true
+      },
+      "damage.py": {
+        "sha256": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "matches_freeze_and_baseline": true
+      },
+      "core/track_variables.py": {
+        "sha256": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "matches_freeze_and_baseline": true
+      },
+      "core/vendor/car_racing.py": {
+        "sha256": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "matches_freeze_and_baseline": true
+      },
+      "core/vendor/car_dynamics.py": {
+        "sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "matches_freeze_and_baseline": true
+      },
+      "core/finish_line.py": {
+        "sha256": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "matches_freeze_and_baseline": true
+      },
+      "core/obstacle_contacts.py": {
+        "sha256": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/environment.py": {
+        "sha256": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/schema.py": {
+        "sha256": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+        "matches_freeze_and_baseline": true
+      },
+      "local_simulator/custom_environment.py": {
+        "sha256": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+        "matches_freeze_and_baseline": true
+      },
+      "agents/apex_2026/evaluate.py": {
+        "sha256": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c",
+        "matches_freeze_and_baseline": true
+      }
+    },
+    "protected_root_and_official_files": {
+      "agent.py": {
+        "sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+        "matches_start_commit_14bb967": true
+      },
+      "env_wrapper.py": {
+        "sha256": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "matches_start_commit_14bb967": true
+      },
+      "damage.py": {
+        "sha256": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "matches_start_commit_14bb967": true
+      },
+      "core/track_variables.py": {
+        "sha256": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "matches_start_commit_14bb967": true
+      },
+      "core/vendor/car_racing.py": {
+        "sha256": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "matches_start_commit_14bb967": true
+      },
+      "core/vendor/car_dynamics.py": {
+        "sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "matches_start_commit_14bb967": true
+      },
+      "core/finish_line.py": {
+        "sha256": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "matches_start_commit_14bb967": true
+      },
+      "core/obstacle_contacts.py": {
+        "sha256": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "matches_start_commit_14bb967": true
+      }
+    }
+  },
+  "audit": {
+    "assertions_completed": true,
+    "unique_and_exact_20_cells": true,
+    "zero_operational_errors": true,
+    "source_parameters_environment_unchanged": true,
+    "all_actions_float32_hash_recomputed": true,
+    "all_actions_finite_and_bounded": true,
+    "all_trace_state_and_debug_finite": true,
+    "all_runtime_metrics_finite_within_limits": true,
+    "action_min": [
+      -0.4000000059604645,
+      0.0,
+      0.0
+    ],
+    "action_max": [
+      0.4000000059604645,
+      1.0,
+      0.6499999761581421
+    ],
+    "semantic_fields": [
+      "action_trace_sha256",
+      "collision_count",
+      "damage",
+      "error",
+      "finished",
+      "lap_time_ms",
+      "offtrack_samples",
+      "parameters",
+      "partial_offtrack_samples",
+      "progress",
+      "retire_reason",
+      "seed",
+      "source_sha256",
+      "steps",
+      "track_id"
+    ],
+    "mandatory_exact_repeats": [
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "lap_time_ms": 15200,
+        "action_trace_sha256": "baa69636993d21dcc5591bd3114ac4d328b607fb74b9429c81f2c9203ee21d78",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-traces/track-1-seed-516237.json",
+          "sha256": "ed12e159e572257be56bb42ddfc8e63a5f5897b05f3014f3a564abff06ece4ce"
+        }
+      },
+      {
+        "track_id": 2,
+        "seed": 644062,
+        "lap_time_ms": 19720,
+        "action_trace_sha256": "8a34b43ccba5349d5c87dbd6fd7fddf3b43fd5f460bd4add6b31d9ce81e0408a",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-traces/track-2-seed-644062.json",
+          "sha256": "8ed7da346950dfe42db3333145c1046cfd09fb5a3865e328f2e7707461fa6d03"
+        }
+      },
+      {
+        "track_id": 3,
+        "seed": 1007,
+        "lap_time_ms": 18780,
+        "action_trace_sha256": "fe393bb816204a8a3bb76132e7d4e7d08fc8575b61e23a3e76c5f4de3634e8b9",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-traces/track-3-seed-1007.json",
+          "sha256": "6cf4dd7232f001a7c96047072dea0412b0d552e8a8c28f5636b6630e445b8a49"
+        }
+      },
+      {
+        "track_id": 4,
+        "seed": 18800,
+        "lap_time_ms": 21140,
+        "action_trace_sha256": "0b205c5a248b4543a9b010fbbab1f6fdf2bf19baf52b72a7cf4529ea6b6b9ffe",
+        "all_15_nonruntime_fields_exact": true,
+        "entire_trace_json_exact": true,
+        "baseline_trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-traces/track-4-seed-18800.json",
+          "sha256": "ab458737c0a2ee3d5a1da6d4815aa83e958f00497e339d8b83d8ef18a62d8a6f"
+        }
+      }
+    ],
+    "trace_bindings": [
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-1-seed-516237.json",
+          "sha256": "c50da90971d581811ab330a62c21507190a22d9d46e7d31993e13c62ee3d9ed7"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-1-seed-516237.json",
+          "sha256": "ed12e159e572257be56bb42ddfc8e63a5f5897b05f3014f3a564abff06ece4ce"
+        },
+        "actions": 190,
+        "action_trace_sha256": "baa69636993d21dcc5591bd3114ac4d328b607fb74b9429c81f2c9203ee21d78",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 15.199999999999743
+      },
+      {
+        "track_id": 2,
+        "seed": 644062,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-2-seed-644062.json",
+          "sha256": "d04516414d1144fdbbe14dd6ac4f7ad07cbdee7f9f9a09d02010fb00ec030abb"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-2-seed-644062.json",
+          "sha256": "8ed7da346950dfe42db3333145c1046cfd09fb5a3865e328f2e7707461fa6d03"
+        },
+        "actions": 247,
+        "action_trace_sha256": "8a34b43ccba5349d5c87dbd6fd7fddf3b43fd5f460bd4add6b31d9ce81e0408a",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 19.739999999999647
+      },
+      {
+        "track_id": 3,
+        "seed": 1007,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-3-seed-1007.json",
+          "sha256": "766c7a45654cd57f092e719bc1c2a1d7a7f2524aabab00dac6c6079fae07ed93"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-3-seed-1007.json",
+          "sha256": "6cf4dd7232f001a7c96047072dea0412b0d552e8a8c28f5636b6630e445b8a49"
+        },
+        "actions": 235,
+        "action_trace_sha256": "fe393bb816204a8a3bb76132e7d4e7d08fc8575b61e23a3e76c5f4de3634e8b9",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.799999999999667
+      },
+      {
+        "track_id": 4,
+        "seed": 18800,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-4-seed-18800.json",
+          "sha256": "51a94bdfb90cf89f7fcb572a88d0dbf9b2c65268671f91d15e0e23b53a482094"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-4-seed-18800.json",
+          "sha256": "ab458737c0a2ee3d5a1da6d4815aa83e958f00497e339d8b83d8ef18a62d8a6f"
+        },
+        "actions": 265,
+        "action_trace_sha256": "0b205c5a248b4543a9b010fbbab1f6fdf2bf19baf52b72a7cf4529ea6b6b9ffe",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 21.159999999999616
+      },
+      {
+        "track_id": 1,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-1-seed-2867319041.json",
+          "sha256": "6626ac934fa1d30c5fc060f42c6f5f2976294455857896ad5ee3ebd65233b30a"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-1-seed-2867319041.json",
+          "sha256": "d6d66de300a2f97563369dfe61b66130ba39e1031d0ec4a02deffdf25b8d8b83"
+        },
+        "actions": 211,
+        "action_trace_sha256": "01ebc4db1dfe1c7a279c647d3f3985d7ab6ebd1a9c2f07f8f4ebe4623ca734d1",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.879999999999708
+      },
+      {
+        "track_id": 2,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-2-seed-2867319041.json",
+          "sha256": "bf26dbd522f2dc718884a0a0cd28670342065fbb97f1ff23844217f5a7824ac0"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-2-seed-2867319041.json",
+          "sha256": "637803dedd804fb7df6362f90966a80a8d23694447d381ee6956aa86c10357a6"
+        },
+        "actions": 254,
+        "action_trace_sha256": "a49b541a8b16b3d71ccc3f78691221ff7fd234906f7987af707590db7fe9cea5",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 20.319999999999634
+      },
+      {
+        "track_id": 3,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-3-seed-2867319041.json",
+          "sha256": "a6c616c4bfa2b60978c065d6b1944ed27abaddc7810bbcd7a88a00b5f8a7d28a"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-3-seed-2867319041.json",
+          "sha256": "d5182b65f315b68d7ffc9b1ff58fdadf1680fb92821c6322310e8f3bff7c7c10"
+        },
+        "actions": 256,
+        "action_trace_sha256": "0e08806997fdb5dd4a6ae646f6a9a9a8db4f4823a0902c190745c3eeac793f9f",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 20.419999999999632
+      },
+      {
+        "track_id": 4,
+        "seed": 2867319041,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-4-seed-2867319041.json",
+          "sha256": "454f70b916c45314c02e83c004957782055678faf47699de501d8581059600e1"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-4-seed-2867319041.json",
+          "sha256": "3580302aafcd4661d322ab178a968bbdf00af3e53a74b8cc17138ea9b247f0d0"
+        },
+        "actions": 303,
+        "action_trace_sha256": "90783d029e3a4ef9850279039f01afd5d71ff35cfc51a9295ad7fedb83857df0",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 24.21999999999955
+      },
+      {
+        "track_id": 1,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-1-seed-359018627.json",
+          "sha256": "eccca6afa74c3301004d91d0bc53628edc6f703eb0d5e1c6e66265d5007f5cdc"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-1-seed-359018627.json",
+          "sha256": "2a449ac9ede622ede23ab389afc084baa4a0555c3fda17b8ba4aed1636db7a27"
+        },
+        "actions": 235,
+        "action_trace_sha256": "f3a9cd184c50701f32997cfa1af6c8db6a9c46e3e48ff61521659bd8f762a48f",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.799999999999667
+      },
+      {
+        "track_id": 2,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-2-seed-359018627.json",
+          "sha256": "fc7e7f43cae47e6a569c6e9da6b152f01866f20e467924d4690b91f267f6938d"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-2-seed-359018627.json",
+          "sha256": "84d82ef0dc0cc509a27e5db573ff41050784dae78bbe5ce07dee612f6f8887de"
+        },
+        "actions": 266,
+        "action_trace_sha256": "bcc0129cbd226ed6cfb1f28a89ca656e6f7f1ec09908972088c39e86cf96fb99",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 21.239999999999615
+      },
+      {
+        "track_id": 3,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-3-seed-359018627.json",
+          "sha256": "3b6d93db1a7102b638b519a89994907019bbd6077af6c0e6c89cb054daf40a93"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-3-seed-359018627.json",
+          "sha256": "cbd37edb1be36f247a7dac1eb8fe0235d652cdd7def1e46105953bffd64580f3"
+        },
+        "actions": 138,
+        "action_trace_sha256": "05ea58212d5aad2f5490c103f880831a2fe0f9507c063e2189597f1f93102dc5",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 11.039999999999832
+      },
+      {
+        "track_id": 4,
+        "seed": 359018627,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-4-seed-359018627.json",
+          "sha256": "5e351bd9f85621230f754b98e70d7f9fe47a0910e765238e842bb1e90059a193"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-4-seed-359018627.json",
+          "sha256": "a4e25d052896cf090d48847044335f9dde677f4507cf34b02070a5dae384870b"
+        },
+        "actions": 210,
+        "action_trace_sha256": "d404bb3011149e699b187c1e3d112642d14a62b7be3e2c6e0624b9866f11ccc7",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.79999999999971
+      },
+      {
+        "track_id": 1,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-1-seed-1764402399.json",
+          "sha256": "4bfed215b538a2de85aab67ed56a521035bacc67da6b66781c9ce6bf4e9ece1a"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-1-seed-1764402399.json",
+          "sha256": "c52b9eb839fe7c9b2d239f4603478b5354aa079dacee4bf2ce5c81e2fd6b69ab"
+        },
+        "actions": 263,
+        "action_trace_sha256": "f6b525b34e49fc6d34100a3559f50a38a832e67cf3b6d00f8338f4f3087c53da",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 21.03999999999962
+      },
+      {
+        "track_id": 2,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-2-seed-1764402399.json",
+          "sha256": "3526537f57761e57672766a69180e73af7106b25a917cad49f35b895219396a2"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-2-seed-1764402399.json",
+          "sha256": "1815282b45977bd466fec1ac7d12fe526b039d892c0186a34c45a32ca91daf73"
+        },
+        "actions": 201,
+        "action_trace_sha256": "cb8b4554bef57548bc07fc8cb0a51d94f65c7810207f72568dd8d5046af097e3",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 16.039999999999726
+      },
+      {
+        "track_id": 3,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-3-seed-1764402399.json",
+          "sha256": "d8f5603d728d165aac98e556c6d24a38a41e9f4258f3b28d2e028441e78b74a8"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-3-seed-1764402399.json",
+          "sha256": "94ac2edc2e373d66a0f230542baebe826fb70d25b337219169fe5ee4ce0db5cb"
+        },
+        "actions": 237,
+        "action_trace_sha256": "5e7667e8d4eeaa9b97db403c38666ab8aad95af2476841b830f7e81930c66638",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.919999999999664
+      },
+      {
+        "track_id": 4,
+        "seed": 1764402399,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-4-seed-1764402399.json",
+          "sha256": "96679d28ebf0e39fcafb33f3abfe4a1a3d681c1c96ba7c838be894ae154159af"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-4-seed-1764402399.json",
+          "sha256": "174abc9c88b383133db6fd416c6fd7b6dbc6b20d0856955e3c58e0dc1504b4f6"
+        },
+        "actions": 240,
+        "action_trace_sha256": "0985058f553b486070479c1bdee4f89745d434e4bc0dd801e2f7ce04b682b83d",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 19.17999999999966
+      },
+      {
+        "track_id": 1,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-1-seed-4029571806.json",
+          "sha256": "e6bb1441176dc2bee3979b09311209e04d411eb066a5945f82f5ecaa911e757d"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-1-seed-4029571806.json",
+          "sha256": "0db900124283584715ffec43d858cad394a149ea490be9987537cdf3aa54b3c4"
+        },
+        "actions": 220,
+        "action_trace_sha256": "2e6b70b8b0b8c51b1b37c52784301ebb08a6e6f2a6de8973d57b89954d8df231",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 17.539999999999694
+      },
+      {
+        "track_id": 2,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-2-seed-4029571806.json",
+          "sha256": "d9f854becff77dcbadfafeaed6db9ccbca979939843a141f5f5f6a1bd2981a79"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-2-seed-4029571806.json",
+          "sha256": "4e83d89a6a667c8211cba545f4899c63674c354e8a3d24b7765c58b047330a0f"
+        },
+        "actions": 226,
+        "action_trace_sha256": "c95204fdc19df9213e8f9d44ecf816fbf1522a024ae841d021aef5178b43a4be",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 18.019999999999683
+      },
+      {
+        "track_id": 3,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-3-seed-4029571806.json",
+          "sha256": "e6e62152261886e859df4bd73ddf92b90d7cf6bf81628678b857c9bb21d3a6e7"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-3-seed-4029571806.json",
+          "sha256": "48be3a477d67c258e3fd6b170d752c648964ec7cbfd4a0658084653fbedcb0e6"
+        },
+        "actions": 320,
+        "action_trace_sha256": "771aecc0d66a7761bdc645913773b1970009a41aea0daf7935c088f6383df716",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 25.539999999999523
+      },
+      {
+        "track_id": 4,
+        "seed": 4029571806,
+        "cell": {
+          "path": "agents/apex_2026/results/speed-20261005/memory-corridor-v1-development.cells/track-4-seed-4029571806.json",
+          "sha256": "18d858ad1b3369591d834e5131e96aff1711bad733e9a3e5a4319e4bb4329285"
+        },
+        "trace": {
+          "path": ".haic-artifacts/apex-speed-20261005/memory-corridor-v1-development-traces/track-4-seed-4029571806.json",
+          "sha256": "bfd20d0197af8cd9879e55872be39c879fb946c757f0532f1cf137db1793e5aa"
+        },
+        "actions": 185,
+        "action_trace_sha256": "7ca929b5d97d8c2b53f4ba837af49d60151a07e4bd45b4fae473bb4baf113716",
+        "finite_and_bounded": true,
+        "finite_state_and_debug": true,
+        "last_sim_time_s": 14.779999999999752
+      }
+    ]
+  },
+  "outcomes": {
+    "mandatory_finishes": 4,
+    "mandatory_cells": 4,
+    "mandatory_lap_time_ms": [
+      15200,
+      19720,
+      18780,
+      21140
+    ],
+    "mandatory_contacts": 0,
+    "extra_finishes": 13,
+    "extra_cells": 16,
+    "extra_per_track": {
+      "1": {
+        "finishes": 2,
+        "cells": 4,
+        "contacts": 10,
+        "finished_lap_time_ms": [
+          21040,
+          17520
+        ]
+      },
+      "2": {
+        "finishes": 4,
+        "cells": 4,
+        "contacts": 0,
+        "finished_lap_time_ms": [
+          20320,
+          21220,
+          16040,
+          18020
+        ]
+      },
+      "3": {
+        "finishes": 3,
+        "cells": 4,
+        "contacts": 2,
+        "finished_lap_time_ms": [
+          20400,
+          18900,
+          25520
+        ]
+      },
+      "4": {
+        "finishes": 4,
+        "cells": 4,
+        "contacts": 3,
+        "finished_lap_time_ms": [
+          24200,
+          16780,
+          19180,
+          14760
+        ]
+      }
+    },
+    "extra_contacts": 15,
+    "extra_finished_lap_min_ms": 14760,
+    "extra_finished_lap_max_ms": 25520,
+    "extra_failures": [
+      {
+        "track_id": 1,
+        "seed": 2867319041,
+        "progress": 0.43986254295532645,
+        "collision_count": 4,
+        "damage": 0.8,
+        "retire_reason": "off_track",
+        "offtrack_samples": 67,
+        "partial_offtrack_samples": 82
+      },
+      {
+        "track_id": 1,
+        "seed": 359018627,
+        "progress": 0.4146341463414634,
+        "collision_count": 3,
+        "damage": 0.6000000000000001,
+        "retire_reason": "off_track",
+        "offtrack_samples": 110,
+        "partial_offtrack_samples": 123
+      },
+      {
+        "track_id": 3,
+        "seed": 359018627,
+        "progress": 0.1602787456445993,
+        "collision_count": 0,
+        "damage": 0.0,
+        "retire_reason": "off_track",
+        "offtrack_samples": 98,
+        "partial_offtrack_samples": 102
+      }
+    ],
+    "mandatory_fast_13s": 0,
+    "extra_fast_13s": 0,
+    "mandatory_fast_18s": 1,
+    "extra_fast_18s": 4,
+    "selected_profile_verdict": {
+      "passed": false,
+      "original_target_met": false,
+      "pace_limit_seconds": 13,
+      "mandatory_finishes": 4,
+      "mandatory_cells": 4,
+      "extra_finishes": 13,
+      "extra_cells": 16,
+      "extra_fast_fraction": 0.0,
+      "per_track": {
+        "1": {
+          "finishes": 2,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "2": {
+          "finishes": 4,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "3": {
+          "finishes": 3,
+          "cells": 4,
+          "fast_fraction": 0.0
+        },
+        "4": {
+          "finishes": 4,
+          "cells": 4,
+          "fast_fraction": 0.0
+        }
+      }
+    },
+    "original_target_met": false,
+    "formally_adopted": false
+  },
+  "runtime": {
+    "local_worker_maxima": {
+      "initialization_ms": 0.7643329954589717,
+      "reset_ms": 0.015338999219238758,
+      "action_latency_max_ms": 39.84295499685686,
+      "peak_worker_rss_mib": 95.2109375
+    },
+    "limits": {
+      "initialization_ms": 10000,
+      "reset_ms": 5000,
+      "action_latency_max_ms": 5000,
+      "peak_worker_rss_mib": 1024
+    },
+    "numpy_preloaded_in_worker_initialization": true,
+    "official_submission_container_certified": false
+  },
+  "limits": [
+    "Consumed development coverage is not unseen validation.",
+    "Benchmark role does not advance the prospective relaxation chain.",
+    "No candidate or parameter selection on new holdout data occurred.",
+    "Local harness timings do not certify the official submission container.",
+    "Mandatory times exceed13s; the requested four early-10-second laps remain unmet."
+  ],
+  "audit_program": {
+    "sha256": "a7ebda8f16bbe9df4e9e68e4ed8f994564b2768a923bc4ae9009e360c1258b36",
+    "location": "temporary inline audit; all checked inputs and actuals are bound above"
+  }
+}
