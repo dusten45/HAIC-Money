@@ -1,0 +1,187 @@
+{
+  "scope": "development_only",
+  "method": "Four required coordinates are the first four declared freeze cells; remaining 16 are additional cells. Paired time totals use only additional coordinates finished by both named agents. Ratio above 1 means candidate slower. Collision events sum row collision_count; crash retirements count retire_reason=crash.",
+  "integrity": {
+    "declared_cells_per_receipt": 20,
+    "max_steps": 700,
+    "all_rows_unique_and_match_declared_cells": true,
+    "all_row_source_hashes_match_freeze": true,
+    "all_operational_errors_null": true,
+    "R7_R4_environment_hashes_identical": true,
+    "fresh_hybrid_environment_hash_differences": [
+      "agents/apex_2026/evaluate.py"
+    ],
+    "simulator_and_physics_hashes_identical_across_receipts": true
+  },
+  "agents": {
+    "R7_guarded_preview": {
+      "receipt": "agents/apex_2026/results/cloud-20261004/development/r7-guarded-preview.json",
+      "receipt_sha256": "cba855e4c3239c4f43bba9a9b9b60e72db20fc0e59a0255de8be8337501d568c",
+      "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+      "selected_profile_seconds": 18,
+      "verdict_passed": false,
+      "original_target_met": false,
+      "required": {
+        "finishes": 4,
+        "track_seconds": {
+          "1": 21.92,
+          "2": 27.64,
+          "3": 26.14,
+          "4": 23.74
+        },
+        "total_seconds": 99.44,
+        "collision_events": 0
+      },
+      "additional": {
+        "finishes": 12,
+        "cells": 16,
+        "per_track_finishes": {
+          "1": 2,
+          "2": 4,
+          "3": 3,
+          "4": 3
+        },
+        "collision_events": 15,
+        "crash_retirements": 0,
+        "offtrack_retirements": 4
+      }
+    },
+    "R4_preview": {
+      "receipt": "agents/apex_2026/results/cloud-20261004/development/r4-preview.json",
+      "receipt_sha256": "ba9645355dc10e040e7012a078247919f21d5f922315c59a651821a455360206",
+      "source_sha256": "f0ccb11d8bcae690cb1a5b3ac98ea0ab9f727f85b9d7d488263c86760f92302d",
+      "selected_profile_seconds": 15,
+      "verdict_passed": false,
+      "original_target_met": false,
+      "required": {
+        "finishes": 4,
+        "track_seconds": {
+          "1": 21.94,
+          "2": 27.16,
+          "3": 25.12,
+          "4": 24.44
+        },
+        "total_seconds": 98.66,
+        "collision_events": 0
+      },
+      "additional": {
+        "finishes": 12,
+        "cells": 16,
+        "per_track_finishes": {
+          "1": 3,
+          "2": 3,
+          "3": 3,
+          "4": 3
+        },
+        "collision_events": 8,
+        "crash_retirements": 0,
+        "offtrack_retirements": 3
+      }
+    },
+    "fresh_hybrid": {
+      "receipt": "agents/apex_2026/results/cloud-20261004/baseline/hybrid-development.json",
+      "receipt_sha256": "c182e4b671d676eec5df772fc350d28b0a238b8fb0a79b35902fbf5de1e5997d",
+      "source_sha256": "a2fed6736f089ad0ba6a93f7cff60b12b1727c8b4c5030d50360859be5991fae",
+      "selected_profile_seconds": 13,
+      "verdict_passed": false,
+      "original_target_met": false,
+      "required": {
+        "finishes": 4,
+        "track_seconds": {
+          "1": 19.62,
+          "2": 26.2,
+          "3": 22.9,
+          "4": 21.82
+        },
+        "total_seconds": 90.54,
+        "collision_events": 0
+      },
+      "additional": {
+        "finishes": 10,
+        "cells": 16,
+        "per_track_finishes": {
+          "1": 1,
+          "2": 4,
+          "3": 2,
+          "4": 3
+        },
+        "collision_events": 16,
+        "crash_retirements": 2,
+        "offtrack_retirements": 4
+      }
+    }
+  },
+  "paired_additional_finishes": [
+    {
+      "candidate": "R7_guarded_preview",
+      "reference": "R4_preview",
+      "common_finished_cells": 11,
+      "candidate_common_total_seconds": 271.68,
+      "reference_common_total_seconds": 268.0,
+      "candidate_over_reference_ratio": 1.01373134,
+      "candidate_slower_percent": 1.37,
+      "candidate_gained_finishes": [
+        [
+          2,
+          4029571806
+        ]
+      ],
+      "candidate_lost_finishes": [
+        [
+          1,
+          359018627
+        ]
+      ]
+    },
+    {
+      "candidate": "R7_guarded_preview",
+      "reference": "fresh_hybrid",
+      "common_finished_cells": 10,
+      "candidate_common_total_seconds": 250.3,
+      "reference_common_total_seconds": 217.94,
+      "candidate_over_reference_ratio": 1.14848123,
+      "candidate_slower_percent": 14.85,
+      "candidate_gained_finishes": [
+        [
+          1,
+          2867319041
+        ],
+        [
+          3,
+          2867319041
+        ]
+      ],
+      "candidate_lost_finishes": []
+    },
+    {
+      "candidate": "R4_preview",
+      "reference": "fresh_hybrid",
+      "common_finished_cells": 9,
+      "candidate_common_total_seconds": 222.16,
+      "reference_common_total_seconds": 196.52,
+      "candidate_over_reference_ratio": 1.13047018,
+      "candidate_slower_percent": 13.05,
+      "candidate_gained_finishes": [
+        [
+          1,
+          359018627
+        ],
+        [
+          1,
+          2867319041
+        ],
+        [
+          3,
+          2867319041
+        ]
+      ],
+      "candidate_lost_finishes": [
+        [
+          2,
+          4029571806
+        ]
+      ]
+    }
+  ],
+  "conclusion": "R7 and R4 each finish 12/16 additional cells, with different failure coordinates; R7 is 1.37% slower on their 11 common additional finishes and records more collision events (15 vs 8). R7 is 14.85% slower than fresh hybrid on their 10 common additional finishes while gaining two finishes. All required cells finish without collision events, but required totals are 99.44, 98.66, and 90.54 seconds respectively. All three receipts fail their selected pace profiles; no pace improvement or promotion is supported."
+}

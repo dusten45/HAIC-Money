@@ -1,78 +1,38 @@
 --- a/agents/apex_2026/preview_agent.py
 +++ b/agents/apex_2026/preview_agent.py
-@@ -1,4 +1,4 @@
+@@ -1 +1 @@
 -"""Standalone camera-only racing candidate with proven visual safety lineage.
 +"""Standalone camera-only experiment with distance-aware curve braking.
- 
- The controller dependency definitions below were extracted at build time from
- root agent.py SHA256 2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988.
-@@ -6,6 +6,8 @@
- Inference imports NumPy and Python standard-library modules, never the project,
- environment, model checkpoints, or telemetry. The Agent extension accelerates
- clear-road underspeed while retaining inherited steering/obstacle/recovery.
+@@ -8,0 +9,2 @@
 +Overlapping metric road windows constrain bend approach speed; this research
 +candidate has not established the requested pace or development profile.
- """
- from __future__ import annotations
- 
-@@ -3044,8 +3046,8 @@
-             raise ValueError("controller parameters must be finite and positive")
-         if low_gas_gate >= high_gas_gate or high_gas_gate > 1.0:
-             raise ValueError("gas demand gates must satisfy 0 < low < high <= 1")
+@@ -3047,2 +3049,2 @@
 -        if curve_window < 6.0 or curve_step > 0.5 * curve_window:
 -            raise ValueError("curve windows need at least 6 m and overlapping steps")
 +        if not 6.0 <= curve_window <= 32.0 or not 1.0 <= curve_step <= 0.5 * curve_window:
 +            raise ValueError("curve windows need 6..32 m and overlapping steps of at least 1 m")
-         self.cruise_speed = float(min(cruise_speed, 130.0))
-         self.lateral_accel = float(lateral_accel)
-         self.preview_time = float(preview_time)
-@@ -3158,7 +3160,7 @@
-             return np.asarray([self.last_steer, 0.0, 0.25], dtype=np.float32)
-         return np.asarray([self.last_steer, 0.09, 0.0], dtype=np.float32)
- 
+@@ -3161 +3163 @@
 -    def _curve_speed(self, forward, lateral):
 +    def _curve_speed(self, forward, lateral, speed=0.0):
-         """Brake for local visible curvature at its conservative approach distance.
- 
-         Overlapping metric windows smooth pixel quantization. A quadratic's
-@@ -3166,6 +3168,12 @@
-         by its local heading. The first window constrains the present turn;
-         farther windows permit the distance needed to reach their corner speed.
-         """
+@@ -3168,0 +3171,6 @@
 +        # Pixel edge quantization can displace one sampled center by a whole
 +        # pixel. A three-row median removes isolated peaks while preserving
 +        # monotone bends, including their immediate curvature constraint.
 +        lateral = np.asarray(lateral, dtype=np.float64).copy()
 +        if lateral.size >= 3:
 +            lateral[1:-1] = np.median(np.stack((lateral[:-2], lateral[1:-1], lateral[2:])), axis=0)
-         valid = (forward >= 0.0) & (forward <= min(32.0, float(forward[-1])))
-         if np.count_nonzero(valid) < 5:
-             return min(self.cruise_speed, float(np.sqrt(self.lateral_accel / 0.03)))
-@@ -3182,10 +3190,13 @@
-             target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
-         last_start = max(0.0, float(ahead[-1]) - self.curve_window)
-         starts = np.unique(np.append(np.arange(0.0, last_start, self.curve_step), last_start))
+@@ -3184,0 +3193,2 @@
 +        fitted_windows = 0
 +        reserve = 2.6 + max(0.0, float(speed)) * 0.08
-         for start in starts:
-             window = (ahead >= start) & (ahead <= start + self.curve_window)
-             if np.count_nonzero(window) < 5:
-                 continue
+@@ -3188,0 +3199 @@
 +            fitted_windows += 1
-             distances = ahead[window] - start
-             coefficients = np.polyfit(distances, side[window], 2)
-             # Fit curvature belongs to the window midpoint. Applying its mean
-@@ -3196,10 +3207,18 @@
-             heading = 2.0 * coefficients[0] * midpoint + coefficients[1]
-             curvature = float(abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5)
-             curve_speed_squared = self.lateral_accel / max(curvature, 0.001)
+@@ -3199,2 +3210,3 @@
 -            # Four metres reserve vehicle length plus one braking decision.
 -            available = max(0.0, float(ahead[window][0]) - 4.0)
 +            # Reserve vehicle length and distance travelled before the next
 +            # action can apply braking, using official four-tick decisions.
 +            available = max(0.0, float(ahead[window][0]) - reserve)
-             approach = np.sqrt(curve_speed_squared + 2.0 * self.braking_accel * available)
-             target = min(target, float(approach))
+@@ -3202,0 +3215,7 @@
 +        if fitted_windows == 0:
 +            # Sparse camera support may never put five points in one local
 +            # window. Its full visible bend still constrains current speed.
@@ -80,22 +40,10 @@
 +            heading = 2.0 * coefficients[0] * ahead[0] + coefficients[1]
 +            curvature = abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5
 +            target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
-         return target
- 
-     def act(self, observation):
-@@ -3218,7 +3237,7 @@
-         preview = min(preview, max(6.0, float(forward[-1]) - 1.0))
-         x_target = float(np.interp(preview, forward, lateral))
- 
+@@ -3221 +3240 @@
 -        target_speed = self._curve_speed(forward, lateral)
 +        target_speed = self._curve_speed(forward, lateral, speed=speed)
-         # A curve running out of view requires an approach speed compatible
-         # with the remaining observed distance and available braking force.
-         if forward[-1] < 22.0:
-@@ -3260,14 +3279,13 @@
-             gas, brake = 0.0, float(np.clip(-error * 0.018, 0.04, 0.70))
-         else:
-             gas = float(np.clip(0.30 + 0.055 * error, 0.0, 1.0))
+@@ -3263,8 +3282,7 @@
 -            if abs(self.last_steer) > 0.04:
 -                lateral_demand = speed * speed * abs(float(np.tan(self.last_steer))) / (
 -                    self.WHEELBASE * self.lateral_accel
@@ -111,39 +59,18 @@
 +                gas = min(gas, 0.16)
 +            elif lateral_demand > self.low_gas_gate:
 +                gas = min(gas, 0.25)
-             brake = 0.0
-         return np.asarray([self.last_steer, gas, brake], dtype=np.float32)
- 
-@@ -3329,7 +3347,9 @@
-             self.mode = 'guided'
-             speed = max(self._metric._speed(frame), float(robust._pace_speed))
-             action = self._steering_pedals(metric_action, steer=float(robust_action[0]),
+@@ -3332 +3350,3 @@
 -                speed=speed, lateral_accel=self._metric.lateral_accel)
 +                speed=speed, lateral_accel=self._metric.lateral_accel,
 +                low_gas_gate=self._metric.low_gas_gate,
 +                high_gas_gate=self._metric.high_gas_gate)
-         if frame is not None and not robust.road_visible:
-             self._lost_frames += 1
-             if self._lost_frames > 3:
-@@ -3351,7 +3371,8 @@
-         return action
- 
-     @staticmethod
+@@ -3354 +3374,2 @@
 -    def _steering_pedals(metric_action, *, steer, speed, lateral_accel):
 +    def _steering_pedals(metric_action, *, steer, speed, lateral_accel,
 +                         low_gas_gate=.50, high_gas_gate=.75):
-         action = np.asarray(metric_action, dtype=np.float32).copy()
-         action[0] = steer
-         tangent = abs(float(np.tan(steer)))
-@@ -3361,9 +3382,9 @@
-             action[2] = max(float(action[2]), float(np.clip(.018 * (speed - speed_ceiling), .04, .7)))
-         else:
-             demand = speed * speed * tangent / (3.24 * lateral_accel)
+@@ -3364 +3385 @@
 -            if demand > .75:
 +            if demand > high_gas_gate:
-                 action[1] = min(float(action[1]), .16)
+@@ -3366 +3387 @@
 -            elif demand > .5:
 +            elif demand > low_gas_gate:
-                 action[1] = min(float(action[1]), .25)
-         if action[2] > 0.0:
-             action[1] = 0.0

@@ -1,0 +1,320 @@
+{
+  "status": "evidence_integrity_verified_research_artifact_not_promoted",
+  "reviewer": "independent_navigation_lane",
+  "verified_at_utc": "2026-10-04T15:15:18.745987+00:00",
+  "manifest_path": "agents/apex_2026/results/cloud-20261004/final/freeze.json",
+  "manifest_sha256": "b1915752995d689e1c07177ed3d1a67f366f9b66aa34eab427ee838db894e594",
+  "freeze_commit": "b43ef9887e9dfe916289dd7883f9c3bdaf516c73",
+  "freeze_commit_at_utc": "2026-10-04T15:09:23Z",
+  "remote_freeze_commit_independently_confirmed": "b43ef9887e9dfe916289dd7883f9c3bdaf516c73",
+  "source_path": "agents/apex_2026/guarded_preview_agent.py",
+  "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+  "parameters": {},
+  "development_chain": [
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r1-safety.json",
+      "sha256": "aa7f2819e34e16d0a348b660f9f01ee37cfc799e1ae67f4cba23500484baf9b9",
+      "source_sha256": "7b783070f26b108957f4d9c4c5658b411a7f03cb26690055cf2bdba13dde4c37",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r2-pace.json",
+      "sha256": "5ed26c239dd251c4135494c667765b4bd2e5ea2641e50157cd4c2c5ddd05c46d",
+      "source_sha256": "7fc32399068e80a35aefb7c2b4475663a6162a698db59f9341dd9c4ed9df3b6e",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r3-recovery.json",
+      "sha256": "0c1bda4e0af986f68edfc283f336bc658cb0de827d5683b7486f15e3451ff031",
+      "source_sha256": "63a4f8537a227f8ee52c898265e0cba4b2b2abdba4d64418603305ad669be1d3",
+      "parameters": {},
+      "selected_profile_seconds": 13,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r4-preview.json",
+      "sha256": "ba9645355dc10e040e7012a078247919f21d5f922315c59a651821a455360206",
+      "source_sha256": "f0ccb11d8bcae690cb1a5b3ac98ea0ab9f727f85b9d7d488263c86760f92302d",
+      "parameters": {},
+      "selected_profile_seconds": 15,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r5-envelope.json",
+      "sha256": "8b55367593a23a58a5fe9c3a46fa3ed6d76e2e50016cec533b033e21eda3d3c9",
+      "source_sha256": "80a8feedf4b2feeabaed86f029498a3c7d1967289ba0f95f88a6efed0efdf087",
+      "parameters": {
+        "cruise_speed": 95.0,
+        "preview_time": 0.23,
+        "braking_accel": 60.0
+      },
+      "selected_profile_seconds": 15,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r6-corridor.json",
+      "sha256": "4c60287e712677775ae64fa19e17f688c4b9be6a5af703aac4c52ffb41d10454",
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "selected_profile_seconds": 15,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    },
+    {
+      "path": "agents/apex_2026/results/cloud-20261004/development/r7-guarded-preview.json",
+      "sha256": "cba855e4c3239c4f43bba9a9b9b60e72db20fc0e59a0255de8be8337501d568c",
+      "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+      "parameters": {},
+      "selected_profile_seconds": 18,
+      "measured_cells": 20,
+      "passed": false,
+      "original_target_met": false
+    }
+  ],
+  "complete_consecutive_rejections": 7,
+  "selected_profile_seconds": 18,
+  "post_freeze_receipts": {
+    "holdout": {
+      "path": "agents/apex_2026/results/cloud-20261004/final/holdout.json",
+      "sha256": "41098a0c9d48cf4d500597a6198db1ed6661041320ee36d859af8b6dc3242c9e",
+      "cells": 20,
+      "post_commit_freeze_at_utc": "2026-10-04T15:09:47.996065+00:00",
+      "source_parameters_environment_match_manifest": true,
+      "action_traces_rehashed_finite_bounded": true,
+      "mandatory_semantic_fields_exact_match_development": [
+        "track_id",
+        "seed",
+        "finished",
+        "lap_time_ms",
+        "progress",
+        "collision_count",
+        "damage",
+        "retire_reason",
+        "steps",
+        "offtrack_samples",
+        "partial_offtrack_samples",
+        "source_sha256",
+        "parameters",
+        "action_trace_sha256",
+        "error"
+      ],
+      "runtime_limits_pass": true,
+      "runtime_maxima": {
+        "initialization_ms": 26.563413000985747,
+        "reset_ms": 0.08379799692193046,
+        "action_latency_max_ms": 100.66474099949119,
+        "peak_worker_rss_mib": 96.0078125
+      },
+      "verdict": {
+        "passed": false,
+        "original_target_met": false,
+        "pace_limit_seconds": 18,
+        "mandatory_finishes": 4,
+        "mandatory_cells": 4,
+        "extra_finishes": 15,
+        "extra_cells": 16,
+        "extra_fast_fraction": 0.0,
+        "per_track": {
+          "1": {
+            "finishes": 4,
+            "cells": 4,
+            "fast_fraction": 0.0
+          },
+          "2": {
+            "finishes": 4,
+            "cells": 4,
+            "fast_fraction": 0.0
+          },
+          "3": {
+            "finishes": 4,
+            "cells": 4,
+            "fast_fraction": 0.0
+          },
+          "4": {
+            "finishes": 3,
+            "cells": 4,
+            "fast_fraction": 0.0
+          }
+        }
+      },
+      "dnf_cells": [
+        {
+          "track_id": 4,
+          "seed": 2376840915,
+          "progress": 0.4095940959409594,
+          "collision_count": 5,
+          "retire_reason": "crash"
+        }
+      ],
+      "extra_finished_lap_range_seconds": [
+        20.0,
+        25.18
+      ]
+    },
+    "cold-source": {
+      "path": "agents/apex_2026/results/cloud-20261004/final/cold-source.json",
+      "sha256": "50d05c163b64d4e262f1bfc1360341eef221afe3b10a98247657502e289669e2",
+      "cells": 4,
+      "post_commit_freeze_at_utc": "2026-10-04T15:09:47.996510+00:00",
+      "source_parameters_environment_match_manifest": true,
+      "action_traces_rehashed_finite_bounded": true,
+      "mandatory_semantic_fields_exact_match_development": [
+        "track_id",
+        "seed",
+        "finished",
+        "lap_time_ms",
+        "progress",
+        "collision_count",
+        "damage",
+        "retire_reason",
+        "steps",
+        "offtrack_samples",
+        "partial_offtrack_samples",
+        "source_sha256",
+        "parameters",
+        "action_trace_sha256",
+        "error"
+      ],
+      "runtime_limits_pass": true,
+      "runtime_maxima": {
+        "initialization_ms": 3.661032998934388,
+        "reset_ms": 0.0770049991842825,
+        "action_latency_max_ms": 92.61673699802486,
+        "peak_worker_rss_mib": 95.703125
+      }
+    },
+    "extracted-zip": {
+      "path": "agents/apex_2026/results/cloud-20261004/final/extracted-zip.json",
+      "sha256": "dd0554932dd6d2d026ae3a5611917aeee16e3a3f6d6554ff4e653ae66448de0b",
+      "cells": 4,
+      "post_commit_freeze_at_utc": "2026-10-04T15:09:48.004129+00:00",
+      "source_parameters_environment_match_manifest": true,
+      "action_traces_rehashed_finite_bounded": true,
+      "mandatory_semantic_fields_exact_match_development": [
+        "track_id",
+        "seed",
+        "finished",
+        "lap_time_ms",
+        "progress",
+        "collision_count",
+        "damage",
+        "retire_reason",
+        "steps",
+        "offtrack_samples",
+        "partial_offtrack_samples",
+        "source_sha256",
+        "parameters",
+        "action_trace_sha256",
+        "error"
+      ],
+      "runtime_limits_pass": true,
+      "runtime_maxima": {
+        "initialization_ms": 42.2099290008191,
+        "reset_ms": 0.09028899876284413,
+        "action_latency_max_ms": 97.26299400062999,
+        "peak_worker_rss_mib": 97.15234375
+      }
+    }
+  },
+  "total_action_traces_independently_rehashed": 28,
+  "combined_runtime_maxima": {
+    "initialization_ms": 84.05737400244107,
+    "reset_ms": 0.09028899876284413,
+    "action_latency_max_ms": 100.66474099949119,
+    "peak_worker_rss_mib": 97.15234375
+  },
+  "package_check": {
+    "zip_sha256": "12e68a101b6fb7456fd26e035f3dc1f0fc5e9a3f779d4e9a5f33bb9c35f6be12",
+    "zip_size_bytes": 26704,
+    "members": [
+      "agent.py"
+    ],
+    "source_bytes": 133977,
+    "compression_ratio": 5.03862354268522,
+    "crc_source_hash_ast_import_call_size_limits_pass": true,
+    "imports": [
+      "__future__",
+      "collections.abc",
+      "dataclasses",
+      "math",
+      "numpy"
+    ],
+    "official_linux_certification": false
+  },
+  "protected_files_match_starting_14bb967": {
+    "agent.py": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806"
+  },
+  "environment_sha256": {
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+    "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+    "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+    "agents/apex_2026/evaluate.py": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+  },
+  "original_target_met": false,
+  "relaxed_profile_met": false,
+  "promoted": false,
+  "existing_full_suite_failures_reported": {
+    "count": 15,
+    "reference": "agents/apex_2026/results/cloud-20261004/BASELINE.md",
+    "fresh_full_suite_rerun_by_this_reviewer": false
+  },
+  "limitations": [
+    "The frozen development profile failed; successful repeat checks verify reproducibility, not adoption.",
+    "Holdout completion is 15/16, but zero extras meet the 13 or 18 second pace ceiling.",
+    "Legacy corridor geometry does not provide a complete dynamic or swept-trajectory safety certificate.",
+    "The official competition website and official submission-container certification remain unavailable."
+  ],
+  "isolated_cold_import_receipt": {
+    "path": "agents/apex_2026/results/cloud-20261004/final/cold-import.json",
+    "sha256": "0b9ea2625acbacb31329b972a15aac9be98a2ddb8feed6bbfc387b05caab9599",
+    "source_matches_manifest": true,
+    "reported_isolation_flag": true,
+    "reported_numpy_cold_import_included": true,
+    "reported_repository_and_torch_imported": false,
+    "action_finite_bounded": true,
+    "runtime_limits_pass": true,
+    "measurements": {
+      "initialization_ms": 84.05737400244107,
+      "reset_ms": 0.00774400177760981,
+      "action_ms": 37.03994000170496,
+      "peak_worker_rss_mib": 37.81640625
+    },
+    "evidence_basis": "Root executed the isolated -I import. Independent reviewer checked receipt fields, source binding, finite action and runtime limits; no extra episode or import run was performed.",
+    "official_linux_certification": false
+  },
+  "driving_runtime_maxima": {
+    "initialization_ms": 42.2099290008191,
+    "reset_ms": 0.09028899876284413,
+    "action_latency_max_ms": 100.66474099949119,
+    "peak_worker_rss_mib": 97.15234375
+  }
+}

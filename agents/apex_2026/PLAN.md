@@ -49,21 +49,21 @@
 - [x] Write and run a failing hazard braking/target test before protecting guided pedals in `safety_agent.py`.
 - [x] Investigate camera speed calibration and steering/physics independently; implement a correction only when measurements justify it.
 - [x] Run bounded benchmark screens; freeze each tested source and parameters while its simulation runs. Corridor V1's operational error is preserved separately from its three valid screens.
-- [x] Test and independently review completed source changes, then commit and push them with honest measured results. The final guarded integration remains in progress.
+- [x] Test and independently review completed source changes, then commit and push them with honest measured results. All guarded integrations are reviewed and measured; none qualifies for adoption.
 
 ### 3. Development selection and protocol
 
 **Files:** selected new standalone candidate, focused tests, `evaluate.py` and its tests only if an identified protocol defect needs correction; `results/cloud-20261004/` for compact receipts.
 
 - [x] Test that a mandatory-only screen cannot count as a completed development rejection; correct the identified evaluator mismatch after current runs finish.
-- [x] Evaluate six distinct prospective candidates on all 20 development cells. Maintain the ordered receipt chain and stop unsuccessful parameter directions after repeated clear regressions. A guarded integration is next.
-- [x] Apply 15/18 second profiles only after the required newly completed rejections; report the 13 second verdict separately. R1–R3 used 13, R4–R6 used 15; the next candidate uses 18.
-- [ ] Select by completion and pace over all cells, rather than the fastest required lap alone; commit and push the checkpoint.
+- [x] Evaluate seven distinct prospective candidates on all 20 development cells. Maintain the ordered receipt chain and stop unsuccessful parameter directions after repeated clear regressions.
+- [x] Apply 15/18 second profiles only after the required newly completed rejections; report the 13 second verdict separately. R1–R3 used 13, R4–R6 used 15, and R7 used 18. Every trial failed both its profile and the original goal.
+- [x] Compare completion and pace over all cells; commit and push the checkpoint. No qualifying candidate exists. Preview V4 remains the balanced reference; guarded preview is frozen only as a reviewed research snapshot and is slower with more development contacts.
 
 ### 4. Final freeze, verification, and report
 
-- [ ] Freeze the selected source, parameters, development receipt, and environment hashes in a reviewable manifest.
-- [ ] Only then run the separate holdout, exact cold required repeats, package checks, and extracted ZIP driving for the frozen artifact.
-- [ ] Independently review evidence and verify protected source hashes.
-- [ ] Update README, benchmark continuation evidence, and concise CONTEXT; commit and push.
-- [ ] Report all four lap times, extra/holdout completion and pace, runtime/package limits, original and relaxed verdicts, and remaining gaps. A failed profile is not a formally adopted candidate.
+- [x] Freeze the research source, parameters, development receipt, and environment hashes in a reviewable manifest; commit and push `b43ef98` before holdout starts.
+- [x] Only then run the separate holdout, exact cold required repeats, package checks, and extracted ZIP driving for the frozen artifact. Holdout extras finish 15/16, but no finish meets 13 or 18 seconds; holdout is now consumed.
+- [x] Independently review evidence and verify protected source hashes, exact repeat traces, archive contents and freeze chronology.
+- [x] Update README, benchmark continuation evidence, and concise CONTEXT; preserve them in the final report commit.
+- [x] Record all four lap times, extra/holdout completion and pace, runtime/package limits, original and relaxed verdicts, and remaining gaps in `results/cloud-20261004/FINAL.md`. The requested performance goal remains unmet; no failed candidate is adopted.

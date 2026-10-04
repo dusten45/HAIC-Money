@@ -1,9 +1,6 @@
 --- a/agents/apex_2026/pace_agent.py
 +++ b/agents/apex_2026/pace_agent.py
-@@ -3218,14 +3218,13 @@
-             gas, brake = 0.0, float(np.clip(-error * 0.018, 0.04, 0.70))
-         else:
-             gas = float(np.clip(0.30 + 0.055 * error, 0.0, 1.0))
+@@ -3221,8 +3221,7 @@
 -            if abs(self.last_steer) > 0.04:
 -                lateral_demand = speed * speed * abs(float(np.tan(self.last_steer))) / (
 -                    self.WHEELBASE * self.lateral_accel
@@ -19,39 +16,18 @@
 +                gas = min(gas, 0.16)
 +            elif lateral_demand > self.low_gas_gate:
 +                gas = min(gas, 0.25)
-             brake = 0.0
-         return np.asarray([self.last_steer, gas, brake], dtype=np.float32)
- 
-@@ -3285,7 +3284,9 @@
-             self.mode = 'guided'
-             speed = max(self._metric._speed(frame), float(robust._pace_speed))
-             action = self._steering_pedals(metric_action, steer=float(robust_action[0]),
+@@ -3288 +3287,3 @@
 -                speed=speed, lateral_accel=self._metric.lateral_accel)
 +                speed=speed, lateral_accel=self._metric.lateral_accel,
 +                low_gas_gate=self._metric.low_gas_gate,
 +                high_gas_gate=self._metric.high_gas_gate)
-         if frame is not None and not robust.road_visible:
-             self._lost_frames += 1
-             if self._lost_frames > 3:
-@@ -3307,7 +3308,8 @@
-         return action
- 
-     @staticmethod
+@@ -3310 +3311,2 @@
 -    def _steering_pedals(metric_action, *, steer, speed, lateral_accel):
 +    def _steering_pedals(metric_action, *, steer, speed, lateral_accel,
 +                         low_gas_gate=.50, high_gas_gate=.75):
-         action = np.asarray(metric_action, dtype=np.float32).copy()
-         action[0] = steer
-         tangent = abs(float(np.tan(steer)))
-@@ -3317,9 +3319,9 @@
-             action[2] = max(float(action[2]), float(np.clip(.018 * (speed - speed_ceiling), .04, .7)))
-         else:
-             demand = speed * speed * tangent / (3.24 * lateral_accel)
+@@ -3320 +3322 @@
 -            if demand > .75:
 +            if demand > high_gas_gate:
-                 action[1] = min(float(action[1]), .16)
+@@ -3322 +3324 @@
 -            elif demand > .5:
 +            elif demand > low_gas_gate:
-                 action[1] = min(float(action[1]), .25)
-         if action[2] > 0.0:
-             action[1] = 0.0

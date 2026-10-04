@@ -113,15 +113,27 @@ MPC completion results do not reproduce on Linux. See
 and the existing full-suite result (1170 passed, 10 skipped, 15 pre-existing
 dependency/provenance failures). No root or official simulator source changed.
 
-Six new complete development trials have been rejected. The first three used
-13 seconds and the next three 15; the next prospective profile is 18 seconds.
-The original 13-second target remains separately unmet. Preview and envelope
-variants reach 12/16 extra finishes, below the fixed completion floor. Current
-corridor V4 required laps are 19.98/24.78/22.68/21.76 s, but extra completion is
-10/16. No independent candidate is adopted. A new guarded integration is being
-tested; holdout remains unopened until final source/parameters are frozen.
-Complete new results and preserved rejected-source patches are in
-`agents/apex_2026/results/cloud-20261004/`.
+Seven new complete development trials have been rejected: R1–R3 used 13 seconds,
+R4–R6 used 15, and R7 used 18 under the predefined prospective rules. Both the
+original 10–13 second goal and the relaxed 18 second profile remain unmet.
+No independent candidate is adopted. Preview V4 remains the balanced development
+reference with 12/16 extra finishes and three on each track.
+
+The reviewed guarded-preview research snapshot was frozen and pushed in
+`b43ef98` before opening holdout; source SHA256 is
+`76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1`,
+with parameters `{}`. Its required laps are 21.92/27.64/26.14/23.74 s with zero
+contacts. Development extras finish 12/16 (per-track 2/4, 4/4, 3/4, 3/4).
+It is slower and has more development contacts than preview V4, so the freeze
+establishes reproducibility rather than performance improvement or adoption.
+
+The now-consumed holdout finishes 15/16 extras in 20.00–25.18 s; it also fails
+both pace targets. No source, parameter or selection changed after opening it.
+Cold source and extracted ZIP required repeats each match all four action hashes
+and outcomes. Current Apex/new behavior tests pass 213/213; the 15 existing
+full-suite dependency/provenance failures above remain disclosed.
+See `agents/apex_2026/results/cloud-20261004/FINAL.md` and `final/summary.json`
+for complete new receipts, runtime/package checks and remaining limitations.
 
 ## Frozen Competition Contract
 

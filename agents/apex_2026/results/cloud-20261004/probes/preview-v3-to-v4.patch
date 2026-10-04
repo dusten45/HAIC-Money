@@ -1,52 +1,27 @@
 --- a/agents/apex_2026/preview_agent.py
 +++ b/agents/apex_2026/preview_agent.py
-@@ -3160,7 +3160,7 @@
-             return np.asarray([self.last_steer, 0.0, 0.25], dtype=np.float32)
-         return np.asarray([self.last_steer, 0.09, 0.0], dtype=np.float32)
- 
+@@ -3163 +3163 @@
 -    def _curve_speed(self, forward, lateral):
 +    def _curve_speed(self, forward, lateral, speed=0.0):
-         """Brake for local visible curvature at its conservative approach distance.
- 
-         Overlapping metric windows smooth pixel quantization. A quadratic's
-@@ -3168,6 +3168,12 @@
-         by its local heading. The first window constrains the present turn;
-         farther windows permit the distance needed to reach their corner speed.
-         """
+@@ -3170,0 +3171,6 @@
 +        # Pixel edge quantization can displace one sampled center by a whole
 +        # pixel. A three-row median removes isolated peaks while preserving
 +        # monotone bends, including their immediate curvature constraint.
 +        lateral = np.asarray(lateral, dtype=np.float64).copy()
 +        if lateral.size >= 3:
 +            lateral[1:-1] = np.median(np.stack((lateral[:-2], lateral[1:-1], lateral[2:])), axis=0)
-         valid = (forward >= 0.0) & (forward <= min(32.0, float(forward[-1])))
-         if np.count_nonzero(valid) < 5:
-             return min(self.cruise_speed, float(np.sqrt(self.lateral_accel / 0.03)))
-@@ -3184,10 +3190,13 @@
-             target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
-         last_start = max(0.0, float(ahead[-1]) - self.curve_window)
-         starts = np.unique(np.append(np.arange(0.0, last_start, self.curve_step), last_start))
+@@ -3186,0 +3193,2 @@
 +        fitted_windows = 0
 +        reserve = 2.6 + max(0.0, float(speed)) * 0.08
-         for start in starts:
-             window = (ahead >= start) & (ahead <= start + self.curve_window)
-             if np.count_nonzero(window) < 5:
-                 continue
+@@ -3190,0 +3199 @@
 +            fitted_windows += 1
-             distances = ahead[window] - start
-             coefficients = np.polyfit(distances, side[window], 2)
-             # Fit curvature belongs to the window midpoint. Applying its mean
-@@ -3198,10 +3207,18 @@
-             heading = 2.0 * coefficients[0] * midpoint + coefficients[1]
-             curvature = float(abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5)
-             curve_speed_squared = self.lateral_accel / max(curvature, 0.001)
+@@ -3201,2 +3210,3 @@
 -            # Four metres reserve vehicle length plus one braking decision.
 -            available = max(0.0, float(ahead[window][0]) - 4.0)
 +            # Reserve vehicle length and distance travelled before the next
 +            # action can apply braking, using official four-tick decisions.
 +            available = max(0.0, float(ahead[window][0]) - reserve)
-             approach = np.sqrt(curve_speed_squared + 2.0 * self.braking_accel * available)
-             target = min(target, float(approach))
+@@ -3204,0 +3215,7 @@
 +        if fitted_windows == 0:
 +            # Sparse camera support may never put five points in one local
 +            # window. Its full visible bend still constrains current speed.
@@ -54,15 +29,6 @@
 +            heading = 2.0 * coefficients[0] * ahead[0] + coefficients[1]
 +            curvature = abs(2.0 * coefficients[0]) / (1.0 + heading ** 2) ** 1.5
 +            target = min(target, float(np.sqrt(self.lateral_accel / max(curvature, 0.001))))
-         return target
- 
-     def act(self, observation):
-@@ -3220,7 +3237,7 @@
-         preview = min(preview, max(6.0, float(forward[-1]) - 1.0))
-         x_target = float(np.interp(preview, forward, lateral))
- 
+@@ -3223 +3240 @@
 -        target_speed = self._curve_speed(forward, lateral)
 +        target_speed = self._curve_speed(forward, lateral, speed=speed)
-         # A curve running out of view requires an approach speed compatible
-         # with the remaining observed distance and available braking force.
-         if forward[-1] < 22.0:
