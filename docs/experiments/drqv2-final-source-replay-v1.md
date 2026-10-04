@@ -1,6 +1,138 @@
 # DrQ-v2 Final-Source Replay: Last Retention Test
 
-Status (2026-09-27 migration stop): the offline audit, both direct final-source TRAIN collections and **five of six** matched learner arms completed. The sixth arm was safely interrupted after its existing step-16,384 checkpoint, with later TRAIN exposure logged through step 21,037. There is **no six-arm sample audit, new TRAIN-DIAGNOSTIC evaluation, retention-gate decision, candidate selection or promotion**. All DrQ experiments are paused for instance migration; do not create r7c, freeze the encoder, sweep lambda/replay ratios, restart the sixth learner, or open evaluation without a new explicit user instruction and a separately audited resumption decision.
+Historical status (2026-09-27 migration stop): the offline audit, both direct final-source TRAIN collections and **five of six** matched learner arms completed. The sixth arm was safely interrupted after its existing step-16,384 checkpoint, with later TRAIN exposure logged through step 21,037. There is **no six-arm sample audit, new TRAIN-DIAGNOSTIC evaluation, retention-gate decision, candidate selection or promotion**.
+
+Current status (2026-09-28): the user explicitly requested resuming this research line. Exact continuation remains impossible; the bounded approach is a fresh, matched six-arm reconstruction in a new run root, starting all arms from the frozen source forks and preserving every old arm/partial artifact. Child protocol revision 2 SHA-256 is `03592f38cc24b9d94e51b3ae0c7688b1881ea03a8d17216d3d1289e88bb1a20a`; the final reuse-only exposure receipt SHA-256 is `49a3ad76825c4982379a83a04389fc4dab559898c108a1e28f6007f01afc5475`. The first seed0/uniform launch failed before run-directory creation/environment construction because the child adapter set Torch interop threads before the parent trainer. Its zero-interaction failure receipt is preserved; revision 2 delegates thread setup to the frozen parent trainer. Study-wide and selected-arm no-reset preflights then passed with zero decisions/resets/updates. The revision-2 seed0/uniform arm completed 32,768 TRAIN decisions/22,768 updates in 2,593.25 seconds; independent verification found 67 episodes/67 reused TRAIN track-seed pairs and validated its eight checkpoint/actor/sample-trace hashes. The terminal TD-MPC2 v2 TRAIN+16-episode CPU diagnostic is included in the cross-lane receipt; four overlapping cells remain consumed TRAIN, not fresh. Seed0/failure-weighted is next. No six-arm sample audit, final-source diagnostic, or gate outcome exists yet. See `talk/messages/20260928T105204Z-h4s9-drq-launch-setup-failure.md`, `talk/messages/20260928T105757Z-h4s9-drq-r2-preflight-ready.md`, `talk/messages/20260928T114836Z-h4s9-drq-r2-seed0-uniform-result.md`, and the frozen protocol/receipt above.
+
+## Reconstruction Progress (2026-09-28)
+
+This dated update supersedes the earlier line above that said seed0/failure-weighted
+was next. The frozen revision-2 child protocol is
+[`drqv2-final-source-replay-reconstruction-r1.json`](../../experiments/drqv2-final-source-replay-reconstruction-r1.json)
+(SHA-256 `03592f38cc24b9d94e51b3ae0c7688b1881ea03a8d17216d3d1289e88bb1a20a`).
+The seed0 `uniform`, `failure_weighted`, and `easy_retention` arms have each
+completed 32,768 TRAIN decisions/22,768 updates. Their independently verified
+run outcomes were respectively 67 episodes/67 track-seed pairs, 69/69, and
+63/63 (47 distinct seeds for the final arm); all 24 intermediate/final
+checkpoint, actor, and sample-trace hashes match their result receipts. These
+are reused parent-catalog TRAIN cells, not fresh geometry.
+
+The first seed0/uniform launch failed before environment construction because
+the adapter attempted Torch interop-thread setup twice. Its runtime and failure
+receipts are preserved; no environment reset or learner update occurred. The
+revised adapter delegates the one-time thread setup to the frozen parent
+trainer. Four of six child arms are now complete; seed1/uniform also met its
+full budget, and seed1/failure-weighted is next. No child sample audit,
+TRAIN-DIAGNOSTIC run, or retention-gate evaluation exists yet. The user asked
+to pause after this arm; no DrQ process remains active.
+
+## Reconstruction Progress (2026-09-28 13:32 UTC)
+
+This dated update supersedes the earlier current-status sentence that listed
+seed0/failure-weighted as next. All three source-seed-0 mixtures have completed
+the full 32,768-decision/22,768-update TRAIN budget. Independent ledger/result
+checks verified 67/69/63 episodes, 179 distinct `(track, geometry_seed)` TRAIN
+pairs, no TRAIN-DIAGNOSTIC cells, and all 24 intermediate/final checkpoint,
+actor, and sample-trace hashes. The first three arm results are preserved under
+[`runs/20260928-drqv2-final-source-replay-reconstruction-r1`](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1).
+The next arm is source-seed-1/uniform; three arms remain. The six-arm sample
+audit, 192-episode diagnostic, and fixed retention gate are still pending.
+
+## Pause Checkpoint (2026-09-28 14:03 UTC)
+
+Four of six revision-2 arms are complete: seed0 uniform/failure-weighted/
+easy-retention and seed1 uniform. Each ran 32,768 TRAIN decisions/22,768
+updates; the independent ledgers/results verified 67/69/63/82 episodes and
+the expected 120-road-catalog reuse with no TRAIN-DIAGNOSTIC cells. Twenty-four
+intermediate/final checkpoint, actor, and sample-trace hashes verify across
+the four arms. The user requested a pause; no training process remains active.
+Two seed1 arms remain, starting with failure-weighted. No sample audit,
+TRAIN-DIAGNOSTIC run, or retention-gate evaluation has occurred.
+
+## Reconstruction Resumed: Audit HOLD (2026-09-29)
+
+The subsequent user-directed resumption completed both remaining child TRAIN
+arms, seed1/failure-weighted and seed1/easy-retention, in 2,731.10 and
+2,614.08 seconds. Both have full 32,768-decision/22,768-update `result.json`
+receipts under [`runs/20260928-drqv2-final-source-replay-reconstruction-r1`](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1).
+Their twelve intermediate/final checkpoint, actor and sample-trace SHA-256
+values independently match the receipts. The six-arm reconstruction training
+matrix is complete on reused TRAIN cells. The separate historical five-complete,
+one-partial study and zero-interaction child setup failure are unchanged.
+
+The first CPU21 six-arm sample audit failed without writing a passing receipt:
+`scripts/audit_drq_final_replay_samples.py` raised `online warmup differs from
+paired evolving-source control: frames` while processing child seed0/uniform.
+Its strict bytewise warmup comparison is against an older r7b run made on a
+different GPU. Device causality and the extent of the difference have not yet
+been established. This is **not** evidence that the final-source treatment
+passes or fails the retained-success gate. No TRAIN-DIAGNOSTIC environment
+reset or 192-episode result exists; the fixed >=9/11 kept AND >=2/21 gained
+gate remains unevaluated. The [HOLD note](../../talk/messages/20260929T074909Z-t8p3-drq-sixarm-audit-hold.md)
+records the traceback and next read-only investigation. Preserve the frozen
+audit and all child artifacts; any changed comparison contract must be a
+separate, justified and source-pinned decision, never a silent waiver.
+
+The independent read-only what-if check, with **only** the historical
+warmup-byte comparator replaced in memory and no output, found no second
+failure in the six-arm source/online/sample/checkpoint checks. That is not an
+original-audit pass: all six child collectors diverged from old r7b on their
+update-free warmup (first action differences at replay rows 0 or 3 and first
+frame differences at rows 11, 18 or 22), despite matching original fork
+weights and episode-0 road identity in seed0/uniform. The change in GPU is a
+hypothesis for the tiny early action differences, not an established cause.
+
+The separately frozen [postrun r2 protocol](../../experiments/drqv2-final-source-replay-reconstruction-postrun-r2.json)
+and new isolated scripts preserve that discrepancy and bind any later
+reused-TRAIN-DIAGNOSTIC result to descriptive, noncausal scope. At the time of
+this update only synthetic tests passed; no r2 receipt, no diagnostic reset,
+no retention verdict and no candidate promotion existed. The original v1
+sample-audit HOLD is not waived or relabeled.
+
+## Postrun R2 Descriptive Diagnosis (2026-09-29)
+
+The distinct [postrun r2 protocol](../../experiments/drqv2-final-source-replay-reconstruction-postrun-r2.json)
+SHA-256 `17503a196c1125fee89bf31c456f7725f126538f95f4c4cadf2633bef0899f4d`
+binds all six completed revision-2 results and the new separately reviewed
+auditor/binder sources. Its [sample receipt](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/pre-evaluation-postrun-r2-sample-audit.json)
+SHA-256 `69ff8fb5e360ff67346f03c8630762813cfd5bac577d73c710a0cb5dba4d7198`
+passed **only** r2's zero-reset source/online metadata, n-step, 32:32 sampled
+update and checkpoint lineage checks. It records all six historical warmup
+action/frame divergences, `original_audit_passed=false` and
+`causal_comparison_eligible=false`. It does not independently recreate the
+child's environment pixels/actions/rewards; the original six-arm historical
+byte-parity auditor still FAILED without writing its own receipt.
+
+After a separate CPU21 zero-reset preflight, six frozen actors completed
+192/192 episodes on the same 16 **previously consumed** track-1
+TRAIN-DIAGNOSTIC roads (two repeats of 96 canonical actor/road cells). The
+[manifest](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2/manifest.json)
+SHA-256 is `e159681ede6f07f1432d5f1b5484bf7c584581704585d8c27f10688bf016dd9f`;
+all 195 output hashes verify independently and each repeat agrees with its
+canonical trace/finish decision. Independent recounts from primary
+[`paired.json`](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2/paired.json)
+and [`summary.json`](../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2/summary.json)
+agree. Each mixture has exactly 32 paired source-actor/road cells, 11
+source-successes and 21 source-failures:
+
+| Mixture | Kept K / 11 | Gained G / 21 | Treatment finishes / 32 | R2 descriptive >=9 kept AND >=2 gained |
+|---|---:|---:|---:|---|
+| uniform | 2 | 4 | 6 | FAIL |
+| failure-weighted | 5 | 7 | 12 | FAIL |
+| easy-retention | 6 | 6 | 12 | FAIL |
+
+All three fail the **retained source-success** requirement even though each
+gains some previously source-failed actor/road cells. These are dependent,
+reused development data, not 192 independent roads. The changed training
+device and update-free collector divergence forbid a matched replay-only
+causal comparison to the historical r7b actors. R2's narrower negative
+retention signal is not a failed original preregistered causal gate, a
+generalization test, a model selection or an official score. There is no DrQ
+candidate to promote; no fresh/confirmation/blind/official evaluation or
+another replay/lambda/architecture tuning axis is authorized by these
+results. Preserve the original partial run, original audit failure and r2
+manifest as distinct evidence. A separate hypothesis would require a new
+source-bound protocol and user decision.
 
 ## Fixed Decision
 

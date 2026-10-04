@@ -1,0 +1,40 @@
+{
+  "format": "haic-drq-final-source-postrun-protocol-r2",
+  "study_id": "drqv2-final-source-replay-reconstruction-postrun-r2",
+  "training_protocol_path": "experiments/drqv2-final-source-replay-reconstruction-r1.json",
+  "training_protocol_sha256": "03592f38cc24b9d94e51b3ae0c7688b1881ea03a8d17216d3d1289e88bb1a20a",
+  "original_audit_status": "failed_historical_warmup_parity",
+  "original_audit_failure": "online warmup differs from paired evolving-source control: frames",
+  "audit_receipt_path": "runs/20260928-drqv2-final-source-replay-reconstruction-r1/pre-evaluation-postrun-r2-sample-audit.json",
+  "diagnostic_output_root": "runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2",
+  "code_sha256": {
+    "scripts/audit_drq_final_source_reconstruction_r2.py": "ba1063953574d7e6d8afede4205c3b8205a7a87e9c640abc2d46e58b045256b9",
+    "scripts/diagnose_drq_final_source_reconstruction_r2.py": "bffdf4249bf1c4c29280d6e5146215ac67ec4453d16b6a400472db7109394bf2"
+  },
+  "run_result_sha256": {
+    "learner-0-uniform-final_source": "841ff49a44c0e89861373420ecc87e4dbf524c0b51726bf873409b909050f003",
+    "learner-0-failure_weighted-final_source": "2beb25c49b8b51e87606f8da3ac74e67d5d56c0f4635d3c95b9c2418fdba781d",
+    "learner-0-easy_retention-final_source": "638714024797c48e7670c4044d789baae321fd30ac83336e78cc85d32437c2fe",
+    "learner-1-uniform-final_source": "881bdd4d0a3278450773037733350eeb5e458a532e4b585e738edb5e1d6ad252",
+    "learner-1-failure_weighted-final_source": "584f2b2dc71c964a04d6f900e7fea69caae0f039e9d9bb8e957fa94fcd76801c",
+    "learner-1-easy_retention-final_source": "bb25cb74ad4dcc264bd45fc6e12e9ee88785082725e590d4edcd2dae866a3183"
+  },
+  "interpretation": "descriptive_reused_train_only",
+  "diagnostic": {
+    "partition": "TRAIN-DIAGNOSTIC",
+    "track_id": 1,
+    "already_consumed_roads": 16,
+    "treatment_actors": 6,
+    "deterministic_repeats": 2,
+    "episodes": 192,
+    "canonical_pairs": 96,
+    "fixed_descriptive_signal_per_mixture": "kept >=9/11 AND gained >=2/21"
+  },
+  "limitations": [
+    "The original six-arm sample audit failed and its receipt remains absent; this protocol does not amend or pass it.",
+    "Reconstruction and historical r7b collectors ran on different GPUs and their update-free warmup trajectories diverged; replay-only causality versus historical r7b cannot be established.",
+    "The postrun receipt attests source/online metadata, n-step, sampling and checkpoint lineage, not independent child environment pixel/action/reward replay parity.",
+    "All roads are previously consumed development TRAIN-DIAGNOSTIC roads; repeated runs are not new independent road evidence.",
+    "Raw reward and retention signals are internal proxies, not official HAIC rankings. No candidate promotion, confirmation, blind, model confirmation or official submission is authorized."
+  ]
+}

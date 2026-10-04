@@ -173,6 +173,125 @@ explicitly authorized, separately audited sixth-arm reconstruction is feasible.
 Do not launch a seventh arm, change lambda/ratio/encoder, rerun occupied paths,
 open protected data, or evaluate the incomplete six-arm gate on your own.
 
+## User-Directed Final-Source Reconstruction Queue (2026-09-28)
+
+The user has now explicitly reopened final-source replay work. The stale
+step-16,384 checkpoint is not a continuation point for the ledger at 21,037;
+all original paths remain immutable. To retain a matched six-arm matrix, prepare
+a distinct protocol/run root that reruns both source seeds across all three
+original mixtures from their source-weight forks, preserving the sealed pools,
+RNG streams, 32:32 ratio, lambda=0.5 and fixed 32,768-decision/22,768-update
+budget. This is a new reconstruction, not completion or relabeling of the
+interrupted six-arm study.
+
+The reconstruction reuses the previously allocated 120-road TRAIN catalog and
+is not fresh geometry or generalization evidence. The exposure auditor now
+verifies the five completed arms and interrupted ledger, and accounts for the
+separately frozen TD-MPC2 v2 reuse of four overlapping track-1 TRAIN cells.
+The frozen cross-lane receipt also binds the terminal TD-MPC2 v2 CPU paired
+TRAIN diagnostic ledger/result (16 capped episodes); no registry claim is made
+for these already allocated/consumed seeds.
+
+The isolated training runtime is Python 3.11.14/Torch 2.11.0+cu128 on RTX 4060
+Ti (compute capability 8.9), unlike the historical RTX 5070 Ti. All six new
+arms must use that same runtime/device; their within-matrix comparison may be
+matched, but they are not bitwise continuations of the historical runs. The
+CPU-only Torch 2.1.0 diagnostic environment is restored separately. The
+reconstruction launcher enforces package, host-memory, disk, GPU-memory and
+single-GPU-process gates before every arm.
+
+**Queue status:** the TD-MPC2 v2 TRAIN phase and CPU-only paired TRAIN diagnostic
+are terminal; its four cells remain consumed reuse, not new evidence. Child
+protocol revision 2 and reuse-only exposure receipt are frozen; both
+study-wide and selected-arm no-reset preflights passed. The first actual
+seed0/uniform attempt failed before environment construction on a duplicate
+Torch interop-thread setup. Its zero-interaction failure/runtime receipts are
+preserved; revision 2 delegates thread configuration to the pinned parent
+trainer. The retry completed 32,768 TRAIN decisions/22,768 updates, 67 episodes
+and 67 reused TRAIN cells; all eight checkpoint/actor/sample-trace hashes were
+independently verified. The seed0 failure-weighted/easy-retention arms have also
+completed 32,768/22,768 updates in 69/63 episodes with all artifact hashes
+verified. Seed1/uniform also completed 32,768 decisions/22,768 updates in 82
+episodes with all eight artifact hashes verified. Two seed1 arms remain, next
+failure-weighted. Continue the same TRAIN-only matrix after the requested pause.
+Only
+after all six full-budget results and the independent sample audit pass may the
+existing 192-episode TRAIN-DIAGNOSTIC evaluation run; the fixed >=9/11 retained
+AND >=2/21 gained gate remains unevaluated until then.
+
+## Resumed Six-Arm Audit Hold (2026-09-29)
+
+The user resumed this line and the two queued seed1 arms completed their frozen
+32,768-decision/22,768-update TRAIN budgets. Both full-budget results and all
+twelve new checkpoint/actor/sample-trace hashes verify, and the previous
+migration-partial arm remains untouched. All six reconstruction learners have
+finished; this is **training provenance**, not a driving result.
+
+The first source-bound CPU21 semantic audit stopped before writing its
+`pre-evaluation-sample-audit.json`: `check_online_warmup()` found the child
+seed0/uniform replay `frames` unequal to the earlier r7b control's update-free
+warmup. This audit checks historical **byte identity**, while the reconstruction
+protocol separately records a changed GPU and denies bitwise continuation.
+The cause and extent of the discrepancy are under read-only investigation; a
+cross-runtime explanation is a hypothesis, not an established mechanism. No
+192-episode TRAIN-DIAGNOSTIC reset, retention-gate assessment, candidate
+promotion or protected/official action is permitted by these results. Preserve
+the failed-gate evidence and all immutable run artifacts; do not change the
+frozen audit in place to manufacture a pass.
+
+## Distinct Postrun R2 Gate (2026-09-29; Pending)
+
+The separate [postrun r2 protocol](../../../experiments/drqv2-final-source-replay-reconstruction-postrun-r2.json)
+pins the original revision-2 training protocol and all six completed results,
+plus new isolated auditor/binder source bytes. The original failed auditor,
+its absent receipt path, the training learner code, and all run artifacts stay
+unaltered. R2 records all six historical warmup mismatches and independently
+checks the remaining frozen source/online n-step, ledger, 32:32 sample and
+checkpoint lineage. Its distinct receipt cannot establish child replay
+pixel/action/reward parity with the environment or a replay-only causal
+comparison against old r7b.
+
+Only after final independent source review, an actual passing **r2-specific**
+zero-reset receipt, and an isolated CPU21 zero-reset preflight may its separate
+192-episode reused TRAIN-DIAGNOSTIC output be opened. The original audit
+remains **FAILED** and its original study gate remains unevaluated. Even if the
+unchanged >=9/11 kept AND >=2/21 gained arithmetic is later calculated, it is
+descriptive development evidence, not old-r7b causal isolation, protected
+generalization, candidate promotion or official performance. The 122 new and
+adjacent synthetic tests passed before the real audit; no r2 receipt or
+diagnostic reset had occurred at this checkpoint.
+
+## Postrun R2 Descriptive Result (2026-09-29 09:43 UTC)
+
+The final [postrun r2 protocol](../../../experiments/drqv2-final-source-replay-reconstruction-postrun-r2.json)
+SHA-256 `17503a196c1125fee89bf31c456f7725f126538f95f4c4cadf2633bef0899f4d`
+passed its separate [six-arm sample audit](../../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/pre-evaluation-postrun-r2-sample-audit.json)
+(SHA-256 `69ff8fb5e360ff67346f03c8630762813cfd5bac577d73c710a0cb5dba4d7198`)
+with **zero** resets, recording all six historical warmup mismatches and
+`original_audit_passed=false`. The strict original auditor's receipt is still
+absent. The isolated CPU21 preflight passed before any reset, then the
+[separate r2 diagnostic manifest](../../../runs/20260928-drqv2-final-source-replay-reconstruction-r1/train-diagnostic-postrun-r2/manifest.json)
+sealed 192/192 reused TRAIN-DIAGNOSTIC episodes, 96 canonical actor/road
+pairs, exact paired-repeat decisions and all 195 listed file hashes.
+
+| Mixture | Kept / 11 source-success cells | Gained / 21 source-failure cells | Treatment finishes / 32 | Descriptive signal |
+|---|---:|---:|---:|---|
+| uniform | 2 | 4 | 6 | FAIL |
+| failure-weighted | 5 | 7 | 12 | FAIL |
+| easy-retention | 6 | 6 | 12 | FAIL |
+
+No mixture meets >=9/11 kept AND >=2/21 gained, even under the narrower
+postrun r2 **descriptive** contract. These are 16 repeatedly reused roads
+and not 192 independent road outcomes; cross-GPU historical trajectory
+divergence means the original replay-only matched question remains
+**unevaluated**, not rescued or newly failed by r2. No DrQ weight is selected
+or promoted. Stop this retention line here: do not tune on these consumed
+diagnostic cells, launch a seventh arm, open fresh/confirmation/blind/official
+evaluation, or treat raw reward as official ranking. A different follow-up
+requires its own hypothesis, source-bound protocol, cell audit and separate
+user decision. Preserve original partial results and both original-failure
+and r2 descriptive evidence as separate records.
+
 ## Separate Speed-Only Follow-Up (2026-09-29 11:46 UTC)
 
 The user's new direction is to prioritize faster completed laps on local
