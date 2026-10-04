@@ -1,0 +1,1684 @@
+{
+  "scope": "Zero new resets. Two pixel-only Agent.act replays; alternative sequences use the internal shadow only.",
+  "provenance": {
+    "/tmp/apex-v2-beam-r3/source.py": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "/tmp/apex-v2-beam-r3/t3-s4111953688.jsonl": "a876261132ff4f9d745acf00668f0c508fdcebb78b8d3fdb05df904b243ef988",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0",
+    "/tmp/apex-v2-beam-r3/failure_capture/receipt.json": "b53b8f874fbb03cbe5cbcc9ae3309b43559b160fb5dedf279dd9fde5c41724ad",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "/workspace/HAIC-Money/agents/apex_2026/v2/diagnostics/beam_procrastination.py": "0b6c62dfaa81b8b9c74ff182f27fb254593b098bd83eb7029ad4c1d9b11f14f8"
+  },
+  "parity": [
+    {
+      "step": 154,
+      "carried_state": {
+        "last_steer": -0.4000000059604645,
+        "slip": 0.00030256543185406165,
+        "throttle": 0.0
+      },
+      "action": [
+        -0.4000000059604645,
+        0.0,
+        0.0
+      ],
+      "beam_cost": -1.5757218437269458,
+      "exact_action_and_cost_match": true
+    },
+    {
+      "step": 155,
+      "carried_state": {
+        "last_steer": -0.4000000059604645,
+        "slip": 0.0,
+        "throttle": 0.0
+      },
+      "action": [
+        -0.4000000059604645,
+        0.0,
+        0.0
+      ],
+      "beam_cost": -1.5757218437269458,
+      "exact_action_and_cost_match": true
+    }
+  ],
+  "initialized_pixel_state": {
+    "speed": 0.0,
+    "yaw": -0.0,
+    "wheel": -0.40425590034439457,
+    "slip": -0.006185456674060371,
+    "flow_valid": true,
+    "omegas": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "raw_mask_initial_unsafe": 0,
+    "initialized_mask_initial_unsafe": 0
+  },
+  "sequence_scores": {
+    "chosen": {
+      "total_cost": -1.5757218437269458,
+      "terminal_progress": 3.7805015726269207,
+      "first_action_progress": 0.0,
+      "progress_reward": -15.122006290507683,
+      "running_tracking_speed_cost": 1.5963577316198485,
+      "terminal_cost": 11.949926715160888,
+      "terminal_components": {
+        "cross": 1.7938781559056918,
+        "heading": 8.38251200245042,
+        "speed": 1.773536556804777
+      },
+      "collision_cost": 0.0,
+      "unsafe_sample_count": 0,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 0.710555686818607,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -3.1452618287630685e-13,
+            0.0
+          ],
+          "speed": 8.629358512479701e-12,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837729687,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 3.1452618287630685e-13,
+          "heading_error": -4.172710354327647e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.22995075837729687
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -7.05324687544362e-13,
+            0.0
+          ],
+          "speed": 1.5491080640472887e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837719495,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 7.05324687544362e-13,
+          "heading_error": -4.946197531413565e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.4599015167544918
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -1.0337286582284833e-12,
+            0.0
+          ],
+          "speed": 1.6808490363451334e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837717532,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.0337286582284833e-12,
+          "heading_error": -5.3373716037141694e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.6898522751316671
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.3006002604961395,
+          "delta_progress": 0.3006002604961395,
+          "position": [
+            -0.007443869952112436,
+            0.3006002604961395
+          ],
+          "speed": 5.134296894073486,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0510862101073093,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.007443869952112436,
+          "heading_error": -0.00422363867983222,
+          "target": 30.242536303311166,
+          "total_cost": -0.36123393497564216
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.8229525685310364,
+          "delta_progress": 0.5223523080348969,
+          "position": [
+            -0.06623804569244385,
+            0.8229525685310364
+          ],
+          "speed": 6.7780280113220215,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.9698925370085454,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.06623804569244385,
+          "heading_error": -0.030675502493977547,
+          "target": 29.006843937081857,
+          "total_cost": -2.3311264719841875
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 1.5160236358642578,
+          "delta_progress": 0.6930710673332214,
+          "position": [
+            -0.19364991784095764,
+            1.5160236358642578
+          ],
+          "speed": 10.228801727294922,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -2.694241864142842,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.19364991784095764,
+          "heading_error": -0.08030300587415695,
+          "target": 27.367294127529096,
+          "total_cost": -5.02536833612703
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 2.4618680477142334,
+          "delta_progress": 0.9458444118499756,
+          "position": [
+            -0.4313679337501526,
+            2.4618680477142334
+          ],
+          "speed": 13.332837104797363,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -3.7140501179183403,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.4313679337501526,
+          "heading_error": -0.1601397544145584,
+          "target": 25.129776074319725,
+          "total_cost": -8.73941845404537
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.7805015726269207,
+          "delta_progress": 1.3186335249126873,
+          "position": [
+            -0.8413324952125549,
+            3.6087470054626465
+          ],
+          "speed": 16.338674545288086,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -4.786230104842463,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 1.7938781559056918,
+            "heading": 8.38251200245042,
+            "speed": 1.773536556804777
+          },
+          "cross_track": 0.6696786833821299,
+          "heading_error": 1.2947982084054968,
+          "target": 24.02749013852648,
+          "total_cost": -1.5757218437269458
+        }
+      ]
+    },
+    "gas_now": {
+      "total_cost": 37.54338688974293,
+      "terminal_progress": 5.486571539620103,
+      "first_action_progress": 0.3006002604961395,
+      "progress_reward": -21.94628615848041,
+      "running_tracking_speed_cost": 4.394049569181462,
+      "terminal_cost": 55.09562347904188,
+      "terminal_components": {
+        "cross": 41.248023145075635,
+        "heading": 4.838442595389111,
+        "speed": 9.009157738577139
+      },
+      "collision_cost": 0.0,
+      "unsafe_sample_count": 0,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 1.7711674073859842,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.3006002604961395,
+          "delta_progress": 0.3006002604961395,
+          "position": [
+            -0.007443869952112436,
+            0.3006002604961395
+          ],
+          "speed": 5.134296894073486,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0510862101073093,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.007443869952112436,
+          "heading_error": -0.00422363867983222,
+          "target": 30.242536303311166,
+          "total_cost": -1.0510862101073093
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.8229525685310364,
+          "delta_progress": 0.5223523080348969,
+          "position": [
+            -0.06623804569244385,
+            0.8229525685310364
+          ],
+          "speed": 6.7780280113220215,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.9698925370085454,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.06623804569244385,
+          "heading_error": -0.030675502493977547,
+          "target": 29.006843937081857,
+          "total_cost": -3.020978747115855
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 1.3462713956832886,
+          "delta_progress": 0.5233188271522522,
+          "position": [
+            -0.18175582587718964,
+            1.3462713956832886
+          ],
+          "speed": 6.654219627380371,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.9795562378997635,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.18175582587718964,
+          "heading_error": -0.07731592655181885,
+          "target": 27.768865144092757,
+          "total_cost": -5.000534985015618
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 2.041815996170044,
+          "delta_progress": 0.6955446004867554,
+          "position": [
+            -0.3584690988063812,
+            2.041815996170044
+          ],
+          "speed": 10.576767921447754,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -2.6992062813375775,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.3584690988063812,
+          "heading_error": -0.13546469807624817,
+          "target": 26.123463869947187,
+          "total_cost": -7.699741266353196
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 3.574471410054178,
+          "delta_progress": 1.5326554138841342,
+          "position": [
+            -0.6349896192550659,
+            2.863795280456543
+          ],
+          "speed": 10.754337310791016,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -5.643201328382537,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.07536274618427354,
+          "heading_error": 1.360765992884305,
+          "target": 24.0,
+          "total_cost": -13.342942594735732
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.9768607389486723,
+          "delta_progress": 0.4023893288944942,
+          "position": [
+            -1.037764310836792,
+            3.78346586227417
+          ],
+          "speed": 14.043007850646973,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0849573452351768,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.8444791837143275,
+          "heading_error": 1.2687378060121557,
+          "target": 24.07832190681466,
+          "total_cost": -14.427899939970908
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 4.590048682821339,
+          "delta_progress": 0.6131879438726671,
+          "position": [
+            -1.6529422998428345,
+            4.9148945808410645
+          ],
+          "speed": 17.23267936706543,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.4924846544233072,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.9763032119556867,
+          "heading_error": 1.14724321604072,
+          "target": 26.23803429094121,
+          "total_cost": -15.920384594394216
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 5.486571539620103,
+          "delta_progress": 0.8965228567987635,
+          "position": [
+            -2.5503413677215576,
+            6.148822784423828
+          ],
+          "speed": 20.154605865478516,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.631851994904734,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 41.248023145075635,
+            "heading": 4.838442595389111,
+            "speed": 9.009157738577139
+          },
+          "cross_track": 3.2112311947707703,
+          "heading_error": 0.9837116036104394,
+          "target": 37.483923738740906,
+          "total_cost": 37.54338688974293
+        }
+      ]
+    },
+    "left_shift_coast_tail": {
+      "total_cost": 3903.183879877189,
+      "terminal_progress": 6.688455605547886,
+      "first_action_progress": 0.3006002604961395,
+      "progress_reward": -26.753822422191543,
+      "running_tracking_speed_cost": 7.398894232621814,
+      "terminal_cost": 122.53880806675897,
+      "terminal_components": {
+        "cross": 76.44169239933278,
+        "heading": 3.2460910559242184,
+        "speed": 42.85102461150197
+      },
+      "collision_cost": 3800.0,
+      "unsafe_sample_count": 19,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 2.037297548702868,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.3006002604961395,
+          "delta_progress": 0.3006002604961395,
+          "position": [
+            -0.007443869952112436,
+            0.3006002604961395
+          ],
+          "speed": 5.134296894073486,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0510862101073093,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.007443869952112436,
+          "heading_error": -0.00422363867983222,
+          "target": 30.242536303311166,
+          "total_cost": -1.0510862101073093
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.8229525685310364,
+          "delta_progress": 0.5223523080348969,
+          "position": [
+            -0.06623804569244385,
+            0.8229525685310364
+          ],
+          "speed": 6.7780280113220215,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.9698925370085454,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.06623804569244385,
+          "heading_error": -0.030675502493977547,
+          "target": 29.006843937081857,
+          "total_cost": -3.020978747115855
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 1.5160236358642578,
+          "delta_progress": 0.6930710673332214,
+          "position": [
+            -0.19364991784095764,
+            1.5160236358642578
+          ],
+          "speed": 10.228801727294922,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -2.694241864142842,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.19364991784095764,
+          "heading_error": -0.08030300587415695,
+          "target": 27.367294127529096,
+          "total_cost": -5.715220611258697
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 2.4618680477142334,
+          "delta_progress": 0.9458444118499756,
+          "position": [
+            -0.4313679337501526,
+            2.4618680477142334
+          ],
+          "speed": 13.332837104797363,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -3.7140501179183403,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.4313679337501526,
+          "heading_error": -0.1601397544145584,
+          "target": 25.129776074319725,
+          "total_cost": -9.429270729177038
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.7805015726269207,
+          "delta_progress": 1.3186335249126873,
+          "position": [
+            -0.8413324952125549,
+            3.6087470054626465
+          ],
+          "speed": 16.338674545288086,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -4.786230104842463,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.6696786833821299,
+          "heading_error": 1.2947982084054968,
+          "target": 24.02749013852648,
+          "total_cost": -14.215500834019501
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 4.445033547801341,
+          "delta_progress": 0.6645319751744201,
+          "position": [
+            -1.5079114437103271,
+            4.901710033416748
+          ],
+          "speed": 19.282554626464844,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.7216821263282345,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.9629468600419464,
+          "heading_error": 1.1422996366053715,
+          "target": 24.596249184074424,
+          "total_cost": -15.937182960347736
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 5.450784120204034,
+          "delta_progress": 1.0057505724026932,
+          "position": [
+            -2.5146093368530273,
+            6.2041120529174805
+          ],
+          "speed": 20.980825424194336,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "stage_cost": -2.0233475513962746,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 3.266484627714717,
+          "heading_error": 0.9813987049745752,
+          "target": 36.96425775385792,
+          "total_cost": 182.03946948825597
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 6.688455605547886,
+          "delta_progress": 1.237671485343852,
+          "position": [
+            -3.7606399059295654,
+            7.306169509887695
+          ],
+          "speed": 20.720705032348633,
+          "unsafe_samples": [
+            2,
+            4,
+            5,
+            7
+          ],
+          "stage_cost": -1.3943976778257188,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 76.44169239933278,
+            "heading": 3.2460910559242184,
+            "speed": 42.85102461150197
+          },
+          "cross_track": 4.37154699160757,
+          "heading_error": 0.8057407841141242,
+          "target": 58.51445434423969,
+          "total_cost": 3903.183879877189
+        }
+      ]
+    },
+    "left_shift_brake_tail": {
+      "total_cost": 25.248387363719857,
+      "terminal_progress": 4.241035571596387,
+      "first_action_progress": 0.3006002604961395,
+      "progress_reward": -16.96414228638555,
+      "running_tracking_speed_cost": 3.8534432811860846,
+      "terminal_cost": 38.35908636891932,
+      "terminal_components": {
+        "cross": 13.267206098366692,
+        "heading": 7.599986897963511,
+        "speed": 17.49189337258912
+      },
+      "collision_cost": 0.0,
+      "unsafe_sample_count": 0,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 1.7242960342238738,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.3006002604961395,
+          "delta_progress": 0.3006002604961395,
+          "position": [
+            -0.007443869952112436,
+            0.3006002604961395
+          ],
+          "speed": 5.134296894073486,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0510862101073093,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.007443869952112436,
+          "heading_error": -0.00422363867983222,
+          "target": 30.242536303311166,
+          "total_cost": -1.0510862101073093
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.8229525685310364,
+          "delta_progress": 0.5223523080348969,
+          "position": [
+            -0.06623804569244385,
+            0.8229525685310364
+          ],
+          "speed": 6.7780280113220215,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.9698925370085454,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.06623804569244385,
+          "heading_error": -0.030675502493977547,
+          "target": 29.006843937081857,
+          "total_cost": -3.020978747115855
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 1.5160236358642578,
+          "delta_progress": 0.6930710673332214,
+          "position": [
+            -0.19364991784095764,
+            1.5160236358642578
+          ],
+          "speed": 10.228801727294922,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -2.694241864142842,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.19364991784095764,
+          "heading_error": -0.08030300587415695,
+          "target": 27.367294127529096,
+          "total_cost": -5.715220611258697
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 2.4618680477142334,
+          "delta_progress": 0.9458444118499756,
+          "position": [
+            -0.4313679337501526,
+            2.4618680477142334
+          ],
+          "speed": 13.332837104797363,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -3.7140501179183403,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.4313679337501526,
+          "heading_error": -0.1601397544145584,
+          "target": 25.129776074319725,
+          "total_cost": -9.429270729177038
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.7805015726269207,
+          "delta_progress": 1.3186335249126873,
+          "position": [
+            -0.8413324952125549,
+            3.6087470054626465
+          ],
+          "speed": 16.338674545288086,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -4.786230104842463,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.6696786833821299,
+          "heading_error": 1.2947982084054968,
+          "target": 24.02749013852648,
+          "total_cost": -14.215500834019501
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.65
+          ],
+          "progress": 4.189688072879471,
+          "delta_progress": 0.4091865002525501,
+          "position": [
+            -1.2509430646896362,
+            4.62877082824707
+          ],
+          "speed": 9.423347473144531,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -0.760441728006436,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.6898726971295925,
+          "heading_error": 1.2373770009775182,
+          "target": 24.13341681237173,
+          "total_cost": -14.975942562025937
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.65
+          ],
+          "progress": 4.241030698089974,
+          "delta_progress": 0.051342625210502923,
+          "position": [
+            -1.3023402690887451,
+            4.760051727294922
+          ],
+          "speed": 0.01484291534870863,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.8298402888344973,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.8211749511519428,
+          "heading_error": 1.2328473459978124,
+          "target": 24.146707948593665,
+          "total_cost": -14.14610227319144
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.65
+          ],
+          "progress": 4.241035571596387,
+          "delta_progress": 4.873506413538564e-06,
+          "position": [
+            -1.3023451566696167,
+            4.760085582733154
+          ],
+          "speed": 9.385598787048366e-06,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 1.0354032679919751,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 13.267206098366692,
+            "heading": 7.599986897963511,
+            "speed": 17.49189337258912
+          },
+          "cross_track": 1.8212088086190648,
+          "heading_error": 1.2328817378778478,
+          "target": 24.146709210204993,
+          "total_cost": 25.248387363719857
+        }
+      ]
+    },
+    "coast_all": {
+      "total_cost": 30.58345086416298,
+      "terminal_progress": 0.0,
+      "first_action_progress": 0.0,
+      "progress_reward": -0.0,
+      "running_tracking_speed_cost": 1.8396060670172614,
+      "terminal_cost": 28.74384479714549,
+      "terminal_components": {
+        "cross": 2.569983405256507e-23,
+        "heading": 2.0262871442017628e-22,
+        "speed": 28.74384479714549
+      },
+      "collision_cost": 0.0,
+      "unsafe_sample_count": 0,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 0.0,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -3.1452618287630685e-13,
+            0.0
+          ],
+          "speed": 8.629358512479701e-12,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837729687,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 3.1452618287630685e-13,
+          "heading_error": -4.172710354327647e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.22995075837729687
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -7.05324687544362e-13,
+            0.0
+          ],
+          "speed": 1.5491080640472887e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837719495,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 7.05324687544362e-13,
+          "heading_error": -4.946197531413565e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.4599015167544918
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -1.2986278719040456e-12,
+            0.0
+          ],
+          "speed": 3.4001444021436456e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837691986,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.2986278719040456e-12,
+          "heading_error": -9.613203462432995e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.6898522751316671
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -1.343480882098902e-12,
+            0.0
+          ],
+          "speed": 1.7294745496831965e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.2299507583771681,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.343480882098902e-12,
+          "heading_error": -5.6033320344761606e-12,
+          "target": 30.953645341153887,
+          "total_cost": 0.9198030335088352
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -1.645350522494482e-12,
+            0.0
+          ],
+          "speed": 1.748910218035693e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.2299507583771652,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.645350522494482e-12,
+          "heading_error": -5.816910321476687e-12,
+          "target": 30.953645341153887,
+          "total_cost": 1.1497537918860004
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -1.9216850333236835e-12,
+            0.0
+          ],
+          "speed": 1.5910921885575746e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837718865,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 1.9216850333236835e-12,
+          "heading_error": -9.186275004569033e-12,
+          "target": 30.953645341153887,
+          "total_cost": 1.3797045502631644
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -2.2396529075763283e-12,
+            0.0
+          ],
+          "speed": 1.757851156303225e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.2299507583771639,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 2.2396529075763283e-12,
+          "heading_error": -6.189122565142258e-12,
+          "target": 30.953645341153887,
+          "total_cost": 1.6096553086403282
+        },
+        {
+          "action": [
+            -0.4,
+            0.0,
+            0.0
+          ],
+          "progress": 0.0,
+          "delta_progress": 0.0,
+          "position": [
+            -2.534750187521695e-12,
+            0.0
+          ],
+          "speed": 1.7574042915358135e-11,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": 0.22995075837716392,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 2.569983405256507e-23,
+            "heading": 2.0262871442017628e-22,
+            "speed": 28.74384479714549
+          },
+          "cross_track": 2.534750187521695e-12,
+          "heading_error": -6.36598326136939e-12,
+          "target": 30.953645341153887,
+          "total_cost": 30.58345086416298
+        }
+      ]
+    },
+    "gas_all": {
+      "total_cost": 5312.329211406393,
+      "terminal_progress": 7.305342878287307,
+      "first_action_progress": 0.3006002604961395,
+      "progress_reward": -29.22137151314923,
+      "running_tracking_speed_cost": 9.054985497156874,
+      "terminal_cost": 132.49559742238563,
+      "terminal_components": {
+        "cross": 95.51846075333862,
+        "heading": 1.3940254706881616,
+        "speed": 35.58311119835884
+      },
+      "collision_cost": 5200.0,
+      "unsafe_sample_count": 26,
+      "steering_cost": 1.0658140956992163e-18,
+      "integrated_progress_m_s": 2.227147855616911,
+      "samples": [
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.3006002604961395,
+          "delta_progress": 0.3006002604961395,
+          "position": [
+            -0.007443869952112436,
+            0.3006002604961395
+          ],
+          "speed": 5.134296894073486,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.0510862101073093,
+          "steering_cost": 1.0658140956992163e-18,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.007443869952112436,
+          "heading_error": -0.00422363867983222,
+          "target": 30.242536303311166,
+          "total_cost": -1.0510862101073093
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 0.8647871613502501,
+          "delta_progress": 0.5641869008541106,
+          "position": [
+            -0.06783270835876465,
+            0.8647871613502502
+          ],
+          "speed": 8.255463600158691,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -2.153391668911802,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.06783270835876465,
+          "heading_error": -0.032556988298892975,
+          "target": 28.90787876320239,
+          "total_cost": -3.2044778790191115
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 1.666557431221008,
+          "delta_progress": 0.801770269870758,
+          "position": [
+            -0.21359850466251373,
+            1.6665574312210083
+          ],
+          "speed": 11.333196640014648,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -3.1388183351714996,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.21359850466251373,
+          "heading_error": -0.0906229019165039,
+          "target": 27.01118684338279,
+          "total_cost": -6.343296214190611
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.426923336748618,
+          "delta_progress": 1.7603659055276097,
+          "position": [
+            -0.4873622953891754,
+            2.6899101734161377
+          ],
+          "speed": 14.368302345275879,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -6.546920345494923,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.24931510536940976,
+          "heading_error": 1.3879440568729906,
+          "target": 24.0,
+          "total_cost": -12.890216559685534
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 3.892461402272715,
+          "delta_progress": 0.46553806552409727,
+          "position": [
+            -0.9534143209457397,
+            3.902188301086426
+          ],
+          "speed": 17.333215713500977,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.325286124640842,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 0.9631665471563087,
+          "heading_error": 1.2543046604890844,
+          "target": 24.056473334089727,
+          "total_cost": -14.215502684326376
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 4.633920098123789,
+          "delta_progress": 0.7414586958510738,
+          "position": [
+            -1.697198510169983,
+            5.239680290222168
+          ],
+          "speed": 20.20384979248047,
+          "unsafe_samples": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "stage_cost": -1.8320560334441232,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 2.3011411224434672,
+          "heading_error": 1.0729673051863804,
+          "target": 26.734723386536622,
+          "total_cost": -16.0475587177705
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 5.748755626711562,
+          "delta_progress": 1.114835528587773,
+          "position": [
+            -2.8129796981811523,
+            6.601973533630371
+          ],
+          "speed": 23.12029457092285,
+          "unsafe_samples": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "stage_cost": -2.0647948342323197,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 0.0,
+            "heading": 0.0,
+            "speed": 0.0
+          },
+          "cross_track": 3.6646449116001945,
+          "heading_error": 0.8330795201944543,
+          "target": 41.29107591853317,
+          "total_cost": 581.8876464479972
+        },
+        {
+          "action": [
+            -0.4,
+            0.7,
+            0.0
+          ],
+          "progress": 7.305342878287307,
+          "delta_progress": 1.5565872515757455,
+          "position": [
+            -4.378896236419678,
+            7.819655895233154
+          ],
+          "speed": 25.848155975341797,
+          "unsafe_samples": [
+            4,
+            6,
+            6,
+            7
+          ],
+          "stage_cost": -2.054032463989535,
+          "steering_cost": 0.0,
+          "terminal_cost": {
+            "cross": 95.51846075333862,
+            "heading": 1.3940254706881616,
+            "speed": 35.58311119835884
+          },
+          "cross_track": 4.886677315757063,
+          "heading_error": 0.5280199751312751,
+          "target": 60.28801234281176,
+          "total_cost": 5312.329211406393
+        }
+      ]
+    }
+  },
+  "repeated_plan_observation": {
+    "decisions": 96,
+    "first_step": 154,
+    "last_step": 249,
+    "coast_first_actions": 96,
+    "unchanged_beam_sequences": 96,
+    "max_actual_speed": 8.682132153029893e-07,
+    "net_actual_displacement_m": 0.0
+  },
+  "findings": [
+    "Progress rewards telescope exactly: sum(-4*delta_progress)=-4*terminal_progress. They do not reward earlier traversal at equal final progress.",
+    "At154 and155 the same stationary observation/action memory yields the same three-coast-then-gas plan; only the first coast is executed each time.",
+    "Chosen and immediate-gas-substitution sequences both have zero predicted unsafe samples. Their ranking difference is dominated by terminal cross-track/heading/speed cost, not collision occupancy.",
+    "Left-shifting the chosen motion and appending coast reaches predicted unsafe pixels; forcing acceleration is not justified.",
+    "The initialized prediction mask has zero initial unsafe samples, so this particular optimizer stall is not caused by an unavoidable initial collision penalty. Earlier real collisions and perception/state errors remain separate issues."
+  ],
+  "structural_hypothesis": "Use an explicit stagewise time-to-progress or discounted progress objective plus a terminal continuation/viability condition that cannot improve merely by delaying the hard maneuver beyond the horizon. Retain collision constraints; do not impose unconditional gas or infer a collision-free escape from this finite candidate set.",
+  "limitations": [
+    "Internal predictions are not actual alternative driving outcomes. No escape feasibility or rescue is established.",
+    "A beam search can prune better action prefixes; this decomposition does not prove a global optimum.",
+    "The car-occlusion fill and finite footprint mask limit collision fidelity; zero predicted occupancy does not prove no physical contact."
+  ]
+}
