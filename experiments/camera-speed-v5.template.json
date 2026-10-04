@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "name": "camera-speed-v5",
+  "status": "UNBOUND",
+  "control_implementation_commit": "1d45611bef833a52e3042d847c984b744b9513d9",
+  "control_blob_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+  "candidate_base_commit": "REQUIRED_AT_BIND",
+  "candidate_base_blob_sha256": "REQUIRED_AT_BIND",
+  "requirements_blob_sha256": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+  "control_class": "_ClearRoadRow42DropoutController",
+  "candidate_class": "_SpeedOptimizedController",
+  "track_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "seed_counts": {
+    "screen": 4,
+    "confirmation": 4
+  },
+  "spot_indices": {
+    "screen": [
+      [
+        1,
+        0
+      ],
+      [
+        4,
+        3
+      ]
+    ],
+    "confirmation": [
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
+  "evaluation_policy": {
+    "selected_before_geometry_binding": true,
+    "maximum_candidates": 2,
+    "candidate_budget_scope": "retained production revisions; exploratory prototypes are development",
+    "maximum_fresh_studies": 2,
+    "maximum_cold_episodes_per_study": 72,
+    "maximum_workers": 3,
+    "worker_timeout_seconds": 300,
+    "maximum_wall_minutes_per_study": 30,
+    "profiles": {
+      "strict": {
+        "minimum_net_finish_gain": 0,
+        "minimum_finished_progress": 0.95,
+        "maximum_phase_lost_control_finishes": 0,
+        "maximum_combined_lost_control_finishes": 0,
+        "maximum_aggregate_crash_increase": 0,
+        "maximum_aggregate_contact_increase": 0,
+        "maximum_aggregate_damage_increase": 0.0,
+        "minimum_mean_progress_delta": 0.0,
+        "progress_metric": "1.0 for an official finished outcome; raw progress for DNF",
+        "minimum_phase_track_net_finish_gain": 0,
+        "minimum_combined_track_net_finish_gain": 0,
+        "minimum_shared_completed_cells_per_phase": 1,
+        "maximum_phase_shared_finish_time_ratio": 1.0,
+        "maximum_combined_shared_finish_time_ratio": 0.9,
+        "minimum_seed_lost_control_finishes_for_negative_net_veto": 2
+      },
+      "fallback": {
+        "minimum_net_finish_gain": 0,
+        "minimum_finished_progress": 0.95,
+        "maximum_phase_lost_control_finishes": 1,
+        "maximum_combined_lost_control_finishes": 1,
+        "maximum_aggregate_crash_increase": 0,
+        "maximum_aggregate_contact_increase": 0,
+        "maximum_aggregate_damage_increase": 0.0,
+        "minimum_mean_progress_delta": 0.0,
+        "progress_metric": "1.0 for an official finished outcome; raw progress for DNF",
+        "minimum_phase_track_net_finish_gain": 0,
+        "minimum_combined_track_net_finish_gain": 0,
+        "minimum_shared_completed_cells_per_phase": 1,
+        "maximum_phase_shared_finish_time_ratio": 1.0,
+        "maximum_combined_shared_finish_time_ratio": 1.0,
+        "minimum_seed_lost_control_finishes_for_negative_net_veto": 2
+      }
+    },
+    "fallback_requires_distinct_committed_performance_failures": 2,
+    "failure_evidence_scopes": [
+      "consumed-development",
+      "fresh-strict"
+    ],
+    "failure_evidence_requires_pinned_source_and_recomputed_canonical_pairs": true,
+    "development_failure_includes_designated_lap_target": true,
+    "fallback_requires_new_source_protocol_and_unused_geometry": true,
+    "historical_decisions_and_sealed_holdouts_unchanged": true,
+    "no_rescoring_bound_study": true,
+    "development_maps": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ]
+    ],
+    "development_lap_target_seconds": [
+      10,
+      13
+    ],
+    "development_target_is_not_fresh_evidence": true,
+    "progress_metric": "1.0 for an official finished outcome; raw progress for DNF"
+  },
+  "source_rule": "Promoted V4 pinned control blob; an explicit committed candidate blob with exactly one Agent selector swap.",
+  "decision_rule": "Every phase preserves per-track completion, aggregate safety and completion-aware progress and shared-finish total time <=1.00. Strict combined time <=0.90 and zero lost finishes. After two documented performance failures only a new study and source may use combined <=1.00 and at most one total lost finish with net>=0."
+}
