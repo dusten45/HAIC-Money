@@ -753,6 +753,83 @@
           "receipt_sha256": "a479305f02248fded531e895b8de018fa17ec7df1ebb3a44ed526e0b81958d86"
         }
       ]
+    },
+    {
+      "variant": "r11",
+      "change": "Isolated relaxed lateral comfort-cost scale18->35; gas/yawcost and maximumspeed unchanged; lost track4 so not promoted",
+      "source_sha256": "8f907e009a85a11a496ec15901c17b38003de1ace7f1e940e41b91bee992ae30",
+      "source": "agents/apex_2026/results/rollout_sources/r11.py",
+      "config": {},
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "status": "completed",
+          "finished": true,
+          "lapTimeMs": 18720,
+          "progress": 1.0,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 234,
+          "retire_reason": null,
+          "inference_mean_s": 0.010139150666673154,
+          "inference_max_s": 0.0387736039997435,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r11/t1.json",
+          "receipt_sha256": "9858b44fd8ed829273300144b08ccbd9b9990d3f3d92cf1cfae39b8e5c9be2f0"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "status": "completed",
+          "finished": true,
+          "lapTimeMs": 21440,
+          "progress": 1.0,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 268,
+          "retire_reason": null,
+          "inference_mean_s": 0.009597189462704306,
+          "inference_max_s": 0.021019858999807184,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r11/t2.json",
+          "receipt_sha256": "b141a9d9facb7861dfbc73c411840fce62c24c1d99229fb8d1aa32c5b5c3c09b"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "status": "completed",
+          "finished": true,
+          "lapTimeMs": 20060,
+          "progress": 1.0,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 251,
+          "retire_reason": null,
+          "inference_mean_s": 0.00897370385257953,
+          "inference_max_s": 0.012550562999877002,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r11/t3.json",
+          "receipt_sha256": "c43f9a4fcf9ef93747df5db8a19d6b186d2b806a1c5eaf86e07f5bda29487b1a"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "status": "completed",
+          "finished": false,
+          "lapTimeMs": null,
+          "progress": 0.5197132616487455,
+          "damage": 0.0,
+          "collision_steps": 0,
+          "steps": 213,
+          "retire_reason": "off_track",
+          "inference_mean_s": 0.007784324882645214,
+          "inference_max_s": 0.012331647999872075,
+          "resource_eligible": true,
+          "receipt": "/tmp/apex-rollout-r11/t4.json",
+          "receipt_sha256": "2c01d5ff12f9b77f0d082c1c64fe88970d0912f1c11e81878d7a6d120e486d12"
+        }
+      ]
     }
   ],
   "zero_reset_operator_errors": [
