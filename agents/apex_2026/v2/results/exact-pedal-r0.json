@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "hypothesis": "Replace only frozen P1 rolling pedal prediction with four exact public mechanics ticks initialized from public pixel HUD and flow/action history.",
+  "status": "rejected",
+  "source_hashes": {
+    "agents/apex_2026/v2/exact_pedal_agent.py": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+    "agents/apex_2026/candidate/agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "agents/apex_2026/v2/shadow_physics.py": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agents/apex_2026/v2/test_exact_pedal_agent.py": "efab1f935e2e5a55903fcaca1b48a7f6778fab24b15613d515778179b04fe9ed"
+  },
+  "snapshot": "/tmp/apex-v2-exact-pedal-r0/source.py",
+  "snapshot_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+  "tests": {
+    "command": ".venv/bin/python -m pytest agents/apex_2026/v2/test_shadow_physics.py agents/apex_2026/v2/test_exact_pedal_agent.py -q",
+    "passed": 11,
+    "log": "/tmp/apex-v2-exact-pedal-r0/tests.log",
+    "log_sha256": "6ca361ff38728a893cdaf9d5406930ba290e0b0489ec9b70feceb63caea54a4d"
+  },
+  "constraints": {
+    "path_steer_target": "inherited frozen P1 unchanged",
+    "hud_speed": "P1 mean last two frames unchanged",
+    "legacy_domain": "P1 <20 or >90 m/s or observed slip >5deg unchanged",
+    "brake_cap": 0.4,
+    "desired_acceleration_min": -65,
+    "desired_acceleration_max": 45,
+    "monotonicity": "9 samples then 14 bisection steps; nearest-speed grid if nonmonotonic",
+    "assumptions": [
+      "uniform road grip",
+      "no damage",
+      "unsigned RPM bars",
+      "unknown slip propagated without asserting validity",
+      "current RPM and yaw with delayed P1 HUD speed are not temporally aligned"
+    ]
+  },
+  "cells": [
+    {
+      "track": 1,
+      "seed": 516237,
+      "finished": false,
+      "damage": 1.0,
+      "lap_ms": null,
+      "reason": "crash",
+      "steps": 70,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t1-s516237.json",
+      "receipt_sha256": "eeda85fb8c34b2f1f8b5609d5327a5773a28cd8ce076eb03ef29d9ef6fae9c99",
+      "trace_sha256": "f0d71ebd276d2f7c8f3e38cf72532bc1986ddd611704ae0e10ea12f506ce6c83",
+      "modes": {
+        "legacy_outside_rolling": 11,
+        "exact": 54,
+        "coast_deadband": 5
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 26,
+      "undamaged_prediction_n": 65,
+      "undamaged_prediction_mae": 0.43079698193298854,
+      "undamaged_prediction_bias": -0.09227447992954041,
+      "peak_memory_mib": 96.125,
+      "inference_max_s": 0.16933503899963398
+    },
+    {
+      "track": 2,
+      "seed": 644062,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 21500,
+      "reason": null,
+      "steps": 269,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t2-s644062.json",
+      "receipt_sha256": "79f7ec200965f11b402469a2a4e450beef76ed691b74f953eaf83cbd31ed4cd1",
+      "trace_sha256": "7d9de5df8b42d899c06c1f00bb0004a2f7607d426ba98a1b1649f7d6196143b6",
+      "modes": {
+        "legacy_outside_rolling": 18,
+        "exact": 237,
+        "coast_deadband": 14
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 154,
+      "undamaged_prediction_n": 269,
+      "undamaged_prediction_mae": 0.6233680875291178,
+      "undamaged_prediction_bias": 0.11327290628145252,
+      "peak_memory_mib": 99.02734375,
+      "inference_max_s": 0.13035441899955913
+    },
+    {
+      "track": 3,
+      "seed": 1007,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 276,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t3-s1007.json",
+      "receipt_sha256": "99f9c24b9d201611fb60a403ca880831ad7514915df62f37184b0013ef12835b",
+      "trace_sha256": "40391f15ef468df85297f19bf96535940f9bdb9aa580553c8e35d97fe7d86298",
+      "modes": {
+        "legacy_outside_rolling": 14,
+        "exact": 254,
+        "coast_deadband": 8
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 161,
+      "undamaged_prediction_n": 276,
+      "undamaged_prediction_mae": 0.5132144689446314,
+      "undamaged_prediction_bias": -0.06256268414566514,
+      "peak_memory_mib": 98.15625,
+      "inference_max_s": 0.11336038099943835
+    },
+    {
+      "track": 4,
+      "seed": 18800,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 329,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t4-s18800.json",
+      "receipt_sha256": "f4a42ee316c45a76255f3a2d680f34c01fa624f50c08d733b066b7d7887e90e5",
+      "trace_sha256": "da303a9f52b772f088cd0d7a1697888e5ce8b638f60ea01e17bdf8e09e52de29",
+      "modes": {
+        "legacy_outside_rolling": 20,
+        "exact": 293,
+        "coast_deadband": 12,
+        "null": 4
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 176,
+      "undamaged_prediction_n": 325,
+      "undamaged_prediction_mae": 0.5360430227435269,
+      "undamaged_prediction_bias": 0.025807325079468053,
+      "peak_memory_mib": 98.5625,
+      "inference_max_s": 0.1851491769994027
+    },
+    {
+      "track": 2,
+      "seed": 4031370700,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 225,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t2-s4031370700.json",
+      "receipt_sha256": "8e503449912802dda88cdb906b193a91b0f59fd7c69caed9ab3ee1eb4978c021",
+      "trace_sha256": "7e9d1749c1d25d16e7434bb6f939983829bdb0d9d8d51ad9f3a20cd028bfb61d",
+      "modes": {
+        "legacy_outside_rolling": 9,
+        "exact": 109,
+        "coast_deadband": 8,
+        "null": 99
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 50,
+      "undamaged_prediction_n": 126,
+      "undamaged_prediction_mae": 0.4392376625729998,
+      "undamaged_prediction_bias": -0.1393900764973046,
+      "peak_memory_mib": 99.125,
+      "inference_max_s": 0.14521887699993385
+    },
+    {
+      "track": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "damage": 0.2,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 375,
+      "source_sha256": "99e6c52b471a2be284969cfbc2c75072103ac849946262970f5d52e8761a0211",
+      "receipt": "/tmp/apex-v2-exact-pedal-r0/t3-s4111953688.json",
+      "receipt_sha256": "63e346dfd90462c94278e17a73b8d3af5af39f4eb84423d634de0eb9fbdb4ce7",
+      "trace_sha256": "e2f17d66ec323c0544a83c787e047a886e9ffbbaec62c3efc5536d228de65777",
+      "modes": {
+        "legacy_outside_rolling": 116,
+        "exact": 245,
+        "coast_deadband": 14
+      },
+      "nonmonotonic_frames": 0,
+      "unknown_slip_frames": 148,
+      "undamaged_prediction_n": 274,
+      "undamaged_prediction_mae": 0.5256172279578687,
+      "undamaged_prediction_bias": -0.03982096760001236,
+      "peak_memory_mib": 97.99609375,
+      "inference_max_s": 0.16008053999939875
+    }
+  ],
+  "runtime_residuals": {
+    "flow": {
+      "n": 638,
+      "mae": 0.49489795148685434,
+      "p95_abs": 1.1442959015241263,
+      "bias": -0.24531858267247028
+    },
+    "decoded_omega<350": {
+      "n": 1335,
+      "mae": 0.5325183978546782,
+      "p95_abs": 1.4158011418355616,
+      "bias": -0.009649021977640171
+    },
+    "drop1-3": {
+      "n": 282,
+      "mae": 0.5305346614140952,
+      "p95_abs": 1.4964745583695158,
+      "bias": 0.016494378543443197
+    },
+    "drop4-9": {
+      "n": 286,
+      "mae": 0.478419408493082,
+      "p95_abs": 1.6579074198863673,
+      "bias": 0.20675616921318576
+    },
+    "drop10+": {
+      "n": 129,
+      "mae": 0.8428561452681089,
+      "p95_abs": 3.0936368203691043,
+      "bias": 0.618977769462514
+    },
+    "counts": {
+      "wheel_estimate_outside_joint_bound": 37
+    },
+    "limitations": [
+      "Speed residual validates only scalar80ms response; not predicted lateral slip or multistep footprint.",
+      "No negative RPM ground truth available in traces; positive decoder cannot distinguish reverse/saturation.",
+      "Flow dropout bins use actual runtime propagated slip, not reset-to-zero surrogate."
+    ]
+  },
+  "failure_analysis": [
+    "Required T1 target falls from100 to28m/s within0.4s; predictor speed errors small before collision, but original65m/s2desired deceleration remains insufficient for late target.",
+    "Required T3 exits with last next-speed prediction error+.13m/s: scalar predictor accuracy does not establish lateral/path feasibility.",
+    "CurrentRPM/yaw and P1mean2 speed have mismatched timestamps; retained intentionally for isolated predictor ablation."
+  ],
+  "baseline_comparators": {
+    "type": "historical, not freshly rerun",
+    "required_receipts": "/tmp/apex-final-frozen/required/",
+    "required_lap_ms": [
+      16780,
+      20680,
+      18560,
+      18100
+    ],
+    "consumed_failure_receipts": "/tmp/apex-final-holdout/holdout/",
+    "consumed_baseline_finished": [
+      false,
+      false
+    ]
+  },
+  "source_archive": "agents/apex_2026/v2/results/exact_pedal_sources/99e6c52b471a.py"
+}
