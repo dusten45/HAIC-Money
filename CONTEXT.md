@@ -10,6 +10,9 @@ candidate evidence.
 - Prospective decisions and holdout isolation: [Apex DESIGN.md](agents/apex_2026/DESIGN.md).
 - Official rules audit: [Apex RULES.md](agents/apex_2026/RULES.md).
 - Declared evaluation cells: [benchmark.json](agents/apex_2026/benchmark.json).
+- Active user-requested continuation: [Apex v2](agents/apex_2026/v2/README.md),
+  [v2 protocol](agents/apex_2026/v2/DESIGN.md), and
+  [all experiment outcomes](agents/apex_2026/v2/EXPERIMENTS.md).
 
 The root agent and official simulator are preserved. The original four-track
 10–13-second goal remains separate from the weaker completion-first gate.

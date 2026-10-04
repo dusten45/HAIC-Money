@@ -60,10 +60,23 @@ small screens from full regression coverage.
 Frenet refinement plus single clearance (r6) finished its initial8/8 screen,
 required mean18.60s, but the full consumed regression finished only20/24.
 It rescued both old failures while losing four old successes. Directional
-footprint r7 also finished8/8 with required mean18.575s; broader validation is
-in progress. Neither result meets the18.53s required-mean selection gate.
+footprint r7 also finished8/8 with required mean18.575s, but broader validation
+finished19/24. All four r6 losses remained and another prior success was lost.
+Neither result meets the18.53s required-mean or24/24 selection gates.
 
 Recovery r1 preserves all required P1 actions and laps exactly, and rescues the
 consumed track2 failure in19.96s without damage. Track3 remains trapped after a
 collision. This is a verified recovery mechanism, not a full24 result or adopted
 candidate. New holdout remains unopened.
+
+An obstacle-triggered joint steering/braking filter preserves four required
+finishes with mean18.485s and retains the track2 recovery, but loses the same
+track3 cell earlier through a different road-departure failure. Its5/6 screen
+is not enough for selection. Diagnostic replay is authorized on that consumed
+cell to distinguish obstacle perception from candidate road feasibility.
+
+Active hypotheses retain earlier negatives: spatial curvature memory addresses
+a measured disappearance of a still-upcoming bend constraint; beam completion
+rollouts address a reproduced early-braking branch-pruning counterexample;
+bounded terrain planning examines short shoulder use under normal95%-tile and
+finish-crossing rules. None has yet established a matched improvement.

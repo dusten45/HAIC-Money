@@ -1,6 +1,6 @@
 # V2 experiment scoreboard
 
-Receipt snapshot: 2026-10-04T19:59:11.363052+00:00. No new resets.
+Receipt snapshot: 2026-10-04T20:03:53.811572+00:00. No new resets.
 
 Explicit planned scopes retain missing and started cells. DNF means completed without a finish. Required4 coverage is reported even for smaller diagnostic allocations. Each source + exact config is separate; source/dependency verification failures invalidate aggregate finish claims.
 
@@ -27,7 +27,7 @@ Explicit planned scopes retain missing and started cells. DNF means completed wi
 | fallback-r1 82b02f5 | 2/4 | 18.06 / 22.40 / DNF / DNF | screen8: 4/8 | 2/4 | 0 / 0 | 0 / 0 | 0 |
 | geodesic-r2 f91a327 | 4/4 | 17.58 / 21.56 / 19.44 / 17.72 | screen8: 6/8 | 2/4 | 0 / 0 | 0 / 0 | 0 |
 | geodesic-frenet-r6 6b96642 | 4/4 | 17.14 / 21.00 / 18.94 / 17.32 | required4+full_consumed_regression24: 24/28 | 20/24 | 0 / 0 | 0 / 0 | 0 |
-| geodesic-footprint-r7 d39a5d8 | 4/4 | 17.14 / 21.10 / 18.84 / 17.22 | required4+full_consumed_regression24: 10/28 | 6/24 | 1 / 16 | 0 / 0 | 0 |
+| geodesic-footprint-r7 d39a5d8 | 4/4 | 17.14 / 21.10 / 18.84 / 17.22 | required4+full_consumed_regression24: 23/28 | 19/24 | 0 / 0 | 0 / 0 | 0 |
 | racing-r3 e3c6fc5 | 4/4 | 19.26 / 23.80 / 21.58 / 19.48 | screen8: 7/8 | 3/4 | 0 / 0 | 0 / 0 | 0 |
 | racing-r4 4f9300a | 4/4 | 21.92 / 27.00 / 23.64 / 22.00 | screen8: 6/8 | 2/4 | 0 / 0 | 0 / 0 | 0 |
 | geodesic-r1 dde6bf2 | 4/4 | 18.74 / 22.18 / 20.64 / 19.92 | required4+full_consumed_regression24: 26/28 | 22/24 | 0 / 0 | 0 / 0 | 0 |
@@ -37,7 +37,7 @@ V1 historical baseline (not new v2 validation):
 - historical_required4: 4/4 finishes; completed 4; missing 0.
 - historical_consumed24: 22/24 finishes; completed 24; missing 0.
 
-Unregistered primary receipts: 0. Add an explicit registry allocation before comparing them.
+Unregistered primary receipts: 4. Add an explicit registry allocation before comparing them.
 
 The geodesic full24 regression includes its two earlier probes exactly once. Overlapping required/screen summaries must not be added together. Retry policy: deduplicate the same episode, then select the earliest started attempt per cell; preserve all attempts, never choose the fastest finish.
 
