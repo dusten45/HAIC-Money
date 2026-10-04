@@ -1,0 +1,39 @@
+{
+  "source": "agents/apex_2026/fast_control_guard_agent.py",
+  "source_sha256": "13172af1ea3ebd34b39ad3b73bf2ec23755e22bb3614d8e8443093c6dc32bdc0",
+  "parent": "agents/apex_2026/fast_rear_clear_agent.py",
+  "parent_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "patch": "rear-clear-to-control-guard-v1.patch",
+  "fixture": "agents/apex_2026/tests/fixtures/control-guard-normal-track2.npz",
+  "fixture_sha256": "189df3d93b59625eef8fc82e9fa403a33efdbf7d3d60c795948bc79791c5005b",
+  "fixture_origin_source_sha256": "0c937c6201c12df110bf43940c030b6adfae40c29274acfd6e285c3db08f7f4f",
+  "fixture_frames": [
+    148,
+    149,
+    150,
+    154,
+    155
+  ],
+  "fixture_role": "Exact camera-derived NormalV1 pre-action states; evaluated counterfactually on RearClear base; no optimized normal path inherited",
+  "overrides": [
+    "act"
+  ],
+  "added_method": "_guarded_ridge_act",
+  "guard": {
+    "projection_m": 8.0,
+    "minimum_depth_m": 1.9,
+    "reject_if": "ridge depth<1.9 AND confidence depth>=1.9",
+    "both_unsupported": "exact parent ridge action",
+    "body_lateral_m": [
+      -1.6,
+      1.6
+    ],
+    "body_longitudinal_m": [
+      -2.4,
+      2.6
+    ]
+  },
+  "state_contract": "One confidence/route transition; trial commits last steer,target,reference curvature,center,mode only after acceptance; restore confidence spin on reject; preserve confidence ArcGuard flags for outer clamp",
+  "tests_passed": 21,
+  "holdout_opened": false
+}
