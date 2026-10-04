@@ -156,3 +156,116 @@ def test_timeout_returns_noop_and_reset_timeout_raises():
             module.safe_reset(agent, None, timeout_sec=.001)
     finally:
         release.set()
+
+
+def test_resources_eligible_and_peak_memory_recorded(tmp_path, monkeypatch):
+    m = harness()
+    assert hasattr(m, 'peak_memory_mib'), 'peak memory monitor missing'
+    monkeypatch.setattr(m, 'peak_memory_mib', lambda: 1024.)
+    out = tmp_path/'result.json'
+    r = m.run_episode(policy_file(tmp_path), 1, 42, out, env_factory=lambda: Environment(out))
+    assert r['resource_eligible'] is True
+    assert 0 <= r['import_constructor_time_s'] <= 10
+    assert r['reset_time_s'] == 0
+    assert r['peak_memory_mib'] == 1024
+    assert r['act_timeout_count'] == r['reset_timeout_count'] == r['import_constructor_timeout_count'] == 0
+
+
+def test_excess_memory_retains_driving_result(tmp_path, monkeypatch):
+    m = harness()
+    assert hasattr(m, 'peak_memory_mib'), 'peak memory monitor missing'
+    monkeypatch.setattr(m, 'peak_memory_mib', lambda: 1024.1)
+    out = tmp_path/'result.json'
+    r = m.run_episode(policy_file(tmp_path), 1, 42, out, env_factory=lambda: Environment(out))
+    assert r['finished'] and r['lapTimeMs'] == 55
+    assert r['resource_eligible'] is False
+
+
+def test_constructor_timeout_is_incomplete_and_does_not_reset(tmp_path, monkeypatch):
+    from threading import Event
+    m = harness()
+    assert hasattr(m, 'IMPORT_TIMEOUT_SECONDS'), 'constructor bound missing'
+    monkeypatch.setattr(m, 'IMPORT_TIMEOUT_SECONDS', .001)
+    release = Event()
+    monkeypatch.setattr(m, 'load_agent', lambda *args: release.wait())
+    out = tmp_path/'result.json'
+    try:
+        with pytest.raises(TimeoutError):
+            m.run_episode(policy_file(tmp_path), 1, 42, out,
+                          env_factory=lambda: pytest.fail('reset after constructor timeout'))
+    finally:
+        release.set()
+    r = json.loads(out.read_text())
+    assert r['status'] == 'error' and r.get('finished') is None
+    assert r['resource_eligible'] is False
+    assert r['import_constructor_timeout_count'] == 1
+
+
+def test_timeout_details_distinguish_invalid_action():
+    from threading import Event
+    m = harness()
+    details = {}
+    _, valid = m.safe_act(SimpleNamespace(act=lambda obs: [1,2]), None, details=details)
+    assert not valid and details['timed_out'] is False
+    release = Event()
+    try:
+        _, valid = m.safe_act(SimpleNamespace(act=lambda obs: release.wait()), None,
+                              timeout_sec=.001, details=details)
+        assert not valid and details['timed_out'] is True
+    finally:
+        release.set()
+
+
+def test_proc_peak_memory_is_current_process_hwm(tmp_path):
+    m = harness()
+    assert hasattr(m, 'peak_memory_mib'), 'peak memory monitor missing'
+    path = tmp_path/'status'
+    path.write_text('Name:\ttest\nVmRSS:\t1024 kB\nVmHWM:\t2048 kB\n')
+    assert m.peak_memory_mib(path) == 2.
+    path.write_text('Name:\tno_hwm\n')
+    assert m.peak_memory_mib(path) is None
+
+
+def test_policy_diagnostics_sanitized_and_errors_do_not_change_driving(tmp_path):
+    m = harness()
+    p = policy_file(tmp_path, 'self.diagnostics = {"array": __import__("numpy").array([1.,float("nan")])}\n        return [0,0,0]')
+    out=tmp_path/'result.json';trace=tmp_path/'trace.jsonl'
+    r=m.run_episode(p,1,42,out,env_factory=lambda: Environment(out),trace=trace)
+    row=json.loads(trace.read_text())
+    assert row['policy_diagnostics'] == {'array':[1.,None]}
+    assert r['finished']
+    p.write_text('class Agent:\n    def act(self, obs): return [0,0,0]\n    def last_step_diagnostics(self): raise ValueError("diagnostic broke")\n')
+    out=tmp_path/'error-diag.json';trace=tmp_path/'error-diag.jsonl'
+    r=m.run_episode(p,1,42,out,env_factory=lambda: Environment(out),trace=trace)
+    assert r['finished']
+    assert 'diagnostic_error' in json.loads(trace.read_text())['policy_diagnostics']
+
+
+def test_reset_timeout_receipt_and_close(tmp_path, monkeypatch):
+    from threading import Event
+    m=harness();monkeypatch.setattr(m,'POLICY_TIMEOUT_SECONDS',.001)
+    release=Event();agent=SimpleNamespace(reset=lambda obs: release.wait())
+    monkeypatch.setattr(m,'load_agent',lambda *args: agent)
+    out=tmp_path/'result.json';env=Environment(out)
+    try:
+        with pytest.raises(TimeoutError):
+            m.run_episode(policy_file(tmp_path),1,42,out,env_factory=lambda:env)
+    finally:
+        release.set()
+    r=json.loads(out.read_text())
+    assert r['status']=='error' and r['reset_timeout_count']==1
+    assert r['reset_time_s']>0 and not r['resource_eligible'] and env.closed
+
+
+def test_act_timeout_preserves_raw_finish_and_marks_ineligible(tmp_path, monkeypatch):
+    from threading import Event
+    m=harness();monkeypatch.setattr(m,'POLICY_TIMEOUT_SECONDS',.001)
+    release=Event();agent=SimpleNamespace(act=lambda obs: release.wait())
+    monkeypatch.setattr(m,'load_agent',lambda *args:agent)
+    out=tmp_path/'result.json'
+    try:
+        r=m.run_episode(policy_file(tmp_path),1,42,out,env_factory=lambda:Environment(out))
+    finally:
+        release.set()
+    assert r['status']=='completed' and r['finished'] and r['lapTimeMs']==55
+    assert r['act_timeout_count']==1 and not r['resource_eligible']

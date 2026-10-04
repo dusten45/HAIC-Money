@@ -28,6 +28,71 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 MAX_STEPS = 2000
+IMPORT_TIMEOUT_SECONDS = 10.0
+POLICY_TIMEOUT_SECONDS = 5.0
+
+
+def bounded_call(call, timeout_sec, details):
+    outcome, errors = [], []
+    def run():
+        try:
+            outcome.append(call())
+        except BaseException as error:
+            errors.append(error)
+    started = time.perf_counter()
+    thread = Thread(target=run, daemon=True)
+    thread.start()
+    thread.join(timeout_sec)
+    details.update(elapsed_s=time.perf_counter() - started, timed_out=thread.is_alive())
+    if details['timed_out']:
+        raise TimeoutError(f'policy call timed out after {timeout_sec}s')
+    if errors:
+        raise errors[0]
+    return outcome[0]
+
+
+def peak_memory_mib(status_path='/proc/self/status'):
+    """Linux process HWM, avoiding inherited getrusage high-water marks."""
+    try:
+        for line in Path(status_path).read_text().splitlines():
+            if line.startswith('VmHWM:'):
+                return float(line.split()[1]) / 1024.
+    except (OSError, ValueError, IndexError):
+        pass
+    return None
+
+
+def policy_diagnostics(agent):
+    """Optional post-action telemetry; failures cannot abort a driving episode."""
+    def clean(value, depth=0):
+        if depth > 15:
+            return '<depth limit>'
+        if isinstance(value, np.ndarray):
+            value = value.tolist()
+        if isinstance(value, np.generic):
+            value = value.item()
+        if isinstance(value, float) and not math.isfinite(value):
+            return None
+        if value is None or isinstance(value, (str, int, float, bool)):
+            return value
+        if isinstance(value, dict):
+            return {str(k): clean(v, depth+1) for k, v in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [clean(v, depth+1) for v in value]
+        return f'<{type(value).__name__}>'
+    def read():
+        getter = getattr(agent, 'last_step_diagnostics', None)
+        if callable(getter):
+            return clean(getter())
+        for name in ('diagnostics', 'last_diagnostics'):
+            value = getattr(agent, name, None)
+            if isinstance(value, dict):
+                return clean(value)
+        return None
+    try:
+        return bounded_call(read, .05, {})
+    except BaseException as error:
+        return {'diagnostic_error': f'{type(error).__name__}: {error}'}
 
 
 def sha256(path):
@@ -56,7 +121,7 @@ def load_agent(path, config=None):
     return module.Agent(**(config or {}))
 
 
-def safe_act(agent, observation, timeout_sec=5.0):
+def safe_act(agent, observation, timeout_sec=5.0, details=None):
     """Match local_runner.safe_act without importing the root policy."""
     outcome = []
     def call():
@@ -65,9 +130,13 @@ def safe_act(agent, observation, timeout_sec=5.0):
         except Exception:
             outcome.append(None)
     thread = Thread(target=call, daemon=True)
+    started = time.perf_counter()
     thread.start()
     thread.join(timeout_sec)
-    if thread.is_alive() or not outcome or outcome[0] is None:
+    timed_out = thread.is_alive()
+    if details is not None:
+        details.update(timed_out=timed_out, elapsed_s=time.perf_counter()-started)
+    if timed_out or not outcome or outcome[0] is None:
         return np.zeros(3, dtype=np.float32), False
     action = outcome[0]
     if action.shape != (3,) or not np.all(np.isfinite(action)):
@@ -75,22 +144,12 @@ def safe_act(agent, observation, timeout_sec=5.0):
     return np.clip(action, [-1., 0., 0.], [1., 1., 1.]), True
 
 
-def safe_reset(agent, observation, timeout_sec=5.0):
+def safe_reset(agent, observation, timeout_sec=5.0, details=None):
+    details = details if details is not None else {}
+    details.update(timed_out=False, elapsed_s=0.)
     if not hasattr(agent, 'reset'):
         return
-    errors = []
-    def call():
-        try:
-            agent.reset(observation)
-        except Exception as error:
-            errors.append(error)
-    thread = Thread(target=call, daemon=True)
-    thread.start()
-    thread.join(timeout_sec)
-    if thread.is_alive():
-        raise TimeoutError('agent.reset() timed out')
-    if errors:
-        raise errors[0]
+    bounded_call(lambda: agent.reset(observation), timeout_sec, details)
 
 
 def make_environment():
@@ -177,6 +236,8 @@ def run_episode(agent_path, track_id, seed, output, *, config=None, trace=None,
     env = None
     trace_handle = None
     inference = []
+    import_details, reset_details = {}, {}
+    act_timeout_count = 0
     try:
         receipt['provenance'] = provenance(agent_path)
         write_receipt(output, receipt)
@@ -184,14 +245,15 @@ def run_episode(agent_path, track_id, seed, output, *, config=None, trace=None,
             trace = Path(trace)
             trace.parent.mkdir(parents=True, exist_ok=True)
             trace_handle = trace.open('x')
-        agent = load_agent(agent_path, config)
+        agent = bounded_call(lambda: load_agent(agent_path, config),
+                             IMPORT_TIMEOUT_SECONDS, import_details)
         receipt['provenance']['runtime_source_sha256_before'] = runtime_hashes()
         write_receipt(output, receipt)
         env = (env_factory or make_environment)()
         observation, info = env.reset(seed=seed, options={'track_id': track_id})
         start_t = float(env.unwrapped.t)
         receipt['start_t'] = start_t
-        safe_reset(agent, copy.deepcopy(observation))
+        safe_reset(agent, copy.deepcopy(observation), POLICY_TIMEOUT_SECONDS, reset_details)
         total_reward = 0.
         invalid_actions = invalid_streak = collisions = 0
         terminated = truncated = False
@@ -201,8 +263,12 @@ def run_episode(agent_path, track_id, seed, output, *, config=None, trace=None,
         for _ in range(MAX_STEPS):
             policy_observation = copy.deepcopy(observation)
             inference_start = time.perf_counter()
-            action, valid = safe_act(agent, policy_observation)
+            act_details = {}
+            action, valid = safe_act(agent, policy_observation, POLICY_TIMEOUT_SECONDS, act_details)
             inference.append(time.perf_counter() - inference_start)
+            act_timeout_count += int(act_details['timed_out'])
+            policy_info = (policy_diagnostics(agent) if trace_handle and not act_details['timed_out']
+                           else None)
             invalid_actions += int(not valid)
             invalid_streak = 0 if valid else invalid_streak + 1
             if invalid_streak >= 10:
@@ -216,7 +282,8 @@ def run_episode(agent_path, track_id, seed, output, *, config=None, trace=None,
             if trace_handle:
                 row = {'step': receipt['steps'], 'action': action.tolist(), 'valid': valid,
                        'inference_s': inference[-1], 'reward': float(reward),
-                       'before': before, 'after': diagnostics(env, info)}
+                       'before': before, 'after': diagnostics(env, info),
+                       'policy_diagnostics': policy_info}
                 trace_handle.write(json.dumps(row, allow_nan=False) + '\n')
                 trace_handle.flush()
             if frames and (receipt['steps'] % 100 == 0 or terminated or truncated):
@@ -254,6 +321,20 @@ def run_episode(agent_path, track_id, seed, output, *, config=None, trace=None,
                            inference_max_s=max(inference) if inference else None)
             if 'provenance' in receipt:
                 receipt['provenance']['runtime_source_sha256_after'] = runtime_hashes()
+            peak = peak_memory_mib()
+            receipt.update(import_constructor_time_s=import_details.get('elapsed_s'),
+                           import_constructor_timeout_count=int(import_details.get('timed_out', False)),
+                           reset_time_s=reset_details.get('elapsed_s'),
+                           reset_timeout_count=int(reset_details.get('timed_out', False)),
+                           act_timeout_count=act_timeout_count, peak_memory_mib=peak,
+                           memory_measurement='Linux /proc/self/status VmHWM (whole evaluator process)')
+            receipt['resource_eligible'] = bool(
+                receipt['status'] == 'completed' and peak is not None and peak <= 1024.
+                and import_details.get('elapsed_s', math.inf) <= 10.
+                and reset_details.get('elapsed_s', math.inf) <= 5.
+                and (max(inference) if inference else 0.) <= 5.
+                and not import_details.get('timed_out', False)
+                and not reset_details.get('timed_out', False) and act_timeout_count == 0)
             write_receipt(output, receipt)
     return receipt
 
