@@ -1,0 +1,126 @@
+{
+  "classification": "fixed_synthetic_legal_state_local_profile_no_worlds_or_laps",
+  "source_sha256": {
+    "planner": "341c61575651774cd5b582c644e47da021fc27737f43cb606b1a57fa561caf99",
+    "model": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+    "geometry": "565d398e4e55c1e8bb5dad5d38e6ffa2c1a42eb5a8675832c2103f1197741920",
+    "camera_perception": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+    "profile": "64c51b0d6003848d331dfb8725c7d9f93a3576b2df04802de1a66087acd317fc"
+  },
+  "all_sources_unchanged": true,
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "rows": [
+    {
+      "speed_mps": 0.0,
+      "scenarios": 1,
+      "field_and_ridge_ms": 11.731400998542085,
+      "total_ms_including_camera_field": 557.6975569929346,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -2.7794683532254645,
+        "worst_progress_m": 2.932253285348601,
+        "predicted_terminal_speed_mps": 15.766347524636185,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 0.3231947645932971,
+        "backup_duration_s": 0.04,
+        "candidate_count": 72,
+        "feasible_count": 72,
+        "scenario_count": 1,
+        "model_steps": 1224,
+        "rejected_max_violation_m": 0.0,
+        "action": [
+          0.0,
+          0.30000001192092896,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 70.0,
+      "scenarios": 3,
+      "field_and_ridge_ms": 11.455414001829922,
+      "total_ms_including_camera_field": 1574.0173710000818,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -23.51057699695108,
+        "worst_progress_m": 23.51767987837076,
+        "predicted_terminal_speed_mps": 78.18954904462102,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 16.369422740131057,
+        "backup_duration_s": 0.34,
+        "candidate_count": 72,
+        "feasible_count": 36,
+        "scenario_count": 3,
+        "model_steps": 3873,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 100.0,
+      "scenarios": 3,
+      "field_and_ridge_ms": 11.260890001722146,
+      "total_ms_including_camera_field": 1154.64516600332,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -31.99958075777137,
+        "worst_progress_m": 31.999998825628758,
+        "predicted_terminal_speed_mps": 100.0,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 29.83229953564758,
+        "backup_duration_s": 0.46,
+        "candidate_count": 72,
+        "feasible_count": 20,
+        "scenario_count": 3,
+        "model_steps": 3028,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          0.1599999964237213,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 70.0,
+      "scenarios": 7,
+      "field_and_ridge_ms": 11.247358001128305,
+      "total_ms_including_camera_field": 3248.932276001142,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -23.51056842579346,
+        "worst_progress_m": 23.517673563047367,
+        "predicted_terminal_speed_mps": 78.18954904462102,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 16.369422740131057,
+        "backup_duration_s": 0.34,
+        "candidate_count": 72,
+        "feasible_count": 36,
+        "scenario_count": 7,
+        "model_steps": 8269,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Profiles measure this host only, not an official worst-case timing guarantee.",
+    "Three/seven scenarios are limited separate perturbations, not a certified error box.",
+    "Body speed and rear-wheel raster uncertainty are not perturbed in this profile.",
+    "Projection bounds use maximum prior/post speed to match semi-implicit model integration.",
+    "No observer integration or completed-lap result is established here."
+  ]
+}

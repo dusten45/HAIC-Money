@@ -1,0 +1,126 @@
+{
+  "classification": "fixed_synthetic_legal_state_local_profile_no_worlds_or_laps",
+  "source_sha256": {
+    "planner": "cd7d87a27359a2bd2ca18404cc26228c77c443b0d21acdb080886b3c0bdd8f39",
+    "model": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+    "geometry": "82c8d5a5a956ec782e4c468f7e705ac55556327393a1ff0dfcf0e29c73bea86f",
+    "camera_perception": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+    "profile": "289d2dd4ff47d3549a307cbf20c8a6e73b9dd25b8b8bf7db8ec511543452f3d4"
+  },
+  "all_sources_unchanged": true,
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "rows": [
+    {
+      "speed_mps": 0.0,
+      "scenarios": 1,
+      "field_and_ridge_ms": 11.230084994167555,
+      "total_ms_including_camera_field": 548.2415099977516,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -2.7794683532254663,
+        "worst_progress_m": 2.9322532853486027,
+        "predicted_terminal_speed_mps": 15.766347524636185,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 0.36584420379632654,
+        "backup_duration_s": 0.04,
+        "candidate_count": 72,
+        "feasible_count": 72,
+        "scenario_count": 1,
+        "model_steps": 1224,
+        "rejected_max_violation_m": 0.0,
+        "action": [
+          0.0,
+          0.30000001192092896,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 70.0,
+      "scenarios": 3,
+      "field_and_ridge_ms": 11.433605999627616,
+      "total_ms_including_camera_field": 1530.2868509970722,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -23.51057699695108,
+        "worst_progress_m": 23.51767987837076,
+        "predicted_terminal_speed_mps": 78.18954904462102,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 16.369422740131057,
+        "backup_duration_s": 0.34,
+        "candidate_count": 72,
+        "feasible_count": 36,
+        "scenario_count": 3,
+        "model_steps": 3891,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 100.0,
+      "scenarios": 3,
+      "field_and_ridge_ms": 11.029589004465379,
+      "total_ms_including_camera_field": 1010.0334399976418,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -31.99958075777137,
+        "worst_progress_m": 31.999998825628758,
+        "predicted_terminal_speed_mps": 100.0,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 29.83229953564758,
+        "backup_duration_s": 0.46,
+        "candidate_count": 72,
+        "feasible_count": 16,
+        "scenario_count": 3,
+        "model_steps": 2718,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          0.1599999964237213,
+          0.0
+        ]
+      }
+    },
+    {
+      "speed_mps": 70.0,
+      "scenarios": 7,
+      "field_and_ridge_ms": 11.042513004213106,
+      "total_ms_including_camera_field": 3185.940384006244,
+      "plan": {
+        "feasible": true,
+        "reason": "feasible",
+        "score": -23.51056842579346,
+        "worst_progress_m": 23.517673563047367,
+        "predicted_terminal_speed_mps": 78.18954904462102,
+        "backup_start_s": 0.08,
+        "backup_end_progress_m": 16.36942660435119,
+        "backup_duration_s": 0.34,
+        "candidate_count": 72,
+        "feasible_count": 36,
+        "scenario_count": 7,
+        "model_steps": 8309,
+        "rejected_max_violation_m": 1.9,
+        "action": [
+          0.0,
+          1.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Profiles measure this host only, not an official worst-case timing guarantee.",
+    "Three/seven scenarios are limited separate perturbations, not a certified error box.",
+    "Body speed and rear-wheel raster uncertainty are not perturbed in this profile.",
+    "Projection reserve .1m covers semi-implicit acceleration; geometry fix is tracked separately.",
+    "No observer integration or completed-lap result is established here."
+  ]
+}

@@ -1,0 +1,10 @@
+--- predictive_control_v1.py
++++ predictive_control.py
+@@ -15 +15 @@
+-              (0., .25), (0., .55), (0., .9))
++              (0., .25), (0., .55), (0., 1.))
+@@ -131 +131,3 @@
+-        command = np.asarray([steer, 0., .9], dtype=np.float32)
++        # 1.0 is exact in float32. float32(.9) becomes .899999976 when
++        # converted to Python float, missing the predictor's >=.9 lock.
++        command = np.asarray([steer, 0., 1.], dtype=np.float32)

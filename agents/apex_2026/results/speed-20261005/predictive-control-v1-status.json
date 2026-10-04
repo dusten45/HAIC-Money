@@ -1,0 +1,9 @@
+{
+  "classification": "superseded_research_prototype_due_float32_brake_lock_representation",
+  "source_sha256": "cd7d87a27359a2bd2ca18404cc26228c77c443b0d21acdb080886b3c0bdd8f39",
+  "profile_receipt": "predictive-control-v1-profile.json",
+  "issue": "float32(.9) converted to Pythonfloat is .8999999761581421, below model lock threshold .9; intended emergency lock differs from validated exact .9 cases",
+  "replacement": "use exactfloat32(1.0) for full brake candidate and backup; both legal model and action activation are >=.9",
+  "red_representation_regression": true,
+  "is_lap_result": false
+}
