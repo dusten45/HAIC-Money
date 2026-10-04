@@ -14,6 +14,20 @@ def load_agent():
     return module.Agent()
 
 
+def rendered_hud(speed):
+    # Invoke the unchanged public renderer without creating a world or reset.
+    from types import SimpleNamespace
+    import pygame
+    from core.vendor.car_racing import CarRacing, WINDOW_W, WINDOW_H, STATE_W, STATE_H
+    from env_wrapper import image_preprocessing
+    wheels = [SimpleNamespace(omega=0, joint=SimpleNamespace(angle=0)) for _ in range(4)]
+    fake = SimpleNamespace(surf=pygame.Surface((WINDOW_W, WINDOW_H)),
+                           car=SimpleNamespace(hull=SimpleNamespace(linearVelocity=(speed, 0),
+                                                                   angularVelocity=0), wheels=wheels))
+    CarRacing._render_indicators(fake, WINDOW_W, WINDOW_H)
+    return image_preprocessing(CarRacing._create_image_array(fake, fake.surf, (STATE_W, STATE_H)))
+
+
 def observation(points=((42, 83), (42, 0)), speed=0.0, obstacle=None):
     frame = np.full((84, 84), 0.58, dtype=np.float32)
     cv2.polylines(frame, [np.array(points, np.int32)], False, 0.4, 21)
@@ -21,10 +35,7 @@ def observation(points=((42, 83), (42, 0)), speed=0.0, obstacle=None):
         cv2.circle(frame, obstacle, 4, 0.92, -1)
     frame[59:68, 40:44] = 0.24
     frame[74:] = 0
-    # Fractional coverage approximates antialiased speed bar.
-    height = speed * 0.042
-    for row in range(74, 82):
-        frame[row, 11:13] = np.clip(80.0 - row, 0, height) - np.clip(79.0 - row, 0, height)
+    frame[74:] = rendered_hud(speed)[74:]
     return np.stack([frame] * 4)
 
 
@@ -74,3 +85,36 @@ def test_official_reset_accepts_initial_observation():
     agent.reset(observation())
     reset_action = agent.act(observation())
     np.testing.assert_array_equal(reset_action, load_agent().act(observation()))
+
+
+def test_speed_decoder_matches_public_renderer_without_environment_reset():
+    agent = load_agent()
+    for speed in (0, 5, 10, 20, 30, 50, 70, 90, 100):
+        assert abs(agent._speed(rendered_hud(speed)) - speed) < 1.5
+
+
+def test_longitudinal_rollout_matches_observed_straight_dynamics():
+    agent = load_agent()
+    assert hasattr(agent, '_acceleration'), 'Rollout dynamics must be calibrated independently'
+    # Wide intervals around required-cell measured before/after velocities;
+    # these prevent nonphysical deceleration under full gas at ordinary speed.
+    assert 35 < agent._acceleration(50.0, 1.0, 0.0) < 50
+    assert -15 < agent._acceleration(50.0, 0.0, 0.0) < -5
+    assert -130 < agent._acceleration(50.0, 0.0, 0.35) < -70
+    assert -220 < agent._acceleration(50.0, 0.0, 0.8) < -150
+
+
+def test_steering_rollout_respects_public_joint_target_and_limit():
+    agent = load_agent()
+    assert hasattr(agent, '_curvature'), 'Steering model must use physical joint limits'
+    # Wheelbase3.24 and direct steering target are public car construction facts.
+    assert np.isclose(agent._curvature(0.1), np.tan(0.1) / 3.24)
+    assert np.isclose(agent._curvature(1.0), agent._curvature(0.4))
+    assert np.isclose(agent._curvature(-0.1), -agent._curvature(0.1))
+
+
+def test_small_orange_obstacle_survives_road_mask_smoothing():
+    frame = observation()[-1]
+    cv2.circle(frame, (42, 43), 1, (0.299 * 255 + 0.587 * 165) / 255, -1)
+    fields = load_agent()._fields(frame)
+    assert fields[0][43, 42] == 0, 'Morphological smoothing must not erase small obstacles'

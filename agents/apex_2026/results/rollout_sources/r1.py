@@ -35,17 +35,17 @@ class Agent:
         self.last_diagnostics = {}
 
     def _speed(self, frame):
-        # The two-stage public resize gives an affine bar-area calibration.
-        # Include the baseline rows81-82: omitting them loses ~22m/s.
-        mass = float(np.sum(frame[77:83, 10:13]))
-        return float(np.clip((mass - 0.27) / 0.085, 0.0, 120.0))
+        # White speed bar: height = (84/40)*0.02*v. Averaging its
+        # antialiased interior preserves subpixel speed information.
+        bar = np.mean(frame[74:81, 11:12], axis=1)
+        return float(np.clip(np.sum(np.clip(bar, 0.0, 1.0)) / 0.042, 0, 100))
 
     def _fields(self, frame):
         road = ((frame[:74] > 0.25) & (frame[:74] < 0.53)).astype(np.uint8)
         # Paint only the known car sprite footprint back into free space.
         road[59:68, 39:45] = 1
         road = cv2.morphologyEx(road, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
-        obstacles = (frame[:74] > 0.56).astype(np.uint8)
+        obstacles = (frame[:74] > 0.76).astype(np.uint8)
         obstacles[59:69, 38:46] = 0
         obstacles = cv2.dilate(obstacles, np.ones((3, 3), np.uint8))
         road[obstacles > 0] = 0
@@ -88,16 +88,6 @@ class Agent:
                          cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT,
                          borderValue=0)[0]
 
-    @staticmethod
-    def _curvature(steer):
-        return np.tan(np.clip(steer, -0.4, 0.4)) / 3.24
-
-    @staticmethod
-    def _acceleration(speed, gas, brake):
-        # Calibrated on straight portions of the four consumed required cells.
-        # Gas is near-linear over this short horizon; drag remains speed-dependent.
-        return gas * (61.0 - 0.2 * speed) - 0.004 * speed ** 2 - 230.0 * brake
-
     def act(self, observation):
         obs = np.asarray(observation)
         if obs.shape != (4, 84, 84) or not np.isfinite(obs).all():
@@ -113,7 +103,7 @@ class Agent:
         y = np.full(n, 63.0)
         yaw = np.zeros(n)
         speed = np.full(n, self.speed)
-        wheel = np.full(n, np.clip(self.previous_steer, -0.4, 0.4))
+        wheel = np.full(n, self.previous_steer)
         score = np.zeros(n)
         active = np.ones(n, dtype=bool)
         minimum_clearance = np.full(n, 100.0)
@@ -123,10 +113,10 @@ class Agent:
         previous_cost = np.full(n, start_cost)
         for step in range(24):
             steer = self.steers * (1.0 if step < 8 else self.tapers)
-            wheel += np.clip(np.clip(steer, -0.4, 0.4) - wheel, -0.12, 0.12)
-            acceleration = self._acceleration(speed, self.gases, self.brakes)
+            wheel += np.clip(steer - wheel, -0.20, 0.20)
+            acceleration = self.gases * (31.0 / (1 + speed * 0.055)) - self.brakes * 38.0 - 0.004 * speed ** 2
             speed = np.maximum(0.0, speed + acceleration * dt)
-            curvature = self._curvature(wheel)
+            curvature = np.tan(wheel * 0.55) / 3.24
             yaw += np.clip(speed * curvature, -3.0, 3.0) * dt
             dx = np.sin(yaw) * speed * dt * self.PIXELS_X
             dy = -np.cos(yaw) * speed * dt * self.PIXELS_Y

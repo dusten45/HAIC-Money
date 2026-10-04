@@ -45,7 +45,7 @@ class Agent:
         # Paint only the known car sprite footprint back into free space.
         road[59:68, 39:45] = 1
         road = cv2.morphologyEx(road, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
-        obstacles = (frame[:74] > 0.56).astype(np.uint8)
+        obstacles = (frame[:74] > 0.76).astype(np.uint8)
         obstacles[59:69, 38:46] = 0
         obstacles = cv2.dilate(obstacles, np.ones((3, 3), np.uint8))
         road[obstacles > 0] = 0
