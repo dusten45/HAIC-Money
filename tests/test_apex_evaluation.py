@@ -1,9 +1,14 @@
+import json
+from importlib.metadata import version
+
 import numpy as np
 import pytest
 import sys
 
+from agents.apex_2026 import evaluate
 from agents.apex_2026.evaluate import (
-    MANDATORY_CELLS, assess, end_reason, execute_worker, pace_profile, rejection_streak, validate_action,
+    DEVELOPMENT_SEEDS, MANDATORY_CELLS, assess, end_reason, execute_worker, pace_profile, rejection_streak,
+    validate_action,
 )
 
 
@@ -64,18 +69,59 @@ def test_valid_action_is_float32_and_unmodified():
     np.testing.assert_array_equal(action, np.asarray([-0.4, 0.6, 0.2], np.float32))
 
 
-def test_only_distinct_real_rejections_relax_the_next_trial():
-    mandatory, extra = cells()
-    mandatory[0] = row(*MANDATORY_CELLS[0], finished=False)
-    reports = [{"freeze": {"source_sha256": f"candidate-{i}", "parameters": {},
-                           "selected_profile_seconds": 13}, "rows": mandatory} for i in range(3)]
-    assert rejection_streak(reports) == 3
-    assert pace_profile(rejection_streak(reports)) == 15
+def development_report(source="candidate"):
+    declared = [*MANDATORY_CELLS, *((track, seed) for seed in DEVELOPMENT_SEEDS for track in range(1, 5))]
+    rows = [row(*cell) for cell in declared]
+    rows[0] = row(*MANDATORY_CELLS[0], finished=False)
+    return {"freeze": {"suite": "development", "cells": [list(cell) for cell in declared],
+                       "trial_role": "candidate", "source_sha256": source, "parameters": {},
+                       "selected_profile_seconds": 13}, "rows": rows}
+
+
+def test_only_distinct_complete_development_rejections_relax_the_next_trial():
+    reports = [development_report(f"candidate-{i}") for i in range(6)]
+    for report in reports[3:]:
+        report["freeze"]["selected_profile_seconds"] = 15
+    reports[0]["rows"].reverse()  # Completion is independent of receipt row order.
+    assert rejection_streak(reports[:3]) == 3
+    assert pace_profile(rejection_streak(reports[:3])) == 15
+    assert rejection_streak(reports) == 6
+    assert pace_profile(rejection_streak(reports)) == 18
     with pytest.raises(ValueError, match="repeat"):
         rejection_streak(reports + [reports[0]])
     reports[-1]["freeze"]["selected_profile_seconds"] = 18
     with pytest.raises(ValueError, match="prospective"):
         rejection_streak(reports)
+
+
+@pytest.mark.parametrize("suite", ("mandatory", "holdout"))
+def test_non_development_receipts_cannot_relax_pace(suite):
+    report = development_report()
+    report["freeze"]["suite"] = suite
+    with pytest.raises(ValueError, match="development"):
+        rejection_streak([report])
+
+
+def test_development_rejection_requires_exact_declared_and_measured_cells():
+    report = development_report()
+    report["freeze"]["cells"].pop()
+    with pytest.raises(ValueError, match="development cells"):
+        rejection_streak([report])
+    report = development_report()
+    report["rows"].pop()
+    with pytest.raises(ValueError, match="development cells"):
+        rejection_streak([report])
+    report = development_report()
+    report["rows"][-1]["seed"] += 1
+    with pytest.raises(ValueError, match="development cells"):
+        rejection_streak([report])
+
+
+def test_operational_error_cannot_count_as_development_rejection():
+    report = development_report()
+    report["rows"][0]["error"] = "worker timed out"
+    with pytest.raises(ValueError, match="operational"):
+        rejection_streak([report])
 
 
 def test_playfield_termination_is_not_a_time_limit():
@@ -95,9 +141,8 @@ def test_worker_timeout_and_bad_json_are_recorded_as_operational_errors():
 
 
 def test_baseline_results_cannot_relax_candidate_criteria():
-    mandatory, _ = cells()
-    report = {"freeze": {"trial_role": "benchmark", "source_sha256": "control",
-                         "parameters": {}, "selected_profile_seconds": 13}, "rows": mandatory}
+    report = development_report("control")
+    report["freeze"]["trial_role"] = "benchmark"
     with pytest.raises(ValueError, match="benchmark"):
         rejection_streak([report])
 
@@ -110,3 +155,35 @@ def test_track_floor_catches_a_concentrated_failure_with_good_aggregate():
     verdict = assess(mandatory, extra, limit_seconds=13)
     assert verdict["extra_fast_fraction"] == .925
     assert not verdict["passed"]
+
+
+def test_mandatory_cli_creates_fresh_source_bound_receipt(tmp_path, monkeypatch):
+    source = tmp_path / "candidate.py"
+    source.write_text("class Agent: pass\n", encoding="utf-8")
+    output = tmp_path / "mandatory.json"
+    calls = []
+
+    def fake_worker(command):
+        payload = json.loads(command[-1])
+        calls.append((payload["track"], payload["seed"]))
+        return {**row(payload["track"], payload["seed"]),
+                "source_sha256": evaluate.digest(source), "parameters": {}, "error": None}, None
+
+    monkeypatch.setattr(evaluate, "ENV_FILES", ())
+    monkeypatch.setattr(evaluate, "execute_worker", fake_worker)
+    monkeypatch.setattr(sys, "argv", ["evaluate", "--source", str(source),
+                                      "--suite", "mandatory", "--output", str(output)])
+    evaluate.main()
+    receipt = json.loads(output.read_text(encoding="utf-8"))
+    assert receipt["freeze"]["source_sha256"] == evaluate.digest(source)
+    assert receipt["freeze"]["runtime_versions"]["box2d-py"] == version("box2d-py")
+    assert receipt["freeze"]["cells"] == [list(cell) for cell in MANDATORY_CELLS]
+    assert {tuple((r["track_id"], r["seed"])) for r in receipt["rows"]} == set(MANDATORY_CELLS)
+    assert receipt["screen_passed"] is True and "verdict" not in receipt
+    assert len(list(output.with_suffix(".cells").glob("*.json"))) == 4
+    assert len(calls) == 4
+    original = output.read_bytes()
+    with pytest.raises(SystemExit):
+        evaluate.main()
+    assert output.read_bytes() == original
+    assert len(calls) == 4

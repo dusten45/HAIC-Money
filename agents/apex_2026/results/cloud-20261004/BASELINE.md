@@ -18,10 +18,20 @@ All finished laps and all MPC DNFs had zero contacts. All MPC retirements were
 measurements. All candidates fail even an 18-second mandatory screen.
 
 The 56 existing Apex tests passed in 1.63 seconds. The isolated existing
-submission-package tests passed 11/11 in 15.89 seconds. The full remaining test
-suite is being run separately to avoid inheriting its parent process's Linux
-RSS high-water mark into the packaging smoke worker; its final result will be
-recorded in the continuation report.
+submission-package tests passed 11/11 in 15.89 seconds. The remaining full
+suite reported **1159 passed, 10 skipped, 15 failed** in 447.11 seconds, for
+**1170 passed, 10 skipped, 15 failed** combined. Four old V4 protocol tests
+require Box2D 2.3.10, while the official Gymnasium extra and repository lock
+install box2d-py 2.3.5. Eleven old consumed-screen provenance tests reject
+LF bytes where their frozen protocol hash corresponds to CRLF; their ignored
+historical run artifacts are also absent. No old source/test was changed to
+conceal these failures. Packaging ran in a fresh process to avoid inheriting
+the memory-heavy suite's Linux RSS high-water mark.
+
+A fresh 20-cell hybrid benchmark in `baseline/hybrid-development.json` also
+finished only **10/16** extra cells: track completion counts were 1/4, 4/4,
+2/4, and 3/4. No extra finish was within 13 seconds. The benchmark role does
+not count toward prospective candidate rejections.
 
 ## Provenance and limits
 

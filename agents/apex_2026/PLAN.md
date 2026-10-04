@@ -36,8 +36,8 @@
 - [x] Read the six requested context/design/result files and inspect Python/dependencies.
 - [x] Independently recheck the official repository and local physics hashes.
 - [x] Run the 56 existing Apex tests and fresh hybrid required laps.
-- [ ] Run the other existing required-lap baselines and full existing test suite.
-- [ ] Save compact fresh receipts and provenance notes; commit and push this checkpoint.
+- [x] Run the other existing required-lap baselines and full existing test suite.
+- [x] Save compact fresh receipts and provenance notes; commit and push this checkpoint.
 
 ### 2. Independent implementation and probes
 

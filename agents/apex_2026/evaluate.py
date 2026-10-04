@@ -74,12 +74,17 @@ def pace_profile(consecutive_rejections):
 def rejection_streak(reports):
     """Apply a prospective profile only to distinct completed development trials."""
     streak, seen = 0, set()
+    expected_cells = list(MANDATORY_CELLS) + [
+        (track, seed) for seed in DEVELOPMENT_SEEDS for track in range(1, 5)
+    ]
     for report in reports:
         freeze = report["freeze"]
         if freeze.get("trial_role", "candidate") != "candidate":
             raise ValueError("benchmark results cannot count as candidate rejections")
-        if freeze.get("suite") == "holdout":
-            raise ValueError("holdout cannot drive development relaxation")
+        if freeze.get("suite") != "development":
+            raise ValueError("only development receipts can drive relaxation")
+        if freeze.get("cells") != [list(cell) for cell in expected_cells]:
+            raise ValueError("prior receipt lacks exact declared development cells")
         identity = (freeze["source_sha256"], json.dumps(freeze["parameters"], sort_keys=True))
         if identity in seen:
             raise ValueError("a repeat cannot count as another rejection")
@@ -88,17 +93,13 @@ def rejection_streak(reports):
         if freeze.get("selected_profile_seconds", 13) != limit:
             raise ValueError("prior receipt disagrees with prospective profile")
         rows = report["rows"]
-        mandatory = [r for r in rows if (r["track_id"], r["seed"]) in MANDATORY_CELLS]
-        if len(mandatory) != 4 or len({(r["track_id"], r["seed"]) for r in mandatory}) != 4:
-            raise ValueError("prior receipt lacks mandatory coverage")
+        row_cells = [(r["track_id"], r["seed"]) for r in rows]
+        if len(row_cells) != len(expected_cells) or set(row_cells) != set(expected_cells):
+            raise ValueError("prior receipt lacks exact measured development cells")
         if any(r.get("error") for r in rows):
             raise ValueError("operational errors are not performance rejections")
-        if len(rows) > 4:
-            passed = assess(mandatory, [r for r in rows if r not in mandatory], limit_seconds=limit)["passed"]
-        else:
-            passed = all(r["finished"] and r.get("lap_time_ms") is not None
-                         and 0 < r["lap_time_ms"] <= limit * 1000
-                         and r.get("progress", 0) >= .95 for r in mandatory)
+        mandatory = [r for r in rows if (r["track_id"], r["seed"]) in MANDATORY_CELLS]
+        passed = assess(mandatory, [r for r in rows if r not in mandatory], limit_seconds=limit)["passed"]
         streak = 0 if passed else streak + 1
     return streak
 
@@ -259,7 +260,7 @@ def main():
               "environment_sha256": env_hashes, "cells": cells, "max_steps": args.max_steps,
               "selected_profile_seconds": selected_limit, "consecutive_rejections": prior_streak,
               "prior_receipts": [{"path": str(p.resolve()), "sha256": digest(p)} for p in args.prior_receipts],
-              "runtime_versions": {name: version(name) for name in ("numpy", "gymnasium", "torch", "opencv-python")},
+              "runtime_versions": {name: version(name) for name in ("numpy", "gymnasium", "torch", "opencv-python", "box2d-py")},
               "python_version": sys.version}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with freeze_path.open("x", encoding="utf-8") as file:
