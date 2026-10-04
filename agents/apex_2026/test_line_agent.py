@@ -1,0 +1,68 @@
+"""Synthetic behavioral tests; no simulator or track reset."""
+import unittest
+import numpy as np
+from agents.apex_2026.line_agent import Agent
+
+
+def scene(bend=0.0, obstacle=False):
+    f = np.full((84, 84), .65, dtype=np.float32)
+    for y in range(74):
+        center = 42 + bend * max(58-y, 0)**2 / 150
+        lo, hi = max(0, int(center-12)), min(84, int(center+13))
+        f[y, lo:hi] = .4
+    f[74:] = 0
+    if obstacle:
+        f[30:36, 43:48] = .95
+    return np.repeat(f[None], 4, axis=0)
+
+
+class LineAgentTests(unittest.TestCase):
+    def test_straight_road_accelerates_without_turning(self):
+        a = Agent()
+        action = a.act(scene())
+        self.assertLess(abs(action[0]), .08)
+        self.assertGreater(action[1], .5)
+        self.assertEqual(action.dtype, np.float32)
+
+    def test_mirrored_bends_produce_opposite_steering(self):
+        right = scene(bend=3.)
+        left = np.roll(right[:, :, ::-1], 1, axis=2).copy()
+        ar, al = Agent().act(right), Agent().act(left)
+        self.assertGreater(ar[0], .05)
+        self.assertLess(al[0], -.05)
+        self.assertLess(abs(ar[0]+al[0]), .15)
+
+    def test_planned_path_goes_around_obstacle(self):
+        a = Agent()
+        a.act(scene(obstacle=True))
+        path = np.asarray(a.diagnostics['path'])
+        crossing = path[(path[:, 1] >= 29) & (path[:, 1] <= 37), 0]
+        self.assertGreater(len(crossing), 0)
+        self.assertTrue(np.all(crossing < 41) or np.all(crossing > 50), crossing)
+
+    def test_curve_schedule_slower_than_straight(self):
+        straight, curved = Agent(), Agent()
+        straight.act(scene())
+        curved.act(scene(bend=1.7))
+        self.assertLess(curved.diagnostics['target_speed'], straight.diagnostics['target_speed'])
+
+    def test_overspeed_brakes_and_never_accelerates_simultaneously(self):
+        obs = scene(bend=1.7)
+        obs[:, 77:83, 10:13] = .9
+        action = Agent().act(obs)
+        self.assertEqual(action[1], 0.)
+        self.assertGreater(action[2], 0.)
+
+    def test_reset_clears_temporal_state(self):
+        a = Agent()
+        a.act(scene(bend=1.))
+        a.reset(scene())
+        np.testing.assert_array_equal(a.act(scene()), Agent().act(scene()))
+
+    def test_invalid_image_fails_closed(self):
+        for obs in (np.zeros((2, 3)), np.full((4,84,84), np.nan)):
+            np.testing.assert_array_equal(Agent().act(obs), np.array([0., 0., .3], np.float32))
+
+
+if __name__ == '__main__':
+    unittest.main()

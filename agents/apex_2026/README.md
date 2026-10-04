@@ -23,5 +23,5 @@ All candidates are experimental until the frozen validation report says
 otherwise. Historical results are never contemporary measurements.
 No official submission or model confirmation is authorized by this experiment.
 
-Hard session deadline: 2026-10-05 04:00 Asia/Seoul (2026-10-04 19:00 UTC).
-Stop launching experiments by 03:35 KST; freeze/review/push before 03:55 KST.
+The user removed the original 04:00 KST deadline during this session.
+Continue based on experimental evidence, without time-triggered stop criteria.

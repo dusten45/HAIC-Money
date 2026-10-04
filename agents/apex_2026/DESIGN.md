@@ -57,9 +57,11 @@ not silently mixed into selected per-track behavior.
 
 - An architectural round is a distinct controller family or structural revision,
   not every numeric configuration probe. Keep a visible ledger of all attempts.
-- After three architectural rounds fail the literal four-cell objective, or at
-  02:45 KST, whichever happens first, activate completion-first fallback.
-- Stop new architectures at fallback. Select the existing family using
+- After three architectural rounds fail the literal four-cell objective,
+  activate completion-first fallback.
+- Fallback is a reporting/selection gate, not an experiment-count limit after
+  the user's removal of additional restrictions. Further justified architectures
+  and experiments remain permitted. Compare candidate families using
   lexicographic gates: required finish count, development finish count, combined
   median genuine finish time, lower damage, then lower worst inference latency.
   Explicitly disclose selection on consumed development data.
@@ -77,11 +79,11 @@ not silently mixed into selected per-track behavior.
 - Every substantial validated unit is a separate commit and push. Check source
   preservation and include compact primary receipts, not bulky generated traces.
 
-## Time budget
+## Time budget amendment
 
-Deadline is 2026-10-05 04:00 KST (Oct 4 19:00 UTC). At 03:35 stop launching
-experiments; by 03:45 stop remaining evaluations with explicit censored receipts;
-by 03:55 finish report, commits and pushes. Earlier completion is allowed.
+The user explicitly removed the original 04:00 KST deadline during this session.
+All clock-triggered stop, freeze, report and fallback conditions are removed.
+Do not stop experiments or select a weaker candidate because of the old deadline.
 
 ## Holdout isolation
 
