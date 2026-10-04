@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "hypothesis": "Preserve P1 nominal actions; recover only invalid path or observed nearzero motion despite gas using bounded2Dpixelentry and transformedlastvalidpath direction.",
+  "status": "unproven: required4unchanged; neither consumed failure rescued",
+  "source_hashes": {
+    "agents/apex_2026/v2/recovery_agent.py": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+    "agents/apex_2026/candidate/agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "agents/apex_2026/v2/test_recovery_agent.py": "6152f3a5e4adeed3b2cb134aa1f20906ddca720b30460fd3d17cbe8e4d0b6793"
+  },
+  "snapshot": "/tmp/apex-v2-recovery-r0/source.py",
+  "snapshot_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+  "tests": {
+    "command": ".venv/bin/python -m unittest agents.apex_2026.v2.test_recovery_agent -v",
+    "passed": 6,
+    "log": "/tmp/apex-v2-recovery-r0/tests.log",
+    "log_sha256": "d90068ef784e59954c52fa4525f4e95f703f4f38489e447e9a4cd59eeefeb9bc"
+  },
+  "preflight": [
+    {
+      "cell": "t2-s4031370700",
+      "final_frame": "/tmp/apex-final-holdout/holdout/t2-s4031370700-frames/0227.png",
+      "components": [
+        {
+          "area": 418,
+          "bounds": [
+            0,
+            59,
+            84,
+            15
+          ],
+          "nearest_m": [
+            0.0,
+            -5.878894767783656
+          ],
+          "distance_m": 5.878894767783656,
+          "ahead_pixels": 12
+        },
+        {
+          "area": 36,
+          "bounds": [
+            40,
+            58,
+            4,
+            9
+          ],
+          "nearest_m": [
+            0.0,
+            0.0
+          ],
+          "distance_m": 0.0,
+          "ahead_pixels": 8
+        }
+      ],
+      "final_speed": 8.447692998452391e-19,
+      "last_100_valid": 0,
+      "last_100_mean_gas": 0.0,
+      "final_damage": 0.0,
+      "original_components_note": "Raw P1 mask above includes HUD and car sprite; not a reachable-road certificate.",
+      "clean_components_excluding_hud_and_car": [
+        {
+          "area": 293,
+          "bounds": [
+            0,
+            59,
+            31,
+            12
+          ],
+          "nearest_m": [
+            -8.818342151675484,
+            -4.11522633744856
+          ],
+          "distance_m": 9.731302385212725
+        }
+      ]
+    },
+    {
+      "cell": "t3-s4111953688",
+      "final_frame": "/tmp/apex-final-holdout/holdout/t3-s4111953688-frames/0299.png",
+      "components": [
+        {
+          "area": 1548,
+          "bounds": [
+            0,
+            0,
+            84,
+            74
+          ],
+          "nearest_m": [
+            0.0,
+            0.0
+          ],
+          "distance_m": 0.0,
+          "ahead_pixels": 1214
+        }
+      ],
+      "final_speed": 1.081445154436339e-06,
+      "last_100_valid": 100,
+      "last_100_mean_gas": 0.9857214403152466,
+      "final_damage": 0.2,
+      "original_components_note": "Raw P1 mask above includes HUD and car sprite; not a reachable-road certificate.",
+      "clean_components_excluding_hud_and_car": [
+        {
+          "area": 1366,
+          "bounds": [
+            0,
+            0,
+            49,
+            71
+          ],
+          "nearest_m": [
+            -2.9394473838918285,
+            0.0
+          ],
+          "distance_m": 2.9394473838918285
+        }
+      ]
+    }
+  ],
+  "constraints": {
+    "recovery_speed_m_s": 8,
+    "gas_cap": 0.2,
+    "steer_cap": 0.65,
+    "brake": 0.4,
+    "max_recovery_actions": 80,
+    "stagnation_trigger_actions": 10,
+    "contact_escape": "one10actionstraightphase and one10actionoppositephase when stagnation reaches16",
+    "runtime_inputs": "public pixel frames and action/ego-transformed path memory only",
+    "baseline": "historical frozen P1; no fresh baseline reruns"
+  },
+  "cells": [
+    {
+      "track": 1,
+      "seed": 516237,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 16780,
+      "reason": null,
+      "steps": 210,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t1-s516237.json",
+      "receipt_sha256": "ba8131dad3c5dece24223d0d99d238c7757d6e157c0aae2c8881b4e98460b541",
+      "trace_sha256": "4c361171aeef2cdeada50405f38f1d9f6b452144c2583788de0acc0be257385f",
+      "modes": {
+        "nominal": 210
+      },
+      "recovery_actions": 0,
+      "first_recovery_step": null,
+      "recovery_duration_s": 0.0,
+      "recovery_max_speed": null,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": 16780,
+      "lap_delta_ms": 0,
+      "peak_memory_mib": 98.66015625,
+      "inference_max_s": 0.04180992100009462
+    },
+    {
+      "track": 2,
+      "seed": 644062,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 20680,
+      "reason": null,
+      "steps": 259,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t2-s644062.json",
+      "receipt_sha256": "baf19742491882e1125cfeacd01112d61215a11628bbc1e48ff679904952da4d",
+      "trace_sha256": "a018563b95d4064098a33f375776cd5189d797c2aca296aadf35d9fc4c1be514",
+      "modes": {
+        "nominal": 259
+      },
+      "recovery_actions": 0,
+      "first_recovery_step": null,
+      "recovery_duration_s": 0.0,
+      "recovery_max_speed": null,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": 20680,
+      "lap_delta_ms": 0,
+      "peak_memory_mib": 97.8984375,
+      "inference_max_s": 0.08181605500067235
+    },
+    {
+      "track": 3,
+      "seed": 1007,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 18560,
+      "reason": null,
+      "steps": 233,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t3-s1007.json",
+      "receipt_sha256": "ea21b43e1a02566850234711a9ec807094c694b910ffff177ddc28126946c2dd",
+      "trace_sha256": "7b484d01c8489244d65c570e15cb1f063565b341e7cfe8bbd14b419165aae8df",
+      "modes": {
+        "nominal": 233
+      },
+      "recovery_actions": 0,
+      "first_recovery_step": null,
+      "recovery_duration_s": 0.0,
+      "recovery_max_speed": null,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": 18560,
+      "lap_delta_ms": 0,
+      "peak_memory_mib": 97.61328125,
+      "inference_max_s": 0.04856696000024385
+    },
+    {
+      "track": 4,
+      "seed": 18800,
+      "finished": true,
+      "damage": 0.0,
+      "lap_ms": 18100,
+      "reason": null,
+      "steps": 227,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t4-s18800.json",
+      "receipt_sha256": "00d8dd2c25b21a049f0ab964a87318a8c831b8f574550ee1e2f573e0b4037f87",
+      "trace_sha256": "3d73444e3eb054e7f17d3e118e0017912731f7c5daceaf5f287cb3a5581e21bc",
+      "modes": {
+        "nominal": 227
+      },
+      "recovery_actions": 0,
+      "first_recovery_step": null,
+      "recovery_duration_s": 0.0,
+      "recovery_max_speed": null,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": 18100,
+      "lap_delta_ms": 0,
+      "peak_memory_mib": 99.01171875,
+      "inference_max_s": 0.06300250399908691
+    },
+    {
+      "track": 2,
+      "seed": 4031370700,
+      "finished": false,
+      "damage": 0.0,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 227,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t2-s4031370700.json",
+      "receipt_sha256": "76c8d2bb82433e26fd32ffe93b70b028a59a19b5d2397eeac021d3979e3142f9",
+      "trace_sha256": "a9d89b278b195c163af193a5050637d5a43d6db3da216c1f80ac2a43135770be",
+      "modes": {
+        "nominal": 126,
+        "decelerate": 20,
+        "entry": 60,
+        "exhausted": 21
+      },
+      "recovery_actions": 101,
+      "first_recovery_step": 127,
+      "recovery_duration_s": 8.08,
+      "recovery_max_speed": 37.60522242070316,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": null,
+      "lap_delta_ms": null,
+      "peak_memory_mib": 98.2734375,
+      "inference_max_s": 0.07272954000109166
+    },
+    {
+      "track": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "damage": 0.2,
+      "lap_ms": null,
+      "reason": "off_track",
+      "steps": 299,
+      "source_sha256": "a003cc4d958770388a3a45435edc86db8e834f72a5e86fc92948ea27b35ce200",
+      "receipt": "/tmp/apex-v2-recovery-r0/t3-s4111953688.json",
+      "receipt_sha256": "24bde4de4cebacd185a299efdf80ea35f5aa2dff524e12a61861d9531b0810af",
+      "trace_sha256": "63032bd9c63572ad279e632a897ef8a3fdb3b5c1fd81b21df55ccdfaed6018da",
+      "modes": {
+        "nominal": 220,
+        "entry": 59,
+        "contact_escape": 20
+      },
+      "recovery_actions": 79,
+      "first_recovery_step": 221,
+      "recovery_duration_s": 6.32,
+      "recovery_max_speed": 0.04651691574314397,
+      "baseline_nominal_prefix_identical": true,
+      "baseline_lap_ms": null,
+      "lap_delta_ms": null,
+      "peak_memory_mib": 102.0625,
+      "inference_max_s": 0.06016870799976459
+    }
+  ],
+  "findings": [
+    "No requiredrun recovery activation; all action sequences/lap times match historical P1.",
+    "T2 invalidpath recoverystarts127; forward motion resumes but fixed.4brake above8HUD causes stop-goactualspeed3.4to8.6;80actionbudgetexpires before roadentry. This does not establish physical unreachability.",
+    "T3recovery detects validpathstagnation; straight and opposite-lock phases still fail to produce sustained movement after collision.",
+    "Official off_track counter is101consecutive negative-reward macrosteps, not grass occupancy; road visibility alone does not imply escape."
+  ]
+}
