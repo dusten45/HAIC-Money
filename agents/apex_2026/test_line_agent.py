@@ -40,6 +40,13 @@ class LineAgentTests(unittest.TestCase):
         self.assertGreater(len(crossing), 0)
         self.assertTrue(np.all(crossing < 41) or np.all(crossing > 50), crossing)
 
+    def test_near_obstacle_changes_tracking_action_not_only_planned_path(self):
+        obs = scene(bend=1.5)
+        obs[:, 47:53, 43:48] = .95
+        agent = Agent({'lookahead': 26, 'pursuit_gain': 3.5})
+        action = agent.act(obs)
+        self.assertLess(action[0], -.04)
+
     def test_curve_schedule_slower_than_straight(self):
         straight, curved = Agent(), Agent()
         straight.act(scene())

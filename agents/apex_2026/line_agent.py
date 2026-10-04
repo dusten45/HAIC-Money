@@ -109,6 +109,42 @@ class Agent:
         path = np.asarray(result[::-1], np.float32).reshape(-1,2)
         return path, free, obstacles
 
+    def _tracking_curvature(self, path, lookahead, free, obstacles):
+        """Choose a pursuit target whose implied arc respects nearby free space.
+
+        A distant point alone can shortcut through a planned obstacle bypass.
+        Evaluate the arcs to all nearer path points over the same forward horizon;
+        obstacle and road occupancy are costs, independent of track identity.
+        """
+        distances = 63.-path[:, 1]
+        target_x = float(np.interp(lookahead, distances, path[:, 0]))
+        lateral_m = (target_x-42.)/1.3608
+        forward_m = lookahead/1.701
+        preferred = 2.*lateral_m/(forward_m**2+lateral_m**2)
+        if not obstacles.any():
+            return preferred
+        eligible = (distances >= 9.) & (distances <= lookahead)
+        offsets = (path[eligible, 0]-42.)/1.3608
+        forwards = distances[eligible]/1.701
+        candidates = np.r_[preferred, 2.*offsets/(forwards*forwards+offsets*offsets)]
+        sample_pixels = np.arange(6., lookahead+1, 1.)
+        sample_m = sample_pixels/1.701
+        turns = candidates[:, None]*sample_m[None]
+        predicted = np.divide(1.-np.sqrt(np.maximum(1.-turns*turns, 0.)),
+                              candidates[:, None], out=np.zeros_like(turns),
+                              where=np.abs(candidates[:, None]) > 1e-7)
+        x = 42.+predicted*1.3608
+        xi = np.clip(np.rint(x), 0, 83).astype(int)
+        yi = np.rint(63.-sample_pixels).astype(int)
+        outside = (x < 0) | (x > 83) | (np.abs(turns) > .97)
+        collision = obstacles[yi[None], xi] > 0
+        offroad = (free[yi[None], xi] == 0) | outside
+        reference = np.interp(sample_pixels, distances, path[:, 0])
+        cost = (1000.*collision.sum(axis=1) + 10.*offroad.sum(axis=1)
+                + .03*np.sum((x-reference[None])**2, axis=1)
+                + 20.*(candidates-preferred)**2)
+        return float(candidates[np.argmin(cost)])
+
     def act(self, observation):
         obs = np.asarray(observation)
         if obs.shape != (4,84,84) or not np.isfinite(obs).all() or obs.min() < 0 or obs.max() > 1:
@@ -125,10 +161,7 @@ class Agent:
         speed = float(np.clip((mass-.27)/.085, 0., 100.))
         distances = 63.-path[:,1]
         lookahead = float(np.clip(c['lookahead']+c['speed_lookahead']*speed, 9., distances[-1]))
-        target_x = float(np.interp(lookahead, distances, path[:,0]))
-        lateral_m = (target_x-42.)/1.3608
-        forward_m = lookahead/1.701
-        curvature = 2.*lateral_m/(forward_m**2+lateral_m**2)
+        curvature = self._tracking_curvature(path, lookahead, free, obstacles)
         steer = float(np.clip(c['pursuit_gain']*curvature, -c['max_steer'], c['max_steer']))
         steer = (1.-c['steer_smoothing'])*steer + c['steer_smoothing']*self.last_steer
         # Fit overlapping local quadratics to suppress lattice quantization.

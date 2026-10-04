@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "candidate_family": "free-space DP path / pure pursuit",
+  "experiments": [
+    {
+      "variant": "initial",
+      "source_sha256": "2a9ed30864431dc2d6b57ac1af63b59b3b9362a9394cd2f45d31ca5edff42368",
+      "config": {},
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 44240,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-line-round0/track1.json",
+          "receipt_sha256": "70c007c4aeb160936e8dfdbf130c2225a04964fd79c58fcb9e560e4fdb4b1ad8"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.2916666666666667,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-round0/track2.json",
+          "receipt_sha256": "34c8882b2a42345387c8ce4bfd84bf1f25a54032031893b931b2cfa604fb824e"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.6051779935275081,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-line-round0/track3.json",
+          "receipt_sha256": "22b91e2b0910bcce9d383befb55ed343df7564c54121a5219a5ea52c7091124d"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3727598566308244,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-round0/track4.json",
+          "receipt_sha256": "ac5121e59f5c62537ef829c9a2012caf86021256419a37cda96e47cbc410b0b1"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "source_snapshot": "initial committed source b4eaaf6",
+      "notes": "Default short-lookahead steering oscillates; t1 only finish"
+    },
+    {
+      "variant": "lookahead26",
+      "source_sha256": "2a9ed30864431dc2d6b57ac1af63b59b3b9362a9394cd2f45d31ca5edff42368",
+      "config": {
+        "lookahead": 26
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 23540,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-lookahead26/t1.json",
+          "receipt_sha256": "53cd6848ecab4b81c25c2d0442cb69a430ddbcbd26365177afff1af163ca17e5"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7916666666666666,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-line-lookahead26/t2.json",
+          "receipt_sha256": "f5206ed876f535641fc0077cd8c4ed8037802f43bd25bb167b5d42f603b9ebb1"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 27740,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-lookahead26/t3.json",
+          "receipt_sha256": "68bf5b475795dcf1b092bf5cc89c74b39352f523d86c123f1d0186c05e3a9fc6"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 25940,
+          "progress": 0.989247311827957,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-line-lookahead26/t4.json",
+          "receipt_sha256": "9f87a2538519c086fa7646359b91270e4251207ff80c83607f101735033107b9"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "source_snapshot": "/tmp/apex-line-lookahead26/source.py",
+      "notes": "Single parameter change; steering variance drops; t2 obstacle crash"
+    },
+    {
+      "variant": "gain35",
+      "source_sha256": "2a9ed30864431dc2d6b57ac1af63b59b3b9362a9394cd2f45d31ca5edff42368",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 3.5
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 26020,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-line-gain35/t1.json",
+          "receipt_sha256": "1505669a906ef6e20746bab2988e0480118f949fa786ab35106e3abd191cf3ab"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 33120,
+          "progress": 0.9702380952380952,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-gain35/t2.json",
+          "receipt_sha256": "f59a11c49be572b275e3b1a66728e5b09680f498d10c2c8a8718295c76b04209"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 29480,
+          "progress": 0.9838187702265372,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-gain35/t3.json",
+          "receipt_sha256": "df768ab82249acde49bd9c92f51caf54f233326292d0a9df02f2e25a53a2dd9d"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 28820,
+          "progress": 0.989247311827957,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-line-gain35/t4.json",
+          "receipt_sha256": "37dddfe2cebc125d549cf8ec1ae19738cd9737bbcfd364879a6afc656cfd0ba7"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "source_snapshot": "/tmp/apex-line-gain35/source.py",
+      "notes": "Calibrated geometric pursuit gain; four finishes but damage on t1/t4"
+    },
+    {
+      "variant": "arcguard",
+      "source_sha256": "aa43d2f96bf1d0851a7b52d5720a7ef602eaa971ae188570f953805ea87ec413",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 3.5
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 26140,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-arcguard/t1.json",
+          "receipt_sha256": "8cfdee812e0c3e24395cf098e7d1c30fa305b69f18ae37cde7a732022995e5da"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 33260,
+          "progress": 0.9672619047619048,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-arcguard/t2.json",
+          "receipt_sha256": "a6f5c05025bfeec37cf9fe0f285e0e1baf158269a4c8b8113423bdbf366416e5"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 29060,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-arcguard/t3.json",
+          "receipt_sha256": "2346cc237eecd1decf8bf38f765d21d7577969846a69dadd355452e885e4ba3c"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 28240,
+          "progress": 0.989247311827957,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-arcguard/t4.json",
+          "receipt_sha256": "bf25ec33379eee0dbeb809213a0da9f8982d68dd3f84f05fbb3139f7e83dbf81"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "source_snapshot": "/tmp/apex-line-arcguard/source.py",
+      "notes": "DP avoidance paths now checked against implied pursuit arcs; four finishes and zero damage"
+    }
+  ],
+  "diagnostic_replays": [
+    {
+      "directory": "/tmp/apex-line-t2-diagnose",
+      "variant": "lookahead26",
+      "track_id": 2,
+      "seed": 644062,
+      "result": "same .7916666667-progress crash reproduced; observations and diagnostics retained"
+    }
+  ]
+}
