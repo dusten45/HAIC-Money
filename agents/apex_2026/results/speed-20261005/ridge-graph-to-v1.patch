@@ -1,0 +1,204 @@
+--- a/source.py
++++ b/source.py
+@@ -410 +410 @@
+-class Agent(_CorridorReference):
++class _GraphReference(_CorridorReference):
+@@ -452,0 +453,198 @@
++
++
++class Agent(_GraphReference):
++    """Parametric camera-road ridge, with NumPy-only metric chamfer distance.
++
++    Image boundaries remain unknown. Enclosed small occlusions are filled
++    before ridge tracing. Pixel-distance and steering references are camera
++    models, not collision or dynamic feasibility certificates.
++    """
++
++    @staticmethod
++    def _expand(mask):
++        result = mask.copy()
++        for dy in (-1, 0, 1):
++            for dx in (-1, 0, 1):
++                if dy == 0 and dx == 0:
++                    continue
++                y0, y1 = max(0, dy), min(mask.shape[0], mask.shape[0]+dy)
++                x0, x1 = max(0, dx), min(mask.shape[1], mask.shape[1]+dx)
++                result[y0:y1, x0:x1] |= mask[y0-dy:y1-dy, x0-dx:x1-dx]
++        return result
++
++    def _distance_field(self, frame):
++        road = (frame[:73] >= .32) & (frame[:73] <= .51)
++        background = ~road
++        exterior = np.zeros_like(road)
++        exterior[[0, -1], :] = background[[0, -1], :]
++        exterior[:, [0, -1]] = background[:, [0, -1]]
++        for _ in range(168):
++            updated = self._expand(exterior) & background
++            if np.array_equal(updated, exterior):
++                break
++            exterior = updated
++        holes = background & ~exterior
++        visited = np.zeros_like(road)
++        for y, x in np.argwhere(holes):
++            if visited[y, x]:
++                continue
++            stack, component = [(int(y), int(x))], []
++            visited[y, x] = True
++            while stack:
++                py, px = stack.pop()
++                component.append((py, px))
++                for ny, nx in ((py-1, px), (py+1, px), (py, px-1), (py, px+1)):
++                    if 0 <= ny < 73 and 0 <= nx < 84 and holes[ny, nx] and not visited[ny, nx]:
++                        visited[ny, nx] = True
++                        stack.append((ny, nx))
++            if len(component) <= 110:
++                ys, xs = np.asarray(component).T
++                road[ys, xs] = True
++        distance = np.where(road, 1000., 0.)
++        neighbors = [(dy, dx, np.hypot(dx/self.PX_X, dy/self.PX_Y))
++                     for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dy or dx]
++        for _ in range(100):
++            updated = distance.copy()
++            for dy, dx, weight in neighbors:
++                y0, y1 = max(0, dy), min(73, 73+dy)
++                x0, x1 = max(0, dx), min(84, 84+dx)
++                np.minimum(updated[y0:y1, x0:x1],
++                           distance[y0-dy:y1-dy, x0-dx:x1-dx]+weight,
++                           out=updated[y0:y1, x0:x1])
++            if np.max(abs(updated-distance)) < 1e-8:
++                break
++            distance = updated
++        return distance
++
++    def _sample_distance(self, distance, points):
++        x = self.CAR_X+points[:, 0]*self.PX_X
++        y = self.CAR_Y-points[:, 1]*self.PX_Y
++        valid = (x >= 0.) & (x <= 83.) & (y >= 0.) & (y <= 72.)
++        x, y = np.clip(x, 0., 83.), np.clip(y, 0., 72.)
++        ix, iy = x.astype(int), y.astype(int)
++        nx, ny = np.minimum(ix+1, 83), np.minimum(iy+1, 72)
++        wx, wy = x-ix, y-iy
++        value = ((1.-wx)*(1.-wy)*distance[iy, ix]+wx*(1.-wy)*distance[iy, nx]
++                 +(1.-wx)*wy*distance[ny, ix]+wx*wy*distance[ny, nx])
++        return np.where(valid, value, 0.)
++
++    def _ridge(self, frame):
++        distance = self._distance_field(frame)
++        starts = np.column_stack((np.linspace(-8., 8., 65), np.full(65, 3.)))
++        initial = self._sample_distance(distance, starts)
++        current = starts[int(np.argmax(initial))]
++        if float(initial.max()) < 2.:
++            return None
++        direction = np.asarray([0., 1.])
++        points = [current.copy()]
++        for _ in range(30):
++            normal = np.asarray([direction[1], -direction[0]])
++            offsets = np.linspace(-4., 4., 41)
++            candidates = current+2.*direction+offsets[:, None]*normal
++            score = self._sample_distance(distance, candidates)-.035*offsets**2
++            chosen = candidates[int(np.argmax(score))]
++            if (self._sample_distance(distance, chosen[None])[0] < 2.
++                    or not (-30. < chosen[0] < 30. and -5. < chosen[1] < 37.)):
++                break
++            heading = chosen-current
++            heading /= max(np.linalg.norm(heading), .01)
++            direction = .25*direction+.75*heading
++            direction /= max(np.linalg.norm(direction), .01)
++            current = chosen
++            points.append(current.copy())
++        path = np.asarray(points)
++        return path if len(path) >= 5 else None
++
++    @staticmethod
++    def _arc(path):
++        return np.r_[0., np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))]
++
++    def _ridge_route(self, path, road, circles, speed, yaw):
++        # Retain the frozen pass selection/memory policy; transfer its normal
++        # lane displacement onto the parametric center rather than x(y).
++        ahead, center = road[:2]
++        original, imminent, obstacle_y = _PathReference._route(self, ahead, center, circles, speed, yaw)
++        road_slope = (np.interp(path[:, 1]+2., ahead, center)
++                      -np.interp(path[:, 1]-2., ahead, center))/4.
++        normal_offset = (np.interp(path[:, 1], ahead, original)
++                         -np.interp(path[:, 1], ahead, center))/np.sqrt(1.+road_slope**2)
++        tangent = np.gradient(path, axis=0)
++        tangent /= np.maximum(np.linalg.norm(tangent, axis=1), .01)[:, None]
++        normal = np.column_stack((tangent[:, 1], -tangent[:, 0]))
++        result = path+normal_offset[:, None]*normal
++        route_s = None
++        if obstacle_y is not None:
++            circle = np.asarray([self.pass_x, self.pass_y])
++            index = int(np.argmin(np.linalg.norm(path-circle, axis=1)))
++            route_s = float(self._arc(path)[index])
++        return result, imminent, route_s
++
++    def _ridge_target(self, path, speed):
++        arc = self._arc(path)
++        target = self.cruise_speed
++        for at in (4., 10., 18., 26.):
++            if at > arc[-1]-2.:
++                continue
++            selected = (arc >= max(0., at-7.)) & (arc <= at+7.)
++            if np.count_nonzero(selected) < 5:
++                continue
++            s = arc[selected]-at
++            weights = np.exp(-.5*(s/5.)**2)
++            cx = np.polyfit(s, path[selected, 0], 2, w=weights)
++            cy = np.polyfit(s, path[selected, 1], 2, w=weights)
++            curve = abs(cx[1]*2.*cy[0]-cy[1]*2.*cx[0])/max((cx[1]**2+cy[1]**2)**1.5, .001)
++            cap = np.sqrt(self.lateral_accel/max(curve, .0005))
++            usable = max(0., at-2.6-.08*speed)
++            target = min(target, np.sqrt(cap**2+2.*self.braking_accel*usable))
++        visibility = max(0., arc[-1]-2.6-.08*speed)
++        return float(min(target, np.sqrt(45.**2+2.*self.braking_accel*visibility)))
++
++    def act(self, observation):
++        frame = self._frame(observation)
++        if frame is None:
++            return self._recover()
++        speed, yaw = self._speed(frame), self._yaw(frame)
++        road, ridge = self._road(frame), self._ridge(frame)
++        if road is None or ridge is None:
++            return self._recover(speed)
++        self.lost_frames = 0
++        self.last_center = self.CAR_X+self.PX_X*float(ridge[0, 0])
++        path, imminent, obstacle_s = self._ridge_route(ridge, road, self._circles(frame, road), speed, yaw)
++        arc = self._arc(path)
++        preview = float(np.clip(7.+self.preview_time*speed, 8., 32.))
++        preview = min(preview, max(3., arc[-1]-1.))
++        if obstacle_s is not None:
++            preview = min(preview, max(7., obstacle_s))
++        x, y = float(np.interp(preview, arc, path[:, 0])), float(np.interp(preview, arc, path[:, 1]))
++        curvature = 2.*x/max(x*x+y*y, 1.)
++        self.reference_curvature = curvature
++        desired = np.arctan(self.WHEELBASE*curvature)+self.yaw_gain*self.WHEELBASE*(speed*curvature-yaw)/max(speed, 20.)
++        self.last_steer += float(np.clip(np.clip(desired, -.4, .4)-self.last_steer, -.24, .24))
++        target = min(self._ridge_target(path, speed), np.sqrt(self.lateral_accel/max(abs(curvature), .0005)), self.last_target+6.)
++        actual_lateral = speed*abs(yaw)
++        demand = max(actual_lateral, speed*speed*abs(curvature))
++        if self._rear_speed(frame)-speed > 15. and demand > 60.:
++            self.spin_frames = 6
++        else:
++            self.spin_frames = max(0, self.spin_frames-1)
++        if actual_lateral > self.lateral_accel:
++            target = min(target, self.lateral_accel/max(abs(yaw), .05))
++        if imminent:
++            target = 0.
++        error = target-speed
++        if error < -2.:
++            gas, brake = 0., float(np.clip(-error*.014, .04, .65))
++        else:
++            gas, brake = float(np.clip(.18+.06*error, 0., 1.)), 0.
++            if demand > 120.:
++                gas = min(gas, .30)
++            elif demand > 60.:
++                gas = min(gas, .60)
++            if speed >= 95.:
++                gas = min(gas, .16)
++            elif speed >= 85.:
++                gas = min(gas, .35)
++            if self.spin_frames:
++                gas = min(gas, .16 if speed > 15. else .08)
++        self.last_target, self.last_speed, self.last_yaw = target, speed, yaw
++        return np.asarray([self.last_steer, gas, brake], dtype=np.float32)
