@@ -10,36 +10,36 @@ stays sealed. All opened V3 geometry is development data for V4.
 
 Action-exact V3 replays split the five confirmation losses: two no-contact road
 exits, two post-contact on-road stalls, and one five-contact crash. A first
-current-frame full-corridor bend guard rescued two losses in a prespecified
-15-cell development panel without losing any sampled gain. A full 96-cell
-consumed V3 matrix is required before implementing or freezing the candidate.
+full-corridor bend guard rescued two losses in a prespecified 15-cell panel,
+but a broader 84/96-cell audit lost two previous finishes and raised contacts
+31 to 39, so that guard is rejected. A distant-obstacle speed-cap probe also
+lost two finishes and raised contacts on a fixed 12-cell panel; it is excluded.
+The next isolated prototype repairs the clear-road 42-row dropout. It rescued
+both known no-contact road exits with zero contacts and left three prespecified
+negative controls action-identical. Its full 96-cell audit is pending.
 
 ## Candidate and development gate
 
-- Add one `_GuardedBendCorridorController` subclass of
+- Add one `_ClearRoadRow42DropoutController` subclass of
   `_BoundedSideHoldController` in `agent.py`, leaving the live bare `Agent`
   selector on `_CompoundClearingBrakeCarryController` during development.
-- Apply the first bend guard only when a full `_corridor_plan` exists, the
-  obstacle bounding box bottom is at most 35, and the current-frame corridor
-  centers contain a far row (first of 30/34/38) and near row (54/50) at least
-  3 pixels apart. The measured bend and base road steer must agree in sign;
-  `abs(base_steering)` must be at least .03; the planned pass side must oppose
-  the base; and the proposed obstacle steer must retain the base sign but fall
-  below half its magnitude. Then return the base road steer through the normal
-  slew/pedal pipeline. In diagnostics, verify `_corridor_centers` against a
-  direct extraction from `observation[-1]`. No track ID, seed, simulator state
-  or hidden vehicle telemetry may enter inference. Do not change the 3-pixel
-  threshold based on V4 fresh phases.
+- Change only the inherited road-steering request when no obstacle is detected,
+  the base class marks the road nonstraight, row 42 is absent from the current
+  frame's measured `centers`, and rows 54, 50 and 46 are present. Set
+  `far = _center_at(42.0, centers)` and `near = centers[54]`, then use the same
+  `0.016 * (far - IMAGE_CENTER) + 0.012 * (far - near)` formula as the base
+  controller before calling the inherited hook. The normal steer slew and
+  pedal rules remain. No track ID, seed, simulator state or hidden vehicle
+  telemetry may enter inference. Do not alter this predicate on V4 fresh data.
 - On all 96 consumed V3 screen/confirmation canonical pairs, require no loss
-  of a previous V3 candidate finish, at least two of the five V3 control-only
-  finish losses rescued, no increase in total crashes or contacts, and new
+  of a previous V3 candidate finish, rescue both known no-contact V3 losses,
+  no increase in total crashes or contacts, and new
   shared-finish total time no more than 1.10 times the V3 candidate total on
   the same jointly finished cells. Preserve exact baseline
   receipts and action hashes. If this fails, diagnose and revise only on
   consumed development data, then rerun the full matrix before freezing.
-- Treat any distant-only speed-cap relaxation as a separate prototype. It is
-  excluded from the first V4 candidate and needs its own full-matrix safety
-  proof and fresh evaluation before activation.
+- The failed bend guard and distant-only speed-cap relaxation are excluded
+  from V4. Their consumed-cell records remain diagnostic evidence.
 
 ## Fresh evaluation contract
 
@@ -59,7 +59,7 @@ consumed V3 matrix is required before implementing or freezing the candidate.
   Reconstruct a distinct candidate base from a new pinned implementation
   commit/blob with the live selector still on the control route; derive the
   candidate snapshot by exactly one selector swap to
-  `_GuardedBendCorridorController`. Verify both committed blobs and snapshots
+  `_ClearRoadRow42DropoutController`. Verify both committed blobs and snapshots
   at bind, restore and before/after every phase. Do not require candidate to
   equal a selector swap of the old control blob. Pin the root model, helpers,
   simulator, cold harness, runner, decision module, template, protocol and
@@ -84,10 +84,10 @@ consumed V3 matrix is required before implementing or freezing the candidate.
 
 ## Work sequence
 
-1. Finish the 96-cell development audit of the guard and inspect every changed
-   finish, crash, contact and shared-finish time.
-2. Repair the diagnostic tracer's current-frame `road_centers` attribution so
-   future camera claims cannot use a past frame. Verify replay action hashes.
+1. Finish the 96-cell development audit of the row42 correction and inspect
+   every changed finish, crash, contact and shared-finish time.
+2. Use the corrected diagnostic tracer's current-decision `road_centers`
+   attribution (commit `195fb62`) and verify replay action hashes.
 3. Implement the selected subclass with focused behavior tests; run the full
    consumed matrix again from committed bytes and record a development result.
 4. Implement and review the separate V4 gate, runner, template and tests. Bind
