@@ -1,0 +1,62 @@
+{
+  "hypothesis": "Allow steering and pedals to change over a short exact-physics horizon; accumulated metric path progress discourages parking while footprint occupancy penalizes unsafe futures.",
+  "source": {
+    "source_sha256": "cf42265cb6eca03eb095e2e2f96d55f00cea3e28f173d054bb094e2cdcc519a3",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "only_change_from_r1": "Restore missing _Road.PIXELS_X/Y copied-method dependencies.",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ]
+    ]
+  },
+  "architecture": {
+    "depth": 8,
+    "raw_ticks_per_depth": 4,
+    "beam_width": 8,
+    "branch_count_at_most": 9,
+    "control_period_s": 0.08,
+    "horizon_s": 0.64,
+    "collision_check_period_s": 0.02,
+    "footprint_samples": 25,
+    "obstacle_dilation_pixels": 0
+  },
+  "observations": [
+    "Current-frame calibrated speed",
+    "Current HUD yaw and clamped wheel angle",
+    "Four positive wheel omega HUD bars",
+    "LK slip when valid, otherwise prior action-driven predicted slip"
+  ],
+  "internal_state": "Snapshots contain only shadow-model hull/wheel pose, linear/angular velocity and wheel omega/gas/brake/steer; no official environment state is read.",
+  "objective": "Sum -4*delta_arclength +0.08*(2*cross_track^2+3*heading_error^2+.025*overspeed^2+.003*underspeed^2), plus200*footprint_violations and final cross-track/heading/speed penalties.",
+  "limits": [
+    "Beam pruning is approximate and can discard useful early braking sequences; no optimality guarantee.",
+    "Positive RPM only and unobserved slip/grip remain limitations.",
+    "Footprint checked at20ms discrete times, not a formal continuous collision guarantee.",
+    "Geodesic route choice can remain ambiguous at loops or occluded corners."
+  ],
+  "test_count": 7,
+  "verification": "Synthetic S-shaped reference produces opposing steering and subsequent brake within one chosen sequence. Stationary clear-road case accelerates. Copied optical-flow metric constants regression fixed and verified on real consumed pixel capture.",
+  "screen": "Exactly six newly executed consumed cells, required4 plus priorfailures2. First r1 attempt retained as6invalid_action implementation failures; r2 only adds missing motion scale constants."
+}

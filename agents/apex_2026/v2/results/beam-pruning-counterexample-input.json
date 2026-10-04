@@ -1,0 +1,41 @@
+{
+  "reference": {
+    "y_linspace": [
+      0,
+      37,
+      75
+    ],
+    "x": 0,
+    "targets": "sqrt(24**2+130*(37-y))"
+  },
+  "free_pixels": {
+    "rows": [
+      0,
+      74
+    ],
+    "columns": [
+      25,
+      59
+    ]
+  },
+  "initial": {
+    "forward_speed": 80,
+    "yaw_rate": 0,
+    "wheel_angle": 0,
+    "lateral_speed": 0,
+    "throttle": 0,
+    "omegas": [
+      148.14814814814815,
+      148.14814814814815,
+      148.14814814814815,
+      148.14814814814815
+    ]
+  },
+  "horizon": {
+    "depth": 8,
+    "raw_ticks_per_depth": 4,
+    "tick_s": 0.02
+  },
+  "source_sha256": "cf42265cb6eca03eb095e2e2f96d55f00cea3e28f173d054bb094e2cdcc519a3",
+  "frozen_result": "beam-pruning-counterexample.json"
+}

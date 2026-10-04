@@ -1,0 +1,150 @@
+{
+  "status": "rejected_prefix_only_pruning",
+  "source": {
+    "source_sha256": "cf42265cb6eca03eb095e2e2f96d55f00cea3e28f173d054bb094e2cdcc519a3",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "only_change_from_r1": "Restore missing _Road.PIXELS_X/Y copied-method dependencies.",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ]
+    ]
+  },
+  "resets": 6,
+  "finished": 0,
+  "episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.4,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 168,
+      "inference_max_s": 0.5763884110001527,
+      "peak_memory_mib": 97.18359375,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t1-s516237.json",
+      "trace": "/tmp/apex-v2-beam-r2/t1-s516237.jsonl",
+      "trace_sha256": "939b877587555002a906e5c4f4149a9228f2044b03e09da450a76d014af27f4f",
+      "max_predicted_cost": 147107.10916410168
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.09821428571428571,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 132,
+      "inference_max_s": 0.5327770990006684,
+      "peak_memory_mib": 97.0546875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t2-s644062.json",
+      "trace": "/tmp/apex-v2-beam-r2/t2-s644062.jsonl",
+      "trace_sha256": "5da31b336efa29449f2eeea5a45d86094d61de169b9ad150579d0ed07ed452d4",
+      "max_predicted_cost": 81788.6637150366
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.10679611650485436,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 131,
+      "inference_max_s": 0.5199707920000947,
+      "peak_memory_mib": 97.2421875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t3-s1007.json",
+      "trace": "/tmp/apex-v2-beam-r2/t3-s1007.jsonl",
+      "trace_sha256": "8eb560b1aa39ca8915aa608b18bec8409dc77958d1fd23026a1fc20624f8eb2c",
+      "max_predicted_cost": 122356.99927789414
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.11827956989247312,
+      "damage": 0.6000000000000001,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 130,
+      "inference_max_s": 0.5871006220004347,
+      "peak_memory_mib": 97.30859375,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t4-s18800.json",
+      "trace": "/tmp/apex-v2-beam-r2/t4-s18800.jsonl",
+      "trace_sha256": "3e443ea3a61b6b1a2cce5a955aba385193b971aeafb559120bcc3026a2588f97",
+      "max_predicted_cost": 17815.53873937555
+    },
+    {
+      "track_id": 2,
+      "seed": 4031370700,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.12267657992565056,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 131,
+      "inference_max_s": 0.5493253940003342,
+      "peak_memory_mib": 97.15625,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t2-s4031370700.json",
+      "trace": "/tmp/apex-v2-beam-r2/t2-s4031370700.jsonl",
+      "trace_sha256": "2c110cf1d6183d3f644cb25cba38aa2f12d36b7d55eaa17548ee51170146f035",
+      "max_predicted_cost": 120765.01469170132
+    },
+    {
+      "track_id": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.1021671826625387,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "invalid_actions": 0,
+      "steps": 131,
+      "inference_max_s": 1.1811869020002632,
+      "peak_memory_mib": 97.07421875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/beam-r2/t3-s4111953688.json",
+      "trace": "/tmp/apex-v2-beam-r2/t3-s4111953688.jsonl",
+      "trace_sha256": "ec10eb77537f32c6444672dd8978e006014e40ef9e0a0b7e4a474831c2970827",
+      "max_predicted_cost": 79332.24608966995
+    }
+  ],
+  "tests_passed": 7,
+  "interpretation": "Allsix stop and retire. Synthetic same-model/same-objective counterexample demonstrates prefix-only beam pruning can discard a collision-free braking sequence and choose a later colliding one. No performance improvement.",
+  "counterexample": "agents/apex_2026/v2/results/beam-pruning-counterexample.json",
+  "next": "Parent authorized completion-heuristic ranking, requiring counterexample regression and measured act<4s before new six-cell screen."
+}

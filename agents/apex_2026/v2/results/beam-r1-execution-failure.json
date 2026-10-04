@@ -1,0 +1,46 @@
+{
+  "status": "execution_defect_all_six_invalid_action",
+  "root_cause": "Copied _Road._motion references PIXELS_X/Y class constants that were omitted; textured observations raise AttributeError.",
+  "source": {
+    "source_sha256": "2acbac8b3eca102e7d7a9a5f2c9028d0ff42611a580042eda5bcf7d5e398384f",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ]
+    ]
+  },
+  "resets": 6,
+  "finished": 0,
+  "receipts": [
+    "agents/apex_2026/v2/results/beam-r1/t2-s644062.json",
+    "agents/apex_2026/v2/results/beam-r1/t3-s4111953688.json",
+    "agents/apex_2026/v2/results/beam-r1/t2-s4031370700.json",
+    "agents/apex_2026/v2/results/beam-r1/t1-s516237.json",
+    "agents/apex_2026/v2/results/beam-r1/t4-s18800.json",
+    "agents/apex_2026/v2/results/beam-r1/t3-s1007.json"
+  ],
+  "reproducer": "Agent().act(np.load(previous consumed motion capture)[observations][0])",
+  "fix_scope": "Only restore missing metric scale class constants, add textured flow regression, rerun matched six cells."
+}

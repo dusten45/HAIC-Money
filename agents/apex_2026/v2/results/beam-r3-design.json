@@ -1,0 +1,48 @@
+{
+  "status": "source_held_for_parent_checkpoint_before_new_six_cell_screen",
+  "source": {
+    "source_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "architecture_change": "Rank prefixes by deterministic feedback completion to the same full horizon; preserve actual prefix objective separately.",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ]
+    ]
+  },
+  "objective": "Unchanged from r2, full horizon prefix-progress/cross-track/heading/speed/20ms-footprint objective.",
+  "search": "Width8,depth8,3steeringx3pedal expansion. Every prefix ranking evaluates its deterministic pursuit+target-speed feedback completion to depth8. Prefix costs are stored separately and never double-count completion costs.",
+  "regression": "Frozen speed80 visible-road counterexample RED215footprint violations -> GREEN0; sequence cost must not exceed feasible constant braking.",
+  "tests_passed": 8,
+  "preflight": "beam-r3-preflight.json",
+  "max_measured_act_s": 2.220357085001524,
+  "run_gate_s": 4,
+  "hard_act_limit_s": 5,
+  "limitations": [
+    "Deterministic completion is still an approximate ranking estimate; no exhaustive optimality guarantee.",
+    "Unknown slip,positiveRPM saturation,undamaged asphalt assumption and uncertain geodesic topology remain.",
+    "25point footprint every20ms is not continuous safety certification."
+  ],
+  "previous_cost": "r1sixinvalid_action andr2sixdrivingfailures permanently retained, not replaced by r3."
+}
