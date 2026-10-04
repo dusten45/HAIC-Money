@@ -3,9 +3,9 @@
 ## Current State
 
 The goal is a fast, reliable, rule-compliant 2026 HAIC agent. The live bare
-`Agent` route remains `_CompoundClearingBrakeCarryController`; neural weights in
-`model.pt` are bypassed after road detection. Diagnostic controllers in
-`agent.py` are not active or submission-ready.
+`Agent` now selects `_ClearRoadRow42DropoutController`; neural weights in
+`model.pt` are bypassed after road detection. Other diagnostic controllers in
+`agent.py` are not the active submission route.
 
 The `_ClearRoadRow42DropoutController` candidate now invalidates its own
 obstacle confidence after lost-road or invalid current-frame decisions while
@@ -16,10 +16,8 @@ Its complete 96-cell consumed V3 development audit independently passed:
 75 to 81 finishes, no previous finish lost, contacts 43 to 43, crashes 2 to 2,
 damage 8.6 to 8.6, common-finish time ratio 0.999857. Both known no-contact
 track-3 road-exit rescues remain. See
-`experiments/camera-upgrade-development-20261004-result.json`; full receipts
-and cold ZIP action-parity evidence are under
-`.haic-artifacts/clear-road-row42-v4/freshness-audit/`. This is development
-evidence, not fresh generalization or activation.
+`experiments/camera-upgrade-development-20261004-result.json`; full development
+receipts are under `.haic-artifacts/clear-road-row42-v4/freshness-audit/`.
 
 V1, V2 and V3 camera studies remain rejected under their original fixed gates.
 V3 screen had 29/32 versus 18/32 finishes; confirmation had 46/64 versus 31/64
@@ -37,16 +35,19 @@ The search is capped at two candidate implementations and two fresh studies;
 any further relaxation requires a distinct protocol and unused geometry.
 V4 is now source-bound in `experiments/camera-policy-competition-v4.json`,
 with 8/16/8 new geometries across four tracks and 2/4/2 exact paired repeats.
-Screen independently retained: 26/32 versus 16/32 finishes, one lost control
-finish, contacts 15 versus 57, crashes zero versus seven, common-finish time
-ratio 1.055276; both exact repeat pairs passed. Confirmation also retained:
-51/64 versus 24/64 finishes, two lost control finishes, contacts 47 versus 110,
-crashes one versus ten, time ratio 1.048332, four exact repeat pairs. The final
-blind phase is running on eight separate geometries; promotion remains pending.
-See `experiments/camera-policy-competition-v4-result.json`.
-Only promote after retained phases, valid seals and combined decision.
-The old V4 progress checkpoint is superseded
-by `docs/superpowers/plans/2026-10-04-autonomous-camera-upgrade.md`.
+All three phases and the combined gate independently retained: screen 26/32
+versus 16/32 finishes, confirmation 51/64 versus 24/64, blind 23/32 versus 17/32.
+Across 128 paired cells, finishes increased from 57 to 100, contacts fell from
+226 to 89 and crashes from 21 to 1. Per-track candidate/control finishes are
+26/17, 22/11, 29/17 and 23/12 (32 cells each). Six control finishes were lost;
+28 candidate cells remain DNF. The 51 common finishes took 4.79% longer in
+aggregate, within the fixed 10% pace allowance. All 272 cold receipts, eight
+exact paired repeats, source pins and predecessor seals passed independent
+recomputation. Runtime maxima: init 4.67 s, reset 0.20 ms, action 139.26 ms,
+RSS 231.55 MiB. Finite testing does not guarantee completion on every geometry.
+The promoted source exactly matches the evaluated selected source above.
+See `experiments/camera-policy-competition-v4-result.json`. Final package and
+post-promotion full-suite verification are being completed.
 
 ## Frozen Competition Contract
 
@@ -80,7 +81,8 @@ by `docs/superpowers/plans/2026-10-04-autonomous-camera-upgrade.md`.
   trajectory and collision telemetry.
 - Local `.venv`: Windows Python 3.11.15, Torch 2.1 CPU, NumPy 1.26. Windows
   lacks `fcntl` for `tests/test_drqv2_matched.py`; the latest full suite
-  excluding that file passed 907 tests and skipped 10. Official-like Linux
+  before promotion excluding that file passed 971 tests and skipped 10.
+  Post-promotion full-suite verification is pending. Official-like Linux
   submission-container certification is unavailable here: Docker is stopped
   and WSL lacks the required runtime/dependencies.
 - Preserve untracked user videos, prior submission directories and

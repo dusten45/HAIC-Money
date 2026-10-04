@@ -49,13 +49,13 @@
 - [x] Implement practical thresholds only in V4; preserve V3 bytes and decisions.
 - [x] Pin candidate commit/blob and decision engine bytes, test, commit and push (`71bb2f4`).
 - [x] Bind fresh disjoint seeds, commit and push the protocol before episodes (`0d11229`).
-- [ ] Run screen, confirmation and blind only after their predecessor gates pass. Validate exact cold repeats and final combined decision.
+- [x] Run screen, confirmation and blind only after their predecessor gates pass. Validate exact cold repeats and final combined decision (all retained; independent 272-receipt audit).
 
 ## Task 4: Promote, package and report
 
 **Files:** `agent.py`, policy selector test, `CONTEXT.md`, V4 result.
 
-- [ ] Promote only the source-bound passing candidate and update the actual-route test.
+- [x] Promote only the source-bound passing candidate and update the actual-route test.
 - [ ] Run the Windows-compatible suite and submission static/CPU checks; report the known Windows `fcntl` exclusion.
 - [ ] Verify promoted source equals the evaluated selected candidate bytes exactly; the single selector swap is relative to pinned base commit `7df85ae`. Test cold package action parity.
 - [ ] Build an immutable package under ignored `.haic-artifacts/submissions/`, preserve user packages, and record archive/source/model hashes.

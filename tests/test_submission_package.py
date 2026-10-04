@@ -74,7 +74,7 @@ class TestSubmissionPackage(unittest.TestCase):
         self.assertTrue(result["reset_matches_first"])
         self.assertTrue(result["unreset_matches_first"])
 
-    def test_packaged_bare_model_uses_aggressive_compound_pace_controller(self):
+    def test_packaged_bare_model_uses_clear_road_dropout_controller(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_path = Path(directory)
             model_path = directory_path / MODEL_FILENAME
@@ -90,6 +90,7 @@ import numpy as np
 from agent import (
     Agent,
     _AggressiveCompoundPaceController,
+    _ClearRoadRow42DropoutController,
     _CompoundClearingBrakeCarryController,
 )
 frame = np.full((84, 84), 0.1, dtype=np.float32)
@@ -97,7 +98,7 @@ frame[20:63, 31:53] = 0.4
 frame[77:83, 10:13] = 0.27 / 18.0
 observation = np.tile(frame[None, :, :], (4, 1, 1))
 agent = Agent()
-assert type(agent._forward_controller) is _CompoundClearingBrakeCarryController
+assert type(agent._forward_controller) is _ClearRoadRow42DropoutController
 np.testing.assert_array_equal(agent.act(observation), np.array([0.0, 0.36, 0.0], dtype=np.float32))
 
 frame[77:83, 10:13] = (0.27 + 0.085 * 45.0) / 18.0
@@ -126,6 +127,8 @@ for _ in range(candidate.OBSTACLE_MISS_LIMIT):
 released_candidate = candidate.act(speed_45)
 assert released_candidate[1] > 0.11
 
+# Preserve the legacy controller's calibration separately from the Agent route.
+legacy = _CompoundClearingBrakeCarryController()
 compound = np.full((84, 84), 0.1, dtype=np.float32)
 for row in range(20, 63):
     center = 42.0 + 0.75 * (54 - row)
@@ -134,8 +137,8 @@ for row in range(20, 63):
     compound[row, left:right] = 0.4
 compound[50:54, 35:38] = 0.68
 compound[77:83, 10:13] = (0.27 + 0.085 * 40.0) / 18.0
-agent.reset(None)
-compound_action = agent.act(np.tile(compound[None, :, :], (4, 1, 1)))
+legacy.reset(None)
+compound_action = legacy.act(np.tile(compound[None, :, :], (4, 1, 1)))
 assert compound_action[1] == 0.0
 np.testing.assert_allclose(
     compound_action[2],
@@ -144,7 +147,7 @@ np.testing.assert_allclose(
     atol=1e-7,
 )
 compound[50:54, 35:38] = 0.4
-compound_miss = agent.act(np.tile(compound[None, :, :], (4, 1, 1)))
+compound_miss = legacy.act(np.tile(compound[None, :, :], (4, 1, 1)))
 assert compound_miss[1] == 0.0
 np.testing.assert_allclose(
     compound_miss[2],
@@ -161,10 +164,10 @@ for row in range(20, 63):
     adaptive[row, left:right] = 0.4
 adaptive[32:36, 35:38] = 0.68
 adaptive[77:83, 10:13] = (0.27 + 0.085 * 40.0) / 18.0
-agent.reset(None)
-adaptive_action = agent.act(np.tile(adaptive[None, :, :], (4, 1, 1)))
-assert 30.0 < agent._forward_controller._pace_command_target <= 38.0
-assert agent._forward_controller._pace_latched_target == 30.0
+legacy.reset(None)
+adaptive_action = legacy.act(np.tile(adaptive[None, :, :], (4, 1, 1)))
+assert 30.0 < legacy._pace_command_target <= 38.0
+assert legacy._pace_latched_target == 30.0
 assert adaptive_action[1] == 0.0
 assert 0.0 < adaptive_action[2] < np.float32(0.154)
 """
@@ -174,6 +177,80 @@ assert 0.0 < adaptive_action[2] < np.float32(0.154)
                 check=True,
                 capture_output=True,
                 text=True,
+            )
+
+    def test_packaged_camera_dropout_actions_reset_and_obstacle_freshness(self):
+        with tempfile.TemporaryDirectory() as directory:
+            directory_path = Path(directory)
+            model_path = directory_path / MODEL_FILENAME
+            archive_path = directory_path / "submission.zip"
+            extracted = directory_path / "extracted"
+            torch.save(Baseline1Actor().state_dict(), model_path)
+            build_submission(ROOT / "agent.py", model_path, archive_path)
+            with zipfile.ZipFile(archive_path) as package:
+                package.extractall(extracted)
+
+            code = """
+import numpy as np
+from agent import Agent
+
+def observation(speed):
+    frame = np.full((84, 84), 0.7, dtype=np.float32)
+    frame[46, 10:35] = 0.4
+    frame[50, 16:40] = 0.4
+    frame[54:61, 22:44] = 0.4
+    frame[77:83, 10:13] = (0.27 + 0.085 * speed) / 18.0
+    return np.repeat(frame[None], 4, axis=0)
+
+def checked_action(runtime, pixels):
+    action = runtime.act(pixels)
+    assert action.shape == (3,) and action.dtype == np.float32
+    assert np.isfinite(action).all()
+    assert np.all(action >= np.array([-1.0, 0.0, 0.0]))
+    assert np.all(action <= 1.0)
+    return action
+
+runtime = Agent()
+high_speed = observation(31.0)
+low_speed = observation(29.0)
+obstacle = low_speed.copy()
+obstacle[:, 55:58, 30:33] = 0.9
+lost_road = np.full((4, 84, 84), 0.7, dtype=np.float32)
+
+# The nearest measured far center is 22, near is 32.5, so the road request is
+# 0.016*(22-41.5) + 0.012*(22-32.5) = -0.438. The slew step is at most 0.07.
+runtime._forward_controller._last_steer = -0.203
+corrected = checked_action(runtime, high_speed)
+np.testing.assert_allclose(corrected[0], -0.273, rtol=0.0, atol=1e-7)
+np.testing.assert_allclose(corrected[0] - (-0.203), -0.07, rtol=0.0, atol=1e-7)
+
+runtime.reset(None)
+first = checked_action(runtime, high_speed)
+np.testing.assert_allclose(first[0], -0.07, rtol=0.0, atol=1e-7)
+checked_action(runtime, obstacle)
+checked_action(runtime, lost_road)
+runtime.reset(None)
+np.testing.assert_array_equal(first, checked_action(runtime, high_speed))
+
+# A genuinely observed obstacle permits the low-speed correction until the
+# next lost-road frame invalidates its evidence, even if the parent latch stays.
+runtime.reset(None)
+checked_action(runtime, obstacle)
+runtime._forward_controller._last_steer = -0.203
+recent = checked_action(runtime, low_speed)
+np.testing.assert_allclose(recent[0], -0.273, rtol=0.0, atol=1e-7)
+checked_action(runtime, lost_road)
+runtime._forward_controller._last_steer = -0.203
+stale = checked_action(runtime, low_speed)
+np.testing.assert_allclose(stale[0], -0.133, rtol=0.0, atol=1e-7)
+"""
+            subprocess.run(
+                [sys.executable, "-B", "-c", code],
+                cwd=extracted,
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=15,
             )
 
     def test_explicit_drq_actor_is_packaged_under_declared_model_filename(self):

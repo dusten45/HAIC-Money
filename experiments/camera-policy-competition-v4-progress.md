@@ -1,4 +1,11 @@
-# Camera Policy V4 Progress (2026-10-04)
+# Historical Camera Policy V4 Development Checkpoint (superseded)
+
+The autonomous upgrade on 2026-10-04 completed the stale-confidence fix,
+96-cell development audit, all fresh V4 phases and independent final review.
+The live route is now `_ClearRoadRow42DropoutController` (source SHA256
+`d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18`).
+See `camera-policy-competition-v4-result.json` and `../CONTEXT.md` for current
+results and validation status. The text below preserves the earlier checkpoint.
 
 This is a development checkpoint, not a V4 fresh-geometry result or a
 submission claim. The live `Agent` selector is still

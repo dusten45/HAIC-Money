@@ -5291,7 +5291,7 @@ class Agent:
         self._map_policy_action = map_policy_action
         self.smoother = build_action_smoother(self.action_smoothing)
         self._forward_controller = (
-            _CompoundClearingBrakeCarryController()
+            _ClearRoadRow42DropoutController()
             if use_forward_controller
             else None
         )
