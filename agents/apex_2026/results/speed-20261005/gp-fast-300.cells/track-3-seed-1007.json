@@ -1,0 +1,22 @@
+{
+  "track_id": 3,
+  "seed": 1007,
+  "finished": false,
+  "lap_time_ms": null,
+  "progress": 0.0,
+  "collision_count": 0,
+  "damage": 0.0,
+  "retire_reason": "worker_error",
+  "source_sha256": "76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1",
+  "parameters": {
+    "cruise_speed": 120,
+    "lateral_accel": 300,
+    "preview_time": 0.25,
+    "robust_cruise_speed": 100,
+    "propulsion": 1,
+    "corner_boost": 0.5,
+    "low_gas_gate": 3,
+    "high_gas_gate": 5
+  },
+  "error": "Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/workspace/HAIC-Money/agents/apex_2026/evaluate.py\", line 310, in <module>\n    main()\n  File \"/workspace/HAIC-Money/agents/apex_2026/evaluate.py\", line 238, in main\n    print(json.dumps(run_cell(**json.loads(args.worker))))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/HAIC-Money/agents/apex_2026/evaluate.py\", line 158, in run_cell\n    agent = module.Agent(**params)\n            ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/HAIC-Money/agents/apex_2026/guarded_preview_agent.py\", line 3308, in __init__\n    self._metric = _MetricClearAgent(cruise_speed=cruise_speed,\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/HAIC-Money/agents/apex_2026/guarded_preview_agent.py\", line 3048, in __init__\n    raise ValueError(\"gas demand gates must satisfy 0 < low < high <= 1\")\nValueError: gas demand gates must satisfy 0 < low < high <= 1\n"
+}
