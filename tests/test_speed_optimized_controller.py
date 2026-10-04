@@ -5,7 +5,7 @@ import pytest
 import agent
 
 
-def camera(*, speed=40.0, shift=0.0, bend=1.0, obstacle=False):
+def camera(*, speed=30.0, shift=0.0, bend=1.0, obstacle=False):
     frame = np.full((84, 84), 0.7, dtype=np.float32)
     for row in range(22, 62):
         left = int(31 + shift + bend * (54 - row) / 4)
@@ -22,8 +22,9 @@ def candidate():
 
 def test_accelerates_an_aligned_clear_curve_without_changing_steering():
     observation = camera()
-    old = agent._ClearRoadRow42DropoutController().act(observation)
-    upgraded = candidate().act(observation)
+    control, runtime = agent._ClearRoadRow42DropoutController(), candidate()
+    for _ in range(2):
+        old, upgraded = control.act(observation), runtime.act(observation)
     assert upgraded[0] == old[0]
     assert upgraded[1] > old[1] + 0.06
     assert upgraded[2] == old[2] == 0.0
@@ -74,3 +75,18 @@ def test_sustained_boost_remains_finite_bounded_and_slew_limited():
         assert -1 <= action[0] <= 1 and np.all((action[1:] >= 0) & (action[1:] <= 1))
         assert abs(float(action[0]) - previous) <= 0.070001
         previous = float(action[0])
+
+
+def test_moderate_speed_approach_does_not_add_gas_before_hazard_appears():
+    control, runtime = agent._ClearRoadRow42DropoutController(), candidate()
+    observation = camera(speed=40)
+    for _ in range(3):
+        np.testing.assert_array_equal(runtime.act(observation), control.act(observation))
+
+
+def test_opposite_actual_steer_does_not_spend_more_grip_on_acceleration():
+    control, runtime = agent._ClearRoadRow42DropoutController(), candidate()
+    for _ in range(3):
+        control.act(camera(speed=30, bend=-1))
+        runtime.act(camera(speed=30, bend=-1))
+    np.testing.assert_array_equal(runtime.act(camera(speed=30)), control.act(camera(speed=30)))

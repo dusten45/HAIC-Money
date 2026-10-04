@@ -4794,6 +4794,7 @@ class _SpeedOptimizedController(_ClearRoadRow42DropoutController):
     """Accelerate an aligned visible bend toward its validated speed target."""
 
     ALIGNED_CURVE_GAS = 0.24
+    BOOST_SPEED_CEILING = 35.0
 
     def __init__(self, *, cruise_speed: float = 68.0) -> None:
         super().__init__(cruise_speed=cruise_speed)
@@ -4827,6 +4828,8 @@ class _SpeedOptimizedController(_ClearRoadRow42DropoutController):
             and abs(float(centers.get(42, near)) - near) <= 5.0
             and max(abs(float(center) - near) for center in centers.values()) <= 9.0
             and abs(adjusted) <= 0.18
+            and abs(adjusted - self._last_steer) <= self.MAX_STEER_STEP
+            and adjusted * self._last_steer >= 0.0
         )
         return adjusted
 
@@ -4844,6 +4847,9 @@ class _SpeedOptimizedController(_ClearRoadRow42DropoutController):
             and inherited_gas > 0.0 and inherited_brake == 0.0
             and self._pace_effective_target is not None
             and self._pace_speed < self._pace_effective_target - 8.0
+            # Visible hazards can arm only after entering the camera ROI.
+            # Stop extra acceleration at moderate pace before that happens.
+            and self._pace_speed <= self.BOOST_SPEED_CEILING + 1e-3
         ):
             steering_ratio = abs(self._carry_steer_request) / self.MAX_STEER
             grip = float(np.sqrt(max(0.25, 1.0 - steering_ratio * steering_ratio)))
