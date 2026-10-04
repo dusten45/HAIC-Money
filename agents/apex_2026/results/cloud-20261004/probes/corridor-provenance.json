@@ -1,0 +1,70 @@
+{
+  "final_source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+  "evaluator_sha256": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c",
+  "versions": [
+    {
+      "version": 1,
+      "source_sha256": "12b7fb50f8b4047c02a5426557125fc7f10177d39b5b844814e937aed58fda8d",
+      "benchmarks": {
+        "target": {
+          "path": "corridor-v1-target.json",
+          "sha256": "b524528d43120afd1eca4c4f2e4f7fc87eade87a472cf6ef73582f39b6386b3d"
+        },
+        "mandatory": {
+          "path": "corridor-v1-mandatory.json",
+          "sha256": "4cf5b572b73de12475ebae0e50873c81d2f2009d324a03715adca4a5eb4fb8e3"
+        }
+      },
+      "source_patch": "corridor-v1-to-v4.patch"
+    },
+    {
+      "version": 2,
+      "source_sha256": "f97af66478c2ce1cdd3717aa218ee138d6c8cc5309c0239b7ae9050dd6af6ca7",
+      "benchmarks": {
+        "target": {
+          "path": "corridor-v2-target.json",
+          "sha256": "83f2779d61c71ae9bbcc24ceba26e1c2bb43fbe531d99c57a51dca7dd3278d4b"
+        },
+        "mandatory": {
+          "path": "corridor-v2-mandatory.json",
+          "sha256": "9e748a8c2346e19b11a1e83991d99e9ac1176ff1bc3d70ab12ce94e23e989b7c"
+        }
+      },
+      "source_patch": "corridor-v2-to-v4.patch",
+      "tests_sha256": "c595d25c8c333d563d169b023444d6cbfab4b531a1b823bdad2d561a4941a085",
+      "tests_patch": "corridor-v2-tests-to-v4.patch"
+    },
+    {
+      "version": 3,
+      "source_sha256": "443bca65741f62290e2c9dcc17c17b7b884f51d7a3f121c8751e6e808f786b50",
+      "benchmarks": {
+        "target": {
+          "path": "corridor-v3-target.json",
+          "sha256": "4985d5a32fb3eb4701cb702bf31d3e7c11d31e58ad5547db96cee7c41e1594d1"
+        },
+        "mandatory": {
+          "path": "corridor-v3-mandatory.json",
+          "sha256": "adb7f978557142f2b7bd25e4edfc0b5e0b5c0cf7b4df1c9e13650be510f3d202"
+        }
+      },
+      "source_patch": "corridor-v3-to-v4.patch",
+      "tests_sha256": "64cf6e5f2b8890f91914c4e6c63b3441bd2496d40beaba279f4c1743fdcd21d6",
+      "tests_patch": "corridor-v3-tests-to-v4.patch"
+    },
+    {
+      "version": 4,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "benchmarks": {
+        "target": {
+          "path": "corridor-v4-target.json",
+          "sha256": "d2c8d77b36c0469315922569270a4812c14f9a003dddc5f34e739a897f7334d6"
+        },
+        "mandatory": {
+          "path": "corridor-v4-mandatory.json",
+          "sha256": "6f30b144902d38e9cd93b434c2a2f4b78099537a8a626801d2d031021d2b9fcc"
+        }
+      },
+      "tests_sha256": "5bbcbc4138178dc618255e6865d1beeaf33db78623fd98b9bca1074810c3bec8"
+    }
+  ]
+}

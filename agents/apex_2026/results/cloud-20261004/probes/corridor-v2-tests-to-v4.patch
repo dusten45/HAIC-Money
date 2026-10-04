@@ -1,0 +1,130 @@
+--- a/agents/apex_2026/tests/test_corridor_agent.py
++++ b/agents/apex_2026/tests/test_corridor_agent.py
+@@ -134,3 +134,127 @@
+     assert agent._robust._corridor_plan is None
+     assert agent._robust._obstacle_side == 0
+     assert agent._metric.last_steer == 0
++
++
++def test_full_visible_bend_span_survives_the_old_search_window():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    for row in range(22, 59):
++        left = max(0, int(round(1 + 3 * (row - 54))))
++        right = int(round(45 + .5 * (row - 54)))
++        frame[row, left:right + 1] = .4
++    bbox = (21, 44, 23, 47)
++    frame[44:48, 21:24] = .671
++    centers = {row: 35. for row in (54, 50, 46, 42, 38, 34, 30)}
++    spans = controller._visible_edges(frame, centers, bbox)
++    assert spans[54] == (1., 45.)
++    assert spans[50] == (0., 43.)
++
++
++def test_a_disconnected_road_is_not_merged_into_the_near_component():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:59, 10:28] = .4
++    frame[22:59, 53:72] = .4
++    frame[40:44, 17:20] = .671
++    centers = {row: 20. for row in (54, 50, 46, 42, 38, 34, 30)}
++    spans = controller._visible_edges(frame, centers, (17, 40, 19, 43))
++    assert spans[54] == (10., 27.)
++    assert spans[42] == (10., 27.)
++
++
++def test_missing_near_asphalt_is_not_filled_from_neighboring_rows():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:59, 30:52] = .4
++    frame[55] = .63
++    centers = {row: 41. for row in (54, 50, 46, 42, 38, 34, 30)}
++    spans = controller._visible_edges(frame, centers, (40, 40, 42, 43))
++    assert 54 in spans and 56 in spans
++    assert 55 not in spans
++
++
++def test_border_clipped_asphalt_can_certify_an_interior_pass():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:74, :63] = .4
++    frame[36:40, 25:28] = .671
++    centers = controller._road_centers(frame)
++    assert controller._nearest_obstacle(frame, centers) is not None
++    assert controller._corridor_edges[54] == (0., 62.)
++    assert controller._corridor_candidate(1) is not None
++
++
++def test_hull_crossing_the_viewport_is_rejected_even_with_its_center_inside():
++    controller = module().Agent()._robust
++    controller._corridor_edges = {row: (0., 83.) for row in range(22, 59)}
++    controller._corridor_edges[57] = (0., 80.)
++    # The visible bend rotates the long hull at a near pose; its center at
++    # x80 is in the image but a front corner reaches beyond x83.
++    assert controller._corridor_hull_margin(
++        58., 80., 58., 26, (15, 30, 17, 33)) is None
++
++
++def test_only_the_measured_obstacle_can_bridge_an_asphalt_gap():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:59, 30:52] = .4
++    frame[40:44, 40:43] = .671
++    frame[42, 35:37] = .63
++    centers = {row: 41.5 for row in (54, 50, 46, 42, 38, 34, 30)}
++    spans = controller._visible_edges(frame, centers, (40, 40, 42, 43))
++    assert spans[42] == (37., 51.)
++
++
++def test_compact_white_curb_does_not_replace_the_orange_circle():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[:74, 32:53] = .4
++    frame[43:47, 39:42] = 171 / 255
++    # Saved target frame 81 had a compact curb fragment, not an elongated
++    # component: its .855 peak distinguishes it from the orange circle.
++    frame[60:62, 44:46] = 218 / 255
++    obstacle = controller._nearest_obstacle(frame, controller._road_centers(frame))
++    assert obstacle is not None
++    assert obstacle[0] < 50
++
++
++def test_a_compact_non_orange_component_is_not_an_obstacle():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[:74, 32:53] = .4
++    frame[43:47, 39:42] = .60
++    assert controller._nearest_obstacle(frame, controller._road_centers(frame)) is None
++
++
++def fringe_fixture():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:59, :42] = .4
++    # Actual obstacle patch from target frame 80, x11..14/y43..46.
++    # Pixel x11/y44 is a measured .537 halo outside the bright core bbox.
++    frame[43:47, 11:15] = np.asarray([
++        [117, 158, 167, 127],
++        [137, 168, 171, 157],
++        [132, 167, 171, 151],
++        [112, 144, 151, 117],
++    ], np.float32) / 255
++    centers = {row: 32. for row in (54, 50, 46, 42, 38, 34, 30)}
++    return controller, frame, centers, (12, 43, 14, 46)
++
++
++def test_actual_one_pixel_orange_fringe_preserves_the_asphalt_topology():
++    controller, frame, centers, bbox = fringe_fixture()
++    assert controller._visible_edges(frame, centers, bbox)[44] == (0., 41.)
++
++
++def test_a_second_fringe_pixel_does_not_bridge_an_unmeasured_gap():
++    controller, frame, centers, bbox = fringe_fixture()
++    frame[44, 10] = 137 / 255
++    assert controller._visible_edges(frame, centers, bbox)[44] == (15., 41.)
++
++
++def test_grass_adjacent_to_the_circle_does_not_count_as_occlusion():
++    controller, frame, centers, bbox = fringe_fixture()
++    frame[44, 11] = .63
++    assert controller._visible_edges(frame, centers, bbox)[44] == (15., 41.)

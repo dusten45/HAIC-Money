@@ -104,8 +104,24 @@ The separate new-agent study is preserved in `agents/apex_2026/` on branch
 were preserved. Hybrid mandatory laps are 19.62/26.68/22.74/21.78 s with zero
 contacts, but only 10/16 additional development cells finish. The 10–13 s target
 and relaxed 18 s profile remain unmet; no independent candidate is promoted.
-Holdout geometries remain unopened. See its README and source-bound benchmark
-summary. Development was paused at the user's request for a GitHub checkpoint.
+Those are historical checkpoint measurements, not fresh cloud validation.
+The user resumed development from `14bb967` on the same branch. The cloud
+environment uses Python 3.11.16 and the pinned Box2D 2.3.5 dependencies; fresh
+hybrid laps are 19.62/26.20/22.90/21.82 s, with 10/16 extra finishes. The old
+MPC completion results do not reproduce on Linux. See
+`agents/apex_2026/results/cloud-20261004/BASELINE.md` for source-bound receipts
+and the existing full-suite result (1170 passed, 10 skipped, 15 pre-existing
+dependency/provenance failures). No root or official simulator source changed.
+
+Six new complete development trials have been rejected. The first three used
+13 seconds and the next three 15; the next prospective profile is 18 seconds.
+The original 13-second target remains separately unmet. Preview and envelope
+variants reach 12/16 extra finishes, below the fixed completion floor. Current
+corridor V4 required laps are 19.98/24.78/22.68/21.76 s, but extra completion is
+10/16. No independent candidate is adopted. A new guarded integration is being
+tested; holdout remains unopened until final source/parameters are frozen.
+Complete new results and preserved rejected-source patches are in
+`agents/apex_2026/results/cloud-20261004/`.
 
 ## Frozen Competition Contract
 
@@ -137,7 +153,7 @@ summary. Development was paused at the user's request for a GitHub checkpoint.
   maps `(1,516237)`, `(2,644062)`, `(3,1007)` and untracked `evaluation_videos/`
   are diagnostic, not fresh evaluation. Track Lab can replay camera, action,
   trajectory and collision telemetry.
-- Local `.venv`: Windows Python 3.11.15, Torch 2.1 CPU, NumPy 1.26. Windows
+- Historical Windows `.venv`: Python 3.11.15, Torch 2.1 CPU, NumPy 1.26. Windows
   lacks `fcntl` for `tests/test_drqv2_matched.py`; the latest post-promotion
   full suite excluding that file passed 1,043 tests and skipped 10 (630.22 s).
   The unchanged local web API has an intermittent Windows TCP abort on rejected

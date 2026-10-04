@@ -1,0 +1,590 @@
+{
+  "freeze": {
+    "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+    "parameters": {},
+    "suite": "development",
+    "trial_role": "candidate",
+    "environment_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+      "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+      "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+      "agents/apex_2026/evaluate.py": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+    },
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        1,
+        2867319041
+      ],
+      [
+        2,
+        2867319041
+      ],
+      [
+        3,
+        2867319041
+      ],
+      [
+        4,
+        2867319041
+      ],
+      [
+        1,
+        359018627
+      ],
+      [
+        2,
+        359018627
+      ],
+      [
+        3,
+        359018627
+      ],
+      [
+        4,
+        359018627
+      ],
+      [
+        1,
+        1764402399
+      ],
+      [
+        2,
+        1764402399
+      ],
+      [
+        3,
+        1764402399
+      ],
+      [
+        4,
+        1764402399
+      ],
+      [
+        1,
+        4029571806
+      ],
+      [
+        2,
+        4029571806
+      ],
+      [
+        3,
+        4029571806
+      ],
+      [
+        4,
+        4029571806
+      ]
+    ],
+    "max_steps": 700,
+    "selected_profile_seconds": 15,
+    "consecutive_rejections": 5,
+    "prior_receipts": [
+      {
+        "path": "/workspace/HAIC-Money/.haic-artifacts/apex-cloud-development/r1-safety.json",
+        "sha256": "aa7f2819e34e16d0a348b660f9f01ee37cfc799e1ae67f4cba23500484baf9b9"
+      },
+      {
+        "path": "/workspace/HAIC-Money/.haic-artifacts/apex-cloud-development/r2-pace.json",
+        "sha256": "5ed26c239dd251c4135494c667765b4bd2e5ea2641e50157cd4c2c5ddd05c46d"
+      },
+      {
+        "path": "/workspace/HAIC-Money/.haic-artifacts/apex-cloud-development/r3-recovery.json",
+        "sha256": "0c1bda4e0af986f68edfc283f336bc658cb0de827d5683b7486f15e3451ff031"
+      },
+      {
+        "path": "/workspace/HAIC-Money/.haic-artifacts/apex-cloud-development/r4-preview.json",
+        "sha256": "ba9645355dc10e040e7012a078247919f21d5f922315c59a651821a455360206"
+      },
+      {
+        "path": "/workspace/HAIC-Money/.haic-artifacts/apex-cloud-development/r5-envelope.json",
+        "sha256": "8b55367593a23a58a5fe9c3a46fa3ed6d76e2e50016cec533b033e21eda3d3c9"
+      }
+    ],
+    "runtime_versions": {
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "torch": "2.1.0",
+      "opencv-python": "4.8.1.78",
+      "box2d-py": "2.3.5"
+    },
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]"
+  },
+  "rows": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 19980,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 250,
+      "initialization_ms": 2.9408940026769415,
+      "reset_ms": 0.06815799861215055,
+      "action_latency_max_ms": 84.53395399919827,
+      "peak_worker_rss_mib": 92.546875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "ee5c3125aec2157079d75930fd0cd39b5c32a764950d0f871998b31005f857cf",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lap_time_ms": 24780,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 310,
+      "initialization_ms": 3.0247409995354246,
+      "reset_ms": 0.06825699892942794,
+      "action_latency_max_ms": 99.31194899763796,
+      "peak_worker_rss_mib": 95.41796875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 4,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "3f8bd6c6807407c9a1394c353bd14ba783ad94b95823c725d08eb076d45a2ad7",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lap_time_ms": 22680,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 284,
+      "initialization_ms": 3.0902030011930037,
+      "reset_ms": 0.06709499939461239,
+      "action_latency_max_ms": 102.90926200104877,
+      "peak_worker_rss_mib": 95.21484375,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "8b3073899db57a49d4ca83781e7dbd355effa64eb8a9c64d3357248a785b3a07",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 21760,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 273,
+      "initialization_ms": 2.9568019999715034,
+      "reset_ms": 0.09244300235877745,
+      "action_latency_max_ms": 83.76138599851402,
+      "peak_worker_rss_mib": 92.84375,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "b7a9c2f5970fd83601374cfe4427d8aa68e90854626af936a7a3bf1162b11bb0",
+      "error": null
+    },
+    {
+      "track_id": 1,
+      "seed": 2867319041,
+      "finished": true,
+      "lap_time_ms": 20840,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 261,
+      "initialization_ms": 3.0653569992864504,
+      "reset_ms": 0.06375900193233974,
+      "action_latency_max_ms": 83.15763399878051,
+      "peak_worker_rss_mib": 94.875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 7,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "0a9c4a79fde4a8699b49d7155815f7c62de297a427beb64dfaee2cc502d3bf05",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 2867319041,
+      "finished": true,
+      "lap_time_ms": 20740,
+      "progress": 1.0,
+      "collision_count": 2,
+      "damage": 0.4,
+      "retire_reason": null,
+      "steps": 260,
+      "initialization_ms": 3.006887000083225,
+      "reset_ms": 0.06578299871762283,
+      "action_latency_max_ms": 97.31499500048812,
+      "peak_worker_rss_mib": 95.53515625,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "cc3f69b38e6f16abcd6a4dd80acf1838a59d65f8d1a78cfa9c7e051b9b08c5ca",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 2867319041,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.24398625429553264,
+      "collision_count": 2,
+      "damage": 0.4,
+      "retire_reason": "off_track",
+      "steps": 153,
+      "initialization_ms": 2.9957359984109644,
+      "reset_ms": 0.06532200131914578,
+      "action_latency_max_ms": 91.42561399858096,
+      "peak_worker_rss_mib": 95.234375,
+      "offtrack_samples": 102,
+      "partial_offtrack_samples": 103,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "cb06e20786b3f7442fd8c481315968f387fdb5e968d0107f202cb14915a0dfec",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 2867319041,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.9450171821305842,
+      "collision_count": 5,
+      "damage": 1.0,
+      "retire_reason": "crash",
+      "steps": 237,
+      "initialization_ms": 3.026283000508556,
+      "reset_ms": 0.060935002693440765,
+      "action_latency_max_ms": 82.43302700066124,
+      "peak_worker_rss_mib": 95.55078125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "487138fbee4567c1a1fba1c75ca3ff14fe24a7d3f2c471573cafe0b7a18c4b96",
+      "error": null
+    },
+    {
+      "track_id": 1,
+      "seed": 359018627,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.5749128919860628,
+      "collision_count": 3,
+      "damage": 0.6000000000000001,
+      "retire_reason": "off_track",
+      "steps": 263,
+      "initialization_ms": 3.0798440020589624,
+      "reset_ms": 0.07168399679358117,
+      "action_latency_max_ms": 82.23982499839622,
+      "peak_worker_rss_mib": 95.5078125,
+      "offtrack_samples": 7,
+      "partial_offtrack_samples": 21,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "10e7ff6b4e0be3346b6518fdf204a6fa1bc76b64affb373bdf8dbae572c60528",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 359018627,
+      "finished": true,
+      "lap_time_ms": 20780,
+      "progress": 0.9965156794425087,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 260,
+      "initialization_ms": 2.9491479981516022,
+      "reset_ms": 0.06314900019788183,
+      "action_latency_max_ms": 106.72918500131345,
+      "peak_worker_rss_mib": 95.59765625,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 4,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "14b4b18dbe8679b289712bf79463816fa4c4af1e6afbfc1377844606df7a57e9",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 359018627,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.20905923344947736,
+      "collision_count": 2,
+      "damage": 0.4,
+      "retire_reason": "off_track",
+      "steps": 186,
+      "initialization_ms": 3.144525999232428,
+      "reset_ms": 0.061907001509098336,
+      "action_latency_max_ms": 81.63775600041845,
+      "peak_worker_rss_mib": 95.61328125,
+      "offtrack_samples": 18,
+      "partial_offtrack_samples": 33,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "be39969f1912c9db300b31970757264009ea4f95b125e55625012f34fd0a3df8",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 359018627,
+      "finished": true,
+      "lap_time_ms": 21640,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 271,
+      "initialization_ms": 2.9339699976844713,
+      "reset_ms": 0.0654620016575791,
+      "action_latency_max_ms": 84.02693499738234,
+      "peak_worker_rss_mib": 95.484375,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 6,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "bd582f75ad3696b54abd95ff34d9970d7276ee4d53231919f230a1a67d321811",
+      "error": null
+    },
+    {
+      "track_id": 1,
+      "seed": 1764402399,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.33916083916083917,
+      "collision_count": 1,
+      "damage": 0.2,
+      "retire_reason": "off_track",
+      "steps": 194,
+      "initialization_ms": 2.9709490008826833,
+      "reset_ms": 0.05730799966841005,
+      "action_latency_max_ms": 83.71738500136416,
+      "peak_worker_rss_mib": 92.28515625,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "0fc201ab20cae4ab11e7f8f32be47280ea2c0a47c04af9f8973fa0f7dee918dc",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 1764402399,
+      "finished": true,
+      "lap_time_ms": 22440,
+      "progress": 1.0,
+      "collision_count": 1,
+      "damage": 0.2,
+      "retire_reason": null,
+      "steps": 281,
+      "initialization_ms": 3.0191499972715974,
+      "reset_ms": 0.0659140023344662,
+      "action_latency_max_ms": 124.05544699868187,
+      "peak_worker_rss_mib": 95.4453125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 4,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "2556c6593858fa83864e10ef2a120b9a396e953ec11ba2fe2d6b06a33d8a147c",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 1764402399,
+      "finished": true,
+      "lap_time_ms": 21700,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 272,
+      "initialization_ms": 3.279938999185106,
+      "reset_ms": 0.0621170001977589,
+      "action_latency_max_ms": 102.75840599933872,
+      "peak_worker_rss_mib": 95.78125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "ab07d7a816878ac66908896043814f0b7f5e9920948dc63f42e5df0bc0af7185",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 1764402399,
+      "finished": true,
+      "lap_time_ms": 22240,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 278,
+      "initialization_ms": 3.1451870017917827,
+      "reset_ms": 0.06982100239838473,
+      "action_latency_max_ms": 99.53899299944169,
+      "peak_worker_rss_mib": 95.46484375,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "e2dfb14ad8bda356099269c31c92115b22ea1897ac4af35d7c589ba8dfeb5206",
+      "error": null
+    },
+    {
+      "track_id": 1,
+      "seed": 4029571806,
+      "finished": true,
+      "lap_time_ms": 19220,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 241,
+      "initialization_ms": 3.1325019990617875,
+      "reset_ms": 0.09776299702934921,
+      "action_latency_max_ms": 82.36237799792434,
+      "peak_worker_rss_mib": 95.71875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "22ff23c839aa36cbd8b5873441846b899a10c8ca2cf88744e101a8256eaf8702",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 4029571806,
+      "finished": true,
+      "lap_time_ms": 21100,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 264,
+      "initialization_ms": 2.9700679988309275,
+      "reset_ms": 0.06342899723676965,
+      "action_latency_max_ms": 83.48079500137828,
+      "peak_worker_rss_mib": 95.2109375,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 7,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "5fabd51ab379d3c1e9aae0703c2cfd02594f1989cf6250b747d873b6c32ed8fc",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 4029571806,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.3874538745387454,
+      "collision_count": 1,
+      "damage": 0.2,
+      "retire_reason": "off_track",
+      "steps": 195,
+      "initialization_ms": 3.2922719983616844,
+      "reset_ms": 0.06559300163644366,
+      "action_latency_max_ms": 83.57551999870338,
+      "peak_worker_rss_mib": 92.3671875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "7f6f38a3245a6db40d6c1785ac0763133f062ac147b22043b43e216076922c63",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 4029571806,
+      "finished": true,
+      "lap_time_ms": 20840,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 261,
+      "initialization_ms": 2.9603900002257433,
+      "reset_ms": 0.0704929989296943,
+      "action_latency_max_ms": 114.42947899922729,
+      "peak_worker_rss_mib": 94.61328125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "43e163dfb4de301c85403d43bbaf7fa6a4de3267727badfb36273be5f1c2dd0e",
+      "parameters": {},
+      "action_trace_sha256": "d3f746ef9732b8f99416ffd8270ae4b8340c2526a3ee63800e0f6bfa3d0a4616",
+      "error": null
+    }
+  ],
+  "verdict": {
+    "passed": false,
+    "original_target_met": false,
+    "pace_limit_seconds": 15,
+    "mandatory_finishes": 4,
+    "mandatory_cells": 4,
+    "extra_finishes": 10,
+    "extra_cells": 16,
+    "extra_fast_fraction": 0.0,
+    "per_track": {
+      "1": {
+        "finishes": 2,
+        "cells": 4,
+        "fast_fraction": 0.0
+      },
+      "2": {
+        "finishes": 4,
+        "cells": 4,
+        "fast_fraction": 0.0
+      },
+      "3": {
+        "finishes": 1,
+        "cells": 4,
+        "fast_fraction": 0.0
+      },
+      "4": {
+        "finishes": 3,
+        "cells": 4,
+        "fast_fraction": 0.0
+      }
+    }
+  }
+}

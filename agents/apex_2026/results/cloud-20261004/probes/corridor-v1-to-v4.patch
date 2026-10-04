@@ -1,0 +1,257 @@
+--- a/agents/apex_2026/corridor_agent.py
++++ b/agents/apex_2026/corridor_agent.py
+@@ -291,6 +291,11 @@
+     ROAD_LOW = 0.24
+     ROAD_HIGH = 0.52
+     OBSTACLE_LOW = 0.54
++    # Official RGB(255,165,0) maps to gray171/255 after camera resizing.
++    # Keep antialias pixels in the component, but require an orange-like
++    # peak rather than accepting compact pieces of a white/red curb.
++    OBSTACLE_CORE_LOW = 0.655
++    OBSTACLE_CORE_HIGH = 0.705
+     MAX_STEER = 0.48
+     STRAIGHT_MAX_STEER = 0.16
+     STRAIGHT_CENTER_DEADBAND = 1.25
+@@ -403,8 +408,10 @@
+                 min_x = max_x = start_x
+                 min_y = max_y = start_y
+                 sum_x = sum_y = area = 0
++                peak = 0.0
+                 while stack:
+                     x, y = stack.pop()
++                    peak = max(peak, float(frame[y, x]))
+                     area += 1
+                     sum_x += x
+                     sum_y += y
+@@ -424,6 +431,7 @@
+                 box_height = max_y - min_y + 1
+                 if not (
+                     4 <= area <= 80
++                    and self.OBSTACLE_CORE_LOW <= peak <= self.OBSTACLE_CORE_HIGH
+                     and 2 <= box_width <= 9
+                     and 2 <= box_height <= 10
+                     # World-scaled compactness rejects horizontal and vertical
+@@ -1813,6 +1821,8 @@
+         bbox = min(xs), min(ys), max(xs), max(ys)
+         if (
+             not 4 <= len(pixels) <= 80
++            or not cls.OBSTACLE_CORE_LOW <= max(float(frame[py, px])
++                                               for px, py in pixels) <= cls.OBSTACLE_CORE_HIGH
+             or not 2 <= bbox[2] - bbox[0] + 1 <= 9
+             or not 2 <= bbox[3] - bbox[1] + 1 <= 10
+             or abs(float(np.mean(xs)) - x) > 1.5
+@@ -1822,71 +1832,59 @@
+         return bbox
+ 
+     @classmethod
+-    def _visible_edges(
+-        cls,
+-        frame: np.ndarray,
+-        centers: dict[int, float],
+-        bbox: tuple[int, int, int, int],
+-    ) -> dict[int, tuple[float, float]]:
++    def _visible_edges(cls, frame: np.ndarray, centers: dict[int, float],
++                       bbox: tuple[int, int, int, int]) -> dict[int, tuple[float, float]]:
++        """Measure a contiguous visible-asphalt envelope over the full row.
++
++        A run touching x0/x83 supplies a conservative visibility bound there,
++        not an estimate of the true offscreen edge. Every accepted path stays
++        inside this observed envelope. Separate road branches and unrelated
++        pixel gaps are never joined or filled from neighboring image rows.
++        """
+         asphalt = (frame >= cls.ROAD_LOW) & (frame <= cls.ROAD_HIGH)
+-        edges = {}
+-        obscured = {}
++        # Only measured circle pixels can join asphalt runs. Resizing adds
++        # a .52..54 fringe one pixel beyond the .54 bright-core footprint.
++        # Accept that pixel only when it is adjacent to the measured core;
++        # never fill an arbitrary bbox padding or an unrelated grass gap.
++        occlusion = np.zeros_like(asphalt)
++        left, top, right, bottom = bbox
++        patch = frame[top:bottom + 1, left:right + 1]
++        if patch.size and cls.OBSTACLE_CORE_LOW <= float(patch.max()) <= cls.OBSTACLE_CORE_HIGH:
++            core = np.zeros_like(asphalt)
++            core[top:bottom + 1, left:right + 1] = patch >= cls.OBSTACLE_LOW
++            occlusion[:] = core
++            for py in range(max(22, top - 1), min(59, bottom + 2)):
++                for px in range(max(0, left - 1), min(84, right + 2)):
++                    if (cls.ROAD_HIGH < frame[py, px] < cls.OBSTACLE_LOW
++                            and core[max(0, py - 1):min(84, py + 2),
++                                     max(0, px - 1):min(84, px + 2)].any()):
++                        occlusion[py, px] = True
++        spans = {}
+         for row in range(22, 59):
+-            center = cls._center_at(float(row), centers)
+-            lo = max(0, int(np.floor(center - 18.0)))
+-            hi = min(83, int(np.ceil(center + 18.0)))
+-            xs = np.flatnonzero(asphalt[row, lo : hi + 1]) + lo
+-            if len(xs) < 6 or xs[0] <= lo or xs[-1] >= hi:
++            points = np.flatnonzero(asphalt[row])
++            if points.size < 6:
+                 continue
+-            gaps = np.flatnonzero(np.diff(xs) > 1)
+-            if any(
+-                not (bbox[1] <= row <= bbox[3]
+-                     and xs[index] < bbox[0] <= bbox[2] < xs[index + 1])
+-                for index in gaps
+-            ):
++            cuts = np.flatnonzero(np.diff(points) > 1) + 1
++            runs = []
++            for component in np.split(points, cuts):
++                left, right = int(component[0]), int(component[-1])
++                count = len(component)
++                if (runs and occlusion[row, runs[-1][1] + 1:left].all()):
++                    old_left, _old_right, old_count = runs[-1]
++                    runs[-1] = (old_left, right, old_count + count)
++                else:
++                    runs.append((left, right, count))
++            runs = [run for run in runs if run[2] >= 6]
++            if not runs:
+                 continue
+-            span = float(xs[0]), float(xs[-1])
+-            if bbox[1] <= row <= bbox[3]:
+-                obscured[row] = span
+-            else:
+-                edges[row] = span
+-        clean_edges = dict(edges)
+-        for row, visible in obscured.items():
+-            below = max((known for known in clean_edges if known < row), default=None)
+-            above = min((known for known in clean_edges if known > row), default=None)
+-            if below is not None and above is not None and above - below <= 12:
+-                weight = (row - below) / (above - below)
+-                interpolated = tuple(
+-                    (1.0 - weight) * clean_edges[below][side]
+-                    + weight * clean_edges[above][side]
+-                    for side in (0, 1)
+-                )
+-                edges[row] = (
+-                    max(visible[0], interpolated[0]),
+-                    min(visible[1], interpolated[1]),
+-                )
+-            else:
+-                neighbor = below if below is not None else above
+-                if neighbor is not None and abs(neighbor - row) <= 4:
+-                    edges[row] = (
+-                        max(visible[0], clean_edges[neighbor][0]),
+-                        min(visible[1], clean_edges[neighbor][1]),
+-                    )
+-        # A compact obstacle can hide a complete row. Interpolate only when
+-        # both nearby rows independently reveal both outer asphalt edges.
+-        for row in range(22, 59):
+-            if row in edges:
+-                continue
+-            below = max((known for known in edges if known < row), default=None)
+-            above = min((known for known in edges if known > row), default=None)
+-            if below is None or above is None or above - below > 8:
+-                continue
+-            weight = (row - below) / (above - below)
+-            edges[row] = tuple(
+-                (1.0 - weight) * edges[below][side] + weight * edges[above][side]
+-                for side in (0, 1)
+-            )
+-        return edges
++            predicted = cls._center_at(float(row), centers)
++            def distance(run):
++                left, right, _count = run
++                return (max(left - predicted, predicted - right, 0.),
++                        abs(.5 * (left + right) - predicted), -(right - left))
++            left, right, _count = min(runs, key=distance)
++            spans[row] = float(left), float(right)
++        return spans
+ 
+     def _nearest_obstacle(
+         self,
+@@ -1911,7 +1909,7 @@
+         return obstacle
+ 
+     def _corridor_curve_center(self, row: float) -> float | None:
+-        """Interpolate measured midpoints; extrapolate at most five near rows.
++        """Interpolate visible-envelope midpoints; extend at most five near rows.
+ 
+         The near extension anchors steering at ego row63. It supplies no road
+         edge or clearance evidence: every checked row still needs real edges.
+@@ -1968,9 +1966,9 @@
+                               far_y: int, bbox) -> float | None:
+         """Check the oriented hull against the obstacle and observed road.
+ 
+-        Body/obstacle separation is checked at every center row. The complete
+-        hull road footprint is additionally checked where all four corners
+-        lie within the finite measured horizon; no unknown edge is invented.
++        Body/obstacle separation and full-hull viewport bounds are checked at
++        every center row. The visible part of its road footprint is checked
++        within the finite measured horizon; no unknown edge is invented.
+         """
+         px_x, px_y = 1.3608, 1.701
+         x = self._corridor_path_x(row, target, near_y)
+@@ -1993,22 +1991,46 @@
+         if obstacle_margin < 0:
+             return None
+         margin = obstacle_margin * px_x
+-        if far_y + 5 <= row <= 53:
++        if far_y <= row <= 58:
+             edge_rows = list(range(far_y, 59))
+-            for longitudinal_corner in (-2.4, 2.6):
+-                for lateral_corner in (-1.2, 1.2):
+-                    corner_x = x + px_x * (longitudinal_corner * sine + lateral_corner * cosine)
+-                    corner_row = row - px_y * (longitudinal_corner * cosine - lateral_corner * sine)
+-                    if not far_y <= corner_row <= 58:
+-                        return None
+-                    left = float(np.interp(corner_row, edge_rows,
+-                                           [self._corridor_edges[y][0] for y in edge_rows]))
+-                    right = float(np.interp(corner_row, edge_rows,
+-                                            [self._corridor_edges[y][1] for y in edge_rows]))
+-                    corner_margin = min(corner_x - left - .25, right - corner_x - .25)
+-                    if corner_margin < 0:
+-                        return None
+-                    margin = min(margin, corner_margin)
++            vertices = [
++                (x + px_x * (longitudinal_corner * sine + lateral_corner * cosine),
++                 row - px_y * (longitudinal_corner * cosine - lateral_corner * sine))
++                for longitudinal_corner, lateral_corner in
++                ((-2.4, -1.2), (-2.4, 1.2), (2.6, 1.2), (2.6, -1.2))
++            ]
++            # A clipped asphalt span certifies its visible interior, never
++            # space beyond the image. This bound applies to the whole hull,
++            # including poses at the finite longitudinal horizon endpoints.
++            if any(vertex[0] < .25 or vertex[0] > 82.75 for vertex in vertices):
++                return None
++            lowest = max(far_y, min(vertex[1] for vertex in vertices))
++            highest = min(58., max(vertex[1] for vertex in vertices))
++            # Both the polygon and observed road edges are piecewise linear.
++            # Their extrema occur at hull vertices or integer road rows;
++            # checking these breakpoints also catches intrusion between corners.
++            check_rows = sorted(set([lowest, highest] +
++                                    [vertex[1] for vertex in vertices
++                                     if lowest <= vertex[1] <= highest] +
++                                    list(range(math.ceil(lowest), math.floor(highest) + 1))))
++            for check_row in check_rows:
++                intersections = []
++                for first, second in zip(vertices, vertices[1:] + vertices[:1]):
++                    if min(first[1], second[1]) - 1e-9 <= check_row <= max(first[1], second[1]) + 1e-9:
++                        if abs(second[1] - first[1]) < 1e-9:
++                            intersections.extend((first[0], second[0]))
++                        else:
++                            fraction = (check_row - first[1]) / (second[1] - first[1])
++                            intersections.append(first[0] + fraction * (second[0] - first[0]))
++                left = float(np.interp(check_row, edge_rows,
++                                       [self._corridor_edges[y][0] for y in edge_rows]))
++                right = float(np.interp(check_row, edge_rows,
++                                        [self._corridor_edges[y][1] for y in edge_rows]))
++                footprint_margin = min(min(intersections) - left - .25,
++                                       right - max(intersections) - .25)
++                if footprint_margin < 0:
++                    return None
++                margin = min(margin, footprint_margin)
+         return margin
+ 
+     def _corridor_candidate(self, side: float):
+@@ -2593,7 +2615,8 @@
+             x = self._corridor_approach_x(row, target, near_y)
+             left, right = self._corridor_edges[row]
+             if (
+-                x < left + self.ROAD_EDGE_MARGIN
++                x is None
++                or x < left + self.ROAD_EDGE_MARGIN
+                 or x > right - self.ROAD_EDGE_MARGIN
+             ):
+                 return None

@@ -45,19 +45,19 @@
 
 **Interface:** each standalone file exposes `Agent(**parameters)`, `reset(observation=None)`, and `act(observation) -> float32[3]`.
 
-- [ ] Write and run a failing low-speed turn/near-slip test before replacing the blanket throttle cap with a lateral-demand gate in `pace_agent.py`.
-- [ ] Write and run a failing hazard braking/target test before protecting guided pedals in `safety_agent.py`.
-- [ ] Investigate camera speed calibration and steering/physics independently; implement a correction only when measurements justify it.
-- [ ] Run at most three parameter benchmark screens per lane; freeze each tested source and parameters while its simulation runs.
-- [ ] Test and independently review each source change, then commit and push it with honest measured results.
+- [x] Write and run a failing low-speed turn/near-slip test before replacing the blanket throttle cap with a lateral-demand gate in `pace_agent.py`.
+- [x] Write and run a failing hazard braking/target test before protecting guided pedals in `safety_agent.py`.
+- [x] Investigate camera speed calibration and steering/physics independently; implement a correction only when measurements justify it.
+- [x] Run bounded benchmark screens; freeze each tested source and parameters while its simulation runs. Corridor V1's operational error is preserved separately from its three valid screens.
+- [x] Test and independently review completed source changes, then commit and push them with honest measured results. The final guarded integration remains in progress.
 
 ### 3. Development selection and protocol
 
 **Files:** selected new standalone candidate, focused tests, `evaluate.py` and its tests only if an identified protocol defect needs correction; `results/cloud-20261004/` for compact receipts.
 
-- [ ] Test that a mandatory-only screen cannot count as a completed development rejection; correct the identified evaluator mismatch after current runs finish.
-- [ ] Combine only supported improvements and evaluate distinct prospective candidates on all 20 development cells. Maintain the ordered receipt chain and stop unsuccessful parameter directions after repeated clear regressions.
-- [ ] Apply 15/18 second profiles only after the required newly completed rejections; report the 13 second verdict separately.
+- [x] Test that a mandatory-only screen cannot count as a completed development rejection; correct the identified evaluator mismatch after current runs finish.
+- [x] Evaluate six distinct prospective candidates on all 20 development cells. Maintain the ordered receipt chain and stop unsuccessful parameter directions after repeated clear regressions. A guarded integration is next.
+- [x] Apply 15/18 second profiles only after the required newly completed rejections; report the 13 second verdict separately. R1–R3 used 13, R4–R6 used 15; the next candidate uses 18.
 - [ ] Select by completion and pace over all cells, rather than the fastest required lap alone; commit and push the checkpoint.
 
 ### 4. Final freeze, verification, and report

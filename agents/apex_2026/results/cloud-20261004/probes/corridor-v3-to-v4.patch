@@ -1,0 +1,76 @@
+--- a/agents/apex_2026/corridor_agent.py
++++ b/agents/apex_2026/corridor_agent.py
+@@ -291,6 +291,11 @@
+     ROAD_LOW = 0.24
+     ROAD_HIGH = 0.52
+     OBSTACLE_LOW = 0.54
++    # Official RGB(255,165,0) maps to gray171/255 after camera resizing.
++    # Keep antialias pixels in the component, but require an orange-like
++    # peak rather than accepting compact pieces of a white/red curb.
++    OBSTACLE_CORE_LOW = 0.655
++    OBSTACLE_CORE_HIGH = 0.705
+     MAX_STEER = 0.48
+     STRAIGHT_MAX_STEER = 0.16
+     STRAIGHT_CENTER_DEADBAND = 1.25
+@@ -403,8 +408,10 @@
+                 min_x = max_x = start_x
+                 min_y = max_y = start_y
+                 sum_x = sum_y = area = 0
++                peak = 0.0
+                 while stack:
+                     x, y = stack.pop()
++                    peak = max(peak, float(frame[y, x]))
+                     area += 1
+                     sum_x += x
+                     sum_y += y
+@@ -424,6 +431,7 @@
+                 box_height = max_y - min_y + 1
+                 if not (
+                     4 <= area <= 80
++                    and self.OBSTACLE_CORE_LOW <= peak <= self.OBSTACLE_CORE_HIGH
+                     and 2 <= box_width <= 9
+                     and 2 <= box_height <= 10
+                     # World-scaled compactness rejects horizontal and vertical
+@@ -1813,6 +1821,8 @@
+         bbox = min(xs), min(ys), max(xs), max(ys)
+         if (
+             not 4 <= len(pixels) <= 80
++            or not cls.OBSTACLE_CORE_LOW <= max(float(frame[py, px])
++                                               for px, py in pixels) <= cls.OBSTACLE_CORE_HIGH
+             or not 2 <= bbox[2] - bbox[0] + 1 <= 9
+             or not 2 <= bbox[3] - bbox[1] + 1 <= 10
+             or abs(float(np.mean(xs)) - x) > 1.5
+@@ -1832,6 +1842,23 @@
+         pixel gaps are never joined or filled from neighboring image rows.
+         """
+         asphalt = (frame >= cls.ROAD_LOW) & (frame <= cls.ROAD_HIGH)
++        # Only measured circle pixels can join asphalt runs. Resizing adds
++        # a .52..54 fringe one pixel beyond the .54 bright-core footprint.
++        # Accept that pixel only when it is adjacent to the measured core;
++        # never fill an arbitrary bbox padding or an unrelated grass gap.
++        occlusion = np.zeros_like(asphalt)
++        left, top, right, bottom = bbox
++        patch = frame[top:bottom + 1, left:right + 1]
++        if patch.size and cls.OBSTACLE_CORE_LOW <= float(patch.max()) <= cls.OBSTACLE_CORE_HIGH:
++            core = np.zeros_like(asphalt)
++            core[top:bottom + 1, left:right + 1] = patch >= cls.OBSTACLE_LOW
++            occlusion[:] = core
++            for py in range(max(22, top - 1), min(59, bottom + 2)):
++                for px in range(max(0, left - 1), min(84, right + 2)):
++                    if (cls.ROAD_HIGH < frame[py, px] < cls.OBSTACLE_LOW
++                            and core[max(0, py - 1):min(84, py + 2),
++                                     max(0, px - 1):min(84, px + 2)].any()):
++                        occlusion[py, px] = True
+         spans = {}
+         for row in range(22, 59):
+             points = np.flatnonzero(asphalt[row])
+@@ -1842,8 +1869,7 @@
+             for component in np.split(points, cuts):
+                 left, right = int(component[0]), int(component[-1])
+                 count = len(component)
+-                if (runs and bbox[1] <= row <= bbox[3]
+-                        and runs[-1][1] + 1 >= bbox[0] and left - 1 <= bbox[2]):
++                if (runs and occlusion[row, runs[-1][1] + 1:left].all()):
+                     old_left, _old_right, old_count = runs[-1]
+                     runs[-1] = (old_left, right, old_count + count)
+                 else:

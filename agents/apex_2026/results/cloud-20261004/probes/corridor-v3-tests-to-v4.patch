@@ -1,0 +1,60 @@
+--- a/agents/apex_2026/tests/test_corridor_agent.py
++++ b/agents/apex_2026/tests/test_corridor_agent.py
+@@ -204,3 +204,57 @@
+     centers = {row: 41.5 for row in (54, 50, 46, 42, 38, 34, 30)}
+     spans = controller._visible_edges(frame, centers, (40, 40, 42, 43))
+     assert spans[42] == (37., 51.)
++
++
++def test_compact_white_curb_does_not_replace_the_orange_circle():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[:74, 32:53] = .4
++    frame[43:47, 39:42] = 171 / 255
++    # Saved target frame 81 had a compact curb fragment, not an elongated
++    # component: its .855 peak distinguishes it from the orange circle.
++    frame[60:62, 44:46] = 218 / 255
++    obstacle = controller._nearest_obstacle(frame, controller._road_centers(frame))
++    assert obstacle is not None
++    assert obstacle[0] < 50
++
++
++def test_a_compact_non_orange_component_is_not_an_obstacle():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[:74, 32:53] = .4
++    frame[43:47, 39:42] = .60
++    assert controller._nearest_obstacle(frame, controller._road_centers(frame)) is None
++
++
++def fringe_fixture():
++    controller = module().Agent()._robust
++    frame = np.full((84, 84), .63, np.float32)
++    frame[22:59, :42] = .4
++    # Actual obstacle patch from target frame 80, x11..14/y43..46.
++    # Pixel x11/y44 is a measured .537 halo outside the bright core bbox.
++    frame[43:47, 11:15] = np.asarray([
++        [117, 158, 167, 127],
++        [137, 168, 171, 157],
++        [132, 167, 171, 151],
++        [112, 144, 151, 117],
++    ], np.float32) / 255
++    centers = {row: 32. for row in (54, 50, 46, 42, 38, 34, 30)}
++    return controller, frame, centers, (12, 43, 14, 46)
++
++
++def test_actual_one_pixel_orange_fringe_preserves_the_asphalt_topology():
++    controller, frame, centers, bbox = fringe_fixture()
++    assert controller._visible_edges(frame, centers, bbox)[44] == (0., 41.)
++
++
++def test_a_second_fringe_pixel_does_not_bridge_an_unmeasured_gap():
++    controller, frame, centers, bbox = fringe_fixture()
++    frame[44, 10] = 137 / 255
++    assert controller._visible_edges(frame, centers, bbox)[44] == (15., 41.)
++
++
++def test_grass_adjacent_to_the_circle_does_not_count_as_occlusion():
++    controller, frame, centers, bbox = fringe_fixture()
++    frame[44, 11] = .63
++    assert controller._visible_edges(frame, centers, bbox)[44] == (15., 41.)
