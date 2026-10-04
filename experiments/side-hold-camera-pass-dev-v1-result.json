@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "name": "side-hold-camera-pass-dev-v1",
+  "status": "DEVELOPMENT_ONLY",
+  "source_protocol": "camera-policy-generalization-v1",
+  "source_protocol_sha256": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+  "frozen_screen_decision": "REJECT",
+  "source_sha256": {
+    "control_agent": "36c8d6d8f5c0bc8bb76568a8f67de2524b3a7720524aff990ef0744a1334ea75",
+    "candidate_agent": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+    "screen_freeze": "ca9e5f3a08af9b6f280a2ff3185a5c9af46b1c6367d3483cb6660894c7840757",
+    "screen_summary": "9abbe4dac6bfc25fcce112fd4acbeeb9e868dbc1f2bb45f2097082ade0072048",
+    "early_floor_probe": "1311d59b6da1f8ebecdacd7ecd2e92531e3c8583421326f539214366b8088632",
+    "side_hold_probe": "35b54c89ba7b7b6e54a27d10fd944945992a0106a646f5e93e28e38f4c6271d5"
+  },
+  "ignored_artifact_roots": {
+    "early_floor": ".haic-artifacts/uncertified-pass-fallback/early-pass-probe-v1/floor07",
+    "side_hold": ".haic-artifacts/uncertified-pass-fallback/side-hold-probe-v1/hold07"
+  },
+  "metric_order": [
+    "finished",
+    "progress",
+    "contacts",
+    "damage",
+    "lap_time_ms"
+  ],
+  "cells": [
+    {
+      "track_id": 1,
+      "geometry_seed": 1402259577,
+      "control": [
+        true,
+        1.0,
+        0,
+        0.0,
+        25840
+      ],
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        28860
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        0,
+        0.0,
+        29300
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        0,
+        0.0,
+        28860
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "9c300fd80cf9596e32632c8b070dc7061fd0425057053c9e68076270d25c3f60",
+        "candidate_receipt": "85df96215e4444e8b469ae0dd8b64a290adba233ce5828d82460a5a709b07162",
+        "early_floor_artifact": "be051c9c98aba8b28b393b5cc803125847f514c15d40bb635f2671b8fbd66bfc",
+        "side_hold_artifact": "7276e29c906d47c32e853de9d7ecaaab2f7003e3494b786c9f52f7558c7cee2f"
+      }
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1460583390,
+      "control": [
+        true,
+        0.9903225806451613,
+        0,
+        0.0,
+        25340
+      ],
+      "frozen_candidate": [
+        false,
+        0.6225806451612903,
+        3,
+        0.6000000000000001,
+        null
+      ],
+      "early_floor": [
+        false,
+        0.6193548387096774,
+        1,
+        0.2,
+        null
+      ],
+      "side_hold": [
+        false,
+        0.6225806451612903,
+        3,
+        0.6000000000000001,
+        null
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "cd4ad7df473330c10c5583b227bff10be3b0ab7c965f12b996631cc8942aa470",
+        "candidate_receipt": "0a92bb7770209a40901fbe54656ab9981335e44eccf5627ed3b291f588cd04ed",
+        "early_floor_artifact": "26875eb306682e6e77afe1547f94665c6b27d76f69b92979866ee41fa1290e98",
+        "side_hold_artifact": "c69e7415e41018e40cc327d45284746bb11dc7d3bf9ea2de08641d7f52d269a1"
+      }
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 2570310388,
+      "control": [
+        false,
+        0.46953405017921146,
+        1,
+        0.2,
+        null
+      ],
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24380
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24540
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24380
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "3cd11126da36cd381ee1e71840c9b554cce2f44c057c0c2e7eba53cdb850a319",
+        "candidate_receipt": "534f98a150c9315cbc51afefd4e8bc3c4af88c3a388b483e940ff46880ac2b9e",
+        "early_floor_artifact": "33a1487ef1f84fac9cfc4df43da88a3d14c2daf5a2b0dbae16aa741a0f664ee8",
+        "side_hold_artifact": "156a0471b4e6f74f24719842693543190029b0a29b373360963171d4dd2b6ba1"
+      }
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1262984018,
+      "control": [
+        true,
+        1.0,
+        0,
+        0.0,
+        25140
+      ],
+      "frozen_candidate": [
+        true,
+        1.0,
+        2,
+        0.4,
+        26980
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        1,
+        0.2,
+        26880
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        2,
+        0.4,
+        26980
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "d26dc2d236a85c772567b83fda225f77a0c1abf483153eb701b78052eb5dc4da",
+        "candidate_receipt": "5e33ab334ca907b6601f5034496ec665ba314bbc98d29c213995be2a814fc552",
+        "early_floor_artifact": "1e624c042685bad6b68b311b456a981488af3ffdb7e647ea9d49a0d19353c6a1",
+        "side_hold_artifact": "e17ad9b4f6ab316a58237fb0715288dcd14ffb5ce4465b0d4461e7bb23825ebe"
+      }
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1460583390,
+      "control": [
+        true,
+        1.0,
+        0,
+        0.0,
+        26040
+      ],
+      "frozen_candidate": [
+        false,
+        0.5096774193548387,
+        1,
+        0.2,
+        null
+      ],
+      "early_floor": [
+        false,
+        0.5096774193548387,
+        1,
+        0.2,
+        null
+      ],
+      "side_hold": [
+        false,
+        0.5096774193548387,
+        1,
+        0.2,
+        null
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "02d750d078394a6f98d4e738ec6d28a9ca0e8cbec7549cf4c8e05119b39c788e",
+        "candidate_receipt": "9156b84717ebb0b01fdadcfaf26eed902983db11a6665f91beac3ad3c79d3a14",
+        "early_floor_artifact": "60ec0078cb506fc192c0cbc945dc5cfbb84e453ea9994522b59bddbd89f13c4c",
+        "side_hold_artifact": "df6cef63bfb5b6918fe5938d519730abdfd8c13660e67b5de252de38693afc98"
+      }
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 2570310388,
+      "control": [
+        true,
+        1.0,
+        4,
+        0.8,
+        22840
+      ],
+      "frozen_candidate": [
+        false,
+        0.46236559139784944,
+        1,
+        0.2,
+        null
+      ],
+      "early_floor": [
+        false,
+        0.4659498207885305,
+        3,
+        0.6000000000000001,
+        null
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        3,
+        0.6000000000000001,
+        23760
+      ],
+      "side_hold_changed_steps": [
+        128,
+        129
+      ],
+      "side_hold_action_exact": false,
+      "sha256": {
+        "control_receipt": "33469242a5a6ee1d3c9cd7b1037d2391e54c75d0e7f31365a0a0be70efb384f9",
+        "candidate_receipt": "0aeac69ef43716b8f36628212bb1e605878dc9f9a1a73af6462b2de798f73e3f",
+        "early_floor_artifact": "03e419daf0380b6e76e340d9d2fdd89c0841661b672e4c56306e664ad15e6acb",
+        "side_hold_artifact": "7f5e020b1298619c7d7c3c699659353606738c5de219b2a478b3990596e1de95"
+      }
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 1814481715,
+      "control": [
+        false,
+        0.5170454545454546,
+        5,
+        1.0,
+        null
+      ],
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        30460
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        0,
+        0.0,
+        30620
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        0,
+        0.0,
+        30460
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "f8d8b8690b68794221767ecf55968db423c7f770b3dc9f67775aa31455a93577",
+        "candidate_receipt": "944b0f5c2596ea693423bbfd36c83b9d4857c70e42d05f9fd3e7ff3f52bce49e",
+        "early_floor_artifact": "d4380000bf6220e38aa73762680dfd76197a477da26f94603a71532c967fead5",
+        "side_hold_artifact": "b1c413343c6b8fe73ac72c984025dcd725ab5ca3e87841e35d417dc420e8bf98"
+      }
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 1402259577,
+      "control": [
+        true,
+        1.0,
+        3,
+        0.6000000000000001,
+        25020
+      ],
+      "frozen_candidate": [
+        false,
+        0.13636363636363635,
+        3,
+        0.6000000000000001,
+        null
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        4,
+        0.8,
+        27820
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        1,
+        0.2,
+        26900
+      ],
+      "side_hold_changed_steps": [
+        35,
+        36,
+        37
+      ],
+      "side_hold_action_exact": false,
+      "sha256": {
+        "control_receipt": "380eecd173dfe70f5a2e6601f23601b6eff2fdd8d4ad4d7f948b76569d4760b0",
+        "candidate_receipt": "f0f5652c9707598357800a0a5374ddc95c40603d3bb3f089f77958825e8b88b9",
+        "early_floor_artifact": "3d1b9abbdaf89b1d3c9c0f908778e2916151caab657ed2e8ebe22d3f1f5e41e9",
+        "side_hold_artifact": "cc6e41f4ad68d9e56b8a33eaf42ace0676912fb60d5b856cb96f96f19f668d7b"
+      }
+    },
+    {
+      "track_id": 4,
+      "geometry_seed": 2570310388,
+      "control": [
+        true,
+        1.0,
+        2,
+        0.4,
+        22620
+      ],
+      "frozen_candidate": [
+        true,
+        1.0,
+        0,
+        0.0,
+        23780
+      ],
+      "early_floor": [
+        true,
+        1.0,
+        0,
+        0.0,
+        24580
+      ],
+      "side_hold": [
+        true,
+        1.0,
+        0,
+        0.0,
+        23780
+      ],
+      "side_hold_changed_steps": [],
+      "side_hold_action_exact": true,
+      "sha256": {
+        "control_receipt": "7aa3207ec2ed9a87ffbd41fd73dca21d5d0a9d0db1b4422e2083534964dc4c63",
+        "candidate_receipt": "39e1604f6682a3aebc5a1feab337b2e894a521ec053805ac860be4aa15683651",
+        "early_floor_artifact": "400dbf3b2f8805645f8179bde2c6a5e69a151aae8239065d60a5aa5e0a339a5a",
+        "side_hold_artifact": "960e3abc4a1c82fe38e699cdeb32b48b76822043db1fa0a647dfa5d631d3c37f"
+      }
+    }
+  ],
+  "method": "Both probes replayed only nine consumed canonical screen geometries through the frozen candidate Agent source and official local generator, with a camera-only in-memory _adjust_obstacle_steering override on that single controller. Preflight checked protocol, committed control source, both snapshots, model, helpers, harness, environment, complete screen summary, and each candidate receipt before and after replay. No live selector, frozen source, confirmation, or blind partition changed.",
+  "early_floor": "Two-frame 0.07 absolute steering floor toward a spatial-plan side rescued track 4/1402259577 but left track 2/2570310388 unfinished with contacts increasing from one to three; rejected.",
+  "side_hold": "A same-controller latch remembers the first 1.0-1.6-pixel spatial pass side when its three road rows give at least 2.0-pixel width and a 0.8-pixel advantage. After that plan disappears, it keeps at least 0.07 steer toward the same obstacle side until bbox bottom exceeds row 52 while the width advantage persists. Track 2/2570310388 and track 4/1402259577 changed from DNF to finish; other seven tested cells kept exact frozen action hashes, including two candidate-only gains and three shared finishes. A no-op baseline replay exactly matched the candidate cold-worker action hash on track 2/2570310388.",
+  "decision": "PROMISING_DEVELOPMENT_ONLY",
+  "limits": "The side-hold arm band (bbox bottom 24-30, initial observation, 1.0-1.6-pixel margin) was selected after inspecting consumed screen failures and is not a generalization claim. Two of four contact losses remain unchanged, and the contact-free road-exit loss was not part of this nine-cell comparison. This probe cannot override the rejected v1 screen, unlock its sealed confirmation or blind cells, or justify activation. Test a coherent source on broader consumed geometries, then preregister independent fresh geometry and gates. Linux submission-container certification remains outstanding."
+}
