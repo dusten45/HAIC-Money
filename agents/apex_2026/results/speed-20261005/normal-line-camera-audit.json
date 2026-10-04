@@ -1,0 +1,126 @@
+{
+  "source_sha256": "0c937c6201c12df110bf43940c030b6adfae40c29274acfd6e285c3db08f7f4f",
+  "parent_sha256": "093aaa77a0123138e52f51f576d54e6ae95b36b38929056f8a6a6a22215740dc",
+  "helper_sha256": "f8b6401902465c93997e1b1ea3ba54b83f539dc689d2f95bcc34d116f0c6d40a",
+  "camera_frames": 235,
+  "base_ridge_frames": 176,
+  "eligible_full_body_frames": 13,
+  "rejected_exact_parent_frames": 163,
+  "body_half_width_m": 1.6,
+  "body_longitudinal_extent_m": [
+    -2.4,
+    2.6
+  ],
+  "minimum_body_camera_depth_m": 1.9,
+  "base_ridge_minimum_camera_depth_m": 5.8,
+  "normal_offset_bound_m": 3.0,
+  "path_node_spacing_m": 2.0,
+  "optimization_iterations": 800,
+  "rows": [
+    {
+      "step": 17,
+      "base_target": 72.91977654836928,
+      "new_geometric_target": 76.2331699742211,
+      "body_depth": 4.341177459474064,
+      "base_curvature": -0.011274374690360666,
+      "new_curvature": -0.008888410715558934
+    },
+    {
+      "step": 18,
+      "base_target": 47.939580643110766,
+      "new_geometric_target": 66.11048315044583,
+      "body_depth": 4.010463136718251,
+      "base_curvature": -0.028180404277375663,
+      "new_curvature": -0.02873473700729655
+    },
+    {
+      "step": 62,
+      "base_target": 75.2559174605032,
+      "new_geometric_target": 87.28785431286008,
+      "body_depth": 3.9874866021346924,
+      "base_curvature": -0.00901969323036723,
+      "new_curvature": -0.009806904904474785
+    },
+    {
+      "step": 94,
+      "base_target": 85.7734813740549,
+      "new_geometric_target": 90.7213018338355,
+      "body_depth": 4.120080903006956,
+      "base_curvature": 0.0016492735015113658,
+      "new_curvature": 0.000960938905700575
+    },
+    {
+      "step": 112,
+      "base_target": 52.9325440657501,
+      "new_geometric_target": 51.61693109340953,
+      "body_depth": 3.5957366105569424,
+      "base_curvature": -0.06781223611045108,
+      "new_curvature": -0.07131308777824423
+    },
+    {
+      "step": 149,
+      "base_target": 81.41418872172946,
+      "new_geometric_target": 83.47106444241227,
+      "body_depth": 4.271017028561403,
+      "base_curvature": -0.011278878258793564,
+      "new_curvature": -0.008958418759011525
+    },
+    {
+      "step": 150,
+      "base_target": 48.48715176183714,
+      "new_geometric_target": 68.57468859244439,
+      "body_depth": 4.128969751051763,
+      "base_curvature": -0.026390246225249925,
+      "new_curvature": -0.02586805454572853
+    },
+    {
+      "step": 155,
+      "base_target": 40.99156697315009,
+      "new_geometric_target": 41.33292733398069,
+      "body_depth": 2.341866160809814,
+      "base_curvature": -0.11307446988812148,
+      "new_curvature": -0.1112144636880337
+    },
+    {
+      "step": 156,
+      "base_target": 44.234557474490295,
+      "new_geometric_target": 42.195064312904194,
+      "body_depth": 3.79952381035219,
+      "base_curvature": -0.09710245879830731,
+      "new_curvature": -0.1067161858304381
+    },
+    {
+      "step": 157,
+      "base_target": 47.862888920585966,
+      "new_geometric_target": 44.685977849196284,
+      "body_depth": 4.43443645097928,
+      "base_curvature": -0.08293842508431008,
+      "new_curvature": -0.09515049876657372
+    },
+    {
+      "step": 165,
+      "base_target": 76.48998745854124,
+      "new_geometric_target": 96.06703914427692,
+      "body_depth": 1.9349996057904464,
+      "base_curvature": 0.013909324097922686,
+      "new_curvature": 0.01429109240921462
+    },
+    {
+      "step": 218,
+      "base_target": 49.779718180371184,
+      "new_geometric_target": 59.53420929965703,
+      "body_depth": 4.295794077487923,
+      "base_curvature": -0.03374410942039043,
+      "new_curvature": -0.030587039683010006
+    },
+    {
+      "step": 219,
+      "base_target": 39.95127868555917,
+      "new_geometric_target": 48.279872798381,
+      "body_depth": 3.4877403741339474,
+      "base_curvature": -0.053160601890266515,
+      "new_curvature": -0.051679550453695204
+    }
+  ],
+  "limitations": "Offline camera reuse only, not driving validation. Model corners use route tangent; actual steering slew, tire slip and tracking error remain unmodeled. Unknown image ends count as depth0 and reject."
+}
