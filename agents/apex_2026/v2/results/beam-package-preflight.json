@@ -1,0 +1,122 @@
+{
+  "scope": "Packagingpreflightonly; noselection,freeze,holdoutallocation orsimulatorreset.",
+  "environment_resets": 0,
+  "beam_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "package_manifest": {
+    "schema_version": 1,
+    "scope": "packaging_preflight_only_no_selection_or_freeze",
+    "beam_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+    "agent_sha256": "311ca7521444cb56378525f33c8d72870117eeac586a7e24a430b587d2a192f5",
+    "transformations": [
+      "shadow module _Road binding and sole ShadowCar.__init__ load renamed _ShadowRoad",
+      "beam exact project helper import removed; archived texts concatenated"
+    ],
+    "files": [
+      "agent.py",
+      "manifest.json"
+    ]
+  },
+  "package_path": "/tmp/apex-beam-standalone-preflight/agent.py",
+  "ast_equal_except_authorized_bindings": true,
+  "numeric_tokens_identical": true,
+  "mit_notice_preserved": true,
+  "rows": [
+    {
+      "sequence": "pure_straight_from_rest",
+      "index": 0,
+      "action_original": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "action_packaged": [
+        0.0,
+        0.699999988079071,
+        0.0
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 2.5689726089985925,
+      "package_wall_s": 2.547478880000199
+    },
+    {
+      "sequence": "saved_public_sequential_67_68",
+      "index": 0,
+      "action_original": [
+        -0.20671294629573822,
+        0.0,
+        0.0
+      ],
+      "action_packaged": [
+        -0.20671294629573822,
+        0.0,
+        0.0
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 2.5829606329989474,
+      "package_wall_s": 2.1543747520008765
+    },
+    {
+      "sequence": "saved_public_sequential_67_68",
+      "index": 1,
+      "action_original": [
+        -0.30822062492370605,
+        0.0,
+        0.6499999761581421
+      ],
+      "action_packaged": [
+        -0.30822062492370605,
+        0.0,
+        0.6499999761581421
+      ],
+      "action_bitwise": true,
+      "diagnostics_exact": true,
+      "state_exact": true,
+      "observation_unchanged": true,
+      "original_wall_s": 2.295095516001311,
+      "package_wall_s": 2.325337075999414
+    }
+  ],
+  "observation_hashes": {
+    "/tmp/apex-v2-obstacle-steering-audit/0067-observation.npy": "2756598bccf7104acd0c04c8cafe24956df3e2eae82c3a3d6a24068d33911571",
+    "/tmp/apex-v2-obstacle-steering-audit/0068-observation.npy": "dec6354ef0c1ff1a45bd41a6671294f7d789b6db58d658294d564f3bceba261d"
+  },
+  "nice": 19,
+  "openblas_threads": "1",
+  "opencv_threads": 1,
+  "limitations": [
+    "Threeobservations only; exactparityatthissubsetdoesnot replacefullcandidateevaluation.",
+    "Savedobservations are replayedsequentially fromfreshagent,not a newenvironmentepisode.",
+    "Walltimesarepreflightmeasurements,not a hardresourceeligibility guarantee."
+  ],
+  "builder_tests": {
+    "passed": 6,
+    "command": ".venv/bin/python -m unittest agents.apex_2026.v2.diagnostics.test_beam_package -v",
+    "log": "/tmp/apex-beam-standalone-preflight/builder-tests.log",
+    "log_sha256": "6497f8e916ba0f2f02dbd6c782f4cf051d4f1b3d230c37ada8f00827908bd840"
+  },
+  "isolated_import_check": {
+    "passed": true,
+    "command": "venvpython -I from/tmp: importstandalone Agent; construct; assert no agents.* modules loaded",
+    "shadow_tile_class": "_ShadowRoad",
+    "beam_road_class": "_Road"
+  },
+  "tooling_hashes": {
+    "agents/apex_2026/v2/diagnostics/build_beam_package.py": "8e82a0389addd31803476f69aa3839ce31579e877249057d620ab9c8c3ade514",
+    "agents/apex_2026/v2/diagnostics/check_beam_package.py": "b6bf1e60596b7eb77598b2168e6e4b71f6cfcc024723aeef749be2c9e815288b",
+    "agents/apex_2026/v2/diagnostics/test_beam_package.py": "eb0393c1a31783d85e1aac2c9c0d5bad4a7754ec436f4ee06f52daaafce774ca"
+  },
+  "commands": {
+    "build": ".venv/bin/python -m agents.apex_2026.v2.diagnostics.build_beam_package --output /tmp/apex-beam-standalone-preflight",
+    "parity": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 19 .venv/bin/python -m agents.apex_2026.v2.diagnostics.check_beam_package"
+  },
+  "manifest_sha256": "1f36ad7b462661217c7c3b832225d63eb3ba363f7d5b077bd70eab76b227b9c6",
+  "runtime_sources_unchanged": true
+}
