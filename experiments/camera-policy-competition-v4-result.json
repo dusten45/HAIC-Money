@@ -1,0 +1,893 @@
+{
+  "candidate_agent_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+  "control_agent_sha256": "291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61",
+  "decision": "PENDING",
+  "development_result": "experiments/camera-upgrade-development-20261004-result.json",
+  "independent_screen_audit": "PASS_68_RECEIPTS_32_PAIRS_2_EXACT_REPEATS",
+  "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+  "name": "camera-policy-competition-v4",
+  "protocol_sha256": "856bc121a2f9c95d0a95cd25653443000cebe615c1fcc7d5f47ebe7fbfc5e7cc",
+  "schema_version": 1,
+  "screen_summary": {
+    "both_dnf_progress_losses": 0,
+    "candidate_agent_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+    "candidate_contacts": 15,
+    "candidate_crashes": 0,
+    "candidate_damage": 3.0,
+    "candidate_finishes": 26,
+    "candidate_mean_progress": 0.9190749953399612,
+    "candidate_shared_completed_time_ms": 369600.0,
+    "canonical_cells": 32,
+    "control_agent_sha256": "291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61",
+    "control_contacts": 57,
+    "control_crashes": 7,
+    "control_damage": 11.400000000000002,
+    "control_finishes": 16,
+    "control_mean_progress": 0.743426063601538,
+    "control_shared_completed_time_ms": 350240.0,
+    "decision": "RETAIN",
+    "decision_engine_sha256": "7bd905e6e83d4035528c0cec375c964c0e094c1dfef3f63dd916c70320b607d5",
+    "environment_sha256": {
+      "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "local_simulator/__init__.py": "c9ec5ddb6782010f693bbd187e2f8dbd55f56331828f42ed3702cbf2c65402a6",
+      "local_simulator/api.py": "9884327fbefaae8ec2382a1c756ee8b4de2a15734ff427114813ffaa4151c775",
+      "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+      "local_simulator/diagnostic.py": "e85b54e6ad8cc1e2867b2f235e9f5e144de59af31563c0af0903e00bb269c95e",
+      "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+      "local_simulator/logging.py": "eac3284110851029e2d0639ffe791ee506c6fbe09a9cc5a0d190bea20966ee3b",
+      "local_simulator/map.py": "78ac958d2803f6ba198e6847cc230bdda8b97d5e4d9d46a226d0fa934de777bb",
+      "local_simulator/policies.py": "0bff5a3a2a4804d04073ca9b7851b8038c2d99fb7a358f772d402f73352fdc36",
+      "local_simulator/preview.py": "c66796b9e1b9ce45e506fd3541044784cc96f8b9da03ab39b656ab859af1be87",
+      "local_simulator/run.py": "293674c3b92c06acc0cf44932443b2410702dac575d2d7e754802175b2b98bbc",
+      "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+      "local_simulator/session.py": "cb63bc49992194817c6d0b55e1e15ed77756eb1343d46e075c3d924042319b61",
+      "local_simulator/simulation.py": "94b06531a3d4af0a4f96f7bb233db827f901f8dd3d8c8759eabe63d279bbf97a",
+      "local_simulator/simulation_types.py": "d96df1468d5b5e5946b11bf6c050f0310d87836ef598871547a076ed3bd94c75",
+      "local_simulator/track_generator.py": "5c36773853d421233eec7c7a094fafe7b161d2d8be68aa1f82427dd4e5e9329b",
+      "local_simulator/track_model.py": "fe5c9a20bd0240a8e3c7c7a6c6c622fae10ba2ee62bb5be82f9c6d6a93d8c45c",
+      "local_simulator/web.py": "e94dc4441e74e353999171f59305862069faaa2c32b207783cfa2a13f1ddb7ca"
+    },
+    "harness_sha256": "3c44b5be578f659dc2d48930f58af70d65013ffa3fc45f4905b9319cfbb95273",
+    "helper_sha256": {
+      "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+      "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb"
+    },
+    "lost_control_finishes": 1,
+    "missing_cells": [],
+    "model_sha256": "c101c6964a915ee6e5be93f90dae2b5a4b798021c9aea120bc14e89992647f12",
+    "net_finish_gain": 10,
+    "new_candidate_crashes": 0,
+    "paired_cells": [
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 24860,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25040,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 1274277667,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 26500,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3146853146853147,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 337571917,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 26080,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 4,
+          "damage": 0.8,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7243816254416962,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 2366896665,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 27120,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": true,
+          "lap_time_ms": 24940,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 647410651,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 22640,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": true,
+          "lap_time_ms": 22140,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 4235093740,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 20920,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 20380,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 727444949,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.6745762711864407,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": true,
+          "lap_time_ms": 24640,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [
+          "control finish lost"
+        ],
+        "seed": 1493128875,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23340,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": true,
+          "lap_time_ms": 22980,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 2108416565,
+        "status": "COMPLETE",
+        "track_id": 1
+      },
+      {
+        "candidate": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.4808362369337979,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.4808362369337979,
+          "retire_reason": "off_track"
+        },
+        "flags": [
+          "contact increase",
+          "damage increase"
+        ],
+        "seed": 1274277667,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25560,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7622377622377622,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 337571917,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 27360,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 24160,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [
+          "shared-finish slowdown"
+        ],
+        "seed": 2366896665,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 3,
+          "damage": 0.6000000000000001,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5190311418685121,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.18685121107266436,
+          "retire_reason": "off_track"
+        },
+        "flags": [
+          "contact increase",
+          "damage increase"
+        ],
+        "seed": 647410651,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5283018867924528,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5132075471698113,
+          "retire_reason": "off_track"
+        },
+        "flags": [
+          "contact increase",
+          "damage increase"
+        ],
+        "seed": 4235093740,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 22920,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7903225806451613,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 727444949,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 26940,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 1,
+          "damage": 0.2,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.43050847457627117,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 1493128875,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 3,
+          "damage": 0.6000000000000001,
+          "finished": true,
+          "lap_time_ms": 25200,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.22661870503597123,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 2108416565,
+        "status": "COMPLETE",
+        "track_id": 2
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25580,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 24420,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 1274277667,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 24760,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 24200,
+          "progress": 0.9965034965034965,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 337571917,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25100,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23760,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 2366896665,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": true,
+          "lap_time_ms": 26860,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23760,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [
+          "contact increase",
+          "damage increase",
+          "shared-finish slowdown"
+        ],
+        "seed": 647410651,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 22780,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 22320,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 4235093740,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.4637096774193548,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.22580645161290322,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 727444949,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25560,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3423728813559322,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 1493128875,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23980,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 2,
+          "damage": 0.4,
+          "finished": true,
+          "lap_time_ms": 23600,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 2108416565,
+        "status": "COMPLETE",
+        "track_id": 3
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25300,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 4,
+          "damage": 0.8,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.5087108013937283,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 1274277667,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25600,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23240,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [
+          "shared-finish slowdown"
+        ],
+        "seed": 337571917,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 25060,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23800,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 2366896665,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7439446366782007,
+          "retire_reason": "off_track"
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.4117647058823529,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 647410651,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23640,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 21500,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "flags": [],
+        "seed": 4235093740,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 20760,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.75,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 727444949,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 26300,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 4,
+          "damage": 0.8,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.488135593220339,
+          "retire_reason": "off_track"
+        },
+        "flags": [],
+        "seed": 1493128875,
+        "status": "COMPLETE",
+        "track_id": 4
+      },
+      {
+        "candidate": {
+          "collision_count": 0,
+          "damage": 0.0,
+          "finished": true,
+          "lap_time_ms": 23580,
+          "progress": 1.0,
+          "retire_reason": null
+        },
+        "control": {
+          "collision_count": 5,
+          "damage": 1.0,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.6366906474820144,
+          "retire_reason": "crash"
+        },
+        "flags": [],
+        "seed": 2108416565,
+        "status": "COMPLETE",
+        "track_id": 4
+      }
+    ],
+    "partition": "screen",
+    "protocol_sha256": "856bc121a2f9c95d0a95cd25653443000cebe615c1fcc7d5f47ebe7fbfc5e7cc",
+    "reasons": [],
+    "receipt_tree_sha256": "9747c718567f6d06e55ab7768e3520bff738c4b5e81aca3e4b970b49178a4b21",
+    "repeat_pairs_checked": 2,
+    "runner_sha256": "302f67306ea9db20464130e677e5d663f8fb44128506f76d3c49da29f25de4cf",
+    "seed_finish_breakdown": [
+      {
+        "candidate_finishes": 4,
+        "control_finishes": 2,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 2,
+        "seed": 337571917
+      },
+      {
+        "candidate_finishes": 2,
+        "control_finishes": 2,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 0,
+        "seed": 647410651
+      },
+      {
+        "candidate_finishes": 3,
+        "control_finishes": 1,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 2,
+        "seed": 727444949
+      },
+      {
+        "candidate_finishes": 3,
+        "control_finishes": 2,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 1,
+        "seed": 1274277667
+      },
+      {
+        "candidate_finishes": 3,
+        "control_finishes": 1,
+        "lost_control_finishes": 1,
+        "net_finish_gain": 2,
+        "seed": 1493128875
+      },
+      {
+        "candidate_finishes": 4,
+        "control_finishes": 2,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 2,
+        "seed": 2108416565
+      },
+      {
+        "candidate_finishes": 4,
+        "control_finishes": 3,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 1,
+        "seed": 2366896665
+      },
+      {
+        "candidate_finishes": 3,
+        "control_finishes": 3,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 0,
+        "seed": 4235093740
+      }
+    ],
+    "shared_completed_cells": 15,
+    "shared_completed_time_ratio": 1.0552763819095476,
+    "track_finish_breakdown": [
+      {
+        "candidate_finishes": 7,
+        "control_finishes": 6,
+        "lost_control_finishes": 1,
+        "net_finish_gain": 1,
+        "track_id": 1
+      },
+      {
+        "candidate_finishes": 5,
+        "control_finishes": 1,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 4,
+        "track_id": 2
+      },
+      {
+        "candidate_finishes": 7,
+        "control_finishes": 6,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 1,
+        "track_id": 3
+      },
+      {
+        "candidate_finishes": 7,
+        "control_finishes": 3,
+        "lost_control_finishes": 0,
+        "net_finish_gain": 4,
+        "track_id": 4
+      }
+    ],
+    "valid_canonical_cells": 32
+  },
+  "status": "SCREEN_RETAIN_CONFIRMATION_RUNNING",
+  "validation_platform": "Windows-10-10.0.26200-SP0"
+}

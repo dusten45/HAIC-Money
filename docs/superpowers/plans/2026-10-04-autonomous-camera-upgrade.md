@@ -57,7 +57,7 @@
 
 - [ ] Promote only the source-bound passing candidate and update the actual-route test.
 - [ ] Run the Windows-compatible suite and submission static/CPU checks; report the known Windows `fcntl` exclusion.
-- [ ] Verify promoted source differs from evaluated source by exactly the authorized selector swap; test cold package action parity.
+- [ ] Verify promoted source equals the evaluated selected candidate bytes exactly; the single selector swap is relative to pinned base commit `7df85ae`. Test cold package action parity.
 - [ ] Build an immutable package under ignored `.haic-artifacts/submissions/`, preserve user packages, and record archive/source/model hashes.
 - [ ] Update concise project state, commit and push coherent progress. Deliver measured outcomes, package path and validation limitations.
 

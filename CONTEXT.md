@@ -37,8 +37,12 @@ The search is capped at two candidate implementations and two fresh studies;
 any further relaxation requires a distinct protocol and unused geometry.
 V4 is now source-bound in `experiments/camera-policy-competition-v4.json`,
 with 8/16/8 new geometries across four tracks and 2/4/2 exact paired repeats.
-Fresh episodes have not yet started. Only promote after retained phases,
-valid seals and combined decision. The old V4 progress checkpoint is superseded
+Screen independently retained: 26/32 versus 16/32 finishes, one lost control
+finish, contacts 15 versus 57, crashes zero versus seven, common-finish time
+ratio 1.055276; both exact repeat pairs passed. Confirmation is running on
+16 separate geometries. See `experiments/camera-policy-competition-v4-result.json`.
+Only promote after retained phases, valid seals and combined decision.
+The old V4 progress checkpoint is superseded
 by `docs/superpowers/plans/2026-10-04-autonomous-camera-upgrade.md`.
 
 ## Frozen Competition Contract
