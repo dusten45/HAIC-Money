@@ -64,9 +64,22 @@ def default_registry():
             'recorded_preimpact_first_actions_unchanged':19, 'recorded_preimpact_first_actions_checked':19,
             'state_mask_2x2_unsafe_pixel_counts':[0,4,2,2]},
         'interpretation':'Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets.'}
-    registry['beam-r5-preflight']={'folders':[], 'expected_cells':[], 'scope':'offline_preflight_active_no_episodes',
-        'benchmark_inclusion':False, 'new_environment_resets':0, 'source_status':'not_frozen_in_this_index',
-        'interpretation':'Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim.'}
+    registry['beam-r5']={'folders':['/tmp/apex-v2-beam-r5'], 'expected_cells':SCREEN6, 'scope':'screen6_initial2_authorized',
+        'source_sha256':'4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57', 'config':{}, 'checkpoint':'81f60fa',
+        'authorized_cells':[(3,4111953688),(1,516237)],
+        'conditional_review_cells':[(2,644062),(3,1007),(4,18800),(2,4031370700)],
+        'declaration':'agents/apex_2026/v2/results/beam-r5-design.json',
+        'authorization_manifest':'/tmp/apex-v2-beam-r5/screen-manifest.json',
+        'full24_authorized':False,
+        'interpretation':'Six cells declared; only oldT3 and required1 initially authorized. Remaining4 require separate review/authorization; no automatic full24. R4 remains offline-only.'}
+    r5_capture=Path('/tmp/apex-v2-beam-r5/stall_capture/receipt.json')
+    if r5_capture.exists():
+        capture=json.loads(r5_capture.read_text())
+        registry['beam-r5-frozen-action-capture']={'folders':[], 'expected_cells':[], 'scope':'diagnostic_capture_not_benchmark',
+            'benchmark_inclusion':False, 'diagnostic_receipt':str(r5_capture),
+            'diagnostic_receipt_sha256':hashlib.sha256(r5_capture.read_bytes()).hexdigest(),
+            'diagnostic_evidence':capture, 'policy_act_calls':0,
+            'interpretation':'One separately authorized diagnostic reset;140 frozen actions replayed with exact before/after parity and81 captured observation stacks. No policy act calls; not a screen retry or independent candidate evaluation.'}
     registry['motion-registration-baseline-diagnostic'] = {'folders':['/tmp/apex-v2-motion-registration'],
         'expected_cells':[REQUIRED[0]], 'scope':'diagnostic1'}
     return registry
@@ -163,7 +176,7 @@ def build(registry):
             key = digest([row.get('provenance',{}).get('agent_sha256'),row.get('config',{})])
             groups.setdefault(key,[]).append((path,row,sha))
         if not groups:
-            variants.append({'label':label,'allocation':allocation,'groups':[], 'execution_status':'not_executed_no_primary_receipts', 'warning':'No primary receipts yet; planned cells remain missing, no simulator run is inferred'})
+            variants.append({'label':label,'allocation':allocation,'groups':[], 'execution_status':'diagnostic_only_no_candidate_evaluation' if allocation.get('diagnostic_receipt') else 'not_executed_no_primary_receipts', 'warning':'No candidate-evaluation primary receipts; planned benchmark cells remain missing. Any explicitly recorded diagnostic reset is separate.'})
             continue
         output_groups = []
         for key, items in groups.items():
@@ -194,6 +207,8 @@ def build(registry):
             output_groups.append({'candidate_key':key,'source_sha256':first.get('provenance',{}).get('agent_sha256'),
                 'config':first.get('config',{}),'agent_paths':sorted(set(r['agent_path'] for r in rows)),
                 'runtime_inventories':signatures,'whole_declared_scope':whole,'required4_coverage':required,
+                'authorized_phase_summary':summarize_selection(rows,allocation['authorized_cells']) if 'authorized_cells' in allocation else None,
+                'conditional_phase_summary':summarize_selection(rows,allocation['conditional_review_cells']) if 'conditional_review_cells' in allocation else None,
                 'consumed_declared_scope':summarize_selection(rows,consumed) if consumed else None,
                 'warnings':sorted(set(warnings)), 'receipts':[compact(Path(p),r,sha) for p,r,sha in items]})
         variants.append({'label':label,'allocation':allocation,'groups':output_groups})
@@ -247,11 +262,18 @@ def markdown(result):
             consumed_text=f"{cs['finished']}/{cs['expected']}" if cs else '—'
             label=variant['label']+' '+g['candidate_key'][:7]
             lines.append(f"| {label} | {r['finished'] if r['finished'] is not None else 'INVALID'}/4 | {' / '.join(times)} | {variant['allocation']['scope']}: {a['finished'] if a['finished'] is not None else 'INVALID'}/{a['expected']} | {consumed_text} | {a['incomplete']} / {a['missing']} | {a['invalid_action_failure_count']} / {a['resource_ineligible_completed']} | {warn} |")
-    lines += ['', 'Offline/nonbenchmark sources (no driving episodes):']
+    lines += ['', 'Nonbenchmark diagnostics and sources:']
     for variant in result['variants']:
         a=variant['allocation']
         if a.get('benchmark_inclusion') is False and not variant['groups']:
             lines.append(f"- **{variant['label']}**: {a.get('interpretation',a['scope'])}")
+    for variant in result['variants']:
+        a=variant['allocation']
+        if 'authorized_cells' in a:
+            lines += ['', f"**{variant['label']} authorization:** {a['interpretation']}"]
+            for g in variant['groups']:
+                phase=g['authorized_phase_summary'];conditional=g['conditional_phase_summary']
+                lines.append(f"Initial authorized phase: {phase['finished']}/{phase['expected']} finishes, {phase['incomplete']} incomplete, {phase['missing']} missing. Conditional phase: {conditional['completed']}/{conditional['expected']} completed, {conditional['incomplete']} incomplete, {conditional['missing']} missing. The screen denominator remains6.")
     lines += ['', 'V1 historical baseline (not new v2 validation):']
     for name,b in result['historical_v1_baseline'].items():
         s=b['summary'];lines.append(f"- {name}: {s['finished']}/{s['expected']} finishes; completed {s['completed']}; missing {s['missing']}.")

@@ -1,6 +1,6 @@
 # V2 experiment scoreboard
 
-Receipt snapshot: 2026-10-04T20:53:34.620883+00:00. No new resets.
+Receipt snapshot: 2026-10-04T21:06:06.298114+00:00. No new resets.
 
 Explicit planned scopes retain missing and started cells. DNF means completed without a finish. Required4 coverage is reported even for smaller diagnostic allocations. Each source + exact config is separate; source/dependency verification failures invalidate aggregate finish claims.
 
@@ -39,12 +39,16 @@ Explicit planned scopes retain missing and started cells. DNF means completed wi
 | curvature-memory-r0 bfcc592 | 4/4 | 18.30 / 21.66 / 19.98 / 18.06 | screen9: 7/9 | 3/5 | 0 / 0 | 0 / 0 | 0 |
 | terrain-grounded-r9 2361296 | 4/4 | 16.74 / 20.72 / 18.64 / 17.02 | required4+full_consumed_regression24: 25/28 | 21/24 | 0 / 0 | 0 / 0 | 0 |
 | obstacle-steering-audit 1121447 | 0/4 | — / — / — / — | diagnostic1_not_benchmark: 0/1 | 0/1 | 0 / 0 | 0 / 0 | 0 |
+| beam-r5 589c8de | 1/4 | 14.28 / — / — / — | screen6_initial2_authorized: 1/6 | 0/2 | 0 / 4 | 0 / 0 | 0 |
 | motion-registration-baseline-diagnostic f54347e | 1/4 | 16.78 / — / — / — | diagnostic1: 1/1 | — | 0 / 0 | 0 / 0 | 0 |
 
-Offline/nonbenchmark sources (no driving episodes):
+Nonbenchmark diagnostics and sources:
 - **curvature-memory-bugfix-untested**: Bug-fixed source used for counterfactual analysis only; no driving receipt, not evaluated.
 - **beam-r4-offline**: Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets.
-- **beam-r5-preflight**: Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim.
+- **beam-r5-frozen-action-capture**: One separately authorized diagnostic reset;140 frozen actions replayed with exact before/after parity and81 captured observation stacks. No policy act calls; not a screen retry or independent candidate evaluation.
+
+**beam-r5 authorization:** Six cells declared; only oldT3 and required1 initially authorized. Remaining4 require separate review/authorization; no automatic full24. R4 remains offline-only.
+Initial authorized phase: 1/2 finishes, 0 incomplete, 0 missing. Conditional phase: 0/4 completed, 0 incomplete, 4 missing. The screen denominator remains6.
 
 V1 historical baseline (not new v2 validation):
 - historical_required4: 4/4 finishes; completed 4; missing 0.

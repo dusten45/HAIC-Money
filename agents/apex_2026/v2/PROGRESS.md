@@ -124,4 +124,14 @@ R5 tests one pixel of collision-mask clearance while retaining the raw road
 planner, physics, action search and other cost terms. This margin is an empirical
 resolution allowance, not a formal uncertainty bound. No radius sweep or forced
 acceleration is combined with it. Fresh driving is gated on fixed-source tests,
-stored-observation checks and the unchanged5s inference limit.
+stored-observation checks and the unchanged5s inference limit. Its initial two
+fresh cells finish1/2: required1 at14.28s without damage, old track3 stops without
+damage at0.356 progress. The remaining four declared cells are unexecuted.
+
+One separately counted recorded-action replay reproduces140 before/after states
+exactly. It exposes two distinct issues: the lowest positive HUD/RPM bins inject
+spurious predicted motion at near-rest, and the beam prunes an admissible moving
+sequence with lower cost and no predicted collision. Removing terminal tracking
+penalties does not explain this stall. R6 therefore tests bounded temporal
+refinement of complete sequences, retaining the existing observer, objective and
+collision margin; it is not an unconditional acceleration fallback.

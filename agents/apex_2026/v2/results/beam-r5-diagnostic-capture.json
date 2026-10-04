@@ -1,0 +1,33 @@
+{
+  "reset_count": 1,
+  "steps_replayed": 140,
+  "capture_decision_steps": [
+    60,
+    140
+  ],
+  "original_trace_sha256": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+  "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+  "exact_before_count": 140,
+  "exact_after_count": 140,
+  "captured_exact": true,
+  "scope": "Diagnostic frozenaction replay only, not candidateevaluation; no policyact calls.",
+  "reproducer": {
+    "path": "agents/apex_2026/v2/diagnostics/shadow_beam_r5_capture_stall.py",
+    "sha256": "18448cbbd6415cf47f4e0e2523869a8cf424cd3bbde93bc2c9bfbc1b1e351a00",
+    "original_operator_path": "/tmp/apex-v2-beam-r5/capture_stall.py",
+    "original_operator_sha256": "18448cbbd6415cf47f4e0e2523869a8cf424cd3bbde93bc2c9bfbc1b1e351a00",
+    "executed_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=. .venv/bin/python /tmp/apex-v2-beam-r5/capture_stall.py",
+    "reproduction_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=. .venv/bin/python agents/apex_2026/v2/diagnostics/shadow_beam_r5_capture_stall.py",
+    "working_directory": "/workspace/HAIC-Money",
+    "warning": "Reproduction command performs one diagnostic reset; do not rerun without authorization. This metadata update performed zero resets."
+  },
+  "capture_artifacts_sha256": {
+    "/tmp/apex-v2-beam-r5/stall_capture/observations.npz": "0a90854415483c9bdb3125a7269e4bbdc8e825e9550e82796d989ec7d19ab653",
+    "/tmp/apex-v2-beam-r5/stall_capture/states.json": "444ef1a6c1ae74ce7fec2eaac85fe3dd7e9818f25144edc155e02cfec9d23a19",
+    "/tmp/apex-v2-beam-r5/stall_capture/parity.json": "32be723381f673c6caac8bf093e5d3144eca47960041cfaf4960d6d283a5efac"
+  },
+  "original_receipt_sha256": "0944e1a9f00603ea22d46e02e37165ff8d3fd24bec54ec970b7f4b46f7a58da1",
+  "original_episode_receipt_sha256": "dd277a95584776096b0d59541ef0ec24208e60152d401395a75cc7a355ba83be",
+  "shadow_sha256": "8d5c21ce445bda2f192e4815739253ebf46d1099f635d966c12fe9e877990a56",
+  "evaluator_sha256": "6c3f20be2600d221f66495bde8514bbac461ffef5617013564e432a683a38ffd"
+}

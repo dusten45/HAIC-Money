@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-04T20:53:34.620883+00:00",
-  "analysis_sha256": "5e62ec0855ecb9891b2a87559f9bebe6f9fcb13253fd60aa453d0db5694da343",
+  "generated_at": "2026-10-04T21:06:06.298114+00:00",
+  "analysis_sha256": "da30be1bd53098b83796301ac841b8ddb56b7354ae253091e67e78fd2b867898",
   "benchmark_sha256": "c52da67c7dfaf9bcc700a7ed4a5ac462558934c177d75585c6701fbc83166f33",
   "registry": {
     "actuator-r0": {
@@ -1547,14 +1547,96 @@
       },
       "interpretation": "Offline only:14 tests and120 independent geometry checks passed, but all19 recorded pre-impact first actions remain unchanged. State/mask2x2 counts0/4/2/2 demonstrate fragile zero-clearance plans. No closed-loop success or failure claim;0 resets."
     },
-    "beam-r5-preflight": {
+    "beam-r5": {
+      "folders": [
+        "/tmp/apex-v2-beam-r5"
+      ],
+      "expected_cells": [
+        [
+          1,
+          516237
+        ],
+        [
+          2,
+          644062
+        ],
+        [
+          3,
+          1007
+        ],
+        [
+          4,
+          18800
+        ],
+        [
+          2,
+          4031370700
+        ],
+        [
+          3,
+          4111953688
+        ]
+      ],
+      "scope": "screen6_initial2_authorized",
+      "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+      "config": {},
+      "checkpoint": "81f60fa",
+      "authorized_cells": [
+        [
+          3,
+          4111953688
+        ],
+        [
+          1,
+          516237
+        ]
+      ],
+      "conditional_review_cells": [
+        [
+          2,
+          644062
+        ],
+        [
+          3,
+          1007
+        ],
+        [
+          4,
+          18800
+        ],
+        [
+          2,
+          4031370700
+        ]
+      ],
+      "declaration": "agents/apex_2026/v2/results/beam-r5-design.json",
+      "authorization_manifest": "/tmp/apex-v2-beam-r5/screen-manifest.json",
+      "full24_authorized": false,
+      "interpretation": "Six cells declared; only oldT3 and required1 initially authorized. Remaining4 require separate review/authorization; no automatic full24. R4 remains offline-only."
+    },
+    "beam-r5-frozen-action-capture": {
       "folders": [],
       "expected_cells": [],
-      "scope": "offline_preflight_active_no_episodes",
+      "scope": "diagnostic_capture_not_benchmark",
       "benchmark_inclusion": false,
-      "new_environment_resets": 0,
-      "source_status": "not_frozen_in_this_index",
-      "interpretation": "Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim."
+      "diagnostic_receipt": "/tmp/apex-v2-beam-r5/stall_capture/receipt.json",
+      "diagnostic_receipt_sha256": "0944e1a9f00603ea22d46e02e37165ff8d3fd24bec54ec970b7f4b46f7a58da1",
+      "diagnostic_evidence": {
+        "reset_count": 1,
+        "steps_replayed": 140,
+        "capture_decision_steps": [
+          60,
+          140
+        ],
+        "original_trace_sha256": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+        "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+        "exact_before_count": 140,
+        "exact_after_count": 140,
+        "captured_exact": true,
+        "scope": "Diagnostic frozenaction replay only, not candidateevaluation; no policyact calls."
+      },
+      "policy_act_calls": 0,
+      "interpretation": "One separately authorized diagnostic reset;140 frozen actions replayed with exact before/after parity and81 captured observation stacks. No policy act calls; not a screen retry or independent candidate evaluation."
     },
     "motion-registration-baseline-diagnostic": {
       "folders": [
@@ -1808,6 +1890,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -2240,6 +2324,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -2661,6 +2747,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -3093,6 +3181,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -3525,6 +3615,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -3946,6 +4038,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -4367,6 +4461,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -4788,6 +4884,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -5209,6 +5307,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -5641,6 +5741,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -6062,6 +6164,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -6483,6 +6587,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -6904,6 +7010,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -7325,6 +7433,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -7748,6 +7858,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -8169,6 +8281,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -8592,6 +8706,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -9024,6 +9140,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -9456,6 +9574,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 2,
             "expected_cells": [
@@ -9845,6 +9965,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": null,
           "warnings": [],
           "receipts": [
@@ -10138,6 +10260,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": null,
           "warnings": [],
           "receipts": [
@@ -10431,6 +10555,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": null,
           "warnings": [],
           "receipts": [
@@ -10788,6 +10914,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 4,
             "expected_cells": [
@@ -11311,6 +11439,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 4,
             "expected_cells": [
@@ -12155,6 +12285,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 24,
             "expected_cells": [
@@ -13699,6 +13831,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 24,
             "expected_cells": [
@@ -14922,6 +15056,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 4,
             "expected_cells": [
@@ -15445,6 +15581,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 4,
             "expected_cells": [
@@ -16289,6 +16427,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 24,
             "expected_cells": [
@@ -17833,6 +17973,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 24,
             "expected_cells": [
@@ -19072,6 +19214,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 5,
             "expected_cells": [
@@ -19951,6 +20095,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 24,
             "expected_cells": [
@@ -21031,6 +21177,8 @@
             "warnings": [],
             "selected": []
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": {
             "expected": 1,
             "expected_cells": [
@@ -21112,7 +21260,7 @@
       },
       "groups": [],
       "execution_status": "not_executed_no_primary_receipts",
-      "warning": "No primary receipts yet; planned cells remain missing, no simulator run is inferred"
+      "warning": "No candidate-evaluation primary receipts; planned benchmark cells remain missing. Any explicitly recorded diagnostic reset is separate."
     },
     {
       "label": "beam-r4-offline",
@@ -21149,22 +21297,430 @@
       },
       "groups": [],
       "execution_status": "not_executed_no_primary_receipts",
-      "warning": "No primary receipts yet; planned cells remain missing, no simulator run is inferred"
+      "warning": "No candidate-evaluation primary receipts; planned benchmark cells remain missing. Any explicitly recorded diagnostic reset is separate."
     },
     {
-      "label": "beam-r5-preflight",
+      "label": "beam-r5",
+      "allocation": {
+        "folders": [
+          "/tmp/apex-v2-beam-r5"
+        ],
+        "expected_cells": [
+          [
+            1,
+            516237
+          ],
+          [
+            2,
+            644062
+          ],
+          [
+            3,
+            1007
+          ],
+          [
+            4,
+            18800
+          ],
+          [
+            2,
+            4031370700
+          ],
+          [
+            3,
+            4111953688
+          ]
+        ],
+        "scope": "screen6_initial2_authorized",
+        "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+        "config": {},
+        "checkpoint": "81f60fa",
+        "authorized_cells": [
+          [
+            3,
+            4111953688
+          ],
+          [
+            1,
+            516237
+          ]
+        ],
+        "conditional_review_cells": [
+          [
+            2,
+            644062
+          ],
+          [
+            3,
+            1007
+          ],
+          [
+            4,
+            18800
+          ],
+          [
+            2,
+            4031370700
+          ]
+        ],
+        "declaration": "agents/apex_2026/v2/results/beam-r5-design.json",
+        "authorization_manifest": "/tmp/apex-v2-beam-r5/screen-manifest.json",
+        "full24_authorized": false,
+        "interpretation": "Six cells declared; only oldT3 and required1 initially authorized. Remaining4 require separate review/authorization; no automatic full24. R4 remains offline-only."
+      },
+      "groups": [
+        {
+          "candidate_key": "589c8dec3219f446b9f42956ad4fa9290ac2f0446a51ef9cc361388bf328e8b6",
+          "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+          "config": {},
+          "agent_paths": [
+            "/tmp/apex-v2-beam-r5/source.py"
+          ],
+          "runtime_inventories": {
+            "5693c60462e7a25d5fbf975b5b0a06b5d1409860ab863626b564cd903ce89e5b": {
+              "before_sha256": "d4e18b8cf914851ec3fd2dbc1b67169c3e715c9ec3d9134eab131e9febdbc887",
+              "after_sha256": "07df541a610ae12d92399e874396ad2e819e8f40a08cad2795a6a5cf502cc76c",
+              "before_count": 127,
+              "after_count": 145,
+              "changed_paths": [],
+              "note": "Full path-to-hash maps remain in SHA-bound primary receipts; protocol verifies them before aggregation."
+            }
+          },
+          "whole_declared_scope": {
+            "expected": 6,
+            "expected_cells": [
+              [
+                1,
+                516237
+              ],
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ],
+              [
+                2,
+                4031370700
+              ],
+              [
+                3,
+                4111953688
+              ]
+            ],
+            "observed": 2,
+            "completed": 2,
+            "incomplete": 0,
+            "missing": 4,
+            "unique_attempts": 2,
+            "repeat_attempts": 0,
+            "raw_finished": 1,
+            "finished": 1,
+            "dnf": 1,
+            "finished_median_ms": 14280,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 1,
+            "progress_at_least95_completed": 1,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 2,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T20:54:34.043299+00:00",
+                "status": "completed",
+                "finished": false,
+                "lapTimeMs": null
+              },
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T20:59:42.645303+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "required4_coverage": {
+            "expected": 4,
+            "expected_cells": [
+              [
+                1,
+                516237
+              ],
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ]
+            ],
+            "observed": 1,
+            "completed": 1,
+            "incomplete": 0,
+            "missing": 3,
+            "unique_attempts": 1,
+            "repeat_attempts": 0,
+            "raw_finished": 1,
+            "finished": 1,
+            "dnf": 0,
+            "finished_median_ms": 14280,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 1,
+            "progress_at_least95_completed": 1,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 1,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T20:59:42.645303+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "authorized_phase_summary": {
+            "expected": 2,
+            "expected_cells": [
+              [
+                3,
+                4111953688
+              ],
+              [
+                1,
+                516237
+              ]
+            ],
+            "observed": 2,
+            "completed": 2,
+            "incomplete": 0,
+            "missing": 0,
+            "unique_attempts": 2,
+            "repeat_attempts": 0,
+            "raw_finished": 1,
+            "finished": 1,
+            "dnf": 1,
+            "finished_median_ms": 14280,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 1,
+            "progress_at_least95_completed": 1,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 2,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T20:54:34.043299+00:00",
+                "status": "completed",
+                "finished": false,
+                "lapTimeMs": null
+              },
+              {
+                "track_id": 1,
+                "seed": 516237,
+                "started_at": "2026-10-04T20:59:42.645303+00:00",
+                "status": "completed",
+                "finished": true,
+                "lapTimeMs": 14280
+              }
+            ]
+          },
+          "conditional_phase_summary": {
+            "expected": 4,
+            "expected_cells": [
+              [
+                2,
+                644062
+              ],
+              [
+                3,
+                1007
+              ],
+              [
+                4,
+                18800
+              ],
+              [
+                2,
+                4031370700
+              ]
+            ],
+            "observed": 0,
+            "completed": 0,
+            "incomplete": 0,
+            "missing": 4,
+            "unique_attempts": 0,
+            "repeat_attempts": 0,
+            "raw_finished": 0,
+            "finished": 0,
+            "dnf": 0,
+            "finished_median_ms": null,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 0,
+            "progress_at_least95_completed": 0,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 0,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": []
+          },
+          "consumed_declared_scope": {
+            "expected": 2,
+            "expected_cells": [
+              [
+                2,
+                4031370700
+              ],
+              [
+                3,
+                4111953688
+              ]
+            ],
+            "observed": 1,
+            "completed": 1,
+            "incomplete": 0,
+            "missing": 1,
+            "unique_attempts": 1,
+            "repeat_attempts": 0,
+            "raw_finished": 0,
+            "finished": 0,
+            "dnf": 1,
+            "finished_median_ms": null,
+            "all_cells_finish": false,
+            "target10_13_count": 0,
+            "finish_qualified_completed": 0,
+            "progress_at_least95_completed": 0,
+            "invalid_action_failure_count": 0,
+            "resource_ineligible_completed": 0,
+            "resource_eligible_completed": 1,
+            "damage_sum_completed": 0,
+            "protocol_verified": true,
+            "warnings": [],
+            "selected": [
+              {
+                "track_id": 3,
+                "seed": 4111953688,
+                "started_at": "2026-10-04T20:54:34.043299+00:00",
+                "status": "completed",
+                "finished": false,
+                "lapTimeMs": null
+              }
+            ]
+          },
+          "warnings": [],
+          "receipts": [
+            {
+              "receipt": "/tmp/apex-v2-beam-r5/t1-s516237.json",
+              "receipt_sha256": "acb998c0f5d6fe4119d85f317d73434e1c74a5be7ff223b6c66590fe45c6b45b",
+              "track_id": 1,
+              "seed": 516237,
+              "status": "completed",
+              "started_at": "2026-10-04T20:59:42.645303+00:00",
+              "ended_at": "2026-10-04T21:05:14.839758+00:00",
+              "finished": true,
+              "lapTimeMs": 14280,
+              "start_t": 1.0200000000000005,
+              "finish_time_s": 15.299999999999763,
+              "end_t": 15.319999999999762,
+              "progress": 1.0,
+              "damage": 0.0,
+              "resource_eligible": true,
+              "retire_reason": null,
+              "finish_qualified": true,
+              "finish_qualified_time_s": 14.419999999999781,
+              "invalid_actions": 0,
+              "act_timeout_count": 0,
+              "error": null
+            },
+            {
+              "receipt": "/tmp/apex-v2-beam-r5/t3-s4111953688.json",
+              "receipt_sha256": "dd277a95584776096b0d59541ef0ec24208e60152d401395a75cc7a355ba83be",
+              "track_id": 3,
+              "seed": 4111953688,
+              "status": "completed",
+              "started_at": "2026-10-04T20:54:34.043299+00:00",
+              "ended_at": "2026-10-04T20:59:42.462609+00:00",
+              "finished": false,
+              "lapTimeMs": null,
+              "start_t": 1.0200000000000005,
+              "finish_time_s": null,
+              "end_t": 16.219999999999743,
+              "progress": 0.3560371517027864,
+              "damage": 0.0,
+              "resource_eligible": true,
+              "retire_reason": "off_track",
+              "finish_qualified": false,
+              "finish_qualified_time_s": null,
+              "invalid_actions": 0,
+              "act_timeout_count": 0,
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "beam-r5-frozen-action-capture",
       "allocation": {
         "folders": [],
         "expected_cells": [],
-        "scope": "offline_preflight_active_no_episodes",
+        "scope": "diagnostic_capture_not_benchmark",
         "benchmark_inclusion": false,
-        "new_environment_resets": 0,
-        "source_status": "not_frozen_in_this_index",
-        "interpretation": "Uncertainty-margin preflight active; no episodes, no closed-loop results, no frozen-source performance claim."
+        "diagnostic_receipt": "/tmp/apex-v2-beam-r5/stall_capture/receipt.json",
+        "diagnostic_receipt_sha256": "0944e1a9f00603ea22d46e02e37165ff8d3fd24bec54ec970b7f4b46f7a58da1",
+        "diagnostic_evidence": {
+          "reset_count": 1,
+          "steps_replayed": 140,
+          "capture_decision_steps": [
+            60,
+            140
+          ],
+          "original_trace_sha256": "7ff849ebcb1d5e079580d0f23d97f59f2b9fa0199636884d09ff9face4eb31d5",
+          "source_sha256": "4106f7ac579ed6a3f56b9389c919d5aa68a49061506600f67820ef28e6f93a57",
+          "exact_before_count": 140,
+          "exact_after_count": 140,
+          "captured_exact": true,
+          "scope": "Diagnostic frozenaction replay only, not candidateevaluation; no policyact calls."
+        },
+        "policy_act_calls": 0,
+        "interpretation": "One separately authorized diagnostic reset;140 frozen actions replayed with exact before/after parity and81 captured observation stacks. No policy act calls; not a screen retry or independent candidate evaluation."
       },
       "groups": [],
-      "execution_status": "not_executed_no_primary_receipts",
-      "warning": "No primary receipts yet; planned cells remain missing, no simulator run is inferred"
+      "execution_status": "diagnostic_only_no_candidate_evaluation",
+      "warning": "No candidate-evaluation primary receipts; planned benchmark cells remain missing. Any explicitly recorded diagnostic reset is separate."
     },
     {
       "label": "motion-registration-baseline-diagnostic",
@@ -21288,6 +21844,8 @@
               }
             ]
           },
+          "authorized_phase_summary": null,
+          "conditional_phase_summary": null,
           "consumed_declared_scope": null,
           "warnings": [],
           "receipts": [
