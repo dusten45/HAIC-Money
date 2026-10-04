@@ -144,6 +144,21 @@ rather than silently editing the posted message.
 
 ## Version Control
 
+For agent-initiated Git work on this host, use the GitHub identity `dusten45`,
+not `Kilo` or a teammate's identity. Before every commit, verify that both
+`git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` show `dusten45`
+with an email linked to that GitHub account. Before any authenticated Git
+network operation, verify that the actual remote URL and credential helper
+use the active `dusten45` account (`gh api user --jq .login`); do not infer the
+push account from commit metadata. Recheck in the command's actual worktree
+and process environment, especially after changes to `HOME`, Git config,
+identity environment variables, command-line overrides, remotes, or protocol.
+If either identity cannot be verified, stop the Git operation and diagnose
+without changing a teammate's credentials or requiring owner approval for
+otherwise authorized Git work. Read-only local Git inspection may be used to
+diagnose a mismatch. These instructions govern agents, not unrelated host
+processes or other users.
+
 Use Git continuously to preserve meaningful progress. Create coherent commits for
 substantial implementations, fixes, experiment setup, documentation changes, and
 other validated units of work; do not combine unrelated changes.

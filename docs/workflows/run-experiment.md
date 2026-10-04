@@ -41,16 +41,21 @@ resource gate before the first reset:
 
 - RAM: measure comparable peak process and checkpoint-serialization memory,
   then forecast *additional* memory needed at the next phase, concurrent-job
-  growth, and a documented safety reserve. Record both raw cgroup
-  `memory.max - memory.current` and host available memory. Clean inactive
-  file cache may be reclaimable; record it separately from dirty/writeback
-  pages, and never treat all cache or host availability as guaranteed cgroup
+  growth, and a documented safety reserve. Record host available memory and
+  raw `memory.max - memory.current` for **every finite ancestor cgroup**;
+  the effective raw headroom is the smallest *difference*, not the smallest
+  limit minus that one cgroup's current use. A leaf `memory.max=max` does
+  not prove its parents are unlimited. Clean inactive file cache may be
+  reclaimable; record it separately from dirty/writeback pages, and never
+  treat all cache or host availability as guaranteed cgroup
   headroom. Check OOM counters/pressure. Do not demand the full initial peak
   as free memory again after this job has already allocated part of it.
 - Disk: estimate remaining immutable checkpoint writes, active replay/logs,
   temporary serialization and partial receipts, plus concurrent writers and
-  reserve. Recompute **remaining** bytes after each sealed checkpoint rather
-  than requiring the initial free-space floor forever. Preserve incomplete
+  reserve. Measure each distinct output/temporary filesystem separately;
+  free space on one cannot fund writes on the other. Recompute **remaining**
+  bytes after each sealed checkpoint rather than requiring the initial
+  free-space floor forever. Preserve incomplete
   checkpoint evidence if a write fails; prefer atomic finalization where
   feasible.
 - GPU: check the device's remaining capacity against measured peak reserved
@@ -71,6 +76,12 @@ ledgers, completed checkpoint hashes and a conservative partial receipt if a
 stop is needed. Never present a mid-episode partial as fresh or exactly
 resumable. See the [resource-floor provenance note](../../talk/messages/20260929T022000Z-k3p7-resource-floor-origin-result.md)
 for why earlier local TD-MPC2 attempts used fixed values.
+The optional `haic/resource_budget.py` pure assessment can express a future
+study's measured incremental forecast, but it does **not** collect or verify
+cgroup ancestry, host/GPU/temp-filesystem measurements, or persist failure
+receipts. No frozen trainer imports it. Before any real reset uses this helper,
+independently source-bind fresh measurements and forecast evidence in a NEW
+protocol, recheck before costly operations, and test durable partial writes.
 
 ## During Execution
 
