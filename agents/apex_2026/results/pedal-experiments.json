@@ -1,0 +1,172 @@
+{
+  "protocol": "apex-2026-opposite-v1",
+  "status": "experimental_unadopted",
+  "variant": "pedal-p1",
+  "parent_source": "agents/apex_2026/results/line_sources/5dd078d04dbf.py",
+  "parent_source_sha256": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+  "source": "agents/apex_2026/results/pedal_sources/aab71b842b07.py",
+  "source_sha256": "aab71b842b07d69d7fa01556e40626c606b2ac2d70823987e3dba733e65ff410",
+  "runtime_source": "/tmp/apex-pedal-p1/source.py",
+  "config": {
+    "config": {
+      "lookahead": 26,
+      "pursuit_gain": 4.5,
+      "lateral_accel": 100,
+      "motion_preview": 0.12,
+      "traction_accel": 180,
+      "max_speed": 100,
+      "path_smoothing": 200,
+      "hud_dynamics": true
+    }
+  },
+  "change": "Replace only frozen HUD100 pedal allocation with calibrated rolling-model desired-acceleration inversion; reset and command-state bookkeeping added",
+  "allocator": {
+    "gas_coefficient": 2735.0620191784787,
+    "brake_coefficient": 303.8957799087198,
+    "coast_drag_coefficient": 0.00031570330627447987,
+    "response_time_s": 0.16,
+    "speed_deadband": 1.0,
+    "brake_cap": 0.4,
+    "desired_acceleration_cap": 45.0,
+    "low_speed_legacy_fallback": 20.0,
+    "high_speed_legacy_fallback": 90.0,
+    "observed_slip_legacy_fallback_rad": 0.08726646259971647,
+    "unchanged_traction_cap": true
+  },
+  "model_evidence": "agents/apex_2026/results/pedal-allocation.json",
+  "required_episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "status": "completed",
+      "finished": true,
+      "lapTimeMs": 16780,
+      "progress": 1.0,
+      "damage": 0.0,
+      "collision_steps": 0,
+      "steps": 210,
+      "retire_reason": null,
+      "inference_mean_s": 0.018721351361870933,
+      "inference_max_s": 0.05714334399999643,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-pedal-p1/t1.json",
+      "receipt_sha256": "698e4eb3dfc21075102e7601e3876d940c5ba75ac7439ea889e2214422ce402b"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "status": "completed",
+      "finished": true,
+      "lapTimeMs": 20680,
+      "progress": 1.0,
+      "damage": 0.0,
+      "collision_steps": 0,
+      "steps": 259,
+      "retire_reason": null,
+      "inference_mean_s": 0.017889391687234517,
+      "inference_max_s": 0.04266640700006974,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-pedal-p1/t2.json",
+      "receipt_sha256": "6baf9249961dcfbe4b8a9967f6ba3a88a252cb2991a9911103915262c0b82f1a"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "status": "completed",
+      "finished": true,
+      "lapTimeMs": 18560,
+      "progress": 0.9902912621359223,
+      "damage": 0.0,
+      "collision_steps": 0,
+      "steps": 233,
+      "retire_reason": null,
+      "inference_mean_s": 0.018132871570808638,
+      "inference_max_s": 0.0547994970002037,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-pedal-p1/t3.json",
+      "receipt_sha256": "4b021605c3cca309537c07783dc8ff00e0c53f7fd99ee23fe442a5faabaa3c28"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "status": "completed",
+      "finished": true,
+      "lapTimeMs": 18100,
+      "progress": 0.996415770609319,
+      "damage": 0.0,
+      "collision_steps": 0,
+      "steps": 227,
+      "retire_reason": null,
+      "inference_mean_s": 0.016279289533045284,
+      "inference_max_s": 0.04133150699999533,
+      "resource_eligible": true,
+      "receipt": "/tmp/apex-pedal-p1/t4.json",
+      "receipt_sha256": "230e13037d7068933e747a00e76180dd35ef149346ff499a1d8109199fe1833b"
+    }
+  ],
+  "matched_required_comparison": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "baseline_lap_ms": 17140,
+      "candidate_lap_ms": 16780,
+      "delta_ms": -360,
+      "baseline_receipt": "/tmp/apex-line-hud100/t1-s516237.json",
+      "baseline_receipt_sha256": "22706b455f297879b30ae0fe038192eababf6da8ae0933c0f6a9cdf548708180",
+      "official_source_hashes_equal": true
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "baseline_lap_ms": 21420,
+      "candidate_lap_ms": 20680,
+      "delta_ms": -740,
+      "baseline_receipt": "/tmp/apex-line-hud100/t2-s644062.json",
+      "baseline_receipt_sha256": "6353b127f3fe98710296fa314126b2ebd738b09f1e3df70a2a553484261736fd",
+      "official_source_hashes_equal": true
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "baseline_lap_ms": 19480,
+      "candidate_lap_ms": 18560,
+      "delta_ms": -920,
+      "baseline_receipt": "/tmp/apex-line-hud100/t3-s1007.json",
+      "baseline_receipt_sha256": "93d4f2df0b4fc8fba9d327219146b1fd2618b8a0d96e8d62ee59af276a2da5fb",
+      "official_source_hashes_equal": true
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "baseline_lap_ms": 17920,
+      "candidate_lap_ms": 18100,
+      "delta_ms": 180,
+      "baseline_receipt": "/tmp/apex-line-hud100/t4-s18800.json",
+      "baseline_receipt_sha256": "2778422991a30de599c9b66a2716412a2902b639b32f228b3c31f21116000b1c",
+      "official_source_hashes_equal": true
+    }
+  ],
+  "mean_required_lap_delta_ms": -460.0,
+  "original_target_met": false,
+  "development_probe": {
+    "track_id": 1,
+    "seed": 3601050001,
+    "receipt": "/tmp/apex-pedal-p1/dev-t1-s3601050001.json",
+    "status": "completed",
+    "finished": true,
+    "lapTimeMs": 16760,
+    "progress": 1.0,
+    "damage": 0.0,
+    "steps": 210,
+    "retire_reason": null,
+    "resource_eligible": true,
+    "receipt_sha256": "db6caaed075abf5694f90af497efbb558013d6d6f324c4175896cf7e8bf011be"
+  },
+  "other_development_owner": "evaluation_harness:remaining11",
+  "holdout_opened": false,
+  "limitations": [
+    "Rolling predictor is calibrated on20-90m/s unsaturated low-slip synthetic car physics; not a high-slip or collision prediction guarantee.",
+    "Existing planning, target-speed envelope, steering, traction cap and HUD100configuration remain unchanged.",
+    "Required4/4 completion and faster conditional mean do not certify development generalization or original10-13s target."
+  ]
+}
