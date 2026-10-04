@@ -172,3 +172,11 @@ expectations and eleven historical receipt/provenance cases. Protected root
 and official simulator sources remain unchanged. The feasibility audit proves
 no useful lower bound excluding 10s; offline route times are not impossibility
 proofs or physical lap results.
+
+## Predictive-control integration checkpoint
+
+Fresh four-cell benchmark experiments are preserved individually: normal-line V1 15.22/19.96/16.48/19.16 s (zero contacts), control-guard V1 15.92/21.52/16.78/17.34 s (0/1/0/2 contacts), arc-hazard V1 15.54/19.14/16.60/21.94 s (zero contacts), and early-far V1 15.60/18.80/16.74 s plus track-4 DNF. None meets the original goal or is adopted. These screens do not increment the eight formal development rejections.
+
+The point-path/emitted-control mismatch motivates a new predictive controller. Four-tire exact-state diagnostics and a camera-only causal observer are separately validated; the observer normal-road one-action speed error is p90 0.65 m/s, not a guaranteed uncertainty bound. A fresh root brake-tail rerun matches all four fixed uniform-asphalt stopping gates. Ordered-path geometry and first-executed-block emergency stopping are covered by meaningful tests; constant controls can retain 100 m/s in a synthetic straight visible corridor. Camera-memory transport remains an offline, model-conditioned association study. Integrated driving and official container certification remain unverified.
+
+Root ran `pytest agents/apex_2026/tests tests/test_apex_package.py`: **398 passed in 14.14 s** before the predictive standalone agent is added. All research source and receipts are committed on the working branch; protected root inference and official simulator sources are preserved. No new holdout opened.

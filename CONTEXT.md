@@ -133,6 +133,7 @@ from excessive reference curvature/normal curve caps and late obstacle planning.
 Most rear-clear driving is 40–80 m/s. Existing fixture replay and offline
 physics/path estimates are diagnostic, not fresh laps or impossibility proofs.
 Receipts and causal diagnostics live in `agents/apex_2026/results/speed-20261005/`.
+Fresh bounded follow-up screens also fail: normal-line V1 15.22/19.96/16.48/19.16 s; control-guard V1 15.92/21.52/16.78/17.34 s (0/1/0/2 contacts); arc-hazard V1 15.54/19.14/16.60/21.94 s; early-far V1 15.60/18.80/16.74 s and track-4 DNF. These are separate four-cell benchmark sources, not formal development rejects or adopted agents. Saved-camera replay shows a safe optimized path can emit an unsafe steering arc; preserving a confidence fallback alone also misses later bend dynamics. Work now integrates a causal camera observer, validated four-tire model, full-body camera constraints and finite predictive controls. Their fixed diagnostic/unit checks pass, but no integrated predictive-agent lap has yet been measured. The current Apex plus package checkpoint passes 398 tests; it is separate from the earlier full-suite results.
 No new holdout has opened; the old holdout is consumed development data.
 
 The user cancelled the subsequently proposed 04:00 KST cutoff: **no active
