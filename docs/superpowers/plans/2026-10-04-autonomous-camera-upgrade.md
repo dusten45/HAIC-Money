@@ -25,11 +25,11 @@
 
 **Files:** `agent.py`, `tests/test_clear_road_row42_dropout.py`.
 
-- [ ] Reproduce stale confidence with a visible obstacle, lost-road decisions, and low-speed reacquisition.
-- [ ] Add failing observation-sequence tests for road loss, invalid frames and reset.
-- [ ] Add candidate-only confidence state; invalidate on road loss/invalid frames and reset; arm on visible-road obstacle evidence. Preserve inherited avoidance state and the existing three visible missing-decision window.
-- [ ] Run focused policy/submission tests and independently review the diff.
-- [ ] Commit and push the isolated fix.
+- [x] Reproduce stale confidence with a visible obstacle, lost-road decisions, and low-speed reacquisition.
+- [x] Add failing observation-sequence tests for road loss, invalid current camera frames and reset.
+- [x] Add candidate-only confidence state; invalidate on road loss/invalid current camera frames and reset; arm on visible-road obstacle evidence. Preserve inherited avoidance state and the existing three visible missing-decision window.
+- [x] Run focused policy/submission tests and independently review the diff.
+- [x] Commit and push the isolated fix (`7df85ae`).
 
 ## Task 2: Complete consumed development audit
 
@@ -45,9 +45,9 @@
 
 **Files:** V4 gate, runner, template and their tests; bound V4 protocol.
 
-- [ ] Add tests where practical thresholds accept valid paired results but safety/integrity violations reject.
-- [ ] Implement practical thresholds only in V4; preserve V3 bytes and decisions.
-- [ ] Pin candidate commit/blob and decision engine bytes, test, commit and push.
+- [x] Add tests where practical thresholds accept valid paired results but safety/integrity violations reject.
+- [x] Implement practical thresholds only in V4; preserve V3 bytes and decisions.
+- [x] Pin candidate commit/blob and decision engine bytes, test, commit and push (`71bb2f4`).
 - [ ] Bind fresh disjoint seeds, commit and push the protocol before episodes.
 - [ ] Run screen, confirmation and blind only after their predecessor gates pass. Validate exact cold repeats and final combined decision.
 
@@ -63,7 +63,7 @@
 
 ## Review focus
 
-- Stale obstacle confidence after missing/invalid road frames.
+- Stale obstacle confidence after missing/invalid current road frames. Official observations provide all four finite frames in range; older-frame corruption is outside this study's input contract.
 - Fresh obstacles rearming after road reacquisition and resets clearing the new confidence.
 - Pace summaries using common finishes rather than comparing unmatched completed laps.
 - Integrity/runtime errors never becoming acceptable through statistical relaxation.

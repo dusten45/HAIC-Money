@@ -7,41 +7,39 @@ The goal is a fast, reliable, rule-compliant 2026 HAIC agent. The live bare
 `model.pt` are bypassed after road detection. Diagnostic controllers in
 `agent.py` are not active or submission-ready.
 
-The source-bound `camera-policy-competition-v3` study tested the unchanged
-`_BoundedSideHoldController` on new geometry under a competition-aligned gate.
-Screen retained (29/32 finishes versus 18/32), but confirmation **REJECTED**:
-46/64 versus 31/64 finishes and five lost control finishes against its fixed
-limit of four. All 136 confirmation receipts and four exact repeats validated;
-the saved summary and independent recomputation agree. Candidate
-crashes/contacts/damage were 2/38/7.6 versus 8/102/20.4; shared finishes were
-about 6% slower. The V3 blind phase is sealed. See
-`experiments/camera-policy-competition-v3-result.json`. The 24 opened V3
-geometries are development data.
+The `_ClearRoadRow42DropoutController` candidate now invalidates its own
+obstacle confidence after lost-road or invalid current-frame decisions while
+preserving inherited obstacle latches. Commit `7df85ae` is pinned as its base;
+the actual selected source SHA256 is
+`d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18`.
+Its complete 96-cell consumed V3 development audit independently passed:
+75 to 81 finishes, no previous finish lost, contacts 43 to 43, crashes 2 to 2,
+damage 8.6 to 8.6, common-finish time ratio 0.999857. Both known no-contact
+track-3 road-exit rescues remain. See
+`experiments/camera-upgrade-development-20261004-result.json`; full receipts
+and cold ZIP action-parity evidence are under
+`.haic-artifacts/clear-road-row42-v4/freshness-audit/`. This is development
+evidence, not fresh generalization or activation.
 
-Earlier V2 and V1 camera candidates were also rejected under their own fixed
-screen gates despite aggregate finish gains. Their confirmation/blind phases
-remain sealed. V2 lost-control mechanisms include on-road post-contact stalls,
-side-switch vetoes and a crash without the proposed intervention; static
-camera-pixel corridor widths did not certify physical clearance. The prior
-results and consumed-cell diagnostics remain in `experiments/`.
+V1, V2 and V3 camera studies remain rejected under their original fixed gates.
+V3 screen had 29/32 versus 18/32 finishes; confirmation had 46/64 versus 31/64
+but lost five control finishes against its fixed allowance of four. V3 blind
+remains sealed; earlier unopened phases also remain protected. Its 24 opened
+geometries are development data. Known remaining failures include post-contact
+on-road stalls and multi-contact crashes.
 
-V3 action-exact replays found two clear-road exits, two post-contact on-road
-stalls, and one five-contact crash among its five confirmation losses. An
-isolated clear-road row-42 dropout correction rescued the two road exits on
-consumed data. Its full 96-cell audit improved finishes 75 to 82 without losing
-a prior finish, but contacts rose 43 to 44, failing the development gate;
-crashes stayed at two and shared-finish time ratio was 0.999857. A refined
-recent-obstacle-or-HUD-speed gate was tested on nine changed-action cells: six finish gains,
-no contact increase, and both known road-exit rescues retained. Its full
-96-cell source-bound replay was interrupted at 57/96 receipts; it has not
-passed a gate.
-Independent review found that remembered obstacle state may survive lost-road
-frames, so that predicate needs correction and a complete audit before any
-fresh V4 seed bind. The inactive `_ClearRoadRow42DropoutController` in `agent.py`
-contains the refined predicate but has not passed the full development gate;
-the stale-memory edge remains. V4 runner/gate/template are committed but
-unbound with pending source pins. No V4 fresh seeds or episodes exist; V3 blind
-must stay sealed. See `experiments/camera-policy-competition-v4-progress.md`.
+At the user's explicit request to relax criteria after repeated failures, a
+new practical V4 profile was committed before binding any new geometry:
+phase finish gains at least 2/4/2, lost control finish budgets 3/6/3, combined
+gain at least 12. Runtime, source/repeat integrity, aggregate safety, progress,
+pace ratio at most 1.10, seed-cluster and combined per-track floors are unchanged.
+The search is capped at two candidate implementations and two fresh studies;
+any further relaxation requires a distinct protocol and unused geometry.
+V4 is now source-bound in `experiments/camera-policy-competition-v4.json`,
+with 8/16/8 new geometries across four tracks and 2/4/2 exact paired repeats.
+Fresh episodes have not yet started. Only promote after retained phases,
+valid seals and combined decision. The old V4 progress checkpoint is superseded
+by `docs/superpowers/plans/2026-10-04-autonomous-camera-upgrade.md`.
 
 ## Frozen Competition Contract
 

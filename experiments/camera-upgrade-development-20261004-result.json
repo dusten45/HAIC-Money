@@ -1,0 +1,86 @@
+{
+  "artifacts_root": ".haic-artifacts/clear-road-row42-v4/freshness-audit",
+  "candidate_base_blob_sha256": "b639b9595da2e117410f1556eb13ab8576b873c464e689f5dd1fd8f38f2157c0",
+  "candidate_commit": "7df85ae822fa3234b9ccd30844776420f0a56012",
+  "consumed_geometry_source_protocol": "experiments/camera-policy-competition-v3.json",
+  "decision": "PASS_DEVELOPMENT_ONLY",
+  "development_gate": {
+    "lost_prior_finishes": 0,
+    "maximum_added_contacts": 0,
+    "maximum_added_crashes": 0,
+    "maximum_shared_finish_time_ratio": 1.1,
+    "required_no_contact_track3_rescue_seeds": [
+      3606488170,
+      4030347914
+    ]
+  },
+  "gained_consumed_cell_labels": [
+    "confirmation/1/57718136",
+    "confirmation/1/3178109363",
+    "confirmation/2/1209855183",
+    "confirmation/3/3606488170",
+    "confirmation/3/4030347914",
+    "screen/1/1793306223"
+  ],
+  "independent_receipt_audit": "PASS_96_UNIQUE_CANONICAL_RECEIPTS_AND_BINDINGS",
+  "summary": {
+    "baseline_replays": "96 archived action-exact replays independently matched to canonical V3 receipts",
+    "cell_count": 96,
+    "contact_increases": [],
+    "evidence": "COMPLETE_CONSUMED_DEVELOPMENT_AUDIT",
+    "frozen_source_sha256": "12ce0199eb8ab613cc1fe4ecad73c805ef2fcbeee5bdf48a559165eb29ca9801",
+    "lost_finishes": [],
+    "per_track": [
+      {
+        "probe_contacts": 9,
+        "probe_finishes": 22,
+        "reference_contacts": 9,
+        "reference_finishes": 19,
+        "track_id": 1
+      },
+      {
+        "probe_contacts": 10,
+        "probe_finishes": 19,
+        "reference_contacts": 10,
+        "reference_finishes": 18,
+        "track_id": 2
+      },
+      {
+        "probe_contacts": 5,
+        "probe_finishes": 22,
+        "reference_contacts": 5,
+        "reference_finishes": 20,
+        "track_id": 3
+      },
+      {
+        "probe_contacts": 19,
+        "probe_finishes": 18,
+        "reference_contacts": 19,
+        "reference_finishes": 18,
+        "track_id": 4
+      }
+    ],
+    "probe_contacts": 43,
+    "probe_crashes": 2,
+    "probe_damage": 8.6,
+    "probe_finishes": 81,
+    "probe_mean_progress": 0.9403096621499336,
+    "probe_source_sha256": "d77b27e4489564f98df985b138d6c8ba2d74ff9ed275aeb62cd61477f2b46c18",
+    "receipt_set_sha256": "69057beed21497f48ed186e4117149a8bbf73d00b7621a4685de15050657a4a4",
+    "reference_contacts": 43,
+    "reference_crashes": 2,
+    "reference_damage": 8.6,
+    "reference_finishes": 75,
+    "reference_mean_progress": 0.9050746803756705,
+    "runner_sha256": "be61393354877e295a32e22a7d0b68e9cea00e4fb7f4ef3b5c88b52554874c41",
+    "runtime_maxima": {
+      "action_latency_max_ms": 199.226800003089,
+      "initialization_ms": 4930.311699979939,
+      "peak_worker_rss_mib": 234.78125,
+      "reset_ms": 0.12890005018562078
+    },
+    "schema_version": 1,
+    "shared_finish_time_ratio": 0.9998571078631502
+  },
+  "summary_artifact": ".haic-artifacts/clear-road-row42-v4/freshness-audit/sweep-summary.json"
+}
