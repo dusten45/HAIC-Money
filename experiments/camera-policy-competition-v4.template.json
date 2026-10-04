@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "name": "camera-policy-competition-v4",
+  "status": "UNBOUND",
+  "control_implementation_commit": "f12c5b62c5f02bff4053e6f4775d202d79917938",
+  "control_blob_sha256": "291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61",
+  "candidate_base_commit": "PENDING_ROW42_IMPLEMENTATION_COMMIT",
+  "candidate_base_blob_sha256": "PENDING_ROW42_IMPLEMENTATION_BLOB_SHA256",
+  "decision_engine_sha256": "0e2ea38793d980605c607e1b490eede26d32a60e223e3c70b6386a8cdb2a7a02",
+  "requirements_blob_sha256": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_ClearRoadRow42DropoutController",
+  "track_ids": [1, 2, 3, 4],
+  "seed_counts": {"screen": 8, "confirmation": 16, "blind": 8},
+  "spot_indices": {"screen": [[1, 0], [4, 7]], "confirmation": [[1, 0], [2, 1], [3, 2], [4, 3]], "blind": [[1, 0], [4, 7]]},
+  "source_rule": "Control uses the pinned f12 agent blob; candidate uses a distinct clear-road implementation blob with exactly one bare Agent selector swap.",
+  "decision_rule": "The byte-identical fixed V3 comparator must RETAIN each V4 phase, seed cluster, combined finish gain and every track before promotion."
+}
