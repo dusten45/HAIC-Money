@@ -1,0 +1,701 @@
+{
+  "classification": "consumed combinedV1 exact action prefix diagnostic; not fresh validation",
+  "source_sha256": "31059f6d3e4906199d8a703aa46e9c5d76df529ef207296d61f6f7c1bf24ce52",
+  "trace_sha256": "04350b8b0ffcbebc644c075d52102fd8b41fe573d3288884c52376bab9f3d29f",
+  "track_id": 1,
+  "seed": 516237,
+  "max_actions": 100,
+  "exact_actions": 64,
+  "stopped_at_first_contact": true,
+  "privileged_diagnostics": "actual motion, wheel contacts and nearest official circle; no privileged fields are passed to inference",
+  "full_diagnostic_sha256": "6a1d87610a4cc7986c0d2672e4fa97622dcd96de10ff822d1bd57f4334c45690",
+  "rows": [
+    {
+      "step": 58,
+      "selected": "fast",
+      "action": [
+        0.03279520943760872,
+        0.6000000238418579,
+        0.0
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            0.03279520943760872,
+            0.6000000238418579,
+            0.0
+          ],
+          "mode": "confidence",
+          "speed": 80.38771449843772,
+          "target": 90.05074667326743,
+          "yaw": -1.2026365697309296,
+          "steer": 0.032795209497060884
+        },
+        "hazard": {
+          "action": [
+            -0.051094457507133484,
+            0.30000001192092896,
+            0.0
+          ],
+          "mode": "metric",
+          "speed": 80.38771449843772,
+          "target": 94.59966918336656,
+          "yaw": -1.2026365697309296,
+          "steer": -0.051094457507133484
+        }
+      },
+      "camera": {
+        "bbox": null,
+        "commit_rejection": null,
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": 0.7348618459729571,
+        "road_support_gap_max": 1.1757789535567333
+      },
+      "before": {
+        "position": [
+          43.93982696533203,
+          99.69120025634766
+        ],
+        "angle": 1.2919371128082275,
+        "speed_mps": 82.16730117980221,
+        "camera_yaw_radps": -1.0808258056640625,
+        "lateral_speed_mps": 0.2700964596377098,
+        "forward_speed_mps": 82.16685725446007,
+        "sideslip_rad": 0.00328715854332987,
+        "wheel_angles": [
+          0.04401397705078125,
+          0.04401397705078125
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          37.53462219238281,
+          101.47386932373047
+        ],
+        "angle": 1.294670581817627,
+        "speed_mps": 83.6713536570136,
+        "camera_yaw_radps": 0.4190756380558014,
+        "lateral_speed_mps": 0.5734794901613007,
+        "forward_speed_mps": 83.66938833331703,
+        "sideslip_rad": 0.006854006242480444,
+        "wheel_angles": [
+          -0.03279519081115723,
+          -0.03279519081115723
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": false,
+      "progress": 0.2857142857142857,
+      "post_action_reference_error_m": 62.964886348392376
+    },
+    {
+      "step": 59,
+      "selected": "hazard",
+      "action": [
+        -0.08474459499120712,
+        0.0,
+        0.6987717747688293
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            -0.005582618992775679,
+            0.0,
+            0.23799686133861542
+          ],
+          "mode": "confidence",
+          "speed": 82.83313764195864,
+          "target": 65.83336174870743,
+          "yaw": 0.49443786162464487,
+          "steer": -0.005582618945521069
+        },
+        "hazard": {
+          "action": [
+            -0.08474459499120712,
+            0.0,
+            0.6987717747688293
+          ],
+          "mode": "curved_pass",
+          "speed": 82.83313764195864,
+          "target": 46.30737658174666,
+          "yaw": 0.49443786162464487,
+          "steer": -0.08474459499120712
+        }
+      },
+      "camera": {
+        "bbox": [
+          36,
+          22,
+          38,
+          23
+        ],
+        "commit_rejection": null,
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": -0.36743092298647856,
+        "road_support_gap_max": 1.1757789535567333,
+        "circle": [
+          -3.6743092298647855,
+          23.80952380952381
+        ],
+        "road_fit_samples": 27,
+        "road_fit_residual_max": 0.19687795894489524,
+        "privileged_nearest_circle": {
+          "camera_coord": [
+            -3.191232426887805,
+            24.032623572922795
+          ],
+          "radius": 1.2000000476837158,
+          "camera_center_error_m": 0.5321059123925831
+        },
+        "plan": {
+          "side": -1.0,
+          "road_margin": 1.3043737049028223,
+          "obstacle_margin": 1.1998978010221906,
+          "min_separation": 3.9998971898717346,
+          "max_curvature": 0.08860398300398434,
+          "obstacle_distance": 23.80952380952381,
+          "ego_reference_x": 0.0,
+          "ego_reference_heading": 0.0
+        }
+      },
+      "before": {
+        "position": [
+          37.53462219238281,
+          101.47386932373047
+        ],
+        "angle": 1.294670581817627,
+        "speed_mps": 83.6713536570136,
+        "camera_yaw_radps": 0.4190756380558014,
+        "lateral_speed_mps": 0.5734794901613007,
+        "forward_speed_mps": 83.66938833331703,
+        "sideslip_rad": 0.006854006242480444,
+        "wheel_angles": [
+          -0.03279519081115723,
+          -0.03279519081115723
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          31.85841178894043,
+          103.03327941894531
+        ],
+        "angle": 1.3325939178466797,
+        "speed_mps": 67.58140315006582,
+        "camera_yaw_radps": -1.1699825525283813,
+        "lateral_speed_mps": 0.06124478026006486,
+        "forward_speed_mps": 67.58137539891163,
+        "sideslip_rad": 0.0009062373047673125,
+        "wheel_angles": [
+          0.08474504947662354,
+          0.08474504947662354
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": false,
+      "progress": 0.29285714285714287,
+      "post_action_reference_error_m": 1.138954254584504
+    },
+    {
+      "step": 60,
+      "selected": "hazard",
+      "action": [
+        -0.1246686577796936,
+        0.0,
+        0.4280451536178589
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            0.041882459074258804,
+            0.0,
+            0.09659221768379211
+          ],
+          "mode": "confidence",
+          "speed": 68.33845039073572,
+          "target": 61.43900606862708,
+          "yaw": -1.303010992235425,
+          "steer": 0.04188245876383717
+        },
+        "hazard": {
+          "action": [
+            -0.1246686577796936,
+            0.0,
+            0.4280451536178589
+          ],
+          "mode": "committed_pass",
+          "speed": 68.33845039073572,
+          "target": 46.30737658174666,
+          "yaw": -1.303010992235425,
+          "steer": -0.1246686577796936
+        }
+      },
+      "camera": {
+        "bbox": [
+          37,
+          30,
+          39,
+          33
+        ],
+        "commit_rejection": null,
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": -1.1022927689594355,
+        "road_support_gap_max": 1.1757789535567333,
+        "circle": [
+          -2.9394473838918285,
+          18.51851851851852
+        ],
+        "road_fit_samples": 22,
+        "road_fit_residual_max": 0.20372329769009845,
+        "privileged_nearest_circle": {
+          "camera_coord": [
+            -2.4538003284943333,
+            18.252449555027315
+          ],
+          "radius": 1.2000000476837158,
+          "camera_center_error_m": 0.5537560435331983
+        },
+        "plan": {
+          "side": -1.0,
+          "road_margin": 1.2955957986788693,
+          "obstacle_margin": 1.1998978010221906,
+          "min_separation": 3.9998971898717346,
+          "max_curvature": 0.08860398300398434,
+          "obstacle_distance": 18.51851851851852,
+          "ego_reference_x": -0.932765485076985,
+          "ego_reference_heading": -0.31320549344489595
+        }
+      },
+      "before": {
+        "position": [
+          31.85841178894043,
+          103.03327941894531
+        ],
+        "angle": 1.3325939178466797,
+        "speed_mps": 67.58140315006582,
+        "camera_yaw_radps": -1.1699825525283813,
+        "lateral_speed_mps": 0.06124478026006486,
+        "forward_speed_mps": 67.58137539891163,
+        "sideslip_rad": 0.0009062373047673125,
+        "wheel_angles": [
+          0.08474504947662354,
+          0.08474504947662354
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          27.117162704467773,
+          103.78422546386719
+        ],
+        "angle": 1.4528915882110596,
+        "speed_mps": 55.87312349945198,
+        "camera_yaw_radps": -1.7349034547805786,
+        "lateral_speed_mps": -0.8501766280933918,
+        "forward_speed_mps": 55.86665489615479,
+        "sideslip_rad": -0.015216787348725568,
+        "wheel_angles": [
+          0.12466907501220703,
+          0.12466907501220703
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": false,
+      "progress": 0.29642857142857143,
+      "post_action_reference_error_m": 2.2472144260608187
+    },
+    {
+      "step": 61,
+      "selected": "fast",
+      "action": [
+        0.11533134430646896,
+        0.24718421697616577,
+        0.0
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            0.11533134430646896,
+            0.24718421697616577,
+            0.0
+          ],
+          "mode": "confidence",
+          "speed": 56.11133467313113,
+          "target": 57.23107170361471,
+          "yaw": -1.8587889670710918,
+          "steer": 0.11533134222030639
+        },
+        "hazard": {
+          "action": [
+            -0.13810940086841583,
+            0.0,
+            0.23820418119430542
+          ],
+          "mode": "robust",
+          "speed": 56.11133467313113,
+          "target": 47.0,
+          "yaw": -1.8587889670710918,
+          "steer": -0.13810940086841583
+        }
+      },
+      "camera": {
+        "bbox": [
+          40,
+          38,
+          42,
+          41
+        ],
+        "commit_rejection": "actual ego departed the committed reference",
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": -1.4697236919459142,
+        "road_support_gap_max": 1.1757789535567333,
+        "circle": [
+          -0.7348618459729571,
+          13.815402704291593
+        ],
+        "road_fit_samples": 18,
+        "road_fit_residual_max": 0.1423210248650757,
+        "privileged_nearest_circle": {
+          "camera_coord": [
+            -0.43364254133326163,
+            13.618346288922506
+          ],
+          "radius": 1.2000000476837158,
+          "camera_center_error_m": 0.35995041370407627
+        }
+      },
+      "before": {
+        "position": [
+          27.117162704467773,
+          103.78422546386719
+        ],
+        "angle": 1.4528915882110596,
+        "speed_mps": 55.87312349945198,
+        "camera_yaw_radps": -1.7349034547805786,
+        "lateral_speed_mps": -0.8501766280933918,
+        "forward_speed_mps": 55.86665489615479,
+        "sideslip_rad": -0.015216787348725568,
+        "wheel_angles": [
+          0.12466907501220703,
+          0.12466907501220703
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          22.610666275024414,
+          104.07444763183594
+        ],
+        "angle": 1.5033859014511108,
+        "speed_mps": 56.78909690761651,
+        "camera_yaw_radps": 0.4933350682258606,
+        "lateral_speed_mps": 0.8696342965336341,
+        "forward_speed_mps": 56.78243798722411,
+        "sideslip_rad": 0.01531400102708733,
+        "wheel_angles": [
+          -0.11533010005950928,
+          -0.11533010005950928
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": false,
+      "progress": 0.3,
+      "post_action_reference_error_m": 3.3431005358578028
+    },
+    {
+      "step": 62,
+      "selected": "fast",
+      "action": [
+        0.30007219314575195,
+        0.0,
+        0.0667622908949852
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            0.30007219314575195,
+            0.0,
+            0.0667622908949852
+          ],
+          "mode": "confidence",
+          "speed": 56.11133467313113,
+          "target": 51.34259966082949,
+          "yaw": 0.5483427068631507,
+          "steer": 0.3000721847800259
+        },
+        "hazard": {
+          "action": [
+            0.04533134400844574,
+            0.0,
+            0.2799999713897705
+          ],
+          "mode": "robust",
+          "speed": 56.11133467313113,
+          "target": 18.0,
+          "yaw": 0.5483427068631507,
+          "steer": 0.04533134400844574
+        }
+      },
+      "camera": {
+        "bbox": [
+          41,
+          46,
+          43,
+          48
+        ],
+        "commit_rejection": null,
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": -1.4697236919459142,
+        "road_support_gap_max": 1.1757789535567333,
+        "circle": [
+          0.0,
+          9.40623162845385
+        ],
+        "road_fit_samples": 15,
+        "road_fit_residual_max": 0.15628943357442115,
+        "privileged_nearest_circle": {
+          "camera_coord": [
+            0.2682588417998323,
+            9.10706561329223
+          ],
+          "radius": 1.2000000476837158,
+          "camera_center_error_m": 0.401824726505812
+        }
+      },
+      "before": {
+        "position": [
+          22.610666275024414,
+          104.07444763183594
+        ],
+        "angle": 1.5033859014511108,
+        "speed_mps": 56.78909690761651,
+        "camera_yaw_radps": 0.4933350682258606,
+        "lateral_speed_mps": 0.8696342965336341,
+        "forward_speed_mps": 56.78243798722411,
+        "sideslip_rad": 0.01531400102708733,
+        "wheel_angles": [
+          -0.11533010005950928,
+          -0.11533010005950928
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          18.246366500854492,
+          104.89706420898438
+        ],
+        "angle": 1.3469877243041992,
+        "speed_mps": 54.87512455354452,
+        "camera_yaw_radps": 2.567474126815796,
+        "lateral_speed_mps": 1.761527773499859,
+        "forward_speed_mps": 54.84684416327172,
+        "sideslip_rad": 0.032106176644436255,
+        "wheel_angles": [
+          -0.3000744581222534,
+          -0.3000744581222534
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": false,
+      "progress": 0.30714285714285716,
+      "post_action_reference_error_m": 4.682785292288091
+    },
+    {
+      "step": 63,
+      "selected": "fast",
+      "action": [
+        0.31690409779548645,
+        0.0,
+        0.6499999761581421
+      ],
+      "proposals": {
+        "fast": {
+          "action": [
+            0.31690409779548645,
+            0.0,
+            0.6499999761581421
+          ],
+          "mode": "confidence",
+          "speed": 53.6659169359272,
+          "target": 0.0,
+          "yaw": 2.672938718173706,
+          "steer": 0.31690408483861104
+        },
+        "hazard": {
+          "action": [
+            0.23007220029830933,
+            0.0,
+            0.2799999713897705
+          ],
+          "mode": "robust",
+          "speed": 53.6659169359272,
+          "target": 18.0,
+          "yaw": 2.672938718173706,
+          "steer": 0.23007220029830933
+        }
+      },
+      "camera": {
+        "bbox": [
+          39,
+          53,
+          41,
+          56
+        ],
+        "commit_rejection": null,
+        "road_horizon": 34.09758965314521,
+        "road_ego_side": -1.8371546149323927,
+        "road_support_gap_max": 1.1757789535567333,
+        "circle": [
+          -1.4697236919459142,
+          4.997060552616108
+        ],
+        "road_fit_samples": 11,
+        "road_fit_residual_max": 0.24238450164376157,
+        "privileged_nearest_circle": {
+          "camera_coord": [
+            -0.9870103675118689,
+            4.599669388159083
+          ],
+          "radius": 1.2000000476837158,
+          "camera_center_error_m": 0.6252454647373925
+        }
+      },
+      "before": {
+        "position": [
+          18.246366500854492,
+          104.89706420898438
+        ],
+        "angle": 1.3469877243041992,
+        "speed_mps": 54.87512455354452,
+        "camera_yaw_radps": 2.567474126815796,
+        "lateral_speed_mps": 1.761527773499859,
+        "forward_speed_mps": 54.84684416327172,
+        "sideslip_rad": 0.032106176644436255,
+        "wheel_angles": [
+          -0.3000744581222534,
+          -0.3000744581222534
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "after": {
+        "position": [
+          17.243234634399414,
+          106.03717803955078
+        ],
+        "angle": 1.7087273597717285,
+        "speed_mps": 14.921356534753144,
+        "camera_yaw_radps": -5.372483730316162,
+        "lateral_speed_mps": 14.769458859106823,
+        "forward_speed_mps": 2.123668016986485,
+        "sideslip_rad": 1.4279873459038408,
+        "wheel_angles": [
+          -0.31663691997528076,
+          -0.31663691997528076
+        ],
+        "wheel_contacts": [
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      "collision": true,
+      "progress": 0.30714285714285716,
+      "post_action_reference_error_m": 5.829734965177653
+    }
+  ],
+  "failed_capture": {
+    "step": 61,
+    "camera_reference_lateral_error_m": -2.320625511253792,
+    "camera_reference_heading_error_rad": -0.2925385860764608,
+    "allowed_lateral_error_m": 1.5,
+    "allowed_heading_error_rad": 0.45
+  },
+  "entry_budget": {
+    "step": 59,
+    "speed_mps": 83.6713536570136,
+    "max_reference_curvature_per_m": 0.08860398300398434,
+    "reference_peak_lateral_accel_at_entry_speed": 620.3072190541809,
+    "declared_lateral_budget_mps2": 190.0,
+    "curve_speed_cap_mps": 46.30737658174666,
+    "straight_decel_distance_to_cap_at100mps2_m": 24.28261148456672,
+    "observed_circle_forward_distance_m": 23.80952380952381,
+    "limitations": "Reference peak includes immediate entry curvature; this straight braking calculation ignores simultaneous lateral force and frontwheel motor lag."
+  },
+  "conclusion": "Accepted pass is geometrically clear but dynamically undertracked before selector exit. Once ego leaves the reference, fallback selection reverses steering opposite the committed left pass while the same circle approaches. No evidence of a state synchronization defect in this prefix; no proof that retaining hazard action alone would finish, or that steering reversal alone caused contact.",
+  "camera_fixture": {
+    "path": "agents/apex_2026/tests/fixtures/combined_v1_entry_camera.npz",
+    "sha256": "569f0d38e2da59016468a3e9e14138593c06b41993c7441ee6d5ffb419db36ff",
+    "bytes": 8333
+  },
+  "figure": {
+    "path": "agents/apex_2026/results/speed-20261005/combined-v1-preview-causal.png",
+    "sha256": "8c634fb6aec55c60584c93da033a18d357093a7c8261f8ed3b1bd03865a40aed",
+    "bytes": 188642
+  },
+  "independent_review": {
+    "reviewer": "evaluation_audit",
+    "source_trace_diagnostic_hashes_verified": true,
+    "all64_actions_exact_verified": true,
+    "compact_rows_match_full": true,
+    "calculations_verified": true,
+    "scope": "read-only; no edits or episodes",
+    "limits": "Straight-braking comparison is illustrative, not physical impossibility proof. No isolated causal test of hazard retention or steering reversal."
+  }
+}
