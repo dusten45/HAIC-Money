@@ -1,0 +1,670 @@
+{
+  "status": "rejected_experimental",
+  "created_at": "2026-10-04T19:44:00.403437+00:00",
+  "source": {
+    "source_sha256": "d62e3ed0852b218eba5aacc7db74f62aae31d87240b3acf5ed74cb96a9cb9516",
+    "geodesic_ancestor_sha256": "36c7a4cbbb5d930708cf639aea9d55e0273490ee962e1994218d12a140296218",
+    "nominal_ancestor_sha256": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        3601050002
+      ],
+      [
+        3,
+        3601050003
+      ]
+    ]
+  },
+  "source_stable": true,
+  "completed": 8,
+  "finished": 4,
+  "required_finishes": 2,
+  "old_failure_finishes": 1,
+  "geodesic_regression_finishes": 1,
+  "episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lapTimeMs": 18060,
+      "progress": 1.0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 226,
+      "inference_max_s": 0.1282020979997469,
+      "peak_memory_mib": 108.7421875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t1-s516237.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t1-s516237.jsonl",
+      "trace_sha256": "f3183fd14460a8fc192256fb44072b9ba0fc539dac40f9fa5a50a170d927926b",
+      "fallback_steps": 59,
+      "fallback_fraction": 0.2610619469026549,
+      "fallback_switches": 22,
+      "warning_counts": {
+        "arc_unsafe": 8,
+        "prefix_unreachable": 23
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 33,
+          "end_decision": 37,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 40,
+          "end_decision": 43,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 69,
+          "end_decision": 72,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 74,
+          "end_decision": 77,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 89,
+          "end_decision": 92,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 109,
+          "end_decision": 113,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 144,
+          "end_decision": 148,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 177,
+          "end_decision": 185,
+          "duration_s": 0.72
+        },
+        {
+          "start_decision": 195,
+          "end_decision": 204,
+          "duration_s": 0.8
+        },
+        {
+          "start_decision": 209,
+          "end_decision": 213,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 221,
+          "end_decision": 224,
+          "duration_s": 0.32
+        }
+      ]
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lapTimeMs": 22400,
+      "progress": 1.0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 280,
+      "inference_max_s": 0.15213068799857865,
+      "peak_memory_mib": 104.5703125,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t2-s644062.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t2-s644062.jsonl",
+      "trace_sha256": "8f136ba203844c9655409115cce371ce327e2c68107e879acbef5b5609e564f0",
+      "fallback_steps": 97,
+      "fallback_fraction": 0.3464285714285714,
+      "fallback_switches": 34,
+      "warning_counts": {
+        "prefix_unreachable": 38,
+        "arc_unsafe": 9,
+        "lateral_continuation": 10
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 20,
+          "end_decision": 24,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 52,
+          "end_decision": 55,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 61,
+          "end_decision": 65,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 73,
+          "end_decision": 76,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 89,
+          "end_decision": 92,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 100,
+          "end_decision": 104,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 109,
+          "end_decision": 115,
+          "duration_s": 0.56
+        },
+        {
+          "start_decision": 118,
+          "end_decision": 123,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 127,
+          "end_decision": 132,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 138,
+          "end_decision": 143,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 152,
+          "end_decision": 156,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 162,
+          "end_decision": 167,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 182,
+          "end_decision": 193,
+          "duration_s": 0.96
+        },
+        {
+          "start_decision": 223,
+          "end_decision": 226,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 240,
+          "end_decision": 248,
+          "duration_s": 0.72
+        },
+        {
+          "start_decision": 264,
+          "end_decision": 268,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 271,
+          "end_decision": 274,
+          "duration_s": 0.32
+        }
+      ]
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.6990291262135923,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "steps": 286,
+      "inference_max_s": 0.07320465100019646,
+      "peak_memory_mib": 103.8359375,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t3-s1007.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t3-s1007.jsonl",
+      "trace_sha256": "07029515267afc93372b67e938833002b9811cfc11820c2fb772e7da1746b665",
+      "fallback_steps": 80,
+      "fallback_fraction": 0.27972027972027974,
+      "fallback_switches": 25,
+      "warning_counts": {
+        "prefix_unreachable": 34,
+        "arc_unsafe": 22,
+        "lateral_continuation": 14
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 21,
+          "end_decision": 25,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 31,
+          "end_decision": 35,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 51,
+          "end_decision": 59,
+          "duration_s": 0.72
+        },
+        {
+          "start_decision": 87,
+          "end_decision": 93,
+          "duration_s": 0.56
+        },
+        {
+          "start_decision": 130,
+          "end_decision": 133,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 158,
+          "end_decision": 179,
+          "duration_s": 1.76
+        },
+        {
+          "start_decision": 183,
+          "end_decision": 186,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 189,
+          "end_decision": 192,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 228,
+          "end_decision": 232,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 252,
+          "end_decision": 255,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 258,
+          "end_decision": 261,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 266,
+          "end_decision": 271,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 286,
+          "end_decision": 286,
+          "duration_s": 0.08
+        }
+      ]
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.5197132616487455,
+      "damage": 0.4,
+      "retire_reason": "off_track",
+      "steps": 219,
+      "inference_max_s": 0.13750277100007224,
+      "peak_memory_mib": 106.6796875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t4-s18800.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t4-s18800.jsonl",
+      "trace_sha256": "8922340821eb713325939c305e4074cf74810093a51a7a7b458dcadd5bbe2e9f",
+      "fallback_steps": 131,
+      "fallback_fraction": 0.5981735159817352,
+      "fallback_switches": 11,
+      "warning_counts": {
+        "prefix_unreachable": 119,
+        "arc_unsafe": 108,
+        "lateral_continuation": 102
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 20,
+          "end_decision": 24,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 31,
+          "end_decision": 36,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 39,
+          "end_decision": 42,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 78,
+          "end_decision": 83,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 93,
+          "end_decision": 98,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 116,
+          "end_decision": 219,
+          "duration_s": 8.32
+        }
+      ]
+    },
+    {
+      "track_id": 2,
+      "seed": 4031370700,
+      "finished": true,
+      "lapTimeMs": 18820,
+      "progress": 1.0,
+      "damage": 0.6000000000000001,
+      "retire_reason": null,
+      "steps": 236,
+      "inference_max_s": 0.1845740789995034,
+      "peak_memory_mib": 103.828125,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t2-s4031370700.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t2-s4031370700.jsonl",
+      "trace_sha256": "3ba3023f925d33ac32dffb8a49555e882489b935ade5a8637c6303b50c00e278",
+      "fallback_steps": 82,
+      "fallback_fraction": 0.3474576271186441,
+      "fallback_switches": 24,
+      "warning_counts": {
+        "prefix_unreachable": 41,
+        "arc_unsafe": 26,
+        "lateral_continuation": 8
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 20,
+          "end_decision": 24,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 39,
+          "end_decision": 48,
+          "duration_s": 0.8
+        },
+        {
+          "start_decision": 71,
+          "end_decision": 74,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 81,
+          "end_decision": 87,
+          "duration_s": 0.56
+        },
+        {
+          "start_decision": 95,
+          "end_decision": 99,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 116,
+          "end_decision": 119,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 133,
+          "end_decision": 149,
+          "duration_s": 1.36
+        },
+        {
+          "start_decision": 151,
+          "end_decision": 158,
+          "duration_s": 0.64
+        },
+        {
+          "start_decision": 177,
+          "end_decision": 181,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 200,
+          "end_decision": 204,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 217,
+          "end_decision": 222,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 228,
+          "end_decision": 233,
+          "duration_s": 0.48
+        }
+      ]
+    },
+    {
+      "track_id": 3,
+      "seed": 4111953688,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.2724458204334365,
+      "damage": 1.0,
+      "retire_reason": "crash",
+      "steps": 74,
+      "inference_max_s": 0.16353791300025478,
+      "peak_memory_mib": 99.3671875,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t3-s4111953688.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t3-s4111953688.jsonl",
+      "trace_sha256": "96f1f67890230ead3d4870053a7c56b56ea7a412c21e446b8b7ac0497ac46ac6",
+      "fallback_steps": 17,
+      "fallback_fraction": 0.22972972972972974,
+      "fallback_switches": 5,
+      "warning_counts": {
+        "prefix_unreachable": 11,
+        "arc_unsafe": 7,
+        "lateral_continuation": 3
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 21,
+          "end_decision": 25,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 57,
+          "end_decision": 61,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 68,
+          "end_decision": 74,
+          "duration_s": 0.56
+        }
+      ]
+    },
+    {
+      "track_id": 1,
+      "seed": 3601050002,
+      "finished": true,
+      "lapTimeMs": 16380,
+      "progress": 1.0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 205,
+      "inference_max_s": 0.16122904199983168,
+      "peak_memory_mib": 103.8515625,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t1-s3601050002.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t1-s3601050002.jsonl",
+      "trace_sha256": "4738f875a346477b1d1a3673d0e66fa751e9a036186ceb94caec35862cefe14d",
+      "fallback_steps": 34,
+      "fallback_fraction": 0.16585365853658537,
+      "fallback_switches": 12,
+      "warning_counts": {
+        "lateral_continuation": 4,
+        "prefix_unreachable": 12,
+        "arc_unsafe": 6
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 29,
+          "end_decision": 38,
+          "duration_s": 0.8
+        },
+        {
+          "start_decision": 69,
+          "end_decision": 75,
+          "duration_s": 0.56
+        },
+        {
+          "start_decision": 88,
+          "end_decision": 91,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 110,
+          "end_decision": 113,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 162,
+          "end_decision": 166,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 169,
+          "end_decision": 172,
+          "duration_s": 0.32
+        }
+      ]
+    },
+    {
+      "track_id": 3,
+      "seed": 3601050003,
+      "finished": false,
+      "lapTimeMs": null,
+      "progress": 0.9822064056939501,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "steps": 319,
+      "inference_max_s": 0.1984714009995514,
+      "peak_memory_mib": 106.92578125,
+      "resource_eligible": true,
+      "receipt": "agents/apex_2026/v2/results/fallback-r1/t3-s3601050003.json",
+      "trace": "/tmp/apex-v2-fallback-r1/t3-s3601050003.jsonl",
+      "trace_sha256": "6b06053186ab5e3b177461fa2db597da02af3f874081dc3a61fb5462265df569",
+      "fallback_steps": 91,
+      "fallback_fraction": 0.2852664576802508,
+      "fallback_switches": 25,
+      "warning_counts": {
+        "prefix_unreachable": 50,
+        "arc_unsafe": 21,
+        "lateral_continuation": 6
+      },
+      "fallback_spans": [
+        {
+          "start_decision": 21,
+          "end_decision": 24,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 30,
+          "end_decision": 35,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 61,
+          "end_decision": 64,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 83,
+          "end_decision": 87,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 93,
+          "end_decision": 100,
+          "duration_s": 0.64
+        },
+        {
+          "start_decision": 107,
+          "end_decision": 110,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 147,
+          "end_decision": 151,
+          "duration_s": 0.4
+        },
+        {
+          "start_decision": 197,
+          "end_decision": 225,
+          "duration_s": 2.32
+        },
+        {
+          "start_decision": 227,
+          "end_decision": 230,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 237,
+          "end_decision": 240,
+          "duration_s": 0.32
+        },
+        {
+          "start_decision": 300,
+          "end_decision": 305,
+          "duration_s": 0.48
+        },
+        {
+          "start_decision": 307,
+          "end_decision": 314,
+          "duration_s": 0.64
+        },
+        {
+          "start_decision": 316,
+          "end_decision": 319,
+          "duration_s": 0.32
+        }
+      ]
+    }
+  ],
+  "tests": "5 focused tests pass; archived geodesic ancestor hash verified; nominal-straight sequential actions exactly match frozen P1.",
+  "interpretation": [
+    "Local geometric warning does not ensure a safe handoff state. Required3 entered fallback at77.4m/s and then rotated sharply; an association, not a counterfactual causal proof.",
+    "First-point reachability warning can be overly conservative: a nearby offset path point need not be followed immediately if a later gradual join exists.",
+    "Both policies share action memory, but that alone does not preserve closed-loop behavior when switching.",
+    "No improvement or adoption; required completion and original10-13s objective fail. All8 are newly executed, already-consumed geometry cells; no new holdout access."
+  ]
+}

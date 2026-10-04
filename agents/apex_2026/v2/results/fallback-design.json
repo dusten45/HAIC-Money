@@ -1,0 +1,56 @@
+{
+  "hypothesis": "Use full-image geodesic planning only when local P1 path or nominal-arc geometry has an explicit warning, preserving nominal policy otherwise.",
+  "source": {
+    "source_sha256": "d62e3ed0852b218eba5aacc7db74f62aae31d87240b3acf5ed74cb96a9cb9516",
+    "geodesic_ancestor_sha256": "36c7a4cbbb5d930708cf639aea9d55e0273490ee962e1994218d12a140296218",
+    "nominal_ancestor_sha256": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ],
+      [
+        2,
+        4031370700
+      ],
+      [
+        3,
+        4111953688
+      ],
+      [
+        1,
+        3601050002
+      ],
+      [
+        3,
+        3601050003
+      ]
+    ]
+  },
+  "heuristic_not_formal_certificate": true,
+  "criteria": {
+    "prefix": "Absolute implied curvature of first path point exceeds tan(.4)/3.24 and lateral offset exceeds1.5m.",
+    "arc": "At least2/30 centerline samples over clipped(4+.2speed,7,13)m have clearance below1.8pixels.",
+    "topology": "Short row path ends belowimage row18 and connected road continues laterally below endpoint."
+  },
+  "hysteresis": {
+    "minimum_active_decisions": 4,
+    "clear_decisions_before_exit": 3
+  },
+  "memory": "Both policies see every observation. Selected policy steering/throttle memories are synchronized after every action; P1 preserves its own row reference path. Exact inactive action sequence tested.",
+  "tests_passed": 5,
+  "screen": "Required4 + oldfailure2 + geodesicr1 regression2, all already-consumed geometry cells. No heldout access.",
+  "fixed_during_batch": true
+}
