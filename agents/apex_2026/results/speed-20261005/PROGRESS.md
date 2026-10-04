@@ -5,6 +5,11 @@ starting from `a30adbb`. Root inference and official physics remain protected.
 Previous holdout seeds are consumed development data; no new holdout has opened.
 No candidate in this series has achieved the goal or been adopted.
 
+The user cancelled the subsequently proposed 04:00 KST time cutoff. There is
+no active clock deadline. Continue toward the speed goal and stop immediately
+on an actual Codex weekly quota exhaustion error. Fast mode is an app setting
+and no available tool can change it from this session.
+
 ## Initial hypotheses and fresh screens
 
 - Existing guarded preview averages about 40–45 m/s and brakes on 30–35% of
@@ -50,6 +55,12 @@ guarded snapshot, but is not yet a qualifying candidate:
 | envelope V3, defaults | 18.54 s | DNF | DNF | DNF |
 | envelope V4, defaults | DNF | DNF | DNF | DNF |
 | path V4 without local quadratic caps | 15.56 s | DNF | DNF | DNF |
+| path V5, defaults | 16.40 s | DNF | DNF | DNF |
+| path V5, yaw_gain=.15 | 15.70 s | DNF | DNF | 26.10 s |
+| curved preview pass V2, defaults | 20.20 s | 26.08 s | 22.82 s | DNF |
+| braking feedforward V1, defaults | 16.60 s | DNF | DNF | 17.04 s |
+| braking feedforward V2, defaults | 16.56 s | DNF | DNF | 16.76 s |
+| camera corridor smoothing V1, defaults | 15.30 s | DNF | DNF | DNF |
 
 All four times must belong to one source/parameter setting; the fastest
 individual laps above must not be combined into a synthetic result. None of
@@ -82,3 +93,26 @@ Apex evaluator/package/controllers and the preview/envelope candidates. The
 previous full baseline's 15 dependency/provenance failures remain disclosed in
 the preceding cloud report. Independent curved-pass, current-pose obstacle and
 HUD-yaw investigations continue toward the original goal.
+
+Nine stationary official renders calibrated the yaw HUD; earlier cropping
+underread moderate and fast rotation. Path V5 fixes the crop and an invented
+late obstacle pass, but both of its fresh settings fail mandatory coverage.
+The curved preview V2 pass has valid sampled camera geometry but undertracks
+the planned displacement: required curvature grows .0245→.0715→.1567/m in
+.16 seconds, eventually exceeding the physical joint limit .1305/m. A later
+hairpin cannot be represented by its single-valued road cubic. These are
+causal failure findings, not reasons to relax the clearance checks.
+
+Braking V1's feedforward still reserves tire force at saturated lateral load;
+V2 corrects that concrete algebraic bug with a RED-to-GREEN camera regression.
+It improves the two finished laps slightly but leaves the other two DNF.
+Corridor V1 minimizes sampled local curvature within visible road and circle
+bounds and passes four focused regressions. Only track 1 finishes; track 3's
+100% tile progress is still an official DNF because no finish was recorded.
+
+Privileged physics teachers and full-map offline route optimizers remain
+diagnostic and cannot be adopted as camera agents. Thirty-two new teacher
+episodes culminate in 14.22/17.98/16.66/15.60 s with zero contacts, still above
+the goal. Converged local point-model time estimates are about
+12.07/15.12/13.62/13.24 s, not physical laps, global optima or lower bounds.
+SciPy 1.14.1 is optional offline research only; inference stays NumPy-only.

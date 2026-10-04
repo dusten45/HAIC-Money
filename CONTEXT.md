@@ -99,41 +99,35 @@ this does not erase earlier invalid attempts or qualify the rejected source.
 
 ## Independent Agent Checkpoint
 
-The separate new-agent study is preserved in `agents/apex_2026/` on branch
-`codex/apex-2026-independent-agent`; the active root agent and official physics
-were preserved. Hybrid mandatory laps are 19.62/26.68/22.74/21.78 s with zero
-contacts, but only 10/16 additional development cells finish. The 10–13 s target
-and relaxed 18 s profile remain unmet; no independent candidate is promoted.
-Those are historical checkpoint measurements, not fresh cloud validation.
-The user resumed development from `14bb967` on the same branch. The cloud
-environment uses Python 3.11.16 and the pinned Box2D 2.3.5 dependencies; fresh
-hybrid laps are 19.62/26.20/22.90/21.82 s, with 10/16 extra finishes. The old
-MPC completion results do not reproduce on Linux. See
-`agents/apex_2026/results/cloud-20261004/BASELINE.md` for source-bound receipts
-and the existing full-suite result (1170 passed, 10 skipped, 15 pre-existing
-dependency/provenance failures). No root or official simulator source changed.
+The separate camera-only agent study continues in `agents/apex_2026/` on
+`codex/apex-2026-independent-agent`, resumed from `14bb967`. Root inference
+and official simulator sources are preserved. Python is 3.11.16 with the
+pinned official Box2D 2.3.5 environment. Fresh hybrid required laps are
+19.62/26.20/22.90/21.82 s, with 10/16 additional development finishes.
 
-Seven new complete development trials have been rejected: R1–R3 used 13 seconds,
-R4–R6 used 15, and R7 used 18 under the predefined prospective rules. Both the
-original 10–13 second goal and the relaxed 18 second profile remain unmet.
-No independent candidate is adopted. Preview V4 remains the balanced development
-reference with 12/16 extra finishes and three on each track.
+The previous cloud research snapshot and its consumed holdout are preserved
+in `agents/apex_2026/results/cloud-20261004/FINAL.md`. Frozen guarded-preview
+source `76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1`
+was pushed before holdout: mandatory 21.92/27.64/26.14/23.74 s, development
+12/16 and holdout 15/16. Cold source and ZIP repeats exactly matched actions.
+Those are earlier fresh validations, not new measurements in the resumed phase.
 
-The reviewed guarded-preview research snapshot was frozen and pushed in
-`b43ef98` before opening holdout; source SHA256 is
-`76863032117175870fbf7ef1a18b49fb2b966ca6b53dd58adcd79a1d2ee46bb1`,
-with parameters `{}`. Its required laps are 21.92/27.64/26.14/23.74 s with zero
-contacts. Development extras finish 12/16 (per-track 2/4, 4/4, 3/4, 3/4).
-It is slower and has more development contacts than preview V4, so the freeze
-establishes reproducibility rather than performance improvement or adoption.
+The current high-speed continuation is active, aiming at four early-10-second
+laps with less curve slowing. No new candidate is adopted or meets all four
+13-second laps. New path V4 finishes 15.40/23.20/18.00 s and fails track 4;
+new braking V2 finishes 16.56 s on track 1 and 16.76 s on track 4 but fails
+tracks 2/3. These distinct candidates cannot be combined into a synthetic
+four-lap result. New camera corridor, committed-pass and motion-estimation
+lanes investigate observed path tracking and wheel-slip failures. Receipts,
+source bindings and causal diagnostics are in `results/speed-20261005/`.
+No new holdout has opened; the old holdout is consumed development data.
 
-The now-consumed holdout finishes 15/16 extras in 20.00–25.18 s; it also fails
-both pace targets. No source, parameter or selection changed after opening it.
-Cold source and extracted ZIP required repeats each match all four action hashes
-and outcomes. Current Apex/new behavior tests pass 213/213; the 15 existing
-full-suite dependency/provenance failures above remain disclosed.
-See `agents/apex_2026/results/cloud-20261004/FINAL.md` and `final/summary.json`
-for complete new receipts, runtime/package checks and remaining limitations.
+The user cancelled the subsequently proposed 04:00 KST cutoff: **no active
+clock deadline**. Continue regardless of time until the requested goal or an
+actual Codex weekly quota exhaustion error. No quota-reading or Fast-mode
+setting tool is exposed; user asked to disable Fast in the app.
+The previous full baseline was 1170 passed, 10 skipped and 15 existing
+Box2D-version/provenance failures; a new full-suite checkpoint is running.
 
 ## Frozen Competition Contract
 

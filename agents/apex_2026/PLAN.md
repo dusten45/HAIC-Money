@@ -67,3 +67,21 @@
 - [x] Independently review evidence and verify protected source hashes, exact repeat traces, archive contents and freeze chronology.
 - [x] Update README, benchmark continuation evidence, and concise CONTEXT; preserve them in the final report commit.
 - [x] Record all four lap times, extra/holdout completion and pace, runtime/package limits, original and relaxed verdicts, and remaining gaps in `results/cloud-20261004/FINAL.md`. The requested performance goal remains unmet; no failed candidate is adopted.
+
+## Active high-speed continuation
+
+The preceding completed checklist is the preserved earlier research snapshot.
+The user restarted implementation toward four early-10-second laps, minimizing
+curve slowdown; no current source meets that goal. The subsequently imposed
+04:00 KST cutoff was explicitly cancelled; no clock deadline is active.
+
+- [x] Diagnose true speed, steering, rear grip and HUD cropping on fresh evidence.
+- [x] Preserve each frozen rejected screen and source lineage; commit and push.
+- [ ] Improve camera path tracking, smooth constrained routes and observe slip.
+- [ ] Verify any improved source on mandatory and additional development cells.
+- [ ] Continue until the requested goal is reached or weekly Codex quota is
+      exhausted; preserve honest source-bound results throughout.
+
+No new holdout opens before a later final source/parameter freeze. The current
+old holdout is consumed; mandatory screens do not advance fallback rejection
+counts. Fast mode cannot be changed by the tools exposed to this session.

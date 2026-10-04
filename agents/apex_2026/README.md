@@ -5,6 +5,21 @@ The active root agent and official physics are unchanged. This is a research
 checkpoint: the requested 10–13 second performance and strong generalization
 have **not** been achieved. No candidate is certified as competition-winning.
 
+## Active high-speed continuation
+
+The user resumed work toward four early-10-second laps on 2026-10-05 KST.
+New source-bound mandatory screens and causal physics/camera diagnostics are
+in [`results/speed-20261005/PROGRESS.md`](results/speed-20261005/PROGRESS.md).
+No current candidate completes all four within 13 seconds, and none is adopted.
+Path V4 currently finishes three at 15.40/23.20/18.00 s; braking V2 finishes
+two at 16.56/16.76 s. Every other mandatory cell remains explicitly DNF in its
+own receipt. Current motion, committed-pass and corridor experiments continue.
+
+The user cancelled the subsequently imposed time cutoff; no clock deadline
+is active. Work continues toward the requested speed goal, with immediate stop
+on actual weekly Codex quota exhaustion. No new holdout has opened; the preceding
+cloud holdout is already consumed.
+
 ## Preserved candidates
 
 - `agent.py`: small metric camera prototype; incomplete mandatory coverage.
