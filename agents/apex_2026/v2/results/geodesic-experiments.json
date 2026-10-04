@@ -927,6 +927,126 @@
       "hypothesis": "Interaction between independently tested Frenet refinement(r5) and single obstacle margin(r2). Only _free_space margin expression differs fromr5; control/speed/pedal remain unchanged.",
       "observations": "8/8 finishes, requiredmean18.60s vsr1 20.37. All r2/r5 screen failures rescued, but requiredt2/t4 damage.4 each and consumedt1 damage.8 show inadequate collision margin. Continuous clearance is not certified: synthetic dense rastercheck2.8px vsnominal3; pixel rounding toleranceexplicit.",
       "tests": "2 targeted tests pass; connectivity plus sampled3px vertex clearance, dense free-space nonintersection and pixel-rounding tolerance; r5method bodies unchanged except_free_space."
+    },
+    {
+      "variant": "geodesic_r7_oriented_footprint",
+      "source_snapshot": "/tmp/apex-v2-geodesic-footprint-r7/source.py",
+      "source_sha256": "d2143f771979e00e7c58261e3c0fcaf3133846de93c3ef866c86ca5ea15ebbec",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 8,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 17450.0,
+        "finished_max_ms": 21140
+      },
+      "required_protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 4,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 18030.0,
+        "finished_max_ms": 21100
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": true,
+          "lap_time_ms": 17680,
+          "progress": 1.0,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t1-s3601050002.json",
+          "receipt_sha256": "82f3d5b7062a790b9b33db719dbf25437173ee825bd612c430b0241021807b83"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 17140,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t1-s516237.json",
+          "receipt_sha256": "3331cafc2be42558a6226087ca5bf3bb68bb0c1d356e3d83aa17eba333200963"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "lap_time_ms": 16600,
+          "progress": 1.0,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t2-s4031370700.json",
+          "receipt_sha256": "dcb82d4fcfb33cb0926b6dc1e66d45590567cc4efe1f944fd3420c4beaf7147f"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21100,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t2-s644062.json",
+          "receipt_sha256": "d891013f93a82e50ca59d19225b634e9cc22ef69e4089881e1a2d28f917564ac"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 18840,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t3-s1007.json",
+          "receipt_sha256": "3262407db8d16f0a9b742e42ab82ab98424c33bc5ec8643ab4f6ec156fcc7239"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": true,
+          "lap_time_ms": 16460,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t3-s3601050003.json",
+          "receipt_sha256": "0d0c315bffe1952fae4be9bd69f30897e712ea6a81fa829be3cc96825734b918"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": true,
+          "lap_time_ms": 21140,
+          "progress": 1.0,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t3-s4111953688.json",
+          "receipt_sha256": "739d483c53855f1fef6884a3bbe14db338bd3f9d23e02ba653c51206db9fddb9"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 17220,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-geodesic-footprint-r7/t4-s18800.json",
+          "receipt_sha256": "4d32fd1efde47b286ef9cc6cfdc4c8901d11228ca2214eb02242a1743a737557"
+        }
+      ],
+      "hypothesis": "Only augment r6 arc-clearance decision with yaw-oriented public hull/wheel envelope sample checks. Existing center3px guard, gain/speed/path/pedal unchanged.",
+      "observations": "8/8 finish; requiredmean18.575s vsr6 18.60, still above18.53 gate. Requiredcollisiondamageunchanged; consumedV1t2damage.4\u2192.2 whilet3.2\u2192.8, so no consistent collision improvement. Physics footprint is approximate raster and still follows staticarc rather than actual transient trajectory.",
+      "tests": "3 footprint behavior tests pass; originalr6method bodies unchanged except_tracking_arc collisionpredicate."
     }
   ]
 }
