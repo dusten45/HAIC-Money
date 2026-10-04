@@ -16,6 +16,7 @@ _MIN_NET_GAIN = (3, 6, 3)
 _MAX_LOST_FINISHES = (2, 4, 2)
 _MAX_SHARED_TIME_RATIO = 1.10
 _MIN_COMBINED_NET_GAIN = 18
+_SEED_LOSS_CLUSTER = 2
 _SEEDS_PER_PHASE = (8, 16, 8)
 _REPEATS_PER_PHASE = (2, 4, 2)
 
@@ -31,6 +32,8 @@ THRESHOLDS = {
     "minimum_mean_progress_delta": 0.0,
     "maximum_aggregate_shared_finish_time_ratio": _MAX_SHARED_TIME_RATIO,
     "minimum_combined_net_finish_gain": _MIN_COMBINED_NET_GAIN,
+    "minimum_seed_lost_control_finishes_for_negative_net_veto": _SEED_LOSS_CLUSTER,
+    "minimum_combined_track_net_finish_gain": 0,
 }
 
 _RUNTIME_LIMITS = (
@@ -58,6 +61,7 @@ _REQUIRED_IDENTITY_FIELDS = (
     "protocol_sha256", "candidate_agent_sha256", "runner_sha256",
     "decision_engine_sha256",
 )
+_DNF_REASONS = frozenset(("crash", "off_track", "max_steps", "terminated"))
 
 
 def _is_finite_number(value: object, minimum: float, maximum: float) -> bool:
@@ -79,6 +83,9 @@ def _metric_errors(row: dict, label: str, phase: str) -> list[str]:
             errors.append(f"{label}: runtime {field} invalid or exceeded")
     if type(row.get("finished")) is not bool:
         errors.append(f"{label}: finished must be boolean")
+    for field in ("lap_time_ms", "retire_reason"):
+        if field not in row:
+            errors.append(f"{label}: missing {field}")
     if not _is_finite_number(row.get("progress"), 0, 1.01):
         errors.append(f"{label}: invalid progress")
     if type(row.get("collision_count")) is not int or row["collision_count"] < 0:
@@ -99,13 +106,41 @@ def _metric_errors(row: dict, label: str, phase: str) -> list[str]:
     elif row.get("finished") is False:
         if lap_time is not None:
             errors.append(f"{label}: DNF lap_time_ms must be null")
-        if not isinstance(row.get("retire_reason"), str) or not row["retire_reason"]:
-            errors.append(f"{label}: DNF needs retire_reason")
+        reason = row.get("retire_reason")
+        if not isinstance(reason, str) or reason not in _DNF_REASONS:
+            errors.append(f"{label}: invalid DNF retire_reason")
     trace = row.get("action_trace_sha256")
     if (not isinstance(trace, str) or len(trace) != 64
             or any(char not in "0123456789abcdef" for char in trace)):
         errors.append(f"{label}: invalid action_trace_sha256")
     return errors
+
+
+def _finish_breakdowns(paired: list[dict], seeds: set[int]) -> tuple[list[dict], list[dict]]:
+    """Count canonical finishes by geometry and track from validated pairs."""
+    def blank() -> dict:
+        return {"control_finishes": 0, "candidate_finishes": 0,
+                "net_finish_gain": 0, "lost_control_finishes": 0}
+
+    by_seed = {seed: blank() for seed in seeds}
+    by_track = {track: blank() for track in (1, 2, 3, 4)}
+    for pair in paired:
+        if pair["status"] != "COMPLETE":
+            continue
+        control = int(pair["control"]["finished"])
+        candidate = int(pair["candidate"]["finished"])
+        lost = int(bool(control and not candidate))
+        buckets = [by_seed[pair["seed"]]]
+        if pair["track_id"] in by_track:
+            buckets.append(by_track[pair["track_id"]])
+        for bucket in buckets:
+            bucket["control_finishes"] += control
+            bucket["candidate_finishes"] += candidate
+            bucket["net_finish_gain"] += candidate - control
+            bucket["lost_control_finishes"] += lost
+    seed_rows = [{"seed": seed, **by_seed[seed]} for seed in sorted(by_seed)]
+    track_rows = [{"track_id": track, **by_track[track]} for track in (1, 2, 3, 4)]
+    return seed_rows, track_rows
 
 
 def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: str) -> dict:
@@ -240,6 +275,8 @@ def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: st
     control_time = totals["control"]["shared_time"]
     candidate_time = totals["candidate"]["shared_time"]
     ratio = candidate_time / control_time if shared_count else None
+    seed_breakdown, track_breakdown = _finish_breakdowns(
+        paired, {seed for _, seed in canonical})
     complete = not reasons and not missing and valid_count == len(canonical)
     if complete:
         if net_gain < _MIN_NET_GAIN[phase_index]:
@@ -256,12 +293,18 @@ def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: st
             reasons.append("candidate mean progress below control")
         if shared_count and candidate_time > control_time * _MAX_SHARED_TIME_RATIO:
             reasons.append("aggregate shared-finish time regression")
+        for entry in seed_breakdown:
+            if (entry["lost_control_finishes"] >= _SEED_LOSS_CLUSTER and
+                    entry["net_finish_gain"] < 0):
+                reasons.append(f"seed {entry['seed']}: clustered control finish loss")
     decision = "REJECT" if reasons else "INCOMPLETE" if missing else "RETAIN"
     denominator = valid_count or 1
     return {
         "decision": decision, "reasons": reasons, "missing_cells": missing,
         "canonical_cells": len(canonical), "valid_canonical_cells": valid_count,
         "repeat_pairs_checked": repeat_pairs_checked, "paired_cells": paired,
+        "seed_finish_breakdown": seed_breakdown,
+        "track_finish_breakdown": track_breakdown,
         "control_finishes": totals["control"]["finishes"],
         "candidate_finishes": totals["candidate"]["finishes"],
         "net_finish_gain": net_gain, "lost_control_finishes": lost_finishes,
@@ -283,13 +326,16 @@ def compare_pairs(rows: list[dict], cells: list[tuple[int, int, int]], phase: st
 
 
 def combined_decision(phase_summaries: dict[str, dict]) -> dict:
-    """Require all three retained phases and 18 net finishes across 128 pairs."""
+    """Require retained phases, 18 net finishes and no harmed track layout."""
     if not isinstance(phase_summaries, dict):
         raise TypeError("phase_summaries must be a dictionary")
     rejected: list[str] = []
     incomplete: list[str] = []
     canonical_count = net_gain = 0
     decisions = {}
+    combined_tracks = {track: {"control_finishes": 0, "candidate_finishes": 0,
+                               "net_finish_gain": 0, "lost_control_finishes": 0}
+                       for track in (1, 2, 3, 4)}
     expected_counts = (32, 64, 32)
     if set(phase_summaries) - set(PHASES):
         rejected.append("unexpected phase summary")
@@ -332,6 +378,72 @@ def combined_decision(phase_summaries: dict[str, dict]) -> dict:
             incomplete.append(f"{phase} has invalid canonical pairs")
         if "partition" in summary and summary["partition"] != phase:
             rejected.append(f"{phase} partition mismatch")
+        pairs = summary.get("paired_cells")
+        if pairs is None:
+            incomplete.append(f"{phase} paired_cells missing")
+            continue
+        if not isinstance(pairs, list):
+            rejected.append(f"{phase} paired_cells invalid")
+            continue
+        if len(pairs) != expected:
+            message = f"{phase} requires {expected} paired_cells"
+            (incomplete if len(pairs) < expected else rejected).append(message)
+            continue
+        seen: set[tuple[int, int]] = set()
+        malformed = False
+        for pair in pairs:
+            if not isinstance(pair, dict):
+                rejected.append(f"{phase} has malformed paired_cells")
+                malformed = True
+                continue
+            track, seed = pair.get("track_id"), pair.get("seed")
+            if type(track) is not int or track not in (1, 2, 3, 4) or type(seed) is not int:
+                rejected.append(f"{phase} has invalid paired cell coordinates")
+                malformed = True
+                continue
+            coordinate = (track, seed)
+            if coordinate in seen:
+                rejected.append(f"{phase} has duplicate paired cell coordinates")
+                malformed = True
+                continue
+            seen.add(coordinate)
+            if pair.get("status") != "COMPLETE":
+                incomplete.append(f"{phase} paired cell {track}/{seed} incomplete")
+                malformed = True
+                continue
+            control, candidate = pair.get("control"), pair.get("candidate")
+            if (not isinstance(control, dict) or not isinstance(candidate, dict)
+                    or type(control.get("finished")) is not bool
+                    or type(candidate.get("finished")) is not bool):
+                rejected.append(f"{phase} paired cell {track}/{seed} lacks finish outcomes")
+                malformed = True
+        if malformed:
+            continue
+        seeds = {seed for _, seed in seen}
+        if (len(seeds) != _SEEDS_PER_PHASE[PHASES.index(phase)] or
+                any({seed for cell_track, seed in seen if cell_track == track} != seeds
+                    for track in (1, 2, 3, 4))):
+            rejected.append(f"{phase} paired_cells do not form the four-track seed grid")
+            continue
+        seed_rows, track_rows = _finish_breakdowns(pairs, seeds)
+        if summary.get("seed_finish_breakdown") != seed_rows:
+            rejected.append(f"{phase} seed finish breakdown differs from paired_cells")
+        if summary.get("track_finish_breakdown") != track_rows:
+            rejected.append(f"{phase} track finish breakdown differs from paired_cells")
+        if (sum(row["control_finishes"] for row in track_rows) != control_finishes or
+                sum(row["candidate_finishes"] for row in track_rows) != candidate_finishes or
+                sum(row["lost_control_finishes"] for row in track_rows) !=
+                summary.get("lost_control_finishes")):
+            rejected.append(f"{phase} finish totals differ from paired_cells")
+        for seed_row in seed_rows:
+            if (seed_row["lost_control_finishes"] >= _SEED_LOSS_CLUSTER and
+                    seed_row["net_finish_gain"] < 0):
+                rejected.append(f"{phase} seed {seed_row['seed']} has clustered finish loss")
+        for row in track_rows:
+            bucket = combined_tracks[row["track_id"]]
+            for field in ("control_finishes", "candidate_finishes", "net_finish_gain",
+                          "lost_control_finishes"):
+                bucket[field] += row[field]
     summaries = [phase_summaries.get(phase) for phase in PHASES]
     if all(isinstance(summary, dict) for summary in summaries):
         for field in _IDENTITY_FIELDS:
@@ -345,7 +457,15 @@ def combined_decision(phase_summaries: dict[str, dict]) -> dict:
                     rejected.append(f"{field} mismatch across phases")
     if not rejected and not incomplete and net_gain < _MIN_COMBINED_NET_GAIN:
         rejected.append(f"combined net finish gain below {_MIN_COMBINED_NET_GAIN}")
+    if not rejected and not incomplete:
+        for track, bucket in combined_tracks.items():
+            if bucket["candidate_finishes"] < bucket["control_finishes"]:
+                rejected.append(f"track {track} candidate finishes below control")
     decision = "REJECT" if rejected else "INCOMPLETE" if incomplete else "RETAIN"
     return {"decision": decision, "reasons": rejected + incomplete,
             "canonical_cells": canonical_count, "net_finish_gain": net_gain,
-            "phase_decisions": decisions}
+            "phase_decisions": decisions,
+            "track_finish_breakdown": [
+                {"track_id": track, **combined_tracks[track]}
+                for track in (1, 2, 3, 4)],
+            }

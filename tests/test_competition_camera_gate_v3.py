@@ -60,6 +60,30 @@ def _gains(phase: str) -> tuple[list[dict], list[tuple[int, int, int]]]:
     return rows, cells
 
 
+def _phase_summary(phase: str, *, candidate_extras: tuple[int, ...] = (),
+                   control_extras: tuple[int, ...] = ()) -> dict:
+    rows, cells = _gains(phase)
+    for index in candidate_extras:
+        _finish(rows, index, "candidate")
+    for index in control_extras:
+        _finish(rows, index, "control")
+    summary = compare_pairs(rows, cells, phase)
+    summary.update(partition=phase, protocol_sha256="a" * 64,
+                   control_agent_sha256="b" * 64,
+                   candidate_agent_sha256="c" * 64, model_sha256="d" * 64,
+                   harness_sha256="e" * 64, runner_sha256="f" * 64,
+                   decision_engine_sha256="0" * 64)
+    return summary
+
+
+def _combined_summaries() -> dict[str, dict]:
+    return {
+        "screen": _phase_summary("screen"),
+        "confirmation": _phase_summary("confirmation", candidate_extras=(6, 7, 8, 9, 10, 11)),
+        "blind": _phase_summary("blind"),
+    }
+
+
 @pytest.mark.parametrize("phase", ("screen", "confirmation", "blind"))
 def test_exact_net_finish_threshold_retains_and_one_less_rejects(phase: str) -> None:
     rows, cells = _gains(phase)
@@ -111,6 +135,40 @@ def test_aggregate_crash_budget_allows_one_new_crash_when_offset_by_control() ->
     excess = compare_pairs(rows, cells, "screen")
     assert excess["decision"] == "REJECT"
     assert any("aggregate crashes" in reason for reason in excess["reasons"])
+
+
+def test_seed_cluster_rejects_two_lost_finishes_only_when_seed_net_is_negative() -> None:
+    rows, cells = _case("screen")
+    for index in (0, 8):  # The same seed on tracks 1 and 2.
+        _finish(rows, index, "control")
+    for index in (1, 2, 3, 4, 5):
+        _finish(rows, index, "candidate")
+    clustered = compare_pairs(rows, cells, "screen")
+    assert clustered["net_finish_gain"] == 3
+    assert clustered["lost_control_finishes"] == 2
+    assert clustered["decision"] == "REJECT"
+    assert any("seed" in reason and "2000" in reason for reason in clustered["reasons"])
+    assert clustered["seed_finish_breakdown"][0] == {
+        "seed": 2000, "control_finishes": 2, "candidate_finishes": 0,
+        "net_finish_gain": -2, "lost_control_finishes": 2,
+    }
+    for index in (16, 24):
+        _finish(rows, index, "candidate")
+    neutral = compare_pairs(rows, cells, "screen")
+    assert neutral["decision"] == "RETAIN"
+    assert neutral["seed_finish_breakdown"][0]["net_finish_gain"] == 0
+    assert neutral["track_finish_breakdown"][0]["control_finishes"] == 1
+
+
+def test_one_lost_finish_on_negative_seed_does_not_veto_phase() -> None:
+    rows, cells = _case("screen")
+    _finish(rows, 0, "control")
+    for index in (1, 2, 3, 4):
+        _finish(rows, index, "candidate")
+    summary = compare_pairs(rows, cells, "screen")
+    assert summary["decision"] == "RETAIN"
+    assert summary["seed_finish_breakdown"][0]["lost_control_finishes"] == 1
+    assert summary["seed_finish_breakdown"][0]["net_finish_gain"] == -1
 
 
 def test_aggregate_contacts_and_damage_allow_local_spikes_only_when_offset() -> None:
@@ -204,6 +262,12 @@ def test_expected_grid_cannot_omit_a_canonical_or_repeat_cell() -> None:
     omitted_repeat = compare_pairs(rows[:-2], cells[:-1], "screen")
     assert omitted_repeat["decision"] == "REJECT"
     assert any("repeat grid" in reason for reason in omitted_repeat["reasons"])
+    wrong_track_cells = deepcopy(cells)
+    wrong_track_rows = deepcopy(rows)
+    wrong_track_cells[3] = (5, 2003, 0)
+    wrong_track_rows[6]["track_id"] = 5
+    wrong_track_rows[7]["track_id"] = 5
+    assert compare_pairs(wrong_track_rows, wrong_track_cells, "screen")["decision"] == "REJECT"
 
 
 def test_duplicate_unexpected_operational_and_invalid_receipts_reject() -> None:
@@ -229,6 +293,24 @@ def test_duplicate_unexpected_operational_and_invalid_receipts_reject() -> None:
         summary = compare_pairs(rows, cells, "screen")
         assert summary["decision"] == "REJECT", reason
         assert reason in " ".join(summary["reasons"])
+
+
+def test_missing_outcome_fields_and_unknown_dnf_reason_reject_cleanly() -> None:
+    base_rows, cells = _gains("screen")
+    cases = []
+    no_dnf_time = deepcopy(base_rows)
+    del no_dnf_time[0]["lap_time_ms"]
+    cases.append((no_dnf_time, "lap_time_ms"))
+    no_finish_reason = deepcopy(base_rows)
+    del no_finish_reason[1]["retire_reason"]
+    cases.append((no_finish_reason, "retire_reason"))
+    unknown_dnf_reason = deepcopy(base_rows)
+    unknown_dnf_reason[0]["retire_reason"] = "unknown"
+    cases.append((unknown_dnf_reason, "retire_reason"))
+    for rows, field in cases:
+        summary = compare_pairs(rows, cells, "screen")
+        assert summary["decision"] == "REJECT", field
+        assert field in " ".join(summary["reasons"])
 
 
 def test_runtime_limits_are_inclusive_and_nonfinite_metrics_reject() -> None:
@@ -271,29 +353,19 @@ def test_repeat_receipt_with_invalid_runtime_rejects_without_counting_it() -> No
 
 
 def test_combined_gate_requires_every_phase_and_eighteen_net_finishes() -> None:
-    summaries = {
-        "screen": {"decision": "RETAIN", "canonical_cells": 32,
-                   "control_finishes": 0, "candidate_finishes": 3, "net_finish_gain": 3},
-        "confirmation": {"decision": "RETAIN", "canonical_cells": 64,
-                         "control_finishes": 0, "candidate_finishes": 12, "net_finish_gain": 12},
-        "blind": {"decision": "RETAIN", "canonical_cells": 32,
-                  "control_finishes": 0, "candidate_finishes": 3, "net_finish_gain": 3},
-    }
-    for summary in summaries.values():
-        summary.update(protocol_sha256="a" * 64, candidate_agent_sha256="b" * 64,
-                       runner_sha256="c" * 64, decision_engine_sha256="d" * 64)
+    summaries = _combined_summaries()
     exact = combined_decision(summaries)
     assert exact["decision"] == "RETAIN"
     assert exact["canonical_cells"] == 128
     assert exact["net_finish_gain"] == 18
-    summaries["confirmation"]["net_finish_gain"] = 11
-    summaries["confirmation"]["candidate_finishes"] = 11
+    summaries["confirmation"] = _phase_summary(
+        "confirmation", candidate_extras=(6, 7, 8, 9, 10))
     below = combined_decision(summaries)
     assert below["decision"] == "REJECT"
     assert below["net_finish_gain"] == 17
     assert any("18" in reason for reason in below["reasons"])
-    summaries["confirmation"]["net_finish_gain"] = 12
-    summaries["confirmation"]["candidate_finishes"] = 12
+    summaries["confirmation"] = _phase_summary(
+        "confirmation", candidate_extras=(6, 7, 8, 9, 10, 11))
     summaries["blind"]["decision"] = "REJECT"
     assert combined_decision(summaries)["decision"] == "REJECT"
     summaries["blind"]["decision"] = "RETAIN"
@@ -304,19 +376,7 @@ def test_combined_gate_requires_every_phase_and_eighteen_net_finishes() -> None:
 
 
 def test_combined_gate_rejects_extra_phase_and_identity_drift() -> None:
-    summaries = {
-        "screen": {"decision": "RETAIN", "canonical_cells": 32,
-                   "control_finishes": 0, "candidate_finishes": 3, "net_finish_gain": 3},
-        "confirmation": {"decision": "RETAIN", "canonical_cells": 64,
-                         "control_finishes": 0, "candidate_finishes": 12, "net_finish_gain": 12},
-        "blind": {"decision": "RETAIN", "canonical_cells": 32,
-                  "control_finishes": 0, "candidate_finishes": 3, "net_finish_gain": 3},
-    }
-    for summary in summaries.values():
-        summary.update(protocol_sha256="a" * 64, control_agent_sha256="b" * 64,
-                       candidate_agent_sha256="c" * 64, model_sha256="d" * 64,
-                       harness_sha256="e" * 64, runner_sha256="f" * 64,
-                       decision_engine_sha256="0" * 64)
+    summaries = _combined_summaries()
     assert combined_decision(summaries)["decision"] == "RETAIN"
     for field in ("protocol_sha256", "control_agent_sha256", "candidate_agent_sha256",
                   "model_sha256", "harness_sha256", "runner_sha256",
@@ -341,3 +401,40 @@ def test_combined_gate_rejects_extra_phase_and_identity_drift() -> None:
     extra = deepcopy(summaries)
     extra["development"] = deepcopy(summaries["screen"])
     assert combined_decision(extra)["decision"] == "REJECT"
+
+
+def test_combined_track_noninferiority_is_derived_from_paired_cells() -> None:
+    summaries = _combined_summaries()
+    assert combined_decision(summaries)["decision"] == "RETAIN"
+    summaries["screen"] = _phase_summary("screen", candidate_extras=(3,),
+                                          control_extras=(24,))
+    failing = combined_decision(summaries)
+    assert failing["net_finish_gain"] == 18
+    assert failing["decision"] == "REJECT"
+    assert any("track 4" in reason for reason in failing["reasons"])
+    assert failing["track_finish_breakdown"][3] == {
+        "track_id": 4, "control_finishes": 1,
+        "candidate_finishes": 0, "net_finish_gain": -1,
+        "lost_control_finishes": 1,
+    }
+    summaries["blind"] = _phase_summary("blind", candidate_extras=(24,))
+    equal_track = combined_decision(summaries)
+    assert equal_track["decision"] == "RETAIN"
+    assert equal_track["track_finish_breakdown"][3]["net_finish_gain"] == 0
+
+
+def test_combined_gate_rejects_thin_or_inconsistent_paired_cell_evidence() -> None:
+    summaries = _combined_summaries()
+    missing = deepcopy(summaries)
+    missing["blind"]["paired_cells"].pop()
+    assert combined_decision(missing)["decision"] == "INCOMPLETE"
+    duplicate = deepcopy(summaries)
+    duplicate["blind"]["paired_cells"][-1]["seed"] = 2000
+    duplicate["blind"]["paired_cells"][-1]["track_id"] = 1
+    assert combined_decision(duplicate)["decision"] == "REJECT"
+    fabricated = deepcopy(summaries)
+    fabricated["confirmation"]["paired_cells"][0]["candidate"]["finished"] = False
+    assert combined_decision(fabricated)["decision"] == "REJECT"
+    thin = deepcopy(summaries)
+    del thin["screen"]["paired_cells"]
+    assert combined_decision(thin)["decision"] == "INCOMPLETE"
