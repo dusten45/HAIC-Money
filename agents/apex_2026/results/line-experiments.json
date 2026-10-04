@@ -836,6 +836,75 @@
       ],
       "scope": "four user-authorized development cells; consumed iteration; no holdout",
       "notes": "Observer rescues high-demand track4 but loses track1 earlier without collision damage; three finishes not sufficient, not promoted."
+    },
+    {
+      "variant": "hud100",
+      "source_sha256": "5dd078d04dbfbcc9b647e5ef6095ab4bfc329f0a537f825c310f817e5dd324f2",
+      "source_snapshot": "/tmp/apex-line-hud100/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 100,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100,
+        "path_smoothing": 200,
+        "hud_dynamics": true
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 17140,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-hud100/t1-s516237.json",
+          "receipt_sha256": "22706b455f297879b30ae0fe038192eababf6da8ae0933c0f6a9cdf548708180"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21420,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-hud100/t2-s644062.json",
+          "receipt_sha256": "6353b127f3fe98710296fa314126b2ebd738b09f1e3df70a2a553484261736fd"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 19480,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-hud100/t3-s1007.json",
+          "receipt_sha256": "93d4f2df0b4fc8fba9d327219146b1fd2618b8a0d96e8d62ee59af276a2da5fb"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 17920,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-hud100/t4-s18800.json",
+          "receipt_sha256": "2778422991a30de599c9b66a2716412a2902b639b32f228b3c31f21116000b1c"
+        },
+        {
+          "track_id": 4,
+          "seed": 3601050002,
+          "finished": true,
+          "lap_time_ms": 16260,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-line-hud100/t4-s3601050002.json",
+          "receipt_sha256": "2cdf414ff593c216c7c7451c5b6e159ab3ec955b1fc4bf93c3797d6f640b9526"
+        }
+      ],
+      "scope": "four required cells plus declared development track4 seed3601050002; consumed iteration; no holdout",
+      "notes": "Instantaneous calibrated pixel-HUD yaw replaces LK yaw only; LK slip retained, wheel angle diagnostic only. All required finish faster with zero damage; targeted dev cell rescued but damage .4. Original10\u201313s target unmet. Full12-development screen follows with this dev receipt reused exactly once."
     }
   ],
   "diagnostic_replays": [
