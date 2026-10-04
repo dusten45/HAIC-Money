@@ -1,0 +1,83 @@
+{
+  "episodes_run": 0,
+  "sha256": {
+    "/tmp/apex-v2-beam-r3/source.py": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+    "/tmp/apex-v2-beam-r3/failure_capture/selected_ticks.json": "2ee21cd70444edb5d623033c303608800871585d3f20b5739a298a95fe7548e6",
+    "/tmp/apex-v2-beam-r3/failure_capture/observations.npz": "4b1d0838e0eefa1713b516832e8e38e549a2948caf42b335a88dc0f078f042f0"
+  },
+  "events": [
+    {
+      "step": 137,
+      "raw_tick": 1,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 137,
+      "raw_tick": 2,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 137,
+      "raw_tick": 3,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 137,
+      "raw_tick": 4,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 138,
+      "raw_tick": 1,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 138,
+      "raw_tick": 2,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 0,
+      "exact_fixture_pixel_intersections": []
+    },
+    {
+      "step": 138,
+      "raw_tick": 3,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 140,
+      "exact_fixture_pixel_intersections": [
+        {
+          "body": 1,
+          "fixture": 0,
+          "pixel": [
+            39,
+            53
+          ],
+          "overlap_pixel_area": 0.23564139008522034
+        }
+      ]
+    },
+    {
+      "step": 138,
+      "raw_tick": 4,
+      "original_sparse_cost": 0,
+      "dense_rectangle_obstacle_samples": 194,
+      "exact_fixture_pixel_intersections": []
+    }
+  ],
+  "conclusion": "At step138 rawtick3 the predicted front-left wheel fixture intersects detected obstacle pixel39,53 by.235641px2 while original25point footprint cost is0. The same predicted trajectory therefore contains a mask-level collision missed by sparse sampling. This does not require changing observer state or widening rectangle1.4m; dense1.4m rectangle also detects it.",
+  "limits": [
+    "Polygon intersections use the square area represented by thresholded obstacle pixels, not privileged exact circular obstacle geometry. Raster uncertainty remains.",
+    "Exact physical wheel footprint intersections are nonzero only138tick3, not finaltick4; endpoint-only checks would miss this transient.",
+    "The script imports candidate definitions and processes captured predictions; no environment or shadow stepping occurs.",
+    "Dense rectangular footprint overbounds actual fixtures: tick4 rectangleoverlap but exactfixturesclear. Prefer exactpolygon-cell geometry or proven conservative envelope, not densepointcount interpretation as groundtruth."
+  ]
+}
