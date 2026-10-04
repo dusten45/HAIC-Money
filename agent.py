@@ -4626,6 +4626,105 @@ class _HighSpeedBendPriorityController(_ImpactAwareSparseRoadController):
         return proposed
 
 
+class _BoundedSideHoldController(_HighSpeedBendPriorityController):
+    """Keep an early, visibly wider pass side for at most three decisions.
+
+    The short latch belongs to the same controller that emits the action. It
+    only applies after a full spatial path was seen and that path temporarily
+    disappears; it does not invent a newly verified passage. This remains a
+    diagnostic candidate until a frozen independent evaluation succeeds.
+    """
+
+    SIDE_HOLD_MARGIN_MIN = 1.0
+    SIDE_HOLD_MARGIN_MAX = 1.6
+    SIDE_HOLD_MIN_WIDTH = 2.0
+    SIDE_HOLD_MIN_WIDTH_GAIN = 0.8
+    SIDE_HOLD_STEER_FLOOR = 0.07
+    SIDE_HOLD_MAX_DECISIONS = 3
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        self._clear_side_hold()
+        super().__init__(cruise_speed=cruise_speed)
+
+    def _clear_side_hold(self) -> None:
+        self._side_hold_identity = None
+        self._side_hold_side = 0.0
+        self._side_hold_decisions = 0
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._clear_side_hold()
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._clear_side_hold()
+        return super()._lost_road_action()
+
+    def _adjust_obstacle_steering(
+        self, *, base_steering: float, obstacle_bias: float, straight: bool,
+    ) -> float:
+        proposed = float(super()._adjust_obstacle_steering(
+            base_steering=base_steering,
+            obstacle_bias=obstacle_bias,
+            straight=straight,
+        ))
+        plan = self._corridor_plan
+        assessment = self._temporal_assessment
+        track = self._temporal_track
+        bbox = self._corridor_bbox
+        if bbox is None or assessment is None or track is None:
+            self._clear_side_hold()
+            return proposed
+
+        if (
+            plan is not None and 24 <= bbox[3] <= 30
+            and self.SIDE_HOLD_MARGIN_MIN <= plan["clearance_px"]
+            <= self.SIDE_HOLD_MARGIN_MAX
+            and track.observations == 1
+            and assessment.brake_required
+            and assessment.selected_target_x is None
+            and len(assessment.road_rows) == 3
+        ):
+            side = float(plan["side"])
+            own = (assessment.left_width_px if side < 0
+                   else assessment.right_width_px)
+            other = (assessment.right_width_px if side < 0
+                     else assessment.left_width_px)
+            if (
+                own is not None and other is not None
+                and own >= self.SIDE_HOLD_MIN_WIDTH
+                and own - other >= self.SIDE_HOLD_MIN_WIDTH_GAIN
+            ):
+                self._side_hold_identity = track.identity
+                self._side_hold_side = side
+                self._side_hold_decisions = 0
+
+        if (
+            plan is None
+            and self._side_hold_identity == track.identity
+            and self._side_hold_side in (-1.0, 1.0)
+            and self._side_hold_decisions < self.SIDE_HOLD_MAX_DECISIONS
+            and 30 <= bbox[3] <= 52
+            and len(assessment.road_rows) == 3
+        ):
+            side = self._side_hold_side
+            own = (assessment.left_width_px if side < 0
+                   else assessment.right_width_px)
+            other = (assessment.right_width_px if side < 0
+                     else assessment.left_width_px)
+            if (
+                own is not None and other is not None
+                and own >= self.SIDE_HOLD_MIN_WIDTH
+                and own - other >= self.SIDE_HOLD_MIN_WIDTH_GAIN
+                and proposed * side < self.SIDE_HOLD_STEER_FLOOR
+            ):
+                self._side_hold_decisions += 1
+                return float(side * self.SIDE_HOLD_STEER_FLOOR)
+
+        if bbox[3] > 52 or track.identity != self._side_hold_identity:
+            self._clear_side_hold()
+        return proposed
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
