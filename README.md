@@ -60,18 +60,9 @@ baseline checkpoint가 없으면 `policy.pt`/선택적 `dynamics.pt` 경로를 �
 checkpoint가 없으면 인터페이스 smoke 용도의 초기 actor를 만들 수 있지만, 제출 ZIP은 strict
 loading으로 유효한 학습 checkpoint가 없으면 실행을 거부합니다. Corridor 교사는 train split의
 시연 수집과 학습 전용 벤치마크에서만 쓰며 별도 teacher 모듈로는 `Agent`에 포함하지 않습니다.
-bare `model.pt`는 도로가 보인 뒤 신경망 행동 대신 명시적인
-`_StableCompletionController`를 사용합니다. 이 정책은 재현 가능한 완주 이력이 있는
-source commit `52976fe`의 카메라 제어 계약을 독립 클래스로 고정한 것입니다. 최신 회색
-프레임에서 도로 중심선과 HUD 속도를 읽고, 직선 조향을 deadband 안에서 0으로 유지하며,
-곡선·작은 장애물 조향을 프레임당 `0.07` 이하로 변경합니다. 순항 목표는 `48`, gas 상한은
-`0.08`이고 gas와 brake는 동시에 내지 않습니다. 도로를 잃으면 마지막 조향을 0으로
-감쇠하면서 `0.06` brake를 적용합니다.
-
-이 복원은 동일한 소비 개발 셀에서 28.4초 무손상·무충돌 완주와 원본 356-step trace
-일치를 확인했지만, 단일 재사용 셀의 진단 결과일 뿐 미지 트랙 일반화나 SOTA 근거가
-아닙니다. 자세한 lineage와 제한은
-`experiments/stable-completion-controller-v1-result.json`에 기록합니다. 명시적
+bare `model.pt` 경로는 도로 감지 후 카메라 기반 제어기를 사용합니다. 현재 활성 제어기와
+독립 평가 상태는 `CONTEXT.md`를 확인하세요. 이전 제어기의 개발 기록은
+`experiments/stable-completion-controller-v1-result.json`에 보관되어 있습니다. 명시적
 action-contract payload, DrQ actor, HAIC visual-policy와 선택적 CEM 경로는 기존 모델
 계약을 그대로 유지합니다.
 
