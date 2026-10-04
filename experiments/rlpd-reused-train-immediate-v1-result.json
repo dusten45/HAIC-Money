@@ -1,0 +1,36 @@
+{
+  "format": "haic-rlpd-reused-train-engineering-result-v1",
+  "role": "single-already-consumed-TRAIN-cell-repeat-not-G1-coverage",
+  "status": "complete-with-cross-runtime-trace-divergence",
+  "protocol_path": "experiments/rlpd-reused-train-immediate-v1.json",
+  "protocol_sha256": "67b65436b52bc494965e2ff170952f738a7c4b9dd91ec1dc6f57f4c5baf10f8f",
+  "attempt_path": "runs/20260929-rlpd-reused-train-immediate-v1/attempt.json",
+  "new_result_path": "runs/20260929-rlpd-reused-train-immediate-v1/result.json",
+  "new_trace_path": "runs/20260929-rlpd-reused-train-immediate-v1/trace.npz",
+  "new_trace_sha256": "78356574088339dc035b65893c483e27502067b1fc4e16590daa8cc193bd3956",
+  "old_g0_cells_path": "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+  "old_g0_cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559",
+  "old_trace_path": "runs/20260926-rlpd-g0-completion-v1/traces/seed-4272000001-track-1-entropy-v5-author-seed50.npz",
+  "old_trace_sha256": "2af529ae03c2ce3f00f7ef61056b91ec4d23ace163b6dbbf24f49e9803b50013",
+  "cell": {"partition": "TRAIN", "track_id": 1, "geometry_seed": 4272000001, "obstacles": true},
+  "actor_id": "entropy-v5-author-seed50",
+  "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+  "road_centerline_sha256": "53624705e6645b2f7b8297f5065aa3855c85829c212edfa7328d9779a93e3758",
+  "original_source_hashes_preserved": "all 25 executable paths from the G0 protocol have the same hashes in the new source map; new operator is the 26th path",
+  "new_run": {"environment_resets": 1, "decisions": 531, "driven_raw_frames": 2122, "outcome": "finished", "policy_updates": 0, "core_hour_cap": null},
+  "old_run": {"decisions": 456, "driven_raw_frames": 1824, "outcome": "off_track"},
+  "comparison": {
+    "initial_pixel_stacks_equal": true,
+    "first_next_frames_equal": true,
+    "first_native_action_max_abs_difference": 1.1920928955078125e-07,
+    "first_next_frame_mismatch_zero_based_decision": 33,
+    "first_native_action_mismatch_above_1e_6_zero_based_decision": 34,
+    "interpretation": "same actor/road/source identity, but trajectories fork; tiny early action differences are observed, not a proven cause"
+  },
+  "limitations": [
+    "One reused TRAIN geometry and a frozen existing actor; the off-track-to-finished change is not an independent success or trained-policy improvement.",
+    "The repeated runtime differs from historical execution; neither a full state/RNG replay nor exact trajectory parity has been established.",
+    "No new G1 cohort, intervention, learner update, confirmation/blind/official evaluation, model confirmation, or submission was opened.",
+    "Historic RLPD runs and protected evaluations lack a complete authenticated transfer inventory; matching these targeted input hashes does not prove whole-tree restoration."
+  ]
+}

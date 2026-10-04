@@ -1,0 +1,56 @@
+{
+  "format": "haic-rlpd-newhost-in-sample-train-screen-result-v1",
+  "status": "complete_negative_in_sample_sanity",
+  "partition": "TRAIN",
+  "role": "same-host-reused-G0-roads-not-fresh-generalization-or-official-evaluation",
+  "protocol_path": "experiments/rlpd-newhost-train-screen-20260929-v1.json",
+  "protocol_sha256": "1cbeb8ed962541296650512924c4ef42c646a6b3de2f269a5c3d58acc06d9cf1",
+  "manifest_path": "runs/20260929-rlpd-newhost-train-screen-v1/manifest.json",
+  "manifest_sha256": "bb6d151bdab8e14cf191bd48ccf77d1a1f643368c3ebb75349c67f3243fcc009",
+  "protocol_snapshot_byte_identical": true,
+  "pinned_source_artifacts_verified": 8,
+  "pinned_executable_sources_verified": 26,
+  "actor_exports": {
+    "entropy-v5-author-seed50": {
+      "actor_path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "trained_online_on_g0_screen_roads": false,
+      "later_drove_g0_roads_without_updates": true
+    },
+    "newhost-seed52-final": {
+      "actor_path": "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "trained_online_on_g0_screen_roads": true,
+      "later_drove_g0_roads_without_updates": true
+    }
+  },
+  "cpu_preflight": "both actor exports double-reloaded on deterministic CHW fixtures with bit-exact actions and native-to-official adapter parity; zero environment resets",
+  "geometry_count": 12,
+  "episodes_scheduled": 24,
+  "episodes_complete": 24,
+  "episodes_censored": 0,
+  "attempt_receipts_verified": 24,
+  "cell_hashes_verified": 24,
+  "trace_hashes_verified": 24,
+  "road_centerline_pairs_and_original_g0_rows_match": 12,
+  "observed_outcomes": {
+    "entropy-v5-author-seed50": {"finished": 5, "off_track": 6, "crash": 1, "denominator": 12},
+    "newhost-seed52-final": {"finished": 1, "off_track": 11, "crash": 0, "denominator": 12}
+  },
+  "paired_finish_table": {
+    "both_finished": 1,
+    "newhost_only_finished": 0,
+    "v5_only_finished": 4,
+    "neither_finished": 7,
+    "denominator": 12
+  },
+  "interpretation": "The final new-host actor fails an in-sample local task sanity comparison; do not promote it on this evidence. The two actors had different training seeds, online road catalogs and host runtimes, so the gap is NOT an identified causal training effect.",
+  "source_manifest_wording_erratum": "The frozen manifest says 'Actors saw these same TRAIN roads in learner data.' That holds for newhost-seed52-final only. V5 seed50 trained on a different four-track/64-geometry online pool and later drove G0 roads without learner updates. Do not treat both as symmetrically in-sample trained.",
+  "limitations": [
+    "The new actor trained on all twelve reused G0 TRAIN roads; this is not fresh-road generalization.",
+    "The V5 comparison is contemporaneous on matching recorded road hashes, but one run per actor/road does not establish repeat determinism or identical hidden simulator state.",
+    "Historical G0 V5 finished 3/12 versus this host's 5/12, with four outcome flips; never substitute the old observations for the current control.",
+    "No matched learning intervention, confirmation, blind, private track, official score, model confirmation or package promotion was performed.",
+    "TRAIN trace/action timing and checkpoint comparisons are separate mechanism hypotheses; do not assert causes from this task outcome alone."
+  ]
+}

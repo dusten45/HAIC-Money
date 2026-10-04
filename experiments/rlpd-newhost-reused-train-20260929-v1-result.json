@@ -1,0 +1,66 @@
+{
+  "format": "haic-rlpd-newhost-reused-train-result-v1",
+  "status": "complete_training_not_evaluated",
+  "partition": "TRAIN",
+  "role": "reused-train-online-actor-critic-learning-not-official-performance",
+  "protocol_path": "experiments/rlpd-newhost-reused-train-20260929-v1.json",
+  "protocol_sha256": "7f54719796af058deac99e208df84412e1021497bee844011f7515c21126b598",
+  "result_path": "runs/20260929-rlpd-newhost-reused-train-v1/result.json",
+  "result_sha256": "dcce1072609d40d9fd210a192841137b4d22cb0101bf815d27ecea0630a28c03",
+  "attempts_path": "runs/20260929-rlpd-newhost-reused-train-v1/attempts.jsonl",
+  "attempts_sha256": "c0645d7739c81dc3af49511c53a794bf53408663cdba9ed10615b460f938d5cb",
+  "metrics_path": "runs/20260929-rlpd-newhost-reused-train-v1/metrics.jsonl",
+  "metrics_sha256": "481dd0d2aca0e08dd6a33e1c432fd20bc5a107ba2af1b2ef4220809cf8dedbd1",
+  "steps_path": "runs/20260929-rlpd-newhost-reused-train-v1/steps.jsonl",
+  "steps_sha256": "ac602d41d12b82389fea267f1b726d58401a44ce3d2e8474e56c327f053f4024",
+  "source_files_verified": 33,
+  "authentic_v5_prior": {
+    "v5_protocol_sha256": "2e7df4152e2282bcd34a6d2a160737cc13c6f1a03d769bd69832e1fc51326546",
+    "prior_manifest_sha256": "2dad0686e8c7c84954f096375f31495673bbad25c988034613b4145cb97fd770",
+    "dataset_sha256": "815563d490c2aa9903f29baee34fc7c8217a1f762e42324b121a0a11a523d77c",
+    "episode_archives_verified": 35,
+    "stored_transitions": 15915
+  },
+  "online_train_cells": {
+    "track_id": 1,
+    "geometry_count": 12,
+    "partition": "already-consumed-TRAIN",
+    "g0_cells_sha256": "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559"
+  },
+  "training": {
+    "environment_decisions": 131072,
+    "gradient_steps": 130072,
+    "random_actions_recorded": 2000,
+    "policy_actions_recorded": 129072,
+    "offline_samples_per_update": 32,
+    "online_samples_per_update": 32,
+    "completed_episodes": 369,
+    "completed_episode_outcomes": {"finished": 19, "off_track": 311, "crash": 39},
+    "open_episode_steps_at_stop": 478
+  },
+  "checkpoints": [
+    {
+      "environment_steps": 65536,
+      "actor_path": "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000065536/actor.pt",
+      "actor_sha256": "db882299d6cbeb357751b45a62b235f9cfbbc870186a11fad4a2d1ea6ef0e734",
+      "checkpoint_sha256": "4b9f64e4c1354d6eea717ed119926c1cc1a0431e66fc85a87e66843dae99e902",
+      "episode_boundary": false,
+      "exact_resume_supported": false
+    },
+    {
+      "environment_steps": 131072,
+      "actor_path": "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000131072/actor.pt",
+      "actor_sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "checkpoint_sha256": "7b6f0dd958385559afcd992a550a70ded0f7a6930f41e4dc3497af0e3d781de1",
+      "episode_boundary": false,
+      "exact_resume_supported": false
+    }
+  ],
+  "limitations": [
+    "Episode outcomes are evolving training interactions, not either saved actor's finish rate or a matched model comparison.",
+    "Training used all 12 reported roads; repeats on those roads are in-sample development, not generalization.",
+    "Both actor archives strict-loaded on CPU; deterministic reload/action parity and separate policy screening are not yet established by this training result.",
+    "The V5 prior and current 33-file source inventory are independently bound; the historical V5 protocol's mutable old source-map check is not reasserted as if current files were unchanged.",
+    "No G1 newly claimed road was used for learner training, and no confirmation, blind, private or official evaluation was opened."
+  ]
+}

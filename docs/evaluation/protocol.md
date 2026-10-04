@@ -108,13 +108,24 @@ Freeze a new source-pinned `haic-rlpd-g1-coverage-protocol-v1` protocol with
 the exact 24 TRAIN `cells`, `study_id`, and `train_claims_sha256` from the claim
 output. Before the first reset, re-audit with the same `--seed-start N` plus
 `--self-study-id ID`, `--self-protocol-path experiments/FILE.json`, and
-`--self-protocol-sha256 SHA`; only exact own claims and the frozen protocol
-SHA/digest are waived. Foreign claims or new interaction still block. A normal
-read-only re-audit *without* self mode intentionally blocks the claimed batch.
+`--self-protocol-sha256 SHA`. If a clear audit receipt is saved under
+`experiments/`, also pass its exact `--self-audit-path` and
+`--self-audit-sha256`; the G1 collector preflight requires this pinned pair.
+Only exact own claims, the frozen protocol and this SHA-checked self-audit
+receipt are exempted from candidate collisions. Foreign candidate-bearing
+receipts or new interaction still block. A normal read-only re-audit *without*
+self mode intentionally blocks the claimed batch.
 The registry is cooperative: an independent lane bypassing it
 can still race; check talk, namespace allocation and live ledgers. The historic
 G0 v1 auditor and per-reset whole-catalog checks remain byte-for-byte frozen
 with that completed run; its v1 receipt is not a G1 certificate.
+The historical four-core-hour-capped G1 protocol remains disabled: that
+particular budget lacks a source-bound mid-episode process-CPU stop. A
+separately frozen new-host TRAIN G1 protocol with `max_core_hours: null`
+did drive all 48 slots on 2026-09-29; see its
+[internal result](../../experiments/rlpd-g1-newhost-20260929-v1-result.json).
+It does not attest complete historic RLPD artifact restoration, image-reviewed
+coverage, a learned treatment or official evaluation.
 
 ## CPU and Package Gates
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 import re
 from typing import Any, Sequence
 
@@ -23,7 +24,7 @@ class CoverageRules:
     max_decisions_per_episode: int = 2000
     max_total_decisions: int = 96000
     max_total_raw_frames: int = 386448
-    max_core_hours: float = 4.0
+    max_core_hours: float | None = 4.0
     min_positive_geometries: int = 3
     min_finished_geometries: int = 3
 
@@ -43,7 +44,7 @@ class CoverageRules:
             or self.max_decisions_per_episode != 2000
             or self.max_total_decisions != 96000
             or self.max_total_raw_frames != 386448
-            or self.max_core_hours != 4.0
+            or self.max_core_hours not in (4.0, None)
             or self.min_positive_geometries != 3
             or self.min_finished_geometries != 3
         ):
@@ -54,8 +55,9 @@ def assess_coverage(
     rules: CoverageRules, rows: Sequence[dict[str, Any]], *, core_hours_used: float,
 ) -> dict[str, Any]:
     """Assess all scheduled roads; the caller must first pin protocol/receipt bytes."""
-    if (type(core_hours_used) not in (int, float)
-            or not 0 <= core_hours_used <= rules.max_core_hours):
+    if (type(core_hours_used) not in (int, float) or not 0 <= core_hours_used
+            or not math.isfinite(core_hours_used)
+            or rules.max_core_hours is not None and core_hours_used > rules.max_core_hours):
         raise ValueError("G1 process exceeded its frozen core-hour cap")
     if len(rows) != 2 * len(rules.cells):
         raise ValueError("G1 result must preserve every scheduled actor-road slot")

@@ -1,0 +1,50 @@
+{
+  "format": "haic-rlpd-g1-newhost-collection-result-v1",
+  "status": "collected_unreviewed_coverage_inconclusive",
+  "partition": "TRAIN",
+  "role": "frozen-source-actor-collection-not-treatment-or-official-evaluation",
+  "protocol_path": "experiments/rlpd-g1-newhost-20260929-v1.json",
+  "protocol_sha256": "aa9c31b7b3d4d54b63cbb7ed8d15d191d32b401834d1bdfbead2c7e7617c23ec",
+  "pre_reset_audit_path": "experiments/rlpd-g1-newhost-20260929-v1-preflight.json",
+  "pre_reset_audit_sha256": "d16d2493114d9da9f6a5beb0ef23fbcd8787930bbc909ef652013c86dc31a102",
+  "image_rubric_path": "experiments/rlpd-g1-newhost-image-rubric-v1.json",
+  "image_rubric_sha256": "47dab02f5768606a23f3bdf7ffc21e4acb8fb3f42b74b99bfb2a9705cf7de3f1",
+  "manifest_path": "runs/20260929-rlpd-g1-newhost-v1/manifest.json",
+  "manifest_sha256": "c7b92f71777adc88de5cb0d6677868bfe447044a6d31a72e6625208992b192d5",
+  "slots_path": "runs/20260929-rlpd-g1-newhost-v1/slots.json",
+  "slots_sha256": "2cd956bc2def2aa17894c2f79aa33e01ec8c795d13d704946347cd8b970a529a",
+  "geometry_count": 24,
+  "slots_scheduled": 48,
+  "slots_complete": 48,
+  "slots_censored": 0,
+  "slots_unrun": 0,
+  "decisions_observed": 21244,
+  "raw_frames_including_resets": 87387,
+  "source_actor_outcomes": {
+    "entropy-v5-author-seed50": {"finished": 12, "off_track": 11, "crash": 1, "episodes": 24},
+    "long-horizon-seed11": {"finished": 11, "off_track": 13, "crash": 0, "episodes": 24}
+  },
+  "paired_geometry_outcomes": {
+    "both_finished": 7,
+    "primary_only_finished": 5,
+    "comparator_only_finished": 4,
+    "neither_finished": 8
+  },
+  "trace_hashes_verified": 48,
+  "cell_receipt_hashes_verified": 48,
+  "image_review": {
+    "status": "not_sealed",
+    "reviewed_slots": 0,
+    "ordinary_anchor_decision": 200,
+    "post_anchor_frames": 8,
+    "known_incomplete_ordinary_slots": [2, 14, 32, 38, 40],
+    "minimum_unknown_labels": 5,
+    "coverage_pass_possible_under_frozen_rubric": false
+  },
+  "limitations": [
+    "The 24 TRAIN geometries are consumed; do not relabel them fresh or top up this cohort.",
+    "Two unchanged source actors, not a baseline/treatment pair; no new learner was evaluated here.",
+    "Short episodes cannot supply the frozen ordinary review window; coverage pass is unreachable, and no image-only labels were sealed.",
+    "Outcomes are internal task proxies, not an official ranking score, causal intervention result, or model generalization evidence."
+  ]
+}

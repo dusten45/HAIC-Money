@@ -72,6 +72,7 @@ class TestG1CollectorSkeleton(unittest.TestCase):
                             "directed_delta_epsilon": 0.01,
                             "centerline_far_threshold_m": 10.0},
             "train_claims_sha256": self.claim_sha, "image_rubric_sha256": "d" * 64,
+            "exclusions": {"training_geometry_seeds": [209999]},
         }
         self.protocol_sha = self.write_json(self.protocol_path, self.protocol)
         self.audit = {
@@ -138,6 +139,21 @@ class TestG1CollectorSkeleton(unittest.TestCase):
         self.assertIn("mid-episode", result["reason"])
         self.assertEqual(result["environment_creations"], 0)
         self.assertEqual(self.created, 0)
+
+    def test_frozen_exclusions_fail_closed_before_environment_creation(self):
+        for exclusions in (None, {"unreviewed_seed": 210000},
+                           {"training_geometry_seeds": [210000]},
+                           {"training_geometry_seeds": ["210000"]}):
+            with self.subTest(exclusions=exclusions):
+                self.setUp()
+                if exclusions is None:
+                    del self.protocol["exclusions"]
+                else:
+                    self.protocol["exclusions"] = exclusions
+                self.protocol_sha = self.write_json(self.protocol_path, self.protocol)
+                with self.assertRaises(ValueError):
+                    self.preflight()
+                self.assertEqual(self.created, 0)
 
     def test_bad_source_cell_actor_claim_and_audit_prevent_every_env_creation(self):
         changes = (

@@ -47,6 +47,17 @@ _EXCLUSION_KEYS = _GEOMETRY_KEYS | {"last_geometry_seed", "exclusion_seed_ids",
 _PASSTHROUGH_FORMATS = {
     "haic-rlpd-g0-r5-receipt-erratum-v1",  # Candidate-bound G0, NEVER a G1 waiver.
 }
+_SELF_AUDIT_KEYS = {
+    "format", "status", "protocol_frozen", "self_claims_verified", "train_claims_sha256",
+    "candidate_rule", "seed_start", "candidate_seeds", "cells", "actors", "collisions",
+    "blockers", "provenance_warnings", "repository_changed_since_audit_snapshot",
+    "inventory_complete", "experiment_inventory", "experiment_inventory_sha256",
+    "source_inventory", "source_inventory_sha256", "blind_episode_reads", "r5_evidence",
+    "limitation",
+}
+_CANDIDATE_RULE = "fixed seed_start+i, i=0..23; no replacement or top-up"
+_R5_LIMITATION = "malformed historical receipt hash; current TRAIN reset IDs independently hashed"
+_LIMITATION = "Candidate-scoped recorded overlap only; warnings require review before reserve/freeze; never a global freshness certificate or permission to allocate/run"
 _REUSED_DREAMER_PROTOCOLS = {
     "dreamerv3-reused-train-diagnostic-v1.json",
     "dreamerv3-reused-train-development-v1.json",
@@ -89,6 +100,48 @@ def _sha(raw: bytes) -> str:
 
 def _digest(value: Any) -> str:
     return _sha(json.dumps(value, sort_keys=True, separators=(",", ":")).encode("ascii"))
+
+
+def _valid_self_audit_metadata(
+    value: dict[str, Any], token: re.Pattern[str], own_paths: set[str],
+) -> bool:
+    """Only generated receipt fields may bypass the unknown-candidate scan."""
+    warnings = value.get("provenance_warnings")
+    r5 = value.get("r5_evidence")
+    if (set(value) != _SELF_AUDIT_KEYS or type(warnings) is not list
+            or any(type(row) is not dict or set(row) != {"path", "field", "reason"}
+                   or any(type(item) is not str or token.search(item) for item in row.values())
+                   for row in warnings)
+            or type(r5) is not dict
+            or set(r5) != {"status", "receipt_sha256", "current_ledger_sha256",
+                           "original_ledger_bytes_attested", "limitation"}
+            or r5["status"] not in ("current TRAIN evidence verified", "unverified")
+            or r5["receipt_sha256"] != R5_ABORT_SHA
+            or r5["current_ledger_sha256"] != R5_LEDGER_SHA
+            or r5["original_ledger_bytes_attested"] is not False
+            or r5["limitation"] != _R5_LIMITATION
+            or value.get("candidate_rule") != _CANDIDATE_RULE
+            or value.get("actors") != ["entropy-v5-author-seed50 SOURCE-primary (predeclare elsewhere)",
+                                       "long-horizon-seed11 comparator (no promotion)"]
+            or value.get("limitation") != _LIMITATION
+            or type(value.get("repository_changed_since_audit_snapshot")) is not bool
+            or type(value.get("inventory_complete")) is not bool
+            or type(value.get("blind_episode_reads")) is not int
+            or value["blind_episode_reads"] != 0):
+        return False
+    for field in ("experiment_inventory", "source_inventory"):
+        rows = value.get(field)
+        if (type(rows) is not list
+                or any(type(row) is not dict or set(row) != {"path", "sha256", "bytes"}
+                       or type(row["path"]) is not str or type(row["sha256"]) is not str
+                       or _SHA.fullmatch(row["sha256"]) is None
+                       or (token.search(row["path"]) is not None
+                           and row["path"] not in own_paths)
+                       or type(row["bytes"]) is not int or row["bytes"] < 0
+                       for row in rows)
+                or value.get(field + "_sha256") != _digest(rows)):
+            return False
+    return True
 
 
 def _uint(value: Any, ref: str) -> int:
@@ -571,6 +624,8 @@ def audit_g1_coverage_seeds(
     self_study_id: str | None = None,
     self_protocol_path: str | None = None,
     self_protocol_sha256: str | None = None,
+    self_audit_path: str | None = None,
+    self_audit_sha256: str | None = None,
     required_ledgers: Sequence[str] = REQUIRED_LEDGERS,
     required_collections: Sequence[str] = tuple(REQUIRED_COLLECTIONS),
 ) -> dict[str, Any]:
@@ -585,6 +640,7 @@ def audit_g1_coverage_seeds(
     if start > UINT32_MAX - 23:
         raise InventoryError("seed_start: 24-road batch exceeds uint32")
     candidates = list(range(start, start + 24))
+    token = re.compile(r"(?<![A-Za-z0-9_.])(?:" + "|".join(map(str, candidates)) + r")(?![A-Za-z0-9_.])")
     proposed_cells = [{"track_id": 1, "geometry_seed": seed, "partition": "TRAIN", "obstacles": True}
                       for seed in candidates]
     if self_study_id is not None:
@@ -595,8 +651,19 @@ def audit_g1_coverage_seeds(
             raise InventoryError("self-claim check requires study ID and frozen experiments protocol path/SHA")
     elif self_protocol_path is not None or self_protocol_sha256 is not None:
         raise InventoryError("self-protocol path/SHA require an explicit study ID")
+    if (self_audit_path is None) != (self_audit_sha256 is None):
+        raise InventoryError("self-audit path and SHA must be supplied together")
+    if self_audit_path is not None and (
+            self_study_id is None or self_audit_sha256 is None
+            or _SHA.fullmatch(self_audit_sha256) is None
+            or PurePosixPath(self_audit_path).parts != (
+                "experiments", PurePosixPath(self_audit_path).name)
+            or not self_audit_path.endswith(".json")
+            or self_audit_path == self_protocol_path):
+        raise InventoryError("self-audit requires a distinct frozen experiments receipt path/SHA")
     root = Path(repo_root).resolve()
     inv = _Inventory(root)
+    self_audit_receipt: dict[str, Any] | None = None
     if root == Path(__file__).resolve().parents[1] and (
             tuple(required_ledgers) != tuple(REQUIRED_LEDGERS)
             or tuple(required_collections) != tuple(REQUIRED_COLLECTIONS)):
@@ -618,6 +685,25 @@ def audit_g1_coverage_seeds(
             name = PurePosixPath(path).name
             if path == self_protocol_path:
                 continue  # SHA, exact cells and claim chain checked below.
+            if path == self_audit_path:
+                assert self_protocol_path is not None
+                if (_sha(raw) != self_audit_sha256
+                        or not _valid_self_audit_metadata(
+                            obj, token, {self_protocol_path} | {
+                                f"{TRAIN_CLAIMS}/seed-{seed}.json" for seed in candidates})
+                        or obj.get("format") != "haic-rlpd-g1-coverage-seed-inventory-v2"
+                        or obj.get("status") != "no_known_recorded_overlap"
+                        or obj.get("protocol_frozen") is not True
+                        or obj.get("self_claims_verified") is not True
+                        or obj.get("seed_start") != start
+                        or obj.get("candidate_seeds") != candidates
+                        or obj.get("cells") != proposed_cells
+                        or obj.get("collisions") != [] or obj.get("blockers") != []):
+                    inv.block(path, "self-audit", "frozen candidate audit receipt differs")
+                else:
+                    self_audit_receipt = obj
+                    inv.typed_paths.add(path)
+                continue
             if (name == G0_PROTOCOL.split("/")[-1] or name == CATALOG_PROTOCOL.split("/")[-1]
                     or name == R7_PROTOCOL.split("/")[-1]
                     or name in _REUSED_DREAMER_PROTOCOLS
@@ -650,6 +736,8 @@ def audit_g1_coverage_seeds(
                 inv.block(path, "format", f"unreviewed experiment JSON schema {obj.get('format')!r}")
     except InventoryError as exc:
         inv.block("experiments", "discovery", str(exc))
+    if self_audit_path is not None and self_audit_receipt is None:
+        inv.block(self_audit_path, "self-audit", "missing or invalid pinned candidate audit receipt")
 
     for path in (G0_PROTOCOL, G0_AUDIT, CATALOG_PROTOCOL, R7_PROTOCOL):
         if path not in inv.raw:
@@ -697,6 +785,7 @@ def audit_g1_coverage_seeds(
     except InventoryError as exc:
         inv.block(G0_CELLS, "G0 primary cells/claims", str(exc))
     try:
+        g0 = _json(inv.read(G0_PROTOCOL), G0_PROTOCOL)
         manifest = _json(inv.read(G0_MANIFEST), G0_MANIFEST)
         claim_dir = root / G0_CLAIMS
         if claim_dir.is_symlink() or not claim_dir.is_dir():
@@ -783,7 +872,8 @@ def audit_g1_coverage_seeds(
                     or _sha(inv.raw[self_protocol_path]) != self_protocol_sha256
                     or set(protocol) - {"format", "status", "partition", "study_id", "cells",
                                         "train_claims_sha256", "source_hashes", "source_actors",
-                                        "budget", "runtime", "exclusions", "track_id", "obstacles"}
+                                        "budget", "runtime", "event_rules", "image_rubric_sha256",
+                                        "exclusions", "track_id", "obstacles"}
                     or protocol.get("format") != "haic-rlpd-g1-coverage-protocol-v1"
                     or protocol.get("status") != "frozen"
                     or protocol.get("partition") != "TRAIN"
@@ -794,6 +884,10 @@ def audit_g1_coverage_seeds(
                 raise InventoryError("frozen self-protocol/24 claims SHA or exact cells disagree")
             inv.typed_paths.add(self_protocol_path)
             self_claims_verified = True
+            if (self_audit_receipt is not None and self_audit_path is not None
+                    and self_audit_receipt.get("train_claims_sha256") != _digest(sorted(
+                        self_claim_sources, key=lambda source: source["path"]))):
+                inv.block(self_audit_path, "self-audit", "frozen audit claim digest differs")
     except (InventoryError, OSError) as exc:
         inv.block(TRAIN_CLAIMS, "claims", str(exc))
 
@@ -941,11 +1035,21 @@ def audit_g1_coverage_seeds(
                 changed_sources[path] = current
                 warnings.append({"path": path, "field": "bytes",
                                  "reason": "source bytes changed during read-only audit; re-audit before reservation"})
+                if path == self_audit_path:
+                    inv.block(path, "self-audit", "pinned receipt changed during re-audit")
     except (InventoryError, OSError) as exc:
         inv.block("source_inventory", "stability", str(exc))
+    if self_audit_path is not None:
+        try:
+            receipt_path = root / self_audit_path
+            if receipt_path.is_symlink() or (root / "experiments").is_symlink():
+                inv.block(self_audit_path, "self-audit", "pinned receipt became a symlink")
+            elif _sha(receipt_path.read_bytes()) != self_audit_sha256:
+                inv.block(self_audit_path, "self-audit", "pinned receipt changed before return")
+        except OSError:
+            inv.block(self_audit_path, "self-audit", "pinned receipt disappeared before return")
     # An opaque source with a candidate token cannot be dismissed as unrelated.
     # Inspect the latest bytes too, so an in-flight edit adding a candidate blocks.
-    token = re.compile(r"(?<![A-Za-z0-9_.])(?:" + "|".join(map(str, candidates)) + r")(?![A-Za-z0-9_.])")
     for path, raw in sorted(changed_sources.items()):
         if _mentions_candidate_road(raw, token, set(candidates)):
             inv.block(path, "concurrent candidate evidence", "candidate ID added or changed during audit")
@@ -956,6 +1060,7 @@ def audit_g1_coverage_seeds(
         if (any(source["path"] == path for seed in candidates for source in inv.ids.get(seed, []))
                 or (path not in inv.typed_paths and _mentions_candidate_road(raw, token, set(candidates)))
                 or "source-list overrides" in issue["field"]
+                or issue["field"] == "self-audit"
                 or (path in ("runs", "experiments") and issue["field"] == "discovery")
                 or (path in (G0_PROTOCOL, G0_AUDIT, CATALOG_PROTOCOL, R7_PROTOCOL)
                     and issue["field"] in ("JSON", "schema", "source"))
@@ -986,7 +1091,7 @@ def audit_g1_coverage_seeds(
         "self_claims_verified": self_claims_verified,
         "train_claims_sha256": (_digest(sorted(self_claim_sources, key=lambda source: source["path"]))
                                  if self_claims_verified else None),
-        "candidate_rule": "fixed seed_start+i, i=0..23; no replacement or top-up",
+        "candidate_rule": _CANDIDATE_RULE,
         "seed_start": start,
         "candidate_seeds": candidates,
         "cells": proposed_cells,
@@ -1005,8 +1110,8 @@ def audit_g1_coverage_seeds(
         "r5_evidence": {"status": "current TRAIN evidence verified" if r5_verified else "unverified",
                         "receipt_sha256": R5_ABORT_SHA, "current_ledger_sha256": R5_LEDGER_SHA,
                         "original_ledger_bytes_attested": False,
-                        "limitation": "malformed historical receipt hash; current TRAIN reset IDs independently hashed"},
-        "limitation": "Candidate-scoped recorded overlap only; warnings require review before reserve/freeze; never a global freshness certificate or permission to allocate/run",
+                        "limitation": _R5_LIMITATION},
+        "limitation": _LIMITATION,
     }
 
 
@@ -1024,6 +1129,8 @@ def main() -> int:
     parser.add_argument("--self-study-id", help="pre-reset recheck of this study's already claimed batch")
     parser.add_argument("--self-protocol-path", help="frozen G1 protocol containing the claim digest")
     parser.add_argument("--self-protocol-sha256", help="exact frozen G1 protocol SHA for pre-reset recheck")
+    parser.add_argument("--self-audit-path", help="frozen self-audit receipt to recheck without self-collision")
+    parser.add_argument("--self-audit-sha256", help="SHA of the exact frozen self-audit receipt")
     args = parser.parse_args()
     try:
         if args.reserve and args.self_study_id:
@@ -1035,7 +1142,9 @@ def main() -> int:
             r5_attestation_sha256=args.r5_attestation_sha256,
             self_study_id=args.self_study_id,
             self_protocol_path=args.self_protocol_path,
-            self_protocol_sha256=args.self_protocol_sha256)
+            self_protocol_sha256=args.self_protocol_sha256,
+            self_audit_path=args.self_audit_path,
+            self_audit_sha256=args.self_audit_sha256)
         if args.reserve:
             if not args.study_id:
                 parser.error("--reserve requires --study-id")

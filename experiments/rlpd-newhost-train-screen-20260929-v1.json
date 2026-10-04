@@ -1,0 +1,199 @@
+{
+  "actors": [
+    {
+      "action_mode": "exported_tanh_mean",
+      "export_protocol_sha256": "2e7df4152e2282bcd34a6d2a160737cc13c6f1a03d769bd69832e1fc51326546",
+      "id": "entropy-v5-author-seed50",
+      "path": "runs/20260925-pixel-rlpd-entropy-target-ablation-v5/rlpd-author-target-seed50/checkpoints/step-000131072/actor.pt",
+      "sha256": "ba56dca388a204a902d0f198d25a909a64866511002854972c4d0dd9627e8b98",
+      "source_sha256": "65c5417493d467b956604314ef9b06c01163a3d59a00d043dd11c2fce4a4cada"
+    },
+    {
+      "action_mode": "exported_tanh_mean",
+      "export_protocol_sha256": "7f54719796af058deac99e208df84412e1021497bee844011f7515c21126b598",
+      "id": "newhost-seed52-final",
+      "path": "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000131072/actor.pt",
+      "sha256": "28d82208ac8f3a99d06f8f2dd35b41f85babfa0e2d362c80ab0dcc01359190f6",
+      "source_sha256": "b2fd99846582d224ee9b66fb954156909116365627836276f137fd5515012a71"
+    }
+  ],
+  "cells": [
+    {
+      "geometry_seed": 4272000001,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000002,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000003,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000004,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000005,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000006,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000007,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000008,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000009,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000010,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000011,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    },
+    {
+      "geometry_seed": 4272000012,
+      "obstacles": true,
+      "partition": "TRAIN",
+      "track_id": 1
+    }
+  ],
+  "centerline_far_threshold_m": 9.0,
+  "created_at_utc": "2026-09-29T16:21:30.978474+00:00",
+  "event_rules": {
+    "directed_delta_epsilon": 0.0001,
+    "max_decisions": 2000,
+    "negative_reward_limit": 100,
+    "stall_window": 20,
+    "tile_window": 30
+  },
+  "execution": {
+    "actor_order": [
+      "entropy-v5-author-seed50",
+      "newhost-seed52-final"
+    ],
+    "collision_penalty": 0.0,
+    "core_hour_cap": null,
+    "cpu_nice_delta": 10,
+    "frame_skip": 4,
+    "max_decisions_per_episode": 2000,
+    "obstacles": true,
+    "one_attempt_per_actor_road": true,
+    "paired_roads": 12,
+    "policy_updates": 0,
+    "reward_shaping": false,
+    "scheduled_slots": 24
+  },
+  "format": "haic-rlpd-newhost-in-sample-train-screen-v1",
+  "output_root": "runs/20260929-rlpd-newhost-train-screen-v1",
+  "partition": "TRAIN",
+  "role": "in-sample-consumed-TRAIN-descriptive-not-generalization-or-official-evaluation",
+  "runtime": {
+    "box2d_py": "2.3.5",
+    "device": "cpu",
+    "gymnasium": "0.29.1",
+    "machine": "x86_64",
+    "numpy": "1.26.0",
+    "opencv": "4.8.1",
+    "pygame": "2.6.1",
+    "python": "3.11.14 | packaged by conda-forge | (main, Oct 22 2025, 22:46:25) [GCC 14.3.0]",
+    "torch": "2.1.0+cu121",
+    "torch_num_threads": 1
+  },
+  "source_artifacts": {
+    "final_candidate": [
+      "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000131072/candidate.json",
+      "b5942025705a90d7aaabffb94ac47db293584f89aeee70a27c4bbcdf99daacb3"
+    ],
+    "final_checkpoint": [
+      "runs/20260929-rlpd-newhost-reused-train-v1/checkpoints/step-000131072/checkpoint.pt",
+      "7b6f0dd958385559afcd992a550a70ded0f7a6930f41e4dc3497af0e3d781de1"
+    ],
+    "g0_ledger": [
+      "runs/20260926-rlpd-g0-completion-v1/cells.jsonl",
+      "924d3ea84b6a393ab962e3b2821d49b11e2c5b23c21f898caf4b795fd58d9559"
+    ],
+    "g0_manifest": [
+      "runs/20260926-rlpd-g0-completion-v1/manifest.json",
+      "52abe52381009f392b849c475afea7fa15aec93aaf8001fbc5eb14611ecbf358"
+    ],
+    "g0_protocol": [
+      "experiments/rlpd-g0-completion-v1.json",
+      "6d4c50aaa03a68bad27bafc8eccf99f2df4377908a21fd31ec7729736f29946b"
+    ],
+    "learner_protocol": [
+      "experiments/rlpd-newhost-reused-train-20260929-v1.json",
+      "7f54719796af058deac99e208df84412e1021497bee844011f7515c21126b598"
+    ],
+    "learner_result": [
+      "runs/20260929-rlpd-newhost-reused-train-v1/result.json",
+      "dcce1072609d40d9fd210a192841137b4d22cb0101bf815d27ecea0630a28c03"
+    ],
+    "learner_snapshot": [
+      "runs/20260929-rlpd-newhost-reused-train-v1/study_protocol.json",
+      "7f54719796af058deac99e208df84412e1021497bee844011f7515c21126b598"
+    ]
+  },
+  "source_hashes": {
+    "action_representation.py": "bb4b42bc385f5071df5190fd57b50c94b53521862efa41405e17dc0a6aaf18a9",
+    "action_smoothing.py": "880e5dd5378325138a7da933112b4dff6464f04f4414a11a8f13d2db156ca2fb",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "common_adapter.py": "76200f82f81d9dad19e8b522b439eb549d30cbbd63df77a58347ab224d7802f3",
+    "core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "haic/__init__.py": "83308c227e0b3fb28104d947b2758833edb9fdb010d7b75c69ffe3a3f7c95670",
+    "haic/algorithms/__init__.py": "a89e2d259085e8f75c9547960bc51157b4e6b876efdba96a1b7c82c26aba338a",
+    "haic/algorithms/rlpd/g0_diagnostic.py": "7573bf577481c752dda68f1ff99e20915cd87ca18a9a092d7f0e629b8c3a899a",
+    "haic/algorithms/rlpd/model.py": "5a6e6693bf97cc43ded65d1f3c19a348b7e6719044490e10fb7a160e7908e79e",
+    "requirements.txt": "7fe177422d03b66b720a30c14b2dff05da95db95e238d3841afd76cb09a73ea2",
+    "scripts/__init__.py": "c5d8359e421222eabceeba933289459a1e3f136ce6ef9d393e8a90b14b1ccfda",
+    "scripts/audit_rlpd_g0_seeds.py": "f0cb3e3c195da6ff3d50e7ea54406c91cbd25b96738e6c811d3adc474509fdab",
+    "scripts/diagnose_rlpd_g0.py": "76a124d125e7ef31bf51626ad3c0b3f5976b4cba115f45bf64861d225e63c65f",
+    "scripts/diagnose_rlpd_newhost_train_screen.py": "155aef1f60dc0f854ba609b8ffb0fd1e9a0f17cd06f4530d2fa9bad69f746905",
+    "scripts/prepare_rlpd_g0_protocol.py": "bb5d4c29ab019d3e0d59c4f726a978f986385d6708c106368f2a702c9c34f29e",
+    "scripts/summarize_rlpd_g0.py": "dfaacef9780fc91902f396b75c1bfd8aaa50376eb4b329faf689475b94918ef8",
+    "tracking.py": "445722297392a54686c9bef5b1acb4ac1efc38c269367c4ec7a9a8e3e7d34b23",
+    "train.py": "edcec093d76de70f9de1cd7c7bd8631dd4b973ae2304685d17cfe825e566ab50"
+  },
+  "status": "frozen"
+}

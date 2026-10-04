@@ -1,0 +1,18 @@
+{
+  "format": "haic-rlpd-g1-image-rubric-v1",
+  "status": "frozen-before-train-collection",
+  "partition": "TRAIN",
+  "purpose": "separate pixel-only annotation; never an actor or learner input",
+  "labels": {
+    "yes": "visible_stall",
+    "no": "no_visible_stall",
+    "unknown": ["ambiguous_pixels", "incomplete_images", "not_reviewed"]
+  },
+  "ordinary_anchor": 200,
+  "first_flag_min_decision": 40,
+  "pixel_difference_ceiling": 1500,
+  "window_before": 8,
+  "window_after": 8,
+  "blinding": "seal packets and labels before joining collector outcomes; do not expose track, actor, reward, result or telemetry in reviewer packets",
+  "interpretation": "review labels are unknown until a separate genuinely blinded review; this rubric is not a performance or intervention gate"
+}

@@ -13,6 +13,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import scripts.audit_rlpd_g1_coverage_seeds as audit
+import scripts.diagnose_rlpd_g1_coverage as collector
 from haic.train_seed_reservations import AUDIT_FORMAT, reserve_train_seeds
 
 
@@ -215,6 +216,12 @@ class G1CoverageSeedInventoryTests(unittest.TestCase):
         report = self.run_audit(4272000001)
         self.assertTrue(any(source["path"] == other for source in report["collisions"][0]["sources"]))
 
+    def test_unreadable_g0_protocol_fails_closed_without_unbound_actor(self) -> None:
+        self.write(audit.G0_PROTOCOL, b"{")
+        report = self.run_audit()
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertTrue(any(row["path"] == audit.G0_PROTOCOL for row in report["blockers"]))
+
     def test_screen_diagnostic_confirmation_and_blind_seeds_stay_excluded(self) -> None:
         for seed, partition in ((3910800002, "TRAIN-DIAGNOSTIC"), (88000, "screen"),
                                 (88001, "confirmation"), (88002, "blind")):
@@ -256,11 +263,33 @@ class G1CoverageSeedInventoryTests(unittest.TestCase):
         self.assertTrue((self.root / audit.TRAIN_CLAIMS / "seed-3000.json").is_file())
         self.assertEqual(self.run_audit()["status"], "BLOCKED")
         protocol_path = "experiments/g1-synthetic-protocol.json"
+        source_hashes = {path: self.write(path, path.encode()) for path in collector.SOURCE_FILES}
+        actor_payloads = {actor: actor.encode() for actor in collector.ACTORS}
+        actor_hashes = {}
+        for actor, path in zip(collector.ACTORS, collector.ACTOR_PATHS):
+            actor_hashes[actor] = self.write(path, actor_payloads[actor])
         frozen_protocol = {
             "format": "haic-rlpd-g1-coverage-protocol-v1", "status": "frozen",
             "study_id": "g1-synthetic", "partition": "TRAIN", "cells": result["cells"],
             "train_claims_sha256": result["train_claims_sha256"],
             "exclusions": {"training_geometry_seeds": [2999]},
+            "source_hashes": source_hashes,
+            "source_actors": [
+                {"id": actor, "path": path, "sha256": actor_hashes[actor],
+                 "source_sha256": "b" * 64, "export_protocol_sha256": "c" * 64,
+                 "action_mode": "exported_tanh_mean"}
+                for actor, path in zip(collector.ACTORS, collector.ACTOR_PATHS)
+            ],
+            "budget": {"max_decisions_per_episode": 2000, "max_total_decisions": 96000,
+                       "max_total_raw_frames": 386448, "max_core_hours": 4.0},
+            "runtime": {"frame_skip": 4, "reward_shaping": False, "collision_penalty": 0,
+                        "interventions": False, "learner_updates": 0,
+                        "reset_initial_raw_frames": 1, "reset_noop_raw_frames": 50},
+            "event_rules": {"max_decisions": 2000, "negative_reward_limit": 100,
+                            "stall_window": 20, "tile_window": 20,
+                            "directed_delta_epsilon": 0.01,
+                            "centerline_far_threshold_m": 10.0},
+            "image_rubric_sha256": "d" * 64,
         }
         frozen_sha = self.write(protocol_path, frozen_protocol)
         self_mode = dict(self_study_id="g1-synthetic", self_protocol_path=protocol_path,
@@ -269,6 +298,92 @@ class G1CoverageSeedInventoryTests(unittest.TestCase):
         self.assertEqual(fresh["status"], "no_known_recorded_overlap", fresh["blockers"])
         self.assertTrue(fresh["self_claims_verified"])
         self.assertEqual(fresh["train_claims_sha256"], result["train_claims_sha256"])
+        audit_path = "experiments/g1-synthetic-preflight.json"
+        audit_sha = self.write(audit_path, fresh)
+
+        def audit_again(seed, **kwargs):
+            self.assertEqual(kwargs.pop("repo_root"), self.root)
+            return self.run_audit(seed, **kwargs)
+
+        with patch.dict(collector.ACTOR_HASHES, actor_hashes):
+            context = collector.preflight(
+                self.root, protocol_path, frozen_sha, audit_path, audit_sha,
+                auditor=audit_again,
+            )
+            self.assertEqual(context["protocol"]["cells"], fresh["cells"])
+            self.assertEqual(collector.collect(context)["status"], "BLOCKED")
+        self.assertEqual(self.run_audit(**self_mode)["status"], "BLOCKED")
+        self.assertEqual(self.run_audit(**self_mode, self_audit_path=audit_path,
+                                        self_audit_sha256=audit_sha)["status"],
+                         "no_known_recorded_overlap")
+        args = ["audit_rlpd_g1_coverage_seeds", "--repo-root", str(self.root),
+                "--seed-start", "3000", "--self-study-id", "g1-synthetic",
+                "--self-protocol-path", protocol_path, "--self-protocol-sha256", frozen_sha,
+                "--self-audit-path", audit_path, "--self-audit-sha256", audit_sha]
+        with (patch.object(sys, "argv", args), patch.object(audit, "R5_ABORT_SHA", self.r5_abort_sha),
+              patch.object(audit, "R5_LEDGER_SHA", self.r5_ledger_sha),
+              redirect_stdout(io.StringIO()) as output):
+            self.assertEqual(audit.main(), 0)
+        self.assertEqual(json.loads(output.getvalue())["status"], "no_known_recorded_overlap")
+        wrong_digest = self.run_audit(**self_mode, self_audit_path=audit_path,
+                                      self_audit_sha256="0" * 64)
+        self.assertEqual(wrong_digest["status"], "BLOCKED")
+        self.assertTrue(any(row["field"] == "self-audit" for row in wrong_digest["blockers"]))
+        missing = self.run_audit(**self_mode, self_audit_path="experiments/missing.json",
+                                 self_audit_sha256=audit_sha)
+        self.assertEqual(missing["status"], "BLOCKED")
+        hidden_candidate_sha = self.write(audit_path, {
+            **fresh, "untyped_prior_road": result["cells"][0]["geometry_seed"],
+        })
+        hidden_candidate = self.run_audit(**self_mode, self_audit_path=audit_path,
+                                          self_audit_sha256=hidden_candidate_sha)
+        self.assertEqual(hidden_candidate["status"], "BLOCKED")
+        for index, altered in enumerate((
+            {**fresh, "r5_evidence": {**fresh["r5_evidence"], "geometry_seed": 3000}},
+            {**fresh, "provenance_warnings": [{"path": "runs/seed-3000-unknown",
+                                                "field": "source bytes", "reason": "unrelated"}]},
+        )):
+            with self.subTest(injected_field=index):
+                altered_sha = self.write(audit_path, altered)
+                report = self.run_audit(**self_mode, self_audit_path=audit_path,
+                                        self_audit_sha256=altered_sha)
+                self.assertEqual(report["status"], "BLOCKED")
+        source_rows = [{**fresh["source_inventory"][0], "geometry_seed": 3000},
+                       *fresh["source_inventory"][1:]]
+        altered = {**fresh, "source_inventory": source_rows,
+                   "source_inventory_sha256": audit._digest(source_rows)}
+        altered_sha = self.write(audit_path, altered)
+        self.assertEqual(self.run_audit(**self_mode, self_audit_path=audit_path,
+                                        self_audit_sha256=altered_sha)["status"], "BLOCKED")
+        source_rows = [{**fresh["source_inventory"][0], "path": "runs/seed-3000-hidden.json"},
+                       *fresh["source_inventory"][1:]]
+        altered = {**fresh, "source_inventory": source_rows,
+                   "source_inventory_sha256": audit._digest(source_rows)}
+        altered_sha = self.write(audit_path, altered)
+        self.assertEqual(self.run_audit(**self_mode, self_audit_path=audit_path,
+                                        self_audit_sha256=altered_sha)["status"], "BLOCKED")
+        self.write(audit_path, fresh)
+
+        original_read = Path.read_bytes
+        reads = 0
+
+        def changed_receipt(path: Path) -> bytes:
+            nonlocal reads
+            if path == self.root / audit_path:
+                reads += 1
+                if reads > 1:
+                    return b"{}"  # Candidate-free drift must still block.
+            return original_read(path)
+
+        with patch.object(Path, "read_bytes", changed_receipt):
+            drifted = self.run_audit(**self_mode, self_audit_path=audit_path,
+                                     self_audit_sha256=audit_sha)
+        self.assertEqual(drifted["status"], "BLOCKED")
+        self.assertTrue(any(row["field"] == "self-audit" for row in drifted["blockers"]))
+        self.write("experiments/foreign-preflight.json", fresh)
+        self.assertEqual(self.run_audit(**self_mode, self_audit_path=audit_path,
+                                        self_audit_sha256=audit_sha)["status"], "BLOCKED")
+        (self.root / "experiments/foreign-preflight.json").unlink()
         conflicting_protocol = {
             "format": "haic-rlpd-g1-coverage-protocol-v1", "status": "frozen",
             "study_id": "g1-synthetic", "partition": "TRAIN", "cells": result["cells"],
