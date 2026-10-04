@@ -1,0 +1,423 @@
+{
+  "schema": "apex_whole_project_tests_checkpoint_v1",
+  "status": "completed_with_known_baseline_failures",
+  "all_tests_passed": false,
+  "started_at_utc": "2026-10-04T15:56:32.266339+00:00",
+  "completed_at_utc": "2026-10-04T16:04:03.537903+00:00",
+  "recorded_at_utc": "2026-10-04T17:08:27.641894+00:00",
+  "command": ".venv/bin/python -m pytest -q",
+  "environment": {
+    "MPLCONFIGDIR": "/tmp/haic-mpl",
+    "XDG_CACHE_HOME": "/tmp/haic-cache",
+    "SDL_VIDEODRIVER": "dummy",
+    "PYGAME_HIDE_SUPPORT_PROMPT": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "runtime": {
+    "python": "3.11.16",
+    "pytest": "8.4.2",
+    "numpy": "1.26.0",
+    "torch": "2.1.0",
+    "gymnasium": "0.29.1",
+    "opencv-python": "4.8.1.78",
+    "box2d-py": "2.3.5"
+  },
+  "exit_code": 1,
+  "results": {
+    "passed": 1396,
+    "skipped": 10,
+    "failed": 15,
+    "warnings": 1,
+    "elapsed_seconds": 450.19,
+    "total_collected": 1421
+  },
+  "scope": {
+    "bare_whole_project_run": true,
+    "includes_root_submission_packaging_tests": true,
+    "no_submission_packaging_failure": true,
+    "git_head_at_start": "29f92c80d0aeee803d2a2a59ace000f2cc2a271a",
+    "git_head_at_record": "9372fe4ce4cacb2cd7a7e833a1961444d8c122c4",
+    "initial_monitored_file_count": 147,
+    "changed_existing_files_after_start": [
+      {
+        "path": "agents/apex_2026/fast_braking_agent.py",
+        "sha256_at_start": "a4dffe5c4d81410e36ddb79082bab41bfde3feb690f5940e97182af548ebd6ee",
+        "sha256_at_record": "b65ccebae577adb6be8b8b78b1f414986b90bdbb502ee666c487ba60e0004900"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/physics_racingline_refine.py",
+        "sha256_at_start": "edb38cd5a304b0465b799aa20525dbaf5232d5b54d38ced7eef06da42b521b25",
+        "sha256_at_record": "3d58aa1a6c42007b0854926a825ec08d08a87374497a7fb07724024869695003"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_braking.py",
+        "sha256_at_start": "310a7ced4f3d7eef376a1a2f62678e4530c5d1f06bc36befab63a16827eac734",
+        "sha256_at_record": "e3a410b3567a9fb5d91cbac9f977628fd29029409b560a191ca2324a0c1b6161"
+      }
+    ],
+    "added_monitored_files_after_start": [
+      {
+        "path": "agents/apex_2026/fast_clear_ridge_agent.py",
+        "sha256_at_record": "86230b49efa177b28eafd8f62190fc2260e3203ad832046b371e23ce03e41d2f"
+      },
+      {
+        "path": "agents/apex_2026/fast_clear_supported_agent.py",
+        "sha256_at_record": "e5ce693a4b9ec00d7ecbab8abf71d4a2c350ab95b4f816ae2b6547be91cfc00b"
+      },
+      {
+        "path": "agents/apex_2026/fast_component_agent.py",
+        "sha256_at_record": "7d3266be509a6bb2ecabe80929dc2290cdc04a807740b2d5880eec79b63ffd7a"
+      },
+      {
+        "path": "agents/apex_2026/fast_confidence_agent.py",
+        "sha256_at_record": "167f14af40b41466a502e47c9b1a9131a675a7bd86cf957da7d2595f41af1efb"
+      },
+      {
+        "path": "agents/apex_2026/fast_corridor_agent.py",
+        "sha256_at_record": "cebffe421e838009b3a97d6543392c879fbaef547e72632a557f95fdbb6a9afd"
+      },
+      {
+        "path": "agents/apex_2026/fast_forecast_agent.py",
+        "sha256_at_record": "daeffaa55b9aa705dd8ef2361fc1683692eff644950361c43264053c3a70aae9"
+      },
+      {
+        "path": "agents/apex_2026/fast_graph_agent.py",
+        "sha256_at_record": "1c211dfce147b52f4ec161ce5f3c6bbb342462671bd8e59e73e265cc33828077"
+      },
+      {
+        "path": "agents/apex_2026/fast_grip_agent.py",
+        "sha256_at_record": "032db7e41c2ee832e7436db02657edaa221d4ea7860eea74cad2b39d2dc3ec63"
+      },
+      {
+        "path": "agents/apex_2026/fast_ridge_agent.py",
+        "sha256_at_record": "a9d086321e34d686d4a5115472f55dbb190e0a1daa88b649afc1a421aab99ce9"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/audit_feasibility.py",
+        "sha256_at_record": "78b13bb6d2062daff725f9e59508a0b5c555029bb7c921bcacc68eb99c570792"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/graph_confidence_probe.py",
+        "sha256_at_record": "165f6d593333359085cb2dfcd8fe0b3aeb23fe655af6c97d8b940dadd4cce04b"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/graph_curvature.py",
+        "sha256_at_record": "b09f9014dea4e8801c0163c0d98799b4898213d67fbb4e84dcf4075160266c55"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/graph_geometry.py",
+        "sha256_at_record": "8c2007d7204ec6726e19b3828828c620735ee8b2aa557e6c45a8e00be0c66ee2"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/graph_ridge.py",
+        "sha256_at_record": "3e8b5fce3e9e8f13ff7f9b0083d994b7869832530f5363e4e13259f65403ecd0"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/graph_ridge_proof.py",
+        "sha256_at_record": "12175ed1dee038e9ce692c7301610ce92e0cb0ed9c23ad8379a310d47582f627"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/physics_racingline_sides.py",
+        "sha256_at_record": "ebd35e2b49a73ea5d8f986d78fc9b696f36fde8269910ecf7a7db9b6c9a64ff3"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/physics_racingline_timepoint.py",
+        "sha256_at_record": "f815728cfb90515dc03e49c3284bf9b17f3868df63df1151eefb9c9be8158ac3"
+      },
+      {
+        "path": "agents/apex_2026/research/speed_20261005/torque_probe.py",
+        "sha256_at_record": "bf743399aaf6d39fc0b197f289555dd7bc9088fa33964a7672105bb6c2dcd37c"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_clear_ridge.py",
+        "sha256_at_record": "cabcbbdf47d8362ee6542f6d68d7457b3cb2b6fda9d127fa23566866cdbc4156"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_clear_supported.py",
+        "sha256_at_record": "48413d6d665cb8cd6f50d20e04268cee3fb8ea5c551e870d9bc0046bb7cbb8bd"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_confidence.py",
+        "sha256_at_record": "c716964af85ef87025369bcd75a0a024ab9728ba8e6506b84e0f6997344dc788"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_corridor.py",
+        "sha256_at_record": "9d5fc559c153854a1f06de1819b85431e86353fc906ec2efb9004077e403c1c0"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_forecast.py",
+        "sha256_at_record": "4cf57c0fb5724aa9a8a56cd33080c5b57af7c57ed93889a9bb3fb08421f14c0c"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_graph.py",
+        "sha256_at_record": "67bba554d6565664fe6e12c1f548a84d1119deb7359bd4c5f8c7f21df23c9c93"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_grip.py",
+        "sha256_at_record": "9db17bd1916230c6ec2aaf690b1ea10c32628356a834a9315b133d0635cc51c2"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_motion.py",
+        "sha256_at_record": "a8aa17f65a1b0661e5896f834dae286c29c0b480f310ffc295c899cd40bba63b"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_fast_ridge.py",
+        "sha256_at_record": "99fe15689270b04d18b47cc06adefd406770ad85beaa1a3536fc7387aa0c2aae"
+      },
+      {
+        "path": "agents/apex_2026/tests/test_graph_curvature_research.py",
+        "sha256_at_record": "9671feb5700abcff7064d34dba7bdb9e2e2e10a4ee3bb1834c2096c13d0ae635"
+      }
+    ],
+    "concurrent_change_limit": "The completed result covers the tests and modules collected/imported by this process. Start/end hashes cannot prove which revision was imported when a file changed, or detect changes that were later reverted.",
+    "parent_reported_scope_exclusions": [
+      "fast_corridor_agent.py and test_fast_corridor.py were created after collection and are not covered by this run.",
+      "The later brake_reserve correction in fast_braking_agent.py and test_fast_braking.py is not certified by this full run; the parent separately reported 23 focused tests passed."
+    ],
+    "additional_test_runs_performed_by_this_agent": 0,
+    "new_files_scope": "Files added after the start have no pre-run hash and are not certified by this checkpoint; additional focused tests belong to their own evidence. The added-file list is measured at record time, which may be later than pytest completion."
+  },
+  "baseline_comparison": {
+    "baseline_passed": 1170,
+    "baseline_skipped": 10,
+    "baseline_failed": 15,
+    "same_failure_names_as_baseline": true,
+    "new_failure_count": 0,
+    "baseline_failure_categories": {
+      "legacy_box2d_version_guard": 4,
+      "legacy_historical_input_byte_hash": 11
+    },
+    "baseline_log": "/tmp/apex-current-full-tests.log",
+    "baseline_log_sha256": "bd98f7bf9f9cd2955bae3d964ceb74b224ed8a82105666c6e532e5e77eca2b0e"
+  },
+  "failure_causes": {
+    "legacy_box2d_version_guard": "Four older V4 protocol tests require Box2D 2.3.10; the project/cloud locked official dependency is Box2D 2.3.5. The early version guard also masks later errors those tests expect.",
+    "legacy_historical_input_byte_hash": {
+      "explanation": "Eleven consumed-screen provenance tests reject the tracked LF protocol bytes; the historical expected SHA256 matches their CRLF variant. Required ignored historical run files are also absent, but this run fails at the protocol hash first.",
+      "protocol_path": "experiments/temporal-reachability-generalization-v1.json",
+      "actual_lf_sha256": "91d84b1dd49eddc30c203f62f5de187ff52571b78f57bb2e112269b54b2504a6",
+      "expected_historical_sha256": "b4f3bd8d72f507c0530103f95ec220a4c5c8b4284a13af31231d77e1d68d821d",
+      "crlf_variant_sha256": "b4f3bd8d72f507c0530103f95ec220a4c5c8b4284a13af31231d77e1d68d821d",
+      "ignored_run_freeze_exists": false,
+      "ignored_run_summary_exists": false
+    }
+  },
+  "failures": [
+    {
+      "test": "tests/test_camera_policy_competition_v4.py::TemplateAndSourceTests::test_preflight_rejects_alternate_model_before_worker",
+      "classification": "legacy_box2d_version_guard",
+      "observed_error": "AssertionError: \"root model\" does not match \"v4 requires Box2D 2.3.10, found 2.3.5\""
+    },
+    {
+      "test": "tests/test_camera_policy_competition_v4.py::TemplateAndSourceTests::test_running_runtime_versions_are_checked_before_commands",
+      "classification": "legacy_box2d_version_guard",
+      "observed_error": "ValueError: v4 requires Box2D 2.3.10, found 2.3.5"
+    },
+    {
+      "test": "tests/test_camera_policy_competition_v4.py::TemplateAndSourceTests::test_uncommitted_template_fails_before_salt_generation",
+      "classification": "legacy_box2d_version_guard",
+      "observed_error": "AssertionError: \"template must be committed\" does not match \"v4 requires Box2D 2.3.10, found 2.3.5\""
+    },
+    {
+      "test": "tests/test_camera_policy_competition_v4.py::TemplateAndSourceTests::test_wrong_commit_class_or_blob_fails_before_salt_generation",
+      "classification": "legacy_box2d_version_guard",
+      "observed_error": "AssertionError: \"blob\" does not match \"v4 requires Box2D 2.3.10, found 2.3.5\""
+    },
+    {
+      "test": "tests/test_compare_consumed_candidate.py::ConsumedCellTests::test_allowlist_has_only_screen_and_old_diagnostic_cells",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_consumed_candidate.py::ConsumedCellTests::test_development_run_rejects_new_cell_before_worker",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "AssertionError: \"consumed\" does not match \"historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json\""
+    },
+    {
+      "test": "tests/test_compare_consumed_candidate.py::ConsumedCellTests::test_selection_rejects_sealed_new_and_malformed_cells",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "AssertionError: \"consumed|cell\" does not match \"historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json\""
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::ScreenSelectionTests::test_direct_run_refuses_non_screen_cell_before_worker",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "AssertionError: \"screen\" does not match \"historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json\""
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::ScreenSelectionTests::test_only_completed_v6_screen_cells_are_selectable",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::OriginalReceiptTests::test_original_pair_matches_frozen_screen_summary",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::OriginalReceiptTests::test_original_receipt_identity_must_match_frozen_run",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::OriginalReceiptTests::test_recomputed_or_stale_original_receipt_is_rejected",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::OriginalReceiptTests::test_source_bound_manifest_rejects_rehashed_action_trace",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::CandidateOnlyComparisonTests::test_report_equals_existing_three_arm_comparator_without_copying_references",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    },
+    {
+      "test": "tests/test_compare_reused_screen_candidate_only.py::CandidateOnlyComparisonTests::test_run_schedules_candidate_worker_only",
+      "classification": "legacy_historical_input_byte_hash",
+      "observed_error": "ValueError: historical input SHA256 changed: /workspace/HAIC-Money/experiments/temporal-reachability-generalization-v1.json"
+    }
+  ],
+  "protected_source_check": {
+    "all_unchanged": true,
+    "files": {
+      "agent.py": {
+        "sha256_at_start": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+        "sha256_at_record": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+        "unchanged": true
+      },
+      "core/__init__.py": {
+        "sha256_at_start": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha256_at_record": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unchanged": true
+      },
+      "core/finish_line.py": {
+        "sha256_at_start": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "sha256_at_record": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+        "unchanged": true
+      },
+      "core/obstacle_contacts.py": {
+        "sha256_at_start": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "sha256_at_record": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+        "unchanged": true
+      },
+      "core/track_variables.py": {
+        "sha256_at_start": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "sha256_at_record": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+        "unchanged": true
+      },
+      "core/vendor/__init__.py": {
+        "sha256_at_start": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha256_at_record": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "unchanged": true
+      },
+      "core/vendor/car_dynamics.py": {
+        "sha256_at_start": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "sha256_at_record": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+        "unchanged": true
+      },
+      "core/vendor/car_racing.py": {
+        "sha256_at_start": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "sha256_at_record": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+        "unchanged": true
+      },
+      "damage.py": {
+        "sha256_at_start": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "sha256_at_record": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+        "unchanged": true
+      },
+      "env_wrapper.py": {
+        "sha256_at_start": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "sha256_at_record": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+        "unchanged": true
+      }
+    }
+  },
+  "fast_controller_hashes": {
+    "agents/apex_2026/fast_braking_agent.py": {
+      "sha256_at_start": "a4dffe5c4d81410e36ddb79082bab41bfde3feb690f5940e97182af548ebd6ee",
+      "sha256_at_record": "b65ccebae577adb6be8b8b78b1f414986b90bdbb502ee666c487ba60e0004900",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_clear_ridge_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "86230b49efa177b28eafd8f62190fc2260e3203ad832046b371e23ce03e41d2f",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_clear_supported_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "e5ce693a4b9ec00d7ecbab8abf71d4a2c350ab95b4f816ae2b6547be91cfc00b",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_component_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "7d3266be509a6bb2ecabe80929dc2290cdc04a807740b2d5880eec79b63ffd7a",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_confidence_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "167f14af40b41466a502e47c9b1a9131a675a7bd86cf957da7d2595f41af1efb",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_corridor_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "cebffe421e838009b3a97d6543392c879fbaef547e72632a557f95fdbb6a9afd",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_envelope_agent.py": {
+      "sha256_at_start": "aa4c47f9d69aa68b50db40682b8f30be72e6bc168931b87464740094fd430502",
+      "sha256_at_record": "aa4c47f9d69aa68b50db40682b8f30be72e6bc168931b87464740094fd430502",
+      "unchanged": true
+    },
+    "agents/apex_2026/fast_forecast_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "daeffaa55b9aa705dd8ef2361fc1683692eff644950361c43264053c3a70aae9",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_graph_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "1c211dfce147b52f4ec161ce5f3c6bbb342462671bd8e59e73e265cc33828077",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_grip_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "032db7e41c2ee832e7436db02657edaa221d4ea7860eea74cad2b39d2dc3ec63",
+      "unchanged": false
+    },
+    "agents/apex_2026/fast_path_agent.py": {
+      "sha256_at_start": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+      "sha256_at_record": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+      "unchanged": true
+    },
+    "agents/apex_2026/fast_preview_agent.py": {
+      "sha256_at_start": "a0cbdf690ead624597968ed8237e4712178dbc70af6b380f9fb6ed9cc3abb8ac",
+      "sha256_at_record": "a0cbdf690ead624597968ed8237e4712178dbc70af6b380f9fb6ed9cc3abb8ac",
+      "unchanged": true
+    },
+    "agents/apex_2026/fast_preview_pass_agent.py": {
+      "sha256_at_start": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+      "sha256_at_record": "aab01ed34d45b2741e307675580d0588026e7e109aec83d174b1b462b9d3f0a8",
+      "unchanged": true
+    },
+    "agents/apex_2026/fast_pursuit_agent.py": {
+      "sha256_at_start": "55a51d570874abc1e6889cb8903a4396bea3cb1c79627b2c11a07e8e047884cd",
+      "sha256_at_record": "55a51d570874abc1e6889cb8903a4396bea3cb1c79627b2c11a07e8e047884cd",
+      "unchanged": true
+    },
+    "agents/apex_2026/fast_ridge_agent.py": {
+      "sha256_at_start": null,
+      "sha256_at_record": "a9d086321e34d686d4a5115472f55dbb190e0a1daa88b649afc1a421aab99ce9",
+      "unchanged": false
+    }
+  },
+  "evidence": {
+    "log": ".haic-artifacts/apex-speed-20261005/full-tests.log",
+    "log_sha256": "6d7cac2541db028d33ce4a9fe68d4095cb4d3cc6a1558d454f12f4bead241043",
+    "input_manifest": ".haic-artifacts/apex-speed-20261005/full-tests.inputs.json",
+    "input_manifest_sha256": "3aaa7a16a91e564c29f26dddf1598c6bd01003e9808a46323c02e0d855b1db69"
+  },
+  "simulations_or_holdout_run_by_this_agent": false
+}
