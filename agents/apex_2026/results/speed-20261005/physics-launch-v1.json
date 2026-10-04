@@ -1,0 +1,276 @@
+{
+  "classification": "privileged_uniform_asphalt_straight_launch",
+  "is_legal_camera_candidate": false,
+  "is_lap_benchmark": false,
+  "source_sha256": "e983d20525bc22d9c3c89556cc49d0b16682bf803ad0b8c50e31e9755c8288ea",
+  "helper_sha256": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded",
+  "official_file_sha256": {
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58"
+  },
+  "initial_speed_mps": 0.0,
+  "gas": 1.0,
+  "steer": 0.0,
+  "duration_s": 3.0,
+  "thresholds_mps": {
+    "25.0": {
+      "speed_mps": 25.396541595458984,
+      "body_yaw_radps": -3.346038452822081e-13,
+      "trajectory_yaw_radps": 3.1094385750525964e-11,
+      "trajectory_curvature_per_m": 1.2458282064931785e-12,
+      "lateral_accel_mps2": 7.760787724690243e-10,
+      "longitudinal_accel_mps2": 43.773460388183594,
+      "body_sideslip_deg": 6.87137241235116e-11,
+      "front_joint_angle_rad": -6.938893903907228e-17,
+      "front_tire_slip_mps": 3.1020035976588056e-11,
+      "rear_tire_slip_mps": 2.992816513053997e-11,
+      "tire_unsaturated_demand_ratio_max": 6.795103730246281,
+      "time_s": 0.54,
+      "distance_m": 7.556472301483154,
+      "rear_omega_radps": [
+        108.41368344458331,
+        108.41368344458331
+      ]
+    },
+    "50.0": {
+      "speed_mps": 50.785255432128906,
+      "body_yaw_radps": -2.071514140777886e-11,
+      "trajectory_yaw_radps": -9.894577917091641e-12,
+      "trajectory_curvature_per_m": -1.9652563083867401e-13,
+      "lateral_accel_mps2": -4.981674488950753e-10,
+      "longitudinal_accel_mps2": 43.773651123046875,
+      "body_sideslip_deg": -6.319295981928352e-12,
+      "front_joint_angle_rad": -2.3522850334245504e-15,
+      "front_tire_slip_mps": 2.919803930813561e-11,
+      "rear_tire_slip_mps": -3.846401424400292e-11,
+      "tire_unsaturated_demand_ratio_max": 5.197172616764188,
+      "time_s": 1.12,
+      "distance_m": 29.903079986572266,
+      "rear_omega_radps": [
+        140.9950314394816,
+        140.9950314394816
+      ]
+    },
+    "70.0": {
+      "speed_mps": 70.04563903808594,
+      "body_yaw_radps": 2.1004162298332574e-10,
+      "trajectory_yaw_radps": 3.965119634597143e-10,
+      "trajectory_curvature_per_m": 5.69636419236646e-12,
+      "lateral_accel_mps2": 2.760036610323587e-08,
+      "longitudinal_accel_mps2": 43.773651123046875,
+      "body_sideslip_deg": 1.5604035388725205e-09,
+      "front_joint_angle_rad": 2.3953061756287752e-14,
+      "front_tire_slip_mps": 1.555256968383988e-09,
+      "rear_tire_slip_mps": 2.2419466063202297e-09,
+      "tire_unsaturated_demand_ratio_max": 2.6587171521618598,
+      "time_s": 1.56,
+      "distance_m": 56.67848587036133,
+      "rear_omega_radps": [
+        153.73146481453907,
+        153.73146481453907
+      ]
+    },
+    "90.0": {
+      "speed_mps": 90.49420166015625,
+      "body_yaw_radps": -1.3592129644024453e-09,
+      "trajectory_yaw_radps": 2.756963210968568e-09,
+      "trajectory_curvature_per_m": 3.05634328946168e-11,
+      "lateral_accel_mps2": 2.4869085134650795e-07,
+      "longitudinal_accel_mps2": 28.956985473632812,
+      "body_sideslip_deg": -1.1379174704363817e-09,
+      "front_joint_angle_rad": -1.5643042416968456e-13,
+      "front_tire_slip_mps": 4.797427055697949e-10,
+      "rear_tire_slip_mps": -3.968245625107974e-09,
+      "tire_unsaturated_demand_ratio_max": 0.40577715860058916,
+      "time_s": 2.1,
+      "distance_m": 100.73239135742188,
+      "rear_omega_radps": [
+        170.77643006204372,
+        170.77643006204372
+      ]
+    },
+    "99.0": {
+      "speed_mps": 99.32872772216797,
+      "body_yaw_radps": -3.042917251505628e-09,
+      "trajectory_yaw_radps": -2.9496993621902847e-08,
+      "trajectory_curvature_per_m": -2.9775817051579646e-10,
+      "lateral_accel_mps2": -2.922078111990612e-06,
+      "longitudinal_accel_mps2": 26.513671875,
+      "body_sideslip_deg": 3.003757635426606e-08,
+      "front_joint_angle_rad": -3.510525203864745e-13,
+      "front_tire_slip_mps": 5.716794826858509e-08,
+      "rear_tire_slip_mps": 4.7205904661467274e-08,
+      "tire_unsaturated_demand_ratio_max": 0.3682315977588464,
+      "time_s": 2.42,
+      "distance_m": 131.21299743652344,
+      "rear_omega_radps": [
+        186.83718859651555,
+        186.83718859651555
+      ]
+    }
+  },
+  "checkpoints": [
+    {
+      "speed_mps": 19.268234252929688,
+      "body_yaw_radps": 3.574699147801397e-10,
+      "trajectory_yaw_radps": 1.2291824636635882e-10,
+      "trajectory_curvature_per_m": 6.5276147025962786e-12,
+      "lateral_accel_mps2": 2.314611995063297e-09,
+      "longitudinal_accel_mps2": 43.773460388183594,
+      "body_sideslip_deg": 5.024017667456347e-10,
+      "front_joint_angle_rad": 4.120315200140112e-14,
+      "front_tire_slip_mps": -4.328182088576415e-10,
+      "rear_tire_slip_mps": 7.33044095004762e-10,
+      "tire_unsaturated_demand_ratio_max": 6.469695474954011,
+      "time_s": 0.4,
+      "distance_m": 4.368655681610107,
+      "rear_omega_radps": [
+        94.12541550862326,
+        94.12541550862326
+      ]
+    },
+    {
+      "speed_mps": 36.777687072753906,
+      "body_yaw_radps": -2.1087373167083534e-11,
+      "trajectory_yaw_radps": -1.4882618367961625e-11,
+      "trajectory_curvature_per_m": -4.0953876210605713e-13,
+      "lateral_accel_mps2": -5.408336157177461e-10,
+      "longitudinal_accel_mps2": 43.773651123046875,
+      "body_sideslip_deg": 1.3258897362139027e-11,
+      "front_joint_angle_rad": -2.518818487118324e-15,
+      "front_tire_slip_mps": 4.396370674689563e-11,
+      "rear_tire_slip_mps": -2.486863787308939e-11,
+      "tire_unsaturated_demand_ratio_max": 6.464817488396566,
+      "time_s": 0.8,
+      "distance_m": 15.752933502197266,
+      "rear_omega_radps": [
+        126.50626321870926,
+        126.50626321870926
+      ]
+    },
+    {
+      "speed_mps": 54.287147521972656,
+      "body_yaw_radps": -2.069593975362327e-11,
+      "trajectory_yaw_radps": -8.446628263123898e-12,
+      "trajectory_curvature_per_m": -1.5685646517914405e-13,
+      "lateral_accel_mps2": -4.548459569959102e-10,
+      "longitudinal_accel_mps2": 43.773651123046875,
+      "body_sideslip_deg": -7.119074803598148e-12,
+      "front_joint_angle_rad": -2.4077961846558082e-15,
+      "front_tire_slip_mps": 2.8010355289043602e-11,
+      "rear_tire_slip_mps": -3.9600332240809294e-11,
+      "tire_unsaturated_demand_ratio_max": 4.78922090503582,
+      "time_s": 1.2,
+      "distance_m": 34.140995025634766,
+      "rear_omega_radps": [
+        143.79481614309137,
+        143.79481614309137
+      ]
+    },
+    {
+      "speed_mps": 71.79658508300781,
+      "body_yaw_radps": 5.680567127797076e-11,
+      "trajectory_yaw_radps": 4.086866299811964e-10,
+      "trajectory_curvature_per_m": 5.7272032573523516e-12,
+      "lateral_accel_mps2": 2.9163407342138195e-08,
+      "longitudinal_accel_mps2": 43.773651123046875,
+      "body_sideslip_deg": 4.4745509231913373e-10,
+      "front_joint_angle_rad": 6.231126725708691e-15,
+      "front_tire_slip_mps": 4.6539292859064327e-10,
+      "rear_tire_slip_mps": 6.511220111420727e-10,
+      "tire_unsaturated_demand_ratio_max": 2.398411763319121,
+      "time_s": 1.6,
+      "distance_m": 59.532840728759766,
+      "rear_omega_radps": [
+        154.6225086299523,
+        154.6225086299523
+      ]
+    },
+    {
+      "speed_mps": 87.56327819824219,
+      "body_yaw_radps": 8.332552425827089e-10,
+      "trajectory_yaw_radps": -2.4717549163101635e-09,
+      "trajectory_curvature_per_m": -2.8324750629261664e-11,
+      "lateral_accel_mps2": -2.156973046743014e-07,
+      "longitudinal_accel_mps2": 29.843521118164062,
+      "body_sideslip_deg": 5.807574101507686e-10,
+      "front_joint_angle_rad": 9.625633623500107e-14,
+      "front_tire_slip_mps": -5.085912577976209e-10,
+      "rear_tire_slip_mps": 2.217835344000578e-09,
+      "tire_unsaturated_demand_ratio_max": 0.4320714831376891,
+      "time_s": 2.0,
+      "distance_m": 91.79949951171875,
+      "rear_omega_radps": [
+        165.57185346112507,
+        165.57185346112507
+      ]
+    },
+    {
+      "speed_mps": 98.79845428466797,
+      "body_yaw_radps": -6.433659716087448e-10,
+      "trajectory_yaw_radps": 3.1027190393505715e-09,
+      "trajectory_curvature_per_m": 3.148946731508838e-11,
+      "lateral_accel_mps2": 3.057169986656382e-07,
+      "longitudinal_accel_mps2": 26.649093627929688,
+      "body_sideslip_deg": -2.7658279453867696e-10,
+      "front_joint_angle_rad": -6.518135198252395e-10,
+      "front_tire_slip_mps": -6.379060891764897e-08,
+      "rear_tire_slip_mps": -6.589683290295747e-08,
+      "tire_unsaturated_demand_ratio_max": 0.37016380178765923,
+      "time_s": 2.4,
+      "distance_m": 129.22642517089844,
+      "rear_omega_radps": [
+        185.8704510632195,
+        185.8704510632195
+      ]
+    },
+    {
+      "speed_mps": 100.00000762939453,
+      "body_yaw_radps": 2.668405940653429e-09,
+      "trajectory_yaw_radps": -1.3572023469982684e-09,
+      "trajectory_curvature_per_m": -1.3572022952251096e-11,
+      "lateral_accel_mps2": -1.3572023987714292e-07,
+      "longitudinal_accel_mps2": 0.0003814697265625,
+      "body_sideslip_deg": 2.861428507370952e-09,
+      "front_joint_angle_rad": 3.067823772795464e-13,
+      "front_tire_slip_mps": 6.178302747024509e-10,
+      "rear_tire_slip_mps": 9.178156059419376e-09,
+      "tire_unsaturated_demand_ratio_max": 0.6613594309773123,
+      "time_s": 2.8000000000000003,
+      "distance_m": 169.2101287841797,
+      "rear_omega_radps": [
+        191.15953925025465,
+        191.15953925025465
+      ]
+    },
+    {
+      "speed_mps": 100.00000762939453,
+      "body_yaw_radps": 9.003917056382704e-10,
+      "trajectory_yaw_radps": 3.2845101108799036e-08,
+      "trajectory_curvature_per_m": 3.284509985585791e-10,
+      "lateral_accel_mps2": 3.284510236174021e-06,
+      "longitudinal_accel_mps2": 0.0003814697265625,
+      "body_sideslip_deg": -6.942646691020994e-08,
+      "front_joint_angle_rad": 1.0474954237338352e-13,
+      "front_tire_slip_mps": -1.226485661609245e-07,
+      "rear_tire_slip_mps": -1.1976019528405104e-07,
+      "tire_unsaturated_demand_ratio_max": 0.6618562990421962,
+      "time_s": 3.0,
+      "distance_m": 189.2101287841797,
+      "rear_omega_radps": [
+        191.16402766999164,
+        191.16402766999164
+      ]
+    }
+  ],
+  "three_second_distance_m": 189.2101287841797,
+  "three_second_time_penalty_vs_instant_100mps_s": 1.1078987121582031,
+  "limits": [
+    "Uniform synthetic road contact and no curvature.",
+    "The measured start penalty is not a shortest-lap lower bound.",
+    "No road geometry, finish criterion, or obstacle is evaluated."
+  ]
+}
