@@ -226,12 +226,17 @@ class TemplateAndSourceTests(unittest.TestCase):
                     cold.assert_not_called()
 
     def test_restore_snapshots_is_a_recognized_cli_mode(self):
-        with patch.object(sys, "argv", ["v3", "restore-snapshots"]), \
-             patch.object(subject, "_runtime_versions", return_value=("3.11", "0.0", "0.0")), \
-             patch.object(subject, "_run_cold_episode") as cold:
-            with self.assertRaisesRegex(ValueError, "unbound v3 protocol"):
-                subject.main()
-            cold.assert_not_called()
+        with tempfile.TemporaryDirectory() as temporary:
+            missing_protocol = Path(temporary) / "missing-v3-protocol.json"
+            with patch.object(subject, "PROTOCOL_PATH", missing_protocol), \
+                 patch.object(sys, "argv", ["v3", "restore-snapshots"]), \
+                 patch.object(subject, "_runtime_versions", return_value=("3.11", "0.0", "0.0")), \
+                 patch.object(subject, "restore_snapshots") as restore, \
+                 patch.object(subject, "_run_cold_episode") as cold:
+                with self.assertRaisesRegex(ValueError, "unbound v3 protocol"):
+                    subject.main()
+                restore.assert_not_called()
+                cold.assert_not_called()
 
     def test_source_pair_rejects_even_one_extra_candidate_byte(self):
         source = b"class _BoundedSideHoldController: pass\nroute = _CompoundClearingBrakeCarryController()\n"
