@@ -71,7 +71,7 @@
   ],
   "development_audit": "Exact geometry seed strings absent from current and snapshot research/source/documentation metadata before allocation; no held-out results inspected.",
   "holdout": {
-    "status": "unallocated_unopened",
+    "status": "allocated_not_evaluated_after_pushed_freeze",
     "count": 12,
     "tracks": [
       1,
@@ -80,7 +80,8 @@
       4
     ],
     "seeds_per_track": 3,
-    "allocation": "random 32-bit geometry seeds only after frozen candidate commit; reject previously exposed/reserved seeds"
+    "allocation": "random 32-bit geometry seeds only after frozen candidate commit; reject previously exposed/reserved seeds",
+    "manifest": "holdout.json"
   },
   "frame_skip": 4,
   "max_steps": 2000,

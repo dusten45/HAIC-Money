@@ -1,0 +1,70 @@
+{
+  "schema": "apex-final-independent-review-v1",
+  "reviewed_at": "2026-10-04T18:50:37.087528+00:00",
+  "freeze_commit": "cdf675e1811542f7999ebcc9510dd35e47541217",
+  "candidate_id": "ce84033dc4c3f28a4023480ef4d4ca8e730058e0fd4c5c39380c1ccf48f5958b",
+  "candidate_source_sha256": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+  "parent_source_sha256": "aab71b842b07d69d7fa01556e40626c606b2ac2d70823987e3dba733e65ff410",
+  "scope": "Frozen packaging/source/API and persisted selection metadata review, plus synthetic observation parity only. No simulator reset, episode, or holdout access. No conclusion about in-progress fresh validation.",
+  "blocking_issues": [],
+  "checks": {
+    "commit_bytes_match": true,
+    "freeze_fingerprint_recomputed": true,
+    "external_runtime_config_empty": true,
+    "selection_report_hash_and_summary_match": true,
+    "source_delta": "AST-identical after removing selected DEFAULTS.update and docstrings; source diff only baked selected defaults and corrected clearance docstring.",
+    "imports": [
+      "from __future__ import annotations",
+      "import cv2",
+      "import numpy as np"
+    ],
+    "forbidden_import_or_dynamic_execution_found": false,
+    "no_config_constructor_matches_selected_parent": true,
+    "synthetic_action_parity": {
+      "independent_reproduction": true,
+      "actions": 135,
+      "agent_state_resets": 3,
+      "simulator_resets": 0,
+      "actions_sha256": "5dbdfa80032fa899e50bc4df6211a5ce70248a55231112a0ada7c73993d51a76",
+      "input_method": "Three sequential 45-frame synthetic curved-road sequences, occasional rectangular obstacles, varying synthetic HUD crop intensity, four-frame temporal stacks. No track images or simulator renderer used.",
+      "action_shape_finite_bounds_pass": true
+    },
+    "persisted_preflight_action_parity_checks": 135
+  },
+  "limitations": [
+    {
+      "severity": "known_nonblocking",
+      "topic": "Unknown slip",
+      "location": "candidate/agent.py:_allocate_pedals and act",
+      "finding": "Failed optical flow leaves slip=0; HUD yaw sets motion_valid=True but does not measure slip. Rolling predictor can therefore run with unknown slip. Prior P1 REQUIRED audit counted 433/929 valid frames. Existing selection metadata explicitly discloses this; measured outcomes remain valid."
+    },
+    {
+      "severity": "known_nonblocking",
+      "topic": "Model domain",
+      "finding": "Rolling acceleration predictor omits saturation, grass, damage and rapid steering transient effects; synthetic calibration accuracy is not lap-performance evidence."
+    },
+    {
+      "severity": "known_nonblocking",
+      "topic": "Path clearance",
+      "finding": "Horizontal row constraints do not certify continuous vehicle-footprint clearance; corrected frozen docstring states this limitation."
+    },
+    {
+      "severity": "scope",
+      "topic": "Performance and generalization",
+      "finding": "Pre-freeze consumed development selection is not holdout corroboration. This review does not audit in-progress final driving validation or claim the original 10\u201313-second goal."
+    },
+    {
+      "severity": "scope",
+      "topic": "Packaging",
+      "finding": "Review covers the frozen Python entry point, not a ZIP archive or official server submission."
+    }
+  ],
+  "evidence_sha256": {
+    "agents/apex_2026/candidate/agent.py": "b27142578d98eb090da8ac858eb784d48053b026142cf894b072da2c6440ac97",
+    "agents/apex_2026/results/pedal_sources/aab71b842b07.py": "aab71b842b07d69d7fa01556e40626c606b2ac2d70823987e3dba733e65ff410",
+    "agents/apex_2026/candidate/freeze.json": "e4a462558333be7fb264a4a093299856ec8f640f7eb95d715821a77aa29b9a18",
+    "agents/apex_2026/candidate/preflight.json": "bcc35e834715fe9b5d4d9d99064cd8b095ffc175d574da44a8ed0e010747307b",
+    "agents/apex_2026/candidate/selection.json": "4b1dc119e96e15f731c06a78d2b440b2df487367beb61295a4b66b676331a742",
+    "agents/apex_2026/results/pedal-development-p1.json": "58f0e92831f5ce1caa00065ba234acebcf7d6075b024619246b003e5b5bcfd91"
+  }
+}
