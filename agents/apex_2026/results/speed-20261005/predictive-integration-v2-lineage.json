@@ -1,0 +1,31 @@
+{
+  "classification": "single_causal_predictive_supported_horizon_revision",
+  "files_sha256": {
+    "agents/apex_2026/fast_predictive_agent.py": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+    "agents/apex_2026/fast_predictive_v2_agent.py": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+    "agents/apex_2026/research/speed_20261005/physics_build_predictive_v2.py": "43963e77ba24b081ebf86c8ab871dddd8de06888bcc3580efea88fe1416a0399",
+    "agents/apex_2026/tests/test_fast_predictive_v2.py": "053b37f76c9c8c8f5fff17a76be7bf6d5e78297b0a1928e032945d9fc268af60",
+    "agents/apex_2026/tests/fixtures/predictive-track3-frame40.npz": "48878e6add7a6b7b2140287ece1ac2f9fa1915e04c1f952621366c55862bf0a9",
+    "agents/apex_2026/results/speed-20261005/predictive-integration-v1-to-v2.patch": "841d77afe1259e51aa9cd8bb8e9e962ee0e19604c41b441808879aacc521d3a8",
+    "agents/apex_2026/results/speed-20261005/predictive-integration-v2.md": "589a34a95beb89f2c0e276af658a5eeefa1159842e5d32db5874d1c60f1b6626"
+  },
+  "v1_preserved_exact": true,
+  "strict_center_prefix_depth_m": 1.9,
+  "body_margin_m_unchanged": 1.9,
+  "dense_prefix_step_max_m": 0.25,
+  "original_minimum_supported_nodes": 5,
+  "new_world_steps": 0,
+  "new_driving_episodes": 0,
+  "new_holdout_opened": false,
+  "red_before_green": true,
+  "combined_integration_tests_passed": 14,
+  "fixture_origin": {
+    "path": ".haic-artifacts/apex-speed-20261005/slow-phase-track3-v2/cameras.npz",
+    "sha256": "dbb7a5c1adc6ea2624fcefc1cf33507f48ed40cc7d28c69c251f22b10f63088b",
+    "frame_index": 40
+  },
+  "performance_improvement_claimed": false,
+  "new_red_tests_before_implementation": 3,
+  "existing_green_defenses_retained": 1,
+  "reversible_patch_reverse_verified_v1_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e"
+}

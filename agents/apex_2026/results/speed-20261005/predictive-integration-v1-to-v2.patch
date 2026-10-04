@@ -1,0 +1,30 @@
+--- agents/apex_2026/fast_predictive_agent.py
++++ agents/apex_2026/fast_predictive_v2_agent.py
+@@ -1462,0 +1463,22 @@
++    def _predictive_supported_prefix(self, path, field):
++        # Keep original nodes, including their minimum-five-node semantics.
++        # Dense samples only locate the first unknown/unsupported boundary;
++        # a later supported road branch can never rejoin after a grass gap.
++        if self._sample_distance(field, path[:1])[0] < 1.9:
++            return None
++        prefix = [path[0].copy()]
++        for left, right in zip(path[:-1], path[1:]):
++            count = max(2, int(np.ceil(np.linalg.norm(right-left)/.25))+1)
++            dense = np.linspace(left, right, count)
++            depth = self._sample_distance(field, dense)
++            unsafe = np.flatnonzero(depth < 1.9)
++            if len(unsafe):
++                if len(prefix) < 5:
++                    return None
++                index = int(unsafe[0])
++                if index > 0 and np.linalg.norm(dense[index-1]-prefix[-1]) > 1e-8:
++                    prefix.append(dense[index-1].copy())
++                return np.asarray(prefix)
++            prefix.append(right.copy())
++        return np.asarray(prefix) if len(prefix) >= 5 else None
++
+@@ -1476 +1498,3 @@
+-        path = self._ridge(frame)
++        path = _ClearRidgeReference._ridge(self, frame)
++        if path is not None:
++            path = self._predictive_supported_prefix(path, field)

@@ -1,0 +1,61 @@
+{
+  "classification": "independent read-only V2 geometry integration review; no driving benchmark",
+  "sources": [
+    {
+      "source": "agents/apex_2026/fast_predictive_agent.py",
+      "source_sha256": "d2bd8a0855876f5cc4d281bd1183646ad29bd27e7f9231a4af6d917e901b844e",
+      "reference_nodes": 15,
+      "reference_last": [
+        0.0,
+        31.0
+      ],
+      "reference_last_depth_m": 6.037037037037036,
+      "supported_extent_from_ego_m": 31.0,
+      "initial_body_road_slack_m": 0.9910052910052869,
+      "raw_reference_last": [
+        -2.9748076836551114,
+        36.824630182009436
+      ],
+      "raw_full_dense_min_depth_m": 0.2124068550276007
+    },
+    {
+      "source": "agents/apex_2026/fast_predictive_v2_agent.py",
+      "source_sha256": "b70af66e0ba39ea975d53909ec6d7a19df2a73005a036465d71dd7ac8caeff8a",
+      "reference_nodes": 18,
+      "reference_last": [
+        -2.7214335624303643,
+        35.10402188471505
+      ],
+      "reference_last_depth_m": 1.9330151523219845,
+      "supported_extent_from_ego_m": 35.9778229235838,
+      "initial_body_road_slack_m": 0.9910052910052869,
+      "raw_reference_last": [
+        -2.9748076836551114,
+        36.824630182009436
+      ],
+      "raw_full_dense_min_depth_m": 0.2124068550276007
+    }
+  ],
+  "fixture_sha256": "48878e6add7a6b7b2140287ece1ac2f9fa1915e04c1f952621366c55862bf0a9",
+  "geometry_sha256": "565d398e4e55c1e8bb5dad5d38e6ffa2c1a42eb5a8675832c2103f1197741920",
+  "planner_sha256": "341c61575651774cd5b582c644e47da021fc27737f43cb606b1a57fa561caf99",
+  "official_shape_source_sha256": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+  "independent_tests_passed": 24,
+  "reviewed": [
+    "explicit raw-ridge dispatch excludes legacy5.8 only",
+    "first strictdense<1.9 stops prefix immediately; no gaprejoin",
+    "minimum5 originalnodes before optional endpoint",
+    "old-field filledhole reference rejected by strict actualcamera chord gate",
+    "MPC field separate baseline field",
+    "actual predicted CCW full body25 points1.9; official hull+steeredtires contained",
+    "exact hull chordvelocity fixes COM/hull progress mismatch",
+    "already transported activecircle union; no secondroute",
+    "endpoint and brakingbackup guards unchanged"
+  ],
+  "body_lateral_half_m": 1.6,
+  "official_front_wheel_max_lateral_m": 1.5681829831674792,
+  "no_source_edits": true,
+  "new_driving_episodes": 0,
+  "holdout_opened": false,
+  "limitations": "Geometry review and source-bound saved-camera counterfactual do not establish lap-time gain, dynamic safety, complete uncertainty coverage or obstacle-pass feasibility. A1.9 roadfield margin around full1.6 body narrows pass availability; fallback is expected."
+}
