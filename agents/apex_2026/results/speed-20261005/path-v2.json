@@ -1,0 +1,176 @@
+{
+  "evidence_type": "mandatory development benchmark; no holdout",
+  "input_receipt": ".haic-artifacts/apex-speed-path-v2/mandatory-default.json",
+  "input_receipt_sha256": "3ad47efff582ce1182d8613f33b4dec70da38e04c1c84b51912f15d8603d4584",
+  "freeze": {
+    "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+    "parameters": {},
+    "suite": "mandatory",
+    "trial_role": "benchmark",
+    "environment_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+      "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+      "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+      "agents/apex_2026/evaluate.py": "39a280612b3f5e7402b7a475c447a7cb9c465ddc0bc9e5c5f98300cdcad0325c"
+    },
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ]
+    ],
+    "max_steps": 700,
+    "selected_profile_seconds": 13,
+    "consecutive_rejections": 0,
+    "prior_receipts": [],
+    "runtime_versions": {
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "torch": "2.1.0",
+      "opencv-python": "4.8.1.78",
+      "box2d-py": "2.3.5"
+    },
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]"
+  },
+  "rows": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 15360,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 192,
+      "initialization_ms": 3.2652619993314147,
+      "reset_ms": 0.00409800122724846,
+      "action_latency_max_ms": 2.368179997574771,
+      "peak_worker_rss_mib": 92.12890625,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+      "parameters": {},
+      "action_trace_sha256": "5a4affbefad01602071a06fb92b544dbf8915deaf3028b821e369d024e48d3ba",
+      "error": null,
+      "trace_file_sha256": "f4212881136953fc14305ae2f3301d24399681dcf803e4dfc072c3badf1a8e67",
+      "diagnostics": {
+        "mean_actual_speed": 63.337982873856845,
+        "mean_target_speed": 74.41220426159275,
+        "mean_gas": 0.5394188165664673,
+        "braking_fraction": 0.25,
+        "all_actions_finite_and_bounded": true
+      }
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.2113095238095238,
+      "collision_count": 1,
+      "damage": 0.2,
+      "retire_reason": "off_track",
+      "steps": 152,
+      "initialization_ms": 3.1489749999309424,
+      "reset_ms": 0.0032460011425428092,
+      "action_latency_max_ms": 3.626680001616478,
+      "peak_worker_rss_mib": 92.7578125,
+      "offtrack_samples": 100,
+      "partial_offtrack_samples": 101,
+      "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+      "parameters": {},
+      "action_trace_sha256": "2d39338c4002c59e1246345f380f458ea760c3c787d4f6c312abfb7b04c541a3",
+      "error": null,
+      "trace_file_sha256": "b741c0dab8c36323f4342cc7341cc85aeb32b69b78be70a1b7e7b139424c37fb",
+      "diagnostics": {
+        "mean_actual_speed": 22.28961427876045,
+        "mean_target_speed": 27.413042896266678,
+        "mean_gas": 0.23201322555541992,
+        "braking_fraction": 0.1118421052631579,
+        "all_actions_finite_and_bounded": true
+      }
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.7637540453074434,
+      "collision_count": 1,
+      "damage": 0.2,
+      "retire_reason": "off_track",
+      "steps": 270,
+      "initialization_ms": 3.091525999479927,
+      "reset_ms": 0.004088000423507765,
+      "action_latency_max_ms": 2.4734670005273074,
+      "peak_worker_rss_mib": 92.6875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 6,
+      "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+      "parameters": {},
+      "action_trace_sha256": "1d2f208a30024234fc7f61d3952af749a922a9ee9ad05efd48c72dd99badb04d",
+      "error": null,
+      "trace_file_sha256": "9cf54c15800d3f70294eca51547f90523a6fd88ff866f3a2ea8dd3f5922d27e5",
+      "diagnostics": {
+        "mean_actual_speed": 37.975011887330524,
+        "mean_target_speed": 61.238819980512794,
+        "mean_gas": 0.6873621344566345,
+        "braking_fraction": 0.17037037037037037,
+        "all_actions_finite_and_bounded": true
+      }
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.5806451612903226,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": "off_track",
+      "steps": 514,
+      "initialization_ms": 4.156162001891062,
+      "reset_ms": 0.004818997695110738,
+      "action_latency_max_ms": 2.887222999561345,
+      "peak_worker_rss_mib": 92.453125,
+      "offtrack_samples": 310,
+      "partial_offtrack_samples": 377,
+      "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+      "parameters": {},
+      "action_trace_sha256": "59c1cccd6467830e7097428c744543c3ef07ce1fdf3d3a0a11340136a54b925b",
+      "error": null,
+      "trace_file_sha256": "d9724ebda42d35517734cf05089432ba102a72f6707f80514c8e7d8510ec2b4a",
+      "diagnostics": {
+        "mean_actual_speed": 21.565651899945998,
+        "mean_target_speed": 47.52023221037098,
+        "mean_gas": 0.2964933514595032,
+        "braking_fraction": 0.1556420233463035,
+        "all_actions_finite_and_bounded": true
+      }
+    }
+  ],
+  "finishes": 1,
+  "original_13_second_goal_met": false,
+  "official_container_certified": false,
+  "limits": "Road-relative references and margins are heuristic; no formal trajectory reachability or collision proof."
+}

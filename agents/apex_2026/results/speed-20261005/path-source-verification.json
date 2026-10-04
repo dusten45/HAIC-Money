@@ -1,0 +1,104 @@
+{
+  "type": "read-only source/provenance verification; no new episode",
+  "final_source_sha256": "71c9ad3fa505615c6316abd99e6bf2d4989cf7e987087eec055148f67ca06bfc",
+  "current_test_sha256": "55e95457d373148180f086847de86feb5cec6d739ba3f664f1d8560f7beedd34",
+  "current_tests_passed": 17,
+  "previous_sources_reconstructed_exactly_by_reverse_zero_context_patches": true,
+  "receipts": [
+    {
+      "version": 1,
+      "source_sha256": "e155d93909f225c8c856ae2381988a5759b8cf4aef3ed4947dfb9dc1cfd79894",
+      "receipt_sha256": "530b4beaf251f71239736ab866c4b3b3fcd5c8e9cecb1080ea4ba11ffb0dcc46",
+      "finished": 0,
+      "times_seconds": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "contacts": [
+        2,
+        1,
+        4,
+        2
+      ]
+    },
+    {
+      "version": 2,
+      "source_sha256": "a59b1113e43fac30c8eb69e08e38cb2433fefc18e91a58ebd19456ed93c7915a",
+      "receipt_sha256": "6d24e1d9fb83c9b8b2601bd6688e2557336a10c6e5b0f80fd7c61bbb907cb613",
+      "finished": 1,
+      "times_seconds": [
+        15.36,
+        null,
+        null,
+        null
+      ],
+      "contacts": [
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "version": 3,
+      "source_sha256": "df49102576102d667a713863c2bc724a0ef9b97b75f557bb40e55219099d1ece",
+      "receipt_sha256": "827a1cb4fafb05b0bfb6233317b11323ac8eef75ff7daa8ac6f6a5f09a291876",
+      "finished": 3,
+      "times_seconds": [
+        15.52,
+        19.92,
+        null,
+        18.32
+      ],
+      "contacts": [
+        0,
+        0,
+        5,
+        1
+      ]
+    },
+    {
+      "version": 4,
+      "source_sha256": "71c9ad3fa505615c6316abd99e6bf2d4989cf7e987087eec055148f67ca06bfc",
+      "receipt_sha256": "530d5d909fe78869a144144500e478c83c18dcd4a2579703d89e44a841c8718d",
+      "finished": 3,
+      "times_seconds": [
+        15.4,
+        23.2,
+        18.0,
+        null
+      ],
+      "contacts": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "protected_files_identical_to_14bb967": {
+    "agent.py": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806"
+  },
+  "inference_imports": [
+    "numpy"
+  ],
+  "original_goal_met": false,
+  "formal_promotion": false,
+  "notes": [
+    "Source and tests are fixed while root prepares commit.",
+    "All four trial action-trace digests and finite bounded actions were verified by path_report.py.",
+    "V3 and V4 each finish three mandatory cells; the successful cells differ.",
+    "No simulator state enters Agent; development-only path_probe.py replays exact saved actions."
+  ],
+  "new_holdout_opened_in_speed_study": false,
+  "previous_study_holdout_already_consumed": true
+}

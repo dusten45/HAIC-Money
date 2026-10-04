@@ -1,0 +1,44 @@
+--- a/agents/apex_2026/fast_path_agent.py
++++ b/agents/apex_2026/fast_path_agent.py
+@@ -77 +77,2 @@
+-        crop = frame[73:83, 19:24]
++        # Row73 straddles the road/HUD boundary and is not a gauge pixel.
++        crop = frame[74:83, 19:24]
+@@ -197,2 +198,4 @@
+-            self.pass_y -= .08*speed
+-            self.pass_x -= .08*self.pass_y*yaw
++            angle = float(np.clip(.08*yaw, -.64, .64))
++            x, y = self.pass_x, self.pass_y-.08*speed
++            self.pass_x = x*np.cos(angle)-y*np.sin(angle)
++            self.pass_y = x*np.sin(angle)+y*np.cos(angle)
+@@ -210,0 +214,3 @@
++        slope = (float(np.interp(distance+2., ahead, center))-
++                 float(np.interp(distance-2., ahead, center)))/4.
++        scale = np.sqrt(1.+slope*slope)
+@@ -212 +218 @@
+-        offset = x-road_x+self.pass_side*separation*np.sqrt(1.+slope*slope)
++        normal_offset = (x-road_x)/scale+self.pass_side*separation
+@@ -214 +220,4 @@
+-        offset = float(np.clip(offset, -4.95, 4.95))
++        normal_offset = float(np.clip(normal_offset, -4.95, 4.95))
++        road_slope = (np.interp(ahead+2., ahead, center)-
++                      np.interp(ahead-2., ahead, center))/4.
++        offsets = normal_offset*np.sqrt(1.+road_slope*road_slope)
+@@ -219 +228 @@
+-        return center+offset*approach*departure, imminent, distance
++        return center+offsets*approach*departure, imminent, distance
+@@ -271,4 +279,0 @@
+-        if self._rear_speed(frame)-speed > 15.:
+-            self.spin_frames = 6
+-        else:
+-            self.spin_frames = max(0, self.spin_frames-1)
+@@ -287,0 +293,7 @@
++        demand = max(actual_lateral, speed*speed*abs(self.reference_curvature))
++        # Powered launch slip can be productive on a straight. Tight turns
++        # need rear lateral grip, so wheel-speed feedback is gated by demand.
++        if self._rear_speed(frame)-speed > 15. and demand > 60.:
++            self.spin_frames = 6
++        else:
++            self.spin_frames = max(0, self.spin_frames-1)
+@@ -297 +308,0 @@
+-            demand = max(actual_lateral, speed*speed*abs(self.reference_curvature))

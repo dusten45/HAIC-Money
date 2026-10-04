@@ -1,0 +1,40 @@
+--- a/agents/apex_2026/fast_path_agent.py
++++ b/agents/apex_2026/fast_path_agent.py
+@@ -17 +17 @@
+-                 obstacle_margin=.80):
++                 obstacle_margin=1.20):
+@@ -41,0 +42 @@
++        self.spin_frames = 0
+@@ -70,0 +72,8 @@
++
++    @staticmethod
++    def _rear_speed(frame):
++        # Both purple rear-wheel gauges: empirically calibrated pixel mass
++        # per rad/s, then the official .54m radius. Missing bars mean no spin.
++        crop = frame[73:83, 19:24]
++        mass = float(np.where(crop <= .20, crop, 0.).sum())
++        return mass/.01485*.54
+@@ -172,2 +181,10 @@
+-                relative = x-road_x
+-                self.pass_side = -1 if relative >= 0. else 1
++                separation = (2.4+max(self.obstacle_margin, 1.3))*np.sqrt(1.+slope*slope)
++                choices = []
++                for side in (-1, 1):
++                    target_x = x+side*separation
++                    offset = target_x-road_x
++                    if abs(offset)/np.sqrt(1.+slope*slope) <= 4.95:
++                        # Prefer a short move from the actual pose when both
++                        # road-relative sides have room, especially in bends.
++                        choices.append((abs(target_x)+.15*abs(offset), side))
++                self.pass_side = min(choices)[1] if choices else (-1 if x >= 0. else 1)
+@@ -197 +214 @@
+-        offset = float(np.clip(offset, -4.25, 4.25))
++        offset = float(np.clip(offset, -4.95, 4.95))
+@@ -253,0 +271,4 @@
++        if self._rear_speed(frame)-speed > 15.:
++            self.spin_frames = 6
++        else:
++            self.spin_frames = max(0, self.spin_frames-1)
+@@ -284,0 +306,2 @@
++            if self.spin_frames:
++                gas = min(gas, .16 if speed > 15. else .08)
