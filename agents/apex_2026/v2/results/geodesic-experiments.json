@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "cycle": "v2",
+  "scope": "consumed required4; no fresh holdout",
+  "experiments": [
+    {
+      "variant": "geodesic_r0",
+      "source_snapshot": "/tmp/apex-v2-geodesic-r0/source.py",
+      "source_sha256": "65d7e95c40e39f99d0b727b22d93edd45ac030b872f1baa93342d370c1f9ed84",
+      "config": {},
+      "protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 3,
+        "finish_rate": 0.75,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 18060,
+        "finished_max_ms": 21520
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 17800,
+          "progress": 1.0,
+          "damage": 0.6000000000000001,
+          "receipt": "/tmp/apex-v2-geodesic-r0/t1-s516237.json",
+          "receipt_sha256": "26e3237ac2213c797be12067b5940bf5cacc3813622c5e668ee600d08dfb8a51"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21520,
+          "progress": 0.9821428571428571,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-geodesic-r0/t2-s644062.json",
+          "receipt_sha256": "d73ac2059b554896c87d17c97a89fa9645699777f30a4893d710ca2b3d254370"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.36245954692556637,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-v2-geodesic-r0/t3-s1007.json",
+          "receipt_sha256": "e6e9f1dedc11eb5040ad542a25e89bcc5fe6c08c38e1c9563916a1341b0806bd"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 18060,
+          "progress": 0.953405017921147,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r0/t4-s18800.json",
+          "receipt_sha256": "b1ed837a54bba2cf8fda91445ed08c34c9e4a1ad2489e4758b518cf6be44bbb5"
+        }
+      ],
+      "hypothesis": "Unrestricted 2-D free-space routes represent horizontal and returning hairpins; arclength curvature and horizon envelope replace row-y assumptions.",
+      "observations": "Synthetic geometry passes. T1 collides while far-target pursuit steers right despite near geodesic routing left; path feasibility alone does not ensure tracking arc clearance."
+    },
+    {
+      "variant": "geodesic_r1_arc_guard",
+      "source_snapshot": "/tmp/apex-v2-geodesic-r1/source.py",
+      "source_sha256": "36c7a4cbbb5d930708cf639aea9d55e0273490ee962e1994218d12a140296218",
+      "config": {},
+      "protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 4,
+        "finish_rate": 1.0,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 20280.0,
+        "finished_max_ms": 22180
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 18740,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r1/t1-s516237.json",
+          "receipt_sha256": "13b2a8ab8c4488f7512bf5ace2cb8b60a0969e5188e2330830e74240b8151a34"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 22180,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r1/t2-s644062.json",
+          "receipt_sha256": "7b2e221c6a5011f83a9aa15b2ecfaa99e714c9440caf94e7549cc064be1db266"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 20640,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r1/t3-s1007.json",
+          "receipt_sha256": "00c29a2015e78c8fd1f473fc4e6456faa6bbd59cd97ee1931963730dba764937"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 19920,
+          "progress": 0.996415770609319,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-r1/t4-s18800.json",
+          "receipt_sha256": "bc51695a2bfd72c3b3ca9d81cebe7ba1c3917975b031e9aeadba78525270f580"
+        }
+      ],
+      "hypothesis": "Clearance of a free-space geodesic does not imply clearance of its tracking connector. Retain nominal pursuit when clear; otherwise choose a bounded forward circular connector matching route with dense mask clearance.",
+      "observations": "4/4 finish zero damage, slower than frozenV1. Six synthetic behavior tests and100 focused Apex tests pass. Runtime geometric feasibility remains distinct from transient wheel/slip feasibility.",
+      "consumed_failure_screen": {
+        "scope": "Two priorV1 holdout failures explicitly consumed and authorized forV2 iteration, never fresh holdout",
+        "protocol": {
+          "expected": 2,
+          "observed": 2,
+          "completed": 2,
+          "complete": true,
+          "finished": 2,
+          "finish_rate": 1.0,
+          "in_target_window": 0,
+          "driving_target_met": false,
+          "resource_eligible": true,
+          "original_target_met": false,
+          "finished_median_ms": 19490.0,
+          "finished_max_ms": 20980
+        },
+        "cells": [
+          {
+            "track_id": 2,
+            "seed": 4031370700,
+            "finished": true,
+            "lap_time_ms": 18000,
+            "progress": 1.0,
+            "damage": 0.0,
+            "receipt": "/tmp/apex-v2-geodesic-r1/t2-s4031370700.json",
+            "receipt_sha256": "c72648b0751cf96ff03180bcc95a65a8ccda29f09d69d5240ff6a6dfa65b8484"
+          },
+          {
+            "track_id": 3,
+            "seed": 4111953688,
+            "finished": true,
+            "lap_time_ms": 20980,
+            "progress": 1.0,
+            "damage": 0.0,
+            "receipt": "/tmp/apex-v2-geodesic-r1/t3-s4111953688.json",
+            "receipt_sha256": "f8303670374f9bb56123ae71b9fb639c7faff8cc22d0c3cd6175fac57c1df4ed"
+          }
+        ]
+      },
+      "operator_errors": [
+        {
+          "log": "/tmp/apex-v2-geodesic-r1/t2-s4031370700.log",
+          "error": "Module-name slash typo; Python failed module discovery before simulator import/reset. Corrected retry has separate log and sole episode receipt.",
+          "resets": 0
+        }
+      ],
+      "speed_limit_analysis": {
+        "t4-s18800": {
+          "frames": 250,
+          "limiting": {
+            "horizon": 69,
+            "path": 132,
+            "correction": 21,
+            "connector": 25
+          },
+          "mean_horizon_target_reduction": 18.952320372221777
+        },
+        "t3-s1007": {
+          "frames": 259,
+          "limiting": {
+            "horizon": 92,
+            "path": 144,
+            "correction": 13,
+            "connector": 10
+          },
+          "mean_horizon_target_reduction": 15.6922988506719
+        },
+        "t2-s644062": {
+          "frames": 278,
+          "limiting": {
+            "horizon": 106,
+            "path": 142,
+            "correction": 14,
+            "connector": 14
+          },
+          "mean_horizon_target_reduction": 19.801902350883463
+        },
+        "t1-s516237": {
+          "frames": 235,
+          "limiting": {
+            "horizon": 87,
+            "path": 134,
+            "correction": 4,
+            "connector": 10
+          },
+          "mean_horizon_target_reduction": 13.652841874910775
+        }
+      }
+    }
+  ]
+}
