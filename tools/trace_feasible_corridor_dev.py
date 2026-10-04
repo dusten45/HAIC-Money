@@ -184,6 +184,7 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
     obstacles: list[Any] = []
     corridors: list[dict] = []
     centers_detail: dict | None = None
+    decision_centers_detail: dict | None = None
     road_detail: dict | None = None
     steering_detail: dict | None = None
     speed_detail: dict | None = None
@@ -218,8 +219,13 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
         return result
 
     def road_call(*args, **kwargs):
-        nonlocal road_detail
+        nonlocal road_detail, decision_centers_detail
         result = originals["_adjust_road_steering"](*args, **kwargs)
+        # _nearest_obstacle may inspect earlier stack frames through
+        # _road_centers. The centers passed to this decision are authoritative.
+        decision_centers_detail = {
+            str(row): float(x) for row, x in kwargs["centers"].items()
+        }
         road_detail = {
             "input": float(kwargs["steering"]),
             "straight": bool(kwargs["straight"]),
@@ -282,7 +288,8 @@ def act_with_diagnostics(agent: Any, observation: Any) -> tuple[np.ndarray, dict
         "corridor_previous": None if getattr(controller, "_corridor_previous", None) is None
         else [float(value) for value in controller._corridor_previous],
         "corridor_misses": None if not candidate else int(controller._corridor_misses),
-        "road_centers": centers_detail,
+        "road_centers": (decision_centers_detail if decision_centers_detail is not None
+                         else centers_detail),
         "road_sweep": None if getattr(controller, "_pace_sweep", None) is None
         else float(controller._pace_sweep),
         "bend_displacement": None if getattr(controller, "_observed_bend_displacement", None) is None

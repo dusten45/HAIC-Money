@@ -105,7 +105,8 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
             controller._corridor_candidate(-1.0)
             controller._corridor_candidate(1.0)
             road = controller._adjust_road_steering(
-                steering=-0.2, straight=False, centers={}, obstacle=(43.5, 41.5, 41.5),
+                steering=-0.2, straight=False, centers=centers,
+                obstacle=(43.5, 41.5, 41.5),
             )
             steering = controller._adjust_obstacle_steering(
                 base_steering=road, obstacle_bias=0.07, straight=False,
@@ -150,6 +151,43 @@ def test_capture_records_actual_candidate_plan_and_restores_methods() -> None:
     assert "_adjust_obstacle_steering" not in vars(agent._forward_controller)
     assert "_road_centers" not in vars(agent._forward_controller)
     assert "_adjust_target_speed_for_steering" not in vars(agent._forward_controller)
+
+
+def test_capture_road_centers_from_current_decision_not_history() -> None:
+    class Controller:
+        OBSTACLE_LOW = 0.54
+
+        def _road_centers(self, frame):
+            center = float(frame[0, 0])
+            return {42: center, 54: center + 1.0}
+
+        def _nearest_obstacle(self, frame, centers):
+            self._road_centers(np.full_like(frame, 9.0))
+            return None
+
+        def _adjust_road_steering(self, *, steering, straight, centers, obstacle):
+            return steering
+
+        def _adjust_obstacle_steering(self, *, base_steering, obstacle_bias, straight):
+            return base_steering
+
+    class Agent:
+        def __init__(self):
+            self._forward_controller = Controller()
+
+        def act(self, observation):
+            controller = self._forward_controller
+            centers = controller._road_centers(observation[-1])
+            controller._nearest_obstacle(observation[-1], centers)
+            controller._adjust_road_steering(
+                steering=0.0, straight=True, centers=centers, obstacle=None,
+            )
+            return np.zeros(3, dtype=np.float32)
+
+    observation = np.zeros((4, 84, 84), dtype=np.float32)
+    observation[-1, 0, 0] = 41.0
+    _, detail = trace.act_with_diagnostics(Agent(), observation)
+    assert detail["road_centers"] == {"42": 41.0, "54": 42.0}
 
 
 def test_v2_study_selects_separate_frozen_receipts_and_artifacts() -> None:
