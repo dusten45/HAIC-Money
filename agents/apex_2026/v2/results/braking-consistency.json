@@ -1,0 +1,5517 @@
+{
+  "scope": "Read-only consumed regression traces; zero resets, no counterfactual driving. World coordinates are diagnostic-only.",
+  "source_sha256": "b182dc495c41201e00bb983b933a7ac4afb972ee864432743c2af16480009142",
+  "analysis_sha256": "9d2f5f294dd89fd7ec484fd9554f7707672a1438927729b9d38b0ebd50a07d8f",
+  "trace_count": 20,
+  "provenance": [
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s1991198892.jsonl",
+      "trace_sha256": "356a9f564dc375c38717ddff6834ec6a744e148602c5b41f5f96dabb4497c0ad",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s1991198892.json",
+      "receipt_sha256": "08c6a8e9df5d2fe053eee0c0b44b2826732f6b07a558542be05382361f3785e1"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s2541631106.jsonl",
+      "trace_sha256": "2547d6252e6aebdd09fb3f7b72af9e6d24a435717b6d55044514b547ec5ad4fb",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s2541631106.json",
+      "receipt_sha256": "fe758ef9cb4d8a8a963e51b3cb2d643424b0e30f2e3c03d09f8a4eec165b943b"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3601050001.jsonl",
+      "trace_sha256": "aef65b1c1108c9f52b67d225106485ad9ee3c9acd300f6cbdee0a4be312086ca",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3601050001.json",
+      "receipt_sha256": "92f127e532e028672791b4add2b237ce88116a3a84d77644655adbbd6387cdc3"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3601050003.jsonl",
+      "trace_sha256": "25feda2907ae28be4097a140ccfce34d80f9fda6289a608e7121646f8dbe011c",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3601050003.json",
+      "receipt_sha256": "d49559a1d01eb06de3a182652da8066924af93f8c9d170696b53b0271614b11e"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3731157233.jsonl",
+      "trace_sha256": "1cd867ec43b74811057ad76f6640b658271f0561150384816d16d36e964a6b4c",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t1-s3731157233.json",
+      "receipt_sha256": "60a7f10f08108d5d2479c78900133c85ce33f2fb9f7c074633e59607702002f4"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s1244362167.jsonl",
+      "trace_sha256": "2786f5bb4033a7e556ae417df019bc3cb55965942ee2cfd7650c12a7c56ee2cc",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s1244362167.json",
+      "receipt_sha256": "7ebc2fe756cb1269b553753ed806035a8688a32f73170dfea92f629e5dd0d57a"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050001.jsonl",
+      "trace_sha256": "140f69e6905dca3dea091922a7cc4056f935333be1e1a9282609ca1af60ab72a",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050001.json",
+      "receipt_sha256": "d8f0142a475045ad5e3344b66f44dbdc743645dea76162abf98daf6299a4e4a5"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050002.jsonl",
+      "trace_sha256": "32a90ba101da9399710c83e6f84d16aa430f9a1cf5dd2503e8128dd700e8ff36",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050002.json",
+      "receipt_sha256": "c7a256d695367f3806baa20664d7bf8d2a5e210baf6b4ed54d0947faee5f1cee"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050003.jsonl",
+      "trace_sha256": "c5a8ae4f9b83f86af5f5ada0d659245b965d74a937700529116f59af2d396248",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3601050003.json",
+      "receipt_sha256": "02edeed3f8618dd7deaae019f804b2cf306b01032762dec79e504e98a2507491"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3941966027.jsonl",
+      "trace_sha256": "da0dd36b09918a21c719c78fb781bba05234dae614e50837775c3551e69d7f9a",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t2-s3941966027.json",
+      "receipt_sha256": "00df5978627681ed2e49625def563c8cfc78ba4191beea624f4942cda8f8161e"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3601050001.jsonl",
+      "trace_sha256": "f53000fc555694ecffcb0f315f3e7b32219ddff76b227f000f134a7bb70cf188",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3601050001.json",
+      "receipt_sha256": "5ec2c57e76e1f993579584287646f496ff6b194697979ca34a7045db9cb68839"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3601050002.jsonl",
+      "trace_sha256": "6e6fde9140ce59d4e1a3e6358e6a906ad3d004d820b05599336bb26746318bc0",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3601050002.json",
+      "receipt_sha256": "632d3e4430127ab2f0db519fa776680dab18b65a0ab56fcf18c5d39e0c547754"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3615151447.jsonl",
+      "trace_sha256": "aa8ccd408d7ececfefb04de48eb8eb6773982876a9699f9598a986fd7e39c9a5",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s3615151447.json",
+      "receipt_sha256": "16f2ea620f9f370fd198b4676312d02068552c76d24c5344684fba68e02b15be"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s4019195530.jsonl",
+      "trace_sha256": "f0a4366c74e120cd8fc944f82d0425a22f16af3f814525932bd9640df680fa3e",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t3-s4019195530.json",
+      "receipt_sha256": "3151762075dc68eda104c170d537f7ef5a74cc9344e27a071f43fff6b12914a1"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s1172828284.jsonl",
+      "trace_sha256": "3c5927b05a444d82910c0e9195d6ddff1de7adbd07bffd818a773887305f65f1",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s1172828284.json",
+      "receipt_sha256": "5c0fe2f986485c7a3e2b1183ba2fac2d5fde8389018242bc644674819a1c1d7b"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3491511754.jsonl",
+      "trace_sha256": "2224b9799e0c37e234b4087fa9537d5e9cf2d2d3afa5b4c8366d19ac8e45d63a",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3491511754.json",
+      "receipt_sha256": "3e9ced7898bf01c63abc749f03ed7663b9b83552fca23aaaca8fa6f7aa6da8ba"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050001.jsonl",
+      "trace_sha256": "578b473c6eba062155cc25060bc99bb266741aa13ffc7176e37ed505559bdb95",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050001.json",
+      "receipt_sha256": "e29205b4ef3314d8f44148afd41b1d5f1503e2ed50f9e6e9c2325a922c8f4011"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050002.jsonl",
+      "trace_sha256": "fa5037f53455487230ab75d633eb1a87c175818667def8d6d6a295b79380bd1b",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050002.json",
+      "receipt_sha256": "6fbce1f2a936db7de84abb87ec46a71e3d7e752e1436d67b36d4042f84277c6f"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050003.jsonl",
+      "trace_sha256": "2a1ca7be6594230ae0885fa43916de959576cd224ae7f5fa137fdc785eea38d0",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3601050003.json",
+      "receipt_sha256": "f0bf93a0d9983ed372df4c032a885f9cd5a8734ae6b6b58149383e8d6c48f5c8"
+    },
+    {
+      "trace": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3841519481.jsonl",
+      "trace_sha256": "f443ce12d5f2daad1fd000bf2e677accb4b82e666cba92fdab1c956a3a1aa776",
+      "receipt": "/tmp/apex-v2-geodesic-frenet-r6-regression/t4-s3841519481.json",
+      "receipt_sha256": "59739805dd8556ee63f29124ba05625745e1e8ccf5beb235b54a7f0688393f27"
+    }
+  ],
+  "critical_window": [
+    {
+      "previous_step": 55,
+      "step": 56,
+      "previous_target": 70.77207538930081,
+      "target": 71.49863184570732,
+      "target_rebound": 0.726556456406513,
+      "previous_curve_envelope": 101.89272869005883,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.65908464748743,
+      "speed": 68.65908229910929,
+      "previous_brake": 0.0,
+      "brake": 0.0,
+      "old_bend_world": [
+        73.76792476770856,
+        53.846667958820404
+      ],
+      "new_nearest_world": [
+        68.47335750386351,
+        55.30871752644708
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.0,
+      "old_bend_speed_cap": 100.0,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -8.535861825036808e-06,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.492725320783577,
+      "travel_m": 5.492725294656644,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 100.0,
+      "new_binding_bend_world": [
+        45.463765258810014,
+        62.06065888244462
+      ],
+      "new_binding_arc": 26.939848507849476,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 56,
+      "step": 57,
+      "previous_target": 71.49863184570732,
+      "target": 67.5159792110857,
+      "target_rebound": -3.9826526346216156,
+      "previous_curve_envelope": 73.39152198628616,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.65908229910929,
+      "speed": 69.41993485402422,
+      "previous_brake": 0.0,
+      "brake": 0.05270995944738388,
+      "old_bend_world": [
+        45.463765258810014,
+        62.06065888244462
+      ],
+      "new_nearest_world": [
+        45.67807871877413,
+        62.010881220312214
+      ],
+      "old_bend_arc": 26.939848507849476,
+      "old_bend_curvature": 0.053074747686899626,
+      "old_bend_speed_cap": 43.406626146742774,
+      "new_nearest_arc": 21.191319013997976,
+      "new_nearest_curvature": 0.0540719350970539,
+      "new_nearest_speed_cap": 43.00451399188818,
+      "world_alignment_error_m": 0.2200183509827289,
+      "travel_m": 5.524873309976003,
+      "transported_remaining_distance_m": 21.414975197873474,
+      "transported_target": 68.32336327470014,
+      "new_binding_bend_world": [
+        44.78390348200884,
+        62.47942204877989
+      ],
+      "new_binding_arc": 22.200813868856304,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 57,
+      "step": 58,
+      "previous_target": 67.5159792110857,
+      "target": 63.35899080770852,
+      "target_rebound": -4.156988403377184,
+      "previous_curve_envelope": 67.5159792110857,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 69.41993485402422,
+      "speed": 68.0339884018137,
+      "previous_brake": 0.05270995944738388,
+      "brake": 0.13710936903953552,
+      "old_bend_world": [
+        44.78390348200884,
+        62.47942204877989
+      ],
+      "new_nearest_world": [
+        44.66836113761136,
+        62.93584622884408
+      ],
+      "old_bend_arc": 22.200813868856304,
+      "old_bend_curvature": 0.05979782430181827,
+      "old_bend_speed_cap": 40.89378492974744,
+      "new_nearest_arc": 16.9594680940544,
+      "new_nearest_curvature": 0.05525988862835972,
+      "new_nearest_speed_cap": 42.5397562750919,
+      "world_alignment_error_m": 0.47082169182837413,
+      "travel_m": 5.48081812997193,
+      "transported_remaining_distance_m": 16.719995738884375,
+      "transported_target": 62.01532949146854,
+      "new_binding_bend_world": [
+        44.66836113761136,
+        62.93584622884408
+      ],
+      "new_binding_arc": 16.9594680940544,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 58,
+      "step": 59,
+      "previous_target": 63.35899080770852,
+      "target": 60.69363824747104,
+      "target_rebound": -2.66535256023748,
+      "previous_curve_envelope": 63.35899080770852,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.0339884018137,
+      "speed": 64.56824844790279,
+      "previous_brake": 0.13710936903953552,
+      "brake": 0.13835449516773224,
+      "old_bend_world": [
+        44.66836113761136,
+        62.93584622884408
+      ],
+      "new_nearest_world": [
+        44.651449546828964,
+        63.71571393995856
+      ],
+      "old_bend_arc": 16.9594680940544,
+      "old_bend_curvature": 0.05525988862835972,
+      "old_bend_speed_cap": 42.5397562750919,
+      "new_nearest_arc": 11.954795054191468,
+      "new_nearest_curvature": 0.041781649005760674,
+      "new_nearest_speed_cap": 48.922338901532044,
+      "world_alignment_error_m": 0.7800510552148082,
+      "travel_m": 5.264946634958207,
+      "transported_remaining_distance_m": 11.694521459096194,
+      "transported_target": 57.70544734794736,
+      "new_binding_bend_world": [
+        42.90599078271245,
+        64.6888108707807
+      ],
+      "new_binding_arc": 13.953952515273636,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 59,
+      "step": 60,
+      "previous_target": 60.69363824747104,
+      "target": 46.80333067186727,
+      "target_rebound": -13.89030757560377,
+      "previous_curve_envelope": 60.69363824747104,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 64.56824844790279,
+      "speed": 61.154546724531606,
+      "previous_brake": 0.13835449516773224,
+      "brake": 0.20866699516773224,
+      "old_bend_world": [
+        42.90599078271245,
+        64.6888108707807
+      ],
+      "new_nearest_world": [
+        43.57484660796254,
+        65.81006500830499
+      ],
+      "old_bend_arc": 13.953952515273636,
+      "old_bend_curvature": 0.053484404763198636,
+      "old_bend_speed_cap": 43.24007281133216,
+      "new_nearest_arc": 8.84596501584327,
+      "new_nearest_curvature": 0.09443970908681712,
+      "new_nearest_speed_cap": 32.54038445550629,
+      "world_alignment_error_m": 1.3055952496414494,
+      "travel_m": 4.992548866946888,
+      "transported_remaining_distance_m": 8.961403648326748,
+      "transported_target": 55.08798753822637,
+      "new_binding_bend_world": [
+        43.11787412972639,
+        66.2076042962228
+      ],
+      "new_binding_arc": 9.451655804367821,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 60,
+      "step": 61,
+      "previous_target": 46.80333067186727,
+      "target": 58.386905605554915,
+      "target_rebound": 11.583574933687643,
+      "previous_curve_envelope": 46.80333067186727,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.154546724531606,
+      "speed": 55.80795246650101,
+      "previous_brake": 0.20866699516773224,
+      "brake": 0.03010253980755806,
+      "old_bend_world": [
+        43.11787412972639,
+        66.2076042962228
+      ],
+      "new_nearest_world": [
+        43.55725326289199,
+        66.70717923640481
+      ],
+      "old_bend_arc": 9.451655804367821,
+      "old_bend_curvature": 0.10396777334750351,
+      "old_bend_speed_cap": 31.01348912025757,
+      "new_nearest_arc": 4.703120178571296,
+      "new_nearest_curvature": 0.0012961568931476287,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 0.6653037979143208,
+      "travel_m": 4.619358129845037,
+      "transported_remaining_distance_m": 4.832297674522784,
+      "transported_target": 39.87524551774317,
+      "new_binding_bend_world": [
+        33.51240572476551,
+        75.83973466369473
+      ],
+      "new_binding_arc": 18.35924824313979,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 61,
+      "step": 62,
+      "previous_target": 58.386905605554915,
+      "target": 24.0,
+      "target_rebound": -34.386905605554915,
+      "previous_curve_envelope": 58.386905605554915,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": false,
+      "previous_speed": 55.80795246650101,
+      "speed": 55.30150558433931,
+      "previous_brake": 0.03010253980755806,
+      "brake": 0.2135009765625,
+      "old_bend_world": [
+        33.51240572476551,
+        75.83973466369473
+      ],
+      "new_nearest_world": [
+        33.700801267110904,
+        76.28709665270824
+      ],
+      "old_bend_arc": 18.35924824313979,
+      "old_bend_curvature": 0.09781591972258256,
+      "old_bend_speed_cap": 31.973871748410566,
+      "new_nearest_arc": 14.042151439849308,
+      "new_nearest_curvature": 0.08027894955196023,
+      "new_nearest_speed_cap": 35.29386006467268,
+      "world_alignment_error_m": 0.4854128444836878,
+      "travel_m": 4.444175638597675,
+      "transported_remaining_distance_m": 13.915072604542114,
+      "transported_target": 53.20984789655278,
+      "new_binding_bend_world": [
+        41.917151891082675,
+        68.93024970955054
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 62,
+      "step": 63,
+      "previous_target": 24.0,
+      "target": 24.0,
+      "target_rebound": 0.0,
+      "previous_curve_envelope": 44.11723538903177,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": false,
+      "previous_speed": 55.30150558433931,
+      "speed": 49.94573755529736,
+      "previous_brake": 0.2135009765625,
+      "brake": 0.21196289360523224,
+      "old_bend_world": [
+        41.917151891082675,
+        68.93024970955054
+      ],
+      "new_nearest_world": [
+        39.27434690854541,
+        72.14552597011455
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06393034973680449,
+      "old_bend_speed_cap": 39.54999745215288,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.06235341802648398,
+      "new_nearest_speed_cap": 40.04698890040702,
+      "world_alignment_error_m": 4.162021096471073,
+      "travel_m": 4.149661425325176,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.54999745215288,
+      "new_binding_bend_world": [
+        39.27434690854541,
+        72.14552597011455
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 63,
+      "step": 64,
+      "previous_target": 24.0,
+      "target": 24.0,
+      "target_rebound": 0.0,
+      "previous_curve_envelope": 44.5633198931056,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": false,
+      "previous_speed": 49.94573755529736,
+      "speed": 44.701573969176835,
+      "previous_brake": 0.21196289360523224,
+      "brake": 0.21250000596046448,
+      "old_bend_world": [
+        39.27434690854541,
+        72.14552597011455
+      ],
+      "new_nearest_world": [
+        37.29465236437916,
+        75.33358478322818
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06235341802648398,
+      "old_bend_speed_cap": 40.04698890040702,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.027046231435033093,
+      "new_nearest_speed_cap": 60.80602588022974,
+      "world_alignment_error_m": 3.7527202778881734,
+      "travel_m": 3.730274530808,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 40.04698890040702,
+      "new_binding_bend_world": [
+        35.48283090128009,
+        76.21561777221997
+      ],
+      "new_binding_arc": 4.955847543612258,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 64,
+      "step": 65,
+      "previous_target": 24.0,
+      "target": 24.0,
+      "target_rebound": 0.0,
+      "previous_curve_envelope": 38.34856810141448,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": false,
+      "previous_speed": 44.701573969176835,
+      "speed": 39.50214272317005,
+      "previous_brake": 0.21250000596046448,
+      "brake": 0.21306152641773224,
+      "old_bend_world": [
+        35.48283090128009,
+        76.21561777221997
+      ],
+      "new_nearest_world": [
+        33.378331524711335,
+        77.01268131873394
+      ],
+      "old_bend_arc": 4.955847543612258,
+      "old_bend_curvature": 0.12101373280071771,
+      "old_bend_speed_cap": 28.74634750293036,
+      "new_nearest_arc": 4.157006356181937,
+      "new_nearest_curvature": -0.008898068439794016,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 2.2503839501648817,
+      "travel_m": 3.3143531140558085,
+      "transported_remaining_distance_m": 1.6414944295564493,
+      "transported_target": 32.24510459901733,
+      "new_binding_bend_world": [
+        32.601477610032035,
+        78.59745623908887
+      ],
+      "new_binding_arc": 5.923611870938627,
+      "damage_after": 0.2,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    }
+  ],
+  "rebound_events": [
+    {
+      "previous_step": 52,
+      "step": 53,
+      "previous_target": 57.6856721615473,
+      "target": 71.85037990300981,
+      "target_rebound": 14.164707741462507,
+      "previous_curve_envelope": 57.6856721615473,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.53252294966038,
+      "speed": 58.63612148163305,
+      "previous_brake": 0.20192870497703552,
+      "brake": 0.0,
+      "old_bend_world": [
+        79.8290223353628,
+        84.09025809913999
+      ],
+      "new_nearest_world": [
+        76.23898351539886,
+        85.41148771030134
+      ],
+      "old_bend_arc": 3.9673671338419703,
+      "old_bend_curvature": 0.03556340738271764,
+      "old_bend_speed_cap": 53.027153849042826,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0004192330737232111,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.825444603475215,
+      "travel_m": 4.838161647741391,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 53.027153849042826,
+      "new_binding_bend_world": [
+        58.82980622091448,
+        90.66436364115955
+      ],
+      "new_binding_arc": 21.142319081153452,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 54,
+      "step": 55,
+      "previous_target": 45.447659310694924,
+      "target": 67.74816858263739,
+      "target_rebound": 22.300509271942467,
+      "previous_curve_envelope": 45.447659310694924,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 59.77538711694679,
+      "speed": 54.29607984370994,
+      "previous_brake": 0.21364745497703552,
+      "brake": 0.0,
+      "old_bend_world": [
+        71.69235842929433,
+        86.77369759644425
+      ],
+      "new_nearest_world": [
+        67.32521018923562,
+        87.86218050099862
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.05940494387620563,
+      "old_bend_speed_cap": 41.028789610650925,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.005631037526594109,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.500753135215818,
+      "travel_m": 4.498520251615806,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 41.028789610650925,
+      "new_binding_bend_world": [
+        56.62329677820927,
+        90.38859230156662
+      ],
+      "new_binding_arc": 13.944548881302792,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 68,
+      "step": 69,
+      "previous_target": 39.058986585759655,
+      "target": 52.52910748120764,
+      "target_rebound": 13.470120895447984,
+      "previous_curve_envelope": 39.058986585759655,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.05874113857652,
+      "speed": 50.85742325107982,
+      "previous_brake": 0.21291503310203552,
+      "brake": 0.04863281175494194,
+      "old_bend_world": [
+        2.9998434843847708,
+        90.39748866099977
+      ],
+      "new_nearest_world": [
+        -0.8411624248352578,
+        92.18361204316388
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08745262349877869,
+      "old_bend_speed_cap": 33.81532601056236,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.042066668577092105,
+      "new_nearest_speed_cap": 48.75632238865363,
+      "world_alignment_error_m": 4.23598431665847,
+      "travel_m": 4.223187754628894,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 33.81532601056236,
+      "new_binding_bend_world": [
+        -0.8411624248352578,
+        92.18361204316388
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 71,
+      "step": 72,
+      "previous_target": 44.12259266682691,
+      "target": 70.80809265679513,
+      "target_rebound": 26.685499989968214,
+      "previous_curve_envelope": 44.12259266682691,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 45.54699844321698,
+      "speed": 43.38570434005551,
+      "previous_brake": 0.09230957180261612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -7.62007727105815,
+        96.0477813642793
+      ],
+      "new_nearest_world": [
+        -10.640878158281375,
+        97.89207979878985
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06391103486855558,
+      "old_bend_speed_cap": 39.55597330033468,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 3.1552203017339586e-07,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.5393042700206885,
+      "travel_m": 3.538365725150884,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033468,
+      "new_binding_bend_world": [
+        -33.879082519706614,
+        111.9674492287827
+      ],
+      "new_binding_arc": 30.113839814991824,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 88,
+      "step": 89,
+      "previous_target": 24.0,
+      "target": 34.3890781448438,
+      "target_rebound": 10.3890781448438,
+      "previous_curve_envelope": 30.953645341153887,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 24.126984294820044,
+      "speed": 22.69985802190304,
+      "previous_brake": 0.05947265774011612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -70.68370914648195,
+        119.23309309976806
+      ],
+      "new_nearest_world": [
+        -70.59875814754373,
+        116.72966786947376
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.3818375737438232,
+      "old_bend_speed_cap": 24.0,
+      "new_nearest_arc": 3.029913011182878,
+      "new_nearest_curvature": -0.021522549510494145,
+      "new_nearest_speed_cap": 68.16369777943237,
+      "world_alignment_error_m": 2.504866175246625,
+      "travel_m": 1.8617947250084734,
+      "transported_remaining_distance_m": 1.0776526588833546,
+      "transported_target": 26.759948536102158,
+      "new_binding_bend_world": [
+        -71.39645777609188,
+        113.82241871905799
+      ],
+      "new_binding_arc": 6.045885608066939,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 119,
+      "step": 120,
+      "previous_target": 43.943381293073415,
+      "target": 55.756706503586074,
+      "target_rebound": 11.813325210512659,
+      "previous_curve_envelope": 43.943381293073415,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 50.905479581674214,
+      "speed": 47.03432103579467,
+      "previous_brake": 0.14814452826976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        -82.22710724984256,
+        44.00272376721398
+      ],
+      "new_nearest_world": [
+        -86.00628695496638,
+        44.83617346780405
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06456225565816909,
+      "old_bend_speed_cap": 39.3559728575282,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.010104774377048476,
+      "new_nearest_speed_cap": 99.48020912440008,
+      "world_alignment_error_m": 3.8699919440527872,
+      "travel_m": 3.8699931008473674,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.3559728575282,
+      "new_binding_bend_world": [
+        -96.90185850143118,
+        46.76052988962373
+      ],
+      "new_binding_arc": 14.03504017666267,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 125,
+      "step": 126,
+      "previous_target": 37.91781339090265,
+      "target": 45.95433866607184,
+      "target_rebound": 8.03652527516919,
+      "previous_curve_envelope": 37.91781339090265,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 39.840255594439924,
+      "speed": 37.711924190092894,
+      "previous_brake": 0.08566894382238388,
+      "brake": 0.0,
+      "old_bend_world": [
+        -103.8820216976169,
+        41.641321691281235
+      ],
+      "new_nearest_world": [
+        -105.97759827262377,
+        39.225439023865654
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.0947299446487517,
+      "old_bend_speed_cap": 32.490497263682784,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.02867423919598757,
+      "new_nearest_speed_cap": 59.05464295871932,
+      "world_alignment_error_m": 3.1981135446441704,
+      "travel_m": 3.078006214207794,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.490497263682784,
+      "new_binding_bend_world": [
+        -108.12516640160366,
+        37.13413007056127
+      ],
+      "new_binding_arc": 5.9393590484725465,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 1991198892,
+      "finished": true
+    },
+    {
+      "previous_step": 33,
+      "step": 34,
+      "previous_target": 37.30241472083436,
+      "target": 70.793222510619,
+      "target_rebound": 33.49080778978464,
+      "previous_curve_envelope": 37.30241472083436,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 41.106470838981075,
+      "speed": 37.408780410703976,
+      "previous_brake": 0.15476074814796448,
+      "brake": 0.0,
+      "old_bend_world": [
+        178.20921704940184,
+        36.739118797123965
+      ],
+      "new_nearest_world": [
+        175.75200160485858,
+        38.64333224533289
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.09907444808138836,
+      "old_bend_speed_cap": 31.77014296630065,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 2.152973303243199e-05,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.1086872787788895,
+      "travel_m": 3.1055097666560587,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 31.77014296630065,
+      "new_binding_bend_world": [
+        175.75200160485858,
+        38.64333224533289
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 50,
+      "step": 51,
+      "previous_target": 37.916569502879995,
+      "target": 70.7931655685849,
+      "target_rebound": 32.8765960657049,
+      "previous_curve_envelope": 37.916569502879995,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 64.5948922308481,
+      "speed": 59.3546265940204,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        112.73865569320793,
+        77.08326444173287
+      ],
+      "new_nearest_world": [
+        108.49536232146242,
+        79.54276725518818
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09473841030870182,
+      "old_bend_speed_cap": 32.48904558402403,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0055456309373489165,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.904558362186547,
+      "travel_m": 4.904183495453906,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.48904558402403,
+      "new_binding_bend_world": [
+        108.49536232146242,
+        79.54276725518818
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 74,
+      "step": 75,
+      "previous_target": 40.098438017766696,
+      "target": 48.85430863461752,
+      "target_rebound": 8.755870616850821,
+      "previous_curve_envelope": 40.098438017766696,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 40.06444109944758,
+      "speed": 37.89864165079246,
+      "previous_brake": 0.09255371242761612,
+      "brake": 0.0,
+      "old_bend_world": [
+        7.366761455967919,
+        68.67966456268007
+      ],
+      "new_nearest_world": [
+        5.014761314737009,
+        70.88386925243428
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08158226708328756,
+      "old_bend_speed_cap": 35.0108064968338,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.020479971849166567,
+      "new_nearest_speed_cap": 69.87717232180287,
+      "world_alignment_error_m": 3.2234179032022294,
+      "travel_m": 3.096666025350237,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 35.0108064968338,
+      "new_binding_bend_world": [
+        1.8475765847408132,
+        73.42496654128053
+      ],
+      "new_binding_arc": 7.005713309054694,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 111,
+      "step": 112,
+      "previous_target": 41.8780100148578,
+      "target": 70.77207538930081,
+      "target_rebound": 28.89406537444301,
+      "previous_curve_envelope": 41.8780100148578,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 52.46936615953269,
+      "speed": 47.521938272337664,
+      "previous_brake": 0.190673828125,
+      "brake": 0.0,
+      "old_bend_world": [
+        -40.507678610049005,
+        100.92312413560414
+      ],
+      "new_nearest_world": [
+        -40.8684673578699,
+        96.99990039731868
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.07290545031281893,
+      "old_bend_speed_cap": 37.035652591774216,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.939778295945178,
+      "travel_m": 3.939744067858181,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 37.035652591774216,
+      "new_binding_bend_world": [
+        -40.8684673578699,
+        96.99990039731868
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 157,
+      "step": 158,
+      "previous_target": 58.56389530482365,
+      "target": 69.82413858512116,
+      "target_rebound": 11.260243280297509,
+      "previous_curve_envelope": 58.56389530482365,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 60.243025156327874,
+      "speed": 57.13988811366387,
+      "previous_brake": 0.1298828125,
+      "brake": 0.0,
+      "old_bend_world": [
+        7.113457876151106,
+        -53.289371403128115
+      ],
+      "new_nearest_world": [
+        6.480844938197146,
+        -53.95987155020264
+      ],
+      "old_bend_arc": 10.16050471623755,
+      "old_bend_curvature": 0.04741888977197818,
+      "old_bend_speed_cap": 45.9223716739833,
+      "new_nearest_arc": 4.96031645680699,
+      "new_nearest_curvature": 0.023637481273637614,
+      "new_nearest_speed_cap": 65.04282581322322,
+      "world_alignment_error_m": 0.9218294725672983,
+      "travel_m": 4.66483029505643,
+      "transported_remaining_distance_m": 5.49567442118112,
+      "transported_target": 53.13475223351483,
+      "new_binding_bend_world": [
+        6.480844938197146,
+        -53.95987155020264
+      ],
+      "new_binding_arc": 4.96031645680699,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 162,
+      "step": 163,
+      "previous_target": 44.122592666824545,
+      "target": 70.77207538930081,
+      "target_rebound": 26.649482722476264,
+      "previous_curve_envelope": 44.122592666824545,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.348220349258106,
+      "speed": 48.14951691382796,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        22.20492037773796,
+        -59.025273868292174
+      ],
+      "new_nearest_world": [
+        26.093911606023703,
+        -59.996875841199376
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06391103486856407,
+      "old_bend_speed_cap": 39.55597330033205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.0085238140044295,
+      "travel_m": 4.007910571295372,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033205,
+      "new_binding_bend_world": [
+        26.093911606023703,
+        -59.996875841199376
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 181,
+      "step": 182,
+      "previous_target": 37.30137236917636,
+      "target": 70.77207538930081,
+      "target_rebound": 33.470703020124446,
+      "previous_curve_envelope": 37.30137236917636,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 52.510303362943944,
+      "speed": 47.31217796595677,
+      "previous_brake": 0.21381835639476776,
+      "brake": 0.0,
+      "old_bend_world": [
+        113.27652555604882,
+        -84.90390197265019
+      ],
+      "new_nearest_world": [
+        117.06948221754479,
+        -85.97887709575288
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09908208172569265,
+      "old_bend_speed_cap": 31.768919098987556,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.942345970520123,
+      "travel_m": 3.940837328652605,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 31.768919098987556,
+      "new_binding_bend_world": [
+        117.06948221754479,
+        -85.97887709575288
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 2541631106,
+      "finished": true
+    },
+    {
+      "previous_step": 34,
+      "step": 35,
+      "previous_target": 35.4847364981752,
+      "target": 50.330138203522175,
+      "target_rebound": 14.845401705346973,
+      "previous_curve_envelope": 35.4847364981752,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.10538125353162,
+      "speed": 52.8932000384736,
+      "previous_brake": 0.21318359673023224,
+      "brake": 0.14567871391773224,
+      "old_bend_world": [
+        168.93995554953477,
+        25.562327450927604
+      ],
+      "new_nearest_world": [
+        164.67635198536004,
+        26.614222087667795
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.11402009770002074,
+      "old_bend_speed_cap": 29.614833520365934,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.046490120243632554,
+      "new_nearest_speed_cap": 46.37881684217165,
+      "world_alignment_error_m": 4.391445966791148,
+      "travel_m": 4.387061343314587,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 29.614833520365934,
+      "new_binding_bend_world": [
+        164.67635198536004,
+        26.614222087667795
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 37,
+      "step": 38,
+      "previous_target": 44.12259266682691,
+      "target": 70.77207538930081,
+      "target_rebound": 26.6494827224739,
+      "previous_curve_envelope": 44.12259266682691,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 44.157809963331886,
+      "speed": 42.68505670879117,
+      "previous_brake": 0.06669922173023224,
+      "brake": 0.0,
+      "old_bend_world": [
+        157.27981174212172,
+        28.941132321338465
+      ],
+      "new_nearest_world": [
+        154.00300150402583,
+        30.066378755447374
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06391103486855558,
+      "old_bend_speed_cap": 39.55597330033468,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.4646305537480995,
+      "travel_m": 3.463899877985892,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033468,
+      "new_binding_bend_world": [
+        154.00300150402583,
+        30.066378755447374
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 60,
+      "step": 61,
+      "previous_target": 46.80333067186727,
+      "target": 58.386905605554915,
+      "target_rebound": 11.583574933687643,
+      "previous_curve_envelope": 46.80333067186727,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.154546724531606,
+      "speed": 55.80795246650101,
+      "previous_brake": 0.20866699516773224,
+      "brake": 0.03010253980755806,
+      "old_bend_world": [
+        43.11787412972639,
+        66.2076042962228
+      ],
+      "new_nearest_world": [
+        43.55725326289199,
+        66.70717923640481
+      ],
+      "old_bend_arc": 9.451655804367821,
+      "old_bend_curvature": 0.10396777334750351,
+      "old_bend_speed_cap": 31.01348912025757,
+      "new_nearest_arc": 4.703120178571296,
+      "new_nearest_curvature": 0.0012961568931476287,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 0.6653037979143208,
+      "travel_m": 4.619358129845037,
+      "transported_remaining_distance_m": 4.832297674522784,
+      "transported_target": 39.87524551774317,
+      "new_binding_bend_world": [
+        33.51240572476551,
+        75.83973466369473
+      ],
+      "new_binding_arc": 18.35924824313979,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050001,
+      "finished": false
+    },
+    {
+      "previous_step": 32,
+      "step": 33,
+      "previous_target": 39.48590950565241,
+      "target": 70.77207538930081,
+      "target_rebound": 31.2861658836484,
+      "previous_curve_envelope": 39.48590950565241,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 65.18691307715972,
+      "speed": 59.805044292606155,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        176.19709515120664,
+        31.558558364524693
+      ],
+      "new_nearest_world": [
+        171.6818804267968,
+        33.56278410487994
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08496112551491425,
+      "old_bend_speed_cap": 34.307563154246814,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.94004907119656,
+      "travel_m": 4.939745270508071,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.307563154246814,
+      "new_binding_bend_world": [
+        171.6818804267968,
+        33.56278410487994
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 60,
+      "step": 61,
+      "previous_target": 43.513474232915414,
+      "target": 65.04138365720169,
+      "target_rebound": 21.52790942428628,
+      "previous_curve_envelope": 43.513474232915414,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 57.03739994926282,
+      "speed": 51.76397574595737,
+      "previous_brake": 0.21315917372703552,
+      "brake": 0.0,
+      "old_bend_world": [
+        36.18500828115424,
+        86.72917342779401
+      ],
+      "new_nearest_world": [
+        31.93850197129003,
+        85.97925696131173
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06616845000285411,
+      "old_bend_speed_cap": 38.87536855018427,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.025985814569494732,
+      "new_nearest_speed_cap": 62.03429235622315,
+      "world_alignment_error_m": 4.312214111847625,
+      "travel_m": 4.294869435523406,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 38.87536855018427,
+      "new_binding_bend_world": [
+        31.93850197129003,
+        85.97925696131173
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 64,
+      "step": 65,
+      "previous_target": 44.085406456236775,
+      "target": 70.92707061413286,
+      "target_rebound": 26.841664157896084,
+      "previous_curve_envelope": 44.085406456236775,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 57.320031691685294,
+      "speed": 51.8101829580184,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        19.105401381123205,
+        83.54894526334438
+      ],
+      "new_nearest_world": [
+        14.859471473351508,
+        82.86965120888
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06404529683011256,
+      "old_bend_speed_cap": 39.514489779138806,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.00020057986918022524,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.299925719607354,
+      "travel_m": 4.299739375106577,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.514489779138806,
+      "new_binding_bend_world": [
+        -2.0722862294852824,
+        79.94739118074104
+      ],
+      "new_binding_arc": 20.123538866136055,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 105,
+      "step": 106,
+      "previous_target": 34.88417670519011,
+      "target": 43.04227834708966,
+      "target_rebound": 8.158101641899556,
+      "previous_curve_envelope": 34.88417670519011,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.81401387931186,
+      "speed": 48.415023374438526,
+      "previous_brake": 0.21376952528953552,
+      "brake": 0.19099120795726776,
+      "old_bend_world": [
+        -110.73300274488707,
+        32.460459724960614
+      ],
+      "new_nearest_world": [
+        -110.72354320867372,
+        28.43129710638443
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.11979238190618235,
+      "old_bend_speed_cap": 28.89251848650426,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.06800363789040359,
+      "new_nearest_speed_cap": 38.34722369875564,
+      "world_alignment_error_m": 4.029173722955745,
+      "travel_m": 4.028557409663869,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 28.89251848650426,
+      "new_binding_bend_world": [
+        -110.72354320867372,
+        28.43129710638443
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 125,
+      "step": 126,
+      "previous_target": 44.1309266098646,
+      "target": 70.89477758571628,
+      "target_rebound": 26.763850975851682,
+      "previous_curve_envelope": 44.1309266098646,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.141371372831614,
+      "speed": 47.91369338382971,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -119.8189688470147,
+        -45.257298608875
+      ],
+      "new_nearest_world": [
+        -118.83899224447157,
+        -49.124750438129304
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.0638810066089915,
+      "old_bend_speed_cap": 39.56526915792837,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.00017915514100894604,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.9896789085256557,
+      "travel_m": 3.98892029061933,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.56526915792837,
+      "new_binding_bend_world": [
+        -115.3647691789106,
+        -62.8316613647534
+      ],
+      "new_binding_arc": 17.0815705732769,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 136,
+      "step": 137,
+      "previous_target": 48.94854628126388,
+      "target": 58.206243964811904,
+      "target_rebound": 9.257697683548024,
+      "previous_curve_envelope": 48.94854628126388,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 50.33292411204887,
+      "speed": 48.5873757817767,
+      "previous_brake": 0.06992187350988388,
+      "brake": 0.0,
+      "old_bend_world": [
+        -99.04674595742647,
+        -86.67168314916377
+      ],
+      "new_nearest_world": [
+        -95.4796628459896,
+        -88.40493616759557
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.04965657455576891,
+      "old_bend_speed_cap": 44.87573980608113,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.016143344733611866,
+      "new_nearest_speed_cap": 78.70516604485219,
+      "world_alignment_error_m": 3.9658855189983853,
+      "travel_m": 3.936454630936566,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 44.87573980608113,
+      "new_binding_bend_world": [
+        -88.20954005479831,
+        -91.93929626741868
+      ],
+      "new_binding_arc": 11.04129489644482,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 168,
+      "step": 169,
+      "previous_target": 38.43905505109588,
+      "target": 47.53775669926968,
+      "target_rebound": 9.098701648173801,
+      "previous_curve_envelope": 38.43905505109588,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 67.19359482181677,
+      "speed": 61.70517748208185,
+      "previous_brake": 0.21328124403953552,
+      "brake": 0.21306152641773224,
+      "old_bend_world": [
+        65.78325906574199,
+        -86.58822101976995
+      ],
+      "new_nearest_world": [
+        70.83792616655495,
+        -85.95639783822263
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09128811973700166,
+      "old_bend_speed_cap": 33.097323053613295,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.053256355827087216,
+      "new_nearest_speed_cap": 43.332553029945295,
+      "world_alignment_error_m": 5.094002358929716,
+      "travel_m": 5.091157251907743,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 33.097323053613295,
+      "new_binding_bend_world": [
+        70.83792616655495,
+        -85.95639783822263
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 169,
+      "step": 170,
+      "previous_target": 47.53775669926968,
+      "target": 69.27930732876453,
+      "target_rebound": 21.741550629494853,
+      "previous_curve_envelope": 47.53775669926968,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.70517748208185,
+      "speed": 56.49973571652866,
+      "previous_brake": 0.21306152641773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        70.83792616655495,
+        -85.95639783822263
+      ],
+      "new_nearest_world": [
+        75.51539349013223,
+        -85.74252637731502
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.053256355827087216,
+      "old_bend_speed_cap": 43.332553029945295,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.011181384776096025,
+      "new_nearest_speed_cap": 94.56974186935525,
+      "world_alignment_error_m": 4.682354275887709,
+      "travel_m": 4.675161184901279,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 43.332553029945295,
+      "new_binding_bend_world": [
+        83.55080380641566,
+        -85.3879507417427
+      ],
+      "new_binding_arc": 10.987040435069343,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 200,
+      "step": 201,
+      "previous_target": 36.88294052070617,
+      "target": 50.557151994170326,
+      "target_rebound": 13.674211473464155,
+      "previous_curve_envelope": 36.88294052070617,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 39.64627414218986,
+      "speed": 37.074846611194374,
+      "previous_brake": 0.10898437350988388,
+      "brake": 0.0,
+      "old_bend_world": [
+        205.42752096858322,
+        -105.4423749489037
+      ],
+      "new_nearest_world": [
+        207.5492657052889,
+        -103.15956437901244
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.10222616471917925,
+      "old_bend_speed_cap": 31.27655897869859,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0014469197855744168,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.1165726087716115,
+      "travel_m": 3.0440067263111863,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 31.27655897869859,
+      "new_binding_bend_world": [
+        211.19268423495467,
+        -99.6936624252313
+      ],
+      "new_binding_arc": 7.976275858542019,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 37,
+      "step": 38,
+      "previous_target": 44.12259266682691,
+      "target": 70.77207538930081,
+      "target_rebound": 26.6494827224739,
+      "previous_curve_envelope": 44.12259266682691,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 50.33612695951662,
+      "speed": 45.136826825915264,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        162.1489654983739,
+        50.138787050395564
+      ],
+      "new_nearest_world": [
+        159.02896868100171,
+        52.25033301768704
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06391103486855558,
+      "old_bend_speed_cap": 39.55597330033468,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.76736068254654,
+      "travel_m": 3.7668989456416853,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033468,
+      "new_binding_bend_world": [
+        159.02896868100171,
+        52.25033301768704
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 64,
+      "step": 65,
+      "previous_target": 33.78174025252993,
+      "target": 42.1143136117179,
+      "target_rebound": 8.332573359187968,
+      "previous_curve_envelope": 33.78174025252993,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.989100708464726,
+      "speed": 53.77755426987376,
+      "previous_brake": 0.213134765625,
+      "brake": 0.21372070908546448,
+      "old_bend_world": [
+        42.800442894982595,
+        119.38313855625394
+      ],
+      "new_nearest_world": [
+        38.730912223004246,
+        121.21611850039433
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.13173879947324516,
+      "old_bend_speed_cap": 27.55136683693684,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.071865552431308,
+      "new_nearest_speed_cap": 37.302644022645225,
+      "world_alignment_error_m": 4.463283025508629,
+      "travel_m": 4.457717662858294,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 27.55136683693684,
+      "new_binding_bend_world": [
+        38.730912223004246,
+        121.21611850039433
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 67,
+      "step": 68,
+      "previous_target": 44.123637853545645,
+      "target": 71.03464227277209,
+      "target_rebound": 26.911004419226444,
+      "previous_curve_envelope": 44.123637853545645,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 43.390275845614596,
+      "speed": 41.918792453268615,
+      "previous_brake": 0.06667480617761612,
+      "brake": 0.0,
+      "old_bend_world": [
+        31.93708425911966,
+        124.78741186647424
+      ],
+      "new_nearest_world": [
+        28.95959697855332,
+        126.43535250180781
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06390726769051669,
+      "old_bend_speed_cap": 39.55713914737653,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0003428997151544368,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.403107233620173,
+      "travel_m": 3.402585622596303,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55713914737653,
+      "new_binding_bend_world": [
+        13.702332758139434,
+        134.47399515512328
+      ],
+      "new_binding_arc": 20.18904237326243,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 117,
+      "step": 118,
+      "previous_target": 36.633498761875316,
+      "target": 48.7618710150877,
+      "target_rebound": 12.128372253212383,
+      "previous_curve_envelope": 36.633498761875316,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.809819232603395,
+      "speed": 53.59324945564634,
+      "previous_brake": 0.21308593451976776,
+      "brake": 0.17766113579273224,
+      "old_bend_world": [
+        -82.92753252948405,
+        -31.272822421210748
+      ],
+      "new_nearest_world": [
+        -83.00466046879632,
+        -35.71978021570449
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.1041791386859972,
+      "old_bend_speed_cap": 30.98201206555802,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.050110445803144256,
+      "new_nearest_speed_cap": 44.672048363446606,
+      "world_alignment_error_m": 4.447626596852662,
+      "travel_m": 4.443071227824548,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 30.98201206555802,
+      "new_binding_bend_world": [
+        -83.00466046879632,
+        -35.71978021570449
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 120,
+      "step": 121,
+      "previous_target": 43.78202850960502,
+      "target": 63.502167970256146,
+      "target_rebound": 19.720139460651126,
+      "previous_curve_envelope": 43.78202850960502,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 44.06802733363978,
+      "speed": 42.415415741078526,
+      "previous_brake": 0.07338867336511612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -82.37375496983634,
+        -43.45865939329183
+      ],
+      "new_nearest_world": [
+        -81.76608200235655,
+        -46.85926922014701
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06515770710626385,
+      "old_bend_speed_cap": 39.17573050384548,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.00969322750639034,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.4544773309300663,
+      "travel_m": 3.4470413771049992,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.17573050384548,
+      "new_binding_bend_world": [
+        -79.71473067366736,
+        -57.64743393352768
+      ],
+      "new_binding_arc": 13.942523096338784,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 138,
+      "step": 139,
+      "previous_target": 43.527819172426796,
+      "target": 70.92595135651855,
+      "target_rebound": 27.398132184091757,
+      "previous_curve_envelope": 43.527819172426796,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 47.188891300172266,
+      "speed": 44.662330660547404,
+      "previous_brake": 0.10446777194738388,
+      "brake": 0.0,
+      "old_bend_world": [
+        -25.049954855920372,
+        -89.75017406534064
+      ],
+      "new_nearest_world": [
+        -21.925316101364732,
+        -91.64125967466259
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06611382803750329,
+      "old_bend_speed_cap": 38.89142427324497,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0014464706375964937,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.65233789897041,
+      "travel_m": 3.6489913251331862,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 38.89142427324497,
+      "new_binding_bend_world": [
+        -21.925316101364732,
+        -91.64125967466259
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 1,
+      "seed": 3731157233,
+      "finished": true
+    },
+    {
+      "previous_step": 37,
+      "step": 38,
+      "previous_target": 44.122592666824545,
+      "target": 70.77207538930081,
+      "target_rebound": 26.649482722476264,
+      "previous_curve_envelope": 44.122592666824545,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.04504277868138,
+      "speed": 47.846773732641196,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        161.710491884259,
+        57.78003243712341
+      ],
+      "new_nearest_world": [
+        158.35777313959744,
+        59.93274240355864
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06391103486856407,
+      "old_bend_speed_cap": 39.55597330033205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.984329702772419,
+      "travel_m": 3.9836644960408796,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033205,
+      "new_binding_bend_world": [
+        158.35777313959744,
+        59.93274240355864
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 61,
+      "step": 62,
+      "previous_target": 40.49727557246645,
+      "target": 71.88724905904648,
+      "target_rebound": 31.389973486580033,
+      "previous_curve_envelope": 40.49727557246645,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 57.967588118554985,
+      "speed": 52.77993340312767,
+      "previous_brake": 0.21337890625,
+      "brake": 0.0,
+      "old_bend_world": [
+        59.27568006535727,
+        124.24713567853625
+      ],
+      "new_nearest_world": [
+        54.94315206599876,
+        124.9330291368474
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.07949750145198799,
+      "old_bend_speed_cap": 35.46690244278953,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.00032374529714421316,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.386484777288015,
+      "travel_m": 4.377296741872501,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 35.46690244278953,
+      "new_binding_bend_world": [
+        47.93048809719619,
+        125.98521870865758
+      ],
+      "new_binding_arc": 10.033219342716038,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 113,
+      "step": 114,
+      "previous_target": 46.55472691433656,
+      "target": 71.19613708895662,
+      "target_rebound": 24.641410174620056,
+      "previous_curve_envelope": 46.55472691433656,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 54.72898884949846,
+      "speed": 49.467744938986336,
+      "previous_brake": 0.21335449814796448,
+      "brake": 0.0,
+      "old_bend_world": [
+        -89.90381828049023,
+        14.24764771004319
+      ],
+      "new_nearest_world": [
+        -88.91215689442613,
+        10.247053390521168
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.056015679608175224,
+      "old_bend_speed_cap": 42.25179804650348,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.02038390712376959,
+      "new_nearest_speed_cap": 70.04163640165154,
+      "world_alignment_error_m": 4.1216680135598525,
+      "travel_m": 4.112353354963693,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 42.25179804650348,
+      "new_binding_bend_world": [
+        -88.91215689442613,
+        10.247053390521168
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 133,
+      "step": 134,
+      "previous_target": 24.0,
+      "target": 33.21921940602035,
+      "target_rebound": 9.21921940602035,
+      "previous_curve_envelope": 39.98733175381617,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 57.04517655388119,
+      "speed": 51.97878093860158,
+      "previous_brake": 0.2034912109375,
+      "brake": 0.19416503608226776,
+      "old_bend_world": [
+        -109.5152567197984,
+        -79.03926592695396
+      ],
+      "new_nearest_world": [
+        -109.74785887612546,
+        -81.36645489356091
+      ],
+      "old_bend_arc": 4.9755100527752925,
+      "old_bend_curvature": -0.10502321920278074,
+      "old_bend_speed_cap": 30.85725836701905,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0010064967457922604,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 2.338784352911816,
+      "travel_m": 4.304917704182632,
+      "transported_remaining_distance_m": 0.6705923485926606,
+      "transported_target": 32.23891126024595,
+      "new_binding_bend_world": [
+        -109.31153412008958,
+        -82.64204032960511
+      ],
+      "new_binding_arc": 4.287654506619138,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 135,
+      "step": 136,
+      "previous_target": 33.7212654836588,
+      "target": 42.02508619819335,
+      "target_rebound": 8.303820714534552,
+      "previous_curve_envelope": 71.43653948527003,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 47.04439542212777,
+      "speed": 41.72746567597095,
+      "previous_brake": 0.19589844346046448,
+      "brake": 0.04914550855755806,
+      "old_bend_world": [
+        -97.49713137336599,
+        -93.52228909964496
+      ],
+      "new_nearest_world": [
+        -96.89763463390868,
+        -92.40776421299122
+      ],
+      "old_bend_arc": 17.18027256201371,
+      "old_bend_curvature": -0.03484631696772367,
+      "old_bend_speed_cap": 53.5699891783521,
+      "new_nearest_arc": 14.08583304616814,
+      "new_nearest_curvature": -0.00019606896568331224,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 1.2655283732854334,
+      "travel_m": 3.4874167565355876,
+      "transported_remaining_distance_m": 13.692855805478121,
+      "transported_target": 68.18955195102045,
+      "new_binding_bend_world": [
+        -81.53953031670065,
+        -97.56842722745246
+      ],
+      "new_binding_arc": 30.297685917975027,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 205,
+      "step": 206,
+      "previous_target": 44.12707488692851,
+      "target": 70.79676045471342,
+      "target_rebound": 26.66968556778491,
+      "previous_curve_envelope": 44.12707488692851,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 42.97136376507119,
+      "speed": 41.50135405319449,
+      "previous_brake": 0.06660155951976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        157.28368106626175,
+        -92.19440158830656
+      ],
+      "new_nearest_world": [
+        160.19129814084147,
+        -93.89780222635535
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06389488205502242,
+      "old_bend_speed_cap": 39.560972917392455,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 9.429933647277094e-06,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.3698383916877304,
+      "travel_m": 3.3691407777261007,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.560972917392455,
+      "new_binding_bend_world": [
+        160.19129814084147,
+        -93.89780222635535
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 219,
+      "step": 220,
+      "previous_target": 35.00647771079554,
+      "target": 50.856536170780295,
+      "target_rebound": 15.850058459984758,
+      "previous_curve_envelope": 35.00647771079554,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 40.63251471909036,
+      "speed": 36.95665403027883,
+      "previous_brake": 0.14738769829273224,
+      "brake": 0.0,
+      "old_bend_world": [
+        207.5695520244156,
+        -106.29397202641499
+      ],
+      "new_nearest_world": [
+        209.54239097964475,
+        -103.82105037069816
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.11857820157150707,
+      "old_bend_speed_cap": 29.040064080688374,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.002924678871635923,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.163453027718749,
+      "travel_m": 3.060385286726427,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 29.040064080688374,
+      "new_binding_bend_world": [
+        212.9894495887627,
+        -100.08867623991644
+      ],
+      "new_binding_arc": 8.029470069608745,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 1244362167,
+      "finished": true
+    },
+    {
+      "previous_step": 40,
+      "step": 41,
+      "previous_target": 43.250873621337014,
+      "target": 70.79290922333969,
+      "target_rebound": 27.542035602002677,
+      "previous_curve_envelope": 43.250873621337014,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.30931324156192,
+      "speed": 58.10922100414859,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        136.17000394039317,
+        35.8886980380489
+      ],
+      "new_nearest_world": [
+        131.52515657413477,
+        37.1190958549823
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06718127933744587,
+      "old_bend_speed_cap": 38.58121186669657,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.012648227362918565,
+      "new_nearest_speed_cap": 88.91707506193407,
+      "world_alignment_error_m": 4.805047954365502,
+      "travel_m": 4.8046989996908644,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 38.58121186669657,
+      "new_binding_bend_world": [
+        130.55451862420287,
+        37.38407724264539
+      ],
+      "new_binding_arc": 3.945605008549048,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 128,
+      "step": 129,
+      "previous_target": 44.119000665180536,
+      "target": 71.2699098809851,
+      "target_rebound": 27.15090921580456,
+      "previous_curve_envelope": 44.119000665180536,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.40870377112142,
+      "speed": 57.90283535740049,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        -71.64879082499651,
+        -37.04938956497966
+      ],
+      "new_nearest_world": [
+        -71.3143200625311,
+        -41.82500272784148
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06392398426581129,
+      "old_bend_speed_cap": 39.55196657295643,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0006576992371981564,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.7873115390836265,
+      "travel_m": 4.7871513403891,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55196657295643,
+      "new_binding_bend_world": [
+        -68.6084283064869,
+        -65.16493066097111
+      ],
+      "new_binding_arc": 26.482542320956505,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 133,
+      "step": 134,
+      "previous_target": 40.30899633872518,
+      "target": 61.01130200482348,
+      "target_rebound": 20.702305666098297,
+      "previous_curve_envelope": 40.30899633872518,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 60.3071201776866,
+      "speed": 55.02644534973065,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        -69.65387851896287,
+        -61.227007183153155
+      ],
+      "new_nearest_world": [
+        -69.30426108027098,
+        -65.77140786843604
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08047078460902791,
+      "old_bend_speed_cap": 35.25176628098828,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.02046049446929346,
+      "new_nearest_speed_cap": 69.91042421801036,
+      "world_alignment_error_m": 4.557829520927374,
+      "travel_m": 4.557822119371944,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 35.25176628098828,
+      "new_binding_bend_world": [
+        -68.62997396322807,
+        -79.79308456698175
+      ],
+      "new_binding_arc": 17.02333127092661,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 152,
+      "step": 153,
+      "previous_target": 38.44815820771155,
+      "target": 49.80739638153383,
+      "target_rebound": 11.359238173822277,
+      "previous_curve_envelope": 58.545323861895426,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 41.279246145189504,
+      "speed": 37.83880457484293,
+      "previous_brake": 0.12382812798023224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -0.6699913992628357,
+        -99.63396384929628
+      ],
+      "new_nearest_world": [
+        -0.3529538755104138,
+        -100.32676931078134
+      ],
+      "old_bend_arc": 10.008289933024203,
+      "old_bend_curvature": 0.04702613196272098,
+      "old_bend_speed_cap": 46.113742580721805,
+      "new_nearest_arc": 6.998318116448733,
+      "new_nearest_curvature": 0.06365391097006486,
+      "new_nearest_speed_cap": 39.6357840741027,
+      "world_alignment_error_m": 0.7619003864880248,
+      "travel_m": 3.125325164404466,
+      "transported_remaining_distance_m": 6.882964768619737,
+      "transported_target": 54.96601381509888,
+      "new_binding_bend_world": [
+        -0.3529538755104138,
+        -100.32676931078134
+      ],
+      "new_binding_arc": 6.998318116448733,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 198,
+      "step": 199,
+      "previous_target": 37.95884245606764,
+      "target": 47.27267846434297,
+      "target_rebound": 9.313836008275324,
+      "previous_curve_envelope": 37.95884245606764,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 41.064190436959905,
+      "speed": 37.60046519026089,
+      "previous_brake": 0.13596192002296448,
+      "brake": 0.0,
+      "old_bend_world": [
+        207.8295779296572,
+        -107.48573983641211
+      ],
+      "new_nearest_world": [
+        210.06345764304203,
+        -105.13833772025154
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.09445139957329673,
+      "old_bend_speed_cap": 32.538370590713754,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.028518417327511508,
+      "new_nearest_speed_cap": 59.215757602808665,
+      "world_alignment_error_m": 3.2404498559347226,
+      "travel_m": 3.105247738693422,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.538370590713754,
+      "new_binding_bend_world": [
+        212.3579996454871,
+        -103.14419317434862
+      ],
+      "new_binding_arc": 5.9816679060775915,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 62,
+      "step": 63,
+      "previous_target": 43.250873621337014,
+      "target": 70.79274512409198,
+      "target_rebound": 27.541871502754965,
+      "previous_curve_envelope": 43.250873621337014,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.32436107439508,
+      "speed": 58.123901852703966,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        102.37502679019667,
+        55.276702101743275
+      ],
+      "new_nearest_world": [
+        97.7076403851421,
+        56.42352758156719
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06718127933744587,
+      "old_bend_speed_cap": 38.58121186669657,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0043318240820270585,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.806215198600828,
+      "travel_m": 4.805880895243756,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 38.58121186669657,
+      "new_binding_bend_world": [
+        94.78187960847843,
+        57.165438358717324
+      ],
+      "new_binding_arc": 5.9578608771334896,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 77,
+      "step": 78,
+      "previous_target": 44.122592666824545,
+      "target": 70.77207538930081,
+      "target_rebound": 26.649482722476264,
+      "previous_curve_envelope": 44.122592666824545,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 59.017458394555085,
+      "speed": 53.81735754447845,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        26.22810745648129,
+        76.78511320308358
+      ],
+      "new_nearest_world": [
+        21.94225453206954,
+        78.02535100843534
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06391103486856407,
+      "old_bend_speed_cap": 39.55597330033205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.461695317198663,
+      "travel_m": 4.461353776017654,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033205,
+      "new_binding_bend_world": [
+        21.94225453206954,
+        78.02535100843534
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 130,
+      "step": 131,
+      "previous_target": 24.0,
+      "target": 32.623258418988144,
+      "target_rebound": 8.623258418988144,
+      "previous_curve_envelope": 30.953645341153887,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 40.80995476105752,
+      "speed": 39.50478834628652,
+      "previous_brake": 0.20954589545726776,
+      "brake": 0.16435547173023224,
+      "old_bend_world": [
+        -140.24460593234966,
+        -9.602511230166263
+      ],
+      "new_nearest_world": [
+        -141.6980200215454,
+        -12.489841318577652
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.27683006949555594,
+      "old_bend_speed_cap": 24.0,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.05202416864511948,
+      "new_nearest_speed_cap": 43.842713504875334,
+      "world_alignment_error_m": 3.2325048420873896,
+      "travel_m": 3.2288374418706134,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 24.0,
+      "new_binding_bend_world": [
+        -141.6980200215454,
+        -12.489841318577652
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.4,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 160,
+      "step": 161,
+      "previous_target": 44.12782318866609,
+      "target": 71.44274375798547,
+      "target_rebound": 27.314920569319376,
+      "previous_curve_envelope": 44.12782318866609,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 44.26033157834443,
+      "speed": 42.74428370177702,
+      "previous_brake": 0.06657715141773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -76.62060906186481,
+        -99.65912040143563
+      ],
+      "new_nearest_world": [
+        -74.37272147149872,
+        -102.30095919655214
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06389218599602563,
+      "old_bend_speed_cap": 39.561807585905875,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.000356133096000985,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.4687621478424457,
+      "travel_m": 3.4684321717449653,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.561807585905875,
+      "new_binding_bend_world": [
+        -56.53259007373312,
+        -120.6986342403155
+      ],
+      "new_binding_arc": 28.6703602981157,
+      "damage_after": 0.4,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 169,
+      "step": 170,
+      "previous_target": 40.893778275796556,
+      "target": 51.540707934922786,
+      "target_rebound": 10.64692965912623,
+      "previous_curve_envelope": 40.893778275796556,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 51.09868500192982,
+      "speed": 45.80268266874035,
+      "previous_brake": 0.21142578125,
+      "brake": 0.0,
+      "old_bend_world": [
+        -49.09361488006786,
+        -120.32798754898897
+      ],
+      "new_nearest_world": [
+        -45.23139298423344,
+        -120.42569497214305
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.0775089887277193,
+      "old_bend_speed_cap": 35.918977459889824,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.04396925571185051,
+      "new_nearest_speed_cap": 47.68979360960871,
+      "world_alignment_error_m": 3.8634576111563925,
+      "travel_m": 3.8158575064424034,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 35.918977459889824,
+      "new_binding_bend_world": [
+        -45.23139298423344,
+        -120.42569497214305
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.4,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 186,
+      "step": 187,
+      "previous_target": 42.33077639719628,
+      "target": 71.81416356644141,
+      "target_rebound": 29.483387169245127,
+      "previous_curve_envelope": 42.33077639719628,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 48.36135399158456,
+      "speed": 43.35842982234529,
+      "previous_brake": 0.20615234971046448,
+      "brake": 0.0,
+      "old_bend_world": [
+        8.128713781231554,
+        -75.56886494346107
+      ],
+      "new_nearest_world": [
+        10.965783090500814,
+        -73.30849673216163
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.07093373412810992,
+      "old_bend_speed_cap": 37.54685699873549,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.006818213632941938,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.6274270104649347,
+      "travel_m": 3.6186097087630897,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 37.54685699873549,
+      "new_binding_bend_world": [
+        17.26058614305837,
+        -68.24922569621984
+      ],
+      "new_binding_arc": 11.020351745535018,
+      "damage_after": 0.4,
+      "track_id": 2,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 27,
+      "step": 28,
+      "previous_target": 49.78982742710431,
+      "target": 68.18310623731921,
+      "target_rebound": 18.393278810214895,
+      "previous_curve_envelope": 49.78982742710431,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.192769067303225,
+      "speed": 53.466853388205344,
+      "previous_brake": 0.18281249701976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        199.55106359601652,
+        22.282284673918117
+      ],
+      "new_nearest_world": [
+        195.68572874313008,
+        24.41053948299336
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.04768947463321041,
+      "old_bend_speed_cap": 45.79190709410224,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.004489203307540135,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.412514255760597,
+      "travel_m": 4.409602041596763,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 45.79190709410224,
+      "new_binding_bend_world": [
+        185.82111103595597,
+        29.747877669764787
+      ],
+      "new_binding_arc": 14.164401409552536,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 30,
+      "step": 31,
+      "previous_target": 39.3407786336194,
+      "target": 70.79907353840541,
+      "target_rebound": 31.45829490478601,
+      "previous_curve_envelope": 39.3407786336194,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.185786031417706,
+      "speed": 50.712987249604474,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        187.68622045527803,
+        28.050035174578515
+      ],
+      "new_nearest_world": [
+        183.79933200180142,
+        29.674519734621153
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.08579502837687297,
+      "old_bend_speed_cap": 34.140426236259955,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.02121176580866039,
+      "new_nearest_speed_cap": 68.66123143532324,
+      "world_alignment_error_m": 4.21270126351095,
+      "travel_m": 4.212007057502944,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.140426236259955,
+      "new_binding_bend_world": [
+        183.79933200180142,
+        29.674519734621153
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 58,
+      "step": 59,
+      "previous_target": 42.568735355110306,
+      "target": 68.27601992703178,
+      "target_rebound": 25.707284571921477,
+      "previous_curve_envelope": 42.568735355110306,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.2256020517486,
+      "speed": 57.99334847339833,
+      "previous_brake": 0.21306152641773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        51.509294773563205,
+        85.77459762476761
+      ],
+      "new_nearest_world": [
+        46.8543480677176,
+        86.95276894464905
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06993158251462361,
+      "old_bend_speed_cap": 37.814931836874706,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.006378077164255716,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.801730572747082,
+      "travel_m": 4.794362279136448,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 37.814931836874706,
+      "new_binding_bend_world": [
+        34.9112422071579,
+        89.5232356535789
+      ],
+      "new_binding_arc": 15.180400912729716,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 123,
+      "step": 124,
+      "previous_target": 38.81695202397441,
+      "target": 47.42963401191233,
+      "target_rebound": 8.612681987937918,
+      "previous_curve_envelope": 38.81695202397441,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.93996829903999,
+      "speed": 63.51269004484078,
+      "previous_brake": 0.21306152641773224,
+      "brake": 0.21323242783546448,
+      "old_bend_world": [
+        -110.61532784049484,
+        -72.3194325485236
+      ],
+      "new_nearest_world": [
+        -108.16264969439072,
+        -76.9492036483917
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08891832247189364,
+      "old_bend_speed_cap": 33.53546785905325,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.053549185886305854,
+      "new_nearest_speed_cap": 43.21391005912348,
+      "world_alignment_error_m": 5.239313936533169,
+      "travel_m": 5.235415202001329,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 33.53546785905325,
+      "new_binding_bend_world": [
+        -108.16264969439072,
+        -76.9492036483917
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 139,
+      "step": 140,
+      "previous_target": 38.800146401664065,
+      "target": 48.11045735885384,
+      "target_rebound": 9.310310957189778,
+      "previous_curve_envelope": 38.800146401664065,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.10654014064262,
+      "speed": 55.90362494899128,
+      "previous_brake": 0.21364745497703552,
+      "brake": 0.21381835639476776,
+      "old_bend_world": [
+        -45.305973962265995,
+        -90.66460087141307
+      ],
+      "new_nearest_world": [
+        -40.697705076527484,
+        -90.21734600952826
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.0890215744865316,
+      "old_bend_speed_cap": 33.51601409602024,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.05174676516662493,
+      "new_nearest_speed_cap": 43.960072194801455,
+      "world_alignment_error_m": 4.629922141326489,
+      "travel_m": 4.628078293487516,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 33.51601409602024,
+      "new_binding_bend_world": [
+        -40.697705076527484,
+        -90.21734600952826
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 141,
+      "step": 142,
+      "previous_target": 44.127166595616224,
+      "target": 70.8765772604007,
+      "target_rebound": 26.74941066478447,
+      "previous_curve_envelope": 44.127166595616224,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 50.70562113249439,
+      "speed": 45.50721607258535,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -36.51888613205319,
+        -89.67421605027337
+      ],
+      "new_nearest_world": [
+        -32.760909604573484,
+        -89.12998226160296
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06389455162768913,
+      "old_bend_speed_cap": 39.56107521101178,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -1.6897282524957677e-05,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.79718026933394,
+      "travel_m": 3.796526582309522,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.56107521101178,
+      "new_binding_bend_world": [
+        -9.745122290964098,
+        -86.20875927220463
+      ],
+      "new_binding_arc": 26.14393936652617,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 159,
+      "step": 160,
+      "previous_target": 62.51296432595128,
+      "target": 71.71509610068587,
+      "target_rebound": 9.202131774734589,
+      "previous_curve_envelope": 62.51296432595128,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.846737405013755,
+      "speed": 62.07455774404616,
+      "previous_brake": 0.07546386867761612,
+      "brake": 0.0,
+      "old_bend_world": [
+        58.35141984193272,
+        -87.70984833990347
+      ],
+      "new_nearest_world": [
+        58.10213008547048,
+        -87.15930110412073
+      ],
+      "old_bend_arc": 11.133069988359262,
+      "old_bend_curvature": -0.040640963091722326,
+      "old_bend_speed_cap": 49.60414912415042,
+      "new_nearest_arc": 5.943191074676636,
+      "new_nearest_curvature": -0.022828387086532065,
+      "new_nearest_speed_cap": 66.18542866351659,
+      "world_alignment_error_m": 0.6043572134963092,
+      "travel_m": 5.020364771524734,
+      "transported_remaining_distance_m": 6.112705216834528,
+      "transported_target": 57.054564133988805,
+      "new_binding_bend_world": [
+        79.41664573647252,
+        -82.13820476926647
+      ],
+      "new_binding_arc": 27.936480535076633,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 162,
+      "step": 163,
+      "previous_target": 44.022278848719424,
+      "target": 56.59561987494629,
+      "target_rebound": 12.573341026226863,
+      "previous_curve_envelope": 44.022278848719424,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 64.48056786067869,
+      "speed": 59.00830083572779,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.12004394829273224,
+      "old_bend_world": [
+        65.00896063148743,
+        -85.40604008213549
+      ],
+      "new_nearest_world": [
+        69.76053303872004,
+        -84.31247153177786
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06427425567270044,
+      "old_bend_speed_cap": 39.44404739790875,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.014818720292744813,
+      "new_nearest_speed_cap": 82.14755647971714,
+      "world_alignment_error_m": 4.875790450327582,
+      "travel_m": 4.875742032536239,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.44404739790875,
+      "new_binding_bend_world": [
+        79.73137268490431,
+        -82.43566209976882
+      ],
+      "new_binding_arc": 13.110165510600794,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 165,
+      "step": 166,
+      "previous_target": 33.33816342357664,
+      "target": 43.6057005524747,
+      "target_rebound": 10.267537128898063,
+      "previous_curve_envelope": 33.33816342357664,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 52.757351333029554,
+      "speed": 47.47299328974673,
+      "previous_brake": 0.2117919921875,
+      "brake": 0.15341797471046448,
+      "old_bend_world": [
+        78.59555510811983,
+        -83.23279202650639
+      ],
+      "new_nearest_world": [
+        82.55983008160584,
+        -83.5893347060102
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.13711684777529687,
+      "old_bend_speed_cap": 27.00564719741346,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0658185308003165,
+      "new_nearest_speed_cap": 38.978570532616445,
+      "world_alignment_error_m": 3.9802762150025837,
+      "travel_m": 3.951364229989544,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 27.00564719741346,
+      "new_binding_bend_world": [
+        82.55983008160584,
+        -83.5893347060102
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 167,
+      "step": 168,
+      "previous_target": 41.30824181540158,
+      "target": 51.988850159373094,
+      "target_rebound": 10.680608343971514,
+      "previous_curve_envelope": 41.30824181540158,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 43.81738975710789,
+      "speed": 41.49948113160233,
+      "previous_brake": 0.09824218600988388,
+      "brake": 0.0,
+      "old_bend_world": [
+        86.13286676753731,
+        -84.27253432218507
+      ],
+      "new_nearest_world": [
+        89.43182062692185,
+        -85.10491271715425
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.07551485944475998,
+      "old_bend_speed_cap": 36.39014539643602,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.043090216960636474,
+      "new_nearest_speed_cap": 48.17377275019894,
+      "world_alignment_error_m": 3.402344832429485,
+      "travel_m": 3.3911345289819774,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 36.39014539643602,
+      "new_binding_bend_world": [
+        89.43182062692185,
+        -85.10491271715425
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 56,
+      "step": 57,
+      "previous_target": 49.90345578764784,
+      "target": 58.882303333619994,
+      "target_rebound": 8.978847545972151,
+      "previous_curve_envelope": 49.90345578764784,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.3950440421318,
+      "speed": 53.18469295792223,
+      "previous_brake": 0.2117919921875,
+      "brake": 0.0,
+      "old_bend_world": [
+        53.04231832287901,
+        55.608410746672455
+      ],
+      "new_nearest_world": [
+        49.87814070843688,
+        58.71605853535205
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.04743322818156476,
+      "old_bend_speed_cap": 45.91543030010484,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.01745920206319554,
+      "new_nearest_speed_cap": 75.68116423086322,
+      "world_alignment_error_m": 4.435030411871136,
+      "travel_m": 4.407531787650103,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 45.91543030010484,
+      "new_binding_bend_world": [
+        44.10887918808025,
+        64.34983876855527
+      ],
+      "new_binding_arc": 11.016518542376435,
+      "damage_after": 0.0,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 117,
+      "step": 118,
+      "previous_target": 24.0,
+      "target": 38.59247366482255,
+      "target_rebound": 14.592473664822549,
+      "previous_curve_envelope": 30.953645341153887,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 49.905689652028286,
+      "speed": 21.28857431518573,
+      "previous_brake": 0.21320800483226776,
+      "brake": 0.0,
+      "old_bend_world": [
+        -88.75563505947783,
+        30.935645532111014
+      ],
+      "new_nearest_world": [
+        -90.06472083901475,
+        29.196746827947816
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.557960045016826,
+      "old_bend_speed_cap": 24.0,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.05953571764319604,
+      "new_nearest_speed_cap": 40.983703742620634,
+      "world_alignment_error_m": 2.1765739779585385,
+      "travel_m": 2.181223231218054,
+      "transported_remaining_distance_m": 0.7582241526737739,
+      "transported_target": 25.97246888240682,
+      "new_binding_bend_world": [
+        -90.33033210127027,
+        27.422361031482854
+      ],
+      "new_binding_arc": 4.733672945641855,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 152,
+      "step": 153,
+      "previous_target": 44.18162253623889,
+      "target": 70.79289152221781,
+      "target_rebound": 26.611268985978924,
+      "previous_curve_envelope": 44.18162253623889,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 47.783869948994095,
+      "speed": 45.46058472535749,
+      "previous_brake": 0.09108886867761612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -64.45984696901603,
+        -71.01319512575854
+      ],
+      "new_nearest_world": [
+        -61.14488212947664,
+        -69.36045143381344
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06369882745820787,
+      "old_bend_speed_cap": 39.62180725344005,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0018715186453798671,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.7041265635297504,
+      "travel_m": 3.7027808866665053,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.62180725344005,
+      "new_binding_bend_world": [
+        -61.14488212947664,
+        -69.36045143381344
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 161,
+      "step": 162,
+      "previous_target": 39.406867178201544,
+      "target": 47.88465063137911,
+      "target_rebound": 8.477783453177565,
+      "previous_curve_envelope": 39.406867178201544,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 63.180010635272026,
+      "speed": 57.68009629750909,
+      "previous_brake": 0.212890625,
+      "brake": 0.21135254204273224,
+      "old_bend_world": [
+        -29.437615511983648,
+        -54.820300761548374
+      ],
+      "new_nearest_world": [
+        -24.876871768563504,
+        -53.40829710776139
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.08541365253155488,
+      "old_bend_speed_cap": 34.216560623395225,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.05233378302518398,
+      "new_nearest_speed_cap": 43.712831138960766,
+      "world_alignment_error_m": 4.7743206649170284,
+      "travel_m": 4.768756482468526,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.216560623395225,
+      "new_binding_bend_world": [
+        -24.876871768563504,
+        -53.40829710776139
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 165,
+      "step": 166,
+      "previous_target": 47.544720491251745,
+      "target": 58.81477419487714,
+      "target_rebound": 11.270053703625393,
+      "previous_curve_envelope": 47.544720491251745,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.56582756505191,
+      "speed": 49.7001080482283,
+      "previous_brake": 0.14895018935203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -12.08039336550459,
+        -53.16898185158809
+      ],
+      "new_nearest_world": [
+        -8.094942310720722,
+        -54.17602213569205
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.053237582724597034,
+      "old_bend_speed_cap": 43.3401925086324,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.01568523443292108,
+      "new_nearest_speed_cap": 79.84624425590845,
+      "world_alignment_error_m": 4.110711646891086,
+      "travel_m": 4.0824996580759025,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 43.3401925086324,
+      "new_binding_bend_world": [
+        -0.3095374728525435,
+        -56.09161111376144
+      ],
+      "new_binding_arc": 10.970589521861015,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 183,
+      "step": 184,
+      "previous_target": 44.12775299234907,
+      "target": 71.10516962695294,
+      "target_rebound": 26.97741663460387,
+      "previous_curve_envelope": 44.12775299234907,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.03858334563112,
+      "speed": 47.83730837710226,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        65.01109714075005,
+        -91.29292170705739
+      ],
+      "new_nearest_world": [
+        68.77168749086093,
+        -92.60533217033996
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06389243889885897,
+      "old_bend_speed_cap": 39.561729287884205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0003301249947655906,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.983021592394474,
+      "travel_m": 3.9830078781578346,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.561729287884205,
+      "new_binding_bend_world": [
+        82.28348878630132,
+        -97.10215918245562
+      ],
+      "new_binding_arc": 17.18530031549145,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 211,
+      "step": 212,
+      "previous_target": 39.521157850358605,
+      "target": 51.745773759375616,
+      "target_rebound": 12.224615909017011,
+      "previous_curve_envelope": 39.521157850358605,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 45.43031616316051,
+      "speed": 40.241903085135995,
+      "previous_brake": 0.20866699516773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        201.910963591288,
+        -107.63525652710027
+      ],
+      "new_nearest_world": [
+        204.47629969568112,
+        -105.31668757584019
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.08476057728573394,
+      "old_bend_speed_cap": 34.3481259740182,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.020916619806033102,
+      "new_nearest_speed_cap": 69.14396000287982,
+      "world_alignment_error_m": 3.4578477858705803,
+      "travel_m": 3.369389579263478,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.3481259740182,
+      "new_binding_bend_world": [
+        209.99850857971822,
+        -100.8893104325595
+      ],
+      "new_binding_arc": 10.041384483885258,
+      "damage_after": 0.2,
+      "track_id": 2,
+      "seed": 3941966027,
+      "finished": true
+    },
+    {
+      "previous_step": 171,
+      "step": 172,
+      "previous_target": 33.126313769503014,
+      "target": 56.03994930512276,
+      "target_rebound": 22.913635535619747,
+      "previous_curve_envelope": 33.126313769503014,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 52.16521954784425,
+      "speed": 46.95777637342386,
+      "previous_brake": 0.21237793564796448,
+      "brake": 0.0,
+      "old_bend_world": [
+        108.83960571583901,
+        -72.3079038723517
+      ],
+      "new_nearest_world": [
+        112.73548169267005,
+        -72.85258724117837
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.13981623872475898,
+      "old_bend_speed_cap": 26.74368157246917,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.03625358684458272,
+      "new_nearest_speed_cap": 52.51997484971591,
+      "world_alignment_error_m": 3.933767862892464,
+      "travel_m": 3.9107417145412975,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 26.74368157246917,
+      "new_binding_bend_world": [
+        112.73548169267005,
+        -72.85258724117837
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 189,
+      "step": 190,
+      "previous_target": 41.89292063677762,
+      "target": 65.19630593199712,
+      "target_rebound": 23.3033852952195,
+      "previous_curve_envelope": 41.89292063677762,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 65.63119915216285,
+      "speed": 60.33829987353929,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        178.45826745953394,
+        -103.87215567357102
+      ],
+      "new_nearest_world": [
+        182.9961792301056,
+        -105.93011869887386
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.07283911973448366,
+      "old_bend_speed_cap": 37.052511919887564,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.00020763142584789615,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.9827557687495085,
+      "travel_m": 4.982729789949669,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 37.052511919887564,
+      "new_binding_bend_world": [
+        200.99426150003728,
+        -113.39909928220712
+      ],
+      "new_binding_arc": 22.47217385624098,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 49,
+      "step": 50,
+      "previous_target": 43.801713902709466,
+      "target": 70.77207538930081,
+      "target_rebound": 26.970361486591344,
+      "previous_curve_envelope": 43.801713902709466,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 59.592510869516246,
+      "speed": 54.212865013587255,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        174.10092245274294,
+        37.54160843052527
+      ],
+      "new_nearest_world": [
+        169.7392959907544,
+        38.617708048619214
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06508459125089859,
+      "old_bend_speed_cap": 39.197729282560154,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.492413135718979,
+      "travel_m": 4.492382269406316,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.197729282560154,
+      "new_binding_bend_world": [
+        169.7392959907544,
+        38.617708048619214
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 76,
+      "step": 77,
+      "previous_target": 37.30137236917636,
+      "target": 70.77207538930081,
+      "target_rebound": 33.470703020124446,
+      "previous_curve_envelope": 37.30137236917636,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.36495645222429,
+      "speed": 56.168499186270815,
+      "previous_brake": 0.21381835639476776,
+      "brake": 0.0,
+      "old_bend_world": [
+        34.44026738697364,
+        75.09852625713717
+      ],
+      "new_nearest_world": [
+        29.931575497350494,
+        76.24028280069231
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09908208172569265,
+      "old_bend_speed_cap": 31.768919098987556,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.651011778130057,
+      "travel_m": 4.649266840840457,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 31.768919098987556,
+      "new_binding_bend_world": [
+        29.931575497350494,
+        76.24028280069231
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 116,
+      "step": 117,
+      "previous_target": 31.979234696736242,
+      "target": 41.305416413122714,
+      "target_rebound": 9.326181716386472,
+      "previous_curve_envelope": 31.979234696736242,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.6363943715914,
+      "speed": 51.52286585238526,
+      "previous_brake": 0.2130126953125,
+      "brake": 0.21357421576976776,
+      "old_bend_world": [
+        -117.78023306499114,
+        61.15839167802231
+      ],
+      "new_nearest_world": [
+        -119.30031290720699,
+        57.15010593776578
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.15611747288154496,
+      "old_bend_speed_cap": 25.30895675216585,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0755281723714019,
+      "new_nearest_speed_cap": 36.386938111849005,
+      "world_alignment_error_m": 4.286840013606155,
+      "travel_m": 4.285421191384979,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 25.30895675216585,
+      "new_binding_bend_world": [
+        -119.30031290720699,
+        57.15010593776578
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.4,
+      "track_id": 3,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 140,
+      "step": 141,
+      "previous_target": 44.12660248273731,
+      "target": 70.80495075352414,
+      "target_rebound": 26.678348270786827,
+      "previous_curve_envelope": 44.12660248273731,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.02406878380907,
+      "speed": 50.521095089666964,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -122.83469894866936,
+        -33.48984110863404
+      ],
+      "new_nearest_world": [
+        -120.60004613213921,
+        -37.042482865903374
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06389658417538616,
+      "old_bend_speed_cap": 39.560445987925625,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -2.1972277984024094e-06,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.1970152091599395,
+      "travel_m": 4.196639224887416,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.560445987925625,
+      "new_binding_bend_world": [
+        -120.60004613213921,
+        -37.042482865903374
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.4,
+      "track_id": 3,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 43,
+      "step": 44,
+      "previous_target": 32.41089054599018,
+      "target": 43.01991281542997,
+      "target_rebound": 10.60902226943979,
+      "previous_curve_envelope": 32.41089054599018,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.1721161665411,
+      "speed": 50.95705801824007,
+      "previous_brake": 0.21335449814796448,
+      "brake": 0.21315917372703552,
+      "old_bend_world": [
+        124.29811029026783,
+        50.41306856866365
+      ],
+      "new_nearest_world": [
+        120.40258533720447,
+        52.07457959923348
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.14962496515690418,
+      "old_bend_speed_cap": 25.852227487746926,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.06809276806574417,
+      "new_nearest_speed_cap": 38.322118140067076,
+      "world_alignment_error_m": 4.235060042625666,
+      "travel_m": 4.232338809219303,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 25.852227487746926,
+      "new_binding_bend_world": [
+        120.40258533720447,
+        52.07457959923348
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 107,
+      "step": 108,
+      "previous_target": 44.02995800490442,
+      "target": 70.91043666243486,
+      "target_rebound": 26.88047865753044,
+      "previous_curve_envelope": 44.02995800490442,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 48.23203567958316,
+      "speed": 44.104444234069625,
+      "previous_brake": 0.17155762016773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -84.55335710404361,
+        55.0480210886498
+      ],
+      "new_nearest_world": [
+        -83.22773785821565,
+        51.64322369438348
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06424633413694276,
+      "old_bend_speed_cap": 39.45261768257855,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.00038031681906436235,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.653753095231287,
+      "travel_m": 3.6536014555827507,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.45261768257855,
+      "new_binding_bend_world": [
+        -83.22773785821565,
+        51.64322369438348
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 123,
+      "step": 124,
+      "previous_target": 44.094272286727644,
+      "target": 56.2071131869238,
+      "target_rebound": 12.112840900196154,
+      "previous_curve_envelope": 44.094272286727644,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 60.455958140497,
+      "speed": 55.23501672422989,
+      "previous_brake": 0.21201172471046448,
+      "brake": 0.07395019382238388,
+      "old_bend_world": [
+        -50.97999686701454,
+        -13.049267587024733
+      ],
+      "new_nearest_world": [
+        -49.67790056283316,
+        -17.44683315064379
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06401324557611324,
+      "old_bend_speed_cap": 39.52438093873375,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.031643900836747535,
+      "new_nearest_speed_cap": 56.215359527744894,
+      "world_alignment_error_m": 4.586288005750513,
+      "travel_m": 4.5731218243521,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.52438093873375,
+      "new_binding_bend_world": [
+        -49.16504959325004,
+        -19.42644245217851
+      ],
+      "new_binding_arc": 4.984705553968991,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 128,
+      "step": 129,
+      "previous_target": 44.034651760821575,
+      "target": 71.13173373085695,
+      "target_rebound": 27.097081970035376,
+      "previous_curve_envelope": 44.034651760821575,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 46.12720255158578,
+      "speed": 43.88804570904829,
+      "previous_brake": 0.09414062649011612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -48.631818318759265,
+        -33.74512566863119
+      ],
+      "new_nearest_world": [
+        -48.55205484328424,
+        -37.32413611221011
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06422927711127295,
+      "old_bend_speed_cap": 39.45785594518396,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0002894643816900247,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.5798991560191826,
+      "travel_m": 3.579885835522229,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.45785594518396,
+      "new_binding_bend_world": [
+        -47.98672973911218,
+        -52.57975596488335
+      ],
+      "new_binding_arc": 18.210663065074854,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 167,
+      "step": 168,
+      "previous_target": 39.46156134031322,
+      "target": 71.44982251096017,
+      "target_rebound": 31.988261170646958,
+      "previous_curve_envelope": 39.46156134031322,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 42.07229666232527,
+      "speed": 40.136182934042886,
+      "previous_brake": 0.08203125,
+      "brake": 0.0,
+      "old_bend_world": [
+        55.09756855338014,
+        -57.521588774529135
+      ],
+      "new_nearest_world": [
+        58.37536056349517,
+        -58.287254926382545
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08510010632011826,
+      "old_bend_speed_cap": 34.27953709590264,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.017870591862343143,
+      "new_nearest_speed_cap": 74.80498356423898,
+      "world_alignment_error_m": 3.3660310630871972,
+      "travel_m": 3.266811540921293,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.27953709590264,
+      "new_binding_bend_world": [
+        72.62241878853528,
+        -60.48974159612684
+      ],
+      "new_binding_arc": 17.36173798814354,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 204,
+      "step": 205,
+      "previous_target": 32.04694595593145,
+      "target": 44.981760353258224,
+      "target_rebound": 12.934814397326775,
+      "previous_curve_envelope": 32.04694595593145,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 40.64268072149454,
+      "speed": 35.45932621590176,
+      "previous_brake": 0.21018067002296448,
+      "brake": 0.0,
+      "old_bend_world": [
+        203.7702529460156,
+        -107.75546289587895
+      ],
+      "new_nearest_world": [
+        206.24872613427124,
+        -105.92520315022283
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.15506794968162327,
+      "old_bend_speed_cap": 25.394459734289548,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.04668480770759393,
+      "new_nearest_speed_cap": 46.282010107278744,
+      "world_alignment_error_m": 3.0810193250726714,
+      "travel_m": 2.9883027942354565,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 25.394459734289548,
+      "new_binding_bend_world": [
+        208.74015277086113,
+        -104.19496773717353
+      ],
+      "new_binding_arc": 5.976525092078632,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 3615151447,
+      "finished": true
+    },
+    {
+      "previous_step": 31,
+      "step": 32,
+      "previous_target": 33.04146535737866,
+      "target": 42.09716269438836,
+      "target_rebound": 9.055697337009697,
+      "previous_curve_envelope": 33.04146535737866,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 55.08911206335386,
+      "speed": 49.71114597207672,
+      "previous_brake": 0.21318359673023224,
+      "brake": 0.213623046875,
+      "old_bend_world": [
+        185.18303807718655,
+        19.07121261208489
+      ],
+      "new_nearest_world": [
+        181.07421954616686,
+        19.54677471211997
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.14092242431780458,
+      "old_bend_speed_cap": 26.6385110893405,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.07194022329667374,
+      "new_nearest_speed_cap": 37.28327972445376,
+      "world_alignment_error_m": 4.136248183056791,
+      "travel_m": 4.132261570617073,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 26.6385110893405,
+      "new_binding_bend_world": [
+        181.07421954616686,
+        19.54677471211997
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 4019195530,
+      "finished": false
+    },
+    {
+      "previous_step": 92,
+      "step": 93,
+      "previous_target": 44.248655707551364,
+      "target": 62.27287285342646,
+      "target_rebound": 18.0242171458751,
+      "previous_curve_envelope": 44.248655707551364,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 49.78692406654376,
+      "speed": 45.10670579675551,
+      "previous_brake": 0.19304199516773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -48.385415301902405,
+        33.19057109012824
+      ],
+      "new_nearest_world": [
+        -47.21200444284964,
+        29.628828574089265
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06345921087940994,
+      "old_bend_speed_cap": 39.69654105862978,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -2.1193626042188005e-05,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.750053705575772,
+      "travel_m": 3.749479807722206,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.69654105862978,
+      "new_binding_bend_world": [
+        -43.004137727200515,
+        15.277213981383355
+      ],
+      "new_binding_arc": 17.93629651285563,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 4019195530,
+      "finished": false
+    },
+    {
+      "previous_step": 101,
+      "step": 102,
+      "previous_target": 24.0,
+      "target": 35.98196645140802,
+      "target_rebound": 11.98196645140802,
+      "previous_curve_envelope": 31.73711798165484,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 27.529670585568216,
+      "speed": 23.48183570261161,
+      "previous_brake": 0.166259765625,
+      "brake": 0.0,
+      "old_bend_world": [
+        -52.09180837866214,
+        4.362163226789871
+      ],
+      "new_nearest_world": [
+        -53.955507676250924,
+        3.3548181513351425
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.15997018210181624,
+      "old_bend_speed_cap": 25.002329848946907,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.10958018463871355,
+      "new_nearest_speed_cap": 30.208835624769037,
+      "world_alignment_error_m": 2.1185181549554475,
+      "travel_m": 1.99997371982019,
+      "transported_remaining_distance_m": 0.9394736640716381,
+      "transported_target": 27.33583864096462,
+      "new_binding_bend_world": [
+        -53.955507676250924,
+        3.3548181513351425
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 3,
+      "seed": 4019195530,
+      "finished": false
+    },
+    {
+      "previous_step": 171,
+      "step": 172,
+      "previous_target": 32.640603381142824,
+      "target": 42.01505601444851,
+      "target_rebound": 9.374452633305687,
+      "previous_curve_envelope": 32.640603381142824,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 53.82191441824456,
+      "speed": 48.60724373543981,
+      "previous_brake": 0.21335449814796448,
+      "brake": 0.21284179389476776,
+      "old_bend_world": [
+        45.68821651760981,
+        -94.0931418863173
+      ],
+      "new_nearest_world": [
+        49.71264072288592,
+        -94.54491030633437
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.14635270847586324,
+      "old_bend_speed_cap": 26.139640953523724,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.07229942983587195,
+      "new_nearest_speed_cap": 37.19054680952282,
+      "world_alignment_error_m": 4.049701827213578,
+      "travel_m": 4.044114740373086,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 26.139640953523724,
+      "new_binding_bend_world": [
+        49.71264072288592,
+        -94.54491030633437
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 1.0,
+      "track_id": 3,
+      "seed": 4019195530,
+      "finished": false
+    },
+    {
+      "previous_step": 92,
+      "step": 93,
+      "previous_target": 31.298223902695955,
+      "target": 46.55312937295793,
+      "target_rebound": 15.254905470261978,
+      "previous_curve_envelope": 31.298223902695955,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 51.881727869484706,
+      "speed": 46.65281642418133,
+      "previous_brake": 0.21298828721046448,
+      "brake": 0.06513671576976776,
+      "old_bend_world": [
+        -56.912748097113905,
+        85.773540992588
+      ],
+      "new_nearest_world": [
+        -60.66230302278299,
+        84.72129264457602
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.16737783848810153,
+      "old_bend_speed_cap": 24.442803839931106,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.04559668083015382,
+      "new_nearest_speed_cap": 46.83099499635592,
+      "world_alignment_error_m": 3.894404797463053,
+      "travel_m": 3.8879239855392,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 24.442803839931106,
+      "new_binding_bend_world": [
+        -61.23405106299761,
+        83.88597785233344
+      ],
+      "new_binding_arc": 3.9516956852628526,
+      "damage_after": 0.2,
+      "track_id": 4,
+      "seed": 1172828284,
+      "finished": false
+    },
+    {
+      "previous_step": 96,
+      "step": 97,
+      "previous_target": 39.31843506083086,
+      "target": 56.62540664032393,
+      "target_rebound": 17.306971579493073,
+      "previous_curve_envelope": 39.31843506083086,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 39.49235726795517,
+      "speed": 38.13143495778811,
+      "previous_brake": 0.060791015625,
+      "brake": 0.0,
+      "old_bend_world": [
+        -69.3472843082567,
+        78.86184227014493
+      ],
+      "new_nearest_world": [
+        -71.52800353359912,
+        76.6416064637258
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.08592459162247429,
+      "old_bend_speed_cap": 34.114676837496724,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.03540689672828119,
+      "new_nearest_speed_cap": 53.14422374328281,
+      "world_alignment_error_m": 3.1120705930109733,
+      "travel_m": 3.0942142556408863,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.114676837496724,
+      "new_binding_bend_world": [
+        -71.52800353359912,
+        76.6416064637258
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.2,
+      "track_id": 4,
+      "seed": 1172828284,
+      "finished": false
+    },
+    {
+      "previous_step": 30,
+      "step": 31,
+      "previous_target": 53.83449567151514,
+      "target": 64.51572540618069,
+      "target_rebound": 10.68122973466555,
+      "previous_curve_envelope": 53.83449567151514,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 60.547607957611056,
+      "speed": 56.644284714737566,
+      "previous_brake": 0.15156249701976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        184.85121270011285,
+        23.191537744112225
+      ],
+      "new_nearest_world": [
+        183.1228822618614,
+        22.92067916537886
+      ],
+      "old_bend_arc": 5.9816066455968295,
+      "old_bend_curvature": -0.04715770913378366,
+      "old_bend_speed_cap": 46.04936547096816,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.02645397204183287,
+      "new_nearest_speed_cap": 61.48292986496147,
+      "world_alignment_error_m": 1.7494257553437065,
+      "travel_m": 4.641146322186495,
+      "transported_remaining_distance_m": 1.3404603234103343,
+      "transported_target": 47.90411153880362,
+      "new_binding_bend_world": [
+        183.1228822618614,
+        22.92067916537886
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 32,
+      "step": 33,
+      "previous_target": 44.122592666824545,
+      "target": 70.77207538930081,
+      "target_rebound": 26.649482722476264,
+      "previous_curve_envelope": 44.122592666824545,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 57.7672733328656,
+      "speed": 52.29096480897986,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        178.59751913875243,
+        23.653872620683067
+      ],
+      "new_nearest_world": [
+        174.30480355522653,
+        24.28356109214466
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06391103486856407,
+      "old_bend_speed_cap": 39.55597330033205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.3386535529053,
+      "travel_m": 4.338301900781375,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033205,
+      "new_binding_bend_world": [
+        174.30480355522653,
+        24.28356109214466
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 61,
+      "step": 62,
+      "previous_target": 39.93128805410599,
+      "target": 71.03044040697755,
+      "target_rebound": 31.099152352871556,
+      "previous_curve_envelope": 39.93128805410599,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.86026350455838,
+      "speed": 63.446562164015134,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        27.153097187374392,
+        52.27558770913574
+      ],
+      "new_nearest_world": [
+        22.18501635397856,
+        53.913325484521415
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.08248241683165242,
+      "old_bend_speed_cap": 34.819241889421576,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0003467412174917036,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.231062242803103,
+      "travel_m": 5.230985232831309,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.819241889421576,
+      "new_binding_bend_world": [
+        5.858291467175391,
+        59.47764890261907
+      ],
+      "new_binding_arc": 20.193182581032534,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 85,
+      "step": 86,
+      "previous_target": 40.95661793335933,
+      "target": 49.89026821813181,
+      "target_rebound": 8.933650284772476,
+      "previous_curve_envelope": 40.95661793335933,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 48.51205414127685,
+      "speed": 43.34525453977118,
+      "previous_brake": 0.2119140625,
+      "brake": 0.0,
+      "old_bend_world": [
+        -88.57528994290226,
+        101.0664013903834
+      ],
+      "new_nearest_world": [
+        -92.05902620494417,
+        99.93458071200261
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.0772012155244258,
+      "old_bend_speed_cap": 35.99050420087545,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.04746285633224919,
+      "new_nearest_speed_cap": 45.90109696914874,
+      "world_alignment_error_m": 3.662981898873667,
+      "travel_m": 3.6203069688033955,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 35.99050420087545,
+      "new_binding_bend_world": [
+        -92.05902620494417,
+        99.93458071200261
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 103,
+      "step": 104,
+      "previous_target": 44.128707144093084,
+      "target": 70.79289534236405,
+      "target_rebound": 26.664188198270963,
+      "previous_curve_envelope": 44.128707144093084,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 49.81312727421979,
+      "speed": 45.078157388122484,
+      "previous_brake": 0.19560547173023224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -114.28739169680134,
+        35.17243551805137
+      ],
+      "new_nearest_world": [
+        -113.94562388607626,
+        31.438536489990568
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06388900142408788,
+      "old_bend_speed_cap": 39.562793560404636,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -5.787544546188753e-06,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.749507592764846,
+      "travel_m": 3.7489264215574494,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.562793560404636,
+      "new_binding_bend_world": [
+        -113.94562388607626,
+        31.438536489990568
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 126,
+      "step": 127,
+      "previous_target": 48.41231930419729,
+      "target": 57.53003761597621,
+      "target_rebound": 9.117718311778923,
+      "previous_curve_envelope": 48.41231930419729,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 49.485887027766836,
+      "speed": 47.57708483618301,
+      "previous_brake": 0.08029785007238388,
+      "brake": 0.0,
+      "old_bend_world": [
+        -76.81264155229573,
+        -56.50502124376923
+      ],
+      "new_nearest_world": [
+        -73.78474490857005,
+        -58.92974056193082
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.05097815610185569,
+      "old_bend_speed_cap": 44.29023030540275,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.017623299677481927,
+      "new_nearest_speed_cap": 75.32799133161666,
+      "world_alignment_error_m": 3.8791006505311607,
+      "travel_m": 3.8652548762101735,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 44.29023030540275,
+      "new_binding_bend_world": [
+        -66.57058112345186,
+        -64.66690872129502
+      ],
+      "new_binding_arc": 12.174900442193124,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 134,
+      "step": 135,
+      "previous_target": 43.29127332288381,
+      "target": 64.97537328702614,
+      "target_rebound": 21.684099964142334,
+      "previous_curve_envelope": 43.29127332288381,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 59.983805022213474,
+      "speed": 54.50704642224927,
+      "previous_brake": 0.21372070908546448,
+      "brake": 0.0,
+      "old_bend_world": [
+        -59.25489591319628,
+        -85.0429809951265
+      ],
+      "new_nearest_world": [
+        -58.147022222615,
+        -89.42448156903569
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06702385079741437,
+      "old_bend_speed_cap": 38.62649590644605,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.02604389820903997,
+      "new_nearest_speed_cap": 61.965078664377195,
+      "world_alignment_error_m": 4.519395025160865,
+      "travel_m": 4.51508787450018,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 38.62649590644605,
+      "new_binding_bend_world": [
+        -58.147022222615,
+        -89.42448156903569
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 147,
+      "step": 148,
+      "previous_target": 37.98026441099004,
+      "target": 46.54636622157333,
+      "target_rebound": 8.566101810583291,
+      "previous_curve_envelope": 37.98026441099004,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 38.1557002528686,
+      "speed": 36.818629899696596,
+      "previous_brake": 0.05859375,
+      "brake": 0.0,
+      "old_bend_world": [
+        -36.698363912742984,
+        -135.83534012829108
+      ],
+      "new_nearest_world": [
+        -33.60106723719242,
+        -135.43160815761757
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.09430649750002967,
+      "old_bend_speed_cap": 32.563358623194546,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.02948278356449063,
+      "new_nearest_speed_cap": 58.23924789921512,
+      "world_alignment_error_m": 3.1234990316183073,
+      "travel_m": 2.985108101437096,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.563358623194546,
+      "new_binding_bend_world": [
+        -30.59674413602756,
+        -135.3160206355917
+      ],
+      "new_binding_arc": 5.948324649046752,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 176,
+      "step": 177,
+      "previous_target": 37.958162545190724,
+      "target": 48.00955211119875,
+      "target_rebound": 10.051389566008027,
+      "previous_curve_envelope": 37.958162545190724,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 42.99220135551832,
+      "speed": 38.29740362211451,
+      "previous_brake": 0.187744140625,
+      "brake": 0.0,
+      "old_bend_world": [
+        52.799770720341414,
+        -38.293262786644235
+      ],
+      "new_nearest_world": [
+        56.113798074673745,
+        -37.96182438441967
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09445600456682493,
+      "old_bend_speed_cap": 32.5375774129111,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.025314782838115085,
+      "new_nearest_speed_cap": 62.851102018429806,
+      "world_alignment_error_m": 3.3305598207706955,
+      "travel_m": 3.198090567919231,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.5375774129111,
+      "new_binding_bend_world": [
+        60.10426599336543,
+        -37.29496902141619
+      ],
+      "new_binding_arc": 6.99197231705261,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 207,
+      "step": 208,
+      "previous_target": 35.183320672346184,
+      "target": 51.18396921206151,
+      "target_rebound": 16.00064853971533,
+      "previous_curve_envelope": 35.183320672346184,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 62.87470891342943,
+      "speed": 57.674637243575866,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.2127685546875,
+      "old_bend_world": [
+        187.80801628244473,
+        -105.93283860137825
+      ],
+      "new_nearest_world": [
+        192.1025606402505,
+        -108.00874787682612
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.11685821177806135,
+      "old_bend_speed_cap": 29.25299802801765,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.04025674590381347,
+      "new_nearest_speed_cap": 49.84030218322447,
+      "world_alignment_error_m": 4.769959178132639,
+      "travel_m": 4.769911267534557,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 29.25299802801765,
+      "new_binding_bend_world": [
+        198.18613230883216,
+        -111.56842755055418
+      ],
+      "new_binding_arc": 10.026135204138907,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3491511754,
+      "finished": true
+    },
+    {
+      "previous_step": 33,
+      "step": 34,
+      "previous_target": 41.529086199500846,
+      "target": 70.77207538930081,
+      "target_rebound": 29.242989189799964,
+      "previous_curve_envelope": 41.529086199500846,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.95646166546304,
+      "speed": 63.47552652513892,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        173.18011407741906,
+        26.807700475829844
+      ],
+      "new_nearest_world": [
+        168.1165952893529,
+        28.13012983794711
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.07448585168870794,
+      "old_bend_speed_cap": 36.64064465398547,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.233358571213044,
+      "travel_m": 5.233039796900286,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 36.64064465398547,
+      "new_binding_bend_world": [
+        168.1165952893529,
+        28.13012983794711
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 69,
+      "step": 70,
+      "previous_target": 35.98198091521014,
+      "target": 55.89465231949209,
+      "target_rebound": 19.91267140428195,
+      "previous_curve_envelope": 35.98198091521014,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 60.84712012847654,
+      "speed": 55.64528092553871,
+      "previous_brake": 0.2138671875,
+      "brake": 0.08269043266773224,
+      "old_bend_world": [
+        28.997111401258604,
+        118.33663519037384
+      ],
+      "new_nearest_world": [
+        28.231055209311165,
+        122.88015339313795
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.10958005965281724,
+      "old_bend_speed_cap": 30.208852852708738,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.02795528088998919,
+      "new_nearest_speed_cap": 59.80921052802463,
+      "world_alignment_error_m": 4.607645792383543,
+      "travel_m": 4.607613189535241,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 30.208852852708738,
+      "new_binding_bend_world": [
+        27.97386774233366,
+        132.8363535584583
+      ],
+      "new_binding_arc": 12.93825369108566,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 88,
+      "step": 89,
+      "previous_target": 33.52468315765638,
+      "target": 41.70288281141495,
+      "target_rebound": 8.178199653758568,
+      "previous_curve_envelope": 33.52468315765638,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 54.99880445650483,
+      "speed": 49.789108456341644,
+      "previous_brake": 0.21354980766773224,
+      "brake": 0.20932617783546448,
+      "old_bend_world": [
+        -32.35017695580418,
+        134.05335081499098
+      ],
+      "new_nearest_world": [
+        -36.33113476534389,
+        132.9126910333526
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.1348115471760545,
+      "old_bend_speed_cap": 27.2355690396825,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0562049869322967,
+      "new_nearest_speed_cap": 42.18058264598038,
+      "world_alignment_error_m": 4.141150784357236,
+      "travel_m": 4.138933217421879,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 27.2355690396825,
+      "new_binding_bend_world": [
+        -36.33113476534389,
+        132.9126910333526
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 91,
+      "step": 92,
+      "previous_target": 38.03669501965712,
+      "target": 52.18955573036092,
+      "target_rebound": 14.152860710703806,
+      "previous_curve_envelope": 38.03669501965712,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 40.91084309228311,
+      "speed": 38.214386766785594,
+      "previous_brake": 0.11018066108226776,
+      "brake": 0.0,
+      "old_bend_world": [
+        -42.313403543738524,
+        129.011968699399
+      ],
+      "new_nearest_world": [
+        -44.18704981615676,
+        126.36484971861131
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09392652244376508,
+      "old_bend_speed_cap": 32.6291588630855,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.012565728701500946,
+      "new_nearest_speed_cap": 89.20848430181164,
+      "world_alignment_error_m": 3.243114128826371,
+      "travel_m": 3.13579895043529,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.6291588630855,
+      "new_binding_bend_world": [
+        -47.40138913438532,
+        122.43000946908683
+      ],
+      "new_binding_arc": 8.029469766361643,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 111,
+      "step": 112,
+      "previous_target": 37.74419626138281,
+      "target": 51.53436101336628,
+      "target_rebound": 13.790164751983468,
+      "previous_curve_envelope": 37.74419626138281,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 51.161360253379044,
+      "speed": 45.961185792702146,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -46.3272403152746,
+        41.780594282803904
+      ],
+      "new_nearest_world": [
+        -46.21148608237299,
+        37.9494498171042
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.0959236118215245,
+      "old_bend_speed_cap": 32.28770960461343,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.04054864239967132,
+      "new_nearest_speed_cap": 49.66058610250027,
+      "world_alignment_error_m": 3.832892766501052,
+      "travel_m": 3.832893182918202,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.28770960461343,
+      "new_binding_bend_world": [
+        -45.361095514559445,
+        31.963122826654576
+      ],
+      "new_binding_arc": 9.0077121636329,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 117,
+      "step": 118,
+      "previous_target": 42.03831314332649,
+      "target": 64.04955089421362,
+      "target_rebound": 22.011237750887133,
+      "previous_curve_envelope": 42.03831314332649,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 47.69317843347905,
+      "speed": 44.299660494945286,
+      "previous_brake": 0.13505859673023224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -52.99166819104439,
+        20.719969211803175
+      ],
+      "new_nearest_world": [
+        -55.53885392020766,
+        18.096700726598684
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.07219739050574973,
+      "old_bend_speed_cap": 37.216818940237744,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.026880153795170666,
+      "new_nearest_speed_cap": 60.99358007072978,
+      "world_alignment_error_m": 3.656459036324634,
+      "travel_m": 3.640106327292621,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 37.216818940237744,
+      "new_binding_bend_world": [
+        -55.53885392020766,
+        18.096700726598684
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 161,
+      "step": 162,
+      "previous_target": 57.08895443997176,
+      "target": 67.47120484096406,
+      "target_rebound": 10.382250400992305,
+      "previous_curve_envelope": 57.08895443997176,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.548136586721775,
+      "speed": 57.64601240869563,
+      "previous_brake": 0.161376953125,
+      "brake": 0.0,
+      "old_bend_world": [
+        35.06575805341911,
+        -90.06115639303086
+      ],
+      "new_nearest_world": [
+        38.58834712794849,
+        -88.87797647502443
+      ],
+      "old_bend_arc": 3.954939803340148,
+      "old_bend_curvature": 0.036429785639737776,
+      "old_bend_speed_cap": 52.39281004694205,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0239794621309782,
+      "new_nearest_speed_cap": 64.57735921192035,
+      "world_alignment_error_m": 3.7159855363506793,
+      "travel_m": 4.729867816625006,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 52.39281004694205,
+      "new_binding_bend_world": [
+        38.58834712794849,
+        -88.87797647502443
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 163,
+      "step": 164,
+      "previous_target": 37.301372369176555,
+      "target": 70.77207538930081,
+      "target_rebound": 33.470703020124255,
+      "previous_curve_envelope": 37.301372369176555,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 58.75944947892501,
+      "speed": 53.289203273007296,
+      "previous_brake": 0.21381835639476776,
+      "brake": 0.0,
+      "old_bend_world": [
+        43.083704012628104,
+        -87.62257696257169
+      ],
+      "new_nearest_world": [
+        47.37267356700978,
+        -86.55475736442209
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.09908208172569123,
+      "old_bend_speed_cap": 31.768919098987784,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 4.419898022873977,
+      "travel_m": 4.41800216727074,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 31.768919098987784,
+      "new_binding_bend_world": [
+        47.37267356700978,
+        -86.55475736442209
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050001,
+      "finished": true
+    },
+    {
+      "previous_step": 66,
+      "step": 67,
+      "previous_target": 44.50155584769462,
+      "target": 70.77207538930081,
+      "target_rebound": 26.27051954160619,
+      "previous_curve_envelope": 44.50155584769462,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 68.4243926417864,
+      "speed": 63.04173405619196,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        80.15705631322062,
+        61.862192779678516
+      ],
+      "new_nearest_world": [
+        75.11319571595344,
+        63.12281153767173
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06256803049487421,
+      "old_bend_speed_cap": 39.97824799762422,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.199008499480341,
+      "travel_m": 5.198675003143946,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.97824799762422,
+      "new_binding_bend_world": [
+        75.11319571595344,
+        63.12281153767173
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 84,
+      "step": 85,
+      "previous_target": 58.44479297371896,
+      "target": 70.85258241895976,
+      "target_rebound": 12.407789445240795,
+      "previous_curve_envelope": 58.44479297371896,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 70.50374668563367,
+      "speed": 65.09281498011659,
+      "previous_brake": 0.21367187798023224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -14.243673580636194,
+        90.45405491659491
+      ],
+      "new_nearest_world": [
+        -18.987144424684395,
+        92.96003777745443
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.03296342148912372,
+      "old_bend_speed_cap": 55.078722441927894,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.009611995247188157,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.364742840738687,
+      "travel_m": 5.362302047883291,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 55.078722441927894,
+      "new_binding_bend_world": [
+        -20.768720731603427,
+        93.90647280120952
+      ],
+      "new_binding_arc": 4.956831931910887,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 98,
+      "step": 99,
+      "previous_target": 51.550575393933585,
+      "target": 61.95379741812779,
+      "target_rebound": 10.403222024194207,
+      "previous_curve_envelope": 59.04005407287223,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 56.44018922530257,
+      "speed": 52.556632674271654,
+      "previous_brake": 0.14624141156673431,
+      "brake": 0.0,
+      "old_bend_world": [
+        -88.5652346054652,
+        114.08877132202528
+      ],
+      "new_nearest_world": [
+        -88.313641779423,
+        112.78517403965647
+      ],
+      "old_bend_arc": 12.166116352284519,
+      "old_bend_curvature": -0.05251734379798155,
+      "old_bend_speed_cap": 43.63637082905371,
+      "new_nearest_arc": 7.974336041646348,
+      "new_nearest_curvature": -0.0203358612315946,
+      "new_nearest_speed_cap": 70.12432843858133,
+      "world_alignment_error_m": 1.3276538798629938,
+      "travel_m": 4.309095224922233,
+      "transported_remaining_distance_m": 7.857021127362286,
+      "transported_target": 54.08831302312716,
+      "new_binding_bend_world": [
+        -92.79736270628794,
+        110.52503332633226
+      ],
+      "new_binding_arc": 13.003292260314817,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 101,
+      "step": 102,
+      "previous_target": 46.51072370411551,
+      "target": 64.89530782987549,
+      "target_rebound": 18.38458412575998,
+      "previous_curve_envelope": 46.51072370411551,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 55.60077034120827,
+      "speed": 50.520628388783926,
+      "previous_brake": 0.197509765625,
+      "brake": 0.0,
+      "old_bend_world": [
+        -90.5742756893381,
+        109.36097358492789
+      ],
+      "new_nearest_world": [
+        -93.66162635407447,
+        106.52427441718193
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.05614447177662989,
+      "old_bend_speed_cap": 42.20330863302823,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.010188574229856062,
+      "new_nearest_speed_cap": 99.07025778626867,
+      "world_alignment_error_m": 4.192683662684175,
+      "travel_m": 4.183987066346675,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 42.20330863302823,
+      "new_binding_bend_world": [
+        -101.12404211268318,
+        99.60252183494359
+      ],
+      "new_binding_arc": 13.129180918362312,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 160,
+      "step": 161,
+      "previous_target": 38.04146616253322,
+      "target": 66.53653201475618,
+      "target_rebound": 28.495065852222957,
+      "previous_curve_envelope": 38.04146616253322,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 43.92256765441725,
+      "speed": 39.339591687601484,
+      "previous_brake": 0.19157715141773224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -39.59250858475884,
+        -118.97520975974597
+      ],
+      "new_nearest_world": [
+        -36.57770583975048,
+        -117.61277954988235
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.09389451058626379,
+      "old_bend_speed_cap": 32.634720588496265,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0031393110838498577,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.308360873311581,
+      "travel_m": 3.2834255444576663,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 32.634720588496265,
+      "new_binding_bend_world": [
+        -25.403151879318948,
+        -113.18496016376531
+      ],
+      "new_binding_arc": 14.970512224341745,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 191,
+      "step": 192,
+      "previous_target": 44.399065839490824,
+      "target": 71.09987079484775,
+      "target_rebound": 26.700804955356922,
+      "previous_curve_envelope": 44.399065839490824,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 47.35314055276751,
+      "speed": 45.219400699085924,
+      "previous_brake": 0.08662109076976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        84.68564642321493,
+        -45.29629104100639
+      ],
+      "new_nearest_world": [
+        88.33024782669352,
+        -44.78187585381071
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06292676588438936,
+      "old_bend_speed_cap": 39.86413033685174,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0008763547218939636,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.6807257946029703,
+      "travel_m": 3.6806985941304244,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.86413033685174,
+      "new_binding_bend_world": [
+        101.40653840908374,
+        -42.80216425707797
+      ],
+      "new_binding_arc": 16.168351116082228,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050002,
+      "finished": true
+    },
+    {
+      "previous_step": 146,
+      "step": 147,
+      "previous_target": 33.68268650565639,
+      "target": 44.128712384695504,
+      "target_rebound": 10.446025879039112,
+      "previous_curve_envelope": 33.68268650565639,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 61.393651846641674,
+      "speed": 56.191874915722046,
+      "previous_brake": 0.21376952528953552,
+      "brake": 0.21389159560203552,
+      "old_bend_world": [
+        -17.879187779763406,
+        -88.85851280338078
+      ],
+      "new_nearest_world": [
+        -13.231709477587295,
+        -88.64735536062345
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.1329088737231893,
+      "old_bend_speed_cap": 27.42982337406476,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.06388898254484776,
+      "new_nearest_speed_cap": 39.56279940582113,
+      "world_alignment_error_m": 4.652272781644426,
+      "travel_m": 4.651259897774138,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 27.42982337406476,
+      "new_binding_bend_world": [
+        -13.231709477587295,
+        -88.64735536062345
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 148,
+      "step": 149,
+      "previous_target": 44.06206256549596,
+      "target": 70.90336735108104,
+      "target_rebound": 26.841304785585088,
+      "previous_curve_envelope": 44.06206256549596,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 50.993138112433925,
+      "speed": 45.79357180178637,
+      "previous_brake": 0.21389159560203552,
+      "brake": 0.0,
+      "old_bend_world": [
+        -9.003802322537197,
+        -88.38625162462078
+      ],
+      "new_nearest_world": [
+        -5.191988099116705,
+        -88.14310221562731
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.06412981114838115,
+      "old_bend_speed_cap": 39.488443849052125,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0003948509286928481,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.819561402695949,
+      "travel_m": 3.819477943547386,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.488443849052125,
+      "new_binding_bend_world": [
+        10.953795411398016,
+        -87.34649536834989
+      ],
+      "new_binding_arc": 19.108350857401454,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 165,
+      "step": 166,
+      "previous_target": 38.561740666981805,
+      "target": 48.0189938833827,
+      "target_rebound": 9.457253216400893,
+      "previous_curve_envelope": 38.561740666981805,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 41.618832296972315,
+      "speed": 38.56151449601921,
+      "previous_brake": 0.12875977158546448,
+      "brake": 0.0,
+      "old_bend_world": [
+        67.09885653985476,
+        -86.99133057704695
+      ],
+      "new_nearest_world": [
+        70.23927063415802,
+        -86.48673859441654
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.09050759237037269,
+      "old_bend_speed_cap": 33.23973049472003,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.05198327598689489,
+      "new_nearest_speed_cap": 43.859954556137055,
+      "world_alignment_error_m": 3.180693910553704,
+      "travel_m": 3.179312462528065,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 33.23973049472003,
+      "new_binding_bend_world": [
+        70.23927063415802,
+        -86.48673859441654
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 182,
+      "step": 183,
+      "previous_target": 39.3563122743179,
+      "target": 70.7929587959363,
+      "target_rebound": 31.4366465216184,
+      "previous_curve_envelope": 39.3563122743179,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 67.48033984029799,
+      "speed": 62.13422594261239,
+      "previous_brake": 0.2138671875,
+      "brake": 0.0,
+      "old_bend_world": [
+        140.50782400228906,
+        -99.24736807097729
+      ],
+      "new_nearest_world": [
+        145.48154226574934,
+        -100.4896316777207
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.08570514054033286,
+      "old_bend_speed_cap": 34.15832484077181,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0010102634004370231,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 5.126508776245051,
+      "travel_m": 5.126186529908521,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 34.15832484077181,
+      "new_binding_bend_world": [
+        149.39289990238615,
+        -101.43665392992605
+      ],
+      "new_binding_arc": 6.963949162538084,
+      "damage_after": 0.0,
+      "track_id": 4,
+      "seed": 3601050003,
+      "finished": true
+    },
+    {
+      "previous_step": 59,
+      "step": 60,
+      "previous_target": 32.954290084173,
+      "target": 48.12960191393868,
+      "target_rebound": 15.175311829765675,
+      "previous_curve_envelope": 32.954290084173,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 54.045424820954544,
+      "speed": 49.36540244688552,
+      "previous_brake": 0.21286621689796448,
+      "brake": 0.08681640774011612,
+      "old_bend_world": [
+        36.66432645072499,
+        67.77610587294782
+      ],
+      "new_nearest_world": [
+        32.57611583928923,
+        67.70385559266624
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.14207429824226864,
+      "old_bend_speed_cap": 26.530304842686704,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.051697475747063716,
+      "new_nearest_speed_cap": 43.981023413379916,
+      "world_alignment_error_m": 4.088848995311118,
+      "travel_m": 4.0785856421140085,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 26.530304842686704,
+      "new_binding_bend_world": [
+        32.57611583928923,
+        67.70385559266624
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.4,
+      "track_id": 4,
+      "seed": 3841519481,
+      "finished": false
+    },
+    {
+      "previous_step": 87,
+      "step": 88,
+      "previous_target": 24.0,
+      "target": 33.67199584525442,
+      "target_rebound": 9.671995845254422,
+      "previous_curve_envelope": 30.953645341153887,
+      "previous_connector_feasible": false,
+      "current_connector_feasible": true,
+      "previous_speed": 48.473001741045294,
+      "speed": 43.63709622771036,
+      "previous_brake": 0.21064452826976776,
+      "brake": 0.2037353515625,
+      "old_bend_world": [
+        -76.79787613638209,
+        106.2888669917291
+      ],
+      "new_nearest_world": [
+        -80.46632851465849,
+        106.30108119078511
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.20561572373997705,
+      "old_bend_speed_cap": 24.0,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0003066830685248215,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.6684727119525298,
+      "travel_m": 3.65186177352767,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 24.0,
+      "new_binding_bend_world": [
+        -90.86444065245293,
+        93.81560169801392
+      ],
+      "new_binding_arc": 19.211068994382735,
+      "damage_after": 0.8,
+      "track_id": 4,
+      "seed": 3841519481,
+      "finished": false
+    },
+    {
+      "previous_step": 98,
+      "step": 99,
+      "previous_target": 44.12259266682691,
+      "target": 70.77207538930081,
+      "target_rebound": 26.6494827224739,
+      "previous_curve_envelope": 44.12259266682691,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 46.71867707503031,
+      "speed": 45.11159324560223,
+      "previous_brake": 0.06618652492761612,
+      "brake": 0.0,
+      "old_bend_world": [
+        -93.37688889735253,
+        78.7760362217708
+      ],
+      "new_nearest_world": [
+        -93.82090402589435,
+        75.14540242938784
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": -0.06391103486855558,
+      "old_bend_speed_cap": 39.55597330033468,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.0,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.657683853036922,
+      "travel_m": 3.657268205935289,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.55597330033468,
+      "new_binding_bend_world": [
+        -93.82090402589435,
+        75.14540242938784
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.8,
+      "track_id": 4,
+      "seed": 3841519481,
+      "finished": false
+    },
+    {
+      "previous_step": 135,
+      "step": 136,
+      "previous_target": 43.95532997296795,
+      "target": 59.87417138472948,
+      "target_rebound": 15.918841411761527,
+      "previous_curve_envelope": 43.95532997296795,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 49.80428402503204,
+      "speed": 47.701579201549755,
+      "previous_brake": 0.12177734076976776,
+      "brake": 0.0,
+      "old_bend_world": [
+        -59.197457320288294,
+        -53.93839981471914
+      ],
+      "new_nearest_world": [
+        -55.346617657007386,
+        -53.289424420790766
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.0645185069294065,
+      "old_bend_speed_cap": 39.36931385135582,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": -0.0001341380787374405,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.905142145200595,
+      "travel_m": 3.9050160116702015,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 39.36931385135582,
+      "new_binding_bend_world": [
+        -42.22241308206437,
+        -51.3704310279969
+      ],
+      "new_binding_arc": 16.225075116565016,
+      "damage_after": 0.8,
+      "track_id": 4,
+      "seed": 3841519481,
+      "finished": false
+    },
+    {
+      "previous_step": 144,
+      "step": 145,
+      "previous_target": 33.97289680368079,
+      "target": 71.17133924833605,
+      "target_rebound": 37.198442444655264,
+      "previous_curve_envelope": 33.97289680368079,
+      "previous_connector_feasible": true,
+      "current_connector_feasible": true,
+      "previous_speed": 48.57821299648274,
+      "speed": 43.402548416426136,
+      "previous_brake": 0.21330566704273224,
+      "brake": 0.0,
+      "old_bend_world": [
+        -25.554183905472414,
+        -63.40741836413562
+      ],
+      "new_nearest_world": [
+        -23.103655854225366,
+        -66.10416655696402
+      ],
+      "old_bend_arc": 2.939447383891828,
+      "old_bend_curvature": 0.1295287195300549,
+      "old_bend_speed_cap": 27.785419869557607,
+      "new_nearest_arc": 2.939447383891828,
+      "new_nearest_curvature": 0.00944193190327341,
+      "new_nearest_speed_cap": 100.0,
+      "world_alignment_error_m": 3.643835691338437,
+      "travel_m": 3.6266708596158903,
+      "transported_remaining_distance_m": 0.0,
+      "transported_target": 27.785419869557607,
+      "new_binding_bend_world": [
+        -23.103655854225366,
+        -66.10416655696402
+      ],
+      "new_binding_arc": 2.939447383891828,
+      "damage_after": 0.8,
+      "track_id": 4,
+      "seed": 3841519481,
+      "finished": false
+    }
+  ],
+  "interpretation": "Step60->61 drops a spatially retained imminent curvature constraint. This supports testing transported constraint memory, not unconditional target hysteresis; no rescue is established.",
+  "limitations": [
+    "Nearest-path alignment shows spatial proximity, not identical obstacle clearance or route homotopy.",
+    "Only sparse rendered frames are retained, so no per-frame free-space or smoothing-stage replay is available.",
+    "Scalar transported target uses prior path arc minus actual displacement, an approximation for this short interval.",
+    "One saved braking action would alter subsequent pose and observations; trace-only analysis cannot establish finish outcomes."
+  ],
+  "rebound_summary": {
+    "all": 118,
+    "on_finished_episodes": 104,
+    "aligned_retained_bend_events": [
+      {
+        "previous_step": 157,
+        "step": 158,
+        "previous_target": 58.56389530482365,
+        "target": 69.82413858512116,
+        "target_rebound": 11.260243280297509,
+        "previous_curve_envelope": 58.56389530482365,
+        "previous_connector_feasible": true,
+        "current_connector_feasible": true,
+        "previous_speed": 60.243025156327874,
+        "speed": 57.13988811366387,
+        "previous_brake": 0.1298828125,
+        "brake": 0.0,
+        "old_bend_world": [
+          7.113457876151106,
+          -53.289371403128115
+        ],
+        "new_nearest_world": [
+          6.480844938197146,
+          -53.95987155020264
+        ],
+        "old_bend_arc": 10.16050471623755,
+        "old_bend_curvature": 0.04741888977197818,
+        "old_bend_speed_cap": 45.9223716739833,
+        "new_nearest_arc": 4.96031645680699,
+        "new_nearest_curvature": 0.023637481273637614,
+        "new_nearest_speed_cap": 65.04282581322322,
+        "world_alignment_error_m": 0.9218294725672983,
+        "travel_m": 4.66483029505643,
+        "transported_remaining_distance_m": 5.49567442118112,
+        "transported_target": 53.13475223351483,
+        "new_binding_bend_world": [
+          6.480844938197146,
+          -53.95987155020264
+        ],
+        "new_binding_arc": 4.96031645680699,
+        "damage_after": 0.0,
+        "track_id": 1,
+        "seed": 2541631106,
+        "finished": true
+      },
+      {
+        "previous_step": 60,
+        "step": 61,
+        "previous_target": 46.80333067186727,
+        "target": 58.386905605554915,
+        "target_rebound": 11.583574933687643,
+        "previous_curve_envelope": 46.80333067186727,
+        "previous_connector_feasible": true,
+        "current_connector_feasible": true,
+        "previous_speed": 61.154546724531606,
+        "speed": 55.80795246650101,
+        "previous_brake": 0.20866699516773224,
+        "brake": 0.03010253980755806,
+        "old_bend_world": [
+          43.11787412972639,
+          66.2076042962228
+        ],
+        "new_nearest_world": [
+          43.55725326289199,
+          66.70717923640481
+        ],
+        "old_bend_arc": 9.451655804367821,
+        "old_bend_curvature": 0.10396777334750351,
+        "old_bend_speed_cap": 31.01348912025757,
+        "new_nearest_arc": 4.703120178571296,
+        "new_nearest_curvature": 0.0012961568931476287,
+        "new_nearest_speed_cap": 100.0,
+        "world_alignment_error_m": 0.6653037979143208,
+        "travel_m": 4.619358129845037,
+        "transported_remaining_distance_m": 4.832297674522784,
+        "transported_target": 39.87524551774317,
+        "new_binding_bend_world": [
+          33.51240572476551,
+          75.83973466369473
+        ],
+        "new_binding_arc": 18.35924824313979,
+        "damage_after": 0.0,
+        "track_id": 1,
+        "seed": 3601050001,
+        "finished": false
+      },
+      {
+        "previous_step": 159,
+        "step": 160,
+        "previous_target": 62.51296432595128,
+        "target": 71.71509610068587,
+        "target_rebound": 9.202131774734589,
+        "previous_curve_envelope": 62.51296432595128,
+        "previous_connector_feasible": true,
+        "current_connector_feasible": true,
+        "previous_speed": 63.846737405013755,
+        "speed": 62.07455774404616,
+        "previous_brake": 0.07546386867761612,
+        "brake": 0.0,
+        "old_bend_world": [
+          58.35141984193272,
+          -87.70984833990347
+        ],
+        "new_nearest_world": [
+          58.10213008547048,
+          -87.15930110412073
+        ],
+        "old_bend_arc": 11.133069988359262,
+        "old_bend_curvature": -0.040640963091722326,
+        "old_bend_speed_cap": 49.60414912415042,
+        "new_nearest_arc": 5.943191074676636,
+        "new_nearest_curvature": -0.022828387086532065,
+        "new_nearest_speed_cap": 66.18542866351659,
+        "world_alignment_error_m": 0.6043572134963092,
+        "travel_m": 5.020364771524734,
+        "transported_remaining_distance_m": 6.112705216834528,
+        "transported_target": 57.054564133988805,
+        "new_binding_bend_world": [
+          79.41664573647252,
+          -82.13820476926647
+        ],
+        "new_binding_arc": 27.936480535076633,
+        "damage_after": 0.0,
+        "track_id": 2,
+        "seed": 3601050003,
+        "finished": true
+      }
+    ],
+    "warning": "Rebounds also occur on successful episodes; indiscriminate scalar braking hysteresis is not supported."
+  }
+}

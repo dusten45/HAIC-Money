@@ -1,0 +1,72 @@
+{
+  "protocol": "apex-2026-structural-v2",
+  "variants": [
+    {
+      "variant": "curvature-memory-r0",
+      "status": "prepared_not_evaluated",
+      "source_sha256": "0acc78fa3f6af17ff9d1020930bca25c1e6ea04f3839e7f224df4184ee7e6277",
+      "source_archive": "agents/apex_2026/v2/results/curvature_memory_sources/0acc78fa3f6a.py",
+      "parent_source_sha256": "b182dc495c41201e00bb983b933a7ac4afb972ee864432743c2af16480009142",
+      "config": {},
+      "hypothesis": "Preserve imminent spatial curvature constraints across temporary replanning curvature loss; do not modify route or steering.",
+      "tests": "6 passed including inactive exact-action parity",
+      "planned_cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050001,
+          "name": "priority-fail",
+          "role": "consumed_r6_failure"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "name": "t1",
+          "role": "required"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "name": "t2",
+          "role": "required"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "name": "t3",
+          "role": "required"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "name": "t4",
+          "role": "required"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "name": "oldfail-t2",
+          "role": "consumed_v1_failure"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "name": "oldfail-t3",
+          "role": "consumed_v1_failure"
+        },
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "name": "reg-t1",
+          "role": "consumed_r1_regression"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "name": "reg-t3",
+          "role": "consumed_r1_regression"
+        }
+      ],
+      "episodes": []
+    }
+  ]
+}
