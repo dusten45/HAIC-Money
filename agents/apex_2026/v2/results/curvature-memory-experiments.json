@@ -3,7 +3,7 @@
   "variants": [
     {
       "variant": "curvature-memory-r0",
-      "status": "prepared_not_evaluated",
+      "status": "completed",
       "source_sha256": "0acc78fa3f6af17ff9d1020930bca25c1e6ea04f3839e7f224df4184ee7e6277",
       "source_archive": "agents/apex_2026/v2/results/curvature_memory_sources/0acc78fa3f6a.py",
       "parent_source_sha256": "b182dc495c41201e00bb983b933a7ac4afb972ee864432743c2af16480009142",
@@ -66,7 +66,452 @@
           "role": "consumed_r1_regression"
         }
       ],
-      "episodes": []
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 3601050001,
+          "start_t": 1.0200000000000005,
+          "finished": false,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.2791519434628975,
+          "damage": 0.4,
+          "steps": 168,
+          "resource_eligible": true,
+          "inference_mean_s": 0.02538538669042672,
+          "inference_max_s": 0.05260570900099992,
+          "role": "consumed_r6_failure",
+          "name": "priority-fail",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/priority-fail.json",
+          "receipt_sha256": "42fd10adfe86770344b1ded2f97d8009ac898ea53a7eed3727b4c43dedeb0ddd",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/priority-fail.jsonl",
+          "trace_sha256": "aaccc7488703fa1463155024aeb99f57d9f0ed312a05cf0e2b4bdca995a1bf71",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 16
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 19.319999999999677,
+          "lapTimeMs": 18300,
+          "progress": 1.0,
+          "damage": 0.4,
+          "steps": 229,
+          "resource_eligible": true,
+          "inference_mean_s": 0.022210727524005717,
+          "inference_max_s": 0.04109220999998797,
+          "role": "required",
+          "name": "t1",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/t1.json",
+          "receipt_sha256": "d28a3ef668c5a55a6bdefa0c4839bfa56430b5d3b28ff996be2311576bfee246",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/t1.jsonl",
+          "trace_sha256": "69462cdc48d7fb93bf80f9b9e25ad865fa7c35ffca8be1f0c004cf66e74f3c8b",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 87
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 22.679999999999605,
+          "lapTimeMs": 21660,
+          "progress": 1.0,
+          "damage": 0.2,
+          "steps": 271,
+          "resource_eligible": true,
+          "inference_mean_s": 0.02067565385620358,
+          "inference_max_s": 0.035012565000215545,
+          "role": "required",
+          "name": "t2",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/t2.json",
+          "receipt_sha256": "41d820fe640057acfaa89d5a5ad07f442ea22091ae7d5f1253804ecf43730b14",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/t2.jsonl",
+          "trace_sha256": "7d3eb38c86acba5bd3e3fe829dfdc0fe907270330ce49de4e690c3802447e265",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 75
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 20.99999999999964,
+          "lapTimeMs": 19980,
+          "progress": 1.0,
+          "damage": 0.0,
+          "steps": 250,
+          "resource_eligible": true,
+          "inference_mean_s": 0.023065435664044343,
+          "inference_max_s": 0.04264068600059545,
+          "role": "required",
+          "name": "t3",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/t3.json",
+          "receipt_sha256": "b63eb7a7f346da58faa385367cb0adf41074f275624651312a7ac8db29eeab28",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/t3.jsonl",
+          "trace_sha256": "4bec7787f7ea168d9e7956b173078d1f6a5233c9a8168b037c4c6e3a8cf41066",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 85
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 19.079999999999682,
+          "lapTimeMs": 18060,
+          "progress": 1.0,
+          "damage": 0.4,
+          "steps": 226,
+          "resource_eligible": true,
+          "inference_mean_s": 0.021245341079713754,
+          "inference_max_s": 0.04278416900160664,
+          "role": "required",
+          "name": "t4",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/t4.json",
+          "receipt_sha256": "4fbe82dbdb767e7224d860c91c14837e67628576f7383cc79a7636b6d3e08e22",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/t4.jsonl",
+          "trace_sha256": "994f72750e44bcb9eb4fdd408bfece35c8aa2d735875151c4a8874567f0aa198",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 76
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 18.599999999999692,
+          "lapTimeMs": 17580,
+          "progress": 1.0,
+          "damage": 0.0,
+          "steps": 220,
+          "resource_eligible": true,
+          "inference_mean_s": 0.023530981854566396,
+          "inference_max_s": 0.039881337999759126,
+          "role": "consumed_v1_failure",
+          "name": "oldfail-t2",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/oldfail-t2.json",
+          "receipt_sha256": "ee19e52f283501e689877da1ce6b1f97ca22f52d6b0218cba83ae801afa6d7fe",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/oldfail-t2.jsonl",
+          "trace_sha256": "cde9bd02cf05c6d78a779db6ced8ecebf514d8aea74d637be6b24eec05af1427",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 79
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "start_t": 1.0200000000000005,
+          "finished": false,
+          "finish_time_s": null,
+          "lapTimeMs": null,
+          "progress": 0.3622291021671827,
+          "damage": 1.0,
+          "steps": 106,
+          "resource_eligible": true,
+          "inference_mean_s": 0.024020786745186685,
+          "inference_max_s": 0.04495176799900946,
+          "role": "consumed_v1_failure",
+          "name": "oldfail-t3",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/oldfail-t3.json",
+          "receipt_sha256": "4ed7d7893128c5b11863d6e0aa9d777853f1d87a7aa18cabf125a8b01a2dc6d3",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/oldfail-t3.jsonl",
+          "trace_sha256": "5f2258b12c378f2b505e5add0fe3c9a1e67d9c76a7a20ff43cae8a1c010046e2",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 27
+        },
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 18.999999999999684,
+          "lapTimeMs": 17980,
+          "progress": 1.0,
+          "damage": 0.8,
+          "steps": 225,
+          "resource_eligible": true,
+          "inference_mean_s": 0.021606311799938945,
+          "inference_max_s": 0.036965499000871205,
+          "role": "consumed_r1_regression",
+          "name": "reg-t1",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/reg-t1.json",
+          "receipt_sha256": "95b04b4a080291c50dcf06042dfaa5a32e85df1f78be6c599c85a73cfe6465c9",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/reg-t1.jsonl",
+          "trace_sha256": "e4ac66fefce122bb0bd14b81e33f47312219d8c848742633a40b8b926dde34c2",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 41
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "start_t": 1.0200000000000005,
+          "finished": true,
+          "finish_time_s": 18.3199999999997,
+          "lapTimeMs": 17300,
+          "progress": 1.0,
+          "damage": 0.0,
+          "steps": 217,
+          "resource_eligible": true,
+          "inference_mean_s": 0.024251557976912898,
+          "inference_max_s": 0.07065623400012555,
+          "role": "consumed_r1_regression",
+          "name": "reg-t3",
+          "receipt": "/tmp/apex-v2-curvature-memory-r0/reg-t3.json",
+          "receipt_sha256": "678725637b0ba45dbdff5cbe7fed9dfee818a4c111a3420b301ae63cd8a224d4",
+          "trace": "/tmp/apex-v2-curvature-memory-r0/reg-t3.jsonl",
+          "trace_sha256": "b4521ac51ac9197a0af3a1c2430fcf3b86270330d208b60ba20a7c407309fda4",
+          "invalid_diagnostic_steps": 0,
+          "cap_intervention_steps": 66
+        }
+      ],
+      "finished_count": 7,
+      "decision": "rejected: priority consumed failure remains DNF and oldfail-t3 loses prior r6 finish; required4 finish with damage and slower times",
+      "review_bug": "Invalid-observation and missing-path early returns leave stale constraint/transport state. None of the9 driving traces contains an invalid diagnostic step; fix is separate from batch interpretation.",
+      "mechanism_check": {
+        "windows": {
+          "priority-fail": [
+            {
+              "step": 60,
+              "speed": 68.59377325607161,
+              "action": [
+                0.04884369298815727,
+                0.0,
+                0.14389649033546448
+              ],
+              "unmodified_target": 64.42969312719593,
+              "memory_cap": 63.05252026861181,
+              "target": 63.05252026861181,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 61,
+              "speed": 64.9507027867952,
+              "action": [
+                0.08634897321462631,
+                0.0,
+                0.21169432997703552
+              ],
+              "unmodified_target": 51.48610184274974,
+              "memory_cap": 56.957341958006445,
+              "target": 51.48610184274974,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 62,
+              "speed": 59.65936406218468,
+              "action": [
+                0.13904935121536255,
+                0.0,
+                0.20939941704273224
+              ],
+              "unmodified_target": 50.05177806210346,
+              "memory_cap": 44.583084087050544,
+              "target": 44.583084087050544,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 63,
+              "speed": 54.40835339855465,
+              "action": [
+                0.06501312553882599,
+                0.0,
+                0.21315917372703552
+              ],
+              "unmodified_target": 60.86841604667508,
+              "memory_cap": 37.18141816587384,
+              "target": 37.18141816587384,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 64,
+              "speed": 49.27384019587091,
+              "action": [
+                0.04254135861992836,
+                0.0,
+                0.21364745497703552
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 39.52148484767558,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 65,
+              "speed": 44.09294957031781,
+              "action": [
+                0.024782858788967133,
+                0.0,
+                0.21384277939796448
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 96.14362185524723,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 66,
+              "speed": 38.90183109424472,
+              "action": [
+                0.07792767882347107,
+                0.0,
+                0.21347656846046448
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 53.006504397687024,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 67,
+              "speed": 33.68068012516921,
+              "action": [
+                0.12620851397514343,
+                0.0,
+                0.21315917372703552
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 65.20805372488289,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 68,
+              "speed": 28.446750126883988,
+              "action": [
+                0.15300019085407257,
+                0.0,
+                0.16813965141773224
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 32.677069709318744,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.2
+            }
+          ],
+          "oldfail-t3": [
+            {
+              "step": 95,
+              "speed": 57.40179601320139,
+              "action": [
+                0.14842520654201508,
+                0.0,
+                0.20993652939796448
+              ],
+              "unmodified_target": 46.70589449974691,
+              "memory_cap": 59.909628841282725,
+              "target": 46.70589449974691,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 96,
+              "speed": 51.820198107959236,
+              "action": [
+                0.10117575526237488,
+                0.0,
+                0.21230468153953552
+              ],
+              "unmodified_target": 57.13226528612194,
+              "memory_cap": 40.07767136259571,
+              "target": 40.07767136259571,
+              "connector_feasible": true,
+              "damage_after": 0.0
+            },
+            {
+              "step": 97,
+              "speed": 46.666266852568235,
+              "action": [
+                0.07498504221439362,
+                0.0,
+                0.2132568359375
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 35.54958791643628,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 98,
+              "speed": 41.49760922995185,
+              "action": [
+                0.0361381471157074,
+                0.0,
+                0.21379394829273224
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 47.734070587836,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 99,
+              "speed": 36.3216741253012,
+              "action": [
+                0.0720086470246315,
+                0.0,
+                0.21359863877296448
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 44.92233275285127,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 100,
+              "speed": 31.11189700236051,
+              "action": [
+                0.13403023779392242,
+                0.0,
+                0.21323242783546448
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 36.07815885390338,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.0
+            },
+            {
+              "step": 101,
+              "speed": 25.872704360878572,
+              "action": [
+                0.16563117504119873,
+                0.0,
+                0.116943359375
+              ],
+              "unmodified_target": 24.0,
+              "memory_cap": 34.41621221047041,
+              "target": 24.0,
+              "connector_feasible": false,
+              "damage_after": 0.2
+            }
+          ]
+        },
+        "observed": "The rebound is suppressed on the new trajectories, but connector infeasibility and collisions still follow. Priority step63 target60.9 becomes37.2 and braking continues; contact occurs step68 at28.4m/s. Oldfail-t3 step96 target57.1 becomes40.1; contact follows step101 at25.9m/s.",
+        "conclusion": "Spatial memory implements its intended local cap retention, but that retention is insufficient for completed laps and harms previously completed cases. No performance promotion."
+      }
     }
-  ]
+  ],
+  "maintenance_fix": {
+    "source_sha256": "b6c66310a58b88bc778f79dd6b9123944d99be3ee826ed7ffa41f13dd62340ba",
+    "source_archive": "agents/apex_2026/v2/results/curvature_memory_sources/b6c66310a58b.py",
+    "parent_source_sha256": "0acc78fa3f6af17ff9d1020930bca25c1e6ea04f3839e7f224df4184ee7e6277",
+    "change": "Clear constraints and previous pixel transport state on invalid observation or unavailable path.",
+    "verification": "New invalid/blank-path regression test failed before fix and passes after;7 focused tests pass.",
+    "driving_resets": 0,
+    "performance_claim": "None; all R0 measurements remain bound to original0acc source."
+  }
 }

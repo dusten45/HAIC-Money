@@ -64,3 +64,17 @@ def test_unmodified_planner_steering_and_allocator_when_memory_inactive():
         assert candidate.diagnostics['path']==baseline.diagnostics['path']
         assert candidate.diagnostics['unmodified_target']==baseline.diagnostics['target_speed']
         assert candidate.diagnostics['retained']==0
+
+
+def test_invalid_or_missing_path_clears_transport_history():
+    a=Agent()
+    for obs in (np.full((4,84,84),np.nan,np.float32),np.zeros((4,84,84),np.float32)):
+        a.curvature_memory=[memory()]
+        a.memory_previous_speed=50.
+        a.memory_previous_yaw=.5
+        a.memory_diagnostics={'retained':1}
+        a.act(obs)
+        assert a.curvature_memory==[]
+        assert a.memory_previous_speed is None
+        assert a.memory_previous_yaw is None
+        assert a.memory_diagnostics=={}
