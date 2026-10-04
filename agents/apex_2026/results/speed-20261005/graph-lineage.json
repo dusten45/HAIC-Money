@@ -1,0 +1,28 @@
+{
+  "base_sha256": "cebffe421e838009b3a97d6543392c879fbaef547e72632a557f95fdbb6a9afd",
+  "source_sha256": "1c211dfce147b52f4ec161ce5f3c6bbb342462671bd8e59e73e265cc33828077",
+  "aborted_source_sha256": "7d3266be509a6bb2ecabe80929dc2290cdc04a807740b2d5880eec79b63ffd7a",
+  "focus_tests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "complete_receipt": "graph-v2.json",
+  "inference_imports": [
+    "numpy"
+  ],
+  "no_holdout": true,
+  "no_official_edits": true,
+  "initial_screen": {
+    "shell_interruption": "Shell reported exit130 after attempted interrupt, but evaluator workers completed all four source-bound cells and aggregate receipt.",
+    "receipt": "graph-v1.json",
+    "source_sha256": "7d3266be509a6bb2ecabe80929dc2290cdc04a807740b2d5880eec79b63ffd7a",
+    "focus_regression_failed": true,
+    "adopted": false
+  },
+  "reverse_patches_verified_exact": true,
+  "root_focused_checkpoint": {
+    "scope": "test_fast_graph",
+    "passed": 3,
+    "failed": 0
+  }
+}

@@ -1,0 +1,51 @@
+--- a/source.py
++++ b/source.py
+@@ -295 +295 @@
+-class Agent(_PathReference):
++class _CorridorReference(_PathReference):
+@@ -407,0 +408,45 @@
++
++
++class Agent(_CorridorReference):
++    """Keep only the visible road component linked to the ego neighborhood.
++
++    This graph connects eight neighboring asphalt pixels. It prevents a
++    row scanner from jumping across grass to another visible road branch.
++    It does not certify an image-center reference as dynamically feasible.
++    """
++
++    def _road(self, frame):
++        asphalt = (frame >= .32) & (frame <= .51)
++        asphalt[73:] = False
++        candidates = []
++        for row in range(53, 73):
++            points = np.flatnonzero(asphalt[row])
++            runs = np.split(points, np.flatnonzero(np.diff(points) > 1)+1)
++            for run in runs:
++                if len(run) >= 8:
++                    candidates.extend((row, int(column)) for column in run)
++        candidates = np.asarray(candidates, dtype=int)
++        if not len(candidates):
++            self.corridor_road = None
++            return None
++        distance = ((candidates[:, 1]-self.CAR_X)/self.PX_X)**2
++        distance += ((candidates[:, 0]-self.CAR_Y)/self.PX_Y)**2
++        seed = candidates[int(np.argmin(distance))]
++        connected = np.zeros((84, 84), dtype=bool)
++        connected[tuple(seed)] = True
++        for _ in range(168):
++            expanded = connected.copy()
++            for dy in (-1, 0, 1):
++                for dx in (-1, 0, 1):
++                    if dy == 0 and dx == 0:
++                        continue
++                    y0, y1 = max(0, dy), min(84, 84+dy)
++                    x0, x1 = max(0, dx), min(84, 84+dx)
++                    expanded[y0:y1, x0:x1] |= connected[y0-dy:y1-dy, x0-dx:x1-dx]
++            expanded &= asphalt
++            if np.array_equal(expanded, connected):
++                break
++            connected = expanded
++        road_frame = frame.copy()
++        road_frame[asphalt & ~connected] = .9
++        return super()._road(road_frame)

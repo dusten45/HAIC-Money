@@ -1,0 +1,14 @@
+--- a/source.py
++++ b/source.py
+@@ -421 +421,8 @@
+-        candidates = np.argwhere(asphalt[53:73])
++        candidates = []
++        for row in range(53, 73):
++            points = np.flatnonzero(asphalt[row])
++            runs = np.split(points, np.flatnonzero(np.diff(points) > 1)+1)
++            for run in runs:
++                if len(run) >= 8:
++                    candidates.extend((row, int(column)) for column in run)
++        candidates = np.asarray(candidates, dtype=int)
+@@ -425 +431,0 @@
+-        candidates[:, 0] += 53
