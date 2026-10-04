@@ -13,8 +13,9 @@ behavior; historical design documents are retained under `docs/architecture/hist
   change as an environment divergence, not an HAIC improvement.
 - `agent.py` is the submission entry point. It exposes `Agent`, `reset`, and `act`;
   its valid input/output contract is maintained in `docs/competition/restrictions.md`.
-- `local_runner.py` exercises the local mirror. It is a development tool, not an
-  official server or a substitute for the official competition source.
+- `scripts/local_runner.py` exercises the local mirror via
+  `python -m scripts.local_runner` from the repository root. It is a development
+  tool, not an official server or a substitute for the official competition source.
 - `common_adapter.py` owns shared observation, action, transition, replay, policy,
   trainer, and evaluator contracts for native algorithm stacks. Its constraints are
   a local research contract; official source still governs the submission boundary.
@@ -44,7 +45,8 @@ entry point, checkpoint, configuration, and source revision.
 
 ## Training and Local Research
 
-- `train.py` and `export_policy.py` are the earlier Stable-Baselines PPO path.
+- `train.py` and `scripts/export_policy.py` are the earlier Stable-Baselines PPO path.
+  Run the exporter from the repository root with `python -m scripts.export_policy`.
 - `haic/` is the home for new reusable research code; the existing root common
   helpers, DrQ-v2 implementation, and DreamerV3 model/trainer remain at their
   compatibility-critical paths. In particular, protected agent/evaluator/DrQ
@@ -59,6 +61,8 @@ entry point, checkpoint, configuration, and source revision.
   standalone DreamerV3 tools. From the repository root, run them with
   `python -m scripts.analyze.dreamerv3_pilot RUN_DIR` or
   `python -m scripts.diagnose.dreamerv3 --checkpoint CHECKPOINT`.
+- `scripts/diagnose_drqv2.py` runs the historical offline DrQ shared-replay
+  diagnostic with `python -m scripts.diagnose_drqv2` in its pinned CPU runtime.
 - `training/` contains the visual PPO, latent dynamics, Track Lab site-map, closed-
   loop evaluation, imitation, and package-building paths. These PPO/CEM paths are
   historical research/implementation evidence, not the current submission route.

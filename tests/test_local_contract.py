@@ -6,7 +6,7 @@ import numpy as np
 
 from damage import CollisionDamage
 from env_wrapper import CarEnvironment, image_preprocessing
-from local_runner import safe_act, safe_reset
+from scripts.local_runner import safe_act, safe_reset
 from core.finish_line import FinishLineTracker
 
 

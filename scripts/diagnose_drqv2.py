@@ -198,12 +198,13 @@ def build_report(checkpoint, actors, *, sample_size=2048, sample_seed=SAMPLE_SEE
         torch.set_num_interop_threads(1)
     observations, source, sample = load_sample(checkpoint, sample_size, sample_seed)
     variants = perturbations(sample_size, sample_seed)
+    root = Path(__file__).resolve().parents[1]
     report = {
         "format": "haic-drq-v2-diagnostics-v1", "diagnostic_only": True,
         "runtime": {"python": sys.version.split()[0], "torch": torch.__version__, "numpy": np.__version__,
                     "device": "cpu", "threads": torch.get_num_threads(), "interop_threads": torch.get_num_interop_threads()},
-        "source_sha256": {name: file_sha256(Path(__file__).parent / name) for name in (
-            "diagnose_drqv2.py", "agent.py", "drq_v2.py", "common_adapter.py", "action_smoothing.py", "action_representation.py")},
+        "source_sha256": {name: file_sha256(root / name) for name in (
+            "scripts/diagnose_drqv2.py", "agent.py", "drq_v2.py", "common_adapter.py", "action_smoothing.py", "action_representation.py")},
         "checkpoint": source, "sample": sample, "batch_size": BATCH_SIZE,
         "perturbations": {name: ({"pad": shift[0], "offset_order": "dy,dx", "offsets": array_metadata(shift[1])}
                                  if shift is not None else {"kind": name}) for name, shift in variants.items()},

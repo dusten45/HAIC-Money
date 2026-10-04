@@ -15,7 +15,7 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
-python local_runner.py --track-id 1 --seed 42
+python -m scripts.local_runner --track-id 1 --seed 42
 python -m unittest discover -s tests -v
 ```
 
@@ -27,7 +27,7 @@ official package acceptance or competition performance.
 | Purpose | Entry point |
 |---|---|
 | Submission agent interface | `agent.py` |
-| Local official-environment mirror | `local_runner.py`, `core/`, `env_wrapper.py`, `damage.py` |
+| Local official-environment mirror | `scripts/local_runner.py`, `core/`, `env_wrapper.py`, `damage.py` |
 | Native DrQ-v2 research | `train_drqv2.py`, `drq_v2.py`, `run_drqv2_matched.py` |
 | Native DreamerV3 research | `train_dreamerv3.py`, `dreamer_v3.py` |
 | Legacy/Track Lab visual PPO research | `training/`, `haic_agent/` |

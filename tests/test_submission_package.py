@@ -11,7 +11,7 @@ import torch
 
 from action_smoothing import canonical_action_smoothing, normalize_action_smoothing
 from agent import Baseline1Actor, MODEL_FILENAME
-from export_policy import export_payload
+from scripts.export_policy import export_payload
 from haic.algorithms.rlpd.agent import PixelRLPDAgent
 from package_submission import (
     RLPD_ACTOR_FORMAT,

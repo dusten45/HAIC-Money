@@ -1,3 +1,5 @@
+"""Export a legacy PPO policy to the submission actor format."""
+
 import argparse
 import io
 import json

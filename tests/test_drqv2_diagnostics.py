@@ -10,7 +10,7 @@ from unittest import mock
 import numpy as np
 import torch
 
-import diagnose_drqv2 as diagnostics
+from scripts import diagnose_drqv2 as diagnostics
 from agent import Agent, DrQActor
 from common_adapter import ActionSpec, ObservationSpec, Transition
 from drq_v2 import DrQv2Config, Uint8Replay, random_shift
@@ -164,6 +164,10 @@ class TestDrQDiagnostics(unittest.TestCase):
         self.assertEqual(report["sample"]["observations"]["dtype"], "|u1")
         self.assertEqual(report["runtime"]["threads"], 1)
         self.assertEqual(report["runtime"]["interop_threads"], 1)
+        self.assertEqual(
+            report["source_sha256"]["scripts/diagnose_drqv2.py"],
+            diagnostics.file_sha256(Path(diagnostics.__file__)),
+        )
         self.assertEqual(len(report["perturbations"]), 14)
         for name in ("random_pad1_0", "random_pad4_0"):
             self.assertEqual(report["perturbations"][name]["offsets"]["shape"], [4, 2])

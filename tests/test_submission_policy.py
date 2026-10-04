@@ -29,8 +29,8 @@ from agent import (
     DreamerV3Actor,
     DreamerV3ExportedActor,
 )
-from export_policy import export_payload, source_action_smoothing
-from export_policy import ACTOR_STATE_KEYS, extract_actor_state
+from scripts.export_policy import export_payload, source_action_smoothing
+from scripts.export_policy import ACTOR_STATE_KEYS, extract_actor_state
 from common_adapter import ActionAdapter, ActionSpec, ObservationSpec
 from drq_v2 import DrQActor as NativeDrQActor, DrQv2Config
 from haic.algorithms.rlpd.model import PixelActor as NativeRLPDActor

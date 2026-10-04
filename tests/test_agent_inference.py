@@ -131,7 +131,7 @@ class TestAgentInference(unittest.TestCase):
     def test_local_runner_exposes_same_default_planning_budget(self):
         # Break caught: a runner-only hardcoded timeout makes closed-loop smoke
         # results use a different planner budget than the submitted Agent.
-        from local_runner import build_argument_parser
+        from scripts.local_runner import build_argument_parser
 
         args = build_argument_parser().parse_args([])
         self.assertEqual(args.plan_budget, 4.5)
