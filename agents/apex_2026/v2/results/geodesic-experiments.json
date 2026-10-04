@@ -350,6 +350,463 @@
         }
       },
       "tests": "7 geodesic tests pass; fullApex130 passed before batch"
+    },
+    {
+      "variant": "racing_r3_frenet_transient_connector",
+      "source_snapshot": "/tmp/apex-v2-racing-r3/source.py",
+      "source_sha256": "5b6a348ae766594f18e525eb13584228c70e95e7d4f6eab2b83e37caf7fdc2bd",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 7,
+        "finish_rate": 0.875,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 19260,
+        "finished_max_ms": 23800
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": true,
+          "lap_time_ms": 18420,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-racing-r3/t1-s3601050002.json",
+          "receipt_sha256": "e5a587479bf3846965bbff544f7054db39d546c6458e50735254a058d2dab041"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 19260,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r3/t1-s516237.json",
+          "receipt_sha256": "2122909d2d48e97bff966ef43a1d25caa10fc9f25a83e603ccee336ed742f1bf"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "lap_time_ms": 18580,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-racing-r3/t2-s4031370700.json",
+          "receipt_sha256": "d6843e025811cb488fc6b234f4dcfff1a0fb48046e28388d82c2634e0ea927bb"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 23800,
+          "progress": 1.0,
+          "damage": 0.6000000000000001,
+          "receipt": "/tmp/apex-v2-racing-r3/t2-s644062.json",
+          "receipt_sha256": "ea96a3045e42ddc2215d5b62fcd04a40e5b3bf14903cb063debb16529e0c4a3b"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 21580,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-racing-r3/t3-s1007.json",
+          "receipt_sha256": "35f2a65cebdfc55a8b51e55f318b689b4034c7229f483a187398ba18d34c95ea"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": true,
+          "lap_time_ms": 18840,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r3/t3-s3601050003.json",
+          "receipt_sha256": "209dd4ceb021de03296d69676e868e93fe44a37f95f0697ad0991ce906e8bbaa"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3622291021671827,
+          "damage": 0.6000000000000001,
+          "receipt": "/tmp/apex-v2-racing-r3/t3-s4111953688.json",
+          "receipt_sha256": "21d64c3d4bfe89cc9bf2bb0e50155cb0a18a65315ec1611a9968a32de161df31"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 19480,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r3/t4-s18800.json",
+          "receipt_sha256": "848db29e9778832dba9912ecb6b473af537fd9b9c8ee32c4c2f0171097697832"
+        }
+      ],
+      "hypothesis": "Frenet box-QP bending minimization uses road width; current HUDwheel/yaw transient connector eliminates geometric arc vs applied steering gain mismatch; narrowpass speed reflects explicit35ms uncertainty allowance.",
+      "observations": "7/8 finishes, requiredmean21.03s and collisions persist; not promoted. T2 precontact steering alternates despite world-frame path consistency (overlap maxdeviation<=.67m steps114-118), rejecting simple topologyflip explanation. Constant-command .6s rollout cannot express S-shaped connector; investigate receding-horizon feedback after first80ms command.",
+      "predictor_check": {
+        "scope": "read-only prior consumed r2 traces, low actionbrake and actual lateralaccel<=130 filter; not independent policy evaluation",
+        "samples": 1099,
+        "position_lateral_mae": 0.07446329922920536,
+        "position_forward_mae": 0.12635406575227975,
+        "yaw_mae": 0.0886012231231328,
+        "lateral_error_p95": 0.22565752934850308,
+        "caveat": "Validation is80ms only; runtime connector extrapolates up to600ms with constant speed/action, so accumulated prediction uncertainty remains unvalidated."
+      },
+      "tests": "5 racing-agent behavior tests pass"
+    },
+    {
+      "variant": "racing_r4_first_action_feedback",
+      "source_snapshot": "/tmp/apex-v2-racing-r4/source.py",
+      "source_sha256": "674ccccc114f2c5f04b2f75f952762d54746d38376ad783c94cd0747b7467d51",
+      "config": {},
+      "scope": "required4 + consumed r1 regressions2 + consumedV1 failures2; no fresh holdout",
+      "protocol": {
+        "expected": 8,
+        "observed": 8,
+        "completed": 8,
+        "complete": true,
+        "finished": 6,
+        "finish_rate": 0.75,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 22820.0,
+        "finished_max_ms": 27000
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 3601050002,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.68,
+          "damage": 1.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t1-s3601050002.json",
+          "receipt_sha256": "8fb1e565f4a40f5dccf904a4f9b0547986e91ac54e91dd92f038d6262b50913c"
+        },
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 21920,
+          "progress": 1.0,
+          "damage": 0.4,
+          "receipt": "/tmp/apex-v2-racing-r4/t1-s516237.json",
+          "receipt_sha256": "cb4df5e573dbaf3a1c54b77d2834c73a0c060c8c67f41a6eac7c1a95c55e3a13"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "finished": true,
+          "lap_time_ms": 21260,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t2-s4031370700.json",
+          "receipt_sha256": "bc83d88c44a9a31a17b5cfca9d659e4d76c72d213cd3fa42c2a1f8195b40b2f2"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 27000,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t2-s644062.json",
+          "receipt_sha256": "a08e062a4c7895784fad46df21bf09ee3de908f0bf9fe54c079e2a4c996664f0"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 23640,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t3-s1007.json",
+          "receipt_sha256": "f56d1e12f074265271032ae2730dccbda1b37255385331e380d3dc3e3cdba072"
+        },
+        {
+          "track_id": 3,
+          "seed": 3601050003,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.4555160142348754,
+          "damage": 0.2,
+          "receipt": "/tmp/apex-v2-racing-r4/t3-s3601050003.json",
+          "receipt_sha256": "b49d5b0c79fa27af5caa7c7e1a0e5958e6a3557c83296f4edc58f53d30b517bc"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "finished": true,
+          "lap_time_ms": 25860,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t3-s4111953688.json",
+          "receipt_sha256": "2ac3d97fe35deb97e9dc505be18f0391d808b2791bd3cda2ae3b2a975a884c67"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 22000,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-racing-r4/t4-s18800.json",
+          "receipt_sha256": "9a63f1fd25d0a25bd8269a11013cf074e556db840f74419ec3d9865bc4fbd250"
+        }
+      ],
+      "hypothesis": "Keep candidate steering fixed for first80ms only; future virtual feedback follows the racingline rather than forcing one constant command through an S-shaped route. Other geometry/speed/pedal unchanged.",
+      "observations": "Required track2 collision removed but lap27.0s vs23.8; meanactualspeed48.38\u219243.17 and meansteeringgoal55.62\u219248.95; steeringSD.113\u2192.140. Feedback surrogate did not improve efficiency. Exact full8 outcomes retained; not promoted.",
+      "tests": "4 newfeedback tests plus5 racing tests pass; initial straight fixture falsely populated HUDgray, corrected to actual blankHUD without runtime edit. Shell batch had begun before this fixture correction; immutable runtime unchanged."
+    },
+    {
+      "variant": "geodesic_r5_frenet_only",
+      "source_snapshot": "/tmp/apex-v2-geodesic-frenet-r5/source.py",
+      "source_sha256": "4dbc59e574869a7b802e015577aa61099efd7f7aea4256b237aba4782658947e",
+      "config": {},
+      "scope": "required4 consumed, no fresh holdout",
+      "protocol": {
+        "expected": 4,
+        "observed": 4,
+        "completed": 4,
+        "complete": true,
+        "finished": 3,
+        "finish_rate": 0.75,
+        "in_target_window": 0,
+        "driving_target_met": false,
+        "resource_eligible": true,
+        "original_target_met": false,
+        "finished_median_ms": 20100,
+        "finished_max_ms": 21960
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 18320,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r5/t1-s516237.json",
+          "receipt_sha256": "681becae7fd96025c997f803bfd04127883ea6d1ab35885b5ec18331406d4698"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21960,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r5/t2-s644062.json",
+          "receipt_sha256": "d44f9b0ba107fec6322d0b505fa55e943af05736781abc757809fb29357ccd03"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 20100,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r5/t3-s1007.json",
+          "receipt_sha256": "ced9843fb4c9b643d84f8e6a87e471f31c70be8b226416aba75ccd55edaa1491"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7419354838709677,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-v2-geodesic-frenet-r5/t4-s18800.json",
+          "receipt_sha256": "729d060a2da899b7539166ab0f7cc3311d78ea4fc8f111677f7cf86b0f8e22fa"
+        }
+      ],
+      "hypothesis": "Add only Frenet minimum-bending refinement to exactr1. All original methods byte-identical exceptact has3line refinement invocation. Keep r1 tracking, pedals, duplicated6px obstacleclearance, lat100,brake65,max100.",
+      "observations": "3/4 finish18.32/21.96/20.10s; track4DNF0damage. First3 improve modestly vsr1 but requiredregression rejects promotion. Resampling changes curvature-fit physical span; saved12pixelframe counterfactual separates some geometry vsdensity effects without episode claims.",
+      "resampling_diagnosis": [
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t3-s4111953688/0200.png",
+          "nodes": [
+            48,
+            39,
+            39
+          ],
+          "path_cap": [
+            43.23200085221763,
+            42.77314026394146,
+            42.99169629585452,
+            44.19585063257889
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t3-s4111953688/0100.png",
+          "nodes": [
+            54,
+            35,
+            35
+          ],
+          "path_cap": [
+            53.43779505527728,
+            54.42890810250574,
+            56.42178787739736,
+            56.60765283563945
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t2-s4031370700/0200.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            83.47161847479852,
+            87.56309690300203,
+            99.84098268265224,
+            94.69927469861933
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t2-s4031370700/0100.png",
+          "nodes": [
+            54,
+            34,
+            34
+          ],
+          "path_cap": [
+            54.92821358299811,
+            58.45931821772553,
+            59.86025256705781,
+            57.83566009034077
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t4-s18800/0200.png",
+          "nodes": [
+            54,
+            33,
+            33
+          ],
+          "path_cap": [
+            44.86153600067376,
+            41.775464198156826,
+            42.81142360113774,
+            44.88125634209269
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t4-s18800/0100.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            34.59034929837972,
+            34.851594650253574,
+            33.658729511826685,
+            36.13946715999046
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t3-s1007/0200.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            41.34131286222092,
+            40.17748753331157,
+            43.99633395094909,
+            47.2697396154348
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t3-s1007/0100.png",
+          "nodes": [
+            54,
+            33,
+            33
+          ],
+          "path_cap": [
+            38.63766820380567,
+            40.907282171602745,
+            47.680722110434054,
+            49.512282435788265
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t2-s644062/0200.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            89.95183623048989,
+            93.46420019365343,
+            101.89272869005883,
+            101.89272869005883
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t2-s644062/0100.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            63.39761589626243,
+            68.04035093849956,
+            71.21409436058349,
+            69.92555633524124
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t1-s516237/0200.png",
+          "nodes": [
+            54,
+            33,
+            33
+          ],
+          "path_cap": [
+            65.60175557224544,
+            68.0139445522754,
+            68.6060972112926,
+            66.95474342003293
+          ]
+        },
+        {
+          "frame": "/tmp/apex-v2-geodesic-r1/frames-t1-s516237/0100.png",
+          "nodes": [
+            54,
+            32,
+            32
+          ],
+          "path_cap": [
+            56.44662839549319,
+            60.75865234335986,
+            62.5828939557005,
+            60.53188830286996
+          ]
+        }
+      ],
+      "tests": "3 behavior tests pass; r1 narrowgap remains blocked by design for axis isolation."
     }
   ]
 }
