@@ -1,0 +1,22 @@
+--- a/agents/apex_2026/research/speed_20261005/physics_racingline_refine.py
++++ b/agents/apex_2026/research/speed_20261005/physics_racingline_refine.py
+@@ -24 +24 @@
+-def refine(row):
++def refine(row, max_iterations=6000):
+@@ -73 +73 @@
+-                   options={'maxiter': 600, 'ftol': 1e-13, 'gtol': 1e-7, 'maxls': 30})
++                   options={'maxiter': max_iterations, 'ftol': 1e-13, 'gtol': 1e-7, 'maxls': 30})
+@@ -96,0 +97 @@
++    parser.add_argument('--iterations', type=int, default=6000)
+@@ -98,2 +99,2 @@
+-    if args.output.exists():
+-        parser.error('output exists')
++    if args.output.exists() or not 1 <= args.iterations <= 20000:
++        parser.error('output must be new and iterations bounded at20000')
+@@ -105 +106 @@
+-        output = refine(row)
++        output = refine(row, args.iterations)
+@@ -116 +117,2 @@
+-                  is_legal_camera_candidate=False, scipy_version=scipy.__version__, rows=rows)
++                  is_legal_camera_candidate=False, scipy_version=scipy.__version__,
++                  maximum_solver_iterations=args.iterations, rows=rows)

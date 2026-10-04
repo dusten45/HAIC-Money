@@ -1,0 +1,273 @@
+{
+  "freeze": {
+    "classification": "privileged_official_mandatory_diagnostic_not_legal_agent",
+    "is_legal_camera_candidate": false,
+    "is_prospective_development_trial": false,
+    "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+    "archived_teacher_sha256": "58397b25c22e19cdb703bd3bcfe22e5fd443a1c4c333d207a28de0bbf45e3b80",
+    "helper_sha256": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded",
+    "official_file_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806"
+    },
+    "setting": "legacy_broad_return",
+    "parameters": {
+      "control": "legacy",
+      "cruise": 110.0,
+      "lateral": 180.0,
+      "braking": 85.0,
+      "preview_time": 0.17,
+      "shift": 3.7,
+      "before": 32.0,
+      "after": 55.0
+    },
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ]
+    ],
+    "max_actions": 450,
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+    "limitations": [
+      "Complete road/obstacle, pose, velocity and wheel state are privileged.",
+      "100m speed planning horizon exceeds camera visibility.",
+      "No tested route/control certifies global optimum or a lap-time lower bound."
+    ]
+  },
+  "row": {
+    "setting": "legacy_broad_return",
+    "parameters": {
+      "control": "legacy",
+      "cruise": 110.0,
+      "lateral": 180.0,
+      "braking": 85.0,
+      "preview_time": 0.17,
+      "shift": 3.7,
+      "before": 32.0,
+      "after": 55.0
+    },
+    "track_id": 4,
+    "seed": 18800,
+    "finished": false,
+    "lap_time_ms": null,
+    "progress": 0.7419354838709677,
+    "collision_count": 1,
+    "retire_reason": "off_track",
+    "steps": 240,
+    "elapsed_sim_ms": 19200,
+    "offroad_samples": 0,
+    "partial_offroad_samples": 0,
+    "damage": 0.2,
+    "route_length_m": 964.1348500391271,
+    "route_max_curvature_per_m": 0.11400479303165056,
+    "speed_mps": {
+      "min": 0.0,
+      "p50": 41.1679028993923,
+      "p90": 84.5419229790444,
+      "max": 100.00000836410815
+    },
+    "abs_sideslip_deg": {
+      "min": 0.0,
+      "p50": 2.275789502125224,
+      "p90": 90.10714297396952,
+      "max": 96.92454212367781
+    },
+    "route_error_m": {
+      "min": 0.09789635974479359,
+      "p50": 2.780885766834615,
+      "p90": 5.202897502375837,
+      "max": 5.565568573644004
+    },
+    "action_trace_sha256": "2024ac06b744922ce240b80ec405302b04a366a459e65bcae35a4ad4a505facb",
+    "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_broad_return-track4-seed18800.json",
+    "raw_trace_sha256": "710372a58289b637d299c7a0208c72eb07958721524be4e3e3ea35d0477a1e61",
+    "diagnostic_checkpoints": [
+      {
+        "step": 0,
+        "sim_time_s": 0.08000000000000007,
+        "action": [
+          0.002744364785030484,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 5.253595979466989,
+        "yaw_radps": -0.0011059269309043884,
+        "sideslip_deg": 0.01885820784057557,
+        "position": [
+          218.6220703125,
+          -52.22193145751953
+        ],
+        "progress": 0.007168458781362007,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          13.124397336864686,
+          13.124397337035422
+        ],
+        "reward": -0.40000000000000036,
+        "debug": {
+          "target_speed_mps": 110.0,
+          "route_error_m": 0.6655689852660323
+        }
+      },
+      {
+        "step": 40,
+        "sim_time_s": 3.279999999999996,
+        "action": [
+          0.007988765835762024,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 97.81314014426964,
+        "yaw_radps": -0.25954023003578186,
+        "sideslip_deg": -0.11993030948442591,
+        "position": [
+          112.91471099853516,
+          34.595985412597656
+        ],
+        "progress": 0.18996415770609318,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          99.71449971981224,
+          99.08263698306126
+        ],
+        "reward": 6.768458781362028,
+        "debug": {
+          "target_speed_mps": 110.0,
+          "route_error_m": 0.6365640741571214
+        }
+      },
+      {
+        "step": 80,
+        "sim_time_s": 6.479999999999928,
+        "action": [
+          -0.02254807949066162,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 78.79965704615836,
+        "yaw_radps": 0.4919518530368805,
+        "sideslip_deg": 0.012247683113124021,
+        "position": [
+          -51.937461853027344,
+          6.761072635650635
+        ],
+        "progress": 0.44086021505376344,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          79.46018436690655,
+          80.27016679692835
+        ],
+        "reward": 3.184229390680912,
+        "debug": {
+          "target_speed_mps": 94.80159301091815,
+          "route_error_m": 0.6733359469263266
+        }
+      },
+      {
+        "step": 120,
+        "sim_time_s": 9.679999999999861,
+        "action": [
+          -0.035175956785678864,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 73.36055167697174,
+        "yaw_radps": 0.7470154762268066,
+        "sideslip_deg": 0.06831298765639793,
+        "position": [
+          12.674203872680664,
+          -90.98936462402344
+        ],
+        "progress": 0.6487455197132617,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          75.71259698967512,
+          76.17748345961166
+        ],
+        "reward": 3.184229390680912,
+        "debug": {
+          "target_speed_mps": 110.0,
+          "route_error_m": 0.21150929223593878
+        }
+      },
+      {
+        "step": 160,
+        "sim_time_s": 12.879999999999793,
+        "action": [
+          -0.09003408253192902,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 0.043150182152435684,
+        "yaw_radps": -0.016036849468946457,
+        "sideslip_deg": -89.95295319088554,
+        "position": [
+          51.99105453491211,
+          -149.41293334960938
+        ],
+        "progress": 0.7419354838709677,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          91.16029012006676,
+          91.95056504605613
+        ],
+        "reward": -0.40000000000009095,
+        "debug": {
+          "target_speed_mps": 80.37434209334684,
+          "route_error_m": 5.211885577333296
+        }
+      },
+      {
+        "step": 200,
+        "sim_time_s": 16.079999999999725,
+        "action": [
+          -0.09130623191595078,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 1.2211214589901059e-05,
+        "yaw_radps": 4.538374469120754e-06,
+        "sideslip_deg": 90.06173735343071,
+        "position": [
+          51.98567199707031,
+          -149.41055297851562
+        ],
+        "progress": 0.7419354838709677,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          101.42336767487592,
+          101.5111058762163
+        ],
+        "reward": -0.40000000000009095,
+        "debug": {
+          "target_speed_mps": 79.80937813570489,
+          "route_error_m": 5.202735229439392
+        }
+      }
+    ]
+  }
+}

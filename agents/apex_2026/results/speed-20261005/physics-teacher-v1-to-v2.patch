@@ -1,0 +1,81 @@
+--- a/agents/apex_2026/research/speed_20261005/physics_teacher.py
++++ b/agents/apex_2026/research/speed_20261005/physics_teacher.py
+@@ -40,9 +40,8 @@
+-    'continuous_minimal': dict(control='continuous', cruise=100., lateral=190., braking=105.,
+-                              preview_time=.20, shift=1.3, before=40., after=55.),
+-    'feedforward_center': dict(control='feedforward', cruise=100., lateral=190., braking=105.,
+-                              preview_time=.20, shift=0., before=40., after=55.,
+-                              ff_blend=.65, heading_gain=.25, yaw_gain=.04),
+-    'continuous_center': dict(control='continuous', cruise=100., lateral=190., braking=105.,
+-                             preview_time=.20, shift=0., before=40., after=55.),
+-    'continuous_long_preview': dict(control='continuous', cruise=100., lateral=190., braking=105.,
+-                                  preview_time=.27, shift=.7, before=55., after=65.),
++    'legacy_brake_ff': dict(control='legacy_brake_ff', cruise=100., lateral=190., braking=85.,
++                           preview_time=.17, shift=3.7, before=32., after=55.),
++    'continuous_brake_ff': dict(control='continuous_brake_ff', cruise=100., lateral=190., braking=85.,
++                               preview_time=.20, shift=3.7, before=32., after=55.),
++    'optimized_190': dict(control='continuous_brake_ff', cruise=100., lateral=190., braking=85.,
++                          preview_time=.20, shift=3.7, before=32., after=55., optimized_route=True),
++    'optimized_210': dict(control='continuous_brake_ff', cruise=100., lateral=210., braking=85.,
++                          preview_time=.20, shift=3.7, before=32., after=55., optimized_route=True),
+@@ -49,0 +49 @@
++OPTIMIZED_ROUTE = ROOT/'agents/apex_2026/results/speed-20261005/physics-racingline-v1.json'
+@@ -100 +100 @@
+-    def __init__(self, raw, params, old):
++    def __init__(self, raw, params, old, track_id=None):
+@@ -109,0 +110,8 @@
++        if params.get('optimized_route'):
++            row = next(r for r in json.loads(OPTIMIZED_ROUTE.read_text())['rows'] if r['track_id'] == track_id)
++            self.base.road = np.asarray(row['road'], float)
++            self.base.route = np.asarray(row['route'], float)
++            self.base.s = np.asarray(row['route_s'], float)
++            self.base.length = row['route_length_m']
++            self.signed = np.asarray(row['signed_curvature_per_m'], float)
++            self.base.kappa = abs(self.signed)
+@@ -136,0 +145,4 @@
++        if self.params['control'] == 'legacy_brake_ff':
++            selected = int(np.argmin(np.sum((first-xy)**2, axis=1)))
++            fraction[selected] = 0.
++            projected[selected] = first[selected]
+@@ -142,0 +155,4 @@
++        if self.params['control'] == 'legacy_brake_ff':
++            target_index = int(np.searchsorted(self.base.s, (anchor_s+preview) % self.base.length,
++                                               side='left')) % len(self.base.route)
++            target = self.base.route[target_index]
+@@ -166,0 +183,2 @@
++        limiting = int(np.argmin(permitted))
++        descending_envelope = bool(ahead[mask][limiting] > 5. and permitted[limiting] < self.params['cruise'])
+@@ -175 +193,16 @@
+-        if error < -1.5:
++        if self.params['control'] in ('legacy_brake_ff', 'continuous_brake_ff'):
++            feedforward = self.params['braking'] if descending_envelope and error < 3. else 0.
++            requested_decel = max(0., feedforward-8.*error)
++            available_decel = math.sqrt(max(0., (219.*grip)**2-demanded_lateral**2))
++            if requested_decel > 3.:
++                gas, brake = 0., min(.8, requested_decel/309., available_decel/309.)
++            else:
++                cap = (1. if demanded_lateral < 45. and speed < 90. else
++                       .65 if demanded_lateral < 80. else .3 if demanded_lateral < 150. else .16)
++                gas, brake = float(np.clip(.35+.09*error, 0., cap)), 0.
++                if demanded_lateral > 60.:
++                    excess = max(w.omega*w.wheel_rad-float(np.asarray(w.linearVelocity) @
++                                 np.asarray(w.GetWorldVector((0, 1)))) for w in self.raw.car.wheels[2:])
++                    if excess > 2.:
++                        gas = min(gas, .05)
++        elif error < -1.5:
+@@ -189 +222,2 @@
+-                      'demanded_lateral_mps2': demanded_lateral, 'preview_m': preview}
++                      'demanded_lateral_mps2': demanded_lateral, 'preview_m': preview,
++                      'descending_speed_envelope': descending_envelope}
+@@ -206 +240 @@
+-        teacher = Teacher(raw, params, old)
++        teacher = Teacher(raw, params, old, track)
+@@ -228 +262 @@
+-        trace_path = raw_dir/f'physics-teacher-v1-{name}-track{track}-seed{seed}.json'
++        trace_path = raw_dir/f'physics-teacher-v2-{name}-track{track}-seed{seed}.json'
+@@ -261,0 +296 @@
++    route_hash = digest(OPTIMIZED_ROUTE)
+@@ -265,0 +301 @@
++              'optimized_route_sha256': route_hash,
+@@ -283,0 +320 @@
++        assert digest(OPTIMIZED_ROUTE) == route_hash

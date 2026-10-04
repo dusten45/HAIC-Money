@@ -1,0 +1,909 @@
+{
+  "classification": "privileged_dynamics_geometry_teacher_diagnostics_not_legal_inference",
+  "is_prospective_development_trial": false,
+  "is_holdout": false,
+  "new_teacher_settings": 8,
+  "cells_per_setting": 4,
+  "new_teacher_driving_episodes": 32,
+  "teacher_episode_budget": 32,
+  "source_sha256": {
+    "agents/apex_2026/research/speed_20261005/physics_launch.py": "e983d20525bc22d9c3c89556cc49d0b16682bf803ad0b8c50e31e9755c8288ea",
+    "agents/apex_2026/research/speed_20261005/physics_teacher.py": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+    "agents/apex_2026/research/speed_20261005/physics_racingline_refine.py": "3d58aa1a6c42007b0854926a825ec08d08a87374497a7fb07724024869695003",
+    "agents/apex_2026/research/speed_20261005/physics_hud.py": "71151d73f7b36fe48b7d6153d196111718d58a5812628379bc6f3906519d1734",
+    "agents/apex_2026/research/speed_20261005/physics_racingline.py": "9db679c650cda19a1a41d60d02cbdfd3eacb565c259ca99dfac1783f0561fb57",
+    "agents/apex_2026/research/speed_20261005/physics_throttle.py": "d52752fb50487f6e8bb4c30772c3859031d7f100a9a1536330b486b586be3797",
+    "agents/apex_2026/research/speed_20261005/physics_racingline_timepoint.py": "f815728cfb90515dc03e49c3284bf9b17f3868df63df1151eefb9c9be8158ac3",
+    "agents/apex_2026/research/speed_20261005/physics_dynamics.py": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded"
+  },
+  "archived_reference_action_hashes_reproduced": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true
+  },
+  "scipy_optional_research_dependency_version": "1.14.1",
+  "original_four_track_10_to_13_seconds_goal_achieved": false,
+  "no_candidate_adoption": true,
+  "settings": [
+    {
+      "setting": "legacy_reference",
+      "parameters": {
+        "control": "archived",
+        "cruise": 110.0,
+        "lateral": 180.0,
+        "braking": 85.0,
+        "preview_time": 0.17,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 22.0
+      },
+      "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v1-legacy-reference.json",
+      "report_sha256": "aeacca34385a99d9371f91fae8e50aa4fccbf1557378e80345f84a7c9f02f089",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 13780,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "0fa13bbe362b2649a54b7ff292e25f87bdfa00d30a618b548e2245dee23e2888",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_reference-track1-seed516237.json",
+          "raw_trace_sha256": "5e20cf07ce256730420ae8eb37ed59b4ab4f735755ba62faca02489bbf3968f5",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 17740,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 2,
+          "action_trace_sha256": "43cec1ed35090018fe14e1662f0ef9ad385874a650ff7bf7d28bacaf09186f21",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_reference-track2-seed644062.json",
+          "raw_trace_sha256": "f5b2327c9b37b5b1d5a13ecbbd43054202cf60b12e3f41e556ff452e5ad30bb3",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 15980,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 3,
+          "action_trace_sha256": "e6b23d46d90b9019840088cce0ccf17cc37ee5ef11f45561831eed76b01380c1",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_reference-track3-seed1007.json",
+          "raw_trace_sha256": "4a34e3bc910bf793cd6a40d6dccb90f0843da66173a36131f1271817270b3ab3",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7419354838709677,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "cae0b677a1ba8587d116d757251b012d190d21a92b6ede8c0eb53d938b878e71",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_reference-track4-seed18800.json",
+          "raw_trace_sha256": "a2c9cba2e23c9b8d9ef9c8fe4af8844808ab639fb8d6575ea4b02804dcd8b8ad",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "legacy_broad_return",
+      "parameters": {
+        "control": "legacy",
+        "cruise": 110.0,
+        "lateral": 180.0,
+        "braking": 85.0,
+        "preview_time": 0.17,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 55.0
+      },
+      "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v1-broad-return.json",
+      "report_sha256": "25daffb204f3b6523eb1a18f5a10fc2f7d9b5723d06012ce19eb094270c69a9e",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 13720,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "bf5455754673dbdf177a0d67c100da59f22d592c96b2960c4ec9670e6c6ef69f",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_broad_return-track1-seed516237.json",
+          "raw_trace_sha256": "1cb42772147898c6358c73f874397cf68fa18ffc9506a08b652f3306d373d1dd",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 17640,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 1,
+          "action_trace_sha256": "d99a87abd707aac1335969528c32eb3dc2d7bb31a52f3b31efabecdbeb7356dd",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_broad_return-track2-seed644062.json",
+          "raw_trace_sha256": "45f5c84231807b5209ef1f90edd4d67ab46c326074e2ab93f1eadbd732871a39",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 15740,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 4,
+          "action_trace_sha256": "2dcb9aa88b6d69cc4312abbc42caf78ba615cc1703fa64ed3c7d0bef0525a63d",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_broad_return-track3-seed1007.json",
+          "raw_trace_sha256": "5eadee124e981f36bedb8f7c08ec72f081d452abe47d906459c9d42f7136c238",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7419354838709677,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "2024ac06b744922ce240b80ec405302b04a366a459e65bcae35a4ad4a505facb",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_broad_return-track4-seed18800.json",
+          "raw_trace_sha256": "710372a58289b637d299c7a0208c72eb07958721524be4e3e3ea35d0477a1e61",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "legacy_minimal_hold",
+      "parameters": {
+        "control": "legacy",
+        "cruise": 110.0,
+        "lateral": 180.0,
+        "braking": 85.0,
+        "preview_time": 0.17,
+        "shift": 1.3,
+        "before": 40.0,
+        "after": 55.0
+      },
+      "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v1-minimal-hold.json",
+      "report_sha256": "12963372c9d8d8df8c0e001e276288ed7bcf25c9f7ca008fc22aab272521798e",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.3357142857142857,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 14,
+          "partial_offroad_samples": 17,
+          "action_trace_sha256": "7f5d618eec5a757c58f0b25aecd35aabe4de4f6f888869aab566274005c32615",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_minimal_hold-track1-seed516237.json",
+          "raw_trace_sha256": "a635b2a163c50659842412e9228711dce9fce753f4f2fd76ce46295b2bf8ec12",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.43154761904761907,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 100,
+          "partial_offroad_samples": 101,
+          "action_trace_sha256": "5c57ed733743d43535339ff0e24939b11b3aab80143a676b3e93db2643719bb3",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_minimal_hold-track2-seed644062.json",
+          "raw_trace_sha256": "59fcca41fac7d835066271fd2b2e5cd9fbb5a8dc77b0150b76e741502fad2e43",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.19741100323624594,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 97,
+          "partial_offroad_samples": 98,
+          "action_trace_sha256": "13f5453bfda3aa69a17ae9b7e21b4e153c11a16892ee8e1e4a0005b835b075c4",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_minimal_hold-track3-seed1007.json",
+          "raw_trace_sha256": "58aca6ec9a8da7aaf9f2c7a403e324129ca4449b012661f8d36b3e3ff536b478",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.12544802867383512,
+          "collision_count": 5,
+          "retire_reason": "crash",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "dc69f11a64eaec6671095cbcc289c8797abe2a639d01b133d799fe7d6480061f",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_minimal_hold-track4-seed18800.json",
+          "raw_trace_sha256": "14c106ba8b176f5e5fdb0ccc5b26393238f02e918189cffc8d6edb36021f81bf",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "feedforward_minimal",
+      "parameters": {
+        "control": "feedforward",
+        "cruise": 100.0,
+        "lateral": 190.0,
+        "braking": 105.0,
+        "preview_time": 0.2,
+        "shift": 1.3,
+        "before": 40.0,
+        "after": 55.0,
+        "ff_blend": 0.65,
+        "heading_gain": 0.25,
+        "yaw_gain": 0.04
+      },
+      "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v1-feedforward-minimal.json",
+      "report_sha256": "1d8f2f6ddb9ca21d7d45aa6e9a2eac955311e792adbfd378366775721fb6be7e",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.8285714285714286,
+          "collision_count": 5,
+          "retire_reason": "crash",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 5,
+          "action_trace_sha256": "c3a4ed1708e7c16de0c8fcf25b3079d6d6043f1edbd74fe62d4f40ef45ec00c1",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-feedforward_minimal-track1-seed516237.json",
+          "raw_trace_sha256": "7f3674da1674a5729df5610777e6a567e74bc758e6587784176bcbbecde8eaba",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.30357142857142855,
+          "collision_count": 1,
+          "retire_reason": "off_track",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "58a1a51fc0332bb490e1ecae588a503c2119502709ce18cfdf8b71a7f8a96b9d",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-feedforward_minimal-track2-seed644062.json",
+          "raw_trace_sha256": "9f41404b6f34118a8bea5959e53ac83aae913db34a1171685175ffc1ed2a7dc6",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 20480,
+          "progress": 0.9838187702265372,
+          "collision_count": 1,
+          "retire_reason": null,
+          "offroad_samples": 6,
+          "partial_offroad_samples": 9,
+          "action_trace_sha256": "9616ea7e5a655a71f3338dd576f0c2d9b92cce803408621a4c8af491f3c41e51",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-feedforward_minimal-track3-seed1007.json",
+          "raw_trace_sha256": "366b699dfb6912939bb683f479bc2f9b09d308310333f9e95405738f33f6c76d",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.12186379928315412,
+          "collision_count": 5,
+          "retire_reason": "crash",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "5299813b186136b5315757d1469700056ee2f0253dcdadd50e37f97ef59c73df",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-feedforward_minimal-track4-seed18800.json",
+          "raw_trace_sha256": "98183af4a5af0820e99e5ee3dfab7151ce393ee9ddc6c61cde97487403b7a189",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "legacy_brake_ff",
+      "parameters": {
+        "control": "legacy_brake_ff",
+        "cruise": 100.0,
+        "lateral": 190.0,
+        "braking": 85.0,
+        "preview_time": 0.17,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 55.0
+      },
+      "source_sha256": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v2-legacy-brake-ff.json",
+      "report_sha256": "7b393550d7599ef698f2b8ce1be07f6b745aed697361c51fed44f7cfa6529f3d",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 15420,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "121d2d5a996c5f37b644b4ca5c88b9412b0bc47a44b837dacc6528103e646ee5",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-legacy_brake_ff-track1-seed516237.json",
+          "raw_trace_sha256": "f4d4ea3c0511394cc74e07d3e95aef0f0ba7b2a42bba280cbf670a1d1359ea2a",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 18840,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "7248e89f5dd9c8b58e9dd51d33acd2f6db2680c6a45063f074814ae46e4bb299",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-legacy_brake_ff-track2-seed644062.json",
+          "raw_trace_sha256": "2cfc804795f398e8f586623bc4080f62134508f9b0fc904d8a197b5940122847",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 17380,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "fec6414d01d4ee25a50c90501cf17fb88bda3f3c10896ffe9e36f863da4bc9e9",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-legacy_brake_ff-track3-seed1007.json",
+          "raw_trace_sha256": "9bd05bd657105f7e5f95222936d4b44e2d7247171c70e378e11b98cc63c254e8",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7455197132616488,
+          "collision_count": 5,
+          "retire_reason": "crash",
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "cd7b7e34a1ccc63c58cfdfdbb0b89caa86ab991d9992e920a97b60f1d28ac6cf",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-legacy_brake_ff-track4-seed18800.json",
+          "raw_trace_sha256": "909b0de146bb8d1319c7b7fdafd0f68280d248dc2600e34f05c273080fbacd20",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "continuous_brake_ff",
+      "parameters": {
+        "control": "continuous_brake_ff",
+        "cruise": 100.0,
+        "lateral": 190.0,
+        "braking": 85.0,
+        "preview_time": 0.2,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 55.0
+      },
+      "source_sha256": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v2-continuous-brake-ff.json",
+      "report_sha256": "f0c22d14cd0bcb5ddf57f588399434a38dd2afd771ff61dd0f177f0d1ded52c9",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 15340,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "3338e54c45dffe3e6567579cf579fa88a0188f19351315be23e59351ae81b50c",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-continuous_brake_ff-track1-seed516237.json",
+          "raw_trace_sha256": "1552fff52bfe9162fadce8dd2f987945892966f38ebd7562344040ca81f54e5a",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 18820,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "7dd0dfda96ad287c5239225c175e5f199105a1ad62c09d8d890c958a6c6248af",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-continuous_brake_ff-track2-seed644062.json",
+          "raw_trace_sha256": "eb0cf795d70064c7e6cbb5ef2f8fffda5ae1438aa1cccd8c639624110c939a6c",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 17460,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "f856227f93da4c783103b585556c3eb76725eeb76deb87dfc86cd8ae8d829dfb",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-continuous_brake_ff-track3-seed1007.json",
+          "raw_trace_sha256": "90a43b20f1d804ea5ad0aa36486939f2b5fe8fc6204b6c1ab278f0c680c91210",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 16380,
+          "progress": 1.0,
+          "collision_count": 1,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 0,
+          "action_trace_sha256": "b7871b289a472043491fa32088abf794d9e2b59389b37e5bba95039a1d003733",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-continuous_brake_ff-track4-seed18800.json",
+          "raw_trace_sha256": "8630601293b91002552d49f506241308ddff8bcd1361f7ba38a1568030c67cfd",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "optimized_190",
+      "parameters": {
+        "control": "continuous_brake_ff",
+        "cruise": 100.0,
+        "lateral": 190.0,
+        "braking": 85.0,
+        "preview_time": 0.2,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 55.0,
+        "optimized_route": true
+      },
+      "source_sha256": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v2-optimized-190.json",
+      "report_sha256": "8030512a34c9b2dbcf5f3030667532901d016bc7f98524a594a81b11a652736d",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 14660,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 2,
+          "action_trace_sha256": "3515662e8fdc66636959d48c5c2a9d4ae4eab45a61290ea0782a2c480dd4cc7c",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_190-track1-seed516237.json",
+          "raw_trace_sha256": "99adc570309065a639499270826afe975e7a6569237b792ae22624b5d3bd9157",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 18500,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 6,
+          "action_trace_sha256": "6a37353590175b66df0e89272aba23e59ad132eec5ee4787d02eca7faafd3c49",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_190-track2-seed644062.json",
+          "raw_trace_sha256": "2a4acbd4f8b55730a77d1d9f24e42eac6580a0f9ef003fec116b9ae97b80cee3",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 17240,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 4,
+          "action_trace_sha256": "f5b8c92fbd13aadd3437ecad9dc76105866ef7a0892eef3f52f08f6d67d91a65",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_190-track3-seed1007.json",
+          "raw_trace_sha256": "6ea4b31db994c65b244debd1633d44e2ce6818f77f5ccf019199996d530efd28",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 15800,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 4,
+          "action_trace_sha256": "493613147b73a5270246a4b4c26191a2a82819d59fc99fd9dd40615465762578",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_190-track4-seed18800.json",
+          "raw_trace_sha256": "1840744ec7ebc2444f705576fb0454e999c2cb2b3885cda2df1f41e0de93c824",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    },
+    {
+      "setting": "optimized_210",
+      "parameters": {
+        "control": "continuous_brake_ff",
+        "cruise": 100.0,
+        "lateral": 210.0,
+        "braking": 85.0,
+        "preview_time": 0.2,
+        "shift": 3.7,
+        "before": 32.0,
+        "after": 55.0,
+        "optimized_route": true
+      },
+      "source_sha256": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-teacher-v2-optimized-210.json",
+      "report_sha256": "689b57a7ad8bb8545ed758c9c83456a61ade16cb79ec781759b012ac7deec9b1",
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 14220,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 2,
+          "action_trace_sha256": "d250eb5d9b7488948eedec9139cd9847c829d4850018d644b8a05d3213200180",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_210-track1-seed516237.json",
+          "raw_trace_sha256": "2c64f74b506ed2ae2f707390caaa7e54934a076fb425d50990eb01c9af13dbee",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 17980,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 5,
+          "action_trace_sha256": "44f408eedf08147d3ae482c057591691c0a509e6c33274365c987ea3ea000f49",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_210-track2-seed644062.json",
+          "raw_trace_sha256": "3e62fb09a35bf0c246c27569a565feeeb12e855221a9a7a0bbf1163506b171d7",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 16660,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 4,
+          "action_trace_sha256": "26903f69aae6ab04688f13fa58f5c31ea3853cdaf4bb9c05e73074fec08446dc",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_210-track3-seed1007.json",
+          "raw_trace_sha256": "42d9ad7041d0920d5a4d25858b36b5fd8270520170276b9be6a04b1a13df3f06",
+          "within_original_10_to_13_seconds": false
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 15600,
+          "progress": 1.0,
+          "collision_count": 0,
+          "retire_reason": null,
+          "offroad_samples": 0,
+          "partial_offroad_samples": 5,
+          "action_trace_sha256": "6b00082b3dd959204d9c9d546ce7cb9b8b9422d17bae48c38f9d22f102ceb396",
+          "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v2-optimized_210-track4-seed18800.json",
+          "raw_trace_sha256": "1fcbb914728ba31470872658a968362dce4cffe61cbcab458759aee055fc1e0c",
+          "within_original_10_to_13_seconds": false
+        }
+      ]
+    }
+  ],
+  "offline_models": [
+    {
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-racingline-v1.json",
+      "report_sha256": "e28920c96c4ef0f3a081d16cd5aea7b560511fa87932a8a2c2b14936989f750c",
+      "source_sha256": "9db679c650cda19a1a41d60d02cbdfd3eacb565c259ca99dfac1783f0561fb57",
+      "classification": "privileged_offline_optimistic_point_car_local_optimization",
+      "is_lap_time_lower_bound": false,
+      "is_driving_episode": false,
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "model_time_s": 12.719123288524298,
+          "route_length_m": 980.5666887942446,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.699992257120134,
+          "solver_success": false,
+          "solver_iterations": 90,
+          "solver_message": "Iteration limit reached"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "model_time_s": 15.938070180163022,
+          "route_length_m": 1174.3626348672108,
+          "maximum_abs_offset_m": 4.800000003628316,
+          "minimum_obstacle_center_clearance_m": 3.699999967415305,
+          "solver_success": false,
+          "solver_iterations": 90,
+          "solver_message": "Iteration limit reached"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "model_time_s": 14.512492838250871,
+          "route_length_m": 1079.0786671728465,
+          "maximum_abs_offset_m": 4.8000000090684845,
+          "minimum_obstacle_center_clearance_m": 3.6999853415884965,
+          "solver_success": false,
+          "solver_iterations": 90,
+          "solver_message": "Iteration limit reached"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "model_time_s": 13.626081607549237,
+          "route_length_m": 958.2476094922215,
+          "maximum_abs_offset_m": 4.800000003682736,
+          "minimum_obstacle_center_clearance_m": 3.699999154946125,
+          "solver_success": false,
+          "solver_iterations": 90,
+          "solver_message": "Iteration limit reached"
+        }
+      ]
+    },
+    {
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-racingline-refine-v1.json",
+      "report_sha256": "5e22daa82833d5d1e23400c6c4c2b5f3ec5e975a46d4c8b49e1a922dcab8e3d5",
+      "source_sha256": "edb38cd5a304b0465b799aa20525dbaf5232d5b54d38ced7eef06da42b521b25",
+      "classification": "privileged_offline_full_point_convex_curvature_approximation",
+      "is_lap_time_lower_bound": false,
+      "is_driving_episode": false,
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "model_time_s": 12.302651194447382,
+          "route_length_m": 967.0448749159843,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.704440832887464,
+          "solver_success": false,
+          "solver_iterations": 600,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "model_time_s": 15.554964848897285,
+          "route_length_m": 1145.0265044885841,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7210053003040438,
+          "solver_success": false,
+          "solver_iterations": 600,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "model_time_s": 14.085989561571163,
+          "route_length_m": 1053.7481430664875,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.726666440548733,
+          "solver_success": false,
+          "solver_iterations": 600,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "model_time_s": 13.541672786265345,
+          "route_length_m": 938.4616751808687,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7417492105266166,
+          "solver_success": false,
+          "solver_iterations": 600,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        }
+      ]
+    },
+    {
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-racingline-refine-v2.json",
+      "report_sha256": "bf4c8672aff8c0a77afbf5b7c965d247488c46ccdcb6502b22c79b79c60e71dd",
+      "source_sha256": "3d58aa1a6c42007b0854926a825ec08d08a87374497a7fb07724024869695003",
+      "classification": "privileged_offline_full_point_convex_curvature_approximation",
+      "is_lap_time_lower_bound": false,
+      "is_driving_episode": false,
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "model_time_s": 12.304553811358716,
+          "route_length_m": 967.0078937264891,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7044287483307943,
+          "solver_success": true,
+          "solver_iterations": 1002,
+          "solver_message": "CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "model_time_s": 15.554483803052594,
+          "route_length_m": 1145.0571315901207,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7210901914906476,
+          "solver_success": true,
+          "solver_iterations": 1272,
+          "solver_message": "CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "model_time_s": 14.084700968886734,
+          "route_length_m": 1053.80624866909,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7267076534287624,
+          "solver_success": true,
+          "solver_iterations": 1208,
+          "solver_message": "CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "model_time_s": 13.54198981121198,
+          "route_length_m": 938.6182555612444,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7418288915581104,
+          "solver_success": true,
+          "solver_iterations": 1616,
+          "solver_message": "CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL"
+        }
+      ]
+    },
+    {
+      "report_path": "agents/apex_2026/results/speed-20261005/physics-racingline-timepoint-v1.json",
+      "report_sha256": "ab481c3e3a9b0f472cd761dea359bb5f29913266a35acf7a4b748ba474dde012",
+      "source_sha256": "f815728cfb90515dc03e49c3284bf9b17f3868df63df1151eefb9c9be8158ac3",
+      "classification": "privileged_offline_full_point_local_time_search",
+      "is_lap_time_lower_bound": false,
+      "is_driving_episode": false,
+      "rows": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "model_time_s": 12.067027290989879,
+          "route_length_m": 966.9910261284814,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.7035744708808402,
+          "solver_success": false,
+          "solver_iterations": 150,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "model_time_s": 15.129891785208144,
+          "route_length_m": 1145.0498873971947,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.719406320583999,
+          "solver_success": false,
+          "solver_iterations": 150,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "model_time_s": 13.701267074179647,
+          "route_length_m": 1053.8153642641983,
+          "maximum_abs_offset_m": 4.8,
+          "minimum_obstacle_center_clearance_m": 3.72646989041512,
+          "solver_success": false,
+          "solver_iterations": 150,
+          "solver_message": "STOP: TOTAL NO. of ITERATIONS REACHED LIMIT"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "model_time_s": 13.23558554145626,
+          "route_length_m": 938.658271830808,
+          "maximum_abs_offset_m": 4.7999887696606605,
+          "minimum_obstacle_center_clearance_m": 3.7418407409763472,
+          "solver_success": true,
+          "solver_iterations": 136,
+          "solver_message": "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH"
+        }
+      ]
+    }
+  ],
+  "road_center_lengths": [
+    {
+      "track_id": 1,
+      "road_center_length_m": 983.5000000000005,
+      "illustrative_instant_100_plus_measured_launch_penalty_s": 10.942899000000004,
+      "is_shortest_physical_lap_lower_bound": false
+    },
+    {
+      "track_id": 2,
+      "road_center_length_m": 1179.5000000001578,
+      "illustrative_instant_100_plus_measured_launch_penalty_s": 12.902899000001577,
+      "is_shortest_physical_lap_lower_bound": false
+    },
+    {
+      "track_id": 3,
+      "road_center_length_m": 1085.0000001926633,
+      "illustrative_instant_100_plus_measured_launch_penalty_s": 11.957899001926632,
+      "is_shortest_physical_lap_lower_bound": false
+    },
+    {
+      "track_id": 4,
+      "road_center_length_m": 979.823531009087,
+      "illustrative_instant_100_plus_measured_launch_penalty_s": 10.90613431009087,
+      "is_shortest_physical_lap_lower_bound": false
+    }
+  ],
+  "limits": [
+    "Privileged whole-map geometry, pose and wheel data are not legal Agent input.",
+    "No physics or official file was modified; each teacher episode freezes and rechecks hashes.",
+    "Point-car time estimates omit coupled tire force, hull sweep, spin, tracking and official finish.",
+    "Local optimization results are not global optimum certificates or lap-time lower bounds."
+  ]
+}

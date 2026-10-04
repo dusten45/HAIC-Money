@@ -1,0 +1,301 @@
+{
+  "freeze": {
+    "classification": "privileged_official_mandatory_diagnostic_not_legal_agent",
+    "is_legal_camera_candidate": false,
+    "is_prospective_development_trial": false,
+    "source_sha256": "41be0e987835fdff3d0d2e66b8e137b9c3ad9a3ca5f65904e6ab156572e5f7b9",
+    "archived_teacher_sha256": "58397b25c22e19cdb703bd3bcfe22e5fd443a1c4c333d207a28de0bbf45e3b80",
+    "helper_sha256": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded",
+    "official_file_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806"
+    },
+    "setting": "legacy_reference",
+    "parameters": {
+      "control": "archived",
+      "cruise": 110.0,
+      "lateral": 180.0,
+      "braking": 85.0,
+      "preview_time": 0.17,
+      "shift": 3.7,
+      "before": 32.0,
+      "after": 22.0
+    },
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ]
+    ],
+    "max_actions": 450,
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+    "limitations": [
+      "Complete road/obstacle, pose, velocity and wheel state are privileged.",
+      "100m speed planning horizon exceeds camera visibility.",
+      "No tested route/control certifies global optimum or a lap-time lower bound."
+    ]
+  },
+  "row": {
+    "setting": "legacy_reference",
+    "parameters": {
+      "control": "archived",
+      "cruise": 110.0,
+      "lateral": 180.0,
+      "braking": 85.0,
+      "preview_time": 0.17,
+      "shift": 3.7,
+      "before": 32.0,
+      "after": 22.0
+    },
+    "track_id": 1,
+    "seed": 516237,
+    "finished": true,
+    "lap_time_ms": 13780,
+    "progress": 1.0,
+    "collision_count": 0,
+    "retire_reason": null,
+    "steps": 173,
+    "elapsed_sim_ms": 13800,
+    "offroad_samples": 0,
+    "partial_offroad_samples": 0,
+    "damage": 0.0,
+    "route_length_m": 986.8157249150578,
+    "route_max_curvature_per_m": 0.0827234022647096,
+    "speed_mps": {
+      "min": 5.253595614828416,
+      "p50": 73.03674952286768,
+      "p90": 94.76690821220666,
+      "max": 100.00001378981281
+    },
+    "abs_sideslip_deg": {
+      "min": 0.00010274701111261499,
+      "p50": 0.20673398397326054,
+      "p90": 1.1387685626854913,
+      "max": 2.0383336554224845
+    },
+    "route_error_m": {
+      "min": 0.06902264423313842,
+      "p50": 1.2956071115863788,
+      "p90": 1.9412967477056935,
+      "max": 2.8867485812498277
+    },
+    "action_trace_sha256": "0fa13bbe362b2649a54b7ff292e25f87bdfa00d30a618b548e2245dee23e2888",
+    "raw_trace_path": "/workspace/HAIC-Money/.haic-artifacts/apex-speed-20261005/physics-teacher-v1-legacy_reference-track1-seed516237.json",
+    "raw_trace_sha256": "5e20cf07ce256730420ae8eb37ed59b4ab4f735755ba62faca02489bbf3968f5",
+    "diagnostic_checkpoints": [
+      {
+        "step": 0,
+        "sim_time_s": 0.08000000000000007,
+        "action": [
+          0.0026196076069027185,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 5.253595614828416,
+        "yaw_radps": -0.0010557357454672456,
+        "sideslip_deg": 0.017998214186953115,
+        "position": [
+          218.88450622558594,
+          -52.59963607788086
+        ],
+        "progress": 0.007142857142857143,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          13.124397336843423,
+          13.124397337005245
+        ],
+        "reward": -0.40000000000000036,
+        "debug": {
+          "target_speed_mps": 110.0,
+          "route_error_m": 0.7000082741808772
+        }
+      },
+      {
+        "step": 28,
+        "sim_time_s": 2.320000000000002,
+        "action": [
+          0.06315422058105469,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 70.52925775134247,
+        "yaw_radps": -1.2568281888961792,
+        "sideslip_deg": -0.05536685117637883,
+        "position": [
+          192.18692016601562,
+          29.765836715698242
+        ],
+        "progress": 0.11071428571428571,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          73.72748469747822,
+          74.08659148223045
+        ],
+        "reward": 6.7428571428571615,
+        "debug": {
+          "target_speed_mps": 96.03258157878273,
+          "route_error_m": 1.4157198591827316
+        }
+      },
+      {
+        "step": 56,
+        "sim_time_s": 4.5599999999999685,
+        "action": [
+          0.04083547741174698,
+          0.0,
+          0.03999999910593033
+        ],
+        "speed_mps": 90.25224365526826,
+        "yaw_radps": -1.0190409421920776,
+        "sideslip_deg": -0.16846325974650517,
+        "position": [
+          7.371232986450195,
+          101.87113952636719
+        ],
+        "progress": 0.3142857142857143,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          91.4296981280271,
+          89.79147415941539
+        ],
+        "reward": 6.742857142857019,
+        "debug": {
+          "target_speed_mps": 89.58287218011019,
+          "route_error_m": 1.9050714189103253
+        }
+      },
+      {
+        "step": 84,
+        "sim_time_s": 6.799999999999921,
+        "action": [
+          -0.017117958515882492,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 72.30135472507243,
+        "yaw_radps": 0.22191394865512848,
+        "sideslip_deg": -0.1865222925774672,
+        "position": [
+          -79.01228332519531,
+          32.06421661376953
+        ],
+        "progress": 0.4714285714285714,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          74.53534921937431,
+          74.37503391109554
+        ],
+        "reward": 3.1714285714284642,
+        "debug": {
+          "target_speed_mps": 105.67480588367401,
+          "route_error_m": 0.9215932571515468
+        }
+      },
+      {
+        "step": 112,
+        "sim_time_s": 9.039999999999875,
+        "action": [
+          -0.1249246820807457,
+          0.0,
+          0.34466925263404846
+        ],
+        "speed_mps": 59.530623424446006,
+        "yaw_radps": 2.097271680831909,
+        "sideslip_deg": -0.7297467635724009,
+        "position": [
+          -66.4816665649414,
+          -121.9555892944336
+        ],
+        "progress": 0.65,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          58.1597622140317,
+          61.95069001434075
+        ],
+        "reward": 3.1714285714284642,
+        "debug": {
+          "target_speed_mps": 51.73482827590938,
+          "route_error_m": 1.3162062409512543
+        }
+      },
+      {
+        "step": 140,
+        "sim_time_s": 11.279999999999827,
+        "action": [
+          -0.03152799978852272,
+          0.8816103935241699,
+          0.0
+        ],
+        "speed_mps": 90.4766862507541,
+        "yaw_radps": 0.8043702244758606,
+        "sideslip_deg": 0.17090720816343183,
+        "position": [
+          71.86096954345703,
+          -97.53638458251953
+        ],
+        "progress": 0.8071428571428572,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          91.34767615421592,
+          92.7277844289711
+        ],
+        "reward": 6.742857142857019,
+        "debug": {
+          "target_speed_mps": 98.70428195037611,
+          "route_error_m": 1.4587235530116855
+        }
+      },
+      {
+        "step": 168,
+        "sim_time_s": 13.51999999999978,
+        "action": [
+          0.03846937045454979,
+          1.0,
+          0.0
+        ],
+        "speed_mps": 71.02912444471492,
+        "yaw_radps": -0.7390362620353699,
+        "sideslip_deg": 0.013764938467126788,
+        "position": [
+          216.05267333984375,
+          -72.05768585205078
+        ],
+        "progress": 0.9892857142857143,
+        "collision": false,
+        "wheels_on_road": 4,
+        "rear_roll_mps": [
+          73.78029770221875,
+          74.46382958094908
+        ],
+        "reward": 3.1714285714284642,
+        "debug": {
+          "target_speed_mps": 110.0,
+          "route_error_m": 0.41015513564600986
+        }
+      }
+    ]
+  }
+}

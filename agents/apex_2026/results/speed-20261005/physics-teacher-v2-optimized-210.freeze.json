@@ -1,0 +1,55 @@
+{
+  "classification": "privileged_official_mandatory_diagnostic_not_legal_agent",
+  "is_legal_camera_candidate": false,
+  "is_prospective_development_trial": false,
+  "source_sha256": "31e77a1d90bb025ee2ed6b3c210fdb2a28688483c712aba766ff42ae2df7350d",
+  "archived_teacher_sha256": "58397b25c22e19cdb703bd3bcfe22e5fd443a1c4c333d207a28de0bbf45e3b80",
+  "helper_sha256": "683d08f537152a8bf17fbf0290039d3d0212509ff4984134f10c4a4328b7bded",
+  "official_file_sha256": {
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+    "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806"
+  },
+  "optimized_route_sha256": "e28920c96c4ef0f3a081d16cd5aea7b560511fa87932a8a2c2b14936989f750c",
+  "setting": "optimized_210",
+  "parameters": {
+    "control": "continuous_brake_ff",
+    "cruise": 100.0,
+    "lateral": 210.0,
+    "braking": 85.0,
+    "preview_time": 0.2,
+    "shift": 3.7,
+    "before": 32.0,
+    "after": 55.0,
+    "optimized_route": true
+  },
+  "cells": [
+    [
+      1,
+      516237
+    ],
+    [
+      2,
+      644062
+    ],
+    [
+      3,
+      1007
+    ],
+    [
+      4,
+      18800
+    ]
+  ],
+  "max_actions": 450,
+  "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]",
+  "limitations": [
+    "Complete road/obstacle, pose, velocity and wheel state are privileged.",
+    "100m speed planning horizon exceeds camera visibility.",
+    "No tested route/control certifies global optimum or a lap-time lower bound."
+  ]
+}
