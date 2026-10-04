@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "name": "camera-policy-competition-v3",
+  "status": "UNBOUND",
+  "implementation_commit": "f12c5b62c5f02bff4053e6f4775d202d79917938",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "candidate_class": "_BoundedSideHoldController",
+  "track_ids": [1, 2, 3, 4],
+  "seed_counts": {"screen": 8, "confirmation": 16, "blind": 8},
+  "spot_indices": {"screen": [[1, 0], [4, 7]], "confirmation": [[1, 0], [2, 1], [3, 2], [4, 3]], "blind": [[1, 0], [4, 7]]},
+  "source_rule": "Bind only the pinned committed candidate after runner and gate are committed; candidate differs only by the Agent route selector.",
+  "decision_rule": "The fixed v3 competition gate must RETAIN screen and confirmation before later phases open."
+}
