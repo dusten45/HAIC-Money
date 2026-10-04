@@ -140,7 +140,269 @@
         "Rolling model extrapolates outside calibrated wheel/speed domain; tire spin, RPM and saturation are approximated.",
         "Safety cost is soft and model-dependent, not a guaranteed collision barrier.",
         "Reference path remains row-monotone P1 path; footprint rollout is pose-anchored."
-      ]
+      ],
+      "failure_diagnosis": {
+        "scope": "Read-only diagnostic, zero further resets. Exact trace SHA listed in episode4.",
+        "critical_window": [
+          {
+            "step": 128,
+            "action": [
+              -0.03750000149011612,
+              1.0,
+              0.0
+            ],
+            "speed_before": 33.67716680933413,
+            "yaw_before": -0.7162098288536072,
+            "yaw_after": -0.4416627585887909,
+            "predicted_yaw_after": -0.5968769788742065,
+            "wheel_pixels": -0.142380636290032,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.209786891937256,
+            "progress_after": 0.34050179211469533
+          },
+          {
+            "step": 129,
+            "action": [
+              -0.20000000298023224,
+              1.0,
+              0.0
+            ],
+            "speed_before": 35.14795953548524,
+            "yaw_before": -0.4416627585887909,
+            "yaw_after": -1.8924962282180786,
+            "predicted_yaw_after": -1.4302771091461182,
+            "wheel_pixels": -0.040646527086241876,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.1729822158813477,
+            "progress_after": 0.34767025089605735
+          },
+          {
+            "step": 130,
+            "action": [
+              -0.15000000596046448,
+              1.0,
+              0.0
+            ],
+            "speed_before": 38.14436731100385,
+            "yaw_before": -1.8924962282180786,
+            "yaw_after": -1.993565559387207,
+            "predicted_yaw_after": -1.9042816162109375,
+            "wheel_pixels": -0.19725675314910818,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.526087760925293,
+            "progress_after": 0.35125448028673834
+          },
+          {
+            "step": 131,
+            "action": [
+              -0.20000000298023224,
+              0.6000000238418579,
+              0.0
+            ],
+            "speed_before": 41.027687236319004,
+            "yaw_before": -1.993565559387207,
+            "yaw_after": -2.828340530395508,
+            "predicted_yaw_after": -2.416409730911255,
+            "wheel_pixels": -0.15032517015941954,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.666260242462158,
+            "progress_after": 0.3548387096774194
+          },
+          {
+            "step": 132,
+            "action": [
+              -0.25,
+              0.6000000238418579,
+              0.0
+            ],
+            "speed_before": 43.48178217299418,
+            "yaw_before": -2.828340530395508,
+            "yaw_after": -3.5296714305877686,
+            "predicted_yaw_after": -3.287533760070801,
+            "wheel_pixels": -0.20152326638556217,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.4045755863189697,
+            "progress_after": 0.35842293906810035
+          },
+          {
+            "step": 133,
+            "action": [
+              -0.25,
+              0.6000000238418579,
+              0.0
+            ],
+            "speed_before": 45.535359115463635,
+            "yaw_before": -3.5296714305877686,
+            "yaw_after": -3.954467296600342,
+            "predicted_yaw_after": -3.6164731979370117,
+            "wheel_pixels": -0.24860195910942265,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.2136876583099365,
+            "progress_after": 0.36200716845878134
+          },
+          {
+            "step": 134,
+            "action": [
+              -0.4000000059604645,
+              0.6000000238418579,
+              0.0
+            ],
+            "speed_before": 47.01116907003847,
+            "yaw_before": -3.954467296600342,
+            "yaw_after": -4.442800998687744,
+            "predicted_yaw_after": -3.820188283920288,
+            "wheel_pixels": -0.24860195910942265,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.6399035453796387,
+            "progress_after": 0.3655913978494624
+          },
+          {
+            "step": 135,
+            "action": [
+              -0.10000000149011612,
+              1.0,
+              0.0
+            ],
+            "speed_before": 48.20936183940623,
+            "yaw_before": -4.442800998687744,
+            "yaw_after": -4.9873223304748535,
+            "predicted_yaw_after": -3.7239925861358643,
+            "wheel_pixels": -0.4002100651259066,
+            "flow_valid": false,
+            "predicted_min_clearance": 3.0619394779205322,
+            "progress_after": 0.36917562724014336
+          },
+          {
+            "step": 136,
+            "action": [
+              -0.10000000149011612,
+              1.0,
+              0.0
+            ],
+            "speed_before": 48.65973172761092,
+            "yaw_before": -4.9873223304748535,
+            "yaw_after": -5.642167091369629,
+            "predicted_yaw_after": -3.0005581378936768,
+            "wheel_pixels": -0.16974514879695637,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.9394474029541016,
+            "progress_after": 0.3727598566308244
+          },
+          {
+            "step": 137,
+            "action": [
+              0.15000000596046448,
+              1.0,
+              0.0
+            ],
+            "speed_before": 48.817192502992505,
+            "yaw_before": -5.642167091369629,
+            "yaw_after": -6.367948532104492,
+            "predicted_yaw_after": -1.6971862316131592,
+            "wheel_pixels": -0.10324647743555909,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.5146236419677734,
+            "progress_after": 0.3763440860215054
+          },
+          {
+            "step": 138,
+            "action": [
+              0.4000000059604645,
+              0.0,
+              0.20000000298023224
+            ],
+            "speed_before": 48.65723263382071,
+            "yaw_before": -6.367948532104492,
+            "yaw_after": -6.7127251625061035,
+            "predicted_yaw_after": -0.4157375395298004,
+            "wheel_pixels": 0.1292781451167683,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.8767247200012207,
+            "progress_after": 0.37992831541218636
+          },
+          {
+            "step": 139,
+            "action": [
+              0.4000000059604645,
+              0.0,
+              0.699999988079071
+            ],
+            "speed_before": 45.23741313858314,
+            "yaw_before": -6.7127251625061035,
+            "yaw_after": -6.475845813751221,
+            "predicted_yaw_after": -0.09642169624567032,
+            "wheel_pixels": 0.3639360511207393,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.6596264839172363,
+            "progress_after": 0.37992831541218636
+          },
+          {
+            "step": 140,
+            "action": [
+              -0.15000000596046448,
+              0.0,
+              0.699999988079071
+            ],
+            "speed_before": 35.05116516472522,
+            "yaw_before": -6.475845813751221,
+            "yaw_after": -5.974689483642578,
+            "predicted_yaw_after": -1.2275733947753906,
+            "wheel_pixels": 0.40454141465059673,
+            "flow_valid": false,
+            "predicted_min_clearance": 2.726269245147705,
+            "progress_after": 0.3835125448028674
+          }
+        ],
+        "observed": "Track4 steps128\u2013137 use gas0.6\u20131 during a sharp turn with missing optical flow. At137 the model predicts yaw -1.70rad/s but actual next yaw is -6.37; at138 it predicts -0.42 versus -6.71. The controller subsequently follows road with progress fixed at0.3835125 until retirement.",
+        "mechanism": "The approximate yaw model rapidly relaxes to its speed-dependent capped rolling target, but observed yaw persists through countersteering. The optimizer selects large throttle despite growing measured yaw. This invalidates its predicted safe footprint during this window.",
+        "hypotheses_not_proven": [
+          "Rear-wheel spin explains the yaw persistence; RPM is not captured in the sparse failure screenshots, so full-state reconstruction is unavailable.",
+          "Terminal path-progress objective favors steady coasting near the visible horizon over earlier planned stops, contributing to low speed."
+        ],
+        "next_gate": "Validate a tire-state/RPM-aware model and comparable brake-tail terminal objectives before another driving variant; do not claim yaw-clamp gain tuning solves the failure."
+      }
+    },
+    {
+      "variant": "predictive-r1",
+      "status": "prepared_not_evaluated",
+      "source_sha256": "67d5a5c0430aca27fcc9c76784e46cd5a7cdb37e5d7ffcae8427e8bcc37fccde",
+      "source_archive": "agents/apex_2026/v2/results/predictive_sources/67d5a5c0430a.py",
+      "config": {},
+      "hypothesis": "Exact pixel-RPM initialized mechanics with common stopping continuation avoids the approximate yaw exploit; feasible candidates maximize executed-prefix progress independently of stopping distance.",
+      "tests": "5 predictive tests and 5 public-mechanics tests passed",
+      "planned_cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "role": "required"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "role": "required"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "role": "required"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "role": "required"
+        },
+        {
+          "track_id": 2,
+          "seed": 4031370700,
+          "role": "consumed_v1_failure"
+        },
+        {
+          "track_id": 3,
+          "seed": 4111953688,
+          "role": "consumed_v1_failure"
+        }
+      ],
+      "episodes": []
     }
   ]
 }
