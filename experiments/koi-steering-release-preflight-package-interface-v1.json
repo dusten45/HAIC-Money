@@ -1,0 +1,14 @@
+{
+  "study": "koi-steering-release-ab-v1",
+  "status": "PREFLIGHT_INTERFACE_ERROR_BEFORE_RUN_DIRECTORY_OR_ENVIRONMENT",
+  "candidate": "submissions/koi-steering-release-v1.zip",
+  "candidate_zip_sha256": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+  "manifest": "submissions/koi-steering-release-v1.manifest.json",
+  "error": "KeyError: baseline_source_sha256 at evaluate_koi_steering_release_ab.py:366",
+  "cause": "Publisher used frozen_baseline_members_sha256 and dictionary inventory; new evaluator requires baseline_source_sha256 and list inventory rows with path/sha256.",
+  "environment_constructions": 0,
+  "environment_resets": 0,
+  "episodes": 0,
+  "run_directory_created": false,
+  "resolution": "Correct only main-owned publisher/contract tests; preserve first ZIP/manifest and generate separate v1a package receipt. Controller/helper bytes, policy, metrics and gates unchanged. Do not edit or bypass the evaluator validation."
+}

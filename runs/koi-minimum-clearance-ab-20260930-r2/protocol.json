@@ -1,0 +1,1628 @@
+{
+  "study": "koi-minimum-clearance-ab-r2",
+  "scope": "explicit consumed TRAIN reuse; no fresh/protected/official action",
+  "source_commit": "c4e224d465eea12acc49d2700ba1e1e5b6146976",
+  "baseline": "frozen_baseline_files source reconstruction, not missing original ZIP restoration",
+  "model_hashes": {
+    "crossing_projection": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "minimum_clearance_v1": "64cecc0bf52426622d094664ebd8130fb4f9f6b132b78754130d98e627d47e2a"
+  },
+  "model_source_sha256": {
+    "crossing_projection": {
+      "agent.py": "ab9a63082fa9200572e009ab24aeb3fa59b652b026745291171dae53967af29c",
+      "haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+      "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+      "haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+      "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+      "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+      "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+      "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+      "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+      "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+    },
+    "minimum_clearance_v1": {
+      "agent.py": "388390ffc4ad3c76dbbfd8c9bffdcd2973e1fddc61f6a2369b21b8eb97d544c6",
+      "haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+      "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+      "haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+      "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+      "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+      "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+      "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+      "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+      "haic_agent/minimum_clearance_runtime.py": "1c24d9b0941ea30a8e14f29fda03fc2fcb4994272b89597eaf9f65cb4cbdb6d2",
+      "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+    }
+  },
+  "candidate_manifest_sha256": "7ebeee9d9d771fd420387633a5ee1ee8da9d20ddbf86ec692376a9fd60545ec1",
+  "cells": [
+    {
+      "track_id": 1,
+      "geometry_seed": 38300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 38300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 38300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 38301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 38301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 38301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 38302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 38302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 38302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 38303,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 38303,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 38303,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 50300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 50300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 50300,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 50301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 50301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 50301,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 50302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 50302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 50302,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 50303,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 50303,
+      "partition": "TRAIN",
+      "obstacles": true
+    },
+    {
+      "track_id": 3,
+      "geometry_seed": 50303,
+      "partition": "TRAIN",
+      "obstacles": true
+    }
+  ],
+  "excludes": [
+    49300,
+    49301,
+    49302,
+    49303,
+    51300,
+    51301,
+    51302,
+    51303
+  ],
+  "protected_cells_allowed": false,
+  "episodes": 48,
+  "max_decisions": 1200,
+  "python": "/tmp/kilo/haic-cpu21/bin/python",
+  "frame_skip": 4,
+  "warmup_ticks": 50,
+  "raw_fps": 50,
+  "runtime_versions": {
+    "python": "3.11.14 | packaged by conda-forge | (main, Oct 22 2025, 22:46:25) [GCC 14.3.0]",
+    "numpy": "1.26.0",
+    "cv2": "4.8.1",
+    "torch": "2.1.0+cpu",
+    "gymnasium": "0.29.1",
+    "Box2D": "2.3.5",
+    "pygame": "2.6.1"
+  },
+  "environment_source_sha256": {
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/env_wrapper.py": "d76a03bd9b051df502f332eef5a2a3b77a607bda458890a032785469cf21c39d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/damage.py": "f00d4393a1a3fb4339debde88c02671bee993724de6864a8b6325fc31f64cfc1",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/__init__.py": "b941048593149b127a2bc6600e45d8d6ba074deef22474a6bae02a1eb8fd54d6",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/benchmark_corridor.py": "d4cdb88992585efbf923baf367ca017fb4a0961ce54ec6bed3247cc06f3ffeee",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/compare_launch_preview_package.py": "a6c62b06928492ea3ba5655f5997933da8d40a36e8957f21b1318599eb7b2b8f",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/compare_launch_surge_package.py": "642d90f9ac452780304521ee87edf7b9da172d3efa21e30e0ad87ae373ab388d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_contact_continuity.py": "f369f15869209258f5018c4b548bc110807e9143b5d81f8a35e7d1d287ad9dc1",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_far_hazard.py": "333d51077b62a325037a507fe6f164941abf67ef6cab49ef5f3da35fc80632aa",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fast_completion.py": "f81e0d166cf378d229878ca9aa7cd0310aebaa0db401acf437a28b0af7aa0a09",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fast_road_commit.py": "a286dd2e35a8c93f2e07b1b20c845a801bfdc2be1cfc900c1367d0da7992506b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fixed_high_speed_impact.py": "9bf4b4a8bb46b00e5aa603f13518dddee278b9eb58157d89812b416acb24c99b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_speed_budget_package.py": "92a0cbf2be5ed9d401ae1884d1c22209436e6588a16b13d3c2b7078d9dcc112e",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_speed_coupled_package.py": "c5aa39865dca0658f4e10bf04db122bbdfdf4a6abbae32b0acac984615e773cd",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_stable_package.py": "e8713f14972bd974bf775093d56efa152a158093df7027fee37e24594b042d7b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/curve_brake_screen.py": "597c5a09c27c028d8282e2678e7e78df48002292a162377719bfea6b19e8ec37",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/env_factory.py": "c0241dc7c6b4f4fae0c646d748e4ffade228c44f9bfc3a93b242528891a0a866",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_closed_loop.py": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_hazard_potential_tune.py": "1f4fbefaf1355dcd37881b4c42e06b4871ddc795620d2be5c8a067a9569e8bfc",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_lagrangian_tune.py": "bd8839a58dd5c3555f002a80762e3ce749e59bc1755b1bc6d9a10e97f7df512c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_tournament.py": "7c7601fb622b025b4d5a7a45edf85e45bcbbb9e9ab90bf254473b84ed69b3e35",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher.py": "ae575038fcffcd66deddc403ab656dde21dfe5c0834e90795dd961f176db48df",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v2.py": "d0ab34f8f693c3eb407b98e22fa117b412acfab6af65254d6e89c34aab79d99a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v3.py": "623f17a021268aa3039b7ac79f45143160ce7c259d36689dcb85aed0680ef4d7",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v4.py": "50b186363123b94b73a599016b83086567fd0eef58b0bc1be03398bf41af05ec",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v5.py": "cf5ab91d3ed088976c89010e6b9bd4ce80d328f7d9a595b123eebabf66e3f05c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed60_completion.py": "9c8a180cecf3c135addec050471e788b198cc5091a49f9c6d69b1497ad5bde9c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_pursuit_repair.py": "e65e668c76f4a2d722524c402e2f624bd0a6479531e4b7b9e1a5bea071740d7e",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_recovery.py": "965edeaf076fc2e4d5a606b947468c1207d4c4b22ebf3b7f2fe0ef032be22c7c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_recovery_v2.py": "baf146b90b777770a3292cb8b245870b7a57bc5dbe8aa0fbba7179fe79c2b316",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_road_bound.py": "3a7c2ece151a49a9680a425d9764e24b6872062c05fae626d50466070014afd9",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_steering.py": "6c43db04a08e909e330497eacf9583eec346039de37d6b1c88d5c5bf6a81251c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/hazard_exposure.py": "adfd5cc167e9f41d46a13ebbdceae8e438a4641b3e18d84bded3240a8558f9cc",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/hazard_potential.py": "732924698ac71ff3402c2c548ca514c40a5c4688905a94b38c7c92f35ca2bd15",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/imitation.py": "ff3e69d3d226efa836884cfd235a8db7d2dc5af79cfef3950b9d2c5eab28435a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/improvement_loop.py": "e872a5fb808d0977643bdde7dbd61ba34da5b7618ca7b5fb8e3bde83414fa614",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/labels.py": "44e19f7da8290d3ba805c8be20b17646abdccb81aa5901b6b5fc5435537045c3",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/lagrangian.py": "4ccab092d39701616633475dec4426cf7c9f9f4aae6d8d382e32045f704a9653",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/lagrangian_ppo.py": "98433b9324d279aee872af19ac43141a048cc76c2c19c2f8c305250627355e17",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_fixed_high_speed_damping.py": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_preview.py": "b9d5086974ba06e3b5e1a5da7b4110c70d058bffbebf1fe998a44e4f1410111b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_preview_speed_gate.py": "92ac1a0750b8b37e9d13e2ced521834672296b48f0f4e3e76d2f712e288032f3",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_surge.py": "38ebbd2d6d069b74953110f9204e106b3dacc3ac539e7cbaec27a75ede065c20",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_speed_budget.py": "8df594ea9e0f33dbb44300d9ebda24862d3a22bb8c78a6bbc5e327425824a997",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_stable_risk.py": "390efeec1066916dc9cd1a6adec7c8d2a8335059cb29df4976078cc5b404e195",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_submission.py": "6c845c08b8573cedf813d25d4d69935825ed52996569884db15b0905fa278d39",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/ppo.py": "0b022cf3103566f5d10538c406813899269c95f9b0db39789ea0e2bc8d611b86",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/preflight_hazard_potential_screen.py": "84094fd60cdc52246b5081aec9c1659b01b4e739109a2b726968d8c095304b74",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/preflight_lagrangian_screen.py": "334f5597379164438bb467437fe083030f48a72afea883cddf42ff18a2704141",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/repair_fast_completion.py": "d3a6dcc47212c0324f6467335a003af031b08db6e69c479026d06a815efd3538",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/rollout.py": "1a4c5bc5059ae3188297e0e38e8eb0ed177bbea4a7ee4cb9f1e0da84fdc063d1",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/site_environment.py": "b6341d1925af19b58e0ef6f5ad21239eff689c9b94a5782449148b39e3cb32a2",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/site_maps.py": "2a9925619e73433b47f6795511c716efaa0f65bdcc2a61cdf247c7218a6d9c26",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/trace_launch_preview_failure.py": "f341d1798d642bb27fda7bcf1d11e89a7ed4c3fb80fa4255a04c6128559c69e0",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/train_dynamics.py": "a8245f2b4dad0d6cab6e3e708c4162f535d709072a68682614c5e435950f2826",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/train_policy.py": "2160445495628b3084197fab7d685d2f088218c930e80504faf7ba8d47b745f2",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/vision_teacher.py": "3bcf82df7cb2ddbc73a5dd06e6c8af62f71c1f063540c08ba0fd08d6f48a39f0",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/finish_line.py": "0c259bc89051813743e7c40e3f61104bca6c38618b8ddd19c002365f1078022b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/obstacle_contacts.py": "796fd3dc7e8a297acdd848b14f0ef115fc605605cfd2d1b1c35d2f0d2601fb15",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/track_variables.py": "b80dc4409e8b6c4cb4e4c4b948ea355c58b24ecf9583cb96c2f9bed003bed10d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/car_dynamics.py": "d0555e6722b5f5431f1b5267060012182febbc215c1cd6bd35da63798012b125",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/car_racing.py": "bf7d7a16690568c96d454322f5bba83c79bd18fb5b44eaf66d6293493058593d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/__init__.py": "4865b086e16dc5eed5d5c0982382c4a1af8fb2ba6ea242e13c1dd887550e9b7c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/acceleration_braking_runtime.py": "e720e876eddbd356f8a3ea1ab38cb81c7db7ae6ba45222602fe383584ef7b1b4",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_runtime.py": "27459733edf6d845b61296f68fa82eb17af9672e2a6c88337ff8ab6d9a2f91d2",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_gentle_runtime.py": "4e6c8acc1c8cffa10856ae0f475deb43945bc4f5161499fc54972369bc29c005",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_runtime.py": "f69ad6cc52265ae94f4699281a6d1f9d6bcbf5ceca485bdd04aa897fdd0fa3a2",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_safe_runtime.py": "56d1ace1dceb751dfac34e82ab824e4ab02f4e16aeca4d2cf673a813a805b9e1",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_fast_cruise_brake_r2_runtime.py": "125ee564efaf0c4943d099c5f86f05cf2384a70e9690b1c7adf2bda8c21ca836",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_fast_cruise_brake_runtime.py": "e02b76bd0065347d2579a61fceb12583cc6818cde7c1343d26737353dce77b2f",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/apex_line_runtime.py": "4b5bc1ef12b751f1fd2d760029426d2398e150fb0f0d5dd554a8c7d0581e65ef",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/bend_safety_runtime.py": "f22e9cff45f810ae15fb95b8b2dd7419486dbbb41729086dcb0da3fe2164bf35",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/connected_guarded_preview_runtime.py": "9903d6eee51351af1421c4dfc60bc702fc12a42f8318c638d8c715af50641240",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/connected_preview_runtime.py": "723d83e3e800bc09a9711f27fb177e8635987433c0bc93c101ab7035f3f8b62a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/dynamics.py": "c7e905529b97bc1539254463150c7015ac9aeb94670865adacfeafac209acd75",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_clearance_cone_runtime.py": "ab7de84e5a9e8355eddd0a3fe0ddbd2b4cd18a334a909a83d18c9815f9ef7e14",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_committed_recovery_runtime.py": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_pedal_stable_steer_runtime.py": "43364689765a6a96cbe902b8025b87a4f6bb7b7e50a825f5c867825381ef5da6",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_policy_safety_runtime.py": "1b7c17625ab6e1f96d69eb7b7ea4ea9809a2b7a5e27401ae8c99480078835b78",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_road_commit_runtime.py": "78c9f2d2098dfbe725098154124da16a208df9f79c46c8773051e04154861ea4",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed60_completion.py": "50379b8ade6dc0c7058ee24afae9a0afac3e687879f21cccfdedc76e68f78ca7",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_pursuit_repair.py": "14beb77ca09c84a9102c9232528f6c6681f7bb263ddf9dedf2e967d0b32ce920",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_recovery.py": "02c3ed0b87ce02201e13242293731ac7dc7500d8bc6f40406cbd6e76bde758ec",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_road_bound.py": "863722c38813afdf2883c613bbf775b2e10d83fabf91efc84a33fdf46013e443",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/geometric_passing_runtime.py": "4475b3380e4547b6f26421c514594cf26d8e7b50fc15e1f3d0744c15bab48a65",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/handoff_path_runtime.py": "870b38f6c85c757c1532251932e0e04ede476a941309e6e9a18b5cd675aea28b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/high_acceleration_path_runtime.py": "2105cf7b73fea0d291b45f94e0618837354b570505187536362d3b529fbe710d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/high_speed_pivot_runtime.py": "4c4dddbb3e33b0abb0b8daf0639784690dd6301e5a532ce7807d6d4e6ee6e9af",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/hybrid_runtime.py": "2b7baa674f665064ec219bb726d60753a4331508809027211206ab8686dc9234",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_lookahead_runtime.py": "0629d00800df1efdb15d03e1b2093e81ad80c9bdaccb37b433f5d41304688060",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_preview_runtime.py": "83294dd08cccd695b8c8fdd4b856be46a3729f6a4576c07b238abff17d8c2d9d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_preview_speed_gate_runtime.py": "4eaca3653be9c08868687841dd873234565c94939b5e5618c09bf615fc03b08d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_surge_runtime.py": "0895977971cb210c23b0574d143a456ddc9bdd64e684ab25e73ec7194a1282de",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/lookahead_corridor_runtime.py": "000e8ae12d7f9bdd4a66c6139e852debb3510d14912da56b5b6771aeafd1ec9f",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/networks.py": "478b231a97e88b63d8198a602489ee28bf2ad021b7bda7652559f42efa18441d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/observation.py": "aaee651e9555b21fa547e0d277ff8771a38829c592162cbe831d2f0e07d8a665",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_commit_late_runtime.py": "6530e547371e7485d8d27065180f454cdc7a49ecf09f6fbb49222f3ab268c135",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_commit_runtime.py": "154f69db55d895cc849bcc32008902800a6f1f471f9dea63e38426490b700279",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_full_road_guard_runtime.py": "7fb612371068c18b981e4d8989200e33bbcf5a98b6c208bb1fa0300de3c57193",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_guard_brake_runtime.py": "cb648a18934742cc73d2bbe0f05208105963a018c8f352779bf72acda190f7aa",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_road_guard_runtime.py": "127a5dd251991e759d4cb2ffce95c1daa54cb6c98eaa37ded892bdcf58523a34",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_side_evidence_runtime.py": "c37bc0a5e7869d586bc405fe05bb80b4ed4784d62079fc19a3ea0263130ee30c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_slew_runtime.py": "c882a371a9ab9a31dc29d21cab9ba53a5e7114f9dc2139e7a8d5709867b0df0d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_slow_runtime.py": "4ae565606c34f592d9dc5914ba1878c5f049cc96ccc66a4f763498a248ffafd5",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_stuck_recovery_runtime.py": "a47b5e3e7e8e80c4b9ff370d4badd2e0311286fc89a51ae6e5217348fcc5d96e",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_visibility_reset_runtime.py": "c5186bc40dddbd54b2409315b8763830136fc15ed378955e5bd3342e65d12461",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_flow_runtime.py": "dc170820d6fcd25d8d39c6d7b98b620b0a5a73cd9f63431fe48d0c330ad99911",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_runtime.py": "fbbe9c88f53e3b878c2e68bff29c80537bd62a2641740fbf9125474574845919",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_visibility_runtime.py": "169068e69317860576e28d6ffd7af84ca3d1a390f6704eee59266f06d9b76f34",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/planner.py": "1d4840119d23ee01250f9a0f7f839f81b2015c37ec86df0b105f804a78943ae8",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/predictive_corridor_runtime.py": "5eefcc3508b53f88a909c0749364b374ca68667ae0d0966cb432fe6d70baede2",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_fast_runtime.py": "4a08ab7b501ac5f144d871f63569a03b3f00ba929dd4ace29e552d6e50d1ad29",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_memory_runtime.py": "e7ef3432b9eb666c5775dc5a030d74df2ed81f93f2a36393a2b785843c95782d",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_runtime.py": "8074c63d5a013d0d0ea0c6944e4c46f792f7c3d978fe28d5198b576a56cf20e5",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/road_margin_speed_cap_runtime.py": "b9fe526fdba411d98c81fc05bf6211b9a8f87980309faa8012e5d0f92d54858a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/road_margin_throttle_runtime.py": "087501a060b91a252b57ce7f1395ee301bde518e1493a5d5d26e255c1b4ea058",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/runtime_config.py": "5c9ba42e18f17e39ac80bd5c2ddc7206f02376584a6de0ae1bc9eda587a6c2fb",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_corridor_runtime.py": "85fda4bfc0974e2215a6fe73e1774a7772c54f387308025abd968e1659b1eb8a",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_fallback_runtime.py": "d7dabf470e9d177e5409632c8d62d1555166742a09786a62e708cee36903be84",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_preview_runtime.py": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r2_runtime.py": "936f8dd45340c34d7308c2e09d82d74479e8baed3e7c34f2c32f9e9e48142ada",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r3_runtime.py": "f98d3f39f08278ea64d803de5f56fa56657de6d02528f76464065f24f5b1cd4c",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r4_runtime.py": "5b15079f629b89523071a54acec30983b67d2876767df8cc13933d3e51f355c8",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r5_runtime.py": "46a37e0fa853c4ab02baaec59ae65eaae81983b0fb7d6aa0ed6306788ca9610b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r6_runtime.py": "fdfd8604bf264f41fed13ff26768459cdc0d5d670110371bc4839f0bd43e9c73",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r7_runtime.py": "af730965681be0b30f6d13b9202320a2fecf8bcd5b1ff53a648d8d3e5e4ab662",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r8_runtime.py": "5813b49f72a8750d5f5e8f7d4366b89af2070f15fe271acfd133b87f44c9f971",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_runtime.py": "36f325eb63ee7e2db1c5e82bfa7f81c513ed636f59f5ea1e6d5f19885bd60bd6",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/stable_risk_envelope_runtime.py": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/straight_boost_runtime.py": "3b9938969af4eba366c70aebf2a54c832f129a19000ff9db9a82f64e376bdfce",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/straight_sprint_runtime.py": "23fefac4eac4a8730875550656a67dff9b7649b501c0846d42c72c263209bef7",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/traction_path_runtime.py": "bb40d993edbc3e0ebe6e5c0557ad74fdd7f2d7fca60499073bf3b8a4474d3e03",
+    "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/unified_passing_runtime.py": "8e94dfd95964243737a6385e03550fb2adee21b50edd350e60a49e9293f569f1"
+  },
+  "helper_source_sha256": {
+    "/workspace/HAIC-Money/scripts/evaluate_koi_minimum_clearance_ab.py": "91357cf122a72a8e97faa7c39d1ee1f97723ab6c5bd5d750f014427cb7323dd7",
+    "/workspace/HAIC-Money/scripts/analyze_koi_minimum_clearance_ab.py": "816bf6f20250cd3a7962047441f0b48389382248ea8a34c4cd425b7cd870a63f",
+    "/workspace/HAIC-Money/scripts/evaluate_koi_adaptive_ab.py": "803015d58a20519cbbf6fff2d480eb9373d7d88b43cdf077858d4ce3a53cecc4",
+    "/workspace/HAIC-Money/scripts/analyze_koi_adaptive_ab.py": "557f2ddc76293aa3aee4d29389bd3bc655d352a8e5149c4b3d55e3128479648e",
+    "/workspace/HAIC-Money/scripts/package_koi_adaptive_avoidance.py": "4a1077cbf5568cdc0c8cf79776d40a7951b44285ea4be6d7ce1b1036b48d56f2",
+    "/workspace/HAIC-Money/scripts/package_koi_minimum_clearance.py": "5fc984a2fa1e70d3fd25f5d2729425cf230c0f28cd66c8805c27bb4c584de9dc"
+  },
+  "source_copies": [
+    {
+      "file": "source/helpers/evaluate_koi_minimum_clearance_ab.py",
+      "source": "/workspace/HAIC-Money/scripts/evaluate_koi_minimum_clearance_ab.py",
+      "sha256": "91357cf122a72a8e97faa7c39d1ee1f97723ab6c5bd5d750f014427cb7323dd7"
+    },
+    {
+      "file": "source/helpers/analyze_koi_minimum_clearance_ab.py",
+      "source": "/workspace/HAIC-Money/scripts/analyze_koi_minimum_clearance_ab.py",
+      "sha256": "816bf6f20250cd3a7962047441f0b48389382248ea8a34c4cd425b7cd870a63f"
+    },
+    {
+      "file": "source/helpers/evaluate_koi_adaptive_ab.py",
+      "source": "/workspace/HAIC-Money/scripts/evaluate_koi_adaptive_ab.py",
+      "sha256": "803015d58a20519cbbf6fff2d480eb9373d7d88b43cdf077858d4ce3a53cecc4"
+    },
+    {
+      "file": "source/helpers/analyze_koi_adaptive_ab.py",
+      "source": "/workspace/HAIC-Money/scripts/analyze_koi_adaptive_ab.py",
+      "sha256": "557f2ddc76293aa3aee4d29389bd3bc655d352a8e5149c4b3d55e3128479648e"
+    },
+    {
+      "file": "source/helpers/package_koi_adaptive_avoidance.py",
+      "source": "/workspace/HAIC-Money/scripts/package_koi_adaptive_avoidance.py",
+      "sha256": "4a1077cbf5568cdc0c8cf79776d40a7951b44285ea4be6d7ce1b1036b48d56f2"
+    },
+    {
+      "file": "source/helpers/package_koi_minimum_clearance.py",
+      "source": "/workspace/HAIC-Money/scripts/package_koi_minimum_clearance.py",
+      "sha256": "5fc984a2fa1e70d3fd25f5d2729425cf230c0f28cd66c8805c27bb4c584de9dc"
+    },
+    {
+      "file": "source/environment/env_wrapper.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/env_wrapper.py",
+      "sha256": "d76a03bd9b051df502f332eef5a2a3b77a607bda458890a032785469cf21c39d"
+    },
+    {
+      "file": "source/environment/damage.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/damage.py",
+      "sha256": "f00d4393a1a3fb4339debde88c02671bee993724de6864a8b6325fc31f64cfc1"
+    },
+    {
+      "file": "source/environment/training/__init__.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/__init__.py",
+      "sha256": "b941048593149b127a2bc6600e45d8d6ba074deef22474a6bae02a1eb8fd54d6"
+    },
+    {
+      "file": "source/environment/training/benchmark_corridor.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/benchmark_corridor.py",
+      "sha256": "d4cdb88992585efbf923baf367ca017fb4a0961ce54ec6bed3247cc06f3ffeee"
+    },
+    {
+      "file": "source/environment/training/compare_launch_preview_package.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/compare_launch_preview_package.py",
+      "sha256": "a6c62b06928492ea3ba5655f5997933da8d40a36e8957f21b1318599eb7b2b8f"
+    },
+    {
+      "file": "source/environment/training/compare_launch_surge_package.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/compare_launch_surge_package.py",
+      "sha256": "642d90f9ac452780304521ee87edf7b9da172d3efa21e30e0ad87ae373ab388d"
+    },
+    {
+      "file": "source/environment/training/confirm_contact_continuity.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_contact_continuity.py",
+      "sha256": "f369f15869209258f5018c4b548bc110807e9143b5d81f8a35e7d1d287ad9dc1"
+    },
+    {
+      "file": "source/environment/training/confirm_far_hazard.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_far_hazard.py",
+      "sha256": "333d51077b62a325037a507fe6f164941abf67ef6cab49ef5f3da35fc80632aa"
+    },
+    {
+      "file": "source/environment/training/confirm_fast_completion.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fast_completion.py",
+      "sha256": "f81e0d166cf378d229878ca9aa7cd0310aebaa0db401acf437a28b0af7aa0a09"
+    },
+    {
+      "file": "source/environment/training/confirm_fast_road_commit.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fast_road_commit.py",
+      "sha256": "a286dd2e35a8c93f2e07b1b20c845a801bfdc2be1cfc900c1367d0da7992506b"
+    },
+    {
+      "file": "source/environment/training/confirm_fixed_high_speed_impact.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_fixed_high_speed_impact.py",
+      "sha256": "9bf4b4a8bb46b00e5aa603f13518dddee278b9eb58157d89812b416acb24c99b"
+    },
+    {
+      "file": "source/environment/training/confirm_speed_budget_package.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_speed_budget_package.py",
+      "sha256": "92a0cbf2be5ed9d401ae1884d1c22209436e6588a16b13d3c2b7078d9dcc112e"
+    },
+    {
+      "file": "source/environment/training/confirm_speed_coupled_package.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_speed_coupled_package.py",
+      "sha256": "c5aa39865dca0658f4e10bf04db122bbdfdf4a6abbae32b0acac984615e773cd"
+    },
+    {
+      "file": "source/environment/training/confirm_stable_package.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/confirm_stable_package.py",
+      "sha256": "e8713f14972bd974bf775093d56efa152a158093df7027fee37e24594b042d7b"
+    },
+    {
+      "file": "source/environment/training/curve_brake_screen.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/curve_brake_screen.py",
+      "sha256": "597c5a09c27c028d8282e2678e7e78df48002292a162377719bfea6b19e8ec37"
+    },
+    {
+      "file": "source/environment/training/env_factory.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/env_factory.py",
+      "sha256": "c0241dc7c6b4f4fae0c646d748e4ffade228c44f9bfc3a93b242528891a0a866"
+    },
+    {
+      "file": "source/environment/training/evaluate_closed_loop.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_closed_loop.py",
+      "sha256": "11622e860a71ecb3470d0bb41f93e3ca83545a7cc2286772df7b6f3f686cec2a"
+    },
+    {
+      "file": "source/environment/training/evaluate_hazard_potential_tune.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_hazard_potential_tune.py",
+      "sha256": "1f4fbefaf1355dcd37881b4c42e06b4871ddc795620d2be5c8a067a9569e8bfc"
+    },
+    {
+      "file": "source/environment/training/evaluate_lagrangian_tune.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_lagrangian_tune.py",
+      "sha256": "bd8839a58dd5c3555f002a80762e3ce749e59bc1755b1bc6d9a10e97f7df512c"
+    },
+    {
+      "file": "source/environment/training/evaluate_tournament.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_tournament.py",
+      "sha256": "7c7601fb622b025b4d5a7a45edf85e45bcbbb9e9ab90bf254473b84ed69b3e35"
+    },
+    {
+      "file": "source/environment/training/fast_route_teacher.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher.py",
+      "sha256": "ae575038fcffcd66deddc403ab656dde21dfe5c0834e90795dd961f176db48df"
+    },
+    {
+      "file": "source/environment/training/fast_route_teacher_v2.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v2.py",
+      "sha256": "d0ab34f8f693c3eb407b98e22fa117b412acfab6af65254d6e89c34aab79d99a"
+    },
+    {
+      "file": "source/environment/training/fast_route_teacher_v3.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v3.py",
+      "sha256": "623f17a021268aa3039b7ac79f45143160ce7c259d36689dcb85aed0680ef4d7"
+    },
+    {
+      "file": "source/environment/training/fast_route_teacher_v4.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v4.py",
+      "sha256": "50b186363123b94b73a599016b83086567fd0eef58b0bc1be03398bf41af05ec"
+    },
+    {
+      "file": "source/environment/training/fast_route_teacher_v5.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fast_route_teacher_v5.py",
+      "sha256": "cf5ab91d3ed088976c89010e6b9bd4ce80d328f7d9a595b123eebabf66e3f05c"
+    },
+    {
+      "file": "source/environment/training/fixed60_completion.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed60_completion.py",
+      "sha256": "9c8a180cecf3c135addec050471e788b198cc5091a49f9c6d69b1497ad5bde9c"
+    },
+    {
+      "file": "source/environment/training/fixed_high_speed_pursuit_repair.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_pursuit_repair.py",
+      "sha256": "e65e668c76f4a2d722524c402e2f624bd0a6479531e4b7b9e1a5bea071740d7e"
+    },
+    {
+      "file": "source/environment/training/fixed_high_speed_recovery.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_recovery.py",
+      "sha256": "965edeaf076fc2e4d5a606b947468c1207d4c4b22ebf3b7f2fe0ef032be22c7c"
+    },
+    {
+      "file": "source/environment/training/fixed_high_speed_recovery_v2.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_recovery_v2.py",
+      "sha256": "baf146b90b777770a3292cb8b245870b7a57bc5dbe8aa0fbba7179fe79c2b316"
+    },
+    {
+      "file": "source/environment/training/fixed_high_speed_road_bound.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_road_bound.py",
+      "sha256": "3a7c2ece151a49a9680a425d9764e24b6872062c05fae626d50466070014afd9"
+    },
+    {
+      "file": "source/environment/training/fixed_high_speed_steering.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/fixed_high_speed_steering.py",
+      "sha256": "6c43db04a08e909e330497eacf9583eec346039de37d6b1c88d5c5bf6a81251c"
+    },
+    {
+      "file": "source/environment/training/hazard_exposure.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/hazard_exposure.py",
+      "sha256": "adfd5cc167e9f41d46a13ebbdceae8e438a4641b3e18d84bded3240a8558f9cc"
+    },
+    {
+      "file": "source/environment/training/hazard_potential.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/hazard_potential.py",
+      "sha256": "732924698ac71ff3402c2c548ca514c40a5c4688905a94b38c7c92f35ca2bd15"
+    },
+    {
+      "file": "source/environment/training/imitation.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/imitation.py",
+      "sha256": "ff3e69d3d226efa836884cfd235a8db7d2dc5af79cfef3950b9d2c5eab28435a"
+    },
+    {
+      "file": "source/environment/training/improvement_loop.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/improvement_loop.py",
+      "sha256": "e872a5fb808d0977643bdde7dbd61ba34da5b7618ca7b5fb8e3bde83414fa614"
+    },
+    {
+      "file": "source/environment/training/labels.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/labels.py",
+      "sha256": "44e19f7da8290d3ba805c8be20b17646abdccb81aa5901b6b5fc5435537045c3"
+    },
+    {
+      "file": "source/environment/training/lagrangian.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/lagrangian.py",
+      "sha256": "4ccab092d39701616633475dec4426cf7c9f9f4aae6d8d382e32045f704a9653"
+    },
+    {
+      "file": "source/environment/training/lagrangian_ppo.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/lagrangian_ppo.py",
+      "sha256": "98433b9324d279aee872af19ac43141a048cc76c2c19c2f8c305250627355e17"
+    },
+    {
+      "file": "source/environment/training/package_fixed_high_speed_damping.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_fixed_high_speed_damping.py",
+      "sha256": "996ccc1e74ae689af30eb00391b8e05fccdae019633b92ef5b9ba42a7db780c0"
+    },
+    {
+      "file": "source/environment/training/package_launch_preview.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_preview.py",
+      "sha256": "b9d5086974ba06e3b5e1a5da7b4110c70d058bffbebf1fe998a44e4f1410111b"
+    },
+    {
+      "file": "source/environment/training/package_launch_preview_speed_gate.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_preview_speed_gate.py",
+      "sha256": "92ac1a0750b8b37e9d13e2ced521834672296b48f0f4e3e76d2f712e288032f3"
+    },
+    {
+      "file": "source/environment/training/package_launch_surge.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_launch_surge.py",
+      "sha256": "38ebbd2d6d069b74953110f9204e106b3dacc3ac539e7cbaec27a75ede065c20"
+    },
+    {
+      "file": "source/environment/training/package_speed_budget.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_speed_budget.py",
+      "sha256": "8df594ea9e0f33dbb44300d9ebda24862d3a22bb8c78a6bbc5e327425824a997"
+    },
+    {
+      "file": "source/environment/training/package_stable_risk.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_stable_risk.py",
+      "sha256": "390efeec1066916dc9cd1a6adec7c8d2a8335059cb29df4976078cc5b404e195"
+    },
+    {
+      "file": "source/environment/training/package_submission.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/package_submission.py",
+      "sha256": "6c845c08b8573cedf813d25d4d69935825ed52996569884db15b0905fa278d39"
+    },
+    {
+      "file": "source/environment/training/ppo.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/ppo.py",
+      "sha256": "0b022cf3103566f5d10538c406813899269c95f9b0db39789ea0e2bc8d611b86"
+    },
+    {
+      "file": "source/environment/training/preflight_hazard_potential_screen.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/preflight_hazard_potential_screen.py",
+      "sha256": "84094fd60cdc52246b5081aec9c1659b01b4e739109a2b726968d8c095304b74"
+    },
+    {
+      "file": "source/environment/training/preflight_lagrangian_screen.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/preflight_lagrangian_screen.py",
+      "sha256": "334f5597379164438bb467437fe083030f48a72afea883cddf42ff18a2704141"
+    },
+    {
+      "file": "source/environment/training/repair_fast_completion.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/repair_fast_completion.py",
+      "sha256": "d3a6dcc47212c0324f6467335a003af031b08db6e69c479026d06a815efd3538"
+    },
+    {
+      "file": "source/environment/training/rollout.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/rollout.py",
+      "sha256": "1a4c5bc5059ae3188297e0e38e8eb0ed177bbea4a7ee4cb9f1e0da84fdc063d1"
+    },
+    {
+      "file": "source/environment/training/site_environment.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/site_environment.py",
+      "sha256": "b6341d1925af19b58e0ef6f5ad21239eff689c9b94a5782449148b39e3cb32a2"
+    },
+    {
+      "file": "source/environment/training/site_maps.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/site_maps.py",
+      "sha256": "2a9925619e73433b47f6795511c716efaa0f65bdcc2a61cdf247c7218a6d9c26"
+    },
+    {
+      "file": "source/environment/training/trace_launch_preview_failure.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/trace_launch_preview_failure.py",
+      "sha256": "f341d1798d642bb27fda7bcf1d11e89a7ed4c3fb80fa4255a04c6128559c69e0"
+    },
+    {
+      "file": "source/environment/training/train_dynamics.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/train_dynamics.py",
+      "sha256": "a8245f2b4dad0d6cab6e3e708c4162f535d709072a68682614c5e435950f2826"
+    },
+    {
+      "file": "source/environment/training/train_policy.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/train_policy.py",
+      "sha256": "2160445495628b3084197fab7d685d2f088218c930e80504faf7ba8d47b745f2"
+    },
+    {
+      "file": "source/environment/training/vision_teacher.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/vision_teacher.py",
+      "sha256": "3bcf82df7cb2ddbc73a5dd06e6c8af62f71c1f063540c08ba0fd08d6f48a39f0"
+    },
+    {
+      "file": "source/environment/core/__init__.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "source/environment/core/finish_line.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/finish_line.py",
+      "sha256": "0c259bc89051813743e7c40e3f61104bca6c38618b8ddd19c002365f1078022b"
+    },
+    {
+      "file": "source/environment/core/obstacle_contacts.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/obstacle_contacts.py",
+      "sha256": "796fd3dc7e8a297acdd848b14f0ef115fc605605cfd2d1b1c35d2f0d2601fb15"
+    },
+    {
+      "file": "source/environment/core/track_variables.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/track_variables.py",
+      "sha256": "b80dc4409e8b6c4cb4e4c4b948ea355c58b24ecf9583cb96c2f9bed003bed10d"
+    },
+    {
+      "file": "source/environment/core/vendor/__init__.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "source/environment/core/vendor/car_dynamics.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/car_dynamics.py",
+      "sha256": "d0555e6722b5f5431f1b5267060012182febbc215c1cd6bd35da63798012b125"
+    },
+    {
+      "file": "source/environment/core/vendor/car_racing.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/core/vendor/car_racing.py",
+      "sha256": "bf7d7a16690568c96d454322f5bba83c79bd18fb5b44eaf66d6293493058593d"
+    },
+    {
+      "file": "source/environment/haic_agent/__init__.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/__init__.py",
+      "sha256": "4865b086e16dc5eed5d5c0982382c4a1af8fb2ba6ea242e13c1dd887550e9b7c"
+    },
+    {
+      "file": "source/environment/haic_agent/acceleration_braking_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/acceleration_braking_runtime.py",
+      "sha256": "e720e876eddbd356f8a3ea1ab38cb81c7db7ae6ba45222602fe383584ef7b1b4"
+    },
+    {
+      "file": "source/environment/haic_agent/acceleration_envelope_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/acceleration_envelope_runtime.py",
+      "sha256": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_bend_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_runtime.py",
+      "sha256": "27459733edf6d845b61296f68fa82eb17af9672e2a6c88337ff8ab6d9a2f91d2"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_bend_speed_gentle_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_gentle_runtime.py",
+      "sha256": "4e6c8acc1c8cffa10856ae0f475deb43945bc4f5161499fc54972369bc29c005"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_bend_speed_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_runtime.py",
+      "sha256": "f69ad6cc52265ae94f4699281a6d1f9d6bcbf5ceca485bdd04aa897fdd0fa3a2"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_bend_speed_safe_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_bend_speed_safe_runtime.py",
+      "sha256": "56d1ace1dceb751dfac34e82ab824e4ab02f4e16aeca4d2cf673a813a805b9e1"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_fast_cruise_brake_r2_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_fast_cruise_brake_r2_runtime.py",
+      "sha256": "125ee564efaf0c4943d099c5f86f05cf2384a70e9690b1c7adf2bda8c21ca836"
+    },
+    {
+      "file": "source/environment/haic_agent/anticipatory_fast_cruise_brake_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/anticipatory_fast_cruise_brake_runtime.py",
+      "sha256": "e02b76bd0065347d2579a61fceb12583cc6818cde7c1343d26737353dce77b2f"
+    },
+    {
+      "file": "source/environment/haic_agent/apex_line_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/apex_line_runtime.py",
+      "sha256": "4b5bc1ef12b751f1fd2d760029426d2398e150fb0f0d5dd554a8c7d0581e65ef"
+    },
+    {
+      "file": "source/environment/haic_agent/bend_safety_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/bend_safety_runtime.py",
+      "sha256": "f22e9cff45f810ae15fb95b8b2dd7419486dbbb41729086dcb0da3fe2164bf35"
+    },
+    {
+      "file": "source/environment/haic_agent/connected_guarded_preview_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/connected_guarded_preview_runtime.py",
+      "sha256": "9903d6eee51351af1421c4dfc60bc702fc12a42f8318c638d8c715af50641240"
+    },
+    {
+      "file": "source/environment/haic_agent/connected_preview_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/connected_preview_runtime.py",
+      "sha256": "723d83e3e800bc09a9711f27fb177e8635987433c0bc93c101ab7035f3f8b62a"
+    },
+    {
+      "file": "source/environment/haic_agent/contact_continuity_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/contact_continuity_runtime.py",
+      "sha256": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80"
+    },
+    {
+      "file": "source/environment/haic_agent/corridor_agent.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/corridor_agent.py",
+      "sha256": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd"
+    },
+    {
+      "file": "source/environment/haic_agent/dynamics.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/dynamics.py",
+      "sha256": "c7e905529b97bc1539254463150c7015ac9aeb94670865adacfeafac209acd75"
+    },
+    {
+      "file": "source/environment/haic_agent/far_hazard_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/far_hazard_runtime.py",
+      "sha256": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_clearance_cone_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_clearance_cone_runtime.py",
+      "sha256": "ab7de84e5a9e8355eddd0a3fe0ddbd2b4cd18a334a909a83d18c9815f9ef7e14"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_committed_recovery_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_committed_recovery_runtime.py",
+      "sha256": "3a1bb7f55ec5ffa674161e5dad9707c0bf15fadef1ec8d5660092e8d1cf34aec"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_completion_coordination.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_completion_coordination.py",
+      "sha256": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_pedal_stable_steer_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_pedal_stable_steer_runtime.py",
+      "sha256": "43364689765a6a96cbe902b8025b87a4f6bb7b7e50a825f5c867825381ef5da6"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_policy_safety_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_policy_safety_runtime.py",
+      "sha256": "1b7c17625ab6e1f96d69eb7b7ea4ea9809a2b7a5e27401ae8c99480078835b78"
+    },
+    {
+      "file": "source/environment/haic_agent/fast_road_commit_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fast_road_commit_runtime.py",
+      "sha256": "78c9f2d2098dfbe725098154124da16a208df9f79c46c8773051e04154861ea4"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed60_completion.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed60_completion.py",
+      "sha256": "50379b8ade6dc0c7058ee24afae9a0afac3e687879f21cccfdedc76e68f78ca7"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed_high_speed_pursuit_repair.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_pursuit_repair.py",
+      "sha256": "14beb77ca09c84a9102c9232528f6c6681f7bb263ddf9dedf2e967d0b32ce920"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed_high_speed_recovery.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_recovery.py",
+      "sha256": "02c3ed0b87ce02201e13242293731ac7dc7500d8bc6f40406cbd6e76bde758ec"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed_high_speed_recovery_v2.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_recovery_v2.py",
+      "sha256": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed_high_speed_road_bound.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_road_bound.py",
+      "sha256": "863722c38813afdf2883c613bbf775b2e10d83fabf91efc84a33fdf46013e443"
+    },
+    {
+      "file": "source/environment/haic_agent/fixed_high_speed_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/fixed_high_speed_runtime.py",
+      "sha256": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88"
+    },
+    {
+      "file": "source/environment/haic_agent/geometric_passing_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/geometric_passing_runtime.py",
+      "sha256": "4475b3380e4547b6f26421c514594cf26d8e7b50fc15e1f3d0744c15bab48a65"
+    },
+    {
+      "file": "source/environment/haic_agent/handoff_path_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/handoff_path_runtime.py",
+      "sha256": "870b38f6c85c757c1532251932e0e04ede476a941309e6e9a18b5cd675aea28b"
+    },
+    {
+      "file": "source/environment/haic_agent/high_acceleration_path_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/high_acceleration_path_runtime.py",
+      "sha256": "2105cf7b73fea0d291b45f94e0618837354b570505187536362d3b529fbe710d"
+    },
+    {
+      "file": "source/environment/haic_agent/high_speed_pivot_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/high_speed_pivot_runtime.py",
+      "sha256": "4c4dddbb3e33b0abb0b8daf0639784690dd6301e5a532ce7807d6d4e6ee6e9af"
+    },
+    {
+      "file": "source/environment/haic_agent/hybrid_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/hybrid_runtime.py",
+      "sha256": "2b7baa674f665064ec219bb726d60753a4331508809027211206ab8686dc9234"
+    },
+    {
+      "file": "source/environment/haic_agent/launch_lookahead_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_lookahead_runtime.py",
+      "sha256": "0629d00800df1efdb15d03e1b2093e81ad80c9bdaccb37b433f5d41304688060"
+    },
+    {
+      "file": "source/environment/haic_agent/launch_preview_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_preview_runtime.py",
+      "sha256": "83294dd08cccd695b8c8fdd4b856be46a3729f6a4576c07b238abff17d8c2d9d"
+    },
+    {
+      "file": "source/environment/haic_agent/launch_preview_speed_gate_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_preview_speed_gate_runtime.py",
+      "sha256": "4eaca3653be9c08868687841dd873234565c94939b5e5618c09bf615fc03b08d"
+    },
+    {
+      "file": "source/environment/haic_agent/launch_surge_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/launch_surge_runtime.py",
+      "sha256": "0895977971cb210c23b0574d143a456ddc9bdd64e684ab25e73ec7194a1282de"
+    },
+    {
+      "file": "source/environment/haic_agent/lookahead_corridor_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/lookahead_corridor_runtime.py",
+      "sha256": "000e8ae12d7f9bdd4a66c6139e852debb3510d14912da56b5b6771aeafd1ec9f"
+    },
+    {
+      "file": "source/environment/haic_agent/networks.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/networks.py",
+      "sha256": "478b231a97e88b63d8198a602489ee28bf2ad021b7bda7652559f42efa18441d"
+    },
+    {
+      "file": "source/environment/haic_agent/observation.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/observation.py",
+      "sha256": "aaee651e9555b21fa547e0d277ff8771a38829c592162cbe831d2f0e07d8a665"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_commit_late_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_commit_late_runtime.py",
+      "sha256": "6530e547371e7485d8d27065180f454cdc7a49ecf09f6fbb49222f3ab268c135"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_commit_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_commit_runtime.py",
+      "sha256": "154f69db55d895cc849bcc32008902800a6f1f471f9dea63e38426490b700279"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_full_road_guard_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_full_road_guard_runtime.py",
+      "sha256": "7fb612371068c18b981e4d8989200e33bbcf5a98b6c208bb1fa0300de3c57193"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_guard_brake_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_guard_brake_runtime.py",
+      "sha256": "cb648a18934742cc73d2bbe0f05208105963a018c8f352779bf72acda190f7aa"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_road_guard_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_road_guard_runtime.py",
+      "sha256": "127a5dd251991e759d4cb2ffce95c1daa54cb6c98eaa37ded892bdcf58523a34"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_side_evidence_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_side_evidence_runtime.py",
+      "sha256": "c37bc0a5e7869d586bc405fe05bb80b4ed4784d62079fc19a3ea0263130ee30c"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_slew_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_slew_runtime.py",
+      "sha256": "c882a371a9ab9a31dc29d21cab9ba53a5e7114f9dc2139e7a8d5709867b0df0d"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_slow_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_slow_runtime.py",
+      "sha256": "4ae565606c34f592d9dc5914ba1878c5f049cc96ccc66a4f763498a248ffafd5"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_stuck_recovery_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_stuck_recovery_runtime.py",
+      "sha256": "a47b5e3e7e8e80c4b9ff370d4badd2e0311286fc89a51ae6e5217348fcc5d96e"
+    },
+    {
+      "file": "source/environment/haic_agent/obstacle_visibility_reset_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/obstacle_visibility_reset_runtime.py",
+      "sha256": "c5186bc40dddbd54b2409315b8763830136fc15ed378955e5bd3342e65d12461"
+    },
+    {
+      "file": "source/environment/haic_agent/out_in_out_flow_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_flow_runtime.py",
+      "sha256": "dc170820d6fcd25d8d39c6d7b98b620b0a5a73cd9f63431fe48d0c330ad99911"
+    },
+    {
+      "file": "source/environment/haic_agent/out_in_out_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_runtime.py",
+      "sha256": "fbbe9c88f53e3b878c2e68bff29c80537bd62a2641740fbf9125474574845919"
+    },
+    {
+      "file": "source/environment/haic_agent/out_in_out_visibility_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/out_in_out_visibility_runtime.py",
+      "sha256": "169068e69317860576e28d6ffd7af84ca3d1a390f6704eee59266f06d9b76f34"
+    },
+    {
+      "file": "source/environment/haic_agent/pixel_features.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/pixel_features.py",
+      "sha256": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+    },
+    {
+      "file": "source/environment/haic_agent/planner.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/planner.py",
+      "sha256": "1d4840119d23ee01250f9a0f7f839f81b2015c37ec86df0b105f804a78943ae8"
+    },
+    {
+      "file": "source/environment/haic_agent/predictive_corridor_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/predictive_corridor_runtime.py",
+      "sha256": "5eefcc3508b53f88a909c0749364b374ca68667ae0d0966cb432fe6d70baede2"
+    },
+    {
+      "file": "source/environment/haic_agent/preview_pedal_fast_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_fast_runtime.py",
+      "sha256": "4a08ab7b501ac5f144d871f63569a03b3f00ba929dd4ace29e552d6e50d1ad29"
+    },
+    {
+      "file": "source/environment/haic_agent/preview_pedal_memory_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_memory_runtime.py",
+      "sha256": "e7ef3432b9eb666c5775dc5a030d74df2ed81f93f2a36393a2b785843c95782d"
+    },
+    {
+      "file": "source/environment/haic_agent/preview_pedal_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/preview_pedal_runtime.py",
+      "sha256": "8074c63d5a013d0d0ea0c6944e4c46f792f7c3d978fe28d5198b576a56cf20e5"
+    },
+    {
+      "file": "source/environment/haic_agent/road_margin_speed_cap_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/road_margin_speed_cap_runtime.py",
+      "sha256": "b9fe526fdba411d98c81fc05bf6211b9a8f87980309faa8012e5d0f92d54858a"
+    },
+    {
+      "file": "source/environment/haic_agent/road_margin_throttle_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/road_margin_throttle_runtime.py",
+      "sha256": "087501a060b91a252b57ce7f1395ee301bde518e1493a5d5d26e255c1b4ea058"
+    },
+    {
+      "file": "source/environment/haic_agent/runtime_config.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/runtime_config.py",
+      "sha256": "5c9ba42e18f17e39ac80bd5c2ddc7206f02376584a6de0ae1bc9eda587a6c2fb"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_coupled_corridor_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_corridor_runtime.py",
+      "sha256": "85fda4bfc0974e2215a6fe73e1774a7772c54f387308025abd968e1659b1eb8a"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_coupled_fallback_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_fallback_runtime.py",
+      "sha256": "d7dabf470e9d177e5409632c8d62d1555166742a09786a62e708cee36903be84"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_coupled_preview_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_coupled_preview_runtime.py",
+      "sha256": "066872b050a0b1c76d509dbb5b6fd2c9da09f77be9c25faf9e3247104f8eeb5b"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r2_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r2_runtime.py",
+      "sha256": "936f8dd45340c34d7308c2e09d82d74479e8baed3e7c34f2c32f9e9e48142ada"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r3_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r3_runtime.py",
+      "sha256": "f98d3f39f08278ea64d803de5f56fa56657de6d02528f76464065f24f5b1cd4c"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r4_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r4_runtime.py",
+      "sha256": "5b15079f629b89523071a54acec30983b67d2876767df8cc13933d3e51f355c8"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r5_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r5_runtime.py",
+      "sha256": "46a37e0fa853c4ab02baaec59ae65eaae81983b0fb7d6aa0ed6306788ca9610b"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r6_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r6_runtime.py",
+      "sha256": "fdfd8604bf264f41fed13ff26768459cdc0d5d670110371bc4839f0bd43e9c73"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r7_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r7_runtime.py",
+      "sha256": "af730965681be0b30f6d13b9202320a2fecf8bcd5b1ff53a648d8d3e5e4ab662"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_r8_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_r8_runtime.py",
+      "sha256": "5813b49f72a8750d5f5e8f7d4366b89af2070f15fe271acfd133b87f44c9f971"
+    },
+    {
+      "file": "source/environment/haic_agent/speed_preview_road_recenter_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/speed_preview_road_recenter_runtime.py",
+      "sha256": "36f325eb63ee7e2db1c5e82bfa7f81c513ed636f59f5ea1e6d5f19885bd60bd6"
+    },
+    {
+      "file": "source/environment/haic_agent/stable_risk_envelope_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/stable_risk_envelope_runtime.py",
+      "sha256": "31eed1bc0e566d89b7b1d5fc33cb1f28f7662f383e1ae21f7ae814142997c86b"
+    },
+    {
+      "file": "source/environment/haic_agent/straight_boost_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/straight_boost_runtime.py",
+      "sha256": "3b9938969af4eba366c70aebf2a54c832f129a19000ff9db9a82f64e376bdfce"
+    },
+    {
+      "file": "source/environment/haic_agent/straight_sprint_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/straight_sprint_runtime.py",
+      "sha256": "23fefac4eac4a8730875550656a67dff9b7649b501c0846d42c72c263209bef7"
+    },
+    {
+      "file": "source/environment/haic_agent/traction_path_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/traction_path_runtime.py",
+      "sha256": "bb40d993edbc3e0ebe6e5c0557ad74fdd7f2d7fca60499073bf3b8a4474d3e03"
+    },
+    {
+      "file": "source/environment/haic_agent/unified_passing_runtime.py",
+      "source": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/haic_agent/unified_passing_runtime.py",
+      "sha256": "8e94dfd95964243737a6385e03550fb2adee21b50edd350e60a49e9293f569f1"
+    },
+    {
+      "file": "candidate.zip",
+      "source": "/workspace/HAIC-Money/submissions/koi-minimum-clearance-v2.zip",
+      "sha256": "64cecc0bf52426622d094664ebd8130fb4f9f6b132b78754130d98e627d47e2a"
+    },
+    {
+      "file": "candidate.manifest.json",
+      "source": "/workspace/HAIC-Money/submissions/koi-minimum-clearance-v2.manifest.json",
+      "sha256": "7ebeee9d9d771fd420387633a5ee1ee8da9d20ddbf86ec692376a9fd60545ec1"
+    }
+  ],
+  "operator_sha256": "91357cf122a72a8e97faa7c39d1ee1f97723ab6c5bd5d750f014427cb7323dd7",
+  "analyzer_sha256": "816bf6f20250cd3a7962047441f0b48389382248ea8a34c4cd425b7cd870a63f",
+  "analysis_spec": {
+    "version": "koi-minimum-clearance-ab-measurement-v1",
+    "slots": 48,
+    "cells": 24,
+    "geometry_seeds": 8,
+    "physical_passage": "first local forward front crossing -radius to first rear>radius; all hull/wheel polygon skins in raw front/rear; retain incomplete encounters",
+    "station_continuity": "dt in(0,.020001]; road_index change<=4; station increment>=-1e-6 and <=hypot(dx,dy)+7; no wrap",
+    "window": "fixed obstacle station-25 to station+25; interpolated world endpoints; no seam wrap; continuous forward station only",
+    "path": "sum world XY chord lengths, clipped at common road window interpolated endpoints; cell mean fractional paired change, then equal-weight cells",
+    "eligibility": "same catalog/initial state/10-decision prefix parity, both complete continuous fixed windows and valid physical passage; no detector conditioning; every baseline-eligible window must preserve candidate eligibility or gate fails",
+    "return": "after first physical all-fixture rear>radius sample, abs centerline lateral<=1m continuously >=0.24s; confirmation must fall by fixed window exit; onset time minus rear-clear time",
+    "return_status": "returned, censored_window_exit, censored_episode_end, unpassed, invalid_window; all retained; no returned-only aggregate",
+    "steering": "executed abs steer time-weighted mean/max/integral on exactly clipped window, held over each decision pre/post interval; full coverage required",
+    "clearance": "minimum circle-to-all-hull/wheel polygons including Box2D skin; sampled50Hz, not continuous-time safety; whole-episode and physical passage",
+    "offroad": "raw ticks any wheel without road contact; side uses signed centerline lateral positive=right, negative=left; road-departure events are transitions into wheel-contact loss",
+    "gates": "all48 valid uncensored episodes; no lost finishes; every cell damage/collision decisions nonincrease; no new hit of any whole-episode baseline-no-hit object (including unreached/invalid-passage); every baseline-eligible window retained; >=2% reduction equal-cell-weight matched-window fractional path across >=2 distinct improving geometry seeds; matched finished mean lap nonincrease",
+    "descriptive": "lateral extrema, steering, return statuses/lower bounds, departures and baseline crossing-branch-off residual avoidance; projection unavailable distinguished from measured projection off; not speed tuning or official score",
+    "safety": "protocol/ledger/episode/raw/ZIP/member/environment/transitive helper source hashes verified; passive only; partial slots retained fail closed"
+  },
+  "schedule": [
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 38300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 38301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 38302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 38303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 50300,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 50301,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 50302,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 1,
+      "seed": 50303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 1,
+      "seed": 50303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 2,
+      "seed": 50303,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 2,
+      "seed": 50303,
+      "status": "unrun"
+    },
+    {
+      "mode": "minimum_clearance_v1",
+      "track_id": 3,
+      "seed": 50303,
+      "status": "unrun"
+    },
+    {
+      "mode": "crossing_projection",
+      "track_id": 3,
+      "seed": 50303,
+      "status": "unrun"
+    }
+  ],
+  "resource_forecast": {
+    "peak_child_bytes": 426172416,
+    "memory_reserve_bytes": 268435456,
+    "serial_children": 1,
+    "gpu": false,
+    "per_episode_disk_bytes": 8388608,
+    "disk_reserve_bytes": 134217728,
+    "temp_bytes": 16777216,
+    "wall_budget_s": 1800,
+    "child_timeout_s": 90,
+    "rationale": "Same CPU21 serial telemetry path;1.5x measured prior peak+256MiB growth reserve,2x per-episode bytes,1.6x measured total duration; not official limits"
+  },
+  "resource_measurement": {
+    "host_mem_available_bytes": 111953620992,
+    "host_dirty_bytes": 1466368,
+    "host_writeback_bytes": 0,
+    "cgroup": "0::/",
+    "visible_cgroup_ancestors": [
+      {
+        "path": "/sys/fs/cgroup",
+        "memory_max": "129567293440",
+        "memory_current": 85688201216,
+        "raw_headroom_bytes": 43879092224,
+        "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+        "memory_stat": "anon 18793943040\nfile 66326290432\nkernel 562262016\nkernel_stack 3883008\npagetables 144076800\nsec_pagetables 0\npercpu 24072\nsock 0\nvmalloc 12288\nshmem 0\nzswap 0\nzswapped 0\nfile_mapped 373641216\nfile_dirty 389120\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 24033361920\nshmem_thp 0\ninactive_anon 1703936\nactive_anon 18792177664\ninactive_file 64599420928\nactive_file 1726869504\nunevictable 0\nslab_reclaimable 362833712\nslab_unreclaimable 51175680\nslab 414009392\nworkingset_refault_anon 0\nworkingset_refault_file 3724362\nworkingset_activate_anon 0\nworkingset_activate_file 2946734\nworkingset_restore_anon 0\nworkingset_restore_file 57970\nworkingset_nodereclaim 0\npgscan 14091845\npgsteal 14081043\npgscan_kswapd 12777688\npgscan_direct 1314157\npgscan_khugepaged 0\npgsteal_kswapd 12767971\npgsteal_direct 1313072\npgsteal_khugepaged 0\npgfault 1814481927\npgmajfault 9787\npgrefill 13740730\npgactivate 10682\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 14\nthp_collapse_alloc 47\nthp_swpout 0\nthp_swpout_fallback 0\n",
+        "memory_pressure": "some avg10=0.00 avg60=0.00 avg300=0.00 total=551684\nfull avg10=0.00 avg60=0.00 avg300=0.00 total=550186\n"
+      }
+    ],
+    "disk": [
+      {
+        "path": "/workspace/HAIC-Money/runs/koi-minimum-clearance-ab-20260930-r2",
+        "device": 49,
+        "free_bytes": 127092129792
+      },
+      {
+        "path": "/tmp/kilo",
+        "device": 49,
+        "free_bytes": 127092129792
+      }
+    ]
+  },
+  "consumed_reuse_evidence": {
+    "scope": "explicit previously consumed TRAIN reuse, not freshness clearance",
+    "source_sha256": {
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/protocol.json": "f07f7f282275c7ac58f1978b2421ba15ca506d46ebd5877b8c3f9b14249b0125",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/episode-report.json": "9224bbab5c9653e1f9c23de4114fe633c8409d46d1c70b9fb94a61a1d79aff46",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-crossing_projection.json": "775af5e5a0ae800ca5bd1e95b6232ed8f5fb2a358f00429308415e791fa6131f",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-crossing_projection.raw.jsonl": "e22c07240e774307547763dc23cec38bf8edad38265c501b2eb98c9c595ceaa6",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-crossing_projection.process.json": "23b8132132eedc16d728251e8bf55b74e9a47631eec9068c129be805bab14738",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-adaptive_v1.json": "ff8f85000528298755060d47dcbc3f35cdaeb42872099db52cabecb6bb713276",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-adaptive_v1.raw.jsonl": "ca3406cff87dfbc44c8e66e6c93bd73d08e17011af0c0031ce674ed92d8955ed",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38300-adaptive_v1.process.json": "96b471fa69be680accf8ce7d8bcdaddac4c1e45a490241fcbe5c8ed8d062ad6d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-adaptive_v1.json": "92873b47f2d8d4865d129edf35610b747240068430cec1ba92893bbda610bd63",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-adaptive_v1.raw.jsonl": "3965cd8b70896f1788e6f31ef078ffb2f6b9c1647362d84bb6f9c2e9027457c7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-adaptive_v1.process.json": "faeaaa574c298889710e349d42f93ab299a43d2b2ba54fcd8eff92a8bc6fdc87",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-crossing_projection.json": "93daa67da9ffa0b5bfccfe05aa4505dcd3e4acc184d2e8a61856995a3d336824",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-crossing_projection.raw.jsonl": "223f389fda4d20b41914a021a03be3b03397a72f6d76721d14ad830b8cbcd77b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38300-crossing_projection.process.json": "063f69bb65780bb269bc54bba15acd793adc96317e1f1b7fe21aaa25b55144f5",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-crossing_projection.json": "b6d82a3cfc3e0422a51e35dc217e4ad8e45d09611053bd2ba9a1605be2d1cfe6",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-crossing_projection.raw.jsonl": "5beb1573681c44ba1f2222dd5f653e5bdf33e960257b5a264ac000c786d26c5f",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-crossing_projection.process.json": "eaf5e5ca412c0086c976336de77568e92617dda1d393d15a3aafea8b2e3695ed",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-adaptive_v1.json": "63009be4e2388a3545a12f80ab44179f9d28e5078bd96909f3ef6d004d7bcea2",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-adaptive_v1.raw.jsonl": "baa4b1a0a78550bc255be27cb3ac03410cbf0d96c82909984d349f49e4f428a9",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38300-adaptive_v1.process.json": "4e41257f33dd2ef7d86c719e031f16ff4918ab33b6f46989d7e9f28ba6d451f3",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-adaptive_v1.json": "d10ea78295c9c8d3c64d0c7e10667ab52f42ef07f5b87255901b1df92207d20d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-adaptive_v1.raw.jsonl": "4f5e5a554f9191c3d1879d0c1196398898e4a13c66ac78a857c517cf1927e7db",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-adaptive_v1.process.json": "fe7ef046353b8e019ec1095728dd7514bb7ea3e8d3dc84f5d1659f6712ea2142",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-crossing_projection.json": "af4abdc514c22fe03722326773f167f8e214c3ae43628950008e28accd468b22",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-crossing_projection.raw.jsonl": "4f5e5a554f9191c3d1879d0c1196398898e4a13c66ac78a857c517cf1927e7db",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38301-crossing_projection.process.json": "86a30262d344065589de0d4cf070376997d3d58f3349175879497b1cf4c7b8ed",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-crossing_projection.json": "bb7dc54b496752d607486f2cab5646a7101433daf84b0a1bab8cdc7e4304b6bc",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-crossing_projection.raw.jsonl": "c51fd8a74afef1157a05c692921a960d5a600a80b6bbf57341d6004b20c7b8df",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-crossing_projection.process.json": "f3490c50f601a61c2c3208880273f7119d06b9fd927701dfa1e43f3542c19d6e",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-adaptive_v1.json": "4938af629df1644cfd3d8216b56f0d6c40ce945a386544b71e74d2d98a5624ab",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-adaptive_v1.raw.jsonl": "bd1e129ad8089fec9e6ce7b7f2aedb09b75dff3ffb4a0507038cb50821984740",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38301-adaptive_v1.process.json": "e5872fc3dd7382275e72c71daae0c6294e47276cb6c14386486e4e0b03fd6393",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-adaptive_v1.json": "4a847384f0b584d4e3677df2008920f467e5ddb131dc1216ed224057407cde2b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-adaptive_v1.raw.jsonl": "7cea7e3ac63d457a35dcd64d561fc2d19db98900ebba048dd1ca2690ddbb8e3b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-adaptive_v1.process.json": "ded19e4639090f2bcdf1a1ea25bdf8c203d4073abccdbb0dd7e87805ef0873f7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-crossing_projection.json": "c86c0afc0f62dd4fbcdf85151e49dc437250ee893a26615ddf007fc21290021b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-crossing_projection.raw.jsonl": "7cea7e3ac63d457a35dcd64d561fc2d19db98900ebba048dd1ca2690ddbb8e3b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38301-crossing_projection.process.json": "2b45745089d7c7e17c4c43a04fab38b9e81dd86b6747df0d21c5985c168f7276",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-crossing_projection.json": "56b02943b729d3e89c26ecae0cff049e2dc39faf86c0815a865c1486bf606709",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-crossing_projection.raw.jsonl": "6f1161351f522051485085ee0dbbc7a75c2b5499368b1e6e661911635927b901",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-crossing_projection.process.json": "2bebe17fd177422bcf72659b6d58c68f4fc69bf36aba39774bcb2a3f5494ab01",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-adaptive_v1.json": "cc19243aa158da2db0d29f1e75a7123c579b3c255c3ad5262328fe8ce7b889e8",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-adaptive_v1.raw.jsonl": "6f1161351f522051485085ee0dbbc7a75c2b5499368b1e6e661911635927b901",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38302-adaptive_v1.process.json": "80a5cd44c0ebeb48f01e99b0a4344a01045d4fd71e73448e467144d76a12421d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-adaptive_v1.json": "72afc1139fcc2e68a4bb505a2ef1a277fb9c86806dfd01695c4f94e7aaca67cf",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-adaptive_v1.raw.jsonl": "b5c72ba1c42f484cc4e07a19f8cd757e65396eccf64be9c80fd9c86d1e3de408",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-adaptive_v1.process.json": "3897989ec7923244a3555421913cd5629162533fc99a367ae60c552262bbad59",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-crossing_projection.json": "96c94acb7cdbbe7e2bb4d287ee77c4f38b59dd2f673e25a816979163300b9ce7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-crossing_projection.raw.jsonl": "b5c72ba1c42f484cc4e07a19f8cd757e65396eccf64be9c80fd9c86d1e3de408",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38302-crossing_projection.process.json": "7c05014e66d1af6911ea00f029acee2b21ad080e664cc023a33d343dbdb0e213",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-crossing_projection.json": "b9520c79d3bbfcd7a2175ef5da37036e924519f5aa5f8219496b934ec549e553",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-crossing_projection.raw.jsonl": "e614ad84623bd9d89917195c384dfb566876aa2a033ffa180e9e80b1ec4bf641",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-crossing_projection.process.json": "1446c77d0cb731a022aeae6ffee719d780f07548d91312a731966fc8f05eab55",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-adaptive_v1.json": "af6be57c18cbdd0f112cd33f00bc3ec7b1b6c17bb47c65da94bf698318fbe7f6",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-adaptive_v1.raw.jsonl": "731a70fa0895539577710f3200fe6f18e1e4729bfc7170b5d1e917bb1344ea10",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38302-adaptive_v1.process.json": "a54e887a00d5e8f31f756372065c3c8ae88e7403cda8362c431ee895a8cee5d9",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-adaptive_v1.json": "57358d8ed2ed7f55aeacf10367a6ad44b6d4cbfe13eb5f0670b9742f8b569354",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-adaptive_v1.raw.jsonl": "4fcae2b2cf03dbef55a3345655893a2adcb37806a70308372de37cf309b3284c",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-adaptive_v1.process.json": "28de0834795f51dda688092db761360e4592b5689ed2ed1ce03116e71054af02",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-crossing_projection.json": "44cfbec7fcda2cd7b49657156f357762fc850a470959ff674023a980a2d5dd10",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-crossing_projection.raw.jsonl": "4fcae2b2cf03dbef55a3345655893a2adcb37806a70308372de37cf309b3284c",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-38303-crossing_projection.process.json": "7623741affe46b52764fa4f772066d2d4cc8aca5362278742d660d6ea6d07b08",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-crossing_projection.json": "bc778c53ca3c8ec1df470eff03ef3b7d20f5f02be1b8e4bdd313b742b5380f03",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-crossing_projection.raw.jsonl": "9ddc1e03d479486857deb4952a92fe3f8f2efa55f1b01279462a4be3ee90ab8b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-crossing_projection.process.json": "e0131a2ef5ab34bc44370eaca75f6f3cd35f3cfb60aacc8779c5731043dbc241",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-adaptive_v1.json": "7939934846a4a384423fc895d41e6df32ca553c5e5a0c443fb8259b08c897f83",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-adaptive_v1.raw.jsonl": "9ddc1e03d479486857deb4952a92fe3f8f2efa55f1b01279462a4be3ee90ab8b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-38303-adaptive_v1.process.json": "963836727dfefa12a6e9ff7360811709fc2cabca98c77e6d63095a8a8745728d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-adaptive_v1.json": "a7fa33457e085441279448ccaccaea35530b8ba31a9e12e30a9ec199b6bff8e7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-adaptive_v1.raw.jsonl": "a460c579100c012a0705b90f6ad13e787d9a194340c898ca179bec84783e822a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-adaptive_v1.process.json": "d6bcd02edbbd4c2f181306d4f1a9eee8eafcc68c66a26e72d38864310183cdb6",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-crossing_projection.json": "d8b8b50ace67b23e8d0bf7131d838c7436c0ccd0552602f710bd2b8fad0e75e4",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-crossing_projection.raw.jsonl": "a460c579100c012a0705b90f6ad13e787d9a194340c898ca179bec84783e822a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-38303-crossing_projection.process.json": "c801f9e26fc2a18573aa6c6efb40828818943e875bc76b6516177b52283d4c18",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-crossing_projection.json": "415d342f04317b854b3cf0c2809dbd1a97657a55a7c0e8cb10f2615ce15b03da",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-crossing_projection.raw.jsonl": "bc7a6ba2353bacdcac7fe199e2c4beaa58d7fca106df330205dc562bfd07a583",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-crossing_projection.process.json": "2db7e1506a440cb786f4c96d2a17429ecd1982568843ebda6dea59eef92edf44",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-adaptive_v1.json": "b6a6a973c77a9e2be4972cfb380ebf4083dc8d6463b1e728b61a7679f46b8b9a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-adaptive_v1.raw.jsonl": "bc7a6ba2353bacdcac7fe199e2c4beaa58d7fca106df330205dc562bfd07a583",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50300-adaptive_v1.process.json": "7db6bc744ad185d72d6fcc7364faced5773e028df12915ca95c4594e377c57c5",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-adaptive_v1.json": "e28c5689dc154f76165ba741d9b9bf801d662ddabd26e52c5c361e045c5f4343",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-adaptive_v1.raw.jsonl": "3acbf9fec2aa19f8e7831fb37b44c7fbcbf2d7eff059de1ccab12f8c3735150d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-adaptive_v1.process.json": "a5fef968dfdb9f41ac8e7bc2228d460b35895cbf47d597803cd63d41f3c9905e",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-crossing_projection.json": "40a4f922b27df9970db50cc3af732bbfed5249056344ab6f5a796be2fe7a7705",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-crossing_projection.raw.jsonl": "3acbf9fec2aa19f8e7831fb37b44c7fbcbf2d7eff059de1ccab12f8c3735150d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50300-crossing_projection.process.json": "331a8fd48194524791f9e76daadb6cf576be8c17d5e7fe4fb3d24609e61c9b5c",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-crossing_projection.json": "3dda1c467d5f22f0147b1d65f3328c04c67c1027198323b093fabe0d72867222",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-crossing_projection.raw.jsonl": "40a12147e8fd011c7df4044d5644128813374f5d2eae635a72e56d7aaacc38ba",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-crossing_projection.process.json": "dafbba24074db4452c217647d5b7e4f2df2a254e6689d0e0fef59335833a8cb5",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-adaptive_v1.json": "46d321a24eebfc8f3345c8d0b32ee74716ff80f77fb4a84b7510117f802f4177",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-adaptive_v1.raw.jsonl": "ea13a6433e2210c59d6bae03da54f014fc0b6b5e85b5b4a09c2f05907c816362",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50300-adaptive_v1.process.json": "99f345bd4aa5a70fe4e85e9d823816c77192a1b1ad351f4f9e153dc5e669b20d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-adaptive_v1.json": "27cf172010fde824a9d7041e3ee65986f4b42d2284f2bec5f7224219dcc8608a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-adaptive_v1.raw.jsonl": "4ae0bbf50f57be8f9e92a464ecb9191454db8fb41462ccaae3dd683851cf1029",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-adaptive_v1.process.json": "32199cc3ea86eb6874cf988ae2b0e6d2311008482962a01bb2c2f13828f6740d",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-crossing_projection.json": "63b0397f824c64f75cac03fbd804d417680ec332f7c3d0bc746e35a559e113a0",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-crossing_projection.raw.jsonl": "4ae0bbf50f57be8f9e92a464ecb9191454db8fb41462ccaae3dd683851cf1029",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50301-crossing_projection.process.json": "717167d71a27a13b823133ddd9dc68849f83b26593597ca970da30413f1a69f0",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-crossing_projection.json": "5a6c9b8e98ef96d2159834dc6ab45068c2212c9f87dd25714dad751dd7943ac3",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-crossing_projection.raw.jsonl": "463c3d1c20ba66586e75f0e555120c33f9b6713b24461bab86cd4a0e892e17ee",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-crossing_projection.process.json": "e0ffb0cf9f9c1d6c929c5132dfcf3db3f4d50993acfaac9c569852eb8559b019",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-adaptive_v1.json": "5a748b3330f3a3e28447df21bd15f3633f4da9c8850c12ea684a59b3cfdb4a02",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-adaptive_v1.raw.jsonl": "463c3d1c20ba66586e75f0e555120c33f9b6713b24461bab86cd4a0e892e17ee",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50301-adaptive_v1.process.json": "189195f3e449899319d1426bcebdf45206457a347094be3be851aa9d88d13797",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-adaptive_v1.json": "70ee9384565ffc92af99780b9b059e90797f200aabbd4d860a4b9249589c4418",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-adaptive_v1.raw.jsonl": "0bc2c03aa2c8fe8f40f8cec5dc7db169f166f434af6c8e2379a2b6cd590df57a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-adaptive_v1.process.json": "4678d5f4b4f8803fdc28c683965041bca788b1a3834c395753c918f88394af77",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-crossing_projection.json": "37fbf13d067fc767a16a6fd46ebbec1f2f1ab7e3119d08be159f901b94fce830",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-crossing_projection.raw.jsonl": "0bc2c03aa2c8fe8f40f8cec5dc7db169f166f434af6c8e2379a2b6cd590df57a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50301-crossing_projection.process.json": "ee4070617d5498eb0b77cf1388cdad76a0e5b2ce2719e7b905eabfba142302fe",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-crossing_projection.json": "fe9a55a88a9c4c865ae6d57c66161d3ccf83a91a10b3b1d1af351134985c88f2",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-crossing_projection.raw.jsonl": "a17dae9fadf22fb0c2ccdc90c77720cec7e9ff23eb239ef303e4487a6349cb0c",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-crossing_projection.process.json": "094f5ab7db3c7ccf8e6c535104f8fd206828997b2665b4d9b6f8d555d11ad7b5",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-adaptive_v1.json": "2804e1f1bfff4207755158462e9fbdfb91a8c150e9e583a9068a69175abcbea0",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-adaptive_v1.raw.jsonl": "a17dae9fadf22fb0c2ccdc90c77720cec7e9ff23eb239ef303e4487a6349cb0c",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50302-adaptive_v1.process.json": "ac38af0eadfa1295584b82b3d56974228042966949e701d09665c0496c5327d4",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-adaptive_v1.json": "e6558eff8897a2c0219ef6ae1adfe371848199188c4cd3cdd8575919bcb678d3",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-adaptive_v1.raw.jsonl": "6a29f1bfab985259cb88b353c9d3c73a7a36a22bf2cb936bee9eb123cea911a7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-adaptive_v1.process.json": "4c3faa5bc17de5a5da1533ba26c350c4d2fc5491182c06bce1e8314934a35639",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-crossing_projection.json": "f984e40f0f4528e08b9f67e40da39cf8694160eb861619dbe19081e37ee4bd93",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-crossing_projection.raw.jsonl": "6a29f1bfab985259cb88b353c9d3c73a7a36a22bf2cb936bee9eb123cea911a7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50302-crossing_projection.process.json": "4350734c90678320563e5f7b09bafcf3eb9fa5adddd5d244d420783902e3c78b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-crossing_projection.json": "592bb78bc5ed992dadadc64a157ed2aadd86848c913881cce5e31195fe100c31",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-crossing_projection.raw.jsonl": "7510ce73bd7cbbb7a135ec0d960929e6103ae9fd4e1fc9765c674a418f82a7b4",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-crossing_projection.process.json": "5afb3955cc4de81428cfede683d906079c16a8b46d14fff567552308dd537b08",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-adaptive_v1.json": "db992421304ac0f7865962a65949041b3c5cadfc62fef14b58dc743c221ac330",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-adaptive_v1.raw.jsonl": "7510ce73bd7cbbb7a135ec0d960929e6103ae9fd4e1fc9765c674a418f82a7b4",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50302-adaptive_v1.process.json": "975ce192c7c9804aae2f224ac941b99fc548d8fd1e1a19cbe10d4a90343e4d76",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-adaptive_v1.json": "b447bf0d26f01e3c548d09122c44409237c1eb2d16f331a83a2bc8f7d593404f",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-adaptive_v1.raw.jsonl": "27c799e5b237c9552a0279173e5565c418e54925d07b0652070ec65a1c0fd651",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-adaptive_v1.process.json": "cd3f8a19065a57864cee76cef70e658e188cfbe9da7c9a1a59a7df8246fb43ba",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-crossing_projection.json": "0da9c4e7338f0e6d38e82b0bcfcac2bfab26aeb8df6177d0a27f0eb19cff101b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-crossing_projection.raw.jsonl": "27c799e5b237c9552a0279173e5565c418e54925d07b0652070ec65a1c0fd651",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/1-50303-crossing_projection.process.json": "db37473006ff35f07302fc1a97e57727c2a7676ffb4788aac945fd155753d787",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-crossing_projection.json": "71af6a2a556c84f3f5044f5c1cde1c92a9316376934102399eb698ba613538d7",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-crossing_projection.raw.jsonl": "d1ac55e4ef501c5d0af13ce2b2ebae21c25ef2e2bf83dda6c08c1b7071000e3f",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-crossing_projection.process.json": "0102133707a8f0706ac1819ec7ca48efa22421a24638f80c67aabcc7c2e5f759",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-adaptive_v1.json": "64e27e9446074e5ff91f3d33e2868ae2dea8d207e45d32c3ec6fc8bb02f34bf0",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-adaptive_v1.raw.jsonl": "d1ac55e4ef501c5d0af13ce2b2ebae21c25ef2e2bf83dda6c08c1b7071000e3f",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/2-50303-adaptive_v1.process.json": "bfd7b344cc086475c4966a436c9fa31b638931f0a813dacceabfef78a4a141cd",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-adaptive_v1.json": "6e723f03b272e4c0c67da12968349c774ed31b65e4ff38933db85cb75268bc7a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-adaptive_v1.raw.jsonl": "a5d4a4544af773e8a1b67549d4a87e798039e08251f753a98b2ce9c325ffd44a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-adaptive_v1.process.json": "a8da8a550059e0fa13af7432d88d6d857147cde30d182ea79d65f7755eb3cbab",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-crossing_projection.json": "b999d2222a803d2a3088dcf6a7b417c2acd95310374fc8e7fdbabf9bbb710d0b",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-crossing_projection.raw.jsonl": "a5d4a4544af773e8a1b67549d4a87e798039e08251f753a98b2ce9c325ffd44a",
+      "/workspace/HAIC-Money/runs/koi-adaptive-ab-20260930-v1/3-50303-crossing_projection.process.json": "872c80214fccbc5247b6b17e2d97b27b64d56e83d7b37882a300a2656b2213a7",
+      "/workspace/HAIC-Money/experiments/koi-adaptive-ab-v1-audit.json": "2f51861b7b7f2970ad972da6a3511a0397982cbdf81b06fa14204f892529a078",
+      "/workspace/HAIC-Money/experiments/koi-minimum-clearance-consumed-audit-v1.json": "836cd201c1c18f137a2c836dbae09434fc73b813cb39f730650e819bd546675d"
+    },
+    "cells": 24,
+    "episodes": 48,
+    "prior_peak_rss_bytes": 284114944,
+    "prior_total_child_wall_s": 830.3357194345444,
+    "prior_max_child_wall_s": 20.138952589128166,
+    "prior_max_episode_bytes": 2318716
+  },
+  "telemetry_passive_not_agent_input": true,
+  "fresh_claim_registry_modified": false,
+  "official_action": false
+}

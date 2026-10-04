@@ -1,0 +1,121 @@
+{
+  "candidate": "koi-minimum-clearance-v3",
+  "status": "zero-reset source-tested; driving improvement unverified",
+  "source_commit": "c4e224d465eea12acc49d2700ba1e1e5b6146976",
+  "reference_crossing_zip_sha256": "4447c8dfad1392ddbbb83f0b3d23b8d5237af2b9be785cdfd08edaf6c4623f64",
+  "baseline_restoration": "frozen source reconstruction, not original crossing ZIP restoration",
+  "baseline_source_sha256": {
+    "agent.py": "ab9a63082fa9200572e009ab24aeb3fa59b652b026745291171dae53967af29c",
+    "haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+    "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+  },
+  "candidate_zip_sha256": "594fca15005ec38cc67801824e9725fc84da440c2309083f02a24955b0ab8fca",
+  "files": [
+    {
+      "path": "agent.py",
+      "bytes": 419,
+      "sha256": "984e9265f0ecd8e9e6e3c1ae047ed223a967d9f0c1c392d06dcc655fec43cbfe"
+    },
+    {
+      "path": "haic_agent/__init__.py",
+      "bytes": 32,
+      "sha256": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8"
+    },
+    {
+      "path": "haic_agent/acceleration_envelope_runtime.py",
+      "bytes": 4279,
+      "sha256": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867"
+    },
+    {
+      "path": "haic_agent/contact_continuity_runtime.py",
+      "bytes": 4559,
+      "sha256": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80"
+    },
+    {
+      "path": "haic_agent/corridor_agent.py",
+      "bytes": 10439,
+      "sha256": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd"
+    },
+    {
+      "path": "haic_agent/far_hazard_runtime.py",
+      "bytes": 5489,
+      "sha256": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4"
+    },
+    {
+      "path": "haic_agent/fast_completion_coordination.py",
+      "bytes": 5285,
+      "sha256": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84"
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_recovery_v2.py",
+      "bytes": 2906,
+      "sha256": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc"
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_runtime.py",
+      "bytes": 3105,
+      "sha256": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88"
+    },
+    {
+      "path": "haic_agent/minimum_clearance_runtime.py",
+      "bytes": 18268,
+      "sha256": "19286801899f1a28ce5662636875e5c3a173fe4bf244bd3b29dfa9942ee2ab07"
+    },
+    {
+      "path": "haic_agent/pixel_features.py",
+      "bytes": 9729,
+      "sha256": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+    }
+  ],
+  "steering_only": true,
+  "baseline_speed_target_and_pedal_computation_unchanged": true,
+  "minimum_scope": "baseline-selected side, .05px grid, full geometric reference with additional applied-command guard",
+  "command_hold_seconds": 0.08,
+  "require_projection_clearance": true,
+  "physical_safety_certified": false,
+  "limitations": [
+    "Reference/kinematic tracking and wheel response are unverified dynamics hypotheses",
+    "Applied-command guard covers .08s using recent maximum HUD speed; later tracking and speed uncertainty remain unverified",
+    "Known current-car silhouette masks asphalt; no claim about hidden surface continuity",
+    "Detector crop/dropout retains baseline parity, not proof of physical full rear-clear"
+  ],
+  "smoke": {
+    "prefix_equal": true,
+    "no_obstacle_equal": true,
+    "far_only_equal": true,
+    "same_observation_pedals_equal": true,
+    "minimum_displacement_active": true,
+    "projection_off_return_active": true,
+    "impact_fallback_equal": true,
+    "obstacle": {
+      "baseline_action": [
+        -0.17000000178813934,
+        0.07999987155199051,
+        0.0
+      ],
+      "candidate_action": [
+        -0.06659454107284546,
+        0.07999987155199051,
+        0.0
+      ],
+      "displacement_px": -2.0,
+      "target_x": 39.75892857142857
+    },
+    "full_command_fallback_verified": false,
+    "actual_hold_command_verified": true,
+    "projection_footprint_guard_verified": true,
+    "applied_correction_regression_verified": true,
+    "deleted_approach_regression_equal": true,
+    "cropped_detector_fallback_equal": true,
+    "environment_resets": 0
+  },
+  "official_submission": false,
+  "driving_evaluation_performed": false
+}

@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "reviewer": "loader-ir6t independent review session ses_f094c2a6cffel9msANhs2jhp2h",
+  "written_at_utc": "2026-10-01T09:27:01Z",
+  "study": "koi-steering-generalization-v1",
+  "protocol_sha256": "ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd",
+  "operator_sha256": "8f4e3a7929af83230f2b6bf8890df65e9b25abd78e17d0bdb14baca758d91833",
+  "analyzer_sha256": "cee3897025ce4b4b5d6e2ffbd4930281f41c3e2d245f457be811604ff4f9ed64",
+  "audit_sha256": "b2efd664347d841b595e3362d1b2bc387ac2b36139475fe038129690c5867fe4",
+  "finalizer_sha256": "763658f75ea71da2142fa3dc3d150d9fbd33196552e43abbef03ca6911bbaeec",
+  "evidence_guard_sha256": "745977592b22409efcdb71719c03f746425ebfb2f59ed8aeb36e2cb38279b4a3",
+  "environment_constructions": 0,
+  "environment_resets": 0,
+  "agent_constructions": 0,
+  "model_updates": 0,
+  "official_action": false,
+  "review_scope": "Independent exact-source zero-interaction preflight approval for the frozen TRAIN study only when final results use the source-bound out-of-band guarded finalizer. This is not a performance result, protected confirmation, model confirmation, or official submission.",
+  "authoritative_finalizer": "scripts/finalize_koi_steering_generalization.py",
+  "authoritative_result_path": "experiments/koi-steering-generalization-v1-result.json",
+  "mandatory_guarded_finalization": true,
+  "raw_loader_residual_risk": "The unchanged frozen load_run does not verify failure-time row.partial_artifacts hashes or byte counts. Two explicit regression tests preserve its expected acceptance of changed partial pins while confirming nonpromotion. Raw-loader output alone is not authoritative. The finalizer verifies exact existing partial artifact inventory, original hashes and byte counts before invoking load_run/summarize, and requires this review's finalizer and guard bindings before publishing the authoritative result.",
+  "blockers": [],
+  "independent_actual_checks": {
+    "root_and_run_protocol_byte_identical": true,
+    "frozen_operator_and_analyzer_unchanged": true,
+    "validate_frozen_passed": true,
+    "cpu21_runtime_resource_and_authenticated_claim_preflight_passed": true,
+    "actual_model_inventory_manifest_baseline_and_steering_terms_closure_passed": true,
+    "source_copies_rehashed": 170,
+    "environment_sources_rehashed": 142,
+    "helper_sources_rehashed": 23,
+    "reference_evidence_pins_rehashed": 510,
+    "authenticated_geometry_claims": 24,
+    "geometry_seeds": 24,
+    "matched_train_layout_cells": 72,
+    "scheduled_episode_slots": 144,
+    "old_road_signatures": 8,
+    "root_agent_sha256": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee",
+    "model_hashes": {
+      "crossing_projection": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+      "steering_release_v1": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce"
+    },
+    "candidate_manifest_sha256": "b1a97164434d66f3e83cfda938d606a1bf6aab910adafbac5fd7dbb59be981a4"
+  },
+  "tests": {
+    "command": "python -B -m pytest -q tests/test_koi_steering_generalization_loader.py tests/test_finalize_koi_steering_generalization.py tests/test_analyze_koi_steering_generalization.py tests/test_evaluate_koi_steering_generalization.py",
+    "passed": 112,
+    "failed": 0,
+    "wall_time_s": 71.61,
+    "loader_tests": 40,
+    "finalizer_tests": 10,
+    "source_sha256": {
+      "tests/test_koi_steering_generalization_loader.py": "044ecb0a84864cba46f5f3512c21ae2a7a3a656de6d485d9233768d4e55012cb",
+      "tests/test_finalize_koi_steering_generalization.py": "dbd6baca794056a0fe6648b1670ba36fd2d77880c55bd11c608401aba84d30b5"
+    },
+    "evidence": [
+      "Producer-compatible six-object raw, episode, action stream, original/bound process and reset-ledger chains are validated without an Agent or environment.",
+      "Complete runs, pending final intents, no-episode bound timeouts, saved empty-raw reset failures and saved act-timeout extra unapplied action streams remain distinguishable and fail closed where incomplete.",
+      "Rehashed semantic corruptions of road/catalog/episode/process/review/ledger/raw/applied stream identities are rejected.",
+      "Transient raw contacts absent from decision-post state and raw lateral peaks have correct failure chronology anchors.",
+      "Guarded entrypoint rejects changed partial artifact bytes and missing independent guard bindings before the frozen loader is called.",
+      "Synthetic complete and valid-partial finalization publishes only the source/guard/review-bound authoritative result; the tiny cohort cannot establish generalization.",
+      "Raw-loader residual risk remains covered by two clearly named expected-accepted, nonpromotion tests rather than being hidden or deleted."
+    ]
+  },
+  "gate_review": [
+    "All-slot validity and no operational or planned censor, paired initial/geometry/first-ten-action parity, finish preservation and per-cell safety remain mandatory.",
+    "All six objects per arm and all prospectively eligible baseline windows/return followups remain in their predeclared denominators; lost coverage cannot be offset by survivor improvements.",
+    "Five-percent cell-weighted and equal-geometry lateral/avoidance gates, joint mechanism coverage, at least eighteen eligible geometries overall and twelve per track remain unchanged.",
+    "Twenty-four distinct road-only signatures disjoint from the eight historical consumed-road signatures remain required; seventy-two layouts are not seventy-two independent roads.",
+    "Matched kept-lap, path and steering nonincrease, whole-object no-new-hit safety and censor nonincrease remain fail closed.",
+    "Internal proxies and descriptive onset/censor-bound mixtures are not official scores, causal mediation proof, KM/RMST or population return-time estimates."
+  ],
+  "freshness_limitations": "Authenticated candidate-lineage-unseen TRAIN audit, not project-global never-used; fifteen unrelated legacy PPO sampled-producer uncertainties remain disclosed. Old consumed cells were only read/rehashed as lineage, not interacted with by this reviewer."
+}

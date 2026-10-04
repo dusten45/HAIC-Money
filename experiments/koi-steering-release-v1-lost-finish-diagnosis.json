@@ -1,0 +1,181 @@
+{
+  "study": "koi-steering-release-v1-lost-finish-diagnosis",
+  "cell": "2:50301",
+  "scope": "Completed first study, cell2:50301 only; pure file/math diagnosis.",
+  "status": "OBSERVED_LATER_ORIGINAL_GENERATOR_FLANK_REVERSAL; REPAIR_UNTESTED",
+  "run": "runs/koi-steering-release-ab-20261001-v1",
+  "environment_imports": 0,
+  "environment_constructions": 0,
+  "environment_resets": 0,
+  "model_constructions": 0,
+  "model_actions": 0,
+  "rendering": 0,
+  "git_commands": 0,
+  "written_files": ["experiments/koi-steering-release-v1-lost-finish-diagnosis.json"],
+  "primary_sha256": {
+    "protocol.json": "26d43bf9e0eceff84c667e244683376344a4bc1356ea818084ca66be8963e04d",
+    "episode-report.json": "1770393d431a98fbc10a9d9e22e1204223d6038b964fdf149f8e8bbfb7e03c14",
+    "candidate.zip": "3566a5c2e22e81b4c46664eeabef3ccabbf8459de0a24b82e0627a3ddd4dde5e",
+    "candidate.manifest.json": "0703eb6d2b1c0264dec38cb558386fb6655e73c8bba75d80150636ce7b894b6c",
+    "2-50301-crossing_projection.json": "73710715e9533d4ccebb31164f83b0370b397c3d3aca7b6a507223f413869279",
+    "2-50301-crossing_projection.raw.jsonl": "8f12a0076831227b9a35f4b71706ea45513c1c7cdc27c3a94988d628ecf0ca0c",
+    "2-50301-crossing_projection.process.json": "df0e43838db5bd8c0939b393d15aaa26d8aa77613b845667367414650c9683dc",
+    "2-50301-crossing_projection.bound-process.json": "d078d86f36c01163a98612da240f4fe1c77e28a3230d0e517a472e2fbb1f92ec",
+    "2-50301-steering_release_v1.json": "7a1e1da4a9fe41486327ce64182bb3d8446ac6ca6780798f9d733605e5d37ff8",
+    "2-50301-steering_release_v1.raw.jsonl": "f7d673d2ae6490a980a36e8736eb9c8a069a7a83682b64b7097d4b88fa24df83",
+    "2-50301-steering_release_v1.process.json": "1405afd544d1c3e556ec05cde261b33487a4201057b9693da4f7c59b62e306ff",
+    "2-50301-steering_release_v1.bound-process.json": "d1c404815f24325a57e7c2293c9d2e66bd137e2180aeca0d6e12ca9e0175e152",
+    "experiments/koi-steering-release-ab-v1-result.json": "37f538e5c2a5ae2569f9a561f9a397394a5fae32c67da360ea2a5ffe0924ebb8"
+  },
+  "source_verification": {
+    "frozen_copies_verified": 158,
+    "frozen_copy_mismatches": 0,
+    "source_inventory_sha256": "60c6fa7c153b2e8e86c7dee91041978579c86b4c013ca040a1eda12fdd9acaf7",
+    "source_inventory_digest_encoding": "sha256(json.dumps(protocol.source_copies,sort_keys=True,separators=(',',':')).encode())",
+    "candidate_members_verified": 12,
+    "candidate_member_mismatches": 0,
+    "selected_sources": {
+      "source/project/haic/algorithms/koi/steering_release.py": "0850c5211e081366c825645449e73cdafb6f1c11b41677b9c57247b1e4587267",
+      "source/project/haic/algorithms/koi/steering_terms.py": "cb1149b03e489c81babda7171349483961b82d367748e717a21b3a5dfe82bbe7",
+      "source/environment/haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+      "source/environment/haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+      "source/environment/core/vendor/car_dynamics.py": "d0555e6722b5f5431f1b5267060012182febbc215c1cd6bd35da63798012b125"
+    },
+    "live_source_not_used": true,
+    "source_values_unchanged": "Band6px; scale1.3608/1.701; pads1/.5px; hold.08s; wheelbase3.24m; front/rear2.61/2.41m; halfwidth1.1+.28*cos(.4)+.54*sin(.4)+.01m."
+  },
+  "outcomes": {
+    "baseline": {"completed": true, "lapTimeMs": 17700, "decisions": 222, "raw_ticks": 886, "damage": 0, "collisions": 0},
+    "candidate": {"completed": false, "retire_reason": "off_track", "decisions": 271, "raw_ticks": 1084, "damage": 0.2, "collisions": 1, "error": null, "invalid_actions": 0},
+    "equal_initial_action_decisions": 35,
+    "equal_initial_raw_records": 140,
+    "first_action_and_world_divergence_decision": 36,
+    "actual_changed_decisions": [36, 120, 121, 147, 148],
+    "candidate_same_input_pedals_exact": "271/271; this is same-observation baseline equality, not cross-trajectory pedal equality"
+  },
+  "guard_reconstruction_method": {
+    "execution": "AST-selected frozen constants and three pure guard functions only; no classes/project/environment imports.",
+    "near_pipeline": "f32(clip(f32(clip(position+lookahead+near*alpha))+damping)); [-.7,.7]. All five inherited_damping.",
+    "trial_guard_order": ["candidate_steer_full_rear_clear_arc", "candidate_steer_hud_bound_0.08s_arc", "previous_issued_steer_hud_bound_0.08s_arc"],
+    "object_association": "Evaluation-only x=42+1.3608*(dx*cos(yaw)+dy*sin(yaw)); y=63-1.701*(-dx*sin(yaw)+dy*cos(yaw)). Match projected centers to stored detector centroid; world IDs never enter policy.",
+    "limitation": "No archived pixels: exact component extraction/raster enclosure cannot be replayed. Stored bbox/centroid/speed bound suffice for pure guards.",
+    "scale_guard_results_encoding": "Rows are [alpha,full_rear_arc,current_hold_arc,previous_hold_arc]; includes mathematical checks beyond the first accepted scale, not additional issued actions."
+  },
+  "released_rows": [
+    {
+      "step": 36, "object_id": 0, "t_pre": 3.82, "t_post": 3.90,
+      "obj_yx": [36.8, 49.0], "box": [48, 35, 3, 4], "side": -1,
+      "projected_x": 54.800000000000004, "previous_steer": -0.12844444811344147,
+      "speed_bound": 73.87082133573645, "baseline_steer": -0.2000555545091629,
+      "alpha": 0.25, "issued_steer": 0.009611111134290695,
+      "current_reentry": false, "centroid_error_px": 0.8575713295278306,
+      "scale_guard_results": [[0,false,true,true],[0.25,true,true,true],[0.5,true,true,true],[0.75,false,true,true]],
+      "actual_hold_min_fixture_clearance_m": 8.623708044555556,
+      "actual_hold_min_transverse_separation_m": 1.6822755463533552,
+      "actual_hold_contacts": [], "actual_yaw_delta": 0.05723166465759277
+    },
+    {
+      "step": 120, "object_id": 2, "t_pre": 10.54, "t_post": 10.62,
+      "obj_yx": [50.666666666666664, 31.88888888888889], "box": [31, 49, 3, 4], "side": 1,
+      "projected_x": 27.62976629766298, "previous_steer": 0.26866665482521057,
+      "speed_bound": 46.09688848607681, "baseline_steer": 0.021166671067476273,
+      "alpha": 0.5, "issued_steer": -0.14883333444595337,
+      "current_reentry": false, "centroid_error_px": 0.7235296332185198,
+      "scale_guard_results": [[0,false,true,true],[0.25,false,true,true],[0.5,true,true,true],[0.75,true,true,true]],
+      "actual_hold_min_fixture_clearance_m": 5.687067949415518,
+      "actual_hold_min_transverse_separation_m": 3.2114620929154913,
+      "actual_hold_contacts": [], "actual_yaw_delta": -0.20506536960601807
+    },
+    {
+      "step": 121, "object_id": 2, "t_pre": 10.62, "t_post": 10.70,
+      "obj_yx": [59.5, 30.2], "box": [29, 58, 3, 4], "side": 1,
+      "projected_x": null, "previous_steer": -0.14883333444595337,
+      "speed_bound": 44.85121311860926, "baseline_steer": -0.12300000339746475,
+      "alpha": 0, "issued_steer": -0.46299999952316284,
+      "current_reentry": false, "centroid_error_px": 0.7332775442830594,
+      "scale_guard_results": [[0,true,true,true],[0.25,true,true,true],[0.5,true,true,true],[0.75,true,true,true]],
+      "actual_hold_min_fixture_clearance_m": 5.656261198909892,
+      "actual_hold_min_transverse_separation_m": 4.172993707289081,
+      "actual_hold_contacts": [], "actual_yaw_delta": 0.003226041793823242,
+      "note": "Unavailable projection: prior same-object latch, not fresh clearance. Bbox ends at crop61; no object collision."
+    },
+    {
+      "step": 147, "object_id": 3, "t_pre": 12.70, "t_post": 12.78,
+      "obj_yx": [32.75, 38.25], "box": [37, 31, 3, 4], "side": 1,
+      "projected_x": 31.809090909090898, "previous_steer": 0.0672222226858139,
+      "speed_bound": 64.92041958079619, "baseline_steer": 0.16705554723739624,
+      "alpha": 0.5, "issued_steer": 0.0655277818441391,
+      "current_reentry": false, "centroid_error_px": 0.8831287260807064,
+      "scale_guard_results": [[0,false,true,true],[0.25,false,true,true],[0.5,true,true,true],[0.75,false,true,true]],
+      "actual_hold_min_fixture_clearance_m": 9.564747180256528,
+      "actual_hold_min_transverse_separation_m": -0.04693778366141377,
+      "actual_hold_contacts": [], "actual_yaw_delta": -0.07837581634521484,
+      "note": "Not transverse-clear throughout hold; still ahead: post rear=-15.7756357/front=-10.6305610m. Predictive, not passed."
+    },
+    {
+      "step": 148, "object_id": 3, "t_pre": 12.78, "t_post": 12.86,
+      "obj_yx": [40.333333333333336, 36.888888888888886], "box": [36, 39, 3, 4], "side": 1,
+      "projected_x": 33.35897435897435, "previous_steer": 0.0655277818441391,
+      "speed_bound": 64.92041958079619, "baseline_steer": 0.2762646973133087,
+      "alpha": 0.5, "issued_steer": 0.10626471042633057,
+      "current_reentry": false, "centroid_error_px": 0.45859979224872305,
+      "scale_guard_results": [[0,false,true,true],[0.25,false,true,true],[0.5,true,true,true],[0.75,false,true,true]],
+      "actual_hold_min_fixture_clearance_m": 6.09873691984053,
+      "actual_hold_min_transverse_separation_m": 0.061481225340346946,
+      "actual_hold_contacts": [], "actual_yaw_delta": -0.10357236862182617,
+      "next_hit_object4_post_clearance_m": 71.55463340355382
+    }
+  ],
+  "whole_episode_object_min_clearance_m": {
+    "baseline": [6.487741987639433, 3.7173739684639573, 5.405258220624152, 5.0900567493702775, 1.8070015231771177, 4.687030437239751],
+    "candidate": [5.49532418790933, 2.936324535618736, 5.656261198909892, 3.653930164380867, -0.012698289923155803, 62.68570710380773],
+    "candidate_contact_ticks_by_object": [0, 0, 0, 0, 405, 0],
+    "object5_candidate_not_reached": true
+  },
+  "later_original_generator_rows": [
+    {"step": 166, "t_pre": 14.22, "obj_yx_road": [24.454545454545453, 41.36363636363637, 40.105262756347656], "object_id": 4, "centroid_error_px": 0.6776158439752277, "base_side": -1, "pass_side": null, "projected_x": null, "issued_steer": -0.12786363065242767, "release_reason": "projection_not_cleared"},
+    {"step": 167, "t_pre": 14.30, "obj_yx_road": [32, 45, 47.064815521240234], "object_id": 4, "centroid_error_px": 0.5988095999016226, "base_side": 1, "pass_side": 1, "projected_x": 58.49397590361444, "issued_steer": 0.24988888204097748, "release_reason": "projection_not_cleared"},
+    {"step": 168, "t_pre": 14.38, "obj_yx_road": [38.666666666666664, 46.111111111111114, 49.349998474121094], "object_id": 4, "centroid_error_px": 0.9495706531842214, "base_side": 1, "pass_side": 1, "projected_x": 49.66666666666668, "issued_steer": 0.5858148336410522, "release_reason": "impact_guard"},
+    {"step": 169, "t_pre": 14.46, "obj_yx_road": [44.5, 43.8, 44.46710538864136], "object_id": 4, "centroid_error_px": 0.46052756644186704, "base_side": -1, "pass_side": 1, "projected_x": 37.659047619047605, "issued_steer": -0.32850000262260437, "release_reason": "protected_replacement", "contact_active": true, "contributions": {"road": 0.10999999940395355, "lookahead": 0.0990000069141388, "avoidance": -0.5499999970197678, "damping": 0.012499988079071045}},
+    {"step": 170, "t_pre": 14.54, "obj_yx_road": [50.3, 40.7, 40.425], "object_id": 4, "centroid_error_px": 0.5188908810324727, "base_side": -1, "pass_side": 1, "projected_x": 35.51551724137932, "issued_steer": -0.1600000113248825, "release_reason": "impact_guard", "contact_active": false, "contributions": {"road": 0.08799999952316284, "lookahead": 0.11699999868869781, "avoidance": -0.3400000035762787, "damping": -0.025000005960464478}}
+  ],
+  "source_exact_flank_flip": {
+    "source": "source/environment/haic_agent/corridor_agent.py:168-180",
+    "candidate_step168_offset": -3.23888736300998,
+    "candidate_step169_offset": -0.667105388641362,
+    "candidate_offset_motion": 2.571781974368618,
+    "trigger": "At y44.5<52, abs(offset)<=1; previous side+1, offset>-3, offset_motion>2 -> original generator sets side=-1.",
+    "contact_source": "source/environment/haic_agent/contact_continuity_runtime.py:69-74",
+    "amplification": "Original crossing projection37.659047619 lies inside42 +/-6; it uses base._obstacle_side, NOT the persistent pass_side+1, and replaces near term with -.55.",
+    "baseline_analogous_step": 170,
+    "baseline_obj_yx_road": [44, 42, 43.29934120178223],
+    "baseline_offset": -1.2993412017822266,
+    "baseline_behavior": "abs(offset)>1 selects candidate_side+1 before the offset-motion branch; baseline retains+1 through passage, action+.5076249837875366 at170 and+.3518750071525574 at171.",
+    "not_a_new_policy_change_at_hit": "149 onward: same-state original commands; history differs from comparator."
+  },
+  "actual_collision_ticks": [
+    {"step": 169, "t": 14.50, "clearance_m": 5.229166939010284, "transverse_separation_m": 0.10989913691183961, "contacts": []},
+    {"step": 169, "t": 14.52, "clearance_m": 4.350382291577656, "transverse_separation_m": -0.05727552307383288, "contacts": []},
+    {"step": 170, "t": 14.60, "clearance_m": 0.7463313942953183, "transverse_separation_m": -0.8805373094128268, "contacts": []},
+    {"step": 170, "t": 14.62, "clearance_m": -0.005549960287347666, "transverse_separation_m": -1.1716061461689264, "contacts": [4], "collision": true, "speed": 9.860813562407865},
+    {"step": 171, "t": 14.68, "clearance_m": -0.012698289923155803, "contacts": [4]}
+  ],
+  "terminal": {"step": 271, "t": 22.70, "station": 717.9324852540449, "progress": 0.7666666666666667, "speed": 2.239235940100811e-05, "contacts": [4], "clearance_object4_m": -0.0029029377219431662, "wheel_road_contacts": [1, 1, 1, 1], "wrapper_off_track": true, "interpretation": "Observed lodged/stationary on obstacle with wheel road contacts; recorded terminal label is off_track, not retire_stalled. Do not infer sustained road departure solely from that label."},
+  "mechanism_assessment": {
+    "collision_during_actual_released_command": false,
+    "collision_on_same_object_as_last_release": false,
+    "seconds_from_last_release_hold_end_to_first_contact": 1.84,
+    "current_geometry_reentry_guard_failure": "No released-hold collision or accepted current_reentry. All selected guards reconstruct; actual released clearances positive. Not physical certification.",
+    "bbox_crop_or_identity_alias": "No observed wrong-object release/replacement. Relevant projected centroid errors .46-.95px. Hit object detected at y50.3, before row62 crop. No pixels to certify exact enclosure.",
+    "constant_steer_prediction_or_actuator_lag": "Released36 has positive steer/positive yaw change;120 negative steer/negative yaw change, opposite instant-arc signs. Original169 also keeps negative yaw under negative steer. Wheel angles, vector velocity and angular velocity are NOT stored; lag/slip/inertia split and causal attribution are unknown.",
+    "inherited_later_flank_flips": "Verified original offset-motion flip at169, crossing amplification, then retained -1 near term at170. Baseline analogous passage keeps+1 and is clean.",
+    "causal_boundary": "Which prior release caused the threshold-sensitive arrival state is not isolated. No counterfactual executed; preventing the observed flip is not a proven recovered finish."
+  },
+  "minimal_repair_hypothesis": {
+    "status": "UNTESTED; NO IMPLEMENTATION OR ADOPTION RECOMMENDATION",
+    "direction": "Explicit same-body passage-flank lifecycle shared by near/crossing generators; prevent motion-only reversal while offset remains on the same side. Here >=30 commitment167:+1, NOT initial166:-1. Untested.",
+    "boundary": "Require observable continuity, ambiguity/reentry/end handling; disappearance is not rear-clear. No blind first-detection lock/world-ID input. Preserve +/-6, raster/skin, speed and pedals. Not every flank change is wrong.",
+    "not_supported": ["Arbitrary steering value tuning", "New lateral target", "Safety-margin tuning", "Speed-target tuning", "Immediate release-guard collision attribution", "Guaranteed recovered finish", "Overall A/B adoption claim"],
+    "decision_owner": "Main after whole first-A/B audit; v2 only separately frozen. Preserve original study/result."
+  }
+}

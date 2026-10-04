@@ -3,6 +3,51 @@
 Only durable choices that prevent future agents from repeating the same debate are
 listed here. Protocol/result artifacts remain the detailed evidence.
 
+## Stop Local Optimization of the KOI Champion
+
+**Context:** On2026-10-04T15:23:01Z, after the sprint72-relief rejection and the
+previous closed avoidance/recovery/corner directions, the user stopped further
+micro-optimization of the current hand-crafted champion. This is broader than
+closing only the latest coefficient or gate.
+
+**Evidence:** The [fixed sprint72 experiment](../../experiments/koi-sprint72-relief-v1-result.json)
+and [independent audit](../../experiments/koi-sprint72-relief-v1-audit.json) show a
+source-correct local intervention, a real local undershoot reduction and changed
+subsequent trajectories, alongside a lost finish, longer offroad exposure and
+slower common-finish laps. Preserve both the rescued and lost cells. The
+[full report](../architecture/koi-baseline-analysis-2026-09-30.md#32-fixed-sprint72-handback-relief-2026-10-04)
+distinguishes local, unmatched and complete matched measurements.
+
+**Interpretation boundary:** This supports sensitivity of the closed-loop system
+to local changes, not a theorem that all heuristic improvements must fail or that
+MPC will outperform it. The6.825->2.218 undershoot pair is one2/0006 window with
+brake-to-gas1->0; repeated cycles3->0 is an own-window aggregate, not that same
+matched window or a complete-cohort matched improvement. Brake history is coupled
+to impact logic, but all observed triggers remain vetoed and genuine impact-clear
+is zero in both arms; no unique impact-mediated cause of the DNF is established.
+
+**Decision:** Preserve exact champion ZIP`c9e376a0...`, shield`ad772bde...`, all11
+frozen sources and root Agent. End autonomous small-rule/threshold/margin/pedal/
+steering/recovery/corner optimization, diagnostic searches and A/B extensions on
+this champion. Do not reopen previously closed variants or relax their gates.
+No candidate promotion or new external action follows. Other independent model
+lanes are not implicitly stopped, redirected or authorized by this KOI decision.
+
+**Future-work boundary:** The user raised retaining the champion through the
+competition OR assessing a separately designed joint steering/pedal short-horizon
+controller. Neither is an instruction to implement, train or evaluate a successor
+now. A later authorized feasibility/design gate would need an observation-valid
+state/prediction model, uncertainty and latency budget, minimal coupled-action
+scope, and a tested interface to any reused shield. Evaluation-only physical
+heading/progress/map state cannot silently become policy input. Reusing unchanged
+shield bytes does not transfer a safety guarantee to a new nominal controller.
+The user's four-track/overall-sixth summary remains user-reported, not independent
+verification or a reason to consume official submissions.
+
+**Revisit condition:** Only explicit new user direction may reopen this campaign
+or commission a separate successor design. No reset, fresh/generalization/private/
+official evaluation, upload or model confirmation is authorized by this record.
+
 ## Close KOI Overavoidance Optimization
 
 **Context:** On2026-10-02 the user authorized one separate reaction-based bounded

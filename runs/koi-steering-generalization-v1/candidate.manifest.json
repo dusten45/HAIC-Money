@@ -1,0 +1,122 @@
+{
+  "candidate": "koi-steering-release-v2",
+  "status": "ZERO_RESET_TESTED_UNEVALUATED_LIFECYCLE_CANDIDATE",
+  "source_commit": "c4e224d465eea12acc49d2700ba1e1e5b6146976",
+  "reference_crossing_zip_sha256": "4447c8dfad1392ddbbb83f0b3d23b8d5237af2b9be785cdfd08edaf6c4623f64",
+  "reconstructed_from_frozen_sources": true,
+  "original_crossing_zip_missing": true,
+  "candidate_zip_sha256": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce",
+  "input_sha256": {
+    "/workspace/HAIC-Money/scripts/package_koi_adaptive_avoidance.py": "4a1077cbf5568cdc0c8cf79776d40a7951b44285ea4be6d7ce1b1036b48d56f2",
+    "/workspace/HAIC-Money/scripts/package_koi_steering_release.py": "d5504dc938b380522f0e5ba98681e8b8ed920f50f372ca7a330291eafde6e531",
+    "/workspace/HAIC-Money/haic/algorithms/koi/steering_release.py": "52f540993eecc4453d36900b726f8fb54bda189e58b0c3e5eb6126ac3fcdd54b",
+    "/workspace/HAIC-Money/haic/algorithms/koi/steering_terms.py": "cb1149b03e489c81babda7171349483961b82d367748e717a21b3a5dfe82bbe7"
+  },
+  "baseline_source_sha256": {
+    "agent.py": "ab9a63082fa9200572e009ab24aeb3fa59b652b026745291171dae53967af29c",
+    "haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+    "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+    "haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80"
+  },
+  "files": [
+    {
+      "path": "agent.py",
+      "sha256": "af1fe23848e15954ee4504c80e648146ace9f0629b68f5e8f81e685a6ae10710",
+      "bytes": 386
+    },
+    {
+      "path": "haic_agent/__init__.py",
+      "sha256": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+      "bytes": 32
+    },
+    {
+      "path": "haic_agent/acceleration_envelope_runtime.py",
+      "sha256": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+      "bytes": 4279
+    },
+    {
+      "path": "haic_agent/contact_continuity_runtime.py",
+      "sha256": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+      "bytes": 4559
+    },
+    {
+      "path": "haic_agent/corridor_agent.py",
+      "sha256": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+      "bytes": 10439
+    },
+    {
+      "path": "haic_agent/far_hazard_runtime.py",
+      "sha256": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+      "bytes": 5489
+    },
+    {
+      "path": "haic_agent/fast_completion_coordination.py",
+      "sha256": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+      "bytes": 5285
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_recovery_v2.py",
+      "sha256": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+      "bytes": 2906
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_runtime.py",
+      "sha256": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+      "bytes": 3105
+    },
+    {
+      "path": "haic_agent/pixel_features.py",
+      "sha256": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a",
+      "bytes": 9729
+    },
+    {
+      "path": "haic_agent/steering_release_runtime.py",
+      "sha256": "52f540993eecc4453d36900b726f8fb54bda189e58b0c3e5eb6126ac3fcdd54b",
+      "bytes": 12910
+    },
+    {
+      "path": "haic_agent/steering_terms.py",
+      "sha256": "cb1149b03e489c81babda7171349483961b82d367748e717a21b3a5dfe82bbe7",
+      "bytes": 21322
+    }
+  ],
+  "changed_members": [
+    "agent.py",
+    "haic_agent/steering_release_runtime.py",
+    "haic_agent/steering_terms.py"
+  ],
+  "policy_change": "ignore only evidenced ambiguous-motion flank reversal, then guarded near-only release",
+  "stabilize_ambiguous_flank": true,
+  "speed_target_changed": false,
+  "margin_reduction": false,
+  "projection_band_px": 6.0,
+  "observation_contract": "pixels/HUD/history only; no world state",
+  "smoke": {
+    "no_obstacle_equal": true,
+    "first10_equal": true,
+    "far_only_equal": true,
+    "safe_release_active": true,
+    "staged_accounting_valid": true,
+    "same_observation_pedals_target_equal": true,
+    "impact_fallback": true,
+    "raw_saturation_fallback": true,
+    "original_projection_band_preserved": true,
+    "unavailable_projection_tail_validated": true,
+    "ambiguous_generation_real_source_verified": true,
+    "environment_constructions": 0,
+    "environment_resets": 0
+  },
+  "smoke_command": "isolated frozen-source staged-accounting/near-release synthetic stacks; zero real resets",
+  "limitations": [
+    "Current-command arc, lag and speed assumptions are not physical safety certification",
+    "Pixel-component continuity is heuristic, not a physical object ID; circle enclosure is a raster assumption",
+    "Unchanged six-pixel projection band and fixed footprint/raster allowances; no minimum displacement target",
+    "No driving improvement or fresh/generalization evidence before separately frozen consumed-TRAIN A/B"
+  ]
+}

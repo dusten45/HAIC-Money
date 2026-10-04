@@ -1,5 +1,34 @@
 # Current Research State
 
+## Champion Micro-Optimization Stopped By User (2026-10-04)
+
+**Stop further local heuristic optimization of the current KOI champion.** The
+user's2026-10-04T15:23:01Z decision closes the campaign beyond sprint72-relief:
+do not propose or execute another small threshold, margin, recovery, steering,
+corner or pedal patch, diagnostic or A/B without a new explicit instruction.
+Keep `crossing_projection + collision-shield v1` as the unchanged submission
+baseline and retain all negative source/protocol/result evidence. This is a
+research-allocation decision, not proof that every heuristic improvement is
+impossible; independent model lanes are not automatically changed.
+
+The observed lesson is closed-loop sensitivity: a source-correct local pedal
+change can improve a local speed profile yet change later perception, restriction
+timing and steering enough to lose a finish. Do not overstate the particular
+mechanism. All observed impact triggers remained vetoed, with zero genuine
+impact-clear in both arms, so an impact-veto release is not the demonstrated DNF
+cause. Also, undershoot6.825->2.218 belongs to the first2/0006 window, whose
+brake-to-gas count is1->0. Repeated cycles3->0 is a DIFFERENT, own-window aggregate;
+only4/13 baseline station windows support complete matched comparison.
+
+Keeping the champion through the competition and researching a separate joint
+steering/pedal short-horizon controller are alternatives raised by the user,
+not a new implementation or experiment authorization. No successor is selected
+or started. If later authorized, first assess feasibility/minimum scope using
+runtime-permitted observations, prediction error/uncertainty, latency and shield
+compatibility; privileged evaluation heading/progress is not a runtime input,
+and shield reuse alone is not a safety proof. See the
+[durable decision](../decisions/INDEX.md#stop-local-optimization-of-the-koi-champion).
+
 ## Current Submission Baseline (2026-10-02)
 
 **User-designated baseline: crossing_projection + collision-shield v1.** At
@@ -11,6 +40,10 @@ to ZIP SHA-256
 This is a **user-reported official result and user-bound package identity**, not
 independent verification: no site submission ID, server receipt or model-confirmation
 receipt is available. No new upload or server confirmation is performed here.
+
+On2026-10-04 the user additionally summarized this champion as finishing all four
+official tracks and placing sixth overall. This remains a dated user report, not
+an independently verified current leaderboard or per-track same-model audit.
 
 Frozen reference artifact:
 [`20261002-crossing-projection-collision-shield-v1-baseline/`](../../submissions/20261002-crossing-projection-collision-shield-v1-baseline/),
@@ -25,6 +58,138 @@ The original research **NOT_ADOPTED / failed+20ms efficiency gate remains unchan
 this submission designation is separate from research adoption. No retuning or
 evaluation is authorized by this documentation update. Historical packaging and
 research designations below remain dated evidence, not the current selection.
+
+## Fixed Sprint72 Handback Relief Rejected (2026-10-04)
+
+**REJECTED / NOT ADOPTED; this exact specification is CLOSED without retuning.**
+On `research/koi-sprint72-relief`, candidate ZIP `e7062c66...` inserts only the
+diagnosed pre-arrival brake law `clip(.02*(v-72),0,.15)` with gas0, exact T60 and
+the unchanged spatial/obstacle/intervention guards. Actual issued brakes enter
+the original history. Champion `c9e376a0...`, all11 frozen sources and final
+shield `ad772bde...` remain unchanged; no root Agent or existing policy edit.
+
+The [frozen protocol](../../runs/koi-sprint72-relief-v1/protocol.json),
+SHA`7fca6b24...`, completed16 contemporary natural episodes/eight matched consumed
+TRAIN layouts/five geometries, with no omitted mate or retry. The
+[result](../../experiments/koi-sprint72-relief-v1-result.json), SHA`b20da6b3...`,
+preserves exact pre-divergence state/pixel/raw parity and all48 objects per arm.
+Finishes remain7/8 but **one old finish is lost** (1/3184000013) and one gained
+(2/3184000006). Damage, collision decisions, contacts and hit objects stay0.
+All-wheel-offroad ticks64->366 and longest spell1.14->6.88s regress. Common6
+laps average+26.667ms;1/0015+180ms and2/0015+80ms violate the20ms ceiling.
+
+Local undershoot can improve:2/0006's first cap-window minimum65.175->69.782.
+However only4/13 baseline station windows remain fully comparable; six meet an
+earlier candidate restriction, two reverse passages are unreached, and one end
+is unreached. No full-cohort matched undershoot/cycle mean is available. Own-window
+repeated brake-gas cycles3->0 and whole-episode transitions215->198 are not valid
+complete matched gains; on the common6 finishes transitions135->136 instead.
+
+The four baseline reverse decisions194/195/447/448 remain counted and runtime-
+eligible, not hidden by a heading veto. Candidate changes earlier driving and
+finishes that cell in21.8s without the old reverse phase; it does not execute
+those identical reverse states. This positive rescue cannot offset the lost finish.
+Candidate changes39 nominal decisions; later steering and arrival timing/entry
+speeds differ despite unchanged code. All232/204 impact triggers are vetoed, with
+zero genuine impact-clear in either arm; do not blame an unobserved veto release.
+
+Integrated159 tests+132 subtests and both exact CPU21 zero-reset import preflights
+pass. The [independent audit](../../experiments/koi-sprint72-relief-v1-audit.json),
+SHA`cfe02a62...`, reproduces the exact frozen result and verifies116 artifacts,
+all4094 issued-brake/history decisions, all8 prefixes and all96 object records
+without new driving; no discrepancy changes the rejection. Preserve source/run/
+result as negative evidence. No coefficient sweep,
+deadband/hysteresis/FP fix, repeat, large generalization, protected/private/official
+evaluation or submission follows. See [section32](../architecture/koi-baseline-analysis-2026-09-30.md#32-fixed-sprint72-handback-relief-2026-10-04).
+
+## Corner Entry Pre-Positioning Closed At Diagnosis (2026-10-04)
+
+**No repeated feasibility improvement; no candidate or A/B.** This separate
+hypothesis moved outside preparation10/20/30 decisions earlier, rather than
+reopening direct apex pulling from the recorded entry. The
+[natural analysis](../../experiments/koi-corner-entry-natural-v1.json) retains all
+62 sharp-corner observations from eight consumed champion episodes/five geometries:
+55 complete, one censored, six unreached. Complete geometric entries are6 outside,
+15 center and34 inside. Earlier-outside comparisons with both shorter path and
+lower maximum front-wheel angle occur on only one geometry, with approach/layout
+confounding; they are not causal A/B or replicated evidence.
+
+The [counterfactual diagnosis](../../experiments/koi-corner-preposition-diagnosis-v1.json)
+tests288 bounded paths for the prior four rejected opportunities/two geometries,
+including gradual setup, genuine outside entry, apex and complete return costs.
+Nineteen paths have positive net length savings, but none reaches the2-unit
+meaningful-gain screen; the maximum is1.459. Removing demand/overlap vetoes AND
+accepting any positive saving leaves only two paths on the same case/geometry,
+saving.187/.228. These are offline geometric predictions, not dynamic feasibility
+proofs or measured lap gains. Brief offroad remains allowed, not a hard boundary.
+
+Champion ZIP/all11 sources, root Agent, pedals, avoidance and shield remain
+unchanged. No new resets, blind/official action, runtime candidate or A/B.
+Exit-throttle, target-speed increases, overavoidance and direct-apex cutting stay
+closed. See [section31](../architecture/koi-baseline-analysis-2026-09-30.md#31-outside-entry-pre-positioning-diagnosis-2026-10-04).
+
+## Direct-Apex Corner Cutting Closed At The Passive Gate (2026-10-04)
+
+**No candidate or A/B; no repeated feasible-looking gain in the bounded family.**
+The [diagnosis](../../experiments/koi-corner-cutting-diagnosis-v1.json) reads only
+the same eight frozen-champion consumed TRAIN episodes/five geometries. It retains
+62 sharp-corner observations,55 complete;44/55 actual paths are already shorter
+than their corresponding centerline arcs. Fifteen complete windows have no recorded
+obstacle/recovery interference. Four of those, on two geometries, have meaningful
+GEOMETRIC savings, but none passes the combined steering/lateral-demand/reentry
+screen at unchanged logged speed. Do not misstate this as zero geometric opportunity.
+
+Road boundaries were SOFT: predicted short offroad was explicitly allowed. The
+bounded .75/1.5/2.25/3-unit inward shifts were screened separately from the
+unconstrained chord lower bound. Their steering, grass exposure, reentry heading
+and time estimates are offline proxies, not replayed trajectories or physical
+impossibility proofs. Close this minimal fixed-speed direction without expanding
+to a planner or changing pedals. Frozen champion/shield, avoidance and straight
+control remain unchanged; exit-throttle, target-speed and overavoidance stay closed.
+No new reset, blind/official action or measured lap improvement. See
+[section30](../architecture/koi-baseline-analysis-2026-09-30.md#30-soft-boundary-corner-cutting-diagnosis-2026-10-04).
+
+## Corner Target-Speed Headroom Not Established (2026-10-04)
+
+**Direction CLOSED at the passive diagnosis gate; no candidate or A/B.** On
+`research/koi-corner-target-speed`, the [diagnosis](../../experiments/koi-corner-target-diagnosis-v1.json)
+uses only the existing eight frozen-champion TRAIN episodes/five roads/2,130
+decisions. The active target is a road-center pixel-spread mapping, not calibrated
+physical curvature. Its issued pedal formula matches832 non-overridden decisions.
+
+Geometry-defined corner/followup windows retain68 complete, one censored/nonforward
+and nine unreached observations. Of23 unconfounded complete passages,12 enter above
+their HUD-scale target and remain contact-loss/damage/collision-free, but only one
+passage on one road supplies sustained same-spread-band headroom under the stated
+diagnostic screen. No mapping band has repeated support across distinct roads.
+One other unconfounded corner already has17 partial-wheel-offroad raw ticks,
+including two all-wheel-offroad ticks. Local projected margin is a proxy, not
+exact curved-road clearance or proof of a physical speed limit.
+
+The result does not establish excessive preview braking or a safe narrow mapping
+increase. No target, lookahead, steering, avoidance or shield change; frozen ZIP,
+all11 sources and worktree shield verify unchanged. Exit-throttle and overavoidance
+remain closed. No new resets, blind/official evaluation, or measured A/B lap delta.
+See [section29](../architecture/koi-baseline-analysis-2026-09-30.md#29-corner-target-speed-headroom-diagnosis-2026-10-04).
+
+## Corner-Exit Throttle Hypothesis Not Confirmed (2026-10-04)
+
+**Direction CLOSED at the diagnosis gate; no candidate or A/B run.** Passive
+[diagnosis](../../experiments/koi-corner-exit-diagnosis-v1.json) covers eight existing
+frozen-shield consumed TRAIN episodes/five roads/2,130 decisions, not fresh data.
+Of36 putative post-turn alignment onsets,30 already issue gas>=.5; four of the
+remaining six exceed their current target. All six fail the existing projected
+free-space gate and have19.62-70.38deg of upcoming road heading change within28.8m.
+These are not established unnecessary post-exit holds. Active targets match the
+current-frame road-spread formula exactly on1,601 eligible decisions;832 eligible
+non-sprint pedal pairs match the current-speed formula within2.8e-8. The corridor
+EMA's pedals are overwritten, and no active corner-exit holding timer was found.
+
+No acceleration/entry/mid-corner/avoidance/shield logic changed. Exact frozen ZIP,
+all11 members and worktree v1 shield hashes match; overavoidance remains CLOSED.
+Zero new simulator resets, generalization or official actions. A/B safety, exit
+time and lap deltas are unmeasured, not zero. See
+[section28](../architecture/koi-baseline-analysis-2026-09-30.md#28-corner-exit-throttle-diagnosis-2026-10-04).
 
 ## Bounded Magnitude Rejected; Overavoidance Closed (2026-10-02)
 

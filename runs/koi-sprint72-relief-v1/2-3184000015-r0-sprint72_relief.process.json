@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/tmp/kilo/haic-cpu21/bin/python",
+    "-I",
+    "-B",
+    "-c",
+    "import sys; sys.path.insert(0,sys.argv[1]); from scripts.evaluate_koi_sprint72_relief import worker; worker(sys.argv[2],int(sys.argv[3]),sys.argv[4],import_only=sys.argv[5]==\"True\")",
+    "/workspace/HAIC-Money/runs/koi-sprint72-relief-v1/source",
+    "/workspace/HAIC-Money/runs/koi-sprint72-relief-v1",
+    "13",
+    "7fca6b24509812aadde8f6dd2b2dd3a0a57bcb217a796ed9f35e5c6cb73d771d",
+    "False"
+  ],
+  "protocol_sha256": "7fca6b24509812aadde8f6dd2b2dd3a0a57bcb217a796ed9f35e5c6cb73d771d",
+  "wall_time_s": 22.642916650045663,
+  "error": null
+}

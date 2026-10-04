@@ -1,0 +1,4 @@
+{
+  "error": "RuntimeError: child_timeout",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/HAIC-Money/scripts/evaluate_koi_steering_generalization.py\", line 590, in run\n    run_child([str(PYTHON), \"-I\", \"-c\", command], directories[arm], output, min(forecast[\"child_timeout_s\"], remaining), identity, protocol[\"operator_sha256\"])\n  File \"/workspace/HAIC-Money/scripts/evaluate_koi_steering_generalization.py\", line 460, in run_child\n    original.run_child(command, directory, output, timeout)\n  File \"/workspace/HAIC-Money/scripts/evaluate_koi_adaptive_ab.py\", line 88, in run_child\n    raise RuntimeError(failure)\nRuntimeError: child_timeout\n"
+}

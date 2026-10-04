@@ -2046,3 +2046,716 @@ environment reset or driving replay. Finish flags are reduced from hash-bound
 episode records, not a separate tracker/physics replay. The audit adds evidence
 only; rejection, no-repeat/no-tune flags, frozen champion and direction closure
 remain unchanged.
+
+## 28. Corner-Exit Throttle Diagnosis (2026-10-04)
+
+The user authorized one separate hypothesis: unnecessary retained deceleration
+after corner exit delays throttle recovery. Preserve frozen crossing_projection
+plus collision-shield v1, entry/mid-corner control and all avoidance logic; the
+overavoidance direction remains closed. Implement a minimal separate candidate
+and consumed TRAIN A/B only if the existing logs first establish this mechanism.
+Otherwise close the direction without extra driving, generalization or official
+evaluation. This section is the narrow plan and completed outcome.
+
+### Passive Evidence
+
+[Diagnosis](../../experiments/koi-corner-exit-diagnosis-v1.json) reads only the eight
+archived frozen_shield episodes in `runs/koi-nominal-trajectory-v1`: Track1 seeds
+3184000002/0013/0015, Track2 seeds3184000001/0006/0015, and Track3 seeds3184000002/0015
+(suffixes expand within3184000000). These are eight consumed layouts/five road
+geometries,2,130 decisions; archived finishes7/8 with damage0/collision decisions0.
+
+An intentionally broad putative exit requires prior obstacle-free |steer|>=.25
+and |physical road-heading error|>=.15rad, then two consecutive decisions with
+|steer|<=.12, |heading error|<=.10rad and all wheels onroad. Obstacle/recovery
+intervention invalidates corner history. These36 events are alignment candidates,
+not36 established straight-road corner exits. At30/36 first aligned decisions,
+gas is already>=.5. Four of the six low-gas onsets exceed the current target.
+
+| Track / Seed | Decision | Gas | Target / Pixel Speed | Next28.8m Road Heading Change |
+|---|---:|---:|---:|---:|
+| 1 / 3184000002 | 160 | .064 | 56.0 / 57.40 | 19.62deg |
+| 1 / 3184000002 | 189 | 0 | 54.0 / 57.40 | 54.31deg |
+| 1 / 3184000013 | 113 | .192 | 59.2 / 57.40 | 70.38deg |
+| 1 / 3184000015 | 94 | 0 | 57.2 / 61.21 | 50.27deg |
+| 3 / 3184000002 | 135 | .282 | 55.2 / 51.15 | 29.64deg |
+| 3 / 3184000015 | 93 | 0 | 58.0 / 61.21 | 40.08deg |
+
+All six fail the existing projected free-space sprint condition. The physical
+heading changes are computed from archived road geometry, not a simulator reset
+or a new controller input. Current alignment alone does not establish that those
+preview limits are unnecessary. In particular,1/0013 already has a recovered
+target of59.2 and approaches the next sharp turn;3/0002 still follows a bending road.
+
+The actual target is `max(38,60-.8*current_road_center_spread)`, with no corner
+holding timer. It matches all1,601 eligible logged targets exactly. The832
+eligible non-sprint/no-arrival-cap pedal pairs match current-speed proportional
+control within2.8e-8. The underlying corridor target EMA is not an issued-pedal
+lag: its pedals are overwritten. The active two-HUD speed average exists but
+does not establish an unnecessary exit delay in these records.
+
+Descriptive effective-target recovery to>=58 (within2 of base straight target60,
+using72 when sprint overrides it) is immediate at31/36 onsets,80ms at3/36 and
+censored at2/36 when alignment ends. Gas>=.5 recovery is immediate at30/36,
+80ms at1/36,160ms at1/36 and censored at4/36. Censors are retained, not zeroed;
+alignment-run duration is not a fixed-station exit-time or matched A/B metric.
+
+### Decision
+
+**HYPOTHESIS NOT CONFIRMED; close this direction without implementing a candidate.**
+No clearly unnecessary retained post-exit deceleration was isolated. This is not
+proof that every possible corner-exit optimization is ineffective. Do not loosen
+entry/preview limits or reopen avoidance/shield work to manufacture a candidate.
+No A/B safety, fixed-station exit-time or lap delta is measured or claimed.
+
+Reproduction: `python -m scripts.diagnose_koi_corner_exit --output experiments/koi-corner-exit-diagnosis-v1.json`.
+The passive script verifies the exact ZIP/all11 member hashes and unchanged
+worktree shield, checks the logged target/pedal formulas and preserves input
+hashes/event contexts. Zero new policy executions, simulator resets, driving
+repeats, generalization runs, submissions or confirmations.
+
+## 29. Corner Target-Speed Headroom Diagnosis (2026-10-04)
+
+### Scope And Decision
+
+The user authorized a single hypothesis: road-shape target speed is unnecessarily
+conservative before corners. Start with existing consumed TRAIN logs; only clear,
+repeated headroom permits a separate minimally raised mapping and consumed A/B.
+Do not change the frozen champion, lookahead, steering, avoidance or shield, and
+do not reopen exit-throttle or overavoidance. Work is on
+`research/koi-corner-target-speed`, based on preservation commit `2408bed`.
+Existing staged and unrelated work is retained, not folded into this diagnosis.
+
+**NO CLEAR HEADROOM; close this direction without candidate implementation or A/B.**
+One promising passage is not replicated cross-road support for changing the
+mapping. This is a bounded evidence decision, not proof that all higher corner
+speeds are unsafe or that the current controller is optimal.
+
+### Active Mechanism
+
+Frozen `fast_completion_coordination.py` computes after decision10:
+`T=max(38,60-.8*S)`, where `S` is the max-minus-min horizontal center position in
+available image rows54/50/46/42/38/34/30. Fewer than two rows uses `S=28`; a near
+obstacle separately capsT at44. **S is a pixel spread, not calibrated curvature.**
+Camera/vehicle heading, lateral position and missing rows also affect it.
+
+ForT<60, gas is `clip(.12+.04*(T-v),0,.6)` and brake is
+`clip(.02*(v-T-2),0,.28)`. AtT60 the inherited brake cap is.15. Herev is the
+two-frame HUD estimate, not exact physical hull speed. Sprint and arrival braking
+can replace these pedals; crossing and shield then affect steering. The discarded
+corridor EMA is not an active target lag. The separate source inspection and
+832 eligible logged pedal pairs agree (maximum residual2.80e-8). Across these
+832 observations HUD minus physical speed ranges-1.44 to+5.66, mean+1.14, so
+above-target tests use HUD values rather than subtracting unlike measurements.
+
+### Passive Windows And Limits
+
+[Result](../../experiments/koi-corner-target-diagnosis-v1.json) reads the same eight
+`frozen_shield` episodes in `runs/koi-nominal-trajectory-v1` as section28: five road
+geometries and2,130 decisions, no new interaction. Geometry-only corner grouping
+uses same-sign curvature>=.01rad/distance-unit, bridges<=10.5 units without a
+meaningful opposite turn, and requires total heading change>=15deg. Observe through
+corner end+10 units; exclude the track seam. Keep68 complete, one censored/nonforward
+and nine unreached windows. These78 episode/corner observations overlap across
+layouts and sometimes in followup; they are not78 independent trials.
+
+Entry must have an active nominal target, and the passage must have no detected
+obstacle/recovery/shield intervention to enter the unconfounded descriptive subset:
+23 complete passages. Raw20ms wheel contacts and obstacle collision/contact records
+plus cumulative damage determine observed safety. The local margin proxy is
+`40/6-|lateral|-1.6*|cos(heading_error)|-2.61*|sin(heading_error)|`.
+Road half-width40/6 is from the protocol-pinned simulator; the footprint envelope
+is conservative locally, not exact clearance to the curved road boundary. A
+negative proxy is NOT itself proof of road departure. Actual contact losses are
+reported separately; metric uncertainty cannot be treated as positive headroom.
+
+The working diagnostic screen requires at least three complete clean passages
+across two geometries in one pixel-spread band, entry HUD>=T+2, and the same excess
+in>=80% of at least three eligible same-band decisions before corner end. Minimum
+margin proxy must be>=1, with no unconfounded low-margin/contact-loss counterexample
+in that band. Post-corner target recovery is NOT counted against speed support.
+These are explicit observational screening definitions, not a physical safety
+theorem, an independently preregistered trial, or a causal speed-limit estimate.
+
+### Results
+
+The following table covers only the23 unconfounded passages. Target and entry
+speed are separate native-scale means; do not read their difference as calibrated
+speed headroom. Minimum margin is the worst local proxy over the full passage and
+followup. Heading-change strata and all exclusions are retained in the JSON.
+
+| Entry Pixel Spread | Passages | Mean Target (HUD) | Mean Physical Entry Speed | Minimum Margin Proxy | Any-Wheel-Offroad Passages | Damage-Positive |
+|---|---:|---:|---:|---:|---:|---:|
+| 0-5 | 6 | 57.40 | 53.57 | -3.85 | 1 | 0 |
+| 5-10 | 5 | 54.34 | 52.66 | -0.79 | 0 | 0 |
+| 10-15 | 4 | 51.13 | 50.24 | -1.40 | 0 | 0 |
+| 15-20 | 5 | 46.64 | 50.67 | -0.17 | 0 | 0 |
+| 20-27.5 | 3 | 40.83 | 45.60 | -0.73 | 0 | 0 |
+
+Braking occurs in72/91 nominal decisions with spread15-20 and31/37 with
+spread20-27.5; this establishes that the target can bind, not that braking is
+unnecessary. In16 unconfounded passage approach windows, the first observed
+eligible brake lies from17.95 units after to39.28 units before geometric entry;
+signed time lead ranges-.24 to+.72s. The means are13.84 units/.266s before entry.
+This is a bounded40-unit lookback's first brake observation, not a guarantee of
+the original braking onset if braking was already active at the window boundary.
+
+There are12 unconfounded, clean above-target entries. Only
+`2/3184000001/corner240` satisfies sustained same-band support: target54.8,
+HUD62.45, physical entry59.31 and minimum margin proxy3.26. All four relevant
+same-band commands exceed target+2, but the full passage still applies six brake
+commands and physical speed falls to49.48. First observed approach braking is
+21.42 units/.34s before entry. It is one geometry, not repeated mapping evidence.
+
+Nine descriptive comparisons find an equally/more sharply curved clean passage
+entered at least two physical speed units faster. They are unmatched and not
+independent: for example, the same road/corner189 on tracks2 and3 of seed0015
+differs by4.68 at entry. Different preceding states/obstacles and later braking
+prevent interpreting this as a causal safe target increase.
+
+Counter-evidence: `3/3184000002/corner222` enters at physical44.76/HUD44.85 with
+target57.2, yet later has17 partial-wheel-offroad raw ticks, including two
+all-wheel-offroad ticks, with zero damage/collisions. This is an observed current
+safety limitation, not proof that entry speed caused it. Other low-margin proxy
+examples include `3/3184000002/corner200` and `3/3184000015/corner214`; neither
+has observed wheel-contact loss, so do not relabel them as actual departures.
+
+No pixel-spread band has repeated headroom across distinct geometries. The
+required basis for even a narrow mapping increase is absent in this bounded
+sample. Candidate/A-B are skipped; no lap improvement or safety preservation of
+a changed policy is claimed. Frozen ZIP, all11 source members and worktree shield
+rehash unchanged; root Agent and all policy code have no changes.
+
+Reproduce with `python -m scripts.diagnose_koi_corner_target --output experiments/koi-corner-target-diagnosis-v1.json`.
+Only four focused synthetic checks were run via
+`python -m unittest tests.test_diagnose_koi_corner_target`; all pass. No full-suite
+audit, replay, simulator reset, new geometry, blind or official evaluation.
+
+## 30. Soft-Boundary Corner Cutting Diagnosis (2026-10-04)
+
+### Scope And Decision
+
+The user authorized a new single hypothesis: the champion follows unnecessarily
+long corner paths and a minimal inward apex shift, with brief offroad allowed,
+could shorten laps. Preserve exact crossing_projection plus collision-shield v1,
+speed targets, obstacle avoidance and straight control. Exit-throttle, target-speed
+increases and overavoidance stay closed. Analyze consumed logs first; only repeated
+meaningful viable-looking shortcuts authorize a separate minimal candidate/A-B.
+The working branch is `research/koi-corner-cutting`; prior work and staging remain.
+
+**CLOSED AT THE PASSIVE GATE, no runtime implementation or A/B.** Geometric savings
+exist on two roads, but the tested small-offset, fixed-speed family supplies no
+route passing the combined reentry/steering/demand screen. This is a bounded
+engineering decision, NOT a physical proof that corner cutting cannot work. Do
+not hide positive geometric savings or present model-based rejection as a driving
+failure. Do not widen to a full planner or change speed to rescue this direction.
+
+### What Was Measured
+
+[Primary result](../../experiments/koi-corner-cutting-diagnosis-v1.json) uses only
+the same eight archived `frozen_shield` episodes/five geometries as sections28/29.
+Use the previous geometry-only corner grouping, now requiring >=45deg total turn.
+Observe from10 distance units before corner start to10 after end, retaining raw
+endpoints. Of62 episode/corner observations,55 are complete. The other seven
+censored/nonforward/unreached windows stay in the artifact, not fresh or successful.
+Only15 complete windows lack recorded obstacle/recovery interference. Observations
+across layouts and overlapping corner windows are not independent samples.
+
+Actual distance sums raw XY increments; centerline arc uses the same endpoints'
+projected stations. The straight endpoint chord is an unconstrained lower bound,
+not the minimum drivable route. **44/55 actual paths are already shorter than
+their centerline arcs**: the literal premise of simply driving the full centerline
+arc is not supported for most observed corners, even though nominal targets may
+still be road-center based.
+
+For each complete window, resample the actual path and blend toward its chord with
+a `sin(pi*u)^4` envelope. Four bounded peak displacements, .75/1.5/2.25/3 units,
+give220 geometric alternatives. Endpoint offset and its first two derivatives
+vanish analytically; this does not eliminate noise in the sampled baseline path.
+The family is a passive feasibility probe, not a runtime trajectory planner or
+proof that a pixel aimpoint shift would track those exact paths.
+
+### Soft Edges And Feasibility Limits
+
+Archived track beta/XY construct the actual road quadrilateral union, half-width
+40/6. Project four wheel centers against it; **nonzero offroad is allowed**.
+Report total/longest any-wheel and longest all-wheel offroad at archived speed,
+plus a half-speed sensitivity. Wheel-center membership is not exact wheel-fixture
+contact. Reentry means predicted all-center road support resumes; failure to rejoin
+within the fixed observation window is unresolved, not proof of permanent loss.
+
+The operational screen asks for >=2 distance units AND3% shortening in at least
+three corners across two geometries; longest predicted offroad<=.5s, reentry/exit
+heading<=15deg, >=.5 rectangle/obstacle clearance and no recorded obstacle/recovery
+interference. These are diagnostic definitions, not official rules. Geometry uses
+archived world positions only offline; none can be supplied to a runtime Agent.
+
+Curvature is averaged over approximately one80ms controller hold to avoid treating
+piecewise-linear interpolation vertices as real steering impulses. Wheel demand
+is calibrated locally as recorded front-wheel angle plus the change in
+`atan(3.24*curvature)`. Screen against the larger of the nominal.4rad stop and
+observed maximum, plus.005rad, and110% of the larger of3rad/s and observed rate.
+P95 lateral demand must not exceed110% of baseline. This optimistic local slip
+approximation is NOT a validated dynamics model; it cannot prove infeasibility.
+Measured joint overshoot is retained rather than rejecting unchanged behavior
+merely because the motor target is smaller. The initial uncalibrated derivative
+estimate was replaced during diagnostic development, not treated as a real run.
+
+Independent source inspection confirms that grass uses60% of per-wheel road force
+capacity, NOT60% speed or an immediate retirement predicate. Longitudinal and
+lateral demands share that budget. Thus logged-speed timing is optimistic and a
+shorter path can still be slower. Break-even fractional mean-speed loss equals
+fractional distance saving. Finishing requires>=95% unique-tile coverage plus
+qualified forward start crossing, not merely reaching a centerline station.
+Predicted newly skipped wheel-center tiles are reported as proxies; they are not
+exact contact/whole-lap coverage. The101-negative-reward-decision retirement rule
+is not an8.08s guaranteed grass allowance or a wheel-offroad timer.
+
+### Observations
+
+All figures below concern the best geometric member of the bounded family, not
+executed candidate driving. Distance is in simulator world units. A dash for
+reentry means no predicted road departure; it is not an unmeasured return set to0.
+
+| Track / Seed / Corner | Actual | Centerline Arc | Chord Lower Bound | Bounded Cut | Longest Predicted Offroad | Reentry Heading | Estimated Wheel Demand / Screen Limit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 1 / 3184000013 / 145 | 48.82 | 51.10 | 30.86 | 45.54 | 0s | - | .532 / .464rad |
+| 1 / 3184000015 / 236 | 42.48 | 44.12 | 32.40 | 40.18 | 0s | - | .580 / .423rad |
+| 1 / 3184000015 / 284 | 38.83 | 44.52 | 28.31 | 36.30 | .234s | 31.44deg | .479 / .418rad |
+| 2 / 3184000015 / 92 | 53.80 | 55.75 | 41.83 | 51.80 | 0s | - | .528 / .439rad |
+
+These four unconfounded windows on two geometries pass the geometric-only gain
+criterion (2.00-3.27 units,3.72-6.71%). None passes all feasibility screens.
+The predicted.234s grass excursion is below the permitted diagnostic duration;
+its rejection is reentry/demand, NOT a hard road-boundary constraint. Rectangle
+obstacle margins in these four are respectively39.67/25.53/7.41/21.21 units, so
+predicted obstacle intersection is not their limiting factor. The other11
+unconfounded best alternatives fail the minimum gain and/or return/demand tests.
+
+Across all220 alternatives, reason counts overlap:185 small gain,202 steering
+demand,161 increased lateral demand,160 baseline obstacle/recovery interference,
+53 reentry heading,32 exit not aligned/onroad and only4 prolonged offroad
+predictions. Do not interpret these as independent failures or observed collisions.
+No complete alternative passed the combined screen, so no repeatable feasible
+gain is established for the minimal fixed-speed proposal. The unconstrained chord
+alone cannot justify new driving. A/B path, offroad, heading and lap deltas are
+unmeasured, not zero.
+
+### Preservation And Reproduction
+
+Separate source inspection identified a potential post-crossing/pre-shield
+stateless nominal boundary, which would preserve same-observation pedals and the
+shield. It was NOT implemented because this diagnostic gate did not pass. Frozen
+ZIP/all11 members verify unchanged; root Agent, shield and all policy code have
+no changes. No candidate, simulator reset, new cells, blind or official action.
+
+Reproduce with `python -m scripts.diagnose_koi_corner_cutting --output experiments/koi-corner-cutting-diagnosis-v1.json`.
+Four focused geometry/timing/zero-shift calibration tests pass via
+`python -m unittest tests.test_diagnose_koi_corner_cutting`. No broad audit.
+
+## 31. Outside-Entry Pre-Positioning Diagnosis (2026-10-04)
+
+### Scope And Decision
+
+The user explicitly narrowed section30's closure to directly pulling the apex
+from the recorded entry state. The new single hypothesis is that an earlier
+outside entry position/heading enables a gentler and shorter line. Prepare10/20/30
+decisions ahead; preserve the frozen champion, speed targets, obstacle avoidance
+and v1 shield. Brief offroad is allowed, but not prolonged or unresolved departure.
+The branch is `research/koi-corner-preposition`, preserving all earlier work.
+
+**CLOSED AT DIAGNOSIS; no candidate or A/B.** Natural comparisons do not supply
+multi-geometry isolated support. A bounded, genuine outside-entry path family does
+not retain meaningful repeated savings after setup/return cost. This is not proof
+that every racing line or preposition controller is physically impossible. The
+limited family, model uncertainty and small positive observations remain explicit.
+
+### Natural Entry Evidence
+
+[Natural artifact](../../experiments/koi-corner-entry-natural-v1.json) verifies the
+24 archived input files against section30's hashes: eight consumed champion
+episodes, five roads,2,130 decisions and8,511 raw ticks. All62 observations remain:
+55 complete, one censored/nonforward and six unreached. The complete-window
+geometric-entry split is6 outside/15 center/34 inside; the censored passage is also
+inside and is not pooled as a complete outcome.
+
+Outside-positive lateral is `turn_direction*raw_lateral`, with outside>1,
+center[-1,1], inside<-1. Entry is the first observed crossing of geometric corner
+start, preserving its bracket/overshoot. Histories use exact logged controller
+decisions, not assumed raw-step offsets. Heading is actual BODY road-heading
+error, not the tangent of the measured XY path. Original complete-window endpoints
+remain unchanged for the natural outcome comparisons.
+
+| Classification Time | Outside-vs-Other Same-Geometry Contrasts | Outside Path Shorter | Shorter And Lower Max Front-Wheel Angle | Both Prior Corner Windows Without Recorded Interference |
+|---|---:|---:|---:|---:|
+| Geometric entry | 3 | 0 | 0 | 0 |
+| 10 decisions earlier | 7 | 4 | 3 | 1 |
+| 20 decisions earlier | 8 | 4 | 1 | 0 |
+| 30 decisions earlier | 10 | 6 | 4 | 0 |
+
+These are contrasts among29 same-seed/corner layout pairs, not independent trials
+or matched controller A/B. All geometric-entry contrasts are on seed3184000002;
+outside paths are1.289/10.863/11.521 units longer, but preceding state/obstacles
+confound that association. Every earlier-outside contrast with BOTH shorter path
+and lower maximum front-wheel angle occurs only on seed3184000015. No contrast
+has two complete30-decision approaches plus windows free of recorded interference.
+The sole pair with both old corner windows unflagged still has approach interference.
+
+The artifact compares actual path/arc, maximum issued steering and INDIVIDUAL front
+wheel angles, minimum physical speed, total/longest partial/full offroad, damage,
+collision and actual BODY-heading at contact reentry. Across55 complete windows,
+14 have some wheel contact loss, three have all-wheel loss, ten observed reentries,
+and four remain offroad at the window boundary. All have zero damage/collision.
+These are descriptive outcomes, not benefits caused by outside entry. Missing
+returns are null/censored, not zero heading. Pooled different-corner averages must
+not be used as causal evidence.
+
+In the prior four rejected opportunities, three are ALREADY outside10 decisions
+earlier:1/0013/145 lateral+4.749;1/0015/236 +5.596;2/0015/92 +4.759. None remains
+outside at geometric entry. The fourth,1/0015/284, changes from-.963 at-10 to
+-5.651 at entry. All four have obstacle/impact-proxy/recovery flags somewhere in
+the30-decision approach; flags are not physical collisions. Recorded pixel centers
+and their second differences are included, but do not establish future-corner
+observability or justify an oracle lookup in a runtime controller.
+
+### Counterfactual Method
+
+[Recalculation](../../experiments/koi-corner-preposition-diagnosis-v1.json) uses
+only those four prior opportunities on two geometries. For each10/20/30-decision
+start, compare common full start-to-return endpoints, ending20 station units after
+the geometric corner. Include setup, corner and return cost; use identical
+resampling for reference and alternatives and retain raw baseline length too.
+
+The bounded grid is outside offset2/4, inside apex2/4/6, apex at50/65% of corner
+station span, and outside turn-in5/10 units before entry:72 paths/case,288 total.
+The outside waypoint is also explicitly held at original entry. Cubic C2 waypoint
+interpolation is corrected with endpoint quintics to preserve locally fitted
+position/tangent/curvature jets. Every8-unit setup waypoint gradually blends the
+original approach toward the outside using quintic smoothstep. This prevents a
+long endpoint spline from taking credit for cutting an unrelated earlier corner.
+The entry classification uses the proposed path's ACTUAL projected station
+crossing, not merely the spline parameter called entry. All final paths reach
+outside, inward-directed entry; geometric endpoint curvature debt is also closed.
+
+This construction is deliberately a small offline family, not a full runtime
+planner. During diagnostic development, unconstrained splines that crossed entry
+on the inside or shortened unrelated approach bends were corrected, not counted
+as valid preposition evidence. The original closed diagnostics were not rewritten.
+
+Use the same archived physical-speed schedule as a function of projected road
+station for all routes. Report analytic, unfiltered curvature/bicycle angle/rate
+and lateral demand separately for setup/corner/return, plus the previous filtered
+kinematic measure for same-model comparison to direct pulling. Do not dilute a
+corner peak with a longer setup's whole-window P95, or carry baseline steering
+residuals to a different entry state. Physical speed is prescribed here, not a
+measured consequence of unchanged pedal code. Minimum-speed improvement cannot
+be inferred from these paths.
+
+Road edges remain soft. The screen allows up to.5s predicted continuous wheel-center
+offroad, requires observed-window return and <=15deg reentry/exit heading,
+rectangle-obstacle clearance>=.5, forward progress and small endpoint debt. The
+nominal bicycle screen uses angle<=.405rad/rate<=3.1rad/s and a5% same-model peak
+steering improvement over direct pull. These are screening proxies, not physical
+limits/proofs for a slipping car. Footprints follow velocity tangent, not known
+counterfactual hull yaw, and wheel centers are not exact fixture contacts. The
+source-checked grass force and95% unique-tile finish caveats from section30 remain.
+
+### Net Results And Sensitivity
+
+Each cell below is the BEST net distance saving over its24 configurations, with
+the full setup and return included. Positive means shorter; negative means longer.
+These optimistically selected geometric quantities are not measured lap gains.
+
+| Prior Case: Track / Seed / Corner | Start10 Decisions Early | Start20 Early | Start30 Early |
+|---|---:|---:|---:|
+| 1 / 3184000013 / 145 | +0.608 | +1.114 | +1.459 |
+| 1 / 3184000015 / 236 | -0.781 | -0.133 | -0.391 |
+| 1 / 3184000015 / 284 | -5.101 | -4.855 | -4.509 |
+| 2 / 3184000015 / 92 | -0.941 | +0.419 | +0.616 |
+
+Nineteen of288 paths have positive net savings, none reaches the operational
+2-unit meaningful-gain threshold, and none passes the combined feasibility screen.
+This conclusion does NOT depend only on the uncertain bicycle model: dropping
+its veto still leaves zero accepted paths. Dropping demand/steering-improvement/
+overlap vetoes AND the2-unit threshold leaves only two positive geometry-only
+paths, both1/0013/145 at30 decisions, saving.186725/.228157 units with no predicted
+departure. They are retained as small positive signals, not repeated evidence.
+
+No final path was rejected for excessive offroad duration or endpoint curvature
+debt. Thus this is not a disguised hard-road-boundary rule or an endpoint-splice
+artifact. Other overlapping flags are128 reentry-heading,90 obstacle-clearance,
+240 existing avoidance/recovery overlap,195 no filtered peak-steering improvement,
+and288 analytic bicycle-demand failures. Those last failures are model sensitivities,
+not288 observed driving failures. Same-code pedals, terminal slip/yaw/steering state
+and lap-wide coverage would still require real A/B; no such result is fabricated.
+
+### Preservation And Reproduction
+
+No runtime candidate, A/B, simulator reset, fresh road, blind/private or official
+evaluation. Frozen ZIP/all11 sources verify unchanged; root Agent, speed targets,
+avoidance and shield have no edits. The previous direct-apex pull, exit-throttle,
+target-speed increase and overavoidance closures remain separate and unchanged.
+
+Commands: `python -m scripts.diagnose_koi_corner_entry_natural --output experiments/koi-corner-entry-natural-v1.json`
+and `python -m scripts.diagnose_koi_corner_preposition --output experiments/koi-corner-preposition-diagnosis-v1.json`.
+Eleven focused tests pass via
+`python -m unittest tests.test_diagnose_koi_corner_preposition tests.test_diagnose_koi_corner_entry_natural`.
+No broad audit. Code, evidence and shared summaries remain uncommitted local work;
+existing unrelated staging was not modified.
+
+## 32. Fixed Sprint72 Handback Relief (2026-10-04)
+
+### Authorized Scope And Frozen Design
+
+The user authorized ONE separate candidate and a small matched consumed TRAIN A/B
+after the passive diagnosis gate. Work is on `research/koi-sprint72-relief`.
+The previous diagnosis was reported in conversation, not saved as a standalone
+sprint protocol/result; the canonical primary evidence is the eight champion
+episodes in `runs/koi-nominal-trajectory-v1`. Do not invent a prior frozen sprint
+artifact or reuse that study's avoidance-efficiency gates as this study's gates.
+
+Keep the exact submitted champion ZIP `c9e376a0...` and all its eleven source
+members immutable. The candidate package alone inserts the helper from
+`haic/algorithms/koi/sprint72_relief.py` into its copy of `FarHazardAgent.act`, after
+current far detection/tracker update/near selection, before the unchanged arrival
+block. All other original package members, including shield `ad772bde...`, remain
+byte-identical. No root Agent, previous candidate, or frozen evidence is edited.
+
+The branch requires finite original two-frame HUD `v>=72`, exact parent `T==60`,
+`steps>10`, and the EXACT original sprint spatial predicate: no near object;
+original road-center rows42/54 present; `abs(C[54]-42)<3`; samples>=4;
+`abs(parent_steer)<.18`; `D>=max(18,max(v,72)*.4)`. Reuse logged/runtime D and N;
+do not recalculate distance, use extended far-road centers, round or repair FP.
+Current far and unresolved track must be absent. Genuine impact clear is
+`(impact_before>0 or impact_proxy_trigger) and not braking_proxy_veto`; it must
+be false. Require post-parent `recovery_left==0` and no geometry repair, then
+verify current pre-arrival gas0, brake action-dtype `.15`, and parent steering.
+
+Only there, issue `gas=0` and `brake=clip(.02*(v-72),0,.15)`. Do not write steering.
+Original arrival/contact code writes the actual issued brake to `brake_history`.
+The existing preview target and sprint-activity diagnostics retain their meanings;
+dedicated candidate fields distinguish eligibility from actual action change.
+Later impact veto/steering may change through real history and physical feedback.
+No new timer, latch, deadband, hysteresis, cap/target increase or hidden-state veto.
+
+### Prerun Evaluation Contract
+
+Use ALL eight original consumed cells, not a success-selected subset: track1
+3184000002/0013/0015, track2 3184000001/0006/0015, track3 3184000002/0015.
+This is eight layouts/five geometries and sixteen contemporary natural episodes,
+not fresh generalization. Include the reverse-driving cell and the diagnostic
+steps194/195/447/448 in its historical applicability account; privileged heading
+is evaluation-only and never filters policy eligibility. No repeat, replacement,
+fresh/protected/private/official evaluation or submission is authorized.
+
+Before reset, freeze independent arm packages, source/environment/CPU runtime,
+consumed evidence, metric definitions, resource forecasts and preservation hashes.
+Require one intent and one natural episode per slot, complete raw/decision coverage,
+same geometry/initial state/pixels and exact prefix before the first changed action.
+Operational tails and unmatched pairs remain visible and cannot pass adoption.
+
+Predeclared safety gates retain every baseline finish, per-cell damage/collision/
+physical-contact counts, all objects/no new hits, and nonincreasing any-wheel and
+all-wheel offroad occupancy and longest spells. Efficiency requires full baseline
+cap-window coverage, lower station-matched physical undershoot and fewer repeated
+issued brake-to-gas cycles. Report HUD and physical speed separately, all incomplete
+or reverse windows, own-policy and matched station trajectories, and actual arrival
+onsets. Distinguish eligibility-end (such as T<60) from the later real restrictive
+command; source/FP-boundary failure alone is not proof of a physical restriction.
+Include downstream steering, impact triggers/vetoes and shield interventions.
+
+Common-finish lap mean must improve, with negative means on at least two road
+geometries and no common cell slower by more than one20ms raw tick. Lost finishes
+cannot be offset by survivor means. Exact numerical metrics/gates are bound in
+the new protocol; no gate is relaxed after seeing outcomes. Failure closes THIS
+specification unchanged, with no `.02` tuning, FP repair or maintain-state extension.
+
+### Frozen Execution And Verdict
+
+**REJECTED / NOT ADOPTED. Close this exact specification without further tuning.**
+The [protocol](../../runs/koi-sprint72-relief-v1/protocol.json)
+SHA`7fca6b24509812aadde8f6dd2b2dd3a0a57bcb217a796ed9f35e5c6cb73d771d`
+completed all16 natural episodes, eight matched pairs, with16 reset intents/ends,
+zero operator errors/unmatched episodes/retries. The
+[result](../../experiments/koi-sprint72-relief-v1-result.json)
+SHA`b20da6b392f63448871828369693a2bfc638dcc4f638d34ea39297cca76e783d`
+passes source, law/history, prefix, geometry and all-object integrity checks.
+All8 initial states/pixels/geometry and logged pre-divergence raw/action prefixes
+match. Two zero-applicability controls are complete action/raw no-ops.
+
+Candidate ZIP is `e7062c66aaf9407d14e4f153b0e1473e13672194e5ecc2b73d4ddbf5e7d3e5be`;
+helper source is `ba053977c26743bd7d03fb1e7c550780cf282a5ad0c7d843b31371f2242914cd`.
+Candidate changes39 nominal decisions. Final source/environment/model/preservation
+validation succeeds after execution; champion/all11 original source members,
+unchanged v1 shield, root Agent and all previous candidates are preserved.
+
+| Track / Seed | Champion | Candidate | Common Lap Delta |
+|---|---:|---:|---:|
+| 1 / 3184000002 | 17.560s | 17.460s | -100ms |
+| 2 / 3184000006 | off_track | 21.800s | gained, not a paired lap |
+| 2 / 3184000001 | 19.420s | 19.420s | 0ms |
+| 3 / 3184000002 | 17.860s | 17.860s | 0ms |
+| 1 / 3184000013 | 19.960s | off_track | LOST, not omitted |
+| 1 / 3184000015 | 19.560s | 19.740s | +180ms |
+| 2 / 3184000015 | 19.780s | 19.860s | +80ms |
+| 3 / 3184000015 | 19.400s | 19.400s | 0ms |
+
+Finishes7/8->7/8 are NOT preservation: kept6, lost1, gained1, neither0. The common6
+mean is+26.666667ms. Their road means are0002:-50ms,0001:0ms,0015:+86.666667ms;
+only one improving geometry, not the required two. Both+180/+80ms cells violate
+the20ms ceiling. Gained21.8s and the lost19.96s cannot be combined into a paired
+lap-time estimate.
+
+The metric is the environment's native `lapTimeMs`, not raw episode duration:
+3/0015 reports19400ms in both arms despite971/970 raw ticks. Do not relabel its
+native tie as a20ms lap improvement by substituting a different clock.
+
+| Full-Cohort Safety | Champion | Candidate |
+|---|---:|---:|
+| Damage / collision decisions / physical contact events / hit objects | 0 / 0 / 0 / 0 | 0 / 0 / 0 / 0 |
+| Objects retained | 48 | 48 |
+| All-wheel-offroad ticks / total duration | 64 / 1.28s | 366 / 7.32s |
+| Longest all-wheel-offroad spell | 1.14s | 6.88s |
+| Any-wheel-offroad ticks / total duration | 576 / 11.52s | 767 / 15.34s |
+| Longest any-wheel-offroad spell | 1.36s | 7.00s |
+
+The lost1/0013 cell has all-wheel-offroad2->345 ticks and longest.04->6.88s;
+any-wheel-offroad62->364 ticks and longest.36->7.00s. Its collision/damage stays0.
+The gained2/0006 cell improves57->16 all-wheel-offroad ticks and1.14->.32s longest
+spell. Preserve both positive and negative cases. `off_track` is the natural
+termination label, not a synonym for the separately measured wheel-contact state.
+
+### Cap Windows And Oscillation
+
+The frozen evaluation definition starts at an eligible cap hold and follows to
+the next actual restriction, recording earlier source-eligibility exit separately.
+It gives13 baseline windows, all reaching a restriction, versus11 candidate windows
+(9 reaching a restriction,2 terminal-censored). The prior diagnosis's14 windows
+also included an arrival-only boundary with no eligible relief hold; that control
+episode remains fully present here. Neither different window count nor terminal
+censoring is treated as zero delay or an improvement.
+
+There is a real local amplitude signal. On2/0006's first cap window, both arms
+start at physical72.735977 and run decisions40-46 before arrival47; minimum speed
+is65.175136->69.782224, entry-to-trough drop7.560842->2.953753, and reference72
+undershoot6.824864->2.217776. Issued brake-to-gas transitions are1->0 in this
+window. These are physical-speed units;72 remains an imperfect reference because
+runtime eligibility uses the original averaged HUD, not physical velocity.
+
+The same window's raw physical velocity at each80ms decision boundary is:
+
+| Seconds After First Cap Hold | Champion | Candidate |
+|---|---:|---:|
+| .00 | 72.735977 | 72.735977 |
+| .08 | 68.822291 | 72.325917 |
+| .16 | 65.175136 | 71.390241 |
+| .24 | 66.177082 | 71.087788 |
+| .32 | 68.243974 | 70.761424 |
+| .40 | 71.159425 | 70.435020 |
+| .48 | 74.000039 | 70.108621 |
+| .56,arrival47 begins | 70.088113 | 69.782224 |
+
+Candidate removes this particular down/up excursion, but ends at a slightly
+lower speed when arrival starts. Do not treat only its higher trough as a lap gain.
+
+However only4/13 baseline station windows are fully covered. Six candidate spans
+meet a real restriction earlier, two baseline reverse starts are not reached in
+the same direction, and one end is unreached. The complete-cohort matched deficit
+and repeated-cycle means remain NULL, not zero and not a survivor estimate.
+The four valid individual station-mean physical deficits are:
+
+| Cell / Baseline Start | Champion | Candidate |
+|---|---:|---:|
+| 1/0002,30 | .479594 | 0 |
+| 1/0002,56 | .894996 | 7.700446 |
+| 2/0006,40 | 2.857699 | .992571 |
+| 2/0015,221 | .232088 | 0 |
+
+Thus even the covered subset is not uniformly better. The later1/0002 span is
+slower despite its earlier intervention's smaller undershoot. Do not infer a
+full six-cell/four-geometry improvement from three favorable rows.
+
+Own-window repeated brake-to-gas cycles are3->0, but windows differ and two
+candidate tails are terminal-censored. Whole-episode transitions215->198 also
+mix changed duration, the rescued reverse lap and the newly failed lap. Among the
+six common finishes they are135->136. These observations do not pass the frozen
+full-coverage matched oscillation/undershoot gates.
+
+All raw velocity samples through the next restrictive decision are retained.
+For1/0013, first-cap minimum65.773->69.752 is a descriptive local improvement,
+but the actual restriction moves61->59. Baseline eligibility already ended at58
+while its original sprint still ran; this is not mislabeled as braking onset.
+The candidate's later failure and missing second baseline span are not hidden.
+
+### Reverse Travel And Downstream Effects
+
+The baseline keeps all four eligible reverse decisions194/195/447/448 in2/0006,
+two reverse cap windows and1,431 reverse-tagged raw ticks. No heading gate is added.
+The candidate changes the earlier forward cap sequence, finishes this cell in
+21.8s and has zero reverse-tagged raw ticks. It therefore does NOT execute those
+identical four reverse states in the real A/B. Their baseline windows remain as
+explicit unmatched same-direction comparisons, and source-bound archived-input
+tests separately verify that all four pass the unchanged runtime applicability.
+This rescue is positive evidence for this cell, not permission to discard its
+old reverse records or ignore the different lost finish.
+
+Arrival code remains byte-identical, but its inputs and entry speeds change:
+
+| Cell / First Post-Cap Object | Arrival Decision B/C | Cap B/C | Physical Entry Speed B/C |
+|---|---|---|---|
+| 1/0002,object0 | 76/77 (+80ms) | 68.309/65.729 | 70.296/72.212 |
+| 2/0006,object0 | 47/47 | 67.722/67.033 | 70.088/69.782 |
+| 1/0013,object0 | 67/67 | 67.948/66.571 | 64.274/75.034 |
+| 1/0015,object0 | 57/57 | 65.181/64.849 | 63.939/66.825 |
+| 3/0015,object0 | 49/49 | 65.937/64.949 | 72.872/65.353 |
+
+The late2/0015 cap has no further arrival onset before finish; the two zero-
+applicability controls retain identical arrival histories.
+
+For1/0013 and1/0015, the first cap-presence onset does not yet brake in the
+champion but does in the candidate. Entries differ in road station as well as
+speed. Object attribution is an offline nearest-projection proxy, not runtime
+identity proof. These are downstream perception/trajectory effects, not changes
+to the cap function, and not proof of a unique causal action for the later DNF.
+
+First same-ordinal steering differences occur at33 (1/0002),49 (2/0006),61
+(1/0013),51 (1/0015),225 (2/0015),50 (3/0015); the two controls remain exact no-ops.
+Those comparisons are no longer same-state counterfactuals after pedal divergence.
+Impact triggers/vetoes total232/232->204/204: every observed trigger remains
+vetoed, and genuine impact-clear is0 in both arms. Do not attribute this failure
+to an unobserved impact-veto release merely because history coupling is possible.
+Shield interventions22->23 (lost cell0->1) confirm downstream behavior can differ
+under byte-identical shield code; they are not a guarantee of road safety.
+
+### Validation And Stop
+
+Final pre-freeze integrated159 tests+132 subtests PASS, including43 candidate
+runtime tests and actual candidate-package Far/Contact/shield action checks.
+Both exact CPU21 isolated model imports pass with zero environment resets.
+Execution then performs exactly16 authorized resets and natural episodes; the
+result's `environment_resets:0` refers ONLY to its passive analysis invocation.
+The independent runtime review's single steering-threshold test-isolation issue
+was corrected before freeze; the helper/formula itself did not change.
+
+The [independent passive postrun audit](../../experiments/koi-sprint72-relief-v1-audit.json),
+SHA`cfe02a625639c5a2509cfbd46e58f2ea205cd3d532b70d1d820f458016081d85`,
+finds no artifact discrepancy. It verifies116 run files, all16 unique processes/
+reset intents/ends, all96 object records, all4094 actual-brake/history/law decisions
+and all8 exact prefixes. The frozen analyzer reproduces the saved2,502,700-byte
+result byte-for-byte. Source, environment and preservation inventories match.
+Native finish-line arithmetic over archived states independently reproduces all
+finish flags/laps and explains the center-crossing versus terminal-tick timing
+distinction above. This audit adds no policy call, physics step, reset or driving
+repeat and does not alter a gate or the rejection.
+
+Reproduce passive analysis only:
+`/tmp/kilo/haic-cpu21/bin/python -B -m scripts.analyze_koi_sprint72_relief --run-dir runs/koi-sprint72-relief-v1 --output <new-result.json>`.
+Do not rerun the operator or overwrite primary frozen evidence. The operator
+refuses a second run. All raw trajectories, per-decision actual history, source
+copies, source pins and CPU/resource/process receipts remain in the run directory.
+
+The decisive lost finish, offroad regression and inconsistent/slower retained
+laps reject the candidate independently of the incomplete cap-window comparison.
+Local speed smoothing and one rescued lap do not erase those failures. Preserve
+this negative result; no coefficient adjustment, deadband/hysteresis, timer, FP
+boundary repair, expanded A/B, large generalization or official action follows.

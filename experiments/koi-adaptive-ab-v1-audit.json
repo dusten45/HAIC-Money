@@ -1,0 +1,113 @@
+{
+  "study": "koi-adaptive-ab-v1",
+  "scope": "independent read-only primary-artifact audit; consumed TRAIN only",
+  "run": "runs/koi-adaptive-ab-20260930-v1",
+  "primary_result": "experiments/koi-adaptive-ab-v1-result.json",
+  "primary_result_sha256": "394fef4d1b87569c3504e78b2e7027f8c3cb4569e18253a2c670498c5cea5a55",
+  "protocol_sha256": "f07f7f282275c7ac58f1978b2421ba15ca506d46ebd5877b8c3f9b14249b0125",
+  "episode_report_sha256": "9224bbab5c9653e1f9c23de4114fe633c8409d46d1c70b9fb94a61a1d79aff46",
+  "analyzer_sha256": "557f2ddc76293aa3aee4d29389bd3bc655d352a8e5149c4b3d55e3128479648e",
+  "verified": {
+    "completed_slots": 48,
+    "paired_cells": 24,
+    "geometry_seeds": 8,
+    "episode_hashes": 48,
+    "raw_hashes": 48,
+    "raw_ticks": 45581,
+    "environment_git_blob_pins": 142,
+    "baseline_members": 10,
+    "candidate_members": 11,
+    "inconsistencies": []
+  },
+  "completion": {"kept": 21, "lost": 0, "gained": 0, "neither": 3},
+  "mutually_finished_laps": {
+    "n": 21,
+    "candidate_faster": 1,
+    "candidate_slower": 5,
+    "equal": 15,
+    "mean_delta_ms": 24.761904761904763,
+    "total_delta_ms": 520,
+    "sole_faster_cell": {"track": 2, "seed": 38300, "delta_ms": -20}
+  },
+  "matched_common_entry_segments": {
+    "n": 120,
+    "catalogue_pairs": 144,
+    "cells": 21,
+    "geometry_seeds": 7,
+    "overlap_with_mutually_finished_cells": 18,
+    "mean_delta_s": 0.0008812496707187793,
+    "mean_of_cell_means_delta_s": 0.0008392854006845517,
+    "candidate_faster_segments": 3,
+    "candidate_slower_segments": 5,
+    "equal_segments": 112,
+    "candidate_faster_cell_means": 0,
+    "candidate_slower_cell_means": 3,
+    "equal_cell_means": 18,
+    "excluded_38300_pairs": 18,
+    "excluded_38300_reason": "initially_beyond_entry at reset seam"
+  },
+  "completed_physical_passage_speeds": {
+    "paired_passages": 138,
+    "aggregation": "mean of per-obstacle mean raw speeds, completed matched passages only",
+    "baseline_mean_mps": 42.943732,
+    "candidate_mean_mps": 43.002545,
+    "precision": "six decimals from independent primary recomputation",
+    "primary_140_encounter_summary_includes_incomplete": 2,
+    "baseline_completed_passage_peak_above44_count": 114
+  },
+  "adaptive_intervention": {
+    "decisions": 5710,
+    "active_decisions": 9,
+    "active_episodes": 8,
+    "changed_decisions": 7,
+    "changed_episodes": 6,
+    "all_activations_isolated": true,
+    "all_active_pass_and_speed_targets": 45
+  },
+  "observed_clean_sustained_above44": {
+    "count": 1,
+    "geometry_seeds": 1,
+    "track": 3,
+    "seed": 38300,
+    "obstacle_id": 2,
+    "source_files": ["3-38300-crossing_projection.json", "3-38300-adaptive_v1.json"],
+    "baseline": {
+      "speed_min_mps": 43.979797737,
+      "speed_mean_mps": 44.687550934,
+      "speed_max_mps": 46.169115562,
+      "minimum_clearance": 2.578331193
+    },
+    "candidate": {
+      "speed_min_mps": 44.161963482,
+      "speed_mean_mps": 44.868360089,
+      "speed_max_mps": 46.344394523,
+      "minimum_clearance": 2.572855786
+    },
+    "sample_window_s": [12.46, 12.66],
+    "samples": 11,
+    "physical_overlap_start_s": 12.48,
+    "both_full_rear_clear_s": 12.66,
+    "both_near_detection_to_pass_s": 0.68,
+    "active_changed_step": 143,
+    "pre_time_s": 12.38,
+    "unique_camera_match_residual_px": 0.591307828,
+    "equal_pre_states_and_first_divergence": true,
+    "baseline_gas": 0.085951477,
+    "candidate_gas": 0.125951469,
+    "candidate_lap_delta_ms": 60,
+    "frozen_qualification": false,
+    "qualification_exclusion": "initially_beyond_entry; reset station1140.999996 exceeds entry622.5",
+    "interpretation": "genuine observed one-seed clean above44 passage; unchanged timing; not a two-seed gate pass or generalization"
+  },
+  "failure_pairs": [
+    {"track": 1, "seed": 38302, "class": "obstacle5 impact followed by damage-cap retirement", "decisions": 238, "raw_ticks": 952, "damage": 1.0, "collision_decisions": 5, "adaptive_active": 0, "adaptive_changed": 0, "full_action_world_and_raw_parity": true},
+    {"track": 2, "seed": 38302, "class": "noncontact physical road departure and failed road reacquisition", "decisions": 214, "raw_ticks": 856, "damage": 0.0, "collision_decisions": 0, "adaptive_active": 0, "adaptive_changed": 0, "full_action_world_and_raw_parity": true},
+    {"track": 2, "seed": 50302, "class": "persistent obstacle4 contact stall; wrapper off_track is not demonstrated road departure", "decisions": 237, "raw_ticks": 948, "damage": 0.4, "collision_decisions": 2, "adaptive_active": 0, "adaptive_changed": 0, "full_action_world_and_raw_parity": true}
+  ],
+  "decision": "not adopted: no obstacle-time reduction and no replicated sustained above44 gate pass",
+  "model_correction": false,
+  "second_evaluation": false,
+  "environment_resets_for_audit": 0,
+  "official_action": false,
+  "timing_caveat": "20ms raw sampling brackets; no sub-tick or statistical-significance claim"
+}

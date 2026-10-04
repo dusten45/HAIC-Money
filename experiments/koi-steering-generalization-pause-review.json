@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "review_type": "conditional-prepause-safety-review",
+  "reviewer": "loader-ir6t independent session ses_f094c2a6cffel9msANhs2jhp2h",
+  "written_at_utc": "2026-10-01T10:47:44Z",
+  "manager_sha256": "5333b86e5574f8494da37cbecbfd411113d5f083d309372c97e91efb46bab1ea",
+  "manager_format": "koi-steering-generalization-pause-v2",
+  "proof_mode": "kernel-flock-owner-waiter-v1",
+  "protocol_sha256": "ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd",
+  "original_protocol_sha256": "ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd",
+  "original_operator_sha256": "8f4e3a7929af83230f2b6bf8890df65e9b25abd78e17d0bdb14baca758d91833",
+  "parent": {
+    "pid": 1105561,
+    "start_ticks": 363247005,
+    "wrapper_pid_not_a_signal_target": 1105554,
+    "boot_id": "1afb3e73-27c8-431b-bf5d-a3594c83411a",
+    "exact_command_cwd_start_time_and_sigint_handler_verified_read_only": true
+  },
+  "model_hashes": {
+    "crossing_projection": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "steering_release_v1": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce"
+  },
+  "environment_resets": 0,
+  "agent_constructions": 0,
+  "environment_constructions": 0,
+  "signals_sent": 0,
+  "production_locks_acquired": 0,
+  "operational_counter_scope": "Original parent, wrapper, workers, claims registry and HAIC environment. Kernel tests use only temporary synthetic processes and locks; synthetic SIGINT tests are not operational actions.",
+  "public_proc_locks_readable_under_system_python": true,
+  "actual_frozen_source_pins_verified_read_only": 697,
+  "boundary_proved_during_review": false,
+  "blockers": [],
+  "runtime_conditions_mandatory": [
+    "Use the exact reviewed source SHA and /usr/bin/python3 public pidfd APIs; never signal the wrapper or a process group.",
+    "Hold the actual claims-directory exclusive flock and verify descriptor/current directory type and dev/inode identity.",
+    "Public /proc/locks must directly show one manager-owned FLOCK ADVISORY WRITE full-range lock and one exact-parent waiter linked by the same numeric lock ID and dev/inode.",
+    "Before the sole parent-pidfd SIGINT, two stored kernel snapshots must match parent identity, no live children, fully saved completed-prefix ledger, source pins and completed artifact hashes under the held lock.",
+    "No pending reset intent or unexecuted-slot artifact is allowed. An ambiguous pre-reset child must finish naturally with the lock released; missing raw data is never proof of zero reset.",
+    "Unreadable or absent public lock proof, identity/source drift, children, incomplete evidence, natural parent exit or unsupported interpreter must refuse without signaling and release held descriptors.",
+    "Only a paused receipt with unchanged ledger/artifacts, terminal KeyboardInterrupt report, no interrupted child and independently verified boundary proof can support later continuation. This review does not approve continuation or change any budget/gate/model."
+  ],
+  "reviewed_command_not_executed": "/usr/bin/python3 -B -m scripts.pause_koi_steering_generalization --pause --parent-pid 1105561 --parent-start-ticks 363247005 --receipt runs/koi-steering-generalization-v1/boundary-pause.json",
+  "boundary_receipt_path": "runs/koi-steering-generalization-v1/boundary-pause.json",
+  "metadata_discovery_review": "This conventional run process proof is not an allocation descriptor and matches neither frozen run metadata names nor exposure/reset-intent markers. Actual protocols and reset-intent ledgers remain discovered and the KOI reset-ledger glob remains unchanged. No broad discovery exclusion was introduced.",
+  "prior_hold_preserved": "The old syscall-dependent source ea93c99e10005333d7562ea653354fead6e54b561b3e55a9cb750f9bae59b671 remains blocked by actual sibling syscall-read PermissionError. This review applies only to the disclosed new direct-kernel proof; no protected syscall/fd/wchan read or permission escalation was used.",
+  "tests": {
+    "system_command": "/usr/bin/python3 -B -m unittest -q tests.test_review_koi_boundary_pause tests.test_pause_koi_steering_generalization",
+    "system_passed": 34,
+    "system_failed": 0,
+    "system_wall_time_s": 1.909,
+    "default_command": "python -B -m pytest -q tests/test_review_koi_boundary_pause.py",
+    "default_passed": 7,
+    "default_subtests_passed": 21,
+    "default_failed": 0,
+    "source_sha256": {
+      "tests/test_review_koi_boundary_pause.py": "2a03fd4373d1d4ee015c933d4e5d8b759c2bb14bb6952fdab71529335bc6611b",
+      "tests/test_pause_koi_steering_generalization.py": "a4cee56ba8730b62b8cc923122456d2ec8918200ec19312654277fce30d76c77"
+    },
+    "coverage": "Linked owner/waiter identity, full range, exclusive FLOCK, inode, live-child and platform/read-permission refusals; no protected proof reads; two stored snapshots and receipt verification; natural active-child drain and ambiguous-child lock release; pre-signal source/identity/pending/artifact failures; descriptor cleanup with no signal; unsupported interpreter; portable mocked filesystem semantics and allocation discovery."
+  },
+  "residual_risks": [
+    "This is code and read-only pre-pause approval, not a claim that the running parent is already at a safe boundary. Every runtime gate must still pass.",
+    "The original deadline may expire or the parent may exit before a provable boundary; the manager must refuse rather than weakening proof or signaling a child.",
+    "Initial directory flock acquisition can block; inability to obtain or prove a boundary is not authorization for a different signal or permission escalation.",
+    "The preserved incomplete parent result must use guarded original finalization before any separately reviewed continuation metadata is published."
+  ]
+}

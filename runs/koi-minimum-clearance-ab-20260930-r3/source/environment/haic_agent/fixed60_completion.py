@@ -1,0 +1,119 @@
+"""Pixel-only path and feedback alternatives at unchanged target60."""
+import numpy as np
+from haic_agent.fixed_high_speed_recovery_v2 import FixedHighSpeedRecoveryV2
+from haic_agent.pixel_features import current_frame, road_centers
+
+
+MODES = ('control', 'offset_path', 'near_servo', 'continuous_road', 'predict_boundary',
+         'offset_repair', 'servo_unwind', 'continuous_repair', 'boundary_repair')
+
+
+def reconstructed(centers, row):
+    if row in centers:
+        return centers[row]
+    known = sorted(centers, key=lambda y: abs(y-row))
+    if len(known)<2:
+        return None
+    a,b=known[:2]
+    return float(np.clip(centers[a]+(row-a)*(centers[b]-centers[a])/(b-a),0,83))
+
+
+def continuous_centers(frame, previous):
+    mask = (frame >= .24) & (frame <= .52)
+    # Close short holes cast by markings and small foreground objects.
+    for gap in (1, 2, 3):
+        for x in range(gap+1, 84):
+            mask[:, x-gap:x] |= (mask[:, x-gap-1] & mask[:, x])[:, None]
+    result = {}
+    anchor = previous.get(54, 42.)
+    for y in (54, 50, 46, 42, 38, 34, 30):
+        locations = np.flatnonzero(mask[y])
+        groups = np.split(locations, np.flatnonzero(np.diff(locations)>1)+1)
+        groups = [g for g in groups if 5 <= len(g) <= 46]
+        if groups:
+            group = min(groups, key=lambda g: abs(float(g.mean())-anchor))
+            if abs(float(group.mean())-anchor) < 26:
+                anchor = float(group.mean())
+                result[y] = anchor
+    return result
+
+
+class Fixed60Completion(FixedHighSpeedRecoveryV2):
+    def __init__(self, mechanism='control'):
+        if mechanism not in MODES:
+            raise ValueError('unknown completion mechanism')
+        self.completion_mode = mechanism
+        super().__init__('impact_clear')
+
+    def reset(self, observation=None):
+        super().reset(observation)
+        self.previous_continuous = {}
+
+    def act(self, observation):
+        impact_before = self.impact_left
+        action = super().act(observation)
+        inherited = float(action[0])
+        control_steer = inherited
+        centers = self.last['road_centers']
+        frame = current_frame(observation)
+        stack = np.asarray(observation)
+        prev = road_centers(stack[-2]) if stack.ndim == 3 else centers
+        near = centers.get(54)
+        middle = centers.get(42)
+        correction = 0.
+        clearing = (impact_before>0 or self.last['impact_proxy_trigger']) and near is not None and middle is not None
+        obstacle = self.base._last_obstacle
+        exact_obstacle = (self.base._obstacle_side*.34*float(np.clip((obstacle[0]-22)/18,0,1))
+                          if obstacle is not None and not clearing else 0.)
+        if self.steps > 10:
+            if self.completion_mode == 'offset_repair':
+                n,m = reconstructed(centers,54),reconstructed(centers,42)
+                pm = reconstructed(prev,42)
+                if n is not None and m is not None:
+                    shift=exact_obstacle/ .34*5.
+                    action[0]=np.clip(.022*(m-42+shift)+.018*(m-n)+(.025*(m-pm) if pm is not None else 0.),-.7,.7)
+            elif self.completion_mode == 'offset_path' and near is not None and middle is not None:
+                road = .022*(middle-42)+.018*(middle-near)
+                obstacle = self.base._last_obstacle
+                shift = 0.
+                if obstacle is not None and self.impact_left == 0:
+                    # A displaced centerline has the same heading as the road.
+                    shift = self.base._obstacle_side * 5.0 * np.clip((obstacle[0]-22)/18,0,1)
+                action[0] = np.clip(road+.022*shift+self.last['correction'], -.7, .7)
+            elif self.completion_mode in ('near_servo','servo_unwind') and near is not None and middle is not None:
+                motion = near-prev.get(54,near)
+                road = .022*(middle-42)+.018*(middle-near)
+                # Correct near lateral error and its rate; preserve obstacle command.
+                correction = .018*(near-42)+.05*motion
+                if self.completion_mode=='servo_unwind' and (near-42)*motion<0 and correction*motion<0:
+                    correction=0.
+                action[0] = np.clip(inherited+correction,-.7,.7)
+            elif self.completion_mode in ('continuous_road','continuous_repair'):
+                tracked = continuous_centers(frame,self.previous_continuous)
+                old = self.previous_continuous
+                self.previous_continuous = tracked
+                if 54 in tracked and 42 in tracked:
+                    n,m = tracked[54],tracked[42]
+                    original_road = .022*(centers.get(42,42)-42)+.018*(centers.get(42,42)-centers.get(54,42))
+                    obstacle = float(self.last['inherited_steer'])-original_road
+                    if self.impact_left: obstacle=0.
+                    if self.completion_mode=='continuous_repair': obstacle=exact_obstacle
+                    road = .022*(m-42)+.018*(m-n)
+                    temporal = .025*(m-old.get(42,m))
+                    action[0] = np.clip(road+obstacle+temporal,-.7,.7)
+                self.last['continuous_centers'] = tracked
+            elif self.completion_mode in ('predict_boundary','boundary_repair') and near is not None:
+                if self.completion_mode=='boundary_repair' and (42 not in centers or 30 not in centers):
+                    m,pm=reconstructed(centers,42),reconstructed(prev,42)
+                    if m is not None:
+                        inherited=.022*(m-42)+.018*(m-near)+exact_obstacle+(.025*(m-pm) if pm is not None else 0.)
+                        action[0]=np.clip(inherited,-.7,.7)
+                motion = near-prev.get(54,near)
+                projected = near+2*motion-42
+                # Intervene on predicted escape, not on a harmless brief excursion.
+                if abs(projected)>8 and projected*motion>0:
+                    correction = .045*(projected-np.clip(projected,-8,8))
+                    action[0] = np.clip(inherited+correction,-.7,.7)
+        self.last.update(completion_mode=self.completion_mode, completion_changed=abs(float(action[0])-control_steer)>1e-6,
+                         completion_correction=correction,control_steer=control_steer)
+        return action

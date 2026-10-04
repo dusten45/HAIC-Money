@@ -1,0 +1,209 @@
+{
+  "status": "audited",
+  "reviewer": "loader-ir6t independent session ses_f094c2a6cffel9msANhs2jhp2h",
+  "written_at_utc": "2026-10-01T11:18:53Z",
+  "study": "koi-steering-generalization-v1",
+  "scope": "Independent read-only audit of the preserved incomplete nonprotected TRAIN attempt. Internal proxies only; not protected confirmation, blind evaluation, an official score, or a completed planned generalization matrix.",
+  "decision": "REJECT_GENERALIZED_PROMOTION_OF_FROZEN_V2_FROM_VALID_MATCHED_COUNTEREXAMPLES",
+  "frozen_analyzer_decision": "NOT_PROMOTED_FROZEN_V2",
+  "planned_matrix_complete": false,
+  "environment_constructions": 0,
+  "agent_constructions": 0,
+  "environment_resets": 0,
+  "signals_sent": 0,
+  "production_locks_acquired": 0,
+  "model_updates": 0,
+  "new_protocols_generated": 0,
+  "official_action": false,
+  "operational_counter_scope": "Actions performed by this independent audit, not interaction counts of the preserved original run. The original run has 96 reset intents and 95 valid saved episodes; its pending final intent is not relabeled as fresh or zero-reset.",
+  "commands": [
+    "python -B -c 'from scripts import analyze_koi_steering_generalization as a;from scripts import evaluate_koi_steering_generalization as o;from scripts import finalize_koi_steering_generalization as f;r=o.ROOT/o.RUN_PATH;report=a.read_json(r/\"episode-report.json\");pins=f.verify_partial_artifacts(r,report);p,s,e,x=a.load_run(r,r/\"candidate.zip\",r/\"candidate.manifest.json\");v=a.summarize(s,e,x);published=a.read_json(f.RESULT_PATH);assert all(published[k]==value for k,value in v.items());assert pins==published[\"partial_failure_time_artifacts_verified\"];print({\"exact_summary_match\":True,\"valid_episodes\":len(e),\"finish_groups\":v[\"completion\"],\"new_hits\":v[\"new_clean_obstacle_hits\"],\"baseline_windows\":v[\"baseline_eligible_windows\"],\"lost_baseline_windows\":v[\"candidate_lost_baseline_eligible_windows\"],\"failure_traces\":len(v[\"failure_traces\"]),\"errors\":x,\"environment_resets\":0})'",
+    "python -B -c 'import json;from scripts import evaluate_koi_steering_generalization as o;p,e=o.validate_frozen(\"ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd\");audit=o.freshness.audit(root=o.ROOT,authenticated_receipt=e,self_protocol_sha256=\"ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd\");print(json.dumps({\"status\":audit[\"status\"],\"collisions\":audit[\"collisions\"],\"blockers\":audit[\"blockers\"],\"source_copies\":len(p[\"source_copies\"]),\"environment_sources\":len(p[\"environment_source_sha256\"]),\"helper_sources\":len(p[\"helper_source_sha256\"]),\"reference_evidence_pins\":len(p[\"reference_evidence\"][\"source_sha256\"]),\"model_hashes\":p[\"model_hashes\"]},indent=2))'"
+  ],
+  "deep_raw_audit_execution": {
+    "tracked_read_only_process": "bgp_0f72ceb57001n7CChXz65BQ9YA",
+    "exit_status": 0,
+    "method": "After guarded load_run/summarize and exact stored-result equality, independently count whole-object hits directly from the source-validated initial/raw states: any object ID in contacts or corresponding clearance <= 0. Assert every raw-derived hit equals the frozen report, and every paired no-hit-to-hit transition equals new_clean_obstacle_hits. Recount finishes/damage/collision decisions/raw collision ticks/offroad ticks only over the same 47 fully matched cells. Explicitly compare catalogs, geometry hashes, initial state and observation hash, and the first ten steer/gas/brake/car_x/car_y/car_yaw/progress vectors. Extract all five lost-finish episode and raw hashes and chronological endpoints without running a policy or environment.",
+    "preliminary_read_only_calculation_errors": "Inline audit-output construction initially used incorrect Python report/key names, then corrected them from executable producer/analyzer sources. These failed passive calculations did not change files, run episodes, or create new exposure. Only the successful primary recomputation and directly verified counts are reported."
+  },
+  "hashes": {
+    "experiments/koi-steering-generalization-v1.json": "ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd",
+    "runs/koi-steering-generalization-v1/protocol.json": "ccc6720f676814eb705e853792eceb31c6c5fb2b2aa695b1144641c2befcd7dd",
+    "scripts/evaluate_koi_steering_generalization.py": "8f4e3a7929af83230f2b6bf8890df65e9b25abd78e17d0bdb14baca758d91833",
+    "scripts/analyze_koi_steering_generalization.py": "cee3897025ce4b4b5d6e2ffbd4930281f41c3e2d245f457be811604ff4f9ed64",
+    "scripts/finalize_koi_steering_generalization.py": "763658f75ea71da2142fa3dc3d150d9fbd33196552e43abbef03ca6911bbaeec",
+    "experiments/koi-steering-generalization-v1-evidence-guard.json": "745977592b22409efcdb71719c03f746425ebfb2f59ed8aeb36e2cb38279b4a3",
+    "experiments/koi-steering-generalization-v1-result.json": "2572e09dfc8dd4a1399a1168ea15692b6be946cbb20a72b18d0532ea00d5843d",
+    "runs/koi-steering-generalization-v1/episode-report.json": "e9ddbce30c868f1ca911b0712aed5353336591eac6458a785b1b1ded3608a530",
+    "runs/koi-steering-generalization-v1/reset-ledger.jsonl": "ba72232f9fdf4e8b06b09da94e5882b88c33232b49044601885fd396db9cba2e",
+    "runs/koi-steering-generalization-v1/operator-failure.json": "054ff5cdd090a770642b236a652c81d6b7adecb195cb7dd9b435f8b8900354f6",
+    "runs/koi-steering-generalization-v1/candidate.zip": "b1911d7dddf05d7c3f405b900f40c8c5696607130d2ef5e1cf473a82166147ce",
+    "runs/koi-steering-generalization-v1/candidate.manifest.json": "b1a97164434d66f3e83cfda938d606a1bf6aab910adafbac5fd7dbb59be981a4",
+    "runs/koi-steering-generalization-v1/crossing-projection-source-reconstruction.zip": "a4b35c56659555f5e60a372261df722628060e4afcd73c88ed9e9688cdb82bb8",
+    "agent.py": "673b06f338f7ca34e23e856291eea54123b1ec87e207e175f9abc97945f9b7ee"
+  },
+  "source_and_evidence_verification": {
+    "published_frozen_summary_exactly_matches_independent_recomputation": true,
+    "guard_inventory_hashes_and_bytes_checked_before_frozen_loader": true,
+    "independent_preflight_review_finalizer_and_guard_bindings_checked": true,
+    "all_95_episode_raw_stream_process_original_chain_and_ledger_bindings_validated": true,
+    "actual_model_inventory_manifest_and_source_closure_validated": true,
+    "source_copies_rehashed": 170,
+    "environment_sources_rehashed": 142,
+    "helper_sources_rehashed": 23,
+    "reference_evidence_pins_rehashed": 510,
+    "postrun_authenticated_self_audit_before_this_receipt_publication": "clear",
+    "prepublication_exposure_collisions": [],
+    "prepublication_exposure_blockers": [],
+    "postpublication_frozen_metadata_audit": {
+      "status": "HOLD",
+      "collision_path": "experiments/koi-steering-generalization-v1-postrun-audit.json",
+      "reason": "explicit candidate road identity across lanes/tracks",
+      "blockers": [],
+      "interpretation": "The frozen auditor broadly discovers root experiment JSON and does not classify this newly authorized outcome-audit filename as an outcome exclusion. Its conservative scan finds the preserved candidate cell identities in this receipt, not a new evaluation/allocation or an original source/model/episode mismatch. The read-only proof before receipt publication was clear; the subsequent status is explicitly preserved rather than hidden. No discovery rule was edited, broad skip added, identity suppressed, or exposure relabeled. This does not invalidate source-bound matched failure evidence or require completing the matrix; it prohibits treating the emitted outcome metadata as invisible to any later freshness check."
+    },
+    "source_variant_mismatches": [],
+    "suspicious_evidence_issues": []
+  },
+  "dataset": {
+    "planned_episode_slots": 144,
+    "planned_matched_cells": 72,
+    "planned_road_seeds": 24,
+    "valid_saved_episodes": 95,
+    "completed_row_status_count": 95,
+    "operational_failed_slots": 1,
+    "unrun_slots": 48,
+    "available_episode_counts_not_a_matched_performance_comparison": {"crossing_projection": 48, "steering_release_v1": 47},
+    "fully_matched_pairs": 47,
+    "fully_matched_episode_denominator_each_arm": 47,
+    "matched_object_denominator_each_arm": 282,
+    "fully_matched_pairs_per_track": {"1": 16, "2": 16, "3": 15},
+    "observed_matched_unique_roads": 16,
+    "unmatched_baseline_slot_excluded_from_all_paired_performance_totals": "3:3184000016:crossing_projection",
+    "ledger_events": 191,
+    "reset_intents": 96,
+    "completed_ledger_events": 95,
+    "pending_final_reset_intents": 1,
+    "validated_raw_ticks_all_95_saved_episodes": 88517,
+    "validated_decisions_all_95_saved_episodes": 22157,
+    "matched_raw_tick_denominator": 87549,
+    "geometry_catalog_and_hash_equal_pairs": 47,
+    "initial_state_and_observation_hash_equal_pairs": 47,
+    "first10_action_and_car_state_parity_pairs": 47
+  },
+  "paired_finish": {
+    "denominator": 47,
+    "kept": 36,
+    "lost": 5,
+    "gained": 4,
+    "neither": 2,
+    "baseline_finishes": 41,
+    "candidate_finishes": 40,
+    "lost_finish_distinct_road_seeds": 4,
+    "note": "Two losses share road seed 3184000013 across tracks 1 and 3; the five losses are not five independent road replications. Gained finishes do not offset the frozen strict zero-lost-finishes requirement."
+  },
+  "matched_arm_totals": {
+    "crossing_projection": {"episodes": 47, "objects": 282, "finishes": 41, "damage": 4.4, "collision_decisions": 22, "whole_episode_hit_objects": 5, "raw_ticks": 44331, "raw_collision_ticks": 37, "offroad_ticks": 2371, "unassociated_collision_events": 0},
+    "steering_release_v1": {"episodes": 47, "objects": 282, "finishes": 40, "damage": 3.4, "collision_decisions": 17, "whole_episode_hit_objects": 4, "raw_ticks": 43218, "raw_collision_ticks": 23, "offroad_ticks": 2095, "unassociated_collision_events": 0}
+  },
+  "per_cell_harm_counterexamples": [
+    {"track_id": 3, "seed": 3184000004, "baseline_damage": 0.0, "candidate_damage": 0.4, "baseline_collision_decisions": 0, "candidate_collision_decisions": 2, "new_baseline_nohit_to_candidate_hit_object": 2},
+    {"track_id": 1, "seed": 3184000005, "baseline_damage": 0.0, "candidate_damage": 1.0, "baseline_collision_decisions": 0, "candidate_collision_decisions": 5, "new_baseline_nohit_to_candidate_hit_object": 4}
+  ],
+  "coverage_and_censor": {
+    "matched_baseline_eligible_windows": 190,
+    "candidate_lost_baseline_eligible_windows": 17,
+    "retained_baseline_eligible_windows": 173,
+    "candidate_total_complete_windows": 181,
+    "candidate_complete_windows_not_a_retention_denominator": true,
+    "matched_baseline_return_followups_eligible_for_comparison": 255,
+    "common_return_cohort": 235,
+    "lost_baseline_comparable_followups": 20,
+    "common_return_censor_counts": {"crossing_projection": 37, "steering_release_v1": 43},
+    "planned_censored_valid_saved_episodes": 0,
+    "matched_fixed_window_status_counts": {
+      "crossing_projection": {"initially_beyond_entry": 72, "complete": 190, "nonlocal_reverse_or_seam": 1, "entry_not_reached": 12, "exit_not_reached": 3, "discontinuous_crossing": 4},
+      "steering_release_v1": {"initially_beyond_entry": 72, "complete": 181, "nonlocal_reverse_or_seam": 4, "entry_not_reached": 20, "exit_not_reached": 3, "discontinuous_crossing": 2}
+    },
+    "matched_prospective_status_counts": {
+      "crossing_projection": {"censored_next_obstacle_entry": 39, "returned": 216, "unpassed": 23, "invalid_next_entry:discontinuous_crossing": 1, "invalid_physical_passage": 1, "invalid_followup_continuity": 2},
+      "steering_release_v1": {"censored_next_obstacle_entry": 41, "returned": 206, "invalid_followup_continuity": 3, "invalid_physical_passage": 1, "unpassed": 28, "censored_fixed_time": 2, "invalid_next_entry:discontinuous_crossing": 1}
+    },
+    "interpretation": "Return status mixtures and common restricted response are descriptive internal proxies, not KM/RMST or population return-time estimates. Aggregate censor differences could change with additional cells; observed baseline window/followup loss cannot be erased without changing or discarding these cells."
+  },
+  "lost_finish_evidence": [
+    {
+      "track_id": 3, "seed": 3184000004, "guarded_result_failure_trace_index": 2,
+      "geometry_sha256": "8b70b97493d7ffa76f27113c5cbc07c84589acac163ce45ef1d396f0395c3a8b",
+      "road_sha256": "b7f4830200a1f02077426bfae92fec2fb1cfd652fdfe3a6e7582c58aa85ffd57",
+      "baseline": {"completed": true, "lapTimeMs": 21000, "damage": 0.0, "collisions": 0, "episode_sha256": "869c06cfb7427d55e9256422b151e9ceda38e6443d055c9d8db0dd72471e6be9", "raw_sha256": "0b2f32e272c8d5d43f1d5674fbf6f171f8a8ce226373e6e4196d09ad6f82ce3d", "stream_sha256": "c33310b722b55420add54cd267d7497ff6af1d5cff73f2440a6654ee69cbbb0b"},
+      "candidate": {"completed": false, "retire_reason": "off_track", "progress": 0.4674922600619195, "damage": 0.4, "collisions": 2, "error": null, "invalid_actions": 0, "steps": 224, "raw_ticks": 896, "episode_sha256": "77024382bc5de4cb467ea201412deb426da82aafb76e29ade29aab99310d5d13", "raw_sha256": "1640f91556442cc803cf5067be91721a2c3f0f11252b5707d22aa705a59a890b", "stream_sha256": "e8615755be778264b46e01583a8c25c650859d7e62229e2632864c8b11b6843a", "terminal_raw_t": 18.939999999999685, "terminal_raw_lateral": -1.8694336062136239, "terminal_raw_speed": 2.3506065869985497e-06, "terminal_contacts": [2], "offroad_ticks": 14}
+    },
+    {
+      "track_id": 1, "seed": 3184000005, "guarded_result_failure_trace_index": 3,
+      "geometry_sha256": "041a420dd041f3815d0214982024d099f7c85863fb5befdb2eb486c4fb38780d",
+      "road_sha256": "8123fd5279a9fa536b08696afef546255c7bb9e8699ad8af13256e379f5b322f",
+      "baseline": {"completed": true, "lapTimeMs": 21000, "damage": 0.0, "collisions": 0, "episode_sha256": "9797edbc14a223dac4cd9a4dd0851d881296fe6924d5ef453419ac72f1c7554b", "raw_sha256": "c89ab2db819ef7eed90a138b7bd6a3b4794596ee78beea68eae959234264b6eb", "stream_sha256": "e4faf88a4a886f2b0182905398fe64cf491fb74ad31f24b23285b7df5d5f2385"},
+      "candidate": {"completed": false, "retire_reason": "crash", "progress": 0.7657657657657657, "damage": 1.0, "collisions": 5, "error": null, "invalid_actions": 0, "steps": 207, "raw_ticks": 828, "episode_sha256": "73b332d8a0e869b4e2e9cb37604f260eeeb16e95f7033ff6c546fc54cdd17265", "raw_sha256": "4cffe3ceebb63e3d1b0ef43903b837366a062cf3b7b1b1ebde59e9f74c925234", "stream_sha256": "7f77e69204ce68ec6e5c2b86213f32d75bd6f19a6729ada8759763e467dc8d09", "terminal_raw_t": 17.579999999999714, "terminal_raw_lateral": -1.5502879647753378, "terminal_raw_speed": 6.873430982968775, "terminal_contacts": [4], "offroad_ticks": 13}
+    },
+    {
+      "track_id": 1, "seed": 3184000013, "guarded_result_failure_trace_index": 7,
+      "geometry_sha256": "a7a4d79f17f2d055104a7b8f338a8d4846ba2b8536babccd96095c016d6f7f23",
+      "road_sha256": "0d3b83e786cf7a0ab3382194c0d50da1e868621bfac4f5e26019ccb5c331ac02",
+      "baseline": {"completed": true, "lapTimeMs": 19960, "damage": 0.0, "collisions": 0, "episode_sha256": "722df260d88246d08f8fd44226ef89d4133f0e8495f982189355c989c487895e", "raw_sha256": "d22467720783a7054a4639e1ce7aa6ed836c86aa5ebc4e4d23923f86e83797e7", "stream_sha256": "4bbb42765a9fb8ac8373f201e08f1d80af69ef9146a759f0c8790d3f5f94e0b9"},
+      "candidate": {"completed": false, "retire_reason": "off_track", "progress": 0.717948717948718, "damage": 0.0, "collisions": 0, "error": null, "invalid_actions": 0, "steps": 265, "raw_ticks": 1059, "episode_sha256": "53c7b7aec77df45db288d7fb71b5e07468d30a905f7998324b3db8dd0f988a85", "raw_sha256": "e38e8226065a951c828a64c131afbe387a73d7dd345a5094d3b6a3eddfe3385f", "stream_sha256": "c8c6943a0699e2eb71109a87d077892cea9f729894a7286f6342aaa3e6571f79", "terminal_raw_t": 22.199999999999616, "terminal_raw_lateral": 260.0024912466854, "terminal_raw_speed": 39.17399193296846, "terminal_contacts": [], "offroad_ticks": 379}
+    },
+    {
+      "track_id": 3, "seed": 3184000013, "guarded_result_failure_trace_index": 8,
+      "geometry_sha256": "e2ef2dbb65254b5c01a0008d092b28d6f2bfc614ef47d9eb9188fbb82415d825",
+      "road_sha256": "0d3b83e786cf7a0ab3382194c0d50da1e868621bfac4f5e26019ccb5c331ac02",
+      "baseline": {"completed": true, "lapTimeMs": 19980, "damage": 0.0, "collisions": 0, "episode_sha256": "b0e56f76ae97211c0f0ff2228e678a3828542e5b9bda3daa5609453ed71f15b4", "raw_sha256": "de92b0ff168de2d7093fce8a57d96b8c25456b657e2b1a93a9d7b96c930883f0", "stream_sha256": "3a4dd389cac7047bbdb435be360e713681ed8ea7909edc52afaba3d0a3bcdd73"},
+      "candidate": {"completed": false, "retire_reason": "off_track", "progress": 0.483974358974359, "damage": 0.0, "collisions": 0, "error": null, "invalid_actions": 0, "steps": 200, "raw_ticks": 798, "episode_sha256": "1fc0d05eef97dcd675c860a6a4a7e91d738d8caf96a28b3d41a4c2215b5be897", "raw_sha256": "db4af064fe156be46c52973b9852cffe61423d8b73d1abbe3639df0a5b9901db", "stream_sha256": "2833b4f25e46b61b809ef55bdfae9aaa00b110ac94fcf9fed16c5b267222035d", "terminal_raw_t": 16.979999999999727, "terminal_raw_lateral": 182.2712783149386, "terminal_raw_speed": 40.00355908953693, "terminal_contacts": [], "offroad_ticks": 345}
+    },
+    {
+      "track_id": 2, "seed": 3184000014, "guarded_result_failure_trace_index": 10,
+      "geometry_sha256": "4f9d9dfdc569e9144a26b2c83fe38228247c37f39c665e70032c87702fc1e00e",
+      "road_sha256": "e823a2e9f208e6fefd5052b6842f9dd24e6c8616d9b0de84216b0d706a53a837",
+      "baseline": {"completed": true, "lapTimeMs": 20760, "damage": 0.0, "collisions": 0, "episode_sha256": "30cd07698b2437c978efe430f27a3dcfba959f3630e6fb98f74f4080d51c9c56", "raw_sha256": "b979ab4eb4605663dc9d9c6258c77d89ee45bc2576a85c27ce9e083a78055f16", "stream_sha256": "bc69a8b7c726dbf11621014be5bc84fdb7780a2ef68324dd5dec36c84909720b"},
+      "candidate": {"completed": false, "retire_reason": "off_track", "progress": 0.3333333333333333, "damage": 0.0, "collisions": 0, "error": null, "invalid_actions": 0, "steps": 202, "raw_ticks": 808, "episode_sha256": "9f94905931f7e3bf394064f73a7ea1efd06ea1f7c8a7586f5b675ea24bf0c54b", "raw_sha256": "41780496191c02dffa6ee09d7ae4be2310b972d1a0b2b1e1749672ec735be62f", "stream_sha256": "6d9bb18f2f250fe7e7963ea9876629480a075013a41fe9c342dfc2c6875a59d6", "terminal_raw_t": 17.179999999999723, "terminal_raw_lateral": -2.585379368179023, "terminal_raw_speed": 17.838591810910664, "terminal_contacts": [], "offroad_ticks": 48}
+    }
+  ],
+  "loss_validity": {
+    "all_five_baselines_finish": true,
+    "all_five_candidates_do_not_finish": true,
+    "all_five_pairs_geometry_initial_observation_and_first10_equal": true,
+    "all_ten_loss_pair_children_completed_naturally_with_valid_process_chain": true,
+    "all_ten_loss_pair_episodes_have_no_error_or_invalid_action": true,
+    "candidate_retirement_labels": {"off_track": 4, "crash": 1},
+    "failure_traces_in_guarded_result": 11,
+    "chronology_not_causality": "Retirement labels are executable-environment observations, not causal explanations. In particular off_track does not by itself prove the endpoint wheels are off road: the seed4 candidate ends in object2 contact at almost zero speed, and the seed14 endpoint still has wheel-road contacts. The source-bound traces retain first contact, peak lateral and terminal chronology. No counterfactual policy correction or replay was performed."
+  },
+  "operational_tail": {
+    "slot": "3:3184000016:steering_release_v1",
+    "error": "RuntimeError: child_timeout",
+    "bound_child_wall_time_s": 2.1236546877771616,
+    "original_process_sha256": "b6177ac075d33b2bc94e864d990d06518d9d8b0122f11d795904b6df28b68a09",
+    "bound_process_sha256": "ee23e55ad218d8db2d0ec3a33f202c73814aa927b471bd73fee0023f092431fc",
+    "failure_time_inventory": [
+      {"file": "3-3184000016-steering_release_v1.process.json", "bytes": 98, "sha256": "b6177ac075d33b2bc94e864d990d06518d9d8b0122f11d795904b6df28b68a09"},
+      {"file": "3-3184000016-steering_release_v1.bound-process.json", "bytes": 409, "sha256": "ee23e55ad218d8db2d0ec3a33f202c73814aa927b471bd73fee0023f092431fc"},
+      {"file": "3-3184000016-steering_release_v1.stdout.txt", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      {"file": "3-3184000016-steering_release_v1.stderr.txt", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    ],
+    "episode_raw_and_decision_artifacts_absent": true,
+    "pending_intent_preserved": true,
+    "zero_reset_or_freshness_inference_made": false,
+    "not_counted_as_a_candidate_policy_loss": true,
+    "boundary_pause_receipt_present": false,
+    "verification_errors_preserved": ["operator_error:RuntimeError: child_timeout", "incomplete_reset_ledger"]
+  },
+  "scientific_assessment": {
+    "strict_zero_loss_requirement_irreversibly_violated": true,
+    "proof": "The frozen conjunctive promotion gate requires zero baseline finishes lost. Five already validated and fully matched fixed cells have baseline completed=true and candidate completed=false with source-valid natural episode completion, no operational error and no invalid actions. For every extension that preserves those exact cells, lost_finish_count >= 5 > 0. Therefore no outcome in the remaining cells can make the zero-loss gate true. Two verified no-hit-to-hit transitions, two per-cell damage/collision increases, seventeen lost baseline windows and twenty lost baseline return followups independently violate preservation requirements in existing cells. Aggregate improvements and four gained finishes cannot cancel these universal/per-cell preservation counterexamples.",
+    "remaining_v2_evaluations_needed_to_decide_frozen_generalized_promotion": false,
+    "incomplete_matrix_does_not_negate_valid_counterexamples": true,
+    "claim_not_made": "This does not establish complete 144-slot performance, unbiased 24-road population averages, statistical significance, generalization beyond the sampled roads, official ranking, or a causal mechanism for the failures.",
+    "favorable_prefix_mechanism_metrics_do_not_override_safety": "The frozen cell/equal-geometry lateral and avoidance reduction gates pass on available prefix metrics, but all-slot/road coverage and finish/safety/coverage preservation fail. Do not promote from survivor-only improvements or offset the losses with gained finishes.",
+    "preservation_policy": "Keep the original protocol/result and operational partial tail immutable; do not replace roads, retry the partial cell, discard counterexamples, relabel pending exposure as fresh, or generate a continuation protocol to salvage this frozen candidate. No such action was performed by this audit."
+  }
+}

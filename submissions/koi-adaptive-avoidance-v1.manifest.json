@@ -1,0 +1,100 @@
+{
+  "candidate": "koi-adaptive-avoidance-v1",
+  "status": "synthetic-tested; driving improvement unverified",
+  "source_commit": "c4e224d465eea12acc49d2700ba1e1e5b6146976",
+  "reference_crossing_zip_sha256": "4447c8dfad1392ddbbb83f0b3d23b8d5237af2b9be785cdfd08edaf6c4623f64",
+  "baseline_restoration": "frozen source reconstruction, not original crossing ZIP restoration",
+  "baseline_source_sha256": {
+    "agent.py": "ab9a63082fa9200572e009ab24aeb3fa59b652b026745291171dae53967af29c",
+    "haic_agent/__init__.py": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8",
+    "haic_agent/acceleration_envelope_runtime.py": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867",
+    "haic_agent/contact_continuity_runtime.py": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80",
+    "haic_agent/corridor_agent.py": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd",
+    "haic_agent/far_hazard_runtime.py": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4",
+    "haic_agent/fast_completion_coordination.py": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84",
+    "haic_agent/fixed_high_speed_recovery_v2.py": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc",
+    "haic_agent/fixed_high_speed_runtime.py": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88",
+    "haic_agent/pixel_features.py": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+  },
+  "candidate_zip_sha256": "5f7057a432074d2e7215f5d2aeb863aafc4d557d9ba93c9fb3d34ee2b46e679c",
+  "files": [
+    {
+      "path": "agent.py",
+      "bytes": 362,
+      "sha256": "478cde48f5712cc9feafb909738905d2f6054b6e5a5d0dd8afb36c26bdaf3afe"
+    },
+    {
+      "path": "haic_agent/__init__.py",
+      "bytes": 32,
+      "sha256": "a5e2b46bb2f58049e8c627b3f3bd75f6b80ddbd6e8e9270b1b6dca19edee01d8"
+    },
+    {
+      "path": "haic_agent/acceleration_envelope_runtime.py",
+      "bytes": 4279,
+      "sha256": "a0b73e5bde07273bb8df7228aba3cb028ce2e8073078cc1d8f19537147ac0867"
+    },
+    {
+      "path": "haic_agent/adaptive_avoidance_runtime.py",
+      "bytes": 8623,
+      "sha256": "b66c60d51073d1b513441f111b12c1fab156182dae9a19bf9f85e90258e8a941"
+    },
+    {
+      "path": "haic_agent/contact_continuity_runtime.py",
+      "bytes": 4559,
+      "sha256": "bd0518542d0c9165c2d5c87be81d4c77bb82183c4d0334269389154143d34e80"
+    },
+    {
+      "path": "haic_agent/corridor_agent.py",
+      "bytes": 10439,
+      "sha256": "00667a41e6ed07c715784669745dcf4646307214474daf2e87b73ee48dc835cd"
+    },
+    {
+      "path": "haic_agent/far_hazard_runtime.py",
+      "bytes": 5489,
+      "sha256": "12fc519edb1e3ac33e1f339ebf5dcf95913a529d51705cbd827e9eff2557f6d4"
+    },
+    {
+      "path": "haic_agent/fast_completion_coordination.py",
+      "bytes": 5285,
+      "sha256": "2f890619535b744977ecbee04c1604f9bed8f2be94fd92de733dfb1c0c895d84"
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_recovery_v2.py",
+      "bytes": 2906,
+      "sha256": "dd1da6da44e009043625af401f5d1cf1cd09b915608b7fdbb42a2a8f2b46e0fc"
+    },
+    {
+      "path": "haic_agent/fixed_high_speed_runtime.py",
+      "bytes": 3105,
+      "sha256": "ab465ff850fb489ff5facde49b8979a2e1e164885015703edf33b81c531e8e88"
+    },
+    {
+      "path": "haic_agent/pixel_features.py",
+      "bytes": 9729,
+      "sha256": "f68895b9c0297ac5075ea47ab7f2a868e739b0ad24bee980082ce818b661d22a"
+    }
+  ],
+  "smoke": {
+    "prefix_equal": true,
+    "no_obstacle_equal": true,
+    "far_only_equal": true,
+    "moving_crossing_equal": true,
+    "obstacle": {
+      "baseline_action": [
+        0.3400000035762787,
+        0.0,
+        0.5937814116477966
+      ],
+      "candidate_action": [
+        0.3400000035762787,
+        0.0,
+        0.5157427191734314
+      ],
+      "pass_speed": 46.0,
+      "target": 46.0
+    },
+    "environment_resets": 0
+  },
+  "official_submission": false,
+  "driving_evaluation_performed": false
+}
