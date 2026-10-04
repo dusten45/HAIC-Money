@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "study": "post-contact-wider-side-recovery-dev-v1",
+  "status": "REJECTED_CONSUMED_SCREEN_DIAGNOSTIC",
+  "source_study": "camera-policy-generalization-v1",
+  "source_partition": "consumed_screen_only",
+  "frozen_candidate_source_sha256": "38169290e637a1cd40c9344bf6e0b0b4d7cab5df1bcbb5910acc51c4673acb82",
+  "frozen_protocol_sha256": "238c15b16a2a72ec0fcdaa95ff96da87541745081241a50f90ed37893f135e0f",
+  "frozen_screen_summary_sha256": "9abbe4dac6bfc25fcce112fd4acbeeb9e868dbc1f2bb45f2097082ade0072048",
+  "ignored_probe_driver": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/wider_side_recovery_probe.py",
+  "ignored_probe_driver_sha256": "142026f32f304da8fb80b11c44a137724d147df03eb9da78ca5b3526668ed340",
+  "intervention": "After a camera HUD speed collapse beside a nearly stationary close obstacle, wait for HUD speed <=3 and three visible road rows. If one measured side is >=2 pixels wide and >=0.8 pixels wider than the other, steer toward it at magnitude 0.32 with gas 0.36 and brake 0 for at most eight decisions, once per continuously visible obstacle.",
+  "cells": [
+    {
+      "track_id": 1,
+      "geometry_seed": 1460583390,
+      "role": "remaining_lost_control_finish",
+      "cold_receipt_sha256": "0a92bb7770209a40901fbe54656ab9981335e44eccf5627ed3b291f588cd04ed",
+      "cold_candidate": {"finished": false, "progress": 0.6225806451612903, "contacts": 3, "damage": 0.6, "action_trace_sha256": "5ef5d9985a0dbc76dc8476564b682d68fc419bbad4fb2b7ec441abc2664584eb"},
+      "probe": {"finished": false, "progress": 0.6225806451612903, "contacts": 3, "damage": 0.6, "trigger_count": 0, "applied_decisions": 0, "action_trace_sha256": "5ef5d9985a0dbc76dc8476564b682d68fc419bbad4fb2b7ec441abc2664584eb"},
+      "finding": "When HUD speed reached its 1.8 floor, the observed left/right width difference was below the 0.8-pixel trigger threshold; the complete action trace matched the frozen candidate.",
+      "ignored_artifact": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/wider-side-recovery-v1/track-1-seed-1460583390.json",
+      "ignored_artifact_sha256": "199b830bd537d542d70578266da534f88fa63f97af3ce97fdd4de59dd2ee26a0"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1460583390,
+      "role": "remaining_lost_control_finish",
+      "cold_receipt_sha256": "9156b84717ebb0b01fdadcfaf26eed902983db11a6665f91beac3ad3c79d3a14",
+      "cold_candidate": {"finished": false, "progress": 0.5096774193548387, "contacts": 1, "damage": 0.2, "action_trace_sha256": "a3b9ae357edece731401a7b82a64d3701e5023b55d0626a603806b2b27650dbe"},
+      "probe": {"finished": false, "progress": 0.5096774193548387, "contacts": 1, "damage": 0.2, "trigger_count": 1, "applied_decisions": 8, "action_trace_sha256": "4070b82b61b954ae96a2df51918c889332c820de649d885f6f5bed88bfc75d98"},
+      "finding": "The trigger fired at decision 191. During eight 0.36-gas decisions, world speed fell from 1.56 to 0.20; there was no new tile or finish.",
+      "ignored_artifact": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/wider-side-recovery-v1/track-2-seed-1460583390.json",
+      "ignored_artifact_sha256": "4f61aa4c87bc770af1efcbf75e208445a818362927e04bfb1742efdfe6531657"
+    },
+    {
+      "track_id": 1,
+      "geometry_seed": 1402259577,
+      "role": "negative_control_shared_finish",
+      "cold_receipt_sha256": "85df96215e4444e8b469ae0dd8b64a290adba233ce5828d82460a5a709b07162",
+      "cold_candidate": {"finished": true, "lap_time_ms": 28860, "contacts": 0, "damage": 0.0, "action_trace_sha256": "e2864dfe4f857affc73d9f5e968ca4f864144de4923e4f1f18773049566e7907"},
+      "probe": {"finished": true, "lap_time_ms": 28860, "contacts": 0, "damage": 0.0, "trigger_count": 0, "applied_decisions": 0, "action_trace_sha256": "e2864dfe4f857affc73d9f5e968ca4f864144de4923e4f1f18773049566e7907"},
+      "ignored_artifact": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/wider-side-recovery-v1/track-1-seed-1402259577.json",
+      "ignored_artifact_sha256": "cced51bf5c259446b109727e0ea0c47b7c3243cb6561ff16620a1de8ab767704"
+    },
+    {
+      "track_id": 2,
+      "geometry_seed": 1262984018,
+      "role": "negative_control_shared_finish",
+      "cold_receipt_sha256": "5e33ab334ca907b6601f5034496ec665ba314bbc98d29c213995be2a814fc552",
+      "cold_candidate": {"finished": true, "lap_time_ms": 26980, "contacts": 2, "damage": 0.4, "action_trace_sha256": "5f81e8fcc11f00fecd9ff896dc793b44f6244df8e0dad9e2f211eb98dc900ca5"},
+      "probe": {"finished": true, "lap_time_ms": 26980, "contacts": 2, "damage": 0.4, "trigger_count": 0, "applied_decisions": 0, "action_trace_sha256": "5f81e8fcc11f00fecd9ff896dc793b44f6244df8e0dad9e2f211eb98dc900ca5"},
+      "ignored_artifact": ".haic-artifacts/camera-policy-generalization-v1/diagnostics/wider-side-recovery-v1/track-2-seed-1262984018.json",
+      "ignored_artifact_sha256": "54505283baff48ebe89d08e3c574007927530c3f77fbae87ae5d159bb889990a"
+    }
+  ],
+  "decision": "REJECT: neither remaining lost-control finish was rescued. Do not add this post-contact recovery to the v2 candidate.",
+  "limits": "These are four selected, previously consumed screen cells and a throwaway intervention on the frozen v1 candidate. The candidate and control trajectories diverged long before contact; a post-contact counterfactual cannot isolate the earlier cause. The camera widths do not certify a physically reachable path, and no fresh confirmation or blind episode was opened."
+}
