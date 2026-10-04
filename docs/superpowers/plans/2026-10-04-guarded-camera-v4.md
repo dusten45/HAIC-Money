@@ -14,23 +14,36 @@ full-corridor bend guard rescued two losses in a prespecified 15-cell panel,
 but a broader 84/96-cell audit lost two previous finishes and raised contacts
 31 to 39, so that guard is rejected. A distant-obstacle speed-cap probe also
 lost two finishes and raised contacts on a fixed 12-cell panel; it is excluded.
-The next isolated prototype repairs the clear-road 42-row dropout. It rescued
-both known no-contact road exits with zero contacts and left three prespecified
-negative controls action-identical. Its full 96-cell audit is pending.
+The first isolated clear-road row-42 dropout correction rescued both known
+no-contact road exits and left three prespecified negative controls
+action-identical. Its full 96-cell consumed-data audit yielded 82 versus 75
+finishes with no lost prior finish, but contacts rose 43 to 44, violating the
+development gate; crashes remained two and shared-finish time ratio was
+0.999857. The unconditional correction is rejected. A refined
+recent-obstacle-or-HUD-speed condition changed nine targeted cells and yielded
+six finish gains, no contact increase, and both road-exit rescues. This is only
+a targeted result. Its full 96-cell replay was interrupted at 57/96 receipts;
+the remaining cells need completion under frozen probe
+source SHA256 `7b0b97ea5e27a7922431f587ff5c0d25ba4a5bb4c4f4a41b094fca6c86be1351`.
+Independent review also found that obstacle memory can remain stale across
+lost-road frames; resolve that issue and rerun the complete consumed matrix
+before selecting the V4 candidate.
 
 ## Candidate and development gate
 
-- Add one `_ClearRoadRow42DropoutController` subclass of
-  `_BoundedSideHoldController` in `agent.py`, leaving the live bare `Agent`
-  selector on `_CompoundClearingBrakeCarryController` during development.
-- Change only the inherited road-steering request when no obstacle is detected,
-  the base class marks the road nonstraight, row 42 is absent from the current
-  frame's measured `centers`, and rows 54, 50 and 46 are present. Set
-  `far = _center_at(42.0, centers)` and `near = centers[54]`, then use the same
-  `0.016 * (far - IMAGE_CENTER) + 0.012 * (far - near)` formula as the base
-  controller before calling the inherited hook. The normal steer slew and
-  pedal rules remain. No track ID, seed, simulator state or hidden vehicle
-  telemetry may enter inference. Do not alter this predicate on V4 fresh data.
+- Keep the live bare `Agent` selector on
+  `_CompoundClearingBrakeCarryController` during development. The currently
+  inactive `_ClearRoadRow42DropoutController` subclass in `agent.py` contains
+  the refined predicate and still needs its stale-memory edge fixed and a
+  complete development audit before candidate freeze.
+- For the selected subclass, change only the inherited clear-road steering
+  request on suitable nonstraight frames with missing row 42 and measured rows
+  54, 50 and 46. Derive the row-42 target from current measured road centers;
+  use camera-derived recent-obstacle and HUD-speed evidence only if validated
+  on all consumed cells. Clear or bound remembered evidence across lost-road
+  frames. Keep the normal steer slew and pedals. No track ID, seed, simulator
+  state or hidden vehicle telemetry may enter inference. Freeze this predicate
+  before V4 fresh data.
 - On all 96 consumed V3 screen/confirmation canonical pairs, require no loss
   of a previous V3 candidate finish, rescue both known no-contact V3 losses,
   no increase in total crashes or contacts, and new
@@ -58,7 +71,7 @@ negative controls action-identical. Its full 96-cell audit is pending.
   SHA256 `291d93081a64d49f18507ec7baaba411e06510bb533221ce07ae585bc4e77b61`.
   Reconstruct a distinct candidate base from a new pinned implementation
   commit/blob with the live selector still on the control route; derive the
-  candidate snapshot by exactly one selector swap to
+  candidate snapshot by exactly one selector swap to the final selected
   `_ClearRoadRow42DropoutController`. Verify both committed blobs and snapshots
   at bind, restore and before/after every phase. Do not require candidate to
   equal a selector swap of the old control blob. Pin the root model, helpers,
@@ -84,12 +97,14 @@ negative controls action-identical. Its full 96-cell audit is pending.
 
 ## Work sequence
 
-1. Finish the 96-cell development audit of the row42 correction and inspect
-   every changed finish, crash, contact and shared-finish time.
+1. Finish and independently audit the refined 96-cell development replay;
+   inspect every changed finish, crash, contact and shared-finish time. Fix
+   stale obstacle memory on lost-road frames, then rerun the complete matrix
+   on a newly frozen candidate source before accepting the development gate.
 2. Use the corrected diagnostic tracer's current-decision `road_centers`
    attribution (commit `195fb62`) and verify replay action hashes.
 3. Implement the selected subclass with focused behavior tests; run the full
-   consumed matrix again from committed bytes and record a development result.
+   consumed matrix from committed bytes and record a development result.
 4. Implement and review the separate V4 gate, runner, template and tests. Bind
    fresh seeds only after all code and input hashes are final.
 5. Run screen, confirmation and blind sequentially subject to their fixed

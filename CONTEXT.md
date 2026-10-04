@@ -9,15 +9,14 @@ The goal is a fast, reliable, rule-compliant 2026 HAIC agent. The live bare
 
 The source-bound `camera-policy-competition-v3` study tested the unchanged
 `_BoundedSideHoldController` on new geometry under a competition-aligned gate.
-Screen retained (29/32 finishes versus 18/32, no lost control finish), but
-confirmation **REJECTED**: 46/64 versus 31/64 finishes and five lost control
-finishes against its fixed limit of four. All 136 confirmation receipts and four
-exact repeats validated; the saved summary and independent recomputation
-agree. Candidate crashes/contacts/damage were 2/38/7.6 versus 8/102/20.4,
-but shared finishes were about 6% slower. Three lost finishes were on track ID
-3 and two on ID 4. The blind phase is sealed and the live route is unchanged.
-See `experiments/camera-policy-competition-v3-result.json` and its bound
-protocol. The 24 opened V3 geometries are now development data.
+Screen retained (29/32 finishes versus 18/32), but confirmation **REJECTED**:
+46/64 versus 31/64 finishes and five lost control finishes against its fixed
+limit of four. All 136 confirmation receipts and four exact repeats validated;
+the saved summary and independent recomputation agree. Candidate
+crashes/contacts/damage were 2/38/7.6 versus 8/102/20.4; shared finishes were
+about 6% slower. The V3 blind phase is sealed. See
+`experiments/camera-policy-competition-v3-result.json`. The 24 opened V3
+geometries are development data.
 
 Earlier V2 and V1 camera candidates were also rejected under their own fixed
 screen gates despite aggregate finish gains. Their confirmation/blind phases
@@ -26,13 +25,23 @@ side-switch vetoes and a crash without the proposed intervention; static
 camera-pixel corridor widths did not certify physical clearance. The prior
 results and consumed-cell diagnostics remain in `experiments/`.
 
-Current priority: diagnose the five V3 confirmation finish losses with
-source-bound action/camera replays, then test a minimal context-sensitive
-controller on consumed cells. Screen failures also show two road exits on one
-geometry and one on-road stall; first-dropout camera evidence is not yet saved,
-so full-width road reacquisition remains a hypothesis. The candidate's
-systematic 6–7% shared-finish slowdown also needs attention. Bind a new fresh
-protocol before any subsequent promotion claim; do not open V3 blind.
+V3 action-exact replays found two clear-road exits, two post-contact on-road
+stalls, and one five-contact crash among its five confirmation losses. An
+isolated clear-road row-42 dropout correction rescued the two road exits on
+consumed data. Its full 96-cell audit improved finishes 75 to 82 without losing
+a prior finish, but contacts rose 43 to 44, failing the development gate;
+crashes stayed at two and shared-finish time ratio was 0.999857. A refined
+recent-obstacle-or-HUD-speed gate was tested on nine changed-action cells: six finish gains,
+no contact increase, and both known road-exit rescues retained. Its full
+96-cell source-bound replay was interrupted at 57/96 receipts; it has not
+passed a gate.
+Independent review found that remembered obstacle state may survive lost-road
+frames, so that predicate needs correction and a complete audit before any
+fresh V4 seed bind. The inactive `_ClearRoadRow42DropoutController` in `agent.py`
+contains the refined predicate but has not passed the full development gate;
+the stale-memory edge remains. V4 runner/gate/template are committed but
+unbound with pending source pins. No V4 fresh seeds or episodes exist; V3 blind
+must stay sealed. See `experiments/camera-policy-competition-v4-progress.md`.
 
 ## Frozen Competition Contract
 
