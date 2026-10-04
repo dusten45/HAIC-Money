@@ -1,0 +1,45 @@
+{
+  "classification": "fixed_uniform_asphalt_supplied_state_batch_kernel_profile",
+  "source_sha256": {
+    "batch": "8ae7239b81d9b41e649e2ef704c3a6bbf3a8b2a933ed499b7bf13f566cb82d53",
+    "scalar": "84a91143f8d42db7cf1007586c5c13038c6e0e6d371624f262abcaba26e46064",
+    "candidate_actions": "341c61575651774cd5b582c644e47da021fc27737f43cb606b1a57fa561caf99",
+    "profile": "f28d9206f0ab5b831e5646203626cc6882d7f254e04d275f403e16daa7521cc8"
+  },
+  "all_sources_unchanged": true,
+  "world_steps": 0,
+  "new_holdout_opened": false,
+  "cases": [
+    {
+      "name": "constant_control_16_ticks",
+      "rows": 216,
+      "raw_ticks": 16,
+      "equivalent_scalar_predictions": 3456,
+      "scalar_ms": 572.5619150034618,
+      "batch_ms": 10.413522999442648,
+      "initial_batch_pack_ms": 1.4435159973800182,
+      "kernel_speedup": 54.982537133120694,
+      "max_state_abs_error": 0.0,
+      "max_diagnostic_abs_error": 0.0
+    },
+    {
+      "name": "first4_then_held_joint_locked_brake32",
+      "rows": 216,
+      "raw_ticks": 36,
+      "equivalent_scalar_predictions": 7776,
+      "scalar_ms": 1292.714632996649,
+      "batch_ms": 20.605079997039866,
+      "initial_batch_pack_ms": 1.7255950006074272,
+      "kernel_speedup": 62.737666302793336,
+      "max_state_abs_error": 0.0,
+      "max_diagnostic_abs_error": 0.0
+    }
+  ],
+  "limits": [
+    "Kernel speedup excludes camera geometry, observer and policy selection.",
+    "Uniform400N asphalt predictor only; no grass, damage or contact certification.",
+    "Non-None privileged wheel velocity override is outside supported scope.",
+    "Latency measures this host and fixed workload only, not official worst-case timing.",
+    "No planner or frozen standalone agent was modified or lap-tested."
+  ]
+}
