@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "name": "camera-policy-generalization-v2",
+  "status": "UNBOUND",
+  "control_class": "_CompoundClearingBrakeCarryController",
+  "track_ids": [1, 2, 3, 4],
+  "seed_counts": {"screen": 8, "confirmation": 16, "blind": 8},
+  "spot_indices": {"screen": [[1, 0], [4, 7]], "confirmation": [[1, 0], [2, 1], [3, 2], [4, 3]], "blind": [[1, 0], [4, 7]]},
+  "decision_engine_sha256": "756434beadd4eee9bffdc94237bb6abb80813975a5e611f4a8f0320e5d527917",
+  "source_rule": "Bind only after candidate agent.py is committed; a fresh one-time salt and all geometry seeds are generated during binding. The candidate snapshot differs solely by the Agent route selector.",
+  "decision_rule": "Use the camera-policy-generalization-v1 finish, contact, damage, progress, crash and pace gates unchanged. Confirmation and blind require prior RETAIN seals."
+}
