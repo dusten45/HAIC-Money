@@ -23,8 +23,10 @@ These partial speed gains do not authorize selection or holdout.
 Full-fixture checking and pixel clearance expose a second, damage-free planning
 stall. R5 preserves required1 at14.28s but fails its old-track3 probe. R6 adds
 bounded temporal refinement that recovers a lower-cost collision-free modeled
-sequence pruned by the beam. Its first two new driving cells are now under
-validation; no R6 driving success is assumed from offline preflight.
+sequence pruned by the beam. Its first two new driving cells both finish cleanly:
+required1 in14.28s and old track3 in18.02s, with measured action maxima4.385/4.032s.
+The remaining four screen cells are now authorized on the unchanged source;
+full24, selection and new holdout remain conditional. Original10–13s is unmet.
 
 
 ## Apex opposite-strategy cycle closed (2026-10-05 KST)

@@ -135,3 +135,10 @@ sequence with lower cost and no predicted collision. Removing terminal tracking
 penalties does not explain this stall. R6 therefore tests bounded temporal
 refinement of complete sequences, retaining the existing observer, objective and
 collision margin; it is not an unconditional acceleration fallback.
+
+R6 initial2 now both finish with zero damage: required1/516237 in14.28s and
+old track3/4111953688 in18.02s. Both are qualified and resource-eligible, with
+zero invalid actions/timeouts. Required1 reproduces all179 R5 actions and driving
+states exactly. These are two fresh episodes on sourcecc0543c2bebb, not the
+whole six-cell screen. Remaining4 are authorized; full24 and holdout stay gated.
+See [initial receipts and source binding](results/beam-r6-initial-screen.json).
