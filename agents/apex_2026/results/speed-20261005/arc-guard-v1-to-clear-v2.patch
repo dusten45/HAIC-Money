@@ -1,0 +1,34 @@
+--- arc-guard-v1.py
++++ arc-clear-v2.py
+@@ -768 +768 @@
+-class Agent(_EarlyCircleReference):
++class _ArcGuardReference(_EarlyCircleReference):
+@@ -849,0 +850,28 @@
++
++
++class Agent(_ArcGuardReference):
++    """Keep obstacle plans and the current emitted turn direction.
++
++    Near support can prefer the opposite side of an S bend after a pass.
++    Shortening that reverses the selected turn is outside this heuristic's
++    scope. This gate preserves the original action in those observations;
++    it does not establish global road or obstacle safety.
++    """
++
++    def _steering(self, ahead, path, speed, yaw):
++        original = _EarlyCircleReference._steering(self, ahead, path, speed, yaw)
++        original_curvature = self.reference_curvature
++        frame, road = self._arc_guard_frame, self.corridor_road
++        if self.pass_side or (frame is not None and road is not None
++                              and self._circles(frame, road)):
++            return original
++        selected = super()._steering(ahead, path, speed, yaw)
++        if self.arc_guard_used:
++            original_emitted = self.last_steer+float(np.clip(original-self.last_steer, -.24, .24))
++            selected_emitted = self.last_steer+float(np.clip(selected-self.last_steer, -.24, .24))
++            if original_emitted*selected_emitted < 0.:
++                self.arc_guard_used = False
++                self.arc_guard_curve = 0.
++                self.reference_curvature = original_curvature
++                return original
++        return selected

@@ -1,0 +1,84 @@
+{
+  "classification": "exact_open_mandatory_prefix_camera_fixture_not_lap_validation",
+  "source_sha256": "5d9958d142970fcc0556af850ccd83895fbea08c8e1f81921a2f2d1085c7dad5",
+  "script_sha256": "4c7fba9cd10a6dee846c317b4b687e72b3f736e1cf1f3e2806a3eb39b5255270",
+  "all_actions_and_post_step_speeds_exact": true,
+  "fixture_sha256": "80d3ba7d0a9414f536ed3c69097eac21ac3db6f019d4ad2aacdff92f546ce3db",
+  "cases": [
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "camera_action": 54,
+      "prefix_actions": 55,
+      "action_prefix_sha256": "9e2c35f3432d28e7a72cedc0b63c2bd37e6a49027405d8bc703d9ade19f181c1",
+      "input_trace_sha256": "9385ab7dd5c3cd75715647335a92ade5a1dbf227d0e91fd3759029c3a8920c7e",
+      "reference_action": [
+        0.10095380246639252,
+        0.0,
+        0.08928586542606354
+      ],
+      "pre_state": {
+        "cruise_speed": 100.0,
+        "lateral_accel": 190.0,
+        "preview_time": 0.22,
+        "yaw_gain": 0.35,
+        "braking_accel": 150.0,
+        "obstacle_margin": 1.2,
+        "last_steer": 0.07211611849297736,
+        "last_center": 40.5,
+        "last_speed": 65.8485656963184,
+        "last_target": 60.061587275050584,
+        "last_yaw": -0.37361656520402814,
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 2,
+        "pass_x": 5.573125154173148,
+        "pass_y": null,
+        "route_distance": null,
+        "spin_frames": 0,
+        "corridor_used": true,
+        "mode": "confidence",
+        "circle_cooldown": 5,
+        "reference_curvature": 0.015025227753904196
+      }
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "camera_action": 62,
+      "prefix_actions": 63,
+      "action_prefix_sha256": "000017e35bd3a7bb35c295b7c77db4256423dd385bc57099ccde7df317e4c3d5",
+      "input_trace_sha256": "00d75b20f990b8bd9d7a815ad84558e530a655a02930f034e1f017ce7135ee0f",
+      "reference_action": [
+        -0.11162693798542023,
+        0.0,
+        0.29963406920433044
+      ],
+      "pre_state": {
+        "cruise_speed": 100.0,
+        "lateral_accel": 190.0,
+        "preview_time": 0.22,
+        "yaw_gain": 0.35,
+        "braking_accel": 150.0,
+        "obstacle_margin": 1.2,
+        "last_steer": -0.08959195706993073,
+        "last_center": 44.5,
+        "last_speed": 75.49686821139588,
+        "last_target": 56.41576066085885,
+        "last_yaw": 0.10595097236614351,
+        "lost_frames": 0,
+        "pass_side": 0,
+        "pass_missing": 2,
+        "pass_x": -3.44373466264718,
+        "pass_y": null,
+        "route_distance": null,
+        "spin_frames": 0,
+        "corridor_used": true,
+        "mode": "confidence",
+        "circle_cooldown": 6,
+        "reference_curvature": -0.0201401245094095
+      }
+    }
+  ],
+  "new_holdout_opened": false
+}

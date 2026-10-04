@@ -1,0 +1,96 @@
+{
+  "source_sha256": "15478c179ff1c8fa2c7dfe12bf65eaba91ad215fc250bde893ce65d7eebcd5ba",
+  "parent_source_sha256": "ea34ba8e8d9bb414d2fc28f73a9728f791b58ace40f0d00e20b0bb49a1c42914",
+  "parent_definition_prefix_exact": true,
+  "parent_class_alias": "_ArcGuardReference",
+  "source_patch_sha256": "04e689789aaa8d28a10602c833cb6d33e1c412906b4d5fd179689dd398b495a2",
+  "reverse_patch_recovers_parent_exactly": true,
+  "parameters": {},
+  "focused_tests_passed": 19,
+  "test_sha256": "82286a98dc5448de74d7c30df32a9e41c5bb1fd5f15d3f38da3beadd95c71e07",
+  "hazard_fixture_sha256": "80d3ba7d0a9414f536ed3c69097eac21ac3db6f019d4ad2aacdff92f546ce3db",
+  "red_result": "2 failed (T3 action54 / T4 action62 reference action identity), 3 passed",
+  "cause_correction": "Exact fixture probes show no active pass/current circle in either harmful reversal. The initial active-pass hypothesis is rejected. Post-pass turn reversals are restricted conservatively; pass/circle exclusion is an additional scope bound.",
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "receipt_sha256": "e4c38462024034b20dc2f1be33b73da273903d364de34f35b0904c4fd0eae53b",
+  "freeze_sha256": "e374cc119bef59704b94ba594fe7c48416588338614ab2a7afd323a680af9761",
+  "source_unchanged_through_evaluation": true,
+  "outcomes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 15440,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "108cc7388650da1ddbc7f3112bc75f85e5faaea3a31a230083005ce4f2c7927a"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lap_time_ms": 19080,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "57517b9bb88c8703a1073a61087133b8be9979e66805a3c00668a30358fb8fb0"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lap_time_ms": 16520,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "c3ea3201eeadb4694bfb632b7b5bedbfc1fa9a99c00303743ea18606d8feaf25"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 20920,
+      "progress": 0.974910394265233,
+      "collision_count": 1,
+      "retire_reason": null,
+      "action_trace_sha256": "f7a8c8da2e0415860b406bb86e14f2a3ce383464e8cd2690cb94251bbebbb0ab"
+    }
+  ],
+  "trace_only_parent_comparison": {
+    "3": {
+      "first_divergence_action": 76,
+      "parent_action": [
+        -0.2643655836582184,
+        0.29145634174346924,
+        0.0
+      ],
+      "candidate_action": [
+        -0.4000000059604645,
+        0.0,
+        0.11564836651086807
+      ],
+      "candidate_contact_actions": [],
+      "min_speed_after_action_m_per_s": 39.995262713980516
+    },
+    "4": {
+      "first_divergence_action": 66,
+      "parent_action": [
+        -0.13884130120277405,
+        0.0,
+        0.12111002206802368
+      ],
+      "candidate_action": [
+        -0.4000000059604645,
+        0.0,
+        0.21711121499538422
+      ],
+      "candidate_contact_actions": [
+        196
+      ],
+      "min_speed_after_action_m_per_s": 1.5389897129353247
+    }
+  }
+}
