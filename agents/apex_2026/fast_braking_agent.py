@@ -365,7 +365,7 @@ class Agent(_PathReference):
                           self.last_speed ** 2 * abs(self.reference_curvature))
             # Retain a tire-force reserve for the current turn. Calibration
             # uses ideal asphalt and does not certify edge/damaged contact.
-            available = np.sqrt(max(0., 210. ** 2 - min(lateral, 209.) ** 2))
+            available = np.sqrt(max(0., 210. ** 2 - lateral ** 2))
             deceleration = min(falling_rate, self.braking_accel, available)
             extra_brake = self.brake_feedforward * deceleration / 309.
             action[2] = min(.65, float(action[2]) + extra_brake)

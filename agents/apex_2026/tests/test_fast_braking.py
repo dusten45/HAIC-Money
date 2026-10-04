@@ -44,3 +44,18 @@ def test_reset_clears_previous_deceleration_and_invalid_pixels_are_finite():
     assert np.all(action >= [-1, 0, 0]) and np.all(action <= 1)
     controller.reset()
     np.testing.assert_array_equal(controller.act(camera()), agent_type()().act(camera()))
+
+
+def test_saturated_corner_has_no_additional_feedforward_braking():
+    controller = agent_type()()
+    proportional = agent_type()(brake_feedforward=0)
+    for policy in (controller, proportional):
+        policy.act(camera(speed=90))
+    observation = camera(curvature=.04, speed=90)
+    action = controller.act(observation)
+    reference = proportional.act(observation)
+    lateral_demand = max(controller.last_speed * abs(controller.last_yaw),
+                         controller.last_speed ** 2 * abs(controller.reference_curvature))
+    assert lateral_demand >= 210
+    assert 0 < reference[2] < .65
+    np.testing.assert_array_equal(action, reference)

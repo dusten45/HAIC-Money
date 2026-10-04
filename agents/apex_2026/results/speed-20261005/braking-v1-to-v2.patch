@@ -1,0 +1,5 @@
+--- braking-v1.py
++++ braking-v2.py
+@@ -368 +368 @@
+-            available = np.sqrt(max(0., 210. ** 2 - min(lateral, 209.) ** 2))
++            available = np.sqrt(max(0., 210. ** 2 - lateral ** 2))

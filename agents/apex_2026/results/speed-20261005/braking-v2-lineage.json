@@ -1,0 +1,68 @@
+{
+  "source_sha256": "b65ccebae577adb6be8b8b78b1f414986b90bdbb502ee666c487ba60e0004900",
+  "parent_source_sha256": "a4dffe5c4d81410e36ddb79082bab41bfde3feb690f5940e97182af548ebd6ee",
+  "change": "Remove false longitudinal tire-force reserve at or above lateral saturation; retain existing proportional brake.",
+  "source_patch_sha256": "31f481738da84bf9e031a67f592827e9cb1151b26b75e472533caaea1c398729",
+  "reverse_patch_recovers_parent_exactly": true,
+  "parent_receipt_sha256": "fd6fb2d07e415516ae1a785308528b595382b14ff5843307bd09c363a2506c02",
+  "regression": {
+    "camera_speed_m_per_s": 90,
+    "camera_curvature": 0.04,
+    "inferred_lateral_demand_m_per_s2": 240.5081328230791,
+    "v1_default_brake": 0.22412083,
+    "v1_feedforward_zero_brake": 0.18106203,
+    "red_result": "1 failed, 3 passed",
+    "green_result": "23 passed (braking 4 + path 19)"
+  },
+  "test_sha256": "e3a410b3567a9fb5d91cbac9f977628fd29029409b560a191ca2324a0c1b6161",
+  "parameters": {},
+  "fresh_mandatory_receipt": "braking-v2.json",
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "receipt_sha256": "3608eb9de94bd1c13ef297288b26e43e09cfd054c747ba11d7e42eba3dc0ad6d",
+  "freeze_sha256": "694f0459f0bb1794e51987374d892336f1f51e9f721840156c57f857de66aa48",
+  "source_unchanged_through_evaluation": true,
+  "outcomes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 16560,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "ac6e3d9e05279d9d4947d8bd1ad5670bd2f86b9ecc8aa3392c2ef8ed27e029b2"
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.6875,
+      "collision_count": 0,
+      "retire_reason": "off_track",
+      "action_trace_sha256": "40b12b543803ba4d5ede2ddac26ad1dc68abe4adb8d92c15a9bea3eda36c7ecf"
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": false,
+      "lap_time_ms": null,
+      "progress": 0.3851132686084142,
+      "collision_count": 4,
+      "retire_reason": "off_track",
+      "action_trace_sha256": "f2306dfa256b3dbe233f858f0194c70f684ae2c3f38c6b2b2484848303e663aa"
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 16760,
+      "progress": 1.0,
+      "collision_count": 0,
+      "retire_reason": null,
+      "action_trace_sha256": "af6d1b1ef477a3eda15af9ed14b79e459ca6c675c7961acd95be67ccd8f06e23"
+    }
+  ]
+}
