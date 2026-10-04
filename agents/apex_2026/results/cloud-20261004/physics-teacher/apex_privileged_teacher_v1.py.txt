@@ -1,0 +1,243 @@
+"""Throwaway, privileged-state driving diagnostic; never a submission agent.
+
+Uses simulator track, obstacles, pose and velocity unavailable to Agent.act().
+Only the four already-open mandatory pairs are run, with two fixed probes.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+from statistics import mean
+
+import numpy as np
+
+from core.vendor.car_racing import TRACK_WIDTH
+from local_simulator.environment import create_environment, reset_environment
+from local_simulator.schema import MapSpec
+
+
+ROOT = Path("/workspace/HAIC-Money")
+CELLS = ((1, 516237), (2, 644062), (3, 1007), (4, 18800))
+PROBES = (
+    {"name": "teacher_110_180", "cruise": 110.0, "lateral": 180.0,
+     "braking": 85.0, "preview_time": 0.17},
+    {"name": "teacher_140_210", "cruise": 140.0, "lateral": 210.0,
+     "braking": 85.0, "preview_time": 0.17},
+)
+MAX_STEPS = 600  # 48 simulated seconds: a bounded diagnostic, not official budget.
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def make_route(raw):
+    """Obstacle-aware center path, constructed from privileged raw geometry."""
+    track = np.asarray(raw.track, dtype=np.float64)
+    road = track[:, 2:4]
+    normals = np.column_stack((np.cos(track[:, 1]), np.sin(track[:, 1])))
+    edge = np.roll(road, -1, axis=0) - road
+    lengths = np.linalg.norm(edge, axis=1)
+    s = np.r_[0.0, np.cumsum(lengths[:-1])]
+    total = float(lengths.sum())
+    offsets = np.zeros(len(road))
+    obstacle_specs = []
+    for body in raw.obstacles:
+        xy = np.asarray([float(body.position.x), float(body.position.y)])
+        index = int(np.argmin(np.sum((road - xy) ** 2, axis=1)))
+        lateral = float(np.dot(xy - road[index], normals[index]))
+        side = -1.0 if lateral >= 0 else 1.0
+        distance = (s - s[index] + total / 2) % total - total / 2
+        # The center is shifted gradually before the obstacle and restored after it.
+        before, after = 32.0, 22.0
+        bump = np.zeros_like(distance)
+        approach = (distance >= -before) & (distance < 0)
+        exit_side = (distance >= 0) & (distance <= after)
+        bump[approach] = 0.5 * (1.0 + np.cos(np.pi * distance[approach] / before))
+        bump[exit_side] = 0.5 * (1.0 + np.cos(np.pi * distance[exit_side] / after))
+        offsets += side * 3.7 * bump
+        obstacle_specs.append({"xy": xy.tolist(), "track_index": index,
+                               "road_lateral_m": lateral, "pass_side": side})
+    offsets = np.clip(offsets, -4.0, 4.0)
+    route = road + offsets[:, None] * normals
+    route = 0.2 * np.roll(route, 1, axis=0) + 0.6 * route + 0.2 * np.roll(route, -1, axis=0)
+    links = np.roll(route, -1, axis=0) - route
+    distances = np.linalg.norm(links, axis=1)
+    route_s = np.r_[0.0, np.cumsum(distances[:-1])]
+    route_length = float(distances.sum())
+    previous = np.roll(links, 1, axis=0)
+    cross = previous[:, 0] * links[:, 1] - previous[:, 1] * links[:, 0]
+    dot = np.einsum("ij,ij->i", previous, links)
+    turn = np.arctan2(cross, dot)
+    kappa = np.abs(turn) / np.maximum(0.5 * (distances + np.roll(distances, 1)), 0.25)
+    kappa = (np.roll(kappa, -2) + 2 * np.roll(kappa, -1) + 3 * kappa
+             + 2 * np.roll(kappa, 1) + np.roll(kappa, 2)) / 9.0
+    return road, normals, route, route_s, route_length, kappa, obstacle_specs
+
+
+class PrivilegedTeacher:
+    def __init__(self, raw, params):
+        self.raw = raw
+        self.params = params
+        (self.road, self.normals, self.route, self.s, self.length,
+         self.kappa, self.obstacles) = make_route(raw)
+        self.last_index = 0
+        self.last_steer = 0.0
+        self.speed_samples = []
+        self.target_samples = []
+        self.route_error_samples = []
+        self.closest_obstacle_m = [float("inf")] * len(self.obstacles)
+        self.max_preview_m = 0.0
+        self.max_turn_preview_m = 0.0
+
+    def action(self):
+        hull = self.raw.car.hull
+        xy = np.asarray(hull.position, dtype=np.float64)
+        velocity = np.asarray(hull.linearVelocity, dtype=np.float64)
+        speed = float(np.linalg.norm(velocity))
+        # Constrain nearest-point tracking to the forward route, including wrap.
+        candidate = (np.arange(self.last_index - 5, self.last_index + 34)
+                     % len(self.route))
+        index = int(candidate[np.argmin(np.sum((self.route[candidate] - xy) ** 2, axis=1))])
+        advance = (index - self.last_index) % len(self.route)
+        if advance <= 33:
+            self.last_index = index
+        index = self.last_index
+        road_error = float(np.linalg.norm(self.route[index] - xy))
+        preview = float(np.clip(7.0 + self.params["preview_time"] * speed, 12.0, 34.0))
+        self.max_preview_m = max(self.max_preview_m, preview)
+        target_s = (float(self.s[index]) + preview) % self.length
+        target_index = int(np.searchsorted(self.s, target_s, side="left")) % len(self.route)
+        to_target = self.route[target_index] - xy
+        angle = float(hull.angle)
+        forward = np.asarray([-math.sin(angle), math.cos(angle)])
+        right = np.asarray([math.cos(angle), math.sin(angle)])
+        cross_track = float(np.dot(to_target, right))
+        distance_sq = max(float(np.dot(to_target, to_target)), 1.0)
+        pursuit_curvature = 2.0 * cross_track / distance_sq
+        desired = math.atan(3.24 * pursuit_curvature)
+
+        # Every upcoming curvature point contributes a braking-distance cap.
+        ahead = (self.s - self.s[index]) % self.length
+        mask = ahead <= 100.0
+        curve_speed = np.sqrt(self.params["lateral"] / np.maximum(self.kappa[mask], 0.0005))
+        permitted = np.sqrt(curve_speed ** 2
+                            + 2.0 * self.params["braking"] * np.maximum(ahead[mask] - 5.0, 0))
+        target_speed = min(float(self.params["cruise"]), float(np.min(permitted)))
+        # Pursuit demand must fit the same lateral acceleration envelope.
+        target_speed = min(target_speed,
+                           math.sqrt(self.params["lateral"] / max(abs(pursuit_curvature), 0.0005)))
+        steer_limit = min(0.45,
+                          math.atan(3.24 * self.params["lateral"] / max(speed * speed, 100.0)))
+        desired = float(np.clip(desired, -steer_limit, steer_limit))
+        self.last_steer += float(np.clip(desired - self.last_steer, -0.28, 0.28))
+        error = target_speed - speed
+        if error < -1.5:
+            gas, brake = 0.0, float(np.clip(-error * 0.021, 0.04, 0.85))
+        else:
+            gas, brake = float(np.clip(0.42 + 0.045 * error, 0.0, 1.0)), 0.0
+
+        self.speed_samples.append(speed)
+        self.target_samples.append(target_speed)
+        self.route_error_samples.append(road_error)
+        for j, spec in enumerate(self.obstacles):
+            center_distance = float(np.linalg.norm(xy - np.asarray(spec["xy"])))
+            self.closest_obstacle_m[j] = min(self.closest_obstacle_m[j], center_distance)
+        self.max_turn_preview_m = max(self.max_turn_preview_m,
+                                      float(np.max(ahead[mask][self.kappa[mask] > 0.03], initial=0.0)))
+        action = np.asarray([self.last_steer, gas, brake], dtype=np.float32)
+        assert action.shape == (3,) and np.isfinite(action).all()
+        return action
+
+
+def run_cell(params, track_id, seed):
+    spec = MapSpec(track_id, seed, "official", (), MAX_STEPS, 4)
+    environment, raw = create_environment(spec, render_mode=None)
+    try:
+        observation, _ = reset_environment(environment, spec)
+        del observation
+        start_s = float(raw.t)
+        teacher = PrivilegedTeacher(raw, params)
+        collisions = offroad = partial = 0
+        info = {}
+        action_digest = hashlib.sha256()
+        terminated = truncated = False
+        for step in range(MAX_STEPS):
+            action = teacher.action()
+            action_digest.update(action.tobytes())
+            _observation, _reward, terminated, truncated, info = environment.step(action)
+            collisions += int(bool(info.get("collision", False)))
+            wheel_road = [bool(w.tiles) for w in raw.car.wheels]
+            offroad += int(not any(wheel_road))
+            partial += int(not all(wheel_road))
+            if terminated or truncated:
+                break
+        finish_s = raw.finish_time_s
+        qualified_s = raw.finish_qualified_time_s
+        reason = info.get("retire_reason")
+        if finish_s is None and reason is None:
+            reason = "max_steps" if truncated or step + 1 >= MAX_STEPS else "playfield_exit"
+        speeds = np.asarray(teacher.speed_samples)
+        targets = np.asarray(teacher.target_samples)
+        route_errors = np.asarray(teacher.route_error_samples)
+        return {
+            "probe": params["name"], "track_id": track_id, "seed": seed,
+            "finished": finish_s is not None,
+            "lap_time_ms": round(1000 * (finish_s - start_s)) if finish_s is not None else None,
+            "qualified_time_ms": round(1000 * (qualified_s - start_s)) if qualified_s is not None else None,
+            "elapsed_sim_ms": round(1000 * (float(raw.t) - start_s)),
+            "progress": float(info.get("progress", 0.0)), "collision_count": collisions,
+            "damage": float(info.get("damage", 0.0)), "retire_reason": reason,
+            "steps": step + 1, "offroad_samples": offroad,
+            "partial_offroad_samples": partial,
+            "actual_speed_max_mps": float(speeds.max()),
+            "actual_speed_p50_mps": float(np.median(speeds)),
+            "actual_speed_p90_mps": float(np.percentile(speeds, 90)),
+            "target_speed_p50_mps": float(np.median(targets)),
+            "route_error_p90_m": float(np.percentile(route_errors, 90)),
+            "closest_obstacle_center_m": teacher.closest_obstacle_m,
+            "max_steering_preview_m": teacher.max_preview_m,
+            "max_speed_preview_m": 100.0,
+            "obstacles": teacher.obstacles,
+            "route_length_m": teacher.length, "road_half_width_m": TRACK_WIDTH,
+            "action_trace_sha256": action_digest.hexdigest(),
+        }
+    finally:
+        environment.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=Path("/tmp/apex-privileged-teacher-v1.json"))
+    args = parser.parse_args()
+    if args.output.exists():
+        parser.error("output exists; pass a fresh filename to preserve prior data")
+    source = Path(__file__).resolve()
+    report = {
+        "label": "throwaway privileged simulator teacher; not legal Agent inference or prospective candidate",
+        "source_sha256": sha256(source),
+        "official_environment_sha256": {name: sha256(ROOT / name) for name in (
+            "env_wrapper.py", "damage.py", "core/vendor/car_racing.py",
+            "core/vendor/car_dynamics.py", "core/finish_line.py",
+            "core/track_variables.py", "core/obstacle_contacts.py")},
+        "cells": CELLS, "probes": PROBES, "frame_skip": 4,
+        "warmup_raw_frames": 50, "diagnostic_max_actions": MAX_STEPS,
+        "rows": [],
+    }
+    for params in PROBES:
+        for track_id, seed in CELLS:
+            row = run_cell(params, track_id, seed)
+            report["rows"].append(row)
+            args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+            print(json.dumps({key: row[key] for key in (
+                "probe", "track_id", "seed", "finished", "lap_time_ms",
+                "progress", "collision_count", "retire_reason", "steps",
+                "actual_speed_p90_mps")}), flush=True)
+
+
+if __name__ == "__main__":
+    main()
