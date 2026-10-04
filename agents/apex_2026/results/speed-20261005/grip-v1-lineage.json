@@ -1,0 +1,19 @@
+{
+  "source_sha256": "032db7e41c2ee832e7436db02657edaa221d4ea7860eea74cad2b39d2dc3ec63",
+  "parent_source_sha256": "177cffe567f756a7969c665fee0f39b3371042e7e0bf659269cacf4264dd07b1",
+  "parent_definition_prefix_exact": true,
+  "parameters": {},
+  "focused_tests_passed": 4,
+  "regressions_red_against_parent": 2,
+  "test_sha256": "9db17bd1916230c6ec2aaf690b1ea10c32628356a834a9315b133d0635cc51c2",
+  "receipt_sha256": "49ced88a0c18cdec0e5b2d2c15bc2cd97549675b2789fc27a4f5e9d93f847648",
+  "new_holdout_opened": false,
+  "original_13_second_goal_met": false,
+  "adopted": false,
+  "physical_model_limits": [
+    "Commanded bicycle curvature is not measured sideslip or actual tire force",
+    "309 m/s2 per brake fraction is ideal-asphalt calibration",
+    "Large measured yaw demand retains previous correction instead of a no-slip model",
+    "Desired path target remains unchanged despite clipped emitted steering"
+  ]
+}
