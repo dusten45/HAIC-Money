@@ -35,11 +35,11 @@
 
 **Artifacts:** `.haic-artifacts/clear-road-row42-v4/freshness-audit/`; tracked result under `experiments/`.
 
-- [ ] Freeze actual candidate source with one bare `Agent` selector swap.
-- [ ] Validate every archived baseline receipt and action-exact baseline replay against the consumed V3 summaries.
-- [ ] Run 96 cold candidate episodes, retaining source/runtime hashes and complete metrics.
-- [ ] Recompute aggregate/per-track results independently; inspect every changed outcome and both known rescue cells.
-- [ ] Persist a concise source-bound development result.
+- [x] Freeze actual candidate source with one bare `Agent` selector swap.
+- [x] Validate every archived baseline receipt and action-exact baseline replay against the consumed V3 summaries.
+- [x] Run 96 cold candidate episodes, retaining source/runtime hashes and complete metrics.
+- [x] Recompute aggregate/per-track results independently; inspect every changed outcome and both known rescue cells.
+- [x] Persist a concise source-bound development result.
 
 ## Task 3: Preregister and run fresh practical V4
 
@@ -48,7 +48,7 @@
 - [x] Add tests where practical thresholds accept valid paired results but safety/integrity violations reject.
 - [x] Implement practical thresholds only in V4; preserve V3 bytes and decisions.
 - [x] Pin candidate commit/blob and decision engine bytes, test, commit and push (`71bb2f4`).
-- [ ] Bind fresh disjoint seeds, commit and push the protocol before episodes.
+- [x] Bind fresh disjoint seeds, commit and push the protocol before episodes (`0d11229`).
 - [ ] Run screen, confirmation and blind only after their predecessor gates pass. Validate exact cold repeats and final combined decision.
 
 ## Task 4: Promote, package and report

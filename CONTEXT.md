@@ -39,8 +39,11 @@ V4 is now source-bound in `experiments/camera-policy-competition-v4.json`,
 with 8/16/8 new geometries across four tracks and 2/4/2 exact paired repeats.
 Screen independently retained: 26/32 versus 16/32 finishes, one lost control
 finish, contacts 15 versus 57, crashes zero versus seven, common-finish time
-ratio 1.055276; both exact repeat pairs passed. Confirmation is running on
-16 separate geometries. See `experiments/camera-policy-competition-v4-result.json`.
+ratio 1.055276; both exact repeat pairs passed. Confirmation also retained:
+51/64 versus 24/64 finishes, two lost control finishes, contacts 47 versus 110,
+crashes one versus ten, time ratio 1.048332, four exact repeat pairs. The final
+blind phase is running on eight separate geometries; promotion remains pending.
+See `experiments/camera-policy-competition-v4-result.json`.
 Only promote after retained phases, valid seals and combined decision.
 The old V4 progress checkpoint is superseded
 by `docs/superpowers/plans/2026-10-04-autonomous-camera-upgrade.md`.
