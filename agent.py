@@ -4790,6 +4790,67 @@ class _ClearRoadRow42DropoutController(_BoundedSideHoldController):
         )
 
 
+class _SpeedOptimizedController(_ClearRoadRow42DropoutController):
+    """Accelerate an aligned visible bend toward its validated speed target."""
+
+    ALIGNED_CURVE_GAS = 0.24
+
+    def __init__(self, *, cruise_speed: float = 68.0) -> None:
+        super().__init__(cruise_speed=cruise_speed)
+        self._speed_aligned_clear_curve = False
+
+    def reset(self, observation=None) -> None:
+        super().reset(observation)
+        self._speed_aligned_clear_curve = False
+
+    def _lost_road_action(self) -> np.ndarray:
+        self._speed_aligned_clear_curve = False
+        return super()._lost_road_action()
+
+    def _adjust_road_steering(
+        self, *, steering: float, straight: bool,
+        centers: dict[int, float],
+        obstacle: tuple[float, float, float] | None,
+    ) -> float:
+        adjusted = super()._adjust_road_steering(
+            steering=steering, straight=straight, centers=centers,
+            obstacle=obstacle,
+        )
+        # Require the whole preview and a centered approach. The parent's
+        # entry latch also protects the decision that releases a hazard.
+        near = float(centers.get(54, self.IMAGE_CENTER))
+        self._speed_aligned_clear_curve = (
+            obstacle is None and self._obstacle_side == 0.0
+            and not self._carry_latched_at_frame_start and not straight
+            and all(row in centers for row in (54, 50, 46, 42, 38, 34, 30))
+            and abs(near - self.IMAGE_CENTER) <= 3.0
+            and abs(float(centers.get(42, near)) - near) <= 5.0
+            and max(abs(float(center) - near) for center in centers.values()) <= 9.0
+            and abs(adjusted) <= 0.18
+        )
+        return adjusted
+
+    def _adjust_pedals(
+        self, *, gas: float, brake: float, straight: bool,
+        obstacle: tuple[float, float, float] | None,
+    ) -> tuple[float, float]:
+        inherited_gas, inherited_brake = super()._adjust_pedals(
+            gas=gas, brake=brake, straight=straight, obstacle=obstacle,
+        )
+        if (
+            self._speed_aligned_clear_curve and obstacle is None
+            and self._obstacle_side == 0.0
+            and not self._carry_latched_at_frame_start
+            and inherited_gas > 0.0 and inherited_brake == 0.0
+            and self._pace_effective_target is not None
+            and self._pace_speed < self._pace_effective_target - 8.0
+        ):
+            steering_ratio = abs(self._carry_steer_request) / self.MAX_STEER
+            grip = float(np.sqrt(max(0.25, 1.0 - steering_ratio * steering_ratio)))
+            return max(inherited_gas, self.ALIGNED_CURVE_GAS * grip), 0.0
+        return inherited_gas, inherited_brake
+
+
 class _RacingLineController(_ForwardCorridorController):
     """Fresh F1-inspired controller for the bare baseline checkpoint.
 
