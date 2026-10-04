@@ -256,16 +256,41 @@ class G1CoverageSeedInventoryTests(unittest.TestCase):
         self.assertTrue((self.root / audit.TRAIN_CLAIMS / "seed-3000.json").is_file())
         self.assertEqual(self.run_audit()["status"], "BLOCKED")
         protocol_path = "experiments/g1-synthetic-protocol.json"
-        frozen_sha = self.write(protocol_path, {
+        frozen_protocol = {
             "format": "haic-rlpd-g1-coverage-protocol-v1", "status": "frozen",
             "study_id": "g1-synthetic", "partition": "TRAIN", "cells": result["cells"],
-            "train_claims_sha256": result["train_claims_sha256"]})
+            "train_claims_sha256": result["train_claims_sha256"],
+            "exclusions": {"training_geometry_seeds": [2999]},
+        }
+        frozen_sha = self.write(protocol_path, frozen_protocol)
         self_mode = dict(self_study_id="g1-synthetic", self_protocol_path=protocol_path,
                          self_protocol_sha256=frozen_sha)
         fresh = self.run_audit(**self_mode)
         self.assertEqual(fresh["status"], "no_known_recorded_overlap", fresh["blockers"])
         self.assertTrue(fresh["self_claims_verified"])
         self.assertEqual(fresh["train_claims_sha256"], result["train_claims_sha256"])
+        conflicting_protocol = {
+            "format": "haic-rlpd-g1-coverage-protocol-v1", "status": "frozen",
+            "study_id": "g1-synthetic", "partition": "TRAIN", "cells": result["cells"],
+            "train_claims_sha256": result["train_claims_sha256"],
+            "exclusions": {"training_geometry_seeds": [3000]},
+        }
+        conflicting_sha = self.write(protocol_path, conflicting_protocol)
+        conflicting = self.run_audit(
+            self_study_id="g1-synthetic", self_protocol_path=protocol_path,
+            self_protocol_sha256=conflicting_sha)
+        self.assertEqual(conflicting["status"], "BLOCKED")
+        self.assertTrue(any("exclusions overlap proposed cells" in blocker["reason"]
+                            for blocker in conflicting["blockers"]))
+        unknown_protocol = dict(frozen_protocol, exclusions={"seed": 3000})
+        unknown_sha = self.write(protocol_path, unknown_protocol)
+        unknown = self.run_audit(
+            self_study_id="g1-synthetic", self_protocol_path=protocol_path,
+            self_protocol_sha256=unknown_sha)
+        self.assertEqual(unknown["status"], "BLOCKED")
+        self.assertTrue(any("unknown exclusion fields" in blocker["reason"]
+                            for blocker in unknown["blockers"]))
+        self.write(protocol_path, frozen_protocol)
         self.assertEqual(self.run_audit()["status"], "BLOCKED")
         claim_file = self.root / audit.TRAIN_CLAIMS / "seed-3001.json"
         original_claim = claim_file.read_bytes()
@@ -550,6 +575,8 @@ class G1CoverageSeedInventoryTests(unittest.TestCase):
     def test_range_text_and_ledger_road_alias_are_candidate_relevant(self) -> None:
         path = "experiments/unreviewed-lane.json"
         for value in ({"training_seed_range": {"start": 2990, "count": 24}},
+                      {"training_seed_range": {"start": 2990, "end": 3020}},
+                      {"training_seed_range": {"start": 2990, "end": 3000}},
                       {"seed_start": 2990, "seed_count": 24},
                       {"note": "seed=3000 was inspected before this protocol"}):
             with self.subTest(value=value):

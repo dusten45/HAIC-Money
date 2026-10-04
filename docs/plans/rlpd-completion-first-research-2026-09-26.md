@@ -133,12 +133,20 @@ pre-action pixel packets and SHA-seals a separate restricted mapping/rubric/
 label receipt before any outcome join. It is only process evidence, not proof
 of human blindness; its first image-only flag parameter has NOT been validated
 as a deployable threshold and no fresh annotations exist. All 30 focused
-tests are synthetic. The peer-owned candidate-scoped seed auditor must close
-the reported unfamiliar `{start,end}` allocation and self-protocol exclusion
-false passes before any new G1 road batch is chosen or claimed. Resource
-availability, typed cell/source audit, fresh source-specific positive/finished
-parent controls, real original-state prefix parity and harmed-finish evidence
-remain separate execution gates; do not call these files a G1 study result.
+collector/coverage/image-review tests are synthetic; 28 candidate-auditor tests
+also pass after closing the reported `{start,end}` and self-protocol exclusion
+false passes. Candidate-relevant integer ranges use conservative inclusive
+overlap, and unknown exclusion fields fail closed; see the
+[auditor correction result](../../talk/messages/20260928T081534Z-u3k9-rlpd-auditor-fix-result.md).
+Local destination hashes for the seed-11 actor and V5 seed-50 actor/checkpoint
+match recorded receipts, but no file-level destination manifest or whole-tree
+verification exists for the RLPD `runs/` and protected `evaluations/` closure;
+the `transferred/` RLPD/evaluation mirror has no readable payload. Complete
+evidence restoration, resource availability, typed cell/source audit, fresh
+source-specific positive/finished-parent controls, genuine blinded annotations,
+real original-state prefix parity and harmed-finish evidence remain separate
+execution gates. Do not choose or claim a new G1 batch and do not call these
+files a G1 study result.
 
 ## 1. Recommendation
 

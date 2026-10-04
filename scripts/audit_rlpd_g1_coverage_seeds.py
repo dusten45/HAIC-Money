@@ -42,6 +42,8 @@ _SHA = re.compile(r"[0-9a-f]{64}\Z")
 _GEOMETRY_KEYS = {"geometry_seed", "geometry_seeds", "training_geometry_seeds",
                   "reserved_training_seeds", "candidate_seeds", "known_excluded_geometry_seeds"}
 _LIST_KEYS = _GEOMETRY_KEYS - {"geometry_seed"}
+_EXCLUSION_KEYS = _GEOMETRY_KEYS | {"last_geometry_seed", "exclusion_seed_ids",
+                                    "structural_reference_seeds"}
 _PASSTHROUGH_FORMATS = {
     "haic-rlpd-g0-r5-receipt-erratum-v1",  # Candidate-bound G0, NEVER a G1 waiver.
 }
@@ -138,6 +140,15 @@ def _mentions_candidate_road(raw: bytes, token: re.Pattern[str], candidates: set
                 count = value.get("count")
                 if type(first) is int and type(count) is int and count > 0:
                     if any(first <= seed < first + count for seed in candidates):
+                        return True
+                if "end" in value:
+                    last = value["end"]
+                    if type(first) is int and type(last) is int:
+                        lower, upper = sorted((first, last))
+                        # Unknown endpoint semantics: include both ends conservatively.
+                        if any(lower <= seed <= upper for seed in candidates):
+                            return True
+                    else:
                         return True
             first = value.get("seed_start", value.get("geometry_seed_start"))
             count = value.get("seed_count", value.get("geometry_seed_count"))
@@ -754,7 +765,20 @@ def audit_g1_coverage_seeds(
             else:
                 inv.record(seed, path, "geometry_seed")
         if self_study_id is not None:
+            assert self_protocol_path is not None and self_protocol_sha256 is not None
             protocol = _json(inv.read(self_protocol_path), self_protocol_path)
+            exclusions = _mapping(protocol.get("exclusions", {}),
+                                  f"{self_protocol_path}.exclusions")
+            unknown_exclusions = set(exclusions) - _EXCLUSION_KEYS
+            if unknown_exclusions:
+                raise InventoryError(
+                    f"frozen self-protocol has unknown exclusion fields: {sorted(unknown_exclusions)}")
+            exclusion_inventory = _Inventory(root)
+            exclusion_inventory.fields(exclusions, self_protocol_path, "exclusions")
+            excluded_proposed = sorted(set(candidates).intersection(exclusion_inventory.ids))
+            if excluded_proposed:
+                raise InventoryError(
+                    f"frozen self-protocol exclusions overlap proposed cells: {excluded_proposed}")
             if (len(self_claim_sources) != len(candidates)
                     or _sha(inv.raw[self_protocol_path]) != self_protocol_sha256
                     or set(protocol) - {"format", "status", "partition", "study_id", "cells",
