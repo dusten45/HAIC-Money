@@ -93,6 +93,42 @@ class LineAgentTests(unittest.TestCase):
         self.assertGreater(a._traction_gas_limit(10., .1), .9)
         self.assertEqual(a._traction_gas_limit(60., -.1), a._traction_gas_limit(60., .1))
 
+    def test_yaw_observer_survives_missing_texture_and_reset(self):
+        a = Agent({'motion_observer': True})
+        a._observe_motion(40., .7, .1, True)
+        yaw, slip = a._observe_motion(40., 0., 0., False)
+        self.assertGreater(yaw, 0.)
+        self.assertGreater(slip, 0.)
+        a.reset()
+        self.assertEqual(a._observe_motion(40., 0., 0., False), (0., 0.))
+
+    def test_continuous_path_removes_staircase_curvature(self):
+        rows = np.arange(58, 7, -2, dtype=np.float32)
+        path = np.column_stack((42.+np.round(.2*(58.-rows)), rows))
+        a = Agent({'path_smoothing': 200.})
+        refined = a._smooth_path(path, np.ones((84,84), np.uint8))
+        self.assertLess(np.max(np.abs(np.diff(refined[:,0], n=2))), .15)
+        self.assertLess(np.max(np.abs(refined[:,0]-path[:,0])), 1.5)
+
+    def test_continuous_path_keeps_obstacle_bypass_clear(self):
+        a = Agent({'path_smoothing': 200., 'lookahead': 26})
+        obs = scene(obstacle=True)
+        a.act(obs)
+        path = np.asarray(a.diagnostics['path'])
+        free, _, _ = a._free_space(obs[-1])
+        x, y = np.rint(path).astype(int).T
+        self.assertTrue(np.all(free[y,x] > 0))
+        crossing = path[(path[:,1] >= 29) & (path[:,1] <= 37),0]
+        self.assertTrue(np.all(crossing < 41) or np.all(crossing > 50))
+
+    def test_hud_dynamics_decodes_current_rotation_with_policy_sign(self):
+        from agents.apex_2026.diagnostics.hud_dynamics_calibration import render_hud
+        a = Agent({'hud_dynamics': True})
+        for raw_yaw, raw_wheel in [(1.5, -.15), (-2.3, .27), (0., 0.)]:
+            yaw, wheel = a._hud_dynamics(render_hud(raw_yaw, raw_wheel, 70., 150.))
+            self.assertAlmostEqual(yaw, -raw_yaw, delta=.065)
+            self.assertAlmostEqual(wheel, -raw_wheel, delta=.005)
+
     def test_reset_clears_temporal_state(self):
         a = Agent()
         a.act(scene(bend=1.))

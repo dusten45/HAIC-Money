@@ -538,6 +538,304 @@
       ],
       "scope": "four user-authorized development cells; consumed iteration; no holdout",
       "notes": "Maximum straight-speed cap raised alone: four finishes, t4 one contact, essentially unchanged times; curve envelope remains limiting."
+    },
+    {
+      "variant": "fastlat100",
+      "source_sha256": "0ac0234b895f121bfa27d0063e60e1280d93e6dd08d5046bf800a556180c2b69",
+      "source_snapshot": "/tmp/apex-line-fastlat100/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 100,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 22540,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-fastlat100/t1.json",
+          "receipt_sha256": "d0465b1aa7818a32a9f32b6ace9f9103fc6f53340a39d83d4e971aee1848c11d"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 26260,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-fastlat100/t2.json",
+          "receipt_sha256": "23d77106e5b3ceb3e7eaf28898544ee8ba62325beaaafbcfa1fb66c4b5240038"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 23760,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-fastlat100/t3.json",
+          "receipt_sha256": "07c6d9d0adc7aaaaeb113546b2999b052e3fc97a5a8d4b08c67bfdab4bcd4bcf"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 23240,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-fastlat100/t4.json",
+          "receipt_sha256": "741caa7786e9a1662a0dbb615e4d89ee3e7aa0e36c6db74dd08dd37ee66b2149"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "notes": "Raising curve envelope after adding preview and traction now retains four zero-damage finishes, unlike original lat100 probe; not a matched attribution between the two lat100 variants."
+    },
+    {
+      "variant": "observer",
+      "source_sha256": "5da4cd17b006f667a6f346b1ffe1100aa886f1ebd1af7edea9724d7d555b9494",
+      "source_snapshot": "/tmp/apex-line-observer/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 65,
+        "motion_preview": 0.12,
+        "motion_observer": true
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 21520,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-observer/t1-s516237.json",
+          "receipt_sha256": "e58d513c753c142e222ef1d0066949f70e6d479502a315685a6bb1b0c741cf48"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 25980,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-observer/t2-s644062.json",
+          "receipt_sha256": "8c8758ee0f8d3a3a2375b89644a095c01eb0dd265ea56b630fb9c7373d4d40ff"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 24940,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-observer/t3-s1007.json",
+          "receipt_sha256": "db3f737dc39529077d134450c16fae64d732b06121bed4bfad55ce2c13afc7e6"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 22520,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-observer/t4-s18800.json",
+          "receipt_sha256": "6dc169c2b3654cf4c930af398a7c9b636cc4dc48999d5402902427f2310ccccc"
+        },
+        {
+          "track_id": 4,
+          "seed": 3601050002,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.16,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-line-observer/t4-s3601050002.json",
+          "receipt_sha256": "f7975a20e62a0c22b76b0efea9b432a1534451b8c21172401c1c494cc27de4dd"
+        }
+      ],
+      "scope": "four required cells plus declared development track4 seed3601050002; consumed iteration; no holdout",
+      "notes": "Yaw dynamics fill visual dropout. Required four finish with zero damage, but exact targeted dev failure not rescued (progress .16, damage .8); no claim the failure is fixed."
+    },
+    {
+      "variant": "smooth200",
+      "source_sha256": "c1104bb5335ad3c492fdea8950f05345342a67884f13985b559dc50907f5199d",
+      "source_snapshot": "/tmp/apex-line-smooth200/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 100,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100,
+        "path_smoothing": 200
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "lap_time_ms": 18320,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smooth200/t1.json",
+          "receipt_sha256": "4f4314700b929217fedcb179212b0c273166ae1abaff20a27f56035fdf323664"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 22800,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smooth200/t2.json",
+          "receipt_sha256": "574cd0c18acb8579ba943b406c21e235b83cf9d4c5d4ccd2515b241bae934382"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 20180,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smooth200/t3.json",
+          "receipt_sha256": "2c793f1eb41862425c02c9d58d1326950ee48045e8fa0ea09c75ad1d5a05d84c"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 18420,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smooth200/t4.json",
+          "receipt_sha256": "112d9999eaca9646e21f4700e3840dae2ec44475e9368ac5d973439a8f1245b1"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "notes": "Continuous curvature-penalized refinement inside DP free-space branch removes staircase corners before control and speed estimation. Four zero-damage finishes, all below25s; all faster than matched unsmoothed configuration. Original10\u201313s target not met."
+    },
+    {
+      "variant": "smoothlat150",
+      "source_sha256": "c1104bb5335ad3c492fdea8950f05345342a67884f13985b559dc50907f5199d",
+      "source_snapshot": "/tmp/apex-line-smoothlat150/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 150,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100,
+        "path_smoothing": 200
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.7571428571428571,
+          "damage": 0.8,
+          "receipt": "/tmp/apex-line-smoothlat150/t1.json",
+          "receipt_sha256": "f9623ef842e645b6511ce7a1e8aa0ce982e102697b390a3babd17f8e158142fb"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 21700,
+          "progress": 0.9970238095238095,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150/t2.json",
+          "receipt_sha256": "acce3a0c0dc8a469529e06cfa65a7b6178a18878d01b456938e2bd709d19a290"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 19120,
+          "progress": 0.9935275080906149,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150/t3.json",
+          "receipt_sha256": "b57f8ab2b0638802246c232b532043fe0a46e0097a16db4225c9b706959fbca8"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.11827956989247312,
+          "damage": 0.6000000000000001,
+          "receipt": "/tmp/apex-line-smoothlat150/t4.json",
+          "receipt_sha256": "6582c07938df79bb8175239197215eb6abea086f50f2c50eda211c1db97cfbdb"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "notes": "Higher lateral demand gives two faster finishes but loses tracks1/4 to obstacle-contact stalls. Not retained. Before t1 contact, visual motion invalid while actual yaw exceeded2.6rad/s; this motivates direct HUD yaw measurement without claiming exclusive causality."
+    },
+    {
+      "variant": "smoothlat150_observer",
+      "source_sha256": "c1104bb5335ad3c492fdea8950f05345342a67884f13985b559dc50907f5199d",
+      "source_snapshot": "/tmp/apex-line-smoothlat150observer/source.py",
+      "config": {
+        "lookahead": 26,
+        "pursuit_gain": 4.5,
+        "lateral_accel": 150,
+        "motion_preview": 0.12,
+        "traction_accel": 180,
+        "max_speed": 100,
+        "path_smoothing": 200,
+        "motion_observer": true
+      },
+      "cells": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": false,
+          "lap_time_ms": null,
+          "progress": 0.32857142857142857,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150observer/t1.json",
+          "receipt_sha256": "c189d880dbe0185a9162b0003a3daf3e7eaaf65a741e52a7ed419ca266c9c7fb"
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "lap_time_ms": 20240,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150observer/t2.json",
+          "receipt_sha256": "00b6957375772387ef71fb11c1c1cda4ef81c8d1715cc948c48ce2df4855db12"
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "lap_time_ms": 17660,
+          "progress": 1.0,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150observer/t3.json",
+          "receipt_sha256": "0818a44f9c8a01e41ce91b0929f33517bb31a3acbef1329ed52dddfaefb2e4a8"
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": true,
+          "lap_time_ms": 24700,
+          "progress": 0.978494623655914,
+          "damage": 0.0,
+          "receipt": "/tmp/apex-line-smoothlat150observer/t4.json",
+          "receipt_sha256": "a900d9db017e53c674ae4d7d0c088256e438915748989807c808bb847792afa1"
+        }
+      ],
+      "scope": "four user-authorized development cells; consumed iteration; no holdout",
+      "notes": "Observer rescues high-demand track4 but loses track1 earlier without collision damage; three finishes not sufficient, not promoted."
     }
   ],
   "diagnostic_replays": [
@@ -547,6 +845,13 @@
       "track_id": 2,
       "seed": 644062,
       "result": "same .7916666667-progress crash reproduced; observations and diagnostics retained"
+    },
+    {
+      "directory": "/tmp/apex-line-dev-failure-diagnose",
+      "variant": "dev-preview parent",
+      "track_id": 4,
+      "seed": 3601050002,
+      "result": "Exact early obstacle contact/stall reproduced: progress .1418181818 damage .2, image inputs and diagnostics retained."
     }
   ]
 }

@@ -14,7 +14,7 @@ DEFAULTS = dict(max_speed=72., min_speed=24., lateral_accel=48., braking_accel=6
                 steer_smoothing=.35, max_steer=.85, clearance=3.,
                 obstacle_margin=3, bend_cost=.8, slope_cost=.04,
                 center_cost=2., previous_cost=.015, brake_gain=.025,
-                road_low=.24, road_high=.52, motion_preview=0., traction_accel=0.)
+                road_low=.24, road_high=.52, motion_preview=0., traction_accel=0., motion_observer=False, path_smoothing=0., hud_dynamics=False)
 
 
 class Agent:
@@ -32,8 +32,12 @@ class Agent:
     def reset(self, observation=None):
         del observation
         self.last_steer = 0.
+        self.previous_steer = 0.
+        self.yaw_estimate = 0.
+        self.slip_estimate = 0.
         self.previous_path = None
         self.diagnostics = {}
+        self._smooth_cache = {}
 
     def _free_space(self, frame):
         c = self.config
@@ -108,7 +112,52 @@ class Agent:
             x -= int(slopes[j])
             j = oldj
         path = np.asarray(result[::-1], np.float32).reshape(-1,2)
+        path = self._smooth_path(path, free)
         return path, free, obstacles
+
+    def _smooth_path(self, path, free):
+        """Refine the lattice route continuously inside its chosen free intervals.
+
+        Integer x steps are search artifacts, not physical corners. A convex
+        curvature penalty removes those artifacts without crossing an obstacle
+        or changing which side of an obstacle the discrete search selected.
+        """
+        weight = float(self.config['path_smoothing'])
+        if weight <= 0 or len(path) < 4:
+            return path
+        lower, upper = [], []
+        for x, y in path:
+            xi, yi = int(round(float(x))), int(round(float(y)))
+            if not free[yi, xi]:
+                return path
+            left = right = xi
+            while left > 0 and free[yi, left-1]:
+                left -= 1
+            while right < 83 and free[yi, right+1]:
+                right += 1
+            margin = min(float(self.config['clearance']), (right-left)*.45)
+            lower.append(left+margin)
+            upper.append(right-margin)
+        lower, upper = np.array(lower), np.array(upper)
+        n = len(path)
+        key = (n, weight)
+        if key not in self._smooth_cache:
+            difference = np.diff(np.eye(n), n=2, axis=0)
+            self._smooth_cache[key] = np.eye(n)+weight*(difference.T@difference)
+        hessian = self._smooth_cache[key]
+        data = path[:,0].astype(np.float64)
+        unconstrained = np.linalg.solve(hessian, data)
+        x = np.clip(unconstrained, lower, upper)
+        if np.max(np.abs(x-unconstrained)) > 1e-8:
+            # Accelerated projected gradient solves the small box-constrained QP.
+            extrapolated, momentum = x.copy(), 1.
+            step = 1./(1.+16.*weight)
+            for _ in range(120):
+                new = np.clip(extrapolated-step*(hessian@extrapolated-data), lower, upper)
+                next_momentum = (1.+np.sqrt(1.+4.*momentum*momentum))*.5
+                extrapolated = new+(momentum-1.)/next_momentum*(new-x)
+                x, momentum = new, next_momentum
+        return np.column_stack((x, path[:,1])).astype(np.float32)
 
     def _tracking_curvature(self, path, lookahead, free, obstacles):
         """Choose a pursuit target whose implied arc respects nearby free space.
@@ -181,6 +230,32 @@ class Agent:
         return float(yaw_rate), float(np.clip(slip, -0.8, 0.8)), True
 
 
+    @staticmethod
+    def _hud_dynamics(frame):
+        """Decode instantaneous HUD state, with positive values turning right.
+
+        Pure observation-only calibration from diagnostics/hud_dynamics_calibration;
+        no renderer, simulator, or calibration dependency is imported at runtime.
+        """
+        yaw_crop = frame[74:82,52:75]
+        wheel_crop = frame[74:82,31:52]
+        yaw_mass = float(yaw_crop[:,:11].sum()-yaw_crop[:,11:].sum())
+        wheel_mass = float(wheel_crop[:,:11].sum()-wheel_crop[:,11:].sum())
+        yaw = .4580150260806972*yaw_mass+.024360133436811916 if yaw_crop.sum() else 0.
+        wheel = .018757917750222175*wheel_mass+.0019537197954649153 if wheel_crop.sum() else 0.
+        return -float(yaw), -float(wheel)
+
+    def _observe_motion(self, speed, yaw, slip, valid):
+        """Fill missing visual motion with the identified steering/yaw response."""
+        if valid:
+            self.yaw_estimate, self.slip_estimate = float(yaw), float(slip)
+        else:
+            self.yaw_estimate = float(np.clip(.6002*self.yaw_estimate
+                        + .16197*speed*self.last_steer
+                        - .05583*speed*self.previous_steer, -8., 8.))
+            self.slip_estimate *= .8
+        return self.yaw_estimate, self.slip_estimate
+
     def _preview_curvature(self, curvature, speed, yaw_rate, slip, lookahead):
         distance = max(lookahead/1.701, 4.)
         dt = float(self.config['motion_preview'])
@@ -220,9 +295,16 @@ class Agent:
         lookahead = float(np.clip(c['lookahead']+c['speed_lookahead']*speed, 9., distances[-1]))
         curvature = self._tracking_curvature(path, lookahead, free, obstacles)
         yaw_rate, slip, motion_valid = 0., 0., False
+        flow_valid, wheel_angle = False, None
         if c['motion_preview'] > 0:
             yaw_rate, slip, motion_valid = self._motion(obs[-2], obs[-1])
-            if motion_valid:
+            flow_valid = motion_valid
+            if c['hud_dynamics']:
+                yaw_rate, wheel_angle = self._hud_dynamics(frame)
+                motion_valid = True
+            elif c['motion_observer']:
+                yaw_rate, slip = self._observe_motion(speed, yaw_rate, slip, motion_valid)
+            if motion_valid or c['motion_observer']:
                 curvature = self._preview_curvature(curvature, speed, yaw_rate, slip, lookahead)
         steer = float(np.clip(c['pursuit_gain']*curvature, -c['max_steer'], c['max_steer']))
         steer = (1.-c['steer_smoothing'])*steer + c['steer_smoothing']*self.last_steer
@@ -247,11 +329,12 @@ class Agent:
         brake = float(np.clip(excess*c['brake_gain'],.03,.7)) if excess > 1 else 0.
         gas_cap = self._traction_gas_limit(speed, steer)
         gas = min(gas, gas_cap)
+        self.previous_steer = self.last_steer
         self.last_steer = steer
         self.previous_path = path.copy()
         self.diagnostics = dict(valid=True,path=path.tolist(),speed=speed,target_speed=target_speed,
                                 lookahead=lookahead,curvature=float(curvature),steer=steer,
-                                obstacle_pixels=int(obstacles.sum()), yaw_rate=yaw_rate, slip=slip, motion_valid=motion_valid, gas_cap=gas_cap)
+                                obstacle_pixels=int(obstacles.sum()), yaw_rate=yaw_rate, slip=slip, motion_valid=motion_valid, flow_valid=flow_valid, wheel_angle=wheel_angle, gas_cap=gas_cap)
         return np.array([steer,gas,brake],np.float32)
 
     def last_step_diagnostics(self):
