@@ -1,0 +1,26 @@
+--- a/source.py
++++ b/source.py
+@@ -499 +499 @@
+-class Agent(_ConfidenceReference):
++class _ClearRidgeReference(_ConfidenceReference):
+@@ -704,0 +705,20 @@
++
++
++class Agent(_ClearRidgeReference):
++    """Use only the ridge prefix with camera boundary-distance support.
++
++    A low depth can reflect occlusion, clipped image edges or a wrong ridge,
++    rather than a change in actual road width. Rejecting that reference keeps
++    the exact inherited confidence action. This is a camera heuristic and
++    does not certify tyre sweep or dynamic feasibility.
++    """
++
++    def _ridge(self, frame):
++        path = super()._ridge(frame)
++        if path is None:
++            return None
++        depth = self._sample_distance(self._distance_field(frame), path)
++        unsupported = np.flatnonzero(depth < 5.8)
++        if len(unsupported):
++            path = path[:int(unsupported[0])]
++        return path if len(path) >= 5 else None
