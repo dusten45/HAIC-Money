@@ -66,11 +66,18 @@ Measured local maxima are initialization 20.71 ms, reset 0.067 ms, action
 establishing official container certification. The independently checked ZIP
 contains byte-identical `agent.py` with the same embedded defaults.
 
-The complete R7 prospective development study is running separately under the
-18-second fallback profile after six complete rejected studies. Its fresh
-extra-track completion results remain pending; this benchmark alone provides
-no generalization claim. Each required lap already exceeds both the original
-10–13-second goal and the 18-second fallback limit.
+The complete `development/r7-guarded-preview.json` study used the prospective
+18-second profile after six complete rejected studies. Required laps reproduce
+the table above. Extra completion is **12/16**, with track counts **2/4, 4/4,
+3/4, 3/4**. No extra lap meets either 13 or 18 seconds; track 1 also fails the
+75% completion floor. Every error is null. The profile and original goal fail.
 
-**Original target met: false; promoted: false.** This study uses no holdout
-simulations, and the source, tests and evaluator remain unchanged during R7.
+The unchanged preview V4 remains the balanced completion reference (3/4 on
+each track). This revision is frozen only as a reviewed research artifact in
+`final/freeze.json`; its exact source, defaults, development receipt and ZIP
+are bound before any holdout execution. Freezing it does not adopt it or claim
+better general completion or pace.
+
+**Original target met: false; promoted: false.** R7 used no holdout simulations;
+the source, tests and evaluator remained unchanged. Subsequent frozen-source
+verification is reported separately in `FINAL.md`.
