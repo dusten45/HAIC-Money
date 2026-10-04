@@ -156,6 +156,8 @@ def test_incoming_yaw_changes_planned_steering_on_same_current_road():
     matrix = cv2.getRotationMatrix2D((42, 63), -5, 1)
     previous = cv2.warpAffine(current, matrix, (84, 84), borderMode=cv2.BORDER_REPLICATE)
     stationary = load_agent().act(np.stack([current] * 4))
+    from agents.apex_2026.diagnostics.hud_dynamics_calibration import render_hud
+    current[74:] = render_hud(-0.95, 0.0, 35)[74:]
     spinning = load_agent().act(np.stack([previous, previous, previous, current]))
     assert spinning[0] < stationary[0] - 0.05
 
@@ -169,7 +171,9 @@ def test_stopped_car_can_plan_around_small_near_obstacle():
 
 
 def test_high_incoming_yaw_avoids_power_oversteer_at_low_speed():
+    from agents.apex_2026.diagnostics.hud_dynamics_calibration import render_hud
     current = observation(speed=20)[-1]
+    current[74:] = render_hud(-2.7, 0.0, 20)[74:]
     for y in range(8, 60, 13):
         for x in (7, 19, 64, 76):
             current[y:y + 5, x:x + 5] = 0.69
@@ -208,3 +212,23 @@ def test_rollout_can_change_lane_before_distant_obstacle_without_hard_braking():
     action = load_agent().act(np.stack([frame] * 4))
     assert abs(action[0]) > 0.01
     assert action[2] < 0.1
+
+
+def test_hud_dynamics_decode_public_renderer_in_policy_sign_convention():
+    from agents.apex_2026.diagnostics.hud_dynamics_calibration import render_hud
+    agent = load_agent()
+    assert hasattr(agent, '_hud_dynamics'), 'Planner must initialize from instantaneous HUD dynamics'
+    for yaw in (-5.5, -2.0, -0.1, 0.0, 0.1, 2.0, 5.5):
+        for wheel in (-0.35, -0.1, 0.0, 0.1, 0.35):
+            decoded_yaw, decoded_wheel = agent._hud_dynamics(render_hud(yaw, wheel, 50, 100))
+            assert abs(decoded_yaw + yaw) < 0.07
+            assert abs(decoded_wheel + wheel) < 0.025
+
+
+def test_hud_yaw_overrides_optical_rotation_disagreement():
+    from agents.apex_2026.diagnostics.hud_dynamics_calibration import render_hud
+    current = observation(speed=35)[-1]
+    current[74:] = render_hud(-2.0, 0.0, 35)[74:]
+    agent = load_agent()
+    agent.act(np.stack([current] * 4))
+    assert abs(agent.last_diagnostics['yaw_rate'] - 2.0) < 0.07
