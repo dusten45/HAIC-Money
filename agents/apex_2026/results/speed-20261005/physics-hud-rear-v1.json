@@ -1,0 +1,1501 @@
+{
+  "classification": "privileged_stationary_official_rear_hud_multi_render",
+  "is_legal_camera_candidate": false,
+  "is_driving_episode": false,
+  "world_steps": 0,
+  "source_sha256": "1b55a86f460c78a27ca23e4c222bf71f264cb35dec05836a1ff5093eb3988f6a",
+  "official_file_sha256": {
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58"
+  },
+  "render_count": 452,
+  "wheel_radius_m": 0.54,
+  "rear_rgb": [
+    51,
+    0,
+    255
+  ],
+  "pure_gray_uint8": 44,
+  "formula": "sum(frame[74:83,19:24] where pixel<=.20)/.01485*.54",
+  "checkpoints": [
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 0.0,
+      "rear_mass": 0.0,
+      "error_mps": 0.0,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -68.33845039073572,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        40.0,
+        40.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 21.6,
+      "decoded_rear_speed_mps": 23.52941252968528,
+      "rear_mass": 0.6470588445663452,
+      "error_mps": 1.9294125296852798,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -44.809037861050435,
+      "true_mean_rear_excess_mps": -48.4,
+      "column_masses": [
+        0.13725490868091583,
+        0.16078431904315948,
+        0.16078431904315948,
+        0.1411764770746231,
+        0.0470588244497776
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 43.2,
+      "decoded_rear_speed_mps": 44.34937997297808,
+      "rear_mass": 1.219607949256897,
+      "error_mps": 1.1493799729780747,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -23.989070417757638,
+      "true_mean_rear_excess_mps": -26.799999999999997,
+      "column_masses": [
+        0.25882354378700256,
+        0.3019607961177826,
+        0.3019607961177826,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 65.0267470966686,
+      "rear_mass": 1.7882355451583862,
+      "error_mps": 0.22674709666858917,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -3.311703294067115,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.3803921639919281,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 85.70411855524236,
+      "rear_mass": 2.356863260269165,
+      "error_mps": -0.6958814447576458,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 17.365668164506644,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5058823823928833,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 106.66668631813744,
+      "rear_mass": 2.9333338737487793,
+      "error_mps": -1.3333136818625633,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 38.32823592740172,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.6274510025978088,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 129.60000000000002,
+      "decoded_rear_speed_mps": 129.34049259532583,
+      "rear_mass": 3.55686354637146,
+      "error_mps": -0.25950740467419564,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 61.00204220459011,
+      "true_mean_rear_excess_mps": 59.60000000000002,
+      "column_masses": [
+        0.7607843279838562,
+        0.8666666746139526,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        300.0,
+        300.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 162.0,
+      "decoded_rear_speed_mps": 161.9964599609375,
+      "rear_mass": 4.454902648925781,
+      "error_mps": -0.0035400390625,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 93.65800957020178,
+      "true_mean_rear_excess_mps": 92.0,
+      "column_masses": [
+        0.95686274766922,
+        1.0862746238708496,
+        1.0862746238708496,
+        0.9803921580314636,
+        0.3450980484485626
+      ]
+    }
+  ],
+  "front_bleed_and_asymmetry_cases": [
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 0.0,
+      "rear_mass": 0.0,
+      "error_mps": 0.0,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -68.33845039073572,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 2.5668450377204204,
+      "rear_mass": 0.07058823853731155,
+      "error_mps": 2.5668450377204204,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -65.77160535301529,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.07058823853731155,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 4.705882614309138,
+      "rear_mass": 0.12941177189350128,
+      "error_mps": 4.705882614309138,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -63.632567776426576,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.12941177189350128,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 4.705882614309138,
+      "rear_mass": 0.12941177189350128,
+      "error_mps": 4.705882614309138,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -63.632567776426576,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.12941177189350128,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 0.0,
+      "decoded_rear_speed_mps": 0.0,
+      "rear_mass": 0.0,
+      "error_mps": 0.0,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -68.33845039073572,
+      "true_mean_rear_excess_mps": -70.0,
+      "column_masses": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 65.0267470966686,
+      "rear_mass": 1.7882355451583862,
+      "error_mps": 0.22674709666858917,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -3.311703294067115,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.3803921639919281,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 67.45099154385655,
+      "rear_mass": 1.8549022674560547,
+      "error_mps": 2.6509915438565343,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -0.88745884687917,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.44705885648727417,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 69.59003101695669,
+      "rear_mass": 1.9137258529663086,
+      "error_mps": 4.790031016956675,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 1.2515806262209708,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.5058823823928833,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 69.59003101695669,
+      "rear_mass": 1.9137258529663086,
+      "error_mps": 4.790031016956675,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 1.2515806262209708,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.5058823823928833,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 64.80000000000001,
+      "decoded_rear_speed_mps": 65.0267470966686,
+      "rear_mass": 1.7882355451583862,
+      "error_mps": 0.22674709666858917,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": -3.311703294067115,
+      "true_mean_rear_excess_mps": -5.199999999999989,
+      "column_masses": [
+        0.3803921639919281,
+        0.4392157196998596,
+        0.4392157196998596,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 85.70411855524236,
+      "rear_mass": 2.356863260269165,
+      "error_mps": -0.6958814447576458,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 17.365668164506644,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5058823823928833,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 87.98575834794478,
+      "rear_mass": 2.4196083545684814,
+      "error_mps": 1.5857583479447754,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 19.647307957209065,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5686274766921997,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 90.12479782104492,
+      "rear_mass": 2.4784319400787354,
+      "error_mps": 3.724797821044916,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 21.786347430309206,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.6274510025978088,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 90.12479782104492,
+      "rear_mass": 2.4784319400787354,
+      "error_mps": 3.724797821044916,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 21.786347430309206,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.6274510025978088,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 85.70411855524236,
+      "rear_mass": 2.356863260269165,
+      "error_mps": -0.6958814447576458,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 17.365668164506644,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5058823823928833,
+        0.5764706134796143,
+        0.5764706134796143,
+        0.5176470875740051,
+        0.18039216101169586
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 106.66668631813744,
+      "rear_mass": 2.9333338737487793,
+      "error_mps": -1.3333136818625633,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 38.32823592740172,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.6274510025978088,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 108.80572579123758,
+      "rear_mass": 2.992157459259033,
+      "error_mps": 0.8057257912375775,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 40.46727540050186,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.686274528503418,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 111.08736558394,
+      "rear_mass": 3.0549025535583496,
+      "error_mps": 3.0873655839399987,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 42.74891519320428,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.7490196228027344,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 111.08736558394,
+      "rear_mass": 3.0549025535583496,
+      "error_mps": 3.0873655839399987,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 42.74891519320428,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.7490196228027344,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 108.0,
+      "decoded_rear_speed_mps": 106.66668631813744,
+      "rear_mass": 2.9333338737487793,
+      "error_mps": -1.3333136818625633,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 38.32823592740172,
+      "true_mean_rear_excess_mps": 38.0,
+      "column_masses": [
+        0.6274510025978088,
+        0.7176470756530762,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 87.55795738913797,
+      "rear_mass": 2.407843828201294,
+      "error_mps": 1.1579573891379624,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 19.219506998402252,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.3803921639919281,
+        0.4392157196998596,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 89.98219750144266,
+      "rear_mass": 2.474510431289673,
+      "error_mps": 3.58219750144265,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 21.64374711070694,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.44705885648727417,
+        0.4392157196998596,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 92.12123697454278,
+      "rear_mass": 2.5333340167999268,
+      "error_mps": 5.7212369745427765,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 23.782786583807066,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5058823823928833,
+        0.4392157196998596,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 92.12123697454278,
+      "rear_mass": 2.5333340167999268,
+      "error_mps": 5.7212369745427765,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 23.782786583807066,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.5058823823928833,
+        0.4392157196998596,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 87.55795738913797,
+      "rear_mass": 2.407843828201294,
+      "error_mps": 1.1579573891379624,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 19.219506998402252,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.3803921639919281,
+        0.4392157196998596,
+        0.7176470756530762,
+        0.6431372761726379,
+        0.22745098173618317
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 84.84850796786222,
+      "rear_mass": 2.333333969116211,
+      "error_mps": -1.5514920321377872,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 16.510057577126503,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.6274510025978088,
+        0.7176470756530762,
+        0.458823561668396,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 86.98753877119584,
+      "rear_mass": 2.3921573162078857,
+      "error_mps": 0.5875387711958382,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 18.649088380460128,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.686274528503418,
+        0.7176470756530762,
+        0.458823561668396,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 89.26917856389825,
+      "rear_mass": 2.454902410507202,
+      "error_mps": 2.869178563898245,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 20.930728173162535,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.7490196228027344,
+        0.7176470756530762,
+        0.458823561668396,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 89.26917856389825,
+      "rear_mass": 2.454902410507202,
+      "error_mps": 2.869178563898245,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 20.930728173162535,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.7490196228027344,
+        0.7176470756530762,
+        0.458823561668396,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 84.84850796786222,
+      "rear_mass": 2.333333969116211,
+      "error_mps": -1.5514920321377872,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 16.510057577126503,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.6274510025978088,
+        0.7176470756530762,
+        0.458823561668396,
+        0.3921568989753723,
+        0.13725490868091583
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 90.55260744961825,
+      "rear_mass": 2.490196704864502,
+      "error_mps": 4.152607449618245,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 22.214157058882535,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.25882354378700256,
+        0.3019607961177826,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 93.11945655129173,
+      "rear_mass": 2.5607850551605225,
+      "error_mps": 6.719456551291728,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 24.781006160556018,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.3294117748737335,
+        0.3019607961177826,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 95.25848735462534,
+      "rear_mass": 2.6196084022521973,
+      "error_mps": 8.858487354625339,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 26.92003696388963,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.38823533058166504,
+        0.3019607961177826,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 95.25848735462534,
+      "rear_mass": 2.6196084022521973,
+      "error_mps": 8.858487354625339,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 26.92003696388963,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.38823533058166504,
+        0.3019607961177826,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 90.55260744961825,
+      "rear_mass": 2.490196704864502,
+      "error_mps": 4.152607449618245,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 22.214157058882535,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.25882354378700256,
+        0.3019607961177826,
+        0.8666666746139526,
+        0.7843137383460999,
+        0.27843138575553894
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 84.56329865889116,
+      "rear_mass": 2.325490713119507,
+      "error_mps": -1.8367013411088493,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 16.22484826815544,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.7607843279838562,
+        0.8666666746139526,
+        0.34117648005485535,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 86.7023381319913,
+      "rear_mass": 2.3843142986297607,
+      "error_mps": 0.30233813199129145,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 18.36388774125558,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.8196078538894653,
+        0.8666666746139526,
+        0.34117648005485535,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 88.98397792469372,
+      "rear_mass": 2.447059392929077,
+      "error_mps": 2.5839779246937127,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 20.645527533958003,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.8823529481887817,
+        0.8666666746139526,
+        0.34117648005485535,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 88.98397792469372,
+      "rear_mass": 2.447059392929077,
+      "error_mps": 2.5839779246937127,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 20.645527533958003,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.8823529481887817,
+        0.8666666746139526,
+        0.34117648005485535,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "body_speed_mps": 70.0,
+      "true_mean_rear_rolling_mps": 86.4,
+      "decoded_rear_speed_mps": 84.56329865889116,
+      "rear_mass": 2.325490713119507,
+      "error_mps": -1.8367013411088493,
+      "decoded_body_speed_mps": 68.33845039073572,
+      "decoded_slip_excess_mps": 16.22484826815544,
+      "true_mean_rear_excess_mps": 16.400000000000006,
+      "column_masses": [
+        0.7607843279838562,
+        0.8666666746139526,
+        0.34117648005485535,
+        0.26274511218070984,
+        0.0941176488995552
+      ]
+    }
+  ],
+  "front_bleed_effects": [
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "max_front_omega_change_effect_mps": 4.705882614309138
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "max_front_omega_change_effect_mps": 4.7058799050070945
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        120.0
+      ],
+      "max_front_omega_change_effect_mps": 4.563283920288086
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "max_front_omega_change_effect_mps": 4.563279585404814
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "max_front_omega_change_effect_mps": 4.420679265802562
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "max_front_omega_change_effect_mps": 4.420670596036032
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "max_front_omega_change_effect_mps": 4.420679265802562
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "max_front_omega_change_effect_mps": 4.420679265802562
+    }
+  ],
+  "dense_equal_rear_range_summary": {
+    "omega0_to_300": {
+      "case_count": 301,
+      "bias_mps": 3.3297280391441353,
+      "min_error_mps": 0.3684667413884881,
+      "max_error_mps": 6.732727922959761,
+      "max_absolute_error_mps": 6.732727922959761,
+      "true_rolling_speed_range_mps": [
+        0.0,
+        162.0
+      ]
+    },
+    "omega120_to_200": {
+      "case_count": 81,
+      "bias_mps": 2.321657869657949,
+      "min_error_mps": 0.3684667413884881,
+      "max_error_mps": 4.259476103349158,
+      "max_absolute_error_mps": 4.259476103349158,
+      "true_rolling_speed_range_mps": [
+        64.80000000000001,
+        108.0
+      ]
+    },
+    "omega130_to_210": {
+      "case_count": 81,
+      "bias_mps": 2.1715435207893545,
+      "min_error_mps": 0.3684667413884881,
+      "max_error_mps": 4.135778961181643,
+      "max_absolute_error_mps": 4.135778961181643,
+      "true_rolling_speed_range_mps": [
+        70.2,
+        113.4
+      ]
+    },
+    "omega200_to_300": {
+      "case_count": 101,
+      "bias_mps": 2.731438644505317,
+      "min_error_mps": 0.3779161626642491,
+      "max_error_mps": 4.8186622758345266,
+      "max_absolute_error_mps": 4.8186622758345266,
+      "true_rolling_speed_range_mps": [
+        108.0,
+        162.0
+      ]
+    },
+    "omega300_to_400": {
+      "case_count": 101,
+      "bias_mps": -1.0781365436653567,
+      "min_error_mps": -12.791423450816751,
+      "max_error_mps": 3.8960207297585328,
+      "max_absolute_error_mps": 12.791423450816751,
+      "true_rolling_speed_range_mps": [
+        162.0,
+        216.0
+      ]
+    }
+  },
+  "dense_omega_grid": {
+    "minimum": 0,
+    "maximum": 400,
+    "step": 1
+  },
+  "operating_range_equal_raster_plateaus": [
+    {
+      "omega_interval_radps": [
+        121,
+        125
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 69.44742636247115
+    },
+    {
+      "omega_interval_radps": [
+        126,
+        130
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 72.29947610334916
+    },
+    {
+      "omega_interval_radps": [
+        131,
+        135
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 74.8663295399059
+    },
+    {
+      "omega_interval_radps": [
+        136,
+        140
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 77.57577896118164
+    },
+    {
+      "omega_interval_radps": [
+        141,
+        145
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 80.1426193930886
+    },
+    {
+      "omega_interval_radps": [
+        146,
+        150
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 82.42425918579103
+    },
+    {
+      "omega_interval_radps": [
+        151,
+        155
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 84.70589897849344
+    },
+    {
+      "omega_interval_radps": [
+        156,
+        160
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 87.41535706953569
+    },
+    {
+      "omega_interval_radps": [
+        161,
+        165
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 89.98219750144266
+    },
+    {
+      "omega_interval_radps": [
+        166,
+        170
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 93.11944788152522
+    },
+    {
+      "omega_interval_radps": [
+        171,
+        175
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 95.6862969831987
+    },
+    {
+      "omega_interval_radps": [
+        176,
+        180
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 98.11053709550337
+    },
+    {
+      "omega_interval_radps": [
+        181,
+        185
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 100.81998651677912
+    },
+    {
+      "omega_interval_radps": [
+        186,
+        190
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 103.2442266290838
+    },
+    {
+      "omega_interval_radps": [
+        191,
+        195
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 105.6684667413885
+    },
+    {
+      "omega_interval_radps": [
+        196,
+        200
+      ],
+      "true_speed_span_mps": 2.16,
+      "decoded_rear_speed_mps": 108.37791616266425
+    }
+  ],
+  "operating_range_max_equal_raster_true_speed_span_mps": 2.16,
+  "operating_range_slip_error_at_body70_mps": {
+    "min": 2.0300163506527724,
+    "max": 5.921025712613442,
+    "max_abs": 5.921025712613442
+  },
+  "tire_force_constants": {
+    "slip_stiffness_N_per_mps": 82.0,
+    "friction_limit_N_per_tire": 400.0,
+    "body_mass_kg": 7.3019199669361115,
+    "maximum_zero_lateral_slip_budget_mps": 4.878048780487805
+  },
+  "behavioral_checks": [
+    "Rear measurement monotonic at requested eight checkpoints.",
+    "All rendered measurements finite; zero frame decodes zero.",
+    "Body speed changes0/70/100 do not alter fixed rear160 meter."
+  ],
+  "limits": [
+    "Synthetic stationary HUD only, not dynamic tire control validation.",
+    "Integer omega sampling understates continuous raster plateau span.",
+    "Pooled rear bars do not resolve each rear wheel separately.",
+    "Dense error bounds apply only to sampled omega range and front160 configuration.",
+    "Sensor calibration does not validate a torque formula that failed dynamics."
+  ]
+}

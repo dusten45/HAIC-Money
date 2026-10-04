@@ -1,0 +1,949 @@
+{
+  "classification": "privileged_stationary_individual_rear_bar_column_calibration",
+  "is_legal_camera_candidate": false,
+  "is_driving_episode": false,
+  "world_steps": 0,
+  "source_sha256": "218c2023896cb178f71d2d789e375729952e725b190e8104d225a8cd713a463f",
+  "hud_helper_sha256": "1b55a86f460c78a27ca23e4c222bf71f264cb35dec05836a1ff5093eb3988f6a",
+  "official_file_sha256": {
+    "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+    "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+    "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+    "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+    "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58"
+  },
+  "render_count": 250,
+  "formula": "(mass_columns20_22-intercept) @ inverse_response_matrix * .54",
+  "mass_roi": "frame[74:83,[20,22]].sum(axis=0)",
+  "fit_omega_grid": {
+    "start": 80,
+    "stop_inclusive": 250,
+    "step": 17
+  },
+  "response_matrix": [
+    [
+      0.0035398973819406303,
+      6.917283713172903e-19
+    ],
+    [
+      -2.7376104855258987e-18,
+      0.003233721294505073
+    ]
+  ],
+  "intercept": [
+    0.020195027723669583,
+    0.00796898243261536
+  ],
+  "inverse_response_matrix": [
+    [
+      282.49406468720383,
+      -6.042857175259085e-14
+    ],
+    [
+      2.3915441163734697e-13,
+      309.2412452796282
+    ]
+  ],
+  "response_matrix_condition_number": 1.0946822745534155,
+  "dense_equal_omega_validation_range": [
+    120,
+    200
+  ],
+  "dense_equal_omega_mean_error_mps": {
+    "min": -1.8747837960892184,
+    "max": 1.3094089260026749,
+    "max_absolute": 1.8747837960892184
+  },
+  "dense_equal_omega_max_individual_error_mps": 1.9330735761173372,
+  "max_front_change_effect_mps": 0.0,
+  "validation_cases": [
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "true_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "mean_error_mps": 0.0
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "true_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "mean_error_mps": 0.0
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "true_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "mean_error_mps": 0.0
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "true_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "mean_error_mps": 0.0
+    },
+    {
+      "rear_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "true_per_rear_speed_mps": [
+        0.0,
+        0.0
+      ],
+      "mean_error_mps": 0.0
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        63.92025902452664,
+        106.06692642388266
+      ],
+      "true_per_rear_speed_mps": [
+        64.80000000000001,
+        108.0
+      ],
+      "mean_error_mps": -1.4064072757953454
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        63.92025902452664,
+        106.06692642388266
+      ],
+      "true_per_rear_speed_mps": [
+        64.80000000000001,
+        108.0
+      ],
+      "mean_error_mps": -1.4064072757953454
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        63.92025902452664,
+        106.06692642388266
+      ],
+      "true_per_rear_speed_mps": [
+        64.80000000000001,
+        108.0
+      ],
+      "mean_error_mps": -1.4064072757953454
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        63.92025902452664,
+        106.06692642388266
+      ],
+      "true_per_rear_speed_mps": [
+        64.80000000000001,
+        108.0
+      ],
+      "mean_error_mps": -1.4064072757953454
+    },
+    {
+      "rear_omega_radps": [
+        120.0,
+        200.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        63.92025902452664,
+        106.06692642388266
+      ],
+      "true_per_rear_speed_mps": [
+        64.80000000000001,
+        108.0
+      ],
+      "mean_error_mps": -1.4064072757953454
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        106.39407452975605,
+        64.15563987915878
+      ],
+      "true_per_rear_speed_mps": [
+        108.0,
+        64.80000000000001
+      ],
+      "mean_error_mps": -1.1251427955425868
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        106.39407452975605,
+        64.15563987915878
+      ],
+      "true_per_rear_speed_mps": [
+        108.0,
+        64.80000000000001
+      ],
+      "mean_error_mps": -1.1251427955425868
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        106.39407452975605,
+        64.15563987915878
+      ],
+      "true_per_rear_speed_mps": [
+        108.0,
+        64.80000000000001
+      ],
+      "mean_error_mps": -1.1251427955425868
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        106.39407452975605,
+        64.15563987915878
+      ],
+      "true_per_rear_speed_mps": [
+        108.0,
+        64.80000000000001
+      ],
+      "mean_error_mps": -1.1251427955425868
+    },
+    {
+      "rear_omega_radps": [
+        200.0,
+        120.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        106.39407452975605,
+        64.15563987915878
+      ],
+      "true_per_rear_speed_mps": [
+        108.0,
+        64.80000000000001
+      ],
+      "mean_error_mps": -1.1251427955425868
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        42.98246488981788,
+        129.64202230589726
+      ],
+      "true_per_rear_speed_mps": [
+        43.2,
+        129.60000000000002
+      ],
+      "mean_error_mps": -0.08775640214244618
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        42.98246488981788,
+        129.64202230589726
+      ],
+      "true_per_rear_speed_mps": [
+        43.2,
+        129.60000000000002
+      ],
+      "mean_error_mps": -0.08775640214244618
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        42.98246488981788,
+        129.64202230589726
+      ],
+      "true_per_rear_speed_mps": [
+        43.2,
+        129.60000000000002
+      ],
+      "mean_error_mps": -0.08775640214244618
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        42.98246488981788,
+        129.64202230589726
+      ],
+      "true_per_rear_speed_mps": [
+        43.2,
+        129.60000000000002
+      ],
+      "mean_error_mps": -0.08775640214244618
+    },
+    {
+      "rear_omega_radps": [
+        80.0,
+        240.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        42.98246488981788,
+        129.64202230589726
+      ],
+      "true_per_rear_speed_mps": [
+        43.2,
+        129.60000000000002
+      ],
+      "mean_error_mps": -0.08775640214244618
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        129.12653673315415,
+        42.5451353206454
+      ],
+      "true_per_rear_speed_mps": [
+        129.60000000000002,
+        43.2
+      ],
+      "mean_error_mps": -0.5641639731002215
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        129.12653673315415,
+        42.5451353206454
+      ],
+      "true_per_rear_speed_mps": [
+        129.60000000000002,
+        43.2
+      ],
+      "mean_error_mps": -0.5641639731002215
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        129.12653673315415,
+        42.5451353206454
+      ],
+      "true_per_rear_speed_mps": [
+        129.60000000000002,
+        43.2
+      ],
+      "mean_error_mps": -0.5641639731002215
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        129.12653673315415,
+        42.5451353206454
+      ],
+      "true_per_rear_speed_mps": [
+        129.60000000000002,
+        43.2
+      ],
+      "mean_error_mps": -0.5641639731002215
+    },
+    {
+      "rear_omega_radps": [
+        240.0,
+        80.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        129.12653673315415,
+        42.5451353206454
+      ],
+      "true_per_rear_speed_mps": [
+        129.60000000000002,
+        43.2
+      ],
+      "mean_error_mps": -0.5641639731002215
+    },
+    {
+      "rear_omega_radps": [
+        130.0,
+        180.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        69.30426777684336,
+        95.58910603187618
+      ],
+      "true_per_rear_speed_mps": [
+        70.2,
+        97.2
+      ],
+      "mean_error_mps": -1.2533130956402232
+    },
+    {
+      "rear_omega_radps": [
+        130.0,
+        180.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        69.30426777684336,
+        95.58910603187618
+      ],
+      "true_per_rear_speed_mps": [
+        70.2,
+        97.2
+      ],
+      "mean_error_mps": -1.2533130956402232
+    },
+    {
+      "rear_omega_radps": [
+        130.0,
+        180.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        69.30426777684336,
+        95.58910603187618
+      ],
+      "true_per_rear_speed_mps": [
+        70.2,
+        97.2
+      ],
+      "mean_error_mps": -1.2533130956402232
+    },
+    {
+      "rear_omega_radps": [
+        130.0,
+        180.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        69.30426777684336,
+        95.58910603187618
+      ],
+      "true_per_rear_speed_mps": [
+        70.2,
+        97.2
+      ],
+      "mean_error_mps": -1.2533130956402232
+    },
+    {
+      "rear_omega_radps": [
+        130.0,
+        180.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        69.30426777684336,
+        95.58910603187618
+      ],
+      "true_per_rear_speed_mps": [
+        70.2,
+        97.2
+      ],
+      "mean_error_mps": -1.2533130956402232
+    },
+    {
+      "rear_omega_radps": [
+        180.0,
+        130.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        95.62606611762011,
+        69.39455007516203
+      ],
+      "true_per_rear_speed_mps": [
+        97.2,
+        70.2
+      ],
+      "mean_error_mps": -1.1896919036089315
+    },
+    {
+      "rear_omega_radps": [
+        180.0,
+        130.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        95.62606611762011,
+        69.39455007516203
+      ],
+      "true_per_rear_speed_mps": [
+        97.2,
+        70.2
+      ],
+      "mean_error_mps": -1.1896919036089315
+    },
+    {
+      "rear_omega_radps": [
+        180.0,
+        130.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        95.62606611762011,
+        69.39455007516203
+      ],
+      "true_per_rear_speed_mps": [
+        97.2,
+        70.2
+      ],
+      "mean_error_mps": -1.1896919036089315
+    },
+    {
+      "rear_omega_radps": [
+        180.0,
+        130.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        95.62606611762011,
+        69.39455007516203
+      ],
+      "true_per_rear_speed_mps": [
+        97.2,
+        70.2
+      ],
+      "mean_error_mps": -1.1896919036089315
+    },
+    {
+      "rear_omega_radps": [
+        180.0,
+        130.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        95.62606611762011,
+        69.39455007516203
+      ],
+      "true_per_rear_speed_mps": [
+        97.2,
+        70.2
+      ],
+      "mean_error_mps": -1.1896919036089315
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        84.85805770548419,
+        85.11128563986969
+      ],
+      "true_per_rear_speed_mps": [
+        86.4,
+        86.4
+      ],
+      "mean_error_mps": -1.415328327323067
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        200.0,
+        200.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        84.85805770548419,
+        85.11128563986969
+      ],
+      "true_per_rear_speed_mps": [
+        86.4,
+        86.4
+      ],
+      "mean_error_mps": -1.415328327323067
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        84.85805770548419,
+        85.11128563986969
+      ],
+      "true_per_rear_speed_mps": [
+        86.4,
+        86.4
+      ],
+      "mean_error_mps": -1.415328327323067
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        0.0,
+        400.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        84.85805770548419,
+        85.11128563986969
+      ],
+      "true_per_rear_speed_mps": [
+        86.4,
+        86.4
+      ],
+      "mean_error_mps": -1.415328327323067
+    },
+    {
+      "rear_omega_radps": [
+        160.0,
+        160.0
+      ],
+      "front_omega_radps": [
+        400.0,
+        0.0
+      ],
+      "decoded_per_rear_speed_mps": [
+        84.85805770548419,
+        85.11128563986969
+      ],
+      "true_per_rear_speed_mps": [
+        86.4,
+        86.4
+      ],
+      "mean_error_mps": -1.415328327323067
+    }
+  ],
+  "equal_raster_plateaus": [
+    {
+      "omega_interval_radps": [
+        121,
+        125
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        126,
+        130
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        131,
+        135
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        136,
+        140
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        141,
+        145
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        146,
+        150
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        151,
+        155
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        156,
+        160
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        161,
+        165
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        166,
+        170
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        171,
+        175
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        176,
+        180
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        181,
+        185
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        186,
+        190
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        191,
+        195
+      ],
+      "true_speed_span_mps": 2.16
+    },
+    {
+      "omega_interval_radps": [
+        196,
+        200
+      ],
+      "true_speed_span_mps": 2.16
+    }
+  ],
+  "max_sampled_equal_raster_speed_span_mps": 2.16,
+  "behavioral_checks_passed": [
+    "New-state mean/individual error<2m/s over omega120..200.",
+    "Front0/200/400 changes do not affect isolated bar columns.",
+    "Swapped rear120/200 mean difference<.5m/s.",
+    "Zero frame decodes zero and response matrix is well-conditioned."
+  ],
+  "limits": [
+    "Only stationary synthetic HUD raster, no torque or tire-control test.",
+    "Discrete omega grid understates continuous raster plateau width.",
+    "HUD body-speed error remains when subtracting wheel and body gauges.",
+    "Fit limits apply to sampled rear omega/raster resolution, not clipped bars.",
+    "A failed dynamics torque formula is not validated by this calibration."
+  ]
+}

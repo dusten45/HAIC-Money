@@ -1,0 +1,169 @@
+{
+  "hashes": {
+    "source_sha256": "ebd35e2b49a73ea5d8f986d78fc9b696f36fde8269910ecf7a7db9b6c9a64ff3",
+    "geometry_sha256": "e28920c96c4ef0f3a081d16cd5aea7b560511fa87932a8a2c2b14936989f750c",
+    "helper_sha256": {
+      "/workspace/HAIC-Money/agents/apex_2026/research/speed_20261005/physics_racingline.py": "9db679c650cda19a1a41d60d02cbdfd3eacb565c259ca99dfac1783f0561fb57",
+      "/workspace/HAIC-Money/agents/apex_2026/research/speed_20261005/physics_racingline_refine.py": "3d58aa1a6c42007b0854926a825ec08d08a87374497a7fb07724024869695003",
+      "/workspace/HAIC-Money/agents/apex_2026/research/speed_20261005/physics_racingline_timepoint.py": "f815728cfb90515dc03e49c3284bf9b17f3868df63df1151eefb9c9be8158ac3"
+    }
+  },
+  "row": {
+    "track_id": 1,
+    "seed": 516237,
+    "obstacle_specs": [
+      {
+        "road_index": 36,
+        "lateral_m": -1.8607307967930353,
+        "eligible_sides": [
+          1
+        ]
+      },
+      {
+        "road_index": 59,
+        "lateral_m": -2.968470282411395,
+        "eligible_sides": [
+          1
+        ]
+      },
+      {
+        "road_index": 85,
+        "lateral_m": 1.107205951164565,
+        "eligible_sides": [
+          -1
+        ]
+      },
+      {
+        "road_index": 206,
+        "lateral_m": 2.4285845518715985,
+        "eligible_sides": [
+          -1
+        ]
+      },
+      {
+        "road_index": 229,
+        "lateral_m": 1.5714932398456902,
+        "eligible_sides": [
+          -1
+        ]
+      },
+      {
+        "road_index": 250,
+        "lateral_m": 0.8582490324344327,
+        "eligible_sides": [
+          -1,
+          1
+        ]
+      }
+    ],
+    "families_considered": 2,
+    "best": {
+      "track_id": 1,
+      "seed": 516237,
+      "model_time_s": 12.021426398105444,
+      "prior_curvature_model_time_s": 12.31512674805337,
+      "route_length_m": 966.5473440081153,
+      "maximum_abs_offset_m": 4.8,
+      "minimum_obstacle_center_clearance_m": 3.6999999999999975,
+      "obstacle_center_clearances_m": [
+        6.654882686408376,
+        7.680401497785425,
+        3.7278116033395654,
+        3.6999999999999975,
+        3.7002366710222576,
+        3.996107867622688
+      ],
+      "max_abs_curvature_per_m": 0.08748717492479165,
+      "solver_success": true,
+      "solver_message": "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH",
+      "solver_iterations": 169,
+      "solver_evaluations": 289,
+      "solver_wall_time_s": 3.426022509000177,
+      "sides": [
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "curvature_model_time_s": 12.31512674805337,
+      "curvature_solver_success": true,
+      "full_trial_canonical_sha256": "0f63c1610113ac88fd25ebed1e08306333749b881b7a1ce36fa63b735f26a120"
+    },
+    "trials": [
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "model_time_s": 12.021426398105444,
+        "prior_curvature_model_time_s": 12.31512674805337,
+        "route_length_m": 966.5473440081153,
+        "maximum_abs_offset_m": 4.8,
+        "minimum_obstacle_center_clearance_m": 3.6999999999999975,
+        "obstacle_center_clearances_m": [
+          6.654882686408376,
+          7.680401497785425,
+          3.7278116033395654,
+          3.6999999999999975,
+          3.7002366710222576,
+          3.996107867622688
+        ],
+        "max_abs_curvature_per_m": 0.08748717492479165,
+        "solver_success": true,
+        "solver_message": "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH",
+        "solver_iterations": 169,
+        "solver_evaluations": 289,
+        "solver_wall_time_s": 3.426022509000177,
+        "sides": [
+          1,
+          1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "curvature_model_time_s": 12.31512674805337,
+        "curvature_solver_success": true,
+        "full_trial_canonical_sha256": "0f63c1610113ac88fd25ebed1e08306333749b881b7a1ce36fa63b735f26a120"
+      },
+      {
+        "track_id": 1,
+        "seed": 516237,
+        "model_time_s": 12.0530354765684,
+        "prior_curvature_model_time_s": 12.259490082729611,
+        "route_length_m": 968.3393996847516,
+        "maximum_abs_offset_m": 4.8,
+        "minimum_obstacle_center_clearance_m": 3.7109961709914976,
+        "obstacle_center_clearances_m": [
+          6.6548707355442005,
+          7.680380919918199,
+          3.728055090728063,
+          3.7109961709914976,
+          3.7757643067873023,
+          3.7924952617563927
+        ],
+        "max_abs_curvature_per_m": 0.09510031347061709,
+        "solver_success": true,
+        "solver_message": "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH",
+        "solver_iterations": 73,
+        "solver_evaluations": 144,
+        "solver_wall_time_s": 1.702455591999751,
+        "sides": [
+          1,
+          1,
+          -1,
+          -1,
+          -1,
+          1
+        ],
+        "curvature_model_time_s": 12.259490082729611,
+        "curvature_solver_success": true,
+        "full_trial_canonical_sha256": "c3a71474abe02e5cc9171abe0bbe74a0a686cc1a7b460aa0fc2fa4116e74563d"
+      }
+    ]
+  },
+  "raw_report_path": ".haic-artifacts/apex-speed-20261005/physics-racingline-sides-v1-track1.json",
+  "raw_report_sha256": "91c18b2c26d20f7e04975ee1c343f33274739f8c8115b58cbc732fc4a48b8614",
+  "raw_report_bytes": 146849,
+  "compaction": "Full trial coordinates preserved byte-exact in ignored raw report; tracked final report retains best route only."
+}
