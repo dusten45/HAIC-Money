@@ -37,6 +37,9 @@ targets are `(1,516237)`, `(2,644062)` and `(3,1007)`, aiming at 10–13 seconds
   distinct study with unused geometries may permit one total lost finish,
   nonnegative net finishes and combined pace ratio at most 1.00. All other
   floors stay fixed. Never rescore already-opened data under weaker gates.
+- Progress is completion-aware: a valid official finish (raw progress at
+  least 0.95) scores 1.0; a DNF retains raw progress. Also report raw means.
+  This definition is fixed before the first V5 binding.
 - Bound retained implementation revisions to two and fresh studies to two.
   Aim for 60 minutes, allow at most 90 minutes for completed verification and
   packaging. Retain current V4 if no new candidate verifies; preserve useful
@@ -64,3 +67,19 @@ braking; obstacles or remembered hazards blocking clear-road acceleration;
 reset and invalid-camera state; preserving explicit neural export routes;
 speed ratios on common finishes rather than unmatched lap averages; immutable
 fresh thresholds and exact promoted/package source identity.
+
+## Prospective bounded-time relaxation before V5 binding
+
+Complete source-bound propulsion and target-76 probes missed the 13-second
+target (three-map ratios 0.921758 and 0.871770); the two preview revisions
+also missed a 20% aggregate gain (best ratio 0.864525). The unrestricted
+propulsion probe additionally lost four of the control's 26 consumed-screen
+finishes and increased contacts 15 to 24, so it is rejected for safety.
+The localized production candidate therefore uses a further prospective
+development pace floor of 3% aggregate improvement, with no individual target
+slowdown. Preserve all existing development completion and aggregate safety
+floors. Use the already-preregistered fallback fresh profile (combined time
+ratio at most 1.00, all other stated floors) only with two committed exact
+source/report failure proofs. No V5 geometry has been bound or opened yet.
+Actual target laps must still be reported; this does not establish the
+requested low-teens performance.
