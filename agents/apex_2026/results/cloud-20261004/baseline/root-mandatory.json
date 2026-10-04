@@ -1,0 +1,137 @@
+{
+  "freeze": {
+    "source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+    "parameters": {},
+    "suite": "mandatory",
+    "trial_role": "benchmark",
+    "environment_sha256": {
+      "env_wrapper.py": "8687215412da0a1f34534623d5050030d85c629a70cb922e9d2199c513a3941e",
+      "damage.py": "b74d15bd2de623cea1345e0469625d4b58f1634d073151a35edf1f05ea35fa30",
+      "core/track_variables.py": "cd28fdfc79f12614262f61b1ac13d670d03fad940d753a2ec185390617c0ed58",
+      "core/vendor/car_racing.py": "fcd3c36087d7b2721efcd27538b2c9576fa48a77b276ca17c2185b410b0a8c69",
+      "core/vendor/car_dynamics.py": "8c5bc529d6dd60f5f1affeafadc9036f9cb53db98da658a80db77cdc5c26fece",
+      "core/finish_line.py": "7c16dda1378dcd65aed46d9da96608aa055124c2f27d8fb00c309078361d4204",
+      "core/obstacle_contacts.py": "5cd59eedfc4091f82c49a55e5d243412b8a22fc52050c86a16c88691ca342806",
+      "local_simulator/environment.py": "c48968f4eb7b8535f7422da77f75d0e3c5aaa08d6539a4049709eba2e2155b8f",
+      "local_simulator/schema.py": "188b42f7ef81d9ba8c16a056727668d7466361e9ec3fc63f59df227fac6d5fe6",
+      "local_simulator/custom_environment.py": "13e7efb77ae4479571f8ad947db93a0806b6ef2240f831e40c9cd72933065233",
+      "agents/apex_2026/evaluate.py": "743f2cf0b9a488bfaa5851b442535561cbb80ed9c1c6104d4da3c3ef4cb4a5c9"
+    },
+    "cells": [
+      [
+        1,
+        516237
+      ],
+      [
+        2,
+        644062
+      ],
+      [
+        3,
+        1007
+      ],
+      [
+        4,
+        18800
+      ]
+    ],
+    "max_steps": 2000,
+    "selected_profile_seconds": 13,
+    "consecutive_rejections": 0,
+    "prior_receipts": [],
+    "runtime_versions": {
+      "numpy": "1.26.0",
+      "gymnasium": "0.29.1",
+      "torch": "2.1.0",
+      "opencv-python": "4.8.1.78"
+    },
+    "python_version": "3.11.16 (main, Sep 24 2026, 17:56:40) [Clang 22.1.3 ]"
+  },
+  "rows": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lap_time_ms": 23980,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 300,
+      "initialization_ms": 2127.9152679999243,
+      "reset_ms": 0.10754100003396161,
+      "action_latency_max_ms": 75.84068399955868,
+      "peak_worker_rss_mib": 468.65625,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+      "parameters": {},
+      "action_trace_sha256": "54698abd580665259f82fa4d6fab3fc5206f0d189183e9401b33576ea575e763",
+      "error": null
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lap_time_ms": 31000,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 388,
+      "initialization_ms": 1108.8917339984619,
+      "reset_ms": 0.1018920011119917,
+      "action_latency_max_ms": 54.955891999270534,
+      "peak_worker_rss_mib": 468.73828125,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+      "parameters": {},
+      "action_trace_sha256": "bfa851f2d3fbc126f12a619427e12214de12f3b801e0d108255b17efe9817a50",
+      "error": null
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lap_time_ms": 27840,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 349,
+      "initialization_ms": 1077.14314900295,
+      "reset_ms": 0.10233200009679422,
+      "action_latency_max_ms": 63.710207999974955,
+      "peak_worker_rss_mib": 469.296875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 0,
+      "source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+      "parameters": {},
+      "action_trace_sha256": "fb85f4a109217bd19cf9a8809b4f13dacfa624314cd168ab7b15425facaea2c4",
+      "error": null
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lap_time_ms": 24820,
+      "progress": 1.0,
+      "collision_count": 0,
+      "damage": 0.0,
+      "retire_reason": null,
+      "steps": 311,
+      "initialization_ms": 1125.78344099893,
+      "reset_ms": 0.10673999713617377,
+      "action_latency_max_ms": 49.9645199997758,
+      "peak_worker_rss_mib": 469.1171875,
+      "offtrack_samples": 0,
+      "partial_offtrack_samples": 1,
+      "source_sha256": "2b2248f0d8fc2d35eddf20a6b9cca0302b95a428c04a3459b564ec6e2181c988",
+      "parameters": {},
+      "action_trace_sha256": "3a4628d2cd10f5ff4527caf6924c32a9096fe591d12691231ceedf3e4aff74d7",
+      "error": null
+    }
+  ],
+  "screen_passed": false
+}
