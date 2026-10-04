@@ -1,0 +1,31 @@
+{
+  "scope": "Synthetic public HUD, zero environment resets; independently sampled test speeds and scene backgrounds.",
+  "train_count": 1401,
+  "test_count": 1000,
+  "speed_domain": [
+    0,
+    140
+  ],
+  "crop": [
+    74,
+    83,
+    10,
+    13
+  ],
+  "coefficients": [
+    11.426880974069949,
+    -2.8567432419448333
+  ],
+  "old": {
+    "mae": 2.6234203300366707,
+    "bias": -0.28917589256221127,
+    "rmse": 4.741021670875462,
+    "maximum": 21.089703788302486
+  },
+  "calibrated": {
+    "mae": 0.7813792837386578,
+    "bias": 0.09793622007211308,
+    "rmse": 0.9559465170539374,
+    "maximum": 2.7386276666724427
+  }
+}
