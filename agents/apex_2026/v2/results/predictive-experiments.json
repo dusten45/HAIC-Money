@@ -1,0 +1,146 @@
+{
+  "protocol": "apex-2026-structural-v2",
+  "variants": [
+    {
+      "variant": "predictive-r0",
+      "source_sha256": "bc9c1fbe8a4bca8f7beff3c06dcdcf3bac00d1923d612e36c1d5e089cdf6e5d6",
+      "source_archive": "agents/apex_2026/v2/results/predictive_sources/bc9c1fbe8a4b.py",
+      "config": {},
+      "hypothesis": "Pose-anchored joint steering/pedal brake-tail rollout with calibrated moving rolling model and footprint safety improves completion and speed.",
+      "tests": "6 focused tests passed before driving",
+      "episodes": [
+        {
+          "track_id": 1,
+          "seed": 516237,
+          "finished": true,
+          "finish_time_s": 25.21999999999955,
+          "progress": 0.9928571428571429,
+          "damage": 0.8,
+          "steps": 303,
+          "resource_eligible": true,
+          "inference_mean_s": 0.11079889692407859,
+          "inference_max_s": 0.22643558500021754,
+          "receipt": "/tmp/apex-v2-predictive-r0/t1.json",
+          "receipt_sha256": "d428b1923ddfcf8c8ba2844039421c483a75216efe78a78f55577fb5031e9aee",
+          "trace": "/tmp/apex-v2-predictive-r0/t1.jsonl",
+          "trace_sha256": "603e9c21732fa71fd406db5874f75d34d7154385b3ca56edcb130fdd8ffe5483",
+          "one_step_measured_residuals": {
+            "prediction_next_speed": {
+              "count": 296,
+              "mean_abs": 1.3770427542010661,
+              "p90_abs": 2.3086853776490095
+            },
+            "prediction_next_yaw": {
+              "count": 296,
+              "mean_abs": 0.24522283705637718,
+              "p90_abs": 0.5428865551948547
+            }
+          },
+          "start_t": 1.0200000000000005,
+          "lapTimeMs": 24200,
+          "lap_time_s": 24.2
+        },
+        {
+          "track_id": 2,
+          "seed": 644062,
+          "finished": true,
+          "finish_time_s": 25.879999999999537,
+          "progress": 1.0,
+          "damage": 0.0,
+          "steps": 311,
+          "resource_eligible": true,
+          "inference_mean_s": 0.109649750614121,
+          "inference_max_s": 0.21842600600029982,
+          "receipt": "/tmp/apex-v2-predictive-r0/t2.json",
+          "receipt_sha256": "500fb2aa8b4ac81e1690b3da5bc9cdb716e50cc96b905ba00adfba1282ef9385",
+          "trace": "/tmp/apex-v2-predictive-r0/t2.jsonl",
+          "trace_sha256": "3a375121c42e34516b192f6264393be697ff2da7e8cd4fef9b6036c7afed6ef4",
+          "one_step_measured_residuals": {
+            "prediction_next_speed": {
+              "count": 305,
+              "mean_abs": 1.0380317667283447,
+              "p90_abs": 2.032412578235662
+            },
+            "prediction_next_yaw": {
+              "count": 305,
+              "mean_abs": 0.15735506420863457,
+              "p90_abs": 0.39080388844013225
+            }
+          },
+          "start_t": 1.0200000000000005,
+          "lapTimeMs": 24860,
+          "lap_time_s": 24.86
+        },
+        {
+          "track_id": 3,
+          "seed": 1007,
+          "finished": true,
+          "finish_time_s": 26.079999999999533,
+          "progress": 1.0,
+          "damage": 0.0,
+          "steps": 314,
+          "resource_eligible": true,
+          "inference_mean_s": 0.08423755610192239,
+          "inference_max_s": 0.2344465730002412,
+          "receipt": "/tmp/apex-v2-predictive-r0/t3.json",
+          "receipt_sha256": "e24d6f475a1673171b45db28b2a26633337a40dd6acf93f829ec546780f3913e",
+          "trace": "/tmp/apex-v2-predictive-r0/t3.jsonl",
+          "trace_sha256": "98b63d6cf78bc543214b4d7fa9b8a779f598bf7eaefc404fefaf8bd51ce6cfa2",
+          "one_step_measured_residuals": {
+            "prediction_next_speed": {
+              "count": 307,
+              "mean_abs": 1.0086797348610566,
+              "p90_abs": 2.0713800405460345
+            },
+            "prediction_next_yaw": {
+              "count": 307,
+              "mean_abs": 0.13515520019813954,
+              "p90_abs": 0.31385220438241984
+            }
+          },
+          "start_t": 1.0200000000000005,
+          "lapTimeMs": 25060,
+          "lap_time_s": 25.06
+        },
+        {
+          "track_id": 4,
+          "seed": 18800,
+          "finished": false,
+          "finish_time_s": null,
+          "progress": 0.3835125448028674,
+          "damage": 0.2,
+          "steps": 241,
+          "resource_eligible": true,
+          "inference_mean_s": 0.06759059535688268,
+          "inference_max_s": 0.08525206100057403,
+          "receipt": "/tmp/apex-v2-predictive-r0/t4.json",
+          "receipt_sha256": "e9b85b8e52bb3c3e596d165f532cce551d9491576a14ef9ca92bdf1750fd7700",
+          "trace": "/tmp/apex-v2-predictive-r0/t4.jsonl",
+          "trace_sha256": "7efad71db25d06843fe568b215b67c80dac3ba000490822ebd4ee0408ee7a594",
+          "one_step_measured_residuals": {
+            "prediction_next_speed": {
+              "count": 229,
+              "mean_abs": 1.3785338052730283,
+              "p90_abs": 2.19089329988809
+            },
+            "prediction_next_yaw": {
+              "count": 229,
+              "mean_abs": 0.2429328525905837,
+              "p90_abs": 0.3441482275724416
+            }
+          },
+          "start_t": 1.0200000000000005,
+          "lapTimeMs": null,
+          "lap_time_s": null
+        }
+      ],
+      "finished_count": 3,
+      "decision": "rejected: required completion 3/4, slower completed laps; no regression24 or holdout resets",
+      "limitations": [
+        "Rolling model extrapolates outside calibrated wheel/speed domain; tire spin, RPM and saturation are approximated.",
+        "Safety cost is soft and model-dependent, not a guaranteed collision barrier.",
+        "Reference path remains row-monotone P1 path; footprint rollout is pose-anchored."
+      ]
+    }
+  ]
+}
