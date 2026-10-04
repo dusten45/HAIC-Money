@@ -19,15 +19,14 @@ class Agent:
         self.previous_steer = 0.0
         self.speed = 0.0
         self.last_diagnostics = {}
-        steer, pedal, profile = np.meshgrid(
-            np.linspace(-1.0, 1.0, 25), np.arange(6), np.arange(5),
+        steer, pedal, taper = np.meshgrid(
+            np.linspace(-1.0, 1.0, 25), np.arange(6), np.array([0.45, 1.0]),
             indexing='ij',
         )
         self.steers = steer.ravel()
         self.gases = np.array([1.0, 0.35, 0.1, 0.0, 0.0, 0.0])[pedal.ravel()]
         self.brakes = np.array([0.0, 0.0, 0.0, 0.0, 0.35, 0.8])[pedal.ravel()]
-        self.profiles = profile.ravel()
-        self.pulse_steps = np.array([0, 0, 3, 5, 8])[self.profiles]
+        self.tapers = taper.ravel()
         self.yy, self.xx = np.mgrid[:74, :84]
 
     def reset(self, observation=None):
@@ -152,9 +151,7 @@ class Agent:
         yaw_rate = np.full(n, measured_yaw)
         speed = np.full(n, self.speed)
         wheel = np.full(n, np.clip(self.previous_steer, -0.4, 0.4))
-        # A future steering reversal must not erase the traction cost of
-        # applying power during the measured present turn.
-        score = 0.02 * (self.gases * self.speed * measured_yaw) ** 2
+        score = np.zeros(n)
         active = np.ones(n, dtype=bool)
         minimum_clearance = np.full(n, 100.0)
         distance = np.zeros(n)
@@ -162,10 +159,7 @@ class Agent:
         start_cost = float(potential[63, 42])
         previous_cost = np.full(n, start_cost)
         for step in range(24):
-            simple = np.where(self.profiles == 0, 0.45 if step >= 8 else 1.0, 1.0)
-            pulse = np.where(step < self.pulse_steps, 1.0,
-                             np.where(step < 2 * self.pulse_steps, -1.0, 0.0))
-            steer = self.steers * np.where(self.profiles < 2, simple, pulse)
+            steer = self.steers * (1.0 if step < 8 else self.tapers)
             wheel += np.clip(np.clip(steer, -0.4, 0.4) - wheel, -0.12, 0.12)
             acceleration = self._acceleration(speed, self.gases, self.brakes)
             speed = np.maximum(0.0, speed + acceleration * dt)

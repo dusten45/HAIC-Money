@@ -179,3 +179,32 @@ def test_high_incoming_yaw_avoids_power_oversteer_at_low_speed():
     action = agent.act(np.stack([previous, previous, previous, current]))
     assert agent.last_diagnostics['yaw_rate'] > 2.0
     assert action[1] <= 0.36
+
+
+def test_horizontal_visible_road_aims_along_road_not_toward_top_edge():
+    action = load_agent().act(observation(((42, 83), (42, 63), (0, 63)), speed=0))
+    assert action[0] < -0.1
+    assert action[1] >= 0.09
+
+
+def test_horizontal_right_turn_has_mirrored_forward_action():
+    action = load_agent().act(observation(((42, 83), (42, 63), (83, 63)), speed=0))
+    assert action[0] > 0.1
+    assert action[1] >= 0.09
+
+
+def test_far_rear_road_does_not_override_clear_forward_road():
+    frame = observation()[-1]
+    cv2.line(frame, (0, 72), (83, 72), 0.4, 12)
+    frame[74:] = rendered_hud(0)[74:]
+    action = load_agent().act(np.stack([frame] * 4))
+    assert abs(action[0]) < 0.1
+    assert action[1] > 0.5
+
+
+def test_rollout_can_change_lane_before_distant_obstacle_without_hard_braking():
+    frame = observation(speed=40)[-1]
+    cv2.circle(frame, (42, 20), 1, 0.68, -1)
+    action = load_agent().act(np.stack([frame] * 4))
+    assert abs(action[0]) > 0.01
+    assert action[2] < 0.1
