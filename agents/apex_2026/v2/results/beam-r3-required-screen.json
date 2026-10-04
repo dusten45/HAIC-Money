@@ -1,0 +1,63 @@
+{
+  "status": "required_only_old_failure_cells_pending",
+  "source_sha256": "aef90410f8ad7f3f022a7c5a07c9ba87b997304964a63e5ca0601d8e60e7e8fa",
+  "required_finishes": 4,
+  "required_cells": 4,
+  "required_mean_ms": 15505.0,
+  "original10to13s_count": 0,
+  "hard_resource_eligible": 4,
+  "inference_max_s": 4.037592407001284,
+  "episodes": [
+    {
+      "track_id": 1,
+      "seed": 516237,
+      "finished": true,
+      "lapTimeMs": 14040,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 3.1181792200004566,
+      "peak_memory_mib": 97.9140625,
+      "act_timeout_count": 0
+    },
+    {
+      "track_id": 2,
+      "seed": 644062,
+      "finished": true,
+      "lapTimeMs": 17240,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 3.2097184590002144,
+      "peak_memory_mib": 97.16796875,
+      "act_timeout_count": 0
+    },
+    {
+      "track_id": 3,
+      "seed": 1007,
+      "finished": true,
+      "lapTimeMs": 15800,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 4.037592407001284,
+      "peak_memory_mib": 97.22265625,
+      "act_timeout_count": 0
+    },
+    {
+      "track_id": 4,
+      "seed": 18800,
+      "finished": true,
+      "lapTimeMs": 14940,
+      "damage": 0.0,
+      "resource_eligible": true,
+      "inference_max_s": 2.7035318430007464,
+      "peak_memory_mib": 97.30078125,
+      "act_timeout_count": 0
+    }
+  ],
+  "new_holdout_opened": false,
+  "adopted": false,
+  "limitations": [
+    "Consumed required cells only; two prespecified old failures are still running.",
+    "Approximate25point footprint can miss interior obstacles and does not enclose maximal-steered wheel; no full physical occupancy certificate.",
+    "RPM ambiguous diagnostic overflags normal positive bars; action computation does not use flag."
+  ]
+}

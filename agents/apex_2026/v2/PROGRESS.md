@@ -95,9 +95,16 @@ required mean18.28s do not yet establish full regression performance.
 
 Beam r3 ranks each action prefix using a feedback continuation to the same
 0.64s horizon, correcting a reproduced premature-pruning counterexample.
-Fresh required1–3 laps are14.04/17.24/15.80s, all damage-free and resource-eligible;
-the remaining screen cells are pending. These partial results are promising,
+Fresh required1–4 laps are14.04/17.24/15.80/14.94s, all damage-free and resource-eligible;
+mean15.505s is16.32% faster than P1. The two old-failure screen cells are pending.
+These partial results are promising,
 not original-target achievement or candidate selection. The largest measured
 action so far is4.038s against the5s hard limit. Sampled footprint, partially
 observed tire state and short horizon remain explicit limitations. All138 v2
 unit tests passed at checkpointd0b3cfa; driving validation remains decisive.
+
+Read-only progress-aligned analysis of the first three required cells attributes
+most of their8.94s total gain to higher sustained speed; estimated route length
+falls1.6–4.1%. About87% of saved time is in middle/high-turn bins. Less repeated
+braking and more coasting support a momentum-preservation explanation, not a
+proven isolated causal effect. See [source-bound analysis](results/beam-speed-gain.json).

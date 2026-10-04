@@ -15,8 +15,9 @@ all small screens, execution failures and full regression results. R6's8/8 scree
 fell to20/24 in broader testing; recovery r1 rescues one old failure while
 preserving required laps, but its other old failure remains unresolved.
 Terrain r8's full consumed regression is22/24, below the24/24 gate despite
-required mean18.205s. The independent beam r3 has newly finished required1–3
-in14.04/17.24/15.80s without damage; its remaining screen and full regression
+required mean18.205s. The independent beam r3 has newly finished required1–4
+in14.04/17.24/15.80/14.94s without damage, mean15.505s (16.32% faster than P1);
+its old-failure screen and full regression
 are pending. These partial speed gains do not authorize selection or holdout.
 
 
