@@ -1,5 +1,66 @@
 # Experiment Evidence Index
 
+## Interval Road And Temporal Pilot (2026-10-05)
+
+**Cost support improved; zero-intervention pilot does not evaluate candidate
+effect.** Separate consumed-TRAIN study, preserving the champion and old evidence.
+
+- [Plan](../../experiments/joint-temporal-interval-v1-plan.json), [scoped exposure](../../experiments/joint-temporal-interval-v1-exposure.json), [claim](../../experiments/joint-temporal-interval-v1-claim.json), [admission](../../experiments/joint-temporal-interval-v1-admission.json), [result and reproduction](../../experiments/joint-temporal-interval-v1-result.json).
+- [Interval scorer](../../haic/algorithms/joint_control/interval_comparison.py), [isolated successor](../../haic/algorithms/joint_control/successor.py), [paired operator](../../scripts/analyze_joint_temporal_intervals.py), [pilot operator](../../scripts/run_joint_temporal_pilot.py). Unknown space is never filled; shared full-H4 support, state/reference stresses, unchanged weights/physics and honest one-action commit.
+- [Eight-pair replay](../../runs/joint-temporal-interval-v1/paired-analysis.json) SHA`19e2fc4e...`: support2/8->6/8; actual3 baseline/3 alternative/2 unsupported. Five reference-only material predicted orders agree; after CAL cost-error allowance .449619, all orders abstain. Components and progress/clearance tradeoffs remain explicit, not tuned to desired winners.
+- [Empirical calibration](../../runs/joint-temporal-interval-v1/calibration.json) SHA`5c8fe665...`: three CAL roads, two roads excluded from fitting; total state+dynamics H4 position1.095715/yaw.092495 envelopes, same-scenario whole-path misses0/6 versus central-only2/6. Mapping calibration separate. Consumed TRAIN, not safety or statistical coverage.
+- [Frozen pilot protocol](../../runs/joint-temporal-interval-v1/pilot/protocol.json) SHA`11fac3c4...`, [six-episode receipt](../../runs/joint-temporal-interval-v1/pilot/episode-report.json), [summary](../../runs/joint-temporal-interval-v1/pilot/summary.json) SHA`91518e06...`: three predeclared roads, each arm2/3 finishes,19.960s/17.860s and one identical off_track DNF.931 decisions per arm; all actions/raw records equal; damage/contact/collision0.
+- Successor compares75 decisions, intervenes0/931, abstains100%; candidate effect and post-intervention failure risk NOT EVALUATED. All75 forecast continuations differ from later issued actions, leaving0 qualified pilot range windows. Whole-act CPU p99=253.613ms/max308.017ms, not the old component timing estimate.
+- 197 tests+65 subtests and zero-reset preflights pass. No extra paired resets, retries, broad audit rerun, champion/distillation edit, official action or model adoption. Raw/frozen/generated artifacts remain local; Git alone does not include the external CPU21 environment or all historical primary data.
+
+## Temporal Observer And Diverse Pairs (2026-10-05)
+
+**Relative-effect signal beyond launch; no qualifying pilot domain.** Persistent
+original-physics/HUD/image state estimation, same-state uncertainty stresses and
+progress-aware costs were frozen before eight diverse paired outcomes. Absolute
+trajectory error was not used as a blanket ranking stop.
+
+- [Plan](../../experiments/joint-temporal-v1-plan.json), [protocol](../../experiments/joint-temporal-v1-protocol.json) SHA`61683b20...`, [result](../../experiments/joint-temporal-v1-result.json), [primary analysis](../../runs/joint-temporal-v1/analysis.json), [audit](../../experiments/joint-temporal-v1-audit.json), [road diagnosis](../../experiments/joint-temporal-v1-road-support-diagnosis.json), [compact statistics](../../experiments/joint-temporal-v1-statistics.json).
+- Eight starts/two per high-speed straight,left/right entry,braking turn; six cells/five consumed road geometries.24 baseline/repeat/alternative resets,768decisions,4296raw including1224warmup,232champion queries. No retries or fresh-confirmation claim; all prefixes and repeats verify.
+- Temporal observer143/174 unique baseline states valid; anchors7/8, current-image motion flags3/8. Inferred mapping yaw bounds miss25/44, so heuristic intervals are not guarantees. Only original1/1/1 coefficients; prior4x correction excluded.
+- H4 physical effect centre signs8/8 per component, median error/effect right/forward/yaw/speed `.09170/.02088/.11998/.00515`; same19-coordinate-state stresses preserve material signs7/8,8/8,7/8,8/8. Dependent samples, not32independent successes.
+- Cost/reference support2/8, both baseline wins, no confidently wrong supported ranking, sixunknowns. Allfour alternative GT-progress wins are amongunknowncosts. Coverage2/25,0/2,2/5,2/13; cost-bias absence and usable intervention coverage are unproven.
+- Five unknowns come from a single ambiguous gray edgepixel plus strict contiguous-reference requirements, not bad mean historywarps or missing physicalroad. First7 fullyrepair ego; causalpose-oracle diagnostic doesnot improve2/8support. Brake2 is separately state/mappinginvalid. No frozen source/gate retuning.
+- All16 actual suffixes physicallysafe, but8/16 miss `.5world/.05rad` same-scenario tube; all5predicted-safe paths misscontainment. These are uncertified envelopes, not five collision events. Independent regionalgate0/4; no successor pilot or official action.
+- [Observer](../../haic/algorithms/joint_control/observer.py), [comparator](../../haic/algorithms/joint_control/comparison.py), [collector](../../scripts/collect_joint_temporal_pairs.py), [analyzer](../../scripts/analyze_joint_temporal_pairs.py).200tests pass; independent856pin/108499assertion audit agrees within1.707e-15. Protected champion source/ZIP unchanged.
+- [Development](../../experiments/joint-temporal-v1-development.json), [raster equivalence](../../experiments/joint-temporal-v1-cost-equivalence.json), [optimized timing](../../experiments/joint-temporal-v1-latency-optimized.json), [exact source archive](../../experiments/joint-temporal-v1-source-archive.json). New measured segment-sum p99~169.7ms is not integratedpilotact. Collection259.60s is not inference latency.
+
+## Joint Relative-Effect TRAIN Probe (2026-10-05)
+
+**Local pairwise signal, but observer coverage is only1/3 starts. No controller
+promotion.** This distinct predeclared measurement follows positive posthoc
+directional-response evidence, preserving the failed archive gate0/3 unchanged.
+It addresses relative comparison rather than requiring an exact simulator clone.
+
+- [Plan](../../experiments/joint-prediction-probe-v1-plan.json), [protocol](../../experiments/joint-prediction-probe-v1-protocol.json), [scoped exposure](../../experiments/joint-prediction-probe-v1-exposure.json), [immutable consumed-use claim](../../experiments/joint-prediction-probe-v1-claim.json), [result](../../experiments/joint-prediction-probe-v1-result.json), [analysis](../../runs/joint-prediction-probe-v1/analysis.json) and [independent audit](../../experiments/joint-prediction-probe-v1-audit.json).
+- Three consumed Track1 cells3184000002/0013/0015, anchor10, baseline/repeat/one joint alternative with common four-hold continuation. Exactly9 resets/126 decisions/963 raw ticks; strict prefix and complete repeat parity. No retries, new controller, full-lap A/B or official evaluation.
+-57 unique instantaneous frame-label records give HUD speed/joint/yaw p95 `1.0993/.0029509/.0290693` in respective units; wheel-omega errors/abstentions remain. Only seed0015 passes motion validity at the anchor; seeds0002/0013 are retained as flagged diagnostics.
+- Source-default.32s six-endpoint median position/yaw/speed-change error: full oracle `.008409/.002454/.002735`, runtime `.647272/.037612/1.362050`. FIT4x correction gives runtime `1.720888/.025944/8.419092` and does not transfer well. No new fitting or coefficient selection on these probe cells.
+- H4 source-default runtime effect signs match3/3 per component; median relative errors right/forward/yaw/speed `.0814/.0403/.0328/.00420`. Fixed image-derived local tracking-proxy ordering3/3 is descriptive, only1/1 within runtime-valid support; not lap, broad action-ranking or safety evidence.
+- [Collector](../../scripts/collect_joint_prediction_probe.py), [analyzer](../../scripts/analyze_joint_prediction_probe.py);80 focused tests pass. Audit checks499 hashes,1161 exact arrays,6885 numeric values with zero discrepancy. Raw physical/observation evidence is retained; no stronger hidden-solver cloning claim.
+- Collection464.50s includes durable capture/fsync; sampled RSS max324,120,576B, not a continuous peak or inference-time measurement. Champion ZIPc9e376a0.../all11 sources and142 environment pins unchanged. No further resets or larger search follow automatically.
+
+## Joint HUD And Physics Prediction (2026-10-05)
+
+**Observer signal confirmed; prediction gate failed0/3 TEST roads.** Separate
+joint-control research, not a champion patch or full controller. Missing saved
+joint branches is a data gap, not a technical stop; the new user instruction
+permits small TRAIN collection only after promising prediction validation.
+
+- [Predeclared plan](../../experiments/joint-prediction-v1-plan.json), [study summary](../../experiments/joint-prediction-v1-result.json), [frozen protocol](../../runs/joint-prediction-v1/protocol.json), [primary result](../../runs/joint-prediction-v1/result.json) and [independent audit](../../experiments/joint-prediction-v1-audit.json).
+- 42 saved TRAIN episodes/18,453 frames/9 geometry seeds, split 4 FIT/2 CAL/3 TEST. No recovery-mask filtering; repeated frames and exact input/action/outcome windows are deduplicated within whole-road splits.
+- HUD speed on TEST has p95 error1.170-1.194 units/s. Joint/yaw/wheel decoders use source-based geometry, but exact instantaneous labels are absent. Yaw integral consistency p95.0189-.0236rad is not direct yaw-rate accuracy. Causal displacement p95.343-.348 units on3070/5168 supported intervals.
+- [FIT omega ablation](../../runs/joint-prediction-fit-ablation-v1/result.json) rejects omission as a fix. [Exactly9 FIT corrections](../../runs/joint-prediction-fit-calibration-v1/result.json) select effective mass/yaw inertia scales4/4, tire1; no grid expansion. These are approximation corrections, not actual physical constants.
+- TEST.32s mean of three geometry medians, position/yaw/speed-change: estimated`.7289/.1835/1.6164`; same-state persistence`.8718/.2663/.7007`; partial oracle`.6922/.1717/1.5921`. Retrospective executed-action prediction is not counterfactual action ranking.
+- Runtime-valid.32s windows2689/5145. All3 roads have relative position/yaw signal, but yaw p95`.439-.489rad` exceeds fixed`.25rad`, and median exceeds`.08rad`. This archive-only phase had no simulator/Agent execution; the later separate probe above does not change this failure. No official action or champion modification.
+- [Independent audit](../../experiments/joint-prediction-v1-audit.json), SHA`2faf77e5...`, reconstructs 1512 error arrays/580608 values exactly and matches all 1296 prediction-summary groups/gate. Motion vectors and omitted-window initial-state dictionaries were not separately saved, limiting passive revalidation of those quantities.
+- [Components](../../haic/algorithms/joint_control/), [isolated offline operator](../../scripts/validate_joint_prediction.py), [FIT diagnosis](../../scripts/diagnose_joint_prediction_fit.py);45 focused tests pass. Frozen-source full run30.37s/150,081,536B peak RSS. All raw/frozen evidence retained.
+
 ## KOI Fixed Sprint72 Handback Relief (2026-10-04)
 
 **REJECTED / NOT ADOPTED; exact specification closed, no retuning.** One stateless

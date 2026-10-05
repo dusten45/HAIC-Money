@@ -1,5 +1,100 @@
 # Current Research State
 
+## Interval Road Pilot Completed (2026-10-05)
+
+**Road-cost support improved; successor effect NOT EVALUATED because intervention
+was zero.** The separately authorized interval study and all six full TRAIN
+episodes completed. Champion, path/speed distillation, original physics1/1/1,
+steering/pedal increments .04/.05 and H4/.32s remain unchanged. No official action,
+model replacement, desired-winner weighting or post-pilot gate relaxation.
+
+- [Plan](../../experiments/joint-temporal-interval-v1-plan.json), [result](../../experiments/joint-temporal-interval-v1-result.json), [paired analysis](../../runs/joint-temporal-interval-v1/paired-analysis.json) SHA`19e2fc4e...`, [calibration](../../runs/joint-temporal-interval-v1/calibration.json) SHA`5c8fe665...`, [pilot summary](../../runs/joint-temporal-interval-v1/pilot/summary.json) SHA`91518e06...`.
+- Road interior, bracketed uncertain boundary and unobserved pixels are separate. Boundary ambiguity can support an interval center reference but never fills free space. All candidates retain the same full17 endpoints and shared19 state/five reference stresses; the latter are finite empirical stresses, not exhaustive bounds.
+- Same eight consumed pairs: common cost support2/8->6/8, four new/two retained/zero lost. Actual supported suffix orders are3 baseline and3 alternative. Reference-only predicted orders are3 baseline/2 alternative/3 ambiguous. The CAL cost-difference error allowance .449619 makes all eight prediction orders ambiguous; no retuning follows.
+- Natural cost support straight2/25->9/25, left0/2->1/2, right2/5->3/5, braking2/13->9/13. Left2's road reaches the visible left edge on rows36..38, leaving no observed nonroad bracket, not the repaired one-pixel ambiguity; brake2 also lacks valid state/history. Unsupported suffixes are not truncated or normalized away. No extra paired resets were necessary.
+- CAL three roads/five starts fit time-index total runtime errors including dynamics, H4 position1.095715/yaw.092495. On two roads/three starts excluded from this fit, same-scenario whole-path misses0/6, central-only misses2/6. Held-out mapping misses0/38 measured and0/15 valid inferred intervals. All are small consumed-TRAIN empirical ranges, not fresh validation, probability coverage or safety guarantees.
+- Fixed pilot cells1/3184000013,3/3184000002,2/3184000006: baseline and successor each finish2/3; laps19.960s/17.860s and the same off_track DNF. Progress .987179/.992509/1.0 is not finish status. Every action and raw physical record matches across arms; six natural episodes,1862 decisions, no retry or omitted failure.
+- Successor compares75/931 decisions (35/14/26 per cell), intervenes0/931 and abstains931/931. No candidate effect or post-intervention failure rate is estimable. Collision decisions/contact events/damage are0 in both arms; both retain the same three all-wheel-offroad spells and one DNF. This is not a safety improvement.
+- All75 online forecasts have a different actually issued future continuation; pilot range coverage is0 qualified windows, NOT0/75 misses. The geometry-held-out paired check above supplies the separately measured containment result. Prediction-range departures and physical accidents remain distinct.
+- Actual whole successor act CPU on931 calls: p50=24.062ms,p95=196.306ms,p99=253.613ms,max308.017ms; no call over1s. Baseline p99=31.135ms. This exceeds the earlier .2s internal target, though it is not an official inference failure. Maximum sampled successor RSS313683968B; total execution wall215.555s includes simulator/logging and is not inference latency.
+- Integrated197 tests+65 subtests and both zero-reset CPU21 imports pass. Reviews fixed support diagnostics, actual-action feedback test gaps, JSON initial-parity and partial/provenance reporting before resets. Only targeted source/claim/champion checks were repeated, not the old large audits. Source and concise records are committed; raw/frozen run artifacts remain local.
+
+The six-reset budget is exhausted. Preserve this coverage/no-op result without
+claiming candidate efficacy, universal safety or promotion; no additional run or
+weight/uncertainty reduction follows automatically. Historical failed gates below
+remain unchanged and refer to their own earlier protocols.
+
+## Temporal Joint Validation Completed (2026-10-05)
+
+**Relative physical effects transfer to the eight tested starts, but usable cost
+references and uncertainty coverage are not ready for a closed-loop pilot.** The
+temporal observer and progress/road/clearance comparator are implemented with
+original physics1/1/1. No4x inertia correction, post-outcome tuning, champion edit,
+official action or successor pilot was used. All prior evidence remains frozen.
+
+- [Plan](../../experiments/joint-temporal-v1-plan.json), [result](../../experiments/joint-temporal-v1-result.json), [primary analysis](../../runs/joint-temporal-v1/analysis.json) SHA`f24fa32f...`, [passive audit](../../experiments/joint-temporal-v1-audit.json) SHA`0fd38b86...`, [road-support diagnosis](../../experiments/joint-temporal-v1-road-support-diagnosis.json) SHA`4bcbfa45...`.
+- Eight outcome-blind starts: high-speed straight, left/right corner entry, braking turn; two per regime on six layout cells/five consumed roads. Exactly24 resets/768 decisions/4296raw including1224warmup,232champion acts, no retries. Prefix and baseline-repeat parity pass. Grouped TRAIN verification, not fresh holdout.
+- Temporal state carries actual actions and corrects HUD/motion;7/8 anchors valid versus3/8 current-frame motion flags,143/174 unique baseline endpoints valid. No claim that a valid flag certifies truth. Inferred mapping yaw misses its heuristic bound25/44 intervals; forward bound misses1. Measured-image118 intervals stay within saved component bounds.
+- H4 centre action-effect directions right/forward/yaw/speed match8/8 each; median relative errors `.09170/.02088/.11998/.00515`. Identical19-state stress sets preserve material correct direction on7/8,8/8,7/8,8/8 respectively. These are correlated coordinates of eight starts, not32 independent trials or scalar-cost proof.
+- Full new-cost labels exist only forright1/straight2: baseline2,alternative0,unknown6; both supported robust orders correct. Natural-prefix comparison coverage isstraight2/25,left0/2,right2/5,braking2/13. Allfour actual alternative GT-progress wins haveunknown new-cost labels; old/new scalarforms overlap on onlyone pair. Cost-bias absence is NOT established.
+- Diagnosis findsfive in-view reference holes from one ambiguous `.52<gray<.54` boundarypixel, rejected by the immediate-known-edge plus contiguous-centre rule. First7 ego regions are77/77repaired; exact causal mean-pose oracle mapping rescuesZEROlabels. No demonstrated implementation/order/schema bug. Brake2 separately has invalid lateral uncertainty and nohistory repair. Do not declare unknown pixels safe or modify the frozen thresholds after results.
+- All16 actual baseline/alternative suffixes remain physically safe(4wheel road contact,zero obstaclecontact/damage), but8 fail the declared same-scenario `.5world/.05rad` pose tube. Five predicted-safe paths all miss containment: failed safety certificates, NOT five accidents. No blanket absolute-RMSE-versus-effect rejection.
+- Pilot gate0/4 regimes; pilot resets0. Timing is not the blocker: measured nominal+observer/scorer segment-sum p99~169.7ms/max173.1ms, not integrated successor.act. Computational raster slicing preserved costs/masks with disclosed existing float32 distance-transform ULPs; no model/weight/gate changes.
+- 200 tests pass; independent404-file/856-pin audit checks108499 assertions and134525 numeric elements with max discrepancy1.707e-15. Collection259.60s includes capture, not inference. Exact champion ZIP/all11sources remain unchanged; no Git write, unrelated RLPD work untouched.
+
+Next priorities are bounded/interval road-reference support without invented free
+space, and calibrated joint-state/inferred-motion uncertainty. Use the retained
+data for diagnosis/development, not as untouched validation after revising these
+rules. Do not expand MPC/search or claim full controller readiness from component
+sign accuracy. The authorized paired budget is complete and the conditional pilot
+was not triggered.
+
+## Relative Action Probe Completed (2026-10-05)
+
+**Small physics model has local response signal; observation quality/coverage is
+the next bottleneck. No controller is adopted.** The user's conditional TRAIN
+collection was exercised after a separate, predeclared relative-effect protocol.
+The earlier archive absolute gate remains failed0/3, not waived or rewritten.
+Absolute error alone did not settle the user's relative-comparison question.
+
+- [Probe result](../../experiments/joint-prediction-probe-v1-result.json), [frozen protocol](../../experiments/joint-prediction-probe-v1-protocol.json), [primary analysis](../../runs/joint-prediction-probe-v1/analysis.json) SHA`78dc71fc...`, [independent audit](../../experiments/joint-prediction-probe-v1-audit.json) SHA`866c1ed4...`.
+- Three consumed Track1 cells, one start each, baseline/repeat/one joint alternative: exactly 9 resets, 126 decisions, 963 raw ticks including459 warmup; 33 champion acts, none after the anchor. Exact prefix raw/image/accessible-state parity and full baseline-repeat equality hold. No retries or fresh-cell claim.
+- New synchronized truth allows direct HUD validation on57 unique frame-label records: speed/joint0/yaw-rate absolute p95 `1.0993 units/s / .0029509rad / .0290693rad/s`. Wheel-omega p95 `5.07-10.58rad/s`, with abstentions. These are three similar early acceleration starts, not broad coverage.
+- At.32s, uncorrected source model with actual instantaneous state has median position/yaw/speed-change errors `.008409/.002454/.002735` across six endpoints. Same model with runtime estimates has `.647272/.037612/1.362050`. This isolates substantial state-initialization error in this narrow regime; it is not a global dynamics/safety proof.
+- Source-default runtime H4 effect signs match3/3 for each component; median relative errors right/forward/yaw/speed are `.0814/.0403/.0328/.00420`. Frozen local tracking-proxy order matches3/3, but only **1/3 starts is runtime-valid**; two motion-invalid fallback cases are diagnostic only. This proxy is not lap utility and does not validate collision safety.
+- The archived FIT4x inertia correction transfers poorly: runtime.32s position/speed-change median errors `1.7209/8.4191`, versus source default `.6473/1.3620`. Both parameter sets were frozen before probe data; no post-probe fitting or promotion. Do not interpret the correction as physical mass.
+- 80 focused synthetic/integrity tests pass. Independent audit checks499 hashes/1161 arrays/6885 numeric comparisons with zero discrepancy. Collection464.50s includes heavy capture/fsync, NOT inference latency; maximum sampled RSS324,120,576B. Champion ZIP/all11 sources and142 environment pins remain intact; no official action or Git write.
+
+Retain the public-physics prior and investigate wheel-state/HUD decoding plus
+causal signed-motion/slip fusion with calibrated uncertainty and abstention.
+Do not move directly to MPC, full replacement or shield-backed safety claims.
+The nine-reset probe is complete; no additional collection is authorized by its
+result. Missing data, observation failure and model-transfer failure remain
+distinct categories. Champion micro-optimization stays closed.
+
+## Joint Prediction Validation (2026-10-05)
+
+**Observer signal confirmed; the current small predictor fails its collection
+gate.** The user's 2026-10-05 instruction authorized implementation, geometry-split
+archive validation and, only if promising, bounded TRAIN comparison collection.
+Missing prior joint branches is a **data gap**, not a technical-failure rule.
+Champion micro-optimization remains closed; no full controller was implemented.
+
+- [Plan](../../experiments/joint-prediction-v1-plan.json), [study result](../../experiments/joint-prediction-v1-result.json), and [primary frozen run](../../runs/joint-prediction-v1/result.json), SHA`1f192e92...`.
+- Source-informed HUD speed/joint/yaw/wheel decoding, causal body-motion registration, and a small public-physics NumPy model are isolated in `haic/algorithms/joint_control/`. No privileged runtime inputs.
+- 42 consumed TRAIN archives/9 roads split 4 FIT, 2 CAL, 3 TEST; repeats/windows stay with their geometry. Speed p95 on TEST is 1.170-1.194 units/s. Valid motion displacement p95 is .343-.348 units; validity 3070/5168 intervals. HUD yaw integral consistency p95 .0189-.0236rad is NOT direct instantaneous-yaw ground truth. Actual joint/omega labels are absent.
+- Exactly9 FIT-only effective inertia corrections selected scales4/4/1 at the grid boundary; no expansion or held retuning. The omega-omission ablation was negative. Source-default and all correction evidence remain preserved.
+- TEST.32s geometry-equal mean medians: estimated position/yaw/speed-change error`.7289/.1835/1.6164`, versus same-state persistence`.8718/.2663/.7007`. Available-label partial oracle`.6922/.1717/1.5921` does not fully isolate dynamics because instantaneous wheel/terrain states remain missing.
+- All3 TEST roads have sufficient support and relative position/yaw signal, but yaw p95`.439-.489rad` exceeds the unchanged`.25rad` gate; median exceeds`.08rad`. That archive protocol ended at gate0/3 with **zero TRAIN resets/steps**. The later distinct relative-effect probe above is not a pass of that gate or a rewrite of its evidence.
+- Runtime-valid.32s windows2689/5145; windows overlap. Existing RLPD/Oracle data and FIT speed support up to about43.72 do not validate the faster champion distribution or unseen actions. No lap/safety/shield-inheritance claim.
+- [Independent passive audit](../../experiments/joint-prediction-v1-audit.json), SHA`2faf77e5...`, finds no discrepancy:1512 forecast-error arrays/580608 values reconstruct exactly,1296 prediction-summary groups and gate agree. Motion-vector numeric errors remain primary-run/hash-backed, not independently re-executed because per-frame vectors were not saved.
+- 45 focused tests pass. Frozen-source full evaluation 30.37s/150,081,536B peak RSS; original champion ZIP/all 11 sources unchanged. No Agent, official evaluation, submission, neural training or Git write.
+
+Keep the observation/prediction components and negative evidence. Do not expand
+the inertia grid or loosen the archive gate after TEST. The subsequent separately
+scoped probe above supplies instantaneous-state diagnostics without relabeling
+the archive failure or missing branch data, and without implementing a controller.
+
 ## Champion Micro-Optimization Stopped By User (2026-10-04)
 
 **Stop further local heuristic optimization of the current KOI champion.** The
@@ -20,13 +115,12 @@ cause. Also, undershoot6.825->2.218 belongs to the first2/0006 window, whose
 brake-to-gas count is1->0. Repeated cycles3->0 is a DIFFERENT, own-window aggregate;
 only4/13 baseline station windows support complete matched comparison.
 
-Keeping the champion through the competition and researching a separate joint
-steering/pedal short-horizon controller are alternatives raised by the user,
-not a new implementation or experiment authorization. No successor is selected
-or started. If later authorized, first assess feasibility/minimum scope using
-runtime-permitted observations, prediction error/uncertainty, latency and shield
-compatibility; privileged evaluation heading/progress is not a runtime input,
-and shield reuse alone is not a safety proof. See the
+At that decision, keeping the champion and researching a separate joint controller
+were alternatives, not implementation authorization. Subsequent2026-10-04
+feasibility and2026-10-05 observer/prediction validation were separately authorized
+and are recorded above; neither selected or implemented a successor controller.
+Privileged evaluation heading/progress is not a runtime input, and shield reuse
+alone is not a safety proof. See the
 [durable decision](../decisions/INDEX.md#stop-local-optimization-of-the-koi-champion).
 
 ## Current Submission Baseline (2026-10-02)

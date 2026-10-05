@@ -1,0 +1,138 @@
+{
+  "schema": "haic-joint-temporal-interval-result-v1",
+  "status": "COMPLETE_ROAD_SUPPORT_REPAIR_AND_SIX_EPISODE_NOOP_PILOT",
+  "candidate_effect": "NOT_EVALUATED_ZERO_INTERVENTIONS",
+  "safety_claim": false,
+  "official_action": false,
+  "model_replacement": false,
+  "classification": "Previously consumed TRAIN development reuse. Held-out means excluded from this calibration fit, not untouched data or independent official validation.",
+  "evidence": {
+    "paired_analysis": {"path": "runs/joint-temporal-interval-v1/paired-analysis.json", "sha256": "19e2fc4ee205b491fc228adf0644ab6093c50a3d96be119c41dcf0c296254f43"},
+    "calibration": {"path": "runs/joint-temporal-interval-v1/calibration.json", "sha256": "5c8fe665e21688a88e286ded8771577d51b1c1849db2a744c91f1905cf3bf1b0"},
+    "pilot_protocol": {"path": "runs/joint-temporal-interval-v1/pilot/protocol.json", "sha256": "11fac3c4c5d337487675b8a69fc650a5420c0653f48548d0b13f2599620224c3"},
+    "pilot_receipt": {"path": "runs/joint-temporal-interval-v1/pilot/episode-report.json", "sha256": "0584c4ccaa13e6db3186ce5926328ef8e99b9a015d77fc09c3ed669924973240"},
+    "pilot_summary": {"path": "runs/joint-temporal-interval-v1/pilot/summary.json", "sha256": "91518e06c3c4b45f324dcab53f69798b4b0cec552d0445963cfc1583d964ca55"}
+  },
+  "preserved": {
+    "champion_zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+    "champion_source_members_unchanged": 11,
+    "path_and_speed_distillation_untouched": true,
+    "old_observer_physics_comparator_and_frozen_results_unchanged": true,
+    "physics": [1, 1, 1],
+    "steer_increment": 0.04,
+    "pedal_increment": 0.05,
+    "first_hold_seconds": 0.08,
+    "prediction_seconds": 0.32,
+    "prediction_raw_ticks": 16,
+    "shared_state_scenarios": 19,
+    "cost_weights_changed": false
+  },
+  "representation": {
+    "change": "A single unclassified adjacent edge no longer deletes an otherwise observed span. Bracket uncertain pixels between confirmed road and confirmed nonroad and retain left/right/center intervals. Do not bracket across another road run or image edge. Preserve original road/known masks exactly.",
+    "classes": ["confirmed road interior", "bracketed uncertain boundary", "unobserved remainder"],
+    "clearance": "Conservative confirmed-road estimate; ambiguous pixels never become free road or absolute footprint support.",
+    "reference_uncertainty": "Five shared midpoint/lower/upper/alternating reference realizations. Finite empirical stress set, NOT an exhaustive nonlinear interval bound.",
+    "common_support": "Every candidate and initial-state scenario requires the same complete17 endpoints and swept intervals. No favorable candidate-specific prefix, support deletion or surviving-tick normalization.",
+    "purity": "One champion query, immutable observer hypotheses during all candidate calculations, exactly one commit of the actual issued float32 action. Changed action feedback replaces nominal brake and recomputes shield wheel/boxes from the unadvanced merged state. No-op complete state and full-episode action/raw parity verified."
+  },
+  "paired": {
+    "starts": 8,
+    "additional_paired_resets": 0,
+    "cost_support_old": 2,
+    "cost_support_interval": 6,
+    "support_transitions": {"retained": 2, "new_only": 4, "lost": 0, "neither": 2},
+    "actual_supported_orders": {"baseline": 3, "alternative": 3},
+    "reference_only_predicted_orders": {"baseline": 3, "alternative": 2, "ambiguous_or_unsupported": 3},
+    "reference_only_material_correct_orders": {"numerator": 5, "denominator": 5, "interpretation": "Conditional on a material prediction; not accuracy8/8 and not the final calibrated gate."},
+    "final_calibrated_robust_orders": {"baseline": 0, "alternative": 0, "ambiguous_or_unsupported": 8},
+    "paired_cost_error_allowance": 0.44961874671412616,
+    "table_convention": "Rounded6 decimals. Delta=alternative-baseline; negative cost favors alternative. Actual cost uses actual suffix paths against the SAME pre-action observed scene, not privileged road geometry. Midpoint means midpoint road reference, not midpoint of the min/max cost range. Every final calibrated predicted order is ambiguous/unsupported.",
+    "rows": [
+      {"id": "straight1", "support_old_interval_calibrated": [false, true, true], "old_order": "unsupported", "reference_only_predicted_order": "ambiguous", "actual_order": "alternative", "actual_midpoint_reference_delta": -0.124754, "actual_reference_range": [-0.205687, -0.074206], "actual_minus_central_predicted_delta": -0.031647, "actual_GT_progress_delta": 0.356218},
+      {"id": "left1", "support_old_interval_calibrated": [false, true, true], "old_order": "unsupported", "reference_only_predicted_order": "alternative", "actual_order": "alternative", "actual_midpoint_reference_delta": -0.320395, "actual_reference_range": [-0.328506, -0.316934], "actual_minus_central_predicted_delta": -0.000989, "actual_GT_progress_delta": 0.315749},
+      {"id": "right1", "support_old_interval_calibrated": [true, true, true], "old_order": "baseline", "reference_only_predicted_order": "baseline", "actual_order": "baseline", "actual_midpoint_reference_delta": 0.443380, "actual_reference_range": [0.443380, 0.443380], "actual_minus_central_predicted_delta": 0.182972, "actual_GT_progress_delta": -0.432349},
+      {"id": "brake1", "support_old_interval_calibrated": [false, true, true], "old_order": "unsupported", "reference_only_predicted_order": "baseline", "actual_order": "baseline", "actual_midpoint_reference_delta": 0.084238, "actual_reference_range": [0.081028, 0.086123], "actual_minus_central_predicted_delta": -0.197066, "actual_GT_progress_delta": -0.217674},
+      {"id": "straight2", "support_old_interval_calibrated": [true, true, true], "old_order": "baseline", "reference_only_predicted_order": "baseline", "actual_order": "baseline", "actual_midpoint_reference_delta": 0.290585, "actual_reference_range": [0.290585, 0.290585], "actual_minus_central_predicted_delta": 0.135566, "actual_GT_progress_delta": -0.379856},
+      {"id": "left2", "support_old_interval_calibrated": [false, false, false], "old_order": "unsupported", "reference_only_predicted_order": "unsupported", "actual_order": "unsupported", "actual_midpoint_reference_delta": null, "actual_reference_range": null, "actual_minus_central_predicted_delta": null, "actual_GT_progress_delta": 0.434048},
+      {"id": "right2", "support_old_interval_calibrated": [false, true, true], "old_order": "unsupported", "reference_only_predicted_order": "alternative", "actual_order": "alternative", "actual_midpoint_reference_delta": -0.481624, "actual_reference_range": [-0.554098, -0.414574], "actual_minus_central_predicted_delta": 0.144286, "reference_only_actual_delta_before_mapping_calibration": -0.468129, "actual_GT_progress_delta": 0.364211},
+      {"id": "brake2", "support_old_interval_calibrated": [false, false, false], "old_order": "unsupported", "reference_only_predicted_order": "unsupported", "actual_order": "unsupported", "actual_midpoint_reference_delta": null, "actual_reference_range": null, "actual_minus_central_predicted_delta": null, "actual_GT_progress_delta": -0.324989}
+    ],
+    "tradeoffs_on_actual_suffixes": [
+      "straight1: observed-reference arc progress contribution -.366998 outweighs lateral+.073885, heading+.021416 and road-clearance-loss+.146972. Alternative actual cost wins although prediction is already ambiguous before calibration. This is a progress/margin tradeoff, not zero clearance cost.",
+      "left1: progress-.300979 and improved road-clearance loss-.114216 outweigh lateral+.019149 and heading+.096098; road-risk also improves-.020457. Alternative actual cost wins.",
+      "right1: obstacle-clearance improvement contributes-.189825 but progress regression+.404960 and road-clearance loss+.146972 dominate; baseline actual cost wins. straight2 similarly trades obstacle-clearance benefit-.142340 against progress penalty+.379671 plus lateral/heading costs.",
+      "brake1: lateral-.048790 and heading-.116456 gains do not offset progress penalty+.232007 plus road-risk+.017409. Baseline wins by only+.084238 actual cost, while central prediction error is-.197066, explaining why calibration removes a confident claim.",
+      "right2: progress-.471061, lateral-.073270, heading-.049574 and road-risk-.052388 outweigh obstacle-clearance loss+.164318 and obstacle-risk+.000397. Alternative wins on actual path cost; calibrated central delta error+.144286 and broader CAL max error still preclude a robust online choice.",
+      "left2 has positive GT progress delta but no full observed-reference cost label; it is not counted as a cost win. None of these fitted road/clearance components is itself a privileged physical safety measurement."
+    ],
+    "remaining_left2_gap": "Same causal scene has three measured-image history links. Zero-based rows38,37,36 contain one continuous known asphalt-classified run reaching visible left edge: columns[1,51),[1,50),[1,50). No observed left nonroad bracket; column0 is outside the visible mask. Rejection is the a<=1 image-edge rule, not a single ambiguous adjacent pixel, multiple-run tie or >4px continuity guard. Predicted reference+footprint support15..16/17 across38 paths despite footprint17/17; actual support14/17 and15/17. Preserve this unbounded center uncertainty rather than inventing an off-image edge.",
+    "natural_prefix_cost_support": {
+      "straight": {"old": 2, "new": 9, "denominator": 25},
+      "left_entry": {"old": 0, "new": 1, "denominator": 2},
+      "right_entry": {"old": 2, "new": 3, "denominator": 5},
+      "braking_turn": {"old": 2, "new": 9, "denominator": 13}
+    },
+    "interpretation": "Reference-only support gains and calibrated-uncertainty abstention are separate effects. Every weighted component, nominal prediction error and actual suffix label remains in the primary eight-row evidence; no label selected a weight. Left2 remains reference-incomplete; brake2 also has invalid state/history. Unknown labels are not ties or correct ranks."
+  },
+  "uncertainty": {
+    "calibration_seeds": [3184000002, 3184000013, 3184000015],
+    "held_out_from_fit_seeds": [3184000001, 3184000006],
+    "calibration_starts": 5,
+    "held_out_starts": 3,
+    "method": "Per-time-index maximum central runtime position/yaw residual on CAL, including both initialization and dynamics; retain .5 world/.05 rad engineering floors after t0. Apply residual to every original shared initial-state scenario, conservatively. Store signed actual-runtime, actual-oracle and oracle-runtime vectors separately. Oracle is true-state initialization of an approximate model, not perfect simulator dynamics.",
+    "h4_position_residual_world": 1.095715344103732,
+    "h4_yaw_residual_rad": 0.09249519316075627,
+    "calibration_whole_path_misses": {"numerator": 0, "denominator": 10},
+    "held_out_whole_path_misses": {"numerator": 0, "denominator": 6},
+    "held_out_central_only_misses": {"numerator": 2, "denominator": 6},
+    "whole_path_semantics": "One fixed scenario must jointly satisfy position and yaw at every raw tick. No scenario or coordinate cherry-picking per tick.",
+    "mapping": {
+      "measured_image": {"position_residual_world": 0.06193281576399596, "yaw_residual_rad": 0.015906844842406675, "cal_intervals": 70, "held_out_misses": 0, "held_out_intervals": 38},
+      "predicted_corrected_issued_action": {"position_residual_world": 0.2664528722970685, "yaw_residual_rad": 0.041015625, "cal_intervals": 24, "held_out_misses": 0, "held_out_intervals": 15},
+      "semantics": "Calibrate causal registration separately by provenance, preserving means/validity. Unsupported older links truncate history; missing an unrelated provenance class is not a global pilot prerequisite."
+    },
+    "limits": "Small, consumed-TRAIN empirical envelopes, not probabilistic coverage or safety guarantees. HELD_OUT values never enlarge fitted ranges. No blanket all-regime qualification requirement."
+  },
+  "pilot": {
+    "resets": 6,
+    "natural_episodes": 6,
+    "retries": 0,
+    "operator_error": null,
+    "wall_seconds_including_environment_and_logging": 215.55473239487037,
+    "each_arm": {"finished": 2, "episodes": 3, "decisions": 931, "collision_positive_decisions": 0, "physical_contact_events": 0, "hit_objects": 0, "damage": 0},
+    "cells": [
+      {"track_id": 1, "seed": 3184000013, "baseline_finished": true, "successor_finished": true, "baseline_lap_seconds": 19.960, "successor_lap_seconds": 19.960, "progress_both": 0.9871794871794872, "decisions_per_arm": 250, "compared_successor_decisions": 35, "interventions": 0, "maximum_all_wheels_offroad_seconds": 0.04},
+      {"track_id": 3, "seed": 3184000002, "baseline_finished": true, "successor_finished": true, "baseline_lap_seconds": 17.860, "successor_lap_seconds": 17.860, "progress_both": 0.9925093632958801, "decisions_per_arm": 224, "compared_successor_decisions": 14, "interventions": 0, "maximum_all_wheels_offroad_seconds": 0.04},
+      {"track_id": 2, "seed": 3184000006, "baseline_finished": false, "successor_finished": false, "baseline_lap_seconds": null, "successor_lap_seconds": null, "retire_reason_both": "off_track", "progress_both": 1.0, "decisions_per_arm": 457, "compared_successor_decisions": 26, "interventions": 0, "maximum_all_wheels_offroad_seconds": 1.14}
+    ],
+    "all_actions_and_raw_records_equal_between_arms": true,
+    "intervention_rate": {"numerator": 0, "denominator": 931, "rate": 0},
+    "abstain_rate": {"numerator": 931, "denominator": 931, "rate": 1},
+    "compared_decisions": 75,
+    "compared_decision_reasons_nonexclusive": {"empirical_order_uncertain": 71, "common_full_horizon_unsupported": 16, "road_margin": 55, "obstacle_margin": 13, "unknown_trajectory_support": 21},
+    "failures": "Each arm has three all-wheel-offroad spells and one noncollision off_track DNF. Zero failures follow intervention because there are zero interventions; post-intervention risk is NOT ESTIMABLE, not a demonstrated zero risk.",
+    "prediction_range": {"forecasts": 75, "actual_future_continuation_mismatch": 75, "qualified_windows": 0, "miss_rate": null, "interpretation": "Actual future actions differ from the fixed current-baseline common tail. These are neither model range failures nor containment successes. No online pilot coverage estimate; held-out paired coverage is separately reported above."},
+    "successor_effect": "NOT_EVALUATED. No lap-time, completion, safety or generalization benefit established. No controller adoption."
+  },
+  "integrated_act": {
+    "measurement": "Outside full model.act, including observer, champion query, pure candidate scoring, feedback, commit and internal diagnostics. External hashing/JSON/fsync/environment excluded. CPU process_time and wall perf_counter measured separately; one CPU thread.",
+    "successor_cpu_ms": {"n": 931, "p50": 24.06247799999761, "p95": 196.30600600000037, "p99": 253.6130656999994, "max": 308.0167930000002, "over_1000ms": 0},
+    "successor_wall_ms": {"n": 931, "p50": 24.060307070612907, "p95": 196.30587799474597, "p99": 253.6125439684838, "max": 308.0213237553835, "over_1000ms": 0},
+    "baseline_cpu_ms": {"n": 931, "p50": 18.324790999999507, "p95": 26.267866500001347, "p99": 31.13528780000046, "max": 39.5811419999994},
+    "successor_max_sampled_rss_bytes": 313683968,
+    "prior_internal_200ms_p99_target_met": false,
+    "interpretation": "Not the previous component segment-sum estimate or official performance proof. No pilot time-budget breach; the earlier .2s internal target is not met."
+  },
+  "verification": {"tests_passed": 197, "subtests_passed": 65, "test_wall_seconds": 29.33, "zero_reset_import_preflights": 2, "warning": "pygame pkg_resources deprecation only", "broad_previous_audit_repeated": false, "independent_reviews": "Scorer support/API and successor feedback reviewed; computed-noop/forced-feedback tests strengthened. Runner tuple/list initial parity, incomplete episode timing and matched-provenance reporting corrected before freeze/reset."},
+  "reproduction": {
+    "paired_file_only": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/kilo/haic-cpu21/bin/python -B -m scripts.analyze_joint_temporal_intervals --output /tmp/kilo/joint-temporal-interval-replay",
+    "paired_output_rule": "Use a new output directory; do not overwrite the original calibration/evidence. Same cached eight-pair data and source pins required.",
+    "pilot_analysis_only": "/tmp/kilo/haic-cpu21/bin/python -B -m scripts.run_joint_temporal_pilot analyze --output runs/joint-temporal-interval-v1/pilot --protocol-sha256 11fac3c4c5d337487675b8a69fc650a5420c0653f48548d0b13f2599620224c3",
+    "pilot_analysis_rule": "Analysis never runs a policy/environment; its final summary write is exclusive. The original summary already exists, so the recorded one-time command refuses replacement. The following verification recipe disables only that final write and compares the recomputed object to the saved summary in place; no bound paths or evidence are changed.",
+    "pilot_verify_without_writes": "/tmp/kilo/haic-cpu21/bin/python -B -c \"from pathlib import Path; from unittest.mock import patch; from scripts import run_joint_temporal_pilot as p; out=Path('runs/joint-temporal-interval-v1/pilot').resolve(); expected=p.read_json(out/'summary.json'); guard=patch.object(p,'save',lambda *args: None); guard.start(); actual=p.analyze(out,'11fac3c4c5d337487675b8a69fc650a5420c0653f48548d0b13f2599620224c3'); guard.stop(); assert actual==expected; print('saved pilot summary verified without writes or resets')\"",
+    "execution_record": "freeze under train-seed directory flock -> preflight (0 resets) -> current immutable admission -> execute once -> analyze. Exact CLI arguments are in process/session records and plan; existing output prevents accidental reset replay. Six-reset budget spent; new execution requires a new scoped claim/admission, not this expired receipt.",
+    "test_command": "PYTHONDONTWRITEBYTECODE=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 PYGAME_HIDE_SUPPORT_PROMPT=1 /tmp/kilo/haic-cpu21/bin/python -B -c \"import sys,numpy,cv2; assert numpy.__version__=='1.26.0' and cv2.__version__=='4.8.1'; sys.path.append('/venv/main/lib/python3.11/site-packages'); import pytest; raise SystemExit(pytest.main(['-q','-p','no:cacheprovider','tests/test_joint_control_hud.py','tests/test_joint_control_motion.py','tests/test_joint_control_physics.py','tests/test_joint_temporal_observer.py','tests/test_joint_temporal_comparison.py::JointTemporalComparisonTests','tests/test_joint_interval_comparison.py','tests/test_joint_temporal_intervals.py','tests/test_joint_temporal_successor.py','tests/test_joint_temporal_pilot.py']))\"",
+    "availability": "Source, focused tests and manually reviewed concise records are committed. Raw/frozen/generated run artifacts, historical untracked joint evidence/operators/tests and external CPU21 snapshot are local prerequisites; Git alone is not full experiment reproduction. No generated raw logs or models added to Git."
+  },
+  "next_boundary": "Preserve this finite support/no-op result. No automatic weight reduction, uncertainty shrinkage, wider search, extra episode, promotion or official submission follows from it."
+}
