@@ -1,5 +1,12 @@
 # Experiment Evidence Index
 
+## Joint Abstention Diagnosis (2026-10-05)
+
+- [Fixed new-data plan](../../experiments/joint-temporal-diagnosis-v1-plan.json), [diagnosis and residual derivation](../../experiments/joint-temporal-diagnosis-v1-diagnosis.json), [scoped consumed-road exposure](../../experiments/joint-temporal-diagnosis-v1-exposure.json).
+- [931-decision funnel](../../runs/joint-temporal-diagnosis-v1/funnel.json) SHA`00d5f270...`:856pre exclusions+75comparisons;59full-cost-supported,19risk-pass. Of19,2 fail shared stress and17 fail original allowance; all4 original robust gains fail road margin. Exclusive order and nonexclusive overlaps are separate; no observer-only explanation.
+- [Separate calibration](../../runs/joint-temporal-diagnosis-v1/envelope-calibration.json) SHA`a0ceed50...`, [old-pair retrospective](../../runs/joint-temporal-diagnosis-v1/envelope-retrospective.json) SHA`db712808...`: correctly paired oldq=.449619 is a stronger every-prediction target, not duplicate numeric addition. New per-reference envelope excess plus NEW residual floor .05 leaves all physical guards unchanged. Old-pilot17would-pass classifications are posthoc, not executed interventions or efficacy.
+- [Funnel CLI](../../scripts/diagnose_joint_temporal_funnel.py), [calibration CLI](../../scripts/calibrate_joint_paired_envelope.py), [new performance comparator](../../haic/algorithms/joint_control/paired_residual.py), [new paired operator](../../scripts/collect_joint_envelope_pairs.py). 27 calibration/funnel tests,14 original interval tests and46 collector tests pass. Three zero-reset imports pass; protocol`1324ff2f...`/source-bound claim/admission frozen before bounded collection. Max9resets/no replacements, conditional fullstage atmost2further resets. Frozen old results stay unchanged.
+
 ## Interval Road And Temporal Pilot (2026-10-05)
 
 **Cost support improved; zero-intervention pilot does not evaluate candidate

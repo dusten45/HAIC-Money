@@ -1,0 +1,52 @@
+{
+  "schema": "haic-joint-envelope-pairs-consumed-train-v1",
+  "study_id": "joint-envelope-pairs-v1",
+  "parent_study": "joint-temporal-diagnosis-v1",
+  "status": "reserved-consumed-reuse",
+  "claimed_by": "main/r6t9",
+  "claimed_at_utc": "2026-10-05T13:06:06Z",
+  "partition": "TRAIN",
+  "fresh": false,
+  "new_paired_starts": true,
+  "cells": [[1, 3184000003], [2, 3184000004], [3, 3184000005]],
+  "arms": ["baseline", "repeat", "alternative"],
+  "max_resets": 9,
+  "max_decisions": 576,
+  "max_raw_ticks": 2763,
+  "retries": 0,
+  "replacements": 0,
+  "run_directory": "/workspace/HAIC-Money/runs/joint-temporal-diagnosis-v1/pairs",
+  "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96",
+  "source_sha256": {
+    "/workspace/HAIC-Money/scripts/collect_joint_envelope_pairs.py": "4237819bc6481fa2a0cb00a13fde29b57deffd55b55d8ab3afc8bc386ebadd7c",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/paired_residual.py": "98c262128681634b02f2f942d9d104cbd1849a63e1a359ff8510fe69c336cd7c"
+  },
+  "evidence_sha256": {
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-plan.json": "f92ede10ed1b3dda8b55578f482297abd6842b975fe7811c89a0a6d161ba5123",
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-exposure.json": "537f36ed82f0fb172e95743a2e6f442c84b3fa7b24e790ec3489402eac9fea88",
+    "/workspace/HAIC-Money/experiments/train-seed-claims/seed-3184000003.json": "3dc560cf95e9f01870eb3bbe7e76634b225a49c99e48f63a564f4d0fc6311814",
+    "/workspace/HAIC-Money/experiments/train-seed-claims/seed-3184000004.json": "922d79b2e94840e2f4e82414b5ed5bfedd2df05e7f9e2bd9020f5a279cb7e7c7",
+    "/workspace/HAIC-Money/experiments/train-seed-claims/seed-3184000005.json": "eee35bf93ef19a975f6ae246a5087b3b9eddc35ddb717789ea1efd204027f99a",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/reset-ledger.jsonl": "ba72232f9fdf4e8b06b09da94e5882b88c33232b49044601885fd396db9cba2e",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/episode-report.json": "e9ddbce30c868f1ca911b0712aed5353336591eac6458a785b1b1ded3608a530",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/1-3184000003-crossing_projection.json": "956de6f0d7db622b0d64c58a91407d687ca3a064ea140d11b8868844a5cebd8d",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/2-3184000004-crossing_projection.json": "88c2405df36e1622f7c9f6bf75f6a55a0005e18153a31ab6df9b97d6827b7e78",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/3-3184000005-crossing_projection.json": "5f636eb1b2f48b6277ae23101ac78a13fcf3be617c72db7e1b6d3310128418e3",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/1-3184000003-crossing_projection.bound-process.json": "5d825325c64d470878c3440eab1ce798eb871c0547c988926907f4c144795833",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/2-3184000004-crossing_projection.bound-process.json": "6a1520747abe5e34dfa0780ce8aba020b972276fcfcb45359ec7d75eed5ea617",
+    "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/3-3184000005-crossing_projection.bound-process.json": "f550c8ab566fbfde82abf8115fbf8b9e6c2a73aee3ff71956558e4fde6b75331",
+    "/workspace/HAIC-Money/runs/koi-collision-priority-v1/reset-ledger.jsonl": "f398061967c037eb2092c52d2c1cc4c3faa8eaa9acf4d21a90d417b7f3dc3e67",
+    "/workspace/HAIC-Money/runs/koi-collision-priority-v1/episode-report.json": "7c587eac7be797bc0615f9451723eac905689c31242266d66dd9a3d2ac85fce9"
+  },
+  "references": [
+    {"track_id": 1, "seed": 3184000003, "episode_path": "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/1-3184000003-crossing_projection.json", "episode_sha256": "956de6f0d7db622b0d64c58a91407d687ca3a064ea140d11b8868844a5cebd8d"},
+    {"track_id": 2, "seed": 3184000004, "episode_path": "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/2-3184000004-crossing_projection.json", "episode_sha256": "88c2405df36e1622f7c9f6bf75f6a55a0005e18153a31ab6df9b97d6827b7e78"},
+    {"track_id": 3, "seed": 3184000005, "episode_path": "/workspace/HAIC-Money/runs/koi-steering-generalization-v1/3-3184000005-crossing_projection.json", "episode_sha256": "5f636eb1b2f48b6277ae23101ac78a13fcf3be617c72db7e1b6d3310128418e3"}
+  ],
+  "active_conflicts": [],
+  "unmatched_candidate_intents": [],
+  "protected_intersections": [],
+  "ambiguity_blockers": [],
+  "scope_recheck": "Only own new scope/diagnosis notes since targeted alltrack seed3/4/5 metadata check; no new relevant allocation. Candidate-specific historical intents are completed. Freeze will authenticate this exact claim under registry-directoryflock; immutable ownclaim is not a generic freshness waiver. Current resource/reset admission required separately.",
+  "limits": "This claim permits only the bounded newpaired collection, not conditional full episodes. No finalmodel/official action or claim of fresh roads."
+}

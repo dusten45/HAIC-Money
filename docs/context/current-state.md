@@ -1,5 +1,21 @@
 # Current Research State
 
+## Zero-Intervention Diagnosis (2026-10-05)
+
+**No driving-performance improvement has been demonstrated.** The same-action
+pilot's equal outcomes are expected. The new request narrows work to the gate
+funnel, paired-error target and small prospective TRAIN checks, not general
+observer optimization or an arbitrary reduction of uncertainty.
+
+- [Fixed plan](../../experiments/joint-temporal-diagnosis-v1-plan.json), [diagnosis](../../experiments/joint-temporal-diagnosis-v1-diagnosis.json), [primary funnel](../../runs/joint-temporal-diagnosis-v1/funnel.json) SHA`00d5f270...`.
+- 931 decisions=856 pre exclusions+75 comparisons. Fixed first-failure pre counts: observer/forward287,mapping1,pilot envelope464,shield/recovery/feedback104. Nonexclusive counts are also retained; mapping217 overlaps observer216 times. Do not equate ordering-dependent exclusive counts with causal importance or invent costs for856 uncomputed decisions.
+- 75 comparisons:59 common full-cost support,19 also pass unchanged risk gates. Those19 split into2 shared-stress ambiguities and17 old-allowance ambiguities. Four gains survive old allowance, but all fail road margin. Observer alone and allowance alone are both incomplete explanations.
+- Oldq=.449619 is correctly paired, not added twice. Its maximum is a negative `brake1` residual from an extreme state/reference. Bounding error to EVERY prediction already incorporates state spread, then the cost interval retains that spread again; abs(q) also penalizes the upper tail. This is a conservative target mismatch relative to envelope containment, not an indexing/arithmetic bug.
+- Separate [empirical paired-envelope target](../../haic/algorithms/joint_control/paired_residual.py) fits only error outside each shared-reference state interval. Raw old-CAL lower/upper=.03751048/.03997636; a **NEW** conservative residual floor .05 gives .05/.05. The original .05 was the material-order threshold, not a residual floor. [Calibration](../../runs/joint-temporal-diagnosis-v1/envelope-calibration.json) SHA`a0ceed50...` preserves the complete old physical/mapping calibration exactly, as well as1/1/1,weights,.04/.05,H4 and risk gates.
+- Posthoc old-pilot state classifications would pass17/931 with the new target versus0 before (9/5/3 bycell). These are NOT17 achievable interventions, benefits or valid continuation labels. Old8paired starts and45natural rows still have zero fullyeligible alternatives under unchanged physical guards.
+- Prospective check predeclares cells1/3184000003,2/3184000004,3/3184000005, first causal18..60 old-preeligible+fullcost-supported anchor, no winner/risk/future-label filtering. New paired starts on consumed roads outside the old joint split, atmost9resets including repeats; no replacements/retries. [Exposure](../../experiments/joint-temporal-diagnosis-v1-exposure.json), [claim](../../experiments/joint-temporal-diagnosis-v1-claim.json), [admission](../../experiments/joint-temporal-diagnosis-v1-admission.json) and three zero-reset imports pass. Frozen protocol SHA`1324ff2f...`; bounded collection is running, with no outcome claim yet.
+- At most one new full-episode baseline/successor pair is conditional on genuinely selectable, actually favorable, contained and nonharmful new suffix evidence. No all-regime requirement and no automatic repeat of a no-op pilot. The LBMPC paper motivates separation, not a transferred safety theorem. Diagnostic/source commit`0f989c2` is pushed; champion/distillation and unrelated RLPD work unchanged.
+
 ## Interval Road Pilot Completed (2026-10-05)
 
 **Road-cost support improved; successor effect NOT EVALUATED because intervention

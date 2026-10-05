@@ -1,0 +1,28 @@
+{
+  "schema": "haic-joint-envelope-pairs-admission-v1",
+  "admitted": true,
+  "protocol_sha256": "1324ff2fec88cb44d0b29983fcb0f3192c8a465c16d4657fc017a48c2933b7bc",
+  "claim_sha256": "7826a0101591ba2d966c1e9c3282177b4d5b5edca0e56aa7d962b1566352b2bd",
+  "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96",
+  "created_unix_s": 1791205721.3542786,
+  "expires_unix_s": 1791208121.3542786,
+  "preflight_sha256": "ddbc35edbc961bbaa9e5f0b8bb9a14f296dd7992aa8d7ad87866bb6430ee3f25",
+  "zero_reset_preflights": {"passed_arms": ["baseline", "repeat", "alternative"], "environment_resets": 0, "agent_instances": [1, 0, 0], "maximum_import_rss_bytes": 270659584, "evaluator": "/tmp/kilo/koi-baseline-c4e224d/snapshots/haic-local-20260930/workspace/training/evaluate_closed_loop.py"},
+  "verification": {"collector_synthetic_tests_passed": 46, "parent_collector_integration_tests_before_two_final_test_additions": 44, "calibration_and_funnel_tests_passed": 27, "original_interval_regressions_passed": 14, "review": "Final-boundary damage/validity included without changing17raw trajectory samples; full last four-raw terminal retains COMPLETE label, earlier/shortened terminal partial. Independent followup resolved source defect, final two integration tests also pass. No real Env construction/reset/step in tests."},
+  "resources": {
+    "fresh_probe_rss_bytes": 29032448,
+    "fresh_probe_hwm_bytes": 38711296,
+    "host_available_bytes": 117125767168,
+    "cgroup_max_bytes": 129567293440,
+    "cgroup_current_bytes": 25071001600,
+    "minimum_headroom_bytes": 104496291840,
+    "needed_additional_memory_and_reserve_bytes": 1313144832,
+    "output_bytes": 747962,
+    "disk_free_bytes": 109051658240,
+    "memory_events": {"low": 0, "high": 0, "max": 0, "oom": 0, "oom_kill": 0, "oom_group_kill": 0},
+    "pressure": "some/full allaverages0,total0",
+    "forecast": "Atmost2763raw/576driving decisions/183champion queries in9serialarms, including causalboundedcomparisons. Prior compact capture below400MB, newisolatedimports below271MB.1GiB RSS/4GiBAS/1GiBoutput,600s child/2400s total with256MiBmemory and128MiBdisk reserves. Actualprocess VmRSS/HWM measured after fresh exec; no inheritedgetrusage estimate. Recheck resource and exactsources before eachreset."
+  },
+  "scope_recheck": "Latest relevant talk contains only own scope and diagnostic result; no new candidate allocation. Source-bound claim frozen under registry-directoryflock; scoped alltrack seed3/4/5 exposure and completed historical intents authenticated. No globalrepository hash collision rule.",
+  "authorization": "Only new bounded TRAIN pairs under currentuserrequest and frozenplan. No continuation or full-episode reset authorized by this admission; conditional fullstage needs its own qualified result/protocol/claim/admission. No official action or model replacement."
+}
