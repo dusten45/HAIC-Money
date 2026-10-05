@@ -1,5 +1,12 @@
 # Experiment Evidence Index
 
+## Single-Intervention Feedback Branch (2026-10-05)
+
+- [Fixed plan](../../experiments/joint-single-branch-v1-plan.json), [A/C/fixedH4 reuse proof](../../experiments/joint-single-branch-v1-reuse.json), [one-reset claim](../../experiments/joint-single-branch-v1-claim.json), [admission](../../experiments/joint-single-branch-v1-admission.json), [result/reproduction](../../experiments/joint-single-branch-v1-result.json).
+- [ABC summary](../../runs/joint-single-branch-v1/summary.json) SHA`cc51986f...`: only B NEW, A/C REUSED. Same3/3184000005, exactlyoneBintervention34 followed by genuinechampionfeedback onnewBobservations, actualhistorycorrected. Allfinish: A21.720s/B21.860s/C22.100s; B-A+140ms,C-B+240ms. All-wheel-road-loss spells0/1/2; contacts/collision/damage0. One consumedroad, not replicatedgeneralization.
+- [Same-scene actualfeedback H4 costs](../../runs/joint-single-branch-v1/feedback-cost.json) SHA`5004b48a...`: B-A[-.742509,-.624026], C-A[-1.113553,-.938447], all17ticks supported. Reusedexactonline-state fixedtail gain also reproduces. B-A GTprogress+.626208 at.32s becomes-.331300 at1s/-.699620 at2s. Thus immediatecostbenefit exists even underfeedback, but doesnotpersisttolap; no proof ofaunique long-term mechanism.
+- [One-shot adapter](../../haic/algorithms/joint_control/single_intervention.py), [one B operator](../../scripts/run_joint_single_branch.py), [actualfeedbackcost operator](../../scripts/score_joint_branch_feedback.py). No futureAaction replay, nooldsourcechange oroutcome fitting.233tests+61subtests then24targetedtests(1new) pass;234distinctcases. One newreset,274decisions,1093drivingraw+51warmup; no retry. CurrentC excludedfromsubmissioncandidates; Bdiagnosticnegative, champion/distillation preserved.
+
 ## Joint Diagnosis And Conditional Pilot (2026-10-05)
 
 - [Fixed new-data plan](../../experiments/joint-temporal-diagnosis-v1-plan.json), [diagnosis and residual derivation](../../experiments/joint-temporal-diagnosis-v1-diagnosis.json), [scoped consumed-road exposure](../../experiments/joint-temporal-diagnosis-v1-exposure.json).

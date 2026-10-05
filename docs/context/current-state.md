@@ -1,5 +1,25 @@
 # Current Research State
 
+## Single-Intervention Branch Completed (2026-10-05)
+
+**Current joint successor excluded from submission candidates.** The first
+intervention alone does not retain a lap-time benefit under champion feedback;
+later interventions cannot be the sole explanation for C's regression. This is
+one consumed TRAIN road, not a claim that joint-control is generally impossible.
+
+- [Plan](../../experiments/joint-single-branch-v1-plan.json), [reuse certificate](../../experiments/joint-single-branch-v1-reuse.json), [result/reproduction](../../experiments/joint-single-branch-v1-result.json), [ABC summary](../../runs/joint-single-branch-v1/summary.json) SHA`cc51986f...`, [actual-feedback H4 costs](../../runs/joint-single-branch-v1/feedback-cost.json) SHA`5004b48a...`.
+- Only ONE new reset: B on3/3184000005,274decisions/1093driving rawticks plus51warmup, no retry/error/replacement. A/C and priorfixedH4 records REUSED after exact online34 observation/state/hypothesis/prediction/action checks. All33prefix actions/pre34states match; B34action andfirstH1match C. TimeLimit64vs1200 difference inshortrecords is explicitlyinactive, not a hidden-solverclone claim.
+- B intervenes only34, then all273otherissued actions equal freshchampion proposals from Bobservations with actualbrake/wheel/box/observer history. No replay of A's futurecontrols. A/B/C allfinish: **21.720/21.860/22.100s**, B-A=+140ms,C-A=+380ms,C-B=+240ms. Interventions0/1/6, all-wheel-road-loss spells0/1/2; Bspell.22s at2.70s afterits soleintervention. Collision/contact/damage0all. B also regresses; no one-shot fix promoted.
+- Same-online-state fixedtail: predictedcostdelta[-.731880,-.263843], actual[-.568279,-.457101]. Actual FEEDBACK H4 also favors B overA[-.742509,-.624026] andC overA[-1.113553,-.938447], common17/17support. Cost order C/B/A isopposite laporder A/B/C. The benefit isnot merely a failed fixedtail reproduction or erased immediately byreplanning.
+- B-A signedGTprogress:+.072832 atH1,+.626208 atH4, then-.331300 at1s and-.699620 at2s. At1s Bspeed is7.1924world/s lower, gasintegral .036action-seconds lower, brakeintegral .015347 higher andsteeringvariation .162 higher. Observedlater response, not a uniquelyisolated braking/steering mechanism. Short-horizon benefit is not wholefeedback utility; no new weight/horizon/physics fitting follows.
+- Allactual35..37continuations differ fromfixeda0tail. Bhas1forecast/1continuationmismatch/0qualifiedH4 prediction windows; physicalroadloss isnot a claimedpredictionrange miss. Measuredactualfeedbackcosts are separate fromforecast-error labels. One-shotfullact CPU p99=38.927ms,max305.144ms (274calls,onlyonecomparison); lowp99 isnot a planningoptimization claim.
+- 233combined tests+61subtests passed, then24targeted tests including anadditional pre34 byteguard case;234distinctcases covered. Zero-reset preflight passes. Review tightened liveearlyfork rejection and report-bound costprovenance before B. OriginalC/calibration/1/1/1/.04/.05/H4/weights/champion/distillation unchanged; no official action. Researchcode/sourcecommit`f80eae9` pushed; raw/frozen/generated data local.
+
+The requested narrow branch is complete. Current C has no actual-feedback lap
+improvement and is excluded in the candidate ledger. B is a fixed-step diagnostic,
+not a deployable generalized policy. Keep the official champion unchanged; no
+further run or outcome-fitted correction under this request.
+
 ## Joint Diagnosis And Negative Pilot (2026-10-05)
 
 **The correction produces real interventions, but this one-road pilot regresses;

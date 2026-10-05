@@ -25,6 +25,30 @@ result.
   Submission selection does not convert it into a research-gate pass, demonstrate
   ordinary-overavoidance reduction, or authorize retuning/evaluation.
 
+## Joint Temporal Successor (Submission Candidate Excluded, 2026-10-05)
+
+- **Current `EnvelopeSuccessor` is excluded from submission candidates.** User's
+  required evidence is actual feedback lap-time reduction, not local cost or
+  intervention count. The [single-intervention branch result](../../experiments/joint-single-branch-v1-result.json)
+  provides no such improvement; the current submission baseline above is unchanged.
+- Matched consumed TRAIN3/3184000005: A champion21.720s, B onlydecision34thenfresh
+  championfeedback21.860s, C continuedsuccessor22.100s. Allfinish; B-A+140ms,
+  C-A+380ms, C-B+240ms. A/C reused only after exactsource/input/prefix checks;
+  one new Breset with actual-issued history feedback, never storedAfutureactions.
+- Interventions0/1/6; all-wheel-road-loss spells0/1/2; collision/contact/damage0.
+  Shortfixedtail and actualfeedbackH4 cost gains reproduce, but B's GTprogress
+  gain at.32s reverses by1s. Localbenefit doesnot establish wholefeedback utility,
+  and laterinterventions cannot be the sole explanation forC's regression.
+- B is a fixed-step ablation, **not a generalized deployable candidate**. Neither
+  B nor C is promoted; no outcome-selected tuning, furtherepisode or official
+  upload/confirmation. This doesnot reject joint-control generally or prove a
+  unique observer/dynamics/feedback mechanism from one road.
+- Preserve championZIP`c9e376a0...`, distillation, physics1/1/1, actionbounds,
+  H4/.32s, all costweights/calibrations and frozen prior outcomes. See the
+  [ABC summary](../../runs/joint-single-branch-v1/summary.json) SHA`cc51986f...`
+  and [same-scene feedback costs](../../runs/joint-single-branch-v1/feedback-cost.json)
+  SHA`5004b48a...`. Generated primary artifacts remain local.
+
 ## KOI Collision Shield v1 (Historical Packaging, 2026-10-01)
 
 - User designation on2026-10-01: package the exact frozen v1 for imminent obstacle-
