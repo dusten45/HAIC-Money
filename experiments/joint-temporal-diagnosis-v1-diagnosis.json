@@ -1,0 +1,71 @@
+{
+  "schema": "haic-joint-temporal-zero-intervention-diagnosis-v1",
+  "status": "PASSIVE_DIAGNOSIS_AND_NEW_TARGET_FROZEN_BEFORE_NEW_PAIRED_DATA",
+  "performance_improvement_demonstrated": false,
+  "evidence": {
+    "funnel": {"path": "runs/joint-temporal-diagnosis-v1/funnel.json", "sha256": "00d5f270a7160b42b2eb67d0eaef0cf4e838770acdd4e6f07aa815ba171e159a"},
+    "new_calibration": {"path": "runs/joint-temporal-diagnosis-v1/envelope-calibration.json", "sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96"},
+    "old_pair_retrospective": {"path": "runs/joint-temporal-diagnosis-v1/envelope-retrospective.json", "sha256": "db7128087ed39a35f0534a688859e8d0ad65706132978e0d0bafce07d7190045"},
+    "old_calibration": {"path": "runs/joint-temporal-interval-v1/calibration.json", "sha256": "5c8fe665e21688a88e286ded8771577d51b1c1849db2a744c91f1905cf3bf1b0"},
+    "old_paired_analysis": {"path": "runs/joint-temporal-interval-v1/paired-analysis.json", "sha256": "19e2fc4ee205b491fc228adf0644ab6093c50a3d96be119c41dcf0c296254f43"}
+  },
+  "funnel": {
+    "decision_ends": 931,
+    "pre_excluded": 856,
+    "compared": 75,
+    "exclusive_pre_first_failure_order": ["observer_or_forward", "mapping", "pilot_envelope", "shield_recovery_feedback", "calibration_budget"],
+    "exclusive_pre_counts": [287, 1, 464, 104, 0],
+    "nonexclusive_pre_counts_of856": {"action_envelope": 685, "hud_envelope": 45, "observer_invalid": 287, "mapping": 217, "shield_recovery_feedback": 596},
+    "observer_mapping_overlap": {"numerator": 216, "mapping_denominator": 217},
+    "pre_costs": "NOT_COMPUTED; no saved frames/replay used to invent counterfactual values for856 pre-exclusions.",
+    "comparison_support_of75": {"common_full17_cost": 59, "alternative_absolute_support": 54, "no_risk_veto": 19},
+    "nonexclusive_veto_of75": {"road": 55, "obstacle": 13, "any": 56},
+    "risk_cost_table": [
+      {"cost_category": "full_cost_unsupported", "no_risk_veto": 0, "risk_veto": 16},
+      {"cost_category": "central_midpoint_no_nominal_gain", "no_risk_veto": 0, "risk_veto": 2},
+      {"cost_category": "shared_stress_removes_nominal_gain", "no_risk_veto": 2, "risk_veto": 15},
+      {"cost_category": "old_allowance_removes_shared_robust_gain", "no_risk_veto": 17, "risk_veto": 19},
+      {"cost_category": "robust_gain_survives_old_allowance", "no_risk_veto": 0, "risk_veto": 4}
+    ],
+    "material_final_baseline_advantages": 0,
+    "material_central_baseline_advantages": 1,
+    "exclusive_post_first_failure": {"common_support": 16, "absolute_support": 8, "road": 31, "obstacle": 1, "shared_stress": 2, "old_allowance": 17},
+    "interpretation": "Exclusive funnels depend on presentation order; overlaps/cross-table retained. Observer alone does not explain zero. Among19 supported no-risk comparisons,2 lose gain under state/reference stresses and17 under the original residual. All4 surviving gains fail road margin. Threshold/guard relaxation is not justified by this count alone."
+  },
+  "concrete_decisions": [
+    {"id": "1/3184000013/50", "central_delta": -0.437774827507, "shared_interval": [-0.615162809000, -0.399034447470], "old_final_interval": [-1.064781555714, 0.050584299244], "road_lower_clearance": 0.70524, "road_required": 0.25, "interpretation": "Fullsupport and riskpass; original allowance alone removes shared robust gain."},
+    {"id": "1/3184000013/91", "central_delta": -1.095581044920, "shared_interval": [-1.204059252, -0.800339005], "old_final_interval": [-1.653677998, -0.350720258], "road_lower_clearance": 0.11735, "road_required": 0.25, "interpretation": "Gain remains after old allowance but unchanged road veto rejects it."}
+  ],
+  "action_effect_size": {"compared": 75, "baseline_gas_zero": 75, "candidate_gas_float32_005": 75, "brake_clips_to_zero": 9, "steer_changes_less_than_004_due_toward_zero": 20, "conclusion": "No evidence that all proposed effects are negligible:57/59 supported central predictions have material gain,40 retain gain through shared stresses. Do not enlarge action/horizon based only on zero issued actions."},
+  "allowance_audit": {
+    "old_q": 0.44961874671412616,
+    "pairing": "Candidate-minus-baseline is formed at the SAME initial-state and road-reference index; shared fixed dynamics1/1/1. No independent-arm extrema, indexing mismatch or literal second addition of q.",
+    "maximum_record": {"anchor": "brake1", "track_id": 1, "seed": 3184000015, "prefix_decisions": 21, "state_index": 12, "reference_index": 4, "wheel_omega_1": [83.59313667582367, 95.59313667582367], "actual_delta": 0.08450504032011708, "predicted_delta": 0.5341237870342432, "signed_residual": -0.44961874671412616},
+    "signed_decomposition": {"central_midpoint_residual": -0.19706611789518647, "reference_change": -0.041535240051366884, "state_extreme_change": -0.2110173887675728},
+    "central_reference4_decomposition": {"total": -0.23860135794655335, "actual_minus_true_state_model": -0.12709460591984367, "true_state_model_minus_runtime_model": -0.11150675202670968, "meaning": "Dynamics/reduced-representation residual plus initialization sensitivity, not independent variance or pure isolated causal components."},
+    "diagnosed_contract": "Old q bounds distance to EVERY stress prediction. Its residual contains state sensitivity, then its outer interval retains the state extrema again; abs(q) also sends a negative residual into upper-side pessimism. Valid deliberate conservatism, not an arithmetic bug. Calibrating error outside the already-shared envelope is a different, explicit empirical target.",
+    "not_double_added_to_safety": "Position/yaw tube and mapping uncertainty enlarge physical support/margin vetoes, not the performance cost scalar. Common underlying errors can block both tests, but no q-to-trajectory numerical addition exists. Physical guards are kept unchanged because relative cost cancellation cannot certify clearance."
+  },
+  "new_target": {
+    "formula": "For each shared reference r: L_r=min_sD_sr,U_r=max_sD_sr; fit q_lower=max_CAL,r(L_r-A_r)_+, q_upper=max_CAL,r(A_r-U_r)_+, then a NEW conservative .05 floor on each. Expand [min_r L_r-q_lower,max_r U_r+q_upper] once.",
+    "raw_lower": 0.037510482520758615,
+    "raw_upper": 0.039976363791419445,
+    "frozen_lower": 0.05,
+    "frozen_upper": 0.05,
+    "floor_provenance": "NEW residual floor, not an original floor. Original material-order threshold remains .05. No weights, physics, safety, candidate directions/magnitudes, horizon, observer or pilot eligibility envelope changed.",
+    "calibration": "Three OLD CALroads:4supported starts/5total,20same-reference actual deltas. Old excluded-from-fit:2supported starts/3total on2roads,10same-reference deltas. All covered after expansion; unsupportedleft2/brake2 never counted as successes. Not fresh validation.",
+    "paired_eligible_after_change": {"numerator": 0, "denominator": 8},
+    "natural_eligible_after_change": {"numerator": 0, "rows": 45, "alternative_comparisons": 90},
+    "absolute_calibration_exactly_preserved": true
+  },
+  "pilot_logged_state_counterfactual": {
+    "classification": "POSTHOC ONLY, not executed actions or measured benefit; changing an earlier action changes subsequent states.",
+    "original": {"cost_gains_of75": 4, "would_pass_of931": 0},
+    "new_envelope_with_005_floor": {"cost_gains_of75": 40, "would_pass_of931": 17, "by_cell": {"1/3184000013": 9, "3/3184000002": 5, "2/3184000006": 3}},
+    "central_signed_alternative_target_diagnostic_only": {"residual_range": [-0.23860135794655335, 0.20703031499754765], "cost_gains_of75": 32, "would_pass_of931": 15},
+    "continuation_warning": "Original75forecasts still have different future actual controls. Neither this counterfactual nor old pilot outcomes validate the proposed interventions. New paired collection is required."
+  },
+  "verification": {"changed_calibration_and_funnel_tests": 27, "additional_original_interval_tests": 14, "old_artifacts_unchanged": true, "pre_execution_review": "Corrected NEW schema adapter to exact immutable CAL/HELD_OUT_FROM_FIT and anchor split keys; synthetic CLI fixture covers it. No old schema/source edits.", "broad_old_audit_repeated": false},
+  "reproduction": {"funnel": "python -B -m scripts.diagnose_joint_temporal_funnel --help", "fit": "OPENBLAS_NUM_THREADS=1 /tmp/kilo/haic-cpu21/bin/python -B -m scripts.calibrate_joint_paired_envelope --output /tmp/kilo/new-joint-envelope-diagnostic", "note": "Operators require existing local primary artifacts; output is exclusive. A new output path does not grant a simulator reset."},
+  "next": "Execute only predeclared newpaired criteria in joint-temporal-diagnosis-v1-plan.json, at most3pairs+repeats after scoped claim/admission. Do not tune on new labels. Full episode is conditional, not automatic."
+}
