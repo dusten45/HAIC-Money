@@ -1,0 +1,33 @@
+{
+  "schema": "haic-joint-temporal-pilot-consumed-train-v1",
+  "study_id": "joint-temporal-interval-v1",
+  "status": "reserved-consumed-reuse",
+  "claimed_by": "main/r6t9",
+  "claimed_at_utc": "2026-10-05T11:26:39Z",
+  "partition": "TRAIN",
+  "fresh": false,
+  "cells": [[1, 3184000013], [3, 3184000002], [2, 3184000006]],
+  "arms": ["baseline", "successor"],
+  "max_resets": 6,
+  "retries": 0,
+  "additional_paired_resets": 0,
+  "run_directory": "/workspace/HAIC-Money/runs/joint-temporal-interval-v1/pilot",
+  "calibration_sha256": "5c8fe665e21688a88e286ded8771577d51b1c1849db2a744c91f1905cf3bf1b0",
+  "source_sha256": {
+    "/workspace/HAIC-Money/scripts/run_joint_temporal_pilot.py": "46461eae25d450fc0aeb7305992238944bc6c84ae3a31271e6d42957f45fdef4",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/successor.py": "5bfb7ba054d8204c5c1fc9f8dd930d9f00bf1217c57539698c2f72db45676378"
+  },
+  "evidence_sha256": {
+    "/workspace/HAIC-Money/experiments/joint-temporal-interval-v1-plan.json": "5f5c0a8b7c26b2ca169b745b3924623fe9fb1c5b6ea0f29d5c85ec7566ac7375",
+    "/workspace/HAIC-Money/experiments/joint-temporal-interval-v1-exposure.json": "b3f36f96c4b9e9cfbd259681969c6b289d4c3b23cc5fbd6c9b797b1c3fa19a81",
+    "/workspace/HAIC-Money/runs/joint-temporal-v1/run.json": "be5241d95c7eb4d06a39a2f5ed40175bc306c05d70c7e00145ca34925b22b9ba",
+    "/workspace/HAIC-Money/runs/joint-temporal-v1/counters.json": "637453e5d4a1bee6f46a6e4270934d341dc3aa85571a49bd75dcbebb7eb47c15",
+    "/workspace/HAIC-Money/runs/koi-sprint72-relief-v1/reset-ledger.jsonl": "0f9d797747e2094d901979cb766d3479530db47a14e7d450b41d101f86cfa034"
+  },
+  "active_conflicts": [],
+  "unmatched_candidate_intents": [],
+  "protected_intersections": [],
+  "ambiguity_blockers": [],
+  "recheck": "Latest relevant talk and candidate-specific claims rechecked before claim. Only this study's own new declarations; prior probe/temporal and KOI consumed runs closed. Freeze copies this immutable claim under the train-seed registry directory flock; separate current resource/admission receipt required before execute.",
+  "limitations": "Retain prior global-use uncertainty. This is consumed development reuse, not freshness, confirmation, safety certification, official evaluation or model replacement. Historic seed claims remain unchanged."
+}

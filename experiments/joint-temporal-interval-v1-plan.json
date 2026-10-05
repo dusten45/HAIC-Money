@@ -1,0 +1,48 @@
+{
+  "schema": "haic-joint-temporal-interval-plan-v1",
+  "status": "PREDECLARED_BEFORE_REANALYSIS_AND_PILOT",
+  "authorization": "User 2026-10-05T10:59:00Z: repair road representation, revalidate eight pairs, calibrate trajectory uncertainty and execute three representative TRAIN full-episode baseline/successor pairs; commit and push; no official action or model replacement.",
+  "scope": "Consumed TRAIN research only. Preserve champion, path/speed distillation, old joint sources/results and unrelated RLPD work.",
+  "physics": [1.0, 1.0, 1.0],
+  "action_hold_seconds": 0.08,
+  "prediction_holds": 4,
+  "prediction_raw_ticks": 16,
+  "candidate": "One joint alternative: steer toward zero by at most .04 (zero uses +.04); gas +.05 and brake -.05, clipped to official bounds. Only its first hold differs; prediction tail uses current baseline action for three holds. No grid expansion or weight tuning.",
+  "cost_weights": {"progress": -1.0, "lateral_squared": 0.2, "heading_squared": 2.0, "road_risk": 0.5, "obstacle_risk": 1.0, "road_clearance_loss": 0.25, "obstacle_clearance_loss": 0.5, "effort": 0.02},
+  "road_contract": "Retain observed interior mask. Bracket ambiguous edge pixels only between observed asphalt and observed nonroad, never across another road run or image edge. Store left/right/center intervals; unbracketed pixels remain unobserved. No mask filling. Five shared reference realizations (midpoint, lower, upper, alternating extremes) are a finite empirical stress set, not a rigorous nonlinear interval enclosure. Conservative clearance uses confirmed asphalt only. Every action/scenario must support all 17 endpoints and swept intervals; no candidate-specific prefix or surviving-support normalization.",
+  "paired_revalidation": {
+    "source": "runs/joint-temporal-v1/analysis.json",
+    "anchors": 8,
+    "calibration_geometry_seeds": [3184000002, 3184000013, 3184000015],
+    "held_out_from_this_fit_geometry_seeds": [3184000001, 3184000006],
+    "split_reason": "Original observer-development overlap versus disjoint strata, fixed without selecting new residual outcomes. Every layout/arm/window of a road keeps its role.",
+    "not_fresh": true,
+    "calibration": "Time-index empirical maxima of central runtime trajectory position/yaw errors on CAL, retaining .5 world/.05 rad engineering floors after t0. Includes initialization AND dynamics. Report actual-oracle and oracle-runtime signed residuals separately. Whole-path containment requires a single shared initial-state scenario for position and yaw at every tick. Mapping residuals calibrated separately by measured/inferred provenance on deduplicated CAL prefix intervals; no held-out enlargement. Paired cost-difference residual calibrated on supported CAL pairs under identical scene/reference realization.",
+    "support_stages": ["frozen original", "interval reference only with original mapping", "interval reference with calibrated mapping and trajectory residuals"],
+    "report": "All eight support masks, baseline/alternative/ambiguous signs, weighted component deltas, actual suffix progress and clearance tradeoffs, prediction errors, calibration/held-out departures and denominators. No small-sample safety or coverage probability guarantee.",
+    "additional_paired_resets": 0,
+    "additional_data_policy": "Existing synchronized pairs suffice for this empirical calibration and held-out-from-fit check. If a concrete missing-label blocker appears, a separate predeclared small TRAIN paired supplement is required; no automatic extension."
+  },
+  "pilot_cells": [
+    {"track_id": 1, "seed": 3184000013, "role": "ordinary control with straight/left-entry support"},
+    {"track_id": 3, "seed": 3184000002, "role": "right-entry and shield challenge"},
+    {"track_id": 2, "seed": 3184000006, "role": "left-entry and noncollision-DNF challenge"}
+  ],
+  "pilot": {
+    "arms": ["baseline", "successor"],
+    "maximum_resets": 6,
+    "maximum_decisions_per_episode": 1200,
+    "maximum_interventions_per_successor_episode": 40,
+    "retries": 0,
+    "complete_natural_episodes": true,
+    "eligibility": "Valid observer, forward speed>5, HUD40..80, abs(baseline steer)<=.35, gas<=.1, brake .02.. .5; no active shield/threat/recovery override. Supported common full horizon, strict upper empirical delta cost < -.05 after shared state/reference stresses and CAL residual expansion, plus supported empirical trajectory tube and unchanged .25road/.5obstacle margin vetoes. Otherwise baseline, not an inferred safe action. No requirement that all four earlier regimes qualify.",
+    "feedback": "One champion query and one actual-issued-action observer commit per decision. Pure candidate calculations. Changed brake replaces current nominal brake-history item; changed steering recomputes shield actuator and box propagation from the unadvanced merged boxes, not from already propagated memory. No-op leaves champion state identical.",
+    "measurement": "Completion, lap time only on finishes, progress separately, contacts/collision decisions/hit objects/damage, offroad, intervention/abstain counts and rates, failures temporally after intervention, and full successor act CPU and wall distributions. Range departures are not accidents; changing future controls are not model-error labels unless predicted with the actual sequence offline.",
+    "zero_interventions": "Candidate effect NOT EVALUATED, regardless of unchanged completion or accident counts.",
+    "stop": "Invalid provenance/action/feedback, execution failure or resource exhaustion preserves partial evidence without retries. Ordinary driving failures are recorded and episodes still terminate naturally. No outcome-dependent tuning or extra episode.",
+    "interpretation": "Diagnostic consumed-TRAIN pilot, not safety evidence, adoption, official score or generalized superiority."
+  },
+  "resources": {"python": "/tmp/kilo/haic-cpu21/bin/python", "threads": 1, "child_wall_seconds": 600, "total_wall_seconds": 3600, "rss_limit_bytes": 1073741824, "address_space_limit_bytes": 4294967296, "basis": "Prior compact paired capture peak below400MB and full-champion reference about509MB; six short natural episodes. Recheck live memory/disk and targeted runtime/source pins before resets; no broad audit repetition."},
+  "preserve": ["official environment", "frozen champion c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801", "path and speed distillation", "all original joint prediction/temporal evidence"],
+  "publication": "Only intended reusable source, focused tests, concise plan/result/reproduction documents and new coordination notes. Do not commit raw episodes, model/training outputs, unrelated changes or secrets. Verify dusten45 author/committer and authenticated remote account before scoped commit/push."
+}

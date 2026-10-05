@@ -1,1 +1,1 @@
-"""Isolated observation and prediction research; no driving policy or Agent."""
+"""Isolated joint-control research, separate from the submission champion."""

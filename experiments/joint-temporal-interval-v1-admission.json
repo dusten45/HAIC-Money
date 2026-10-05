@@ -1,0 +1,28 @@
+{
+  "schema": "haic-joint-temporal-pilot-admission-v1",
+  "admitted": true,
+  "protocol_sha256": "11fac3c4c5d337487675b8a69fc650a5420c0653f48548d0b13f2599620224c3",
+  "claim_sha256": "808e2d38e4e72a3e1c8a437d8cf7be92d5453fe6592f7f824dddd742dbf72e6f",
+  "calibration_sha256": "5c8fe665e21688a88e286ded8771577d51b1c1849db2a744c91f1905cf3bf1b0",
+  "created_unix_s": 1791199696.5574589,
+  "expires_unix_s": 1791203296.5574589,
+  "preflight_sha256": "944e232173538b25096b6ec30e02b39fe62f762810d2479733790ec7448cdcb2",
+  "tests": {"passed": 197, "subtests_passed": 65, "runtime": "CPU21 Python with NumPy1.26.0/OpenCV4.8.1; existing host pytest tooling appended, plugin autoload disabled", "warning": "pygame pkg_resources deprecation only"},
+  "resources": {
+    "host_available_bytes": 118958350336,
+    "finite_cgroup_max_bytes": 129567293440,
+    "finite_cgroup_current_bytes": 21776822272,
+    "minimum_raw_headroom_bytes": 107790471168,
+    "required_additional_memory_and_reserve_bytes": 1342177280,
+    "output_and_temporary_disk_free_bytes": 110140067840,
+    "initial_output_bytes": 799069,
+    "baseline_import_rss_bytes": 267296768,
+    "successor_import_rss_bytes": 269557760,
+    "oom_events": 0,
+    "pressure": "all measured averages0; total0",
+    "forecast": "Six serial short natural episodes; each child600s, total3600s,1GiB RSS,4GiB address space,1GiB output plus128MiB disk reserve. Import observations and prior <400MB temporal/<510MB champion peaks support the memory allowance. Live telemetry and source admission rechecked before every reset."
+  },
+  "scope_recheck": "No new relevant talk or candidate-specific claim since scoped exposure except this own immutable claim. Exact three consumed TRAIN cells, baseline/successor only, no retries or supplemental pairs. Historic claims unchanged. Protocol froze under shared train-seed directory flock.",
+  "paired_gate_interpretation": "No forced gain or all-four-regime prerequisite. All eight anchor cost orders become uncertain after empirical CAL error expansion, so their actions abstain. Full episodes may use only later runtime-supported, clear-cost local opportunities; zero interventions is NOT EVALUATED candidate effect, not success.",
+  "authorization": "Current user request permits exactly this internal pilot. No official submission, model replacement, champion edit, weight retuning or safety claim."
+}
