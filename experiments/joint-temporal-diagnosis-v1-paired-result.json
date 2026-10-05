@@ -1,0 +1,75 @@
+{
+  "schema": "haic-joint-envelope-new-pairs-result-v1",
+  "status": "COMPLETE_THREE_NEW_PAIRS_CONDITIONAL_GATE_PASS",
+  "classification": "New paired starts on three consumed TRAIN roads excluded from the old joint fit. Not fresh roads, blind validation, independent15-case coverage, official score or safety evidence.",
+  "evidence": {
+    "protocol": {"path": "runs/joint-temporal-diagnosis-v1/pairs/protocol.json", "sha256": "1324ff2fec88cb44d0b29983fcb0f3192c8a465c16d4657fc017a48c2933b7bc"},
+    "analysis": {"path": "runs/joint-temporal-diagnosis-v1/pairs/analysis.json", "sha256": "1043a3c62bf1d96078a52658edfa856e689a8e9f01f12413c03c2a3399569bae"},
+    "report": {"path": "runs/joint-temporal-diagnosis-v1/pairs/report.json", "sha256": "33c4d80654ad8f57734e445e8b3235099db150bb5728ca6f212b4a24dbd68fb5"},
+    "counters": {"path": "runs/joint-temporal-diagnosis-v1/pairs/counters.json", "sha256": "47fbb6e3d888dbc796153c251765c60455f6f1337183d6e3213a0c7153f40ad4"},
+    "calibration": {"path": "runs/joint-temporal-diagnosis-v1/envelope-calibration.json", "sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96"}
+  },
+  "protocol_adherence": {
+    "fixed_cells": [[1, 3184000003], [2, 3184000004], [3, 3184000005]],
+    "first_causal_cost_supported_prefixes": [18, 18, 33],
+    "selection_looked_at_winner_or_risk_or_future_outcome": false,
+    "new_data_used_for_fit": false,
+    "actual_resets": 9,
+    "actual_decisions": 243,
+    "actual_raw_ticks_including_warmup": 1431,
+    "warmup_raw_ticks": 459,
+    "complete_arms": 9,
+    "not_found_pairs": 0,
+    "operator_error": null,
+    "retries_or_replacements": 0,
+    "wall_seconds_including_simulator_and_capture": 120.66201705811545,
+    "counter_warning": "Report schedule rows decisions64/raw307 are per-arm CAPS, not actual usage. Counters and receipts have22/22/37 driving decisions and139/139/199 rawticks perarm bycell. All actual counters equal completed/started, blocksclosed,9arms SEALED.",
+    "full_baseline_repeat_parity": "3/3 pairs: complete accessible raw state, boundaries and observation streams exactly equal",
+    "alternative_prefix_parity": "3/3 pairs: initial/static/warmup/prefix/anchor exactly equal before differing firsthold action",
+    "continuation": "Actual float32 firsthold differs once; following3holds exact common baselinea0.17raw-endpoint paths/16rawcontrols, no subsequent champion query or speculative observer commit. Replays instantiate noAgent.",
+    "kept": "Exactchampion/distillation,physics1/1/1,.04/.05 actionbounds,H4/.32s,weights,19sharedstates/5references,complete support and original physical/mapping calibration."
+  },
+  "delta_convention": "Alternative-baseline; negative cost favors alternative. All cost intervals are five finite observed-reference stresses, not probability confidence or exhaustive geometry intervals.",
+  "rows": [
+    {"cell": [1, 3184000003], "prefix": 18, "baseline_action": [-0.06499999761581421, 0.0, 0.1525813788175583], "alternative_action": [-0.02499999850988388, 0.05000000074505806, 0.10258138179779053], "old_predicted_interval": [-1.8768885018755341, 0.17240539602882166], "new_predicted_interval": [-1.477269755161408, -0.22721335068530452], "actual_cost_interval": [-1.0252565431066785, -0.7754011273862638], "old_would_select": false, "new_would_select": false, "actual_cost_order": "alternative", "unchanged_absolute_support_scenarios": 5, "scenarios": 19, "known_inflated_ticks": 302, "inflated_tick_denominator": 323, "minimum_known_road_gap": 0.117348313332, "road_required": 0.25, "vetoed_scenarios": 19, "new_abstain_reasons": ["unknown_trajectory_support", "road_margin"], "paired_envelope_excess_lower_upper": [0, 0]},
+    {"cell": [2, 3184000004], "prefix": 18, "baseline_action": [-0.032499998807907104, 0.0, 0.18549488484859467], "alternative_action": [0.0, 0.05000000074505806, 0.1354948878288269], "old_predicted_interval": [-1.3465294230426217, 0.41609485974958105], "new_predicted_interval": [-0.9469106763284956, 0.01647611303545489], "actual_cost_interval": [-0.7887963776220666, -0.6111690841570727], "old_would_select": false, "new_would_select": false, "actual_cost_order": "alternative", "unchanged_absolute_support_scenarios": 0, "scenarios": 19, "known_inflated_ticks": 285, "inflated_tick_denominator": 323, "minimum_known_road_gap": -1.64320099354, "road_required": 0.25, "vetoed_scenarios": 19, "new_abstain_reasons": ["unknown_trajectory_support", "road_margin", "empirical_order_uncertain"], "paired_envelope_excess_lower_upper": [0.0015376423522752702, 0]},
+    {"cell": [3, 3184000005], "prefix": 33, "baseline_action": [-0.019999999552965164, 0.0, 0.24541643261909485], "alternative_action": [0.0, 0.05000000074505806, 0.1954164355993271], "old_predicted_interval": [-1.1314984730967552, 0.1357753072988288], "new_predicted_interval": [-0.7318797263826291, -0.26384343941529736], "actual_cost_interval": [-0.5682785259300402, -0.45710093578388467], "old_would_select": false, "new_would_select": true, "actual_cost_order": "alternative", "unchanged_absolute_support_scenarios": 19, "scenarios": 19, "known_inflated_ticks": 323, "inflated_tick_denominator": 323, "minimum_known_road_gap": 1.29312729836, "road_required": 0.25, "vetoed_scenarios": 0, "new_abstain_reasons": [], "paired_envelope_excess_lower_upper": [0, 0]}
+  ],
+  "remaining_second_pair_ambiguity": {
+    "central_midpoint_delta": -0.471022149206,
+    "state_only_midpoint_reference_range": [-0.816106672699, -0.172764875493],
+    "reference_only_central_state_range": [-0.501764726476, -0.434138260427],
+    "joint_stress_range": [-0.896910676328, -0.033523886965],
+    "new_upper_with_floor": 0.01647611303545489,
+    "interpretation": "Joint state/reference stress ALREADY fails the unchanged -.05 material threshold before residual expansion. It is not solely an allowance blocker. Its physical support/road veto also remains. No relaxation follows this observed beneficial suffix."
+  },
+  "actual_cost_components": {
+    "qualification": "WEIGHTED component deltas on actual paths in the same pre-action OBSERVED scene; not privileged true-road or lap-time quantities. Columns match unchanged cost weights.",
+    "columns": ["progress", "lateral_squared", "heading_squared", "road_risk", "road_clearance_loss", "effort", "sum_midpoint_reference_delta"],
+    "cell1": [-1.095540242548, 0.039910750105, 0.056155021298, 0, 0.077581405640, -0.000022173019, -0.921915238524],
+    "cell2": [-0.978586972467, 0.103333465887, 0.008080181884, 0.015463700597, 0.141215145588, -0.000023369180, -0.710517847691],
+    "cell3": [-0.426079824192, -0.041884495207, -0.004085062379, 0, 0, -0.000031906627, -0.472081288404],
+    "obstacle_terms": "Both obstacle risk and obstacle-clearance-loss deltas are0 for all3; observed boxes empty. Known obstacle SAT gaps use+infinity, serializednull likeNaN; do not interpret these nulls as0gap or obstacle contact. No obstacle_margin flags.",
+    "actual_path_minimum_observed_road_gap_baseline_alternative": [[2.468906164169, 2.158580541611], [1.953389167786, 1.388528585434], [3.056795597076, 3.056795597076]],
+    "tradeoff": "First2 gain observed-reference progress at cost of worse lateral/heading/road clearance. Third improves observed-reference progress,lateral andheading with unchanged minimum road gap. First2 risk-vetoed predictions are NOT measured accidents."
+  },
+  "privileged_separate_proxies": {
+    "GT_nearest_centerline_h4_progress_baseline_alternative": [[17.592703627199, 17.646514280721], [16.934603037406, 16.969948755161], [19.395708866372, 19.820495470910]],
+    "GT_progress_deltas": [0.053810653522, 0.035345717755, 0.424786604537],
+    "raw_reward_baseline_equals_alternative": [14.847368421053, 13.879876160991, 13.415015015015],
+    "raw_reward_deltas": [0, 0, 0],
+    "warning": "Observed-reference progress gains1.09554/.97859/.42608 are not interchangeable with GT progress or lap-time gain. First2 differ substantially; do not relabel their cost gains as that much true progress. Raw reward is an internal proxy, not official ranking."
+  },
+  "uncertainty_and_harm": {
+    "paired_cost_envelope_covered": {"same_reference_labels": 15, "denominator": 15, "starts": 3, "interpretation": "Correlated5reference stresses perstart, not15independent examples; frozen lower/upper.05/.05, nofit onnewdata."},
+    "trajectory_wholepath_misses": {"misses": 0, "paths": 6, "starts": 3, "criterion": "One fixed scenario jointlyXY+yaw across all17endpoints, unchanged physical arrays; paired B/A paths correlated."},
+    "actual_obstacle_contact_ticks": 0,
+    "actual_damage_increases": [0, 0, 0, 0, 0, 0],
+    "minimum_road_contact_wheels_all_six_paths": 4,
+    "partial_or_total_wheel_loss": false,
+    "safety_guarantee": false
+  },
+  "conditional_gate": {"outcome": "PASS", "complete_pairs": 3, "selected_pairs": 1, "selected_evaluable_pairs": 1, "selected_supported_actual_benefit": {"numerator": 1, "denominator": 1}, "blockers": [], "first_qualifying_cell": [3, 3184000005], "next": "Only predeclared one baseline/successor full-episode pair allowed after separate newsource/claim/admission. Not a generalized safety or performance claim; no otherroad/retry/tuning."},
+  "reproduction": "Exact recorded execute/analyze invocations use protocol1324ff2f... andsource-bound immutableadmission; no replay resets authorized by this record. Analyze is offline, finalartifact exclusive. Primary code/plan/claim/receipts retain allscalar and trajectorydetails. Raw/frozen/generated evidence stayslocal, notGit.",
+  "limits": "Onlyone newly selectable, actually favorable localcost case. No full-episode lap improvement yet; no safety guarantee or model adoption. Preserve allthree cases and unchanged thresholds, including beneficial but abstained firsttwo."
+}

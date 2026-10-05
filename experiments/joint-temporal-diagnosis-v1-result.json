@@ -1,0 +1,106 @@
+{
+  "schema": "haic-joint-temporal-diagnosis-final-result-v1",
+  "status": "COMPLETE_CAUSE_SPECIFIC_CORRECTION_ACTUALLY_INTERVENES_BUT_REGRESSES_ONE_ROAD",
+  "promotion": "DO_NOT_PROMOTE_FROM_THIS_RESULT",
+  "official_action": false,
+  "champion_replaced": false,
+  "summary": "Zero intervention was not an observer-only problem. A separate shared-envelope performance residual removes one diagnosed conservative barrier, passes one selectable favorable newpaired case, and causes6actual full-episode interventions. On the one matched road, successor is380ms slower and has2all-wheel-road-loss spells versus0. No driving improvement or safety guarantee established; no post-outcome tuning or extra runs.",
+  "evidence": {
+    "diagnosis": "experiments/joint-temporal-diagnosis-v1-diagnosis.json",
+    "new_pairs": "experiments/joint-temporal-diagnosis-v1-paired-result.json",
+    "full_protocol": {"path": "runs/joint-temporal-diagnosis-v1/full-pilot/protocol.json", "sha256": "a2f07616ea1830d82322d813c0c2c1da45691da27a947d1da6cbc88e2f47504e"},
+    "full_summary": {"path": "runs/joint-temporal-diagnosis-v1/full-pilot/summary.json", "sha256": "72dad2216d6f8d772c60f72e96206ab4838f5967589889da3fae3c62fd4f204f"},
+    "full_report": {"path": "runs/joint-temporal-diagnosis-v1/full-pilot/episode-report.json", "sha256": "d687e676b8d0cd6c4404ec339a2ba24aaee5e55d5f5a4df5bb4034873386048b"},
+    "full_reset_ledger": {"path": "runs/joint-temporal-diagnosis-v1/full-pilot/reset-ledger.jsonl", "sha256": "4ee7f7e1aa9e5ab8ed5548fb75c85c4947e1db0499a61f145a9856c5449497a4"},
+    "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96"
+  },
+  "diagnosis_conclusion": {
+    "original_decisions": 931,
+    "pre_excluded": 856,
+    "compared": 75,
+    "fixed_order_pre_exclusions": {"observer_forward": 287, "mapping": 1, "pilot_envelope": 464, "shield_recovery_feedback": 104},
+    "supported_no_risk_comparisons": 19,
+    "of_those_shared_stress_blocked": 2,
+    "of_those_old_allowance_blocked": 17,
+    "old_robust_gains_all_road_vetoed": 4,
+    "meaning": "Nonexclusive overlaps and full cost/risk cross-table preserved inprimary funnel; fixedfirst-failure order is notcausal attribution. Pre-excluded856have no invented counterfactualcosts."
+  },
+  "specific_correction": {
+    "old_target": "q=.44961874671412616 correctly bounds actual paired delta's distance to EVERY state/reference prediction. The negative maximizing residual contains state-stress distance and is symmetrized into the upper penalty. No candidate-index mismatch or literal double addition ofq.",
+    "new_target": "Only one-sided excess beyond each SAME-reference shared-state cost envelope; originalCAL rawlower/upper=.03751048/.03997636, then NEW conservative residualfloor .05each. This is an explicit empirical contract change, not arbitrary winner-tuning or a theorem.",
+    "preserved": ["exact entire old physical/mapping calibration", "physics1/1/1", ".04steer/.05pedal maximum change", "H4/.32s", "cost weights", "material gain threshold .05", "19initial states and5reference stresses", "common full17endpoint support", "road.25/obstacle.5 vetoes", "champion and path/speed distillation"],
+    "old_state_counterfactual": "17/931 saved old-pilot states would pass, NOT17achievable or beneficial closed-loop interventions."
+  },
+  "prospective_pairs": {
+    "roads": [[1, 3184000003], [2, 3184000004], [3, 3184000005]],
+    "first_causal_prefixes": [18, 18, 33],
+    "actual_cost_alternative_wins": {"numerator": 3, "denominator": 3},
+    "new_predicted_material_gains": {"numerator": 2, "denominator": 3},
+    "genuinely_selectable_actual_beneficial_pairs": {"numerator": 1, "denominator": 3},
+    "selected_pair": [3, 3184000005],
+    "paired_cost_coverage": "15/15 correlated same-reference labels across3starts within frozen performance interval; not15independent trials.",
+    "trajectory_coverage": "6/6 paired paths within unchanged17endpoint fixed-scenario XY+yaw empiricaltube; small consumedTRAINsample, not guarantee.",
+    "raw_reward_delta_all3": 0,
+    "metric_caveat": "Observed-reference progress improvements1.09554/.97859/.42608 differ from GTprogress .05381/.03535/.42479. Internal cost improvement is not automatically true-progress or lap improvement. No refit on these data."
+  },
+  "full_episode_pair": {
+    "cell": [3, 3184000005],
+    "classification": "One predeclared conditional consumed-TRAIN matched comparison; not replicated generalization.",
+    "natural_episodes": 2,
+    "reset_intents": 2,
+    "retries_or_replacements": 0,
+    "operator_error": null,
+    "wall_seconds_including_simulator_and_logging": 49.757023158017546,
+    "matched": true,
+    "identical_static_initial_and_raw_prefix": true,
+    "unchanged_prefix_decisions": 33,
+    "first_changed_step": 34,
+    "first_changed_pre_state_and_image_equal": true,
+    "all_actions_equal": false,
+    "baseline": {"finished": true, "lap_ms": 21720, "progress": 1.0, "decisions": 272, "driving_raw_ticks": 1086, "collision_positive_decisions": 0, "physical_contact_events": 0, "damage": 0, "all_wheels_road_loss_spells": 0, "all_wheels_road_loss_ticks": 0, "all_wheels_road_loss_max_seconds": 0, "any_wheel_offroad_ticks": 75, "any_wheel_offroad_max_seconds": 0.54, "minimum_fixture_clearance": 2.581747564653658},
+    "successor": {"finished": true, "lap_ms": 22100, "progress": 0.987987987987988, "decisions": 277, "driving_raw_ticks": 1105, "collision_positive_decisions": 0, "physical_contact_events": 0, "damage": 0, "all_wheels_road_loss_spells": 2, "all_wheels_road_loss_ticks": 18, "all_wheels_road_loss_max_seconds": 0.28, "any_wheel_offroad_ticks": 91, "any_wheel_offroad_max_seconds": 0.70, "minimum_fixture_clearance": 3.4076388839377563},
+    "lap_delta_successor_minus_baseline_ms": 380,
+    "lap_change": "About1.75% slower on this road; both finish. Progress fraction is reported separately, not a finish flag.",
+    "effect_status": "EVALUATED_ONE_ROAD_NEGATIVE_LAP_AND_ROAD_CONTACT_RESULT"
+  },
+  "actual_successor_decisions": {
+    "comparisons": {"numerator": 16, "denominator": 277},
+    "interventions": {"numerator": 6, "denominator": 277, "rate": 0.021660649819494584},
+    "abstain": {"numerator": 271, "denominator": 277, "rate": 0.9783393501805054},
+    "actual_proposal_differences": 6,
+    "candidate_orders_of16": {"alternative": 8, "baseline": 0, "ambiguous": 4, "unsupported": 4},
+    "feedback": "Inherited one champion query and one actual-issued float32 action commit. Actual brake history and shield actuator/box memory corrected from unadvanced state. Candidate scoring never changes observer; no second prediction foroldqdiagnostics."
+  },
+  "failures_after_intervention": {
+    "events": [
+      {"kind": "all_wheels_offroad", "step": 67, "time_seconds": 6.36, "last_intervention_step": 55, "decision_distance": 12, "seconds_after_last_intervention": 1.02, "duration_seconds": 0.28},
+      {"kind": "all_wheels_offroad", "step": 238, "time_seconds": 20.06, "last_intervention_step": 55, "decision_distance": 183, "seconds_after_last_intervention": 14.72, "duration_seconds": 0.08}
+    ],
+    "interpretation": "Both recorded road-loss events temporally follow intervention, but2/2 is a fraction offailureevents, NOT a per-intervention failure probability. Do not report2/6 as a causal failure rate. This one matched policy run is worse on these measurements; individual intervention/long-delay mechanisms are unisolated. No collisions or damage occurred."
+  },
+  "prediction_ranges": {
+    "online_forecasts": 16,
+    "different_actual_future_continuation": 16,
+    "qualified_exact_H4_windows": 0,
+    "range_miss_rate": null,
+    "interpretation": "All later actualcontrols differ from the fixed common-tail forecast law. These are not16misses or16containment successes. No onlineH4coverage estimate. The matched fixed-tail newpair evidence above is separate. Physicalroadloss at1.02s/14.72s afterlastintervention is not automatically a .32s prediction-range miss."
+  },
+  "full_act_timing": {
+    "measurement": "External process_time/perf_counter around COMPLETEact including observer/champion/scoring/feedback/commit/provenance. Logging/environment excluded; thread1 CPU21. No calls or samples censored.",
+    "successor_cpu_ms": {"n": 277, "p50": 20.056434999997208, "p95": 167.16933259999997, "p99": 173.18890976000129, "max": 178.95496100000052, "over1000ms": 0},
+    "successor_wall_ms": {"n": 277, "p50": 20.054892636835575, "p95": 167.1674988232553, "p99": 173.1929149106145, "max": 178.95726766437292},
+    "baseline_cpu_ms": {"n": 272, "p50": 16.290308999999503, "p99": 23.667059520000016, "max": 24.63937700000063},
+    "max_sampled_successor_rss_bytes": 305127424,
+    "caveat": "One different road/decision mix. Do not call p99 lower than the earlier253.6ms three-road pilot a demonstrated CPU optimization; no latency-targeted code change was made."
+  },
+  "budget_and_preservation": {"total_new_resets": 11, "paired_resets": 9, "full_resets": 2, "total_new_decisions": 792, "total_raw_including_warmup": 3724, "total_warmup_raw": 561, "additional_runs_after_outcome": 0, "old_source_and_artifact_pins_unchanged": true, "champion_zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801", "unrelated_RLPD_work_preserved": true},
+  "verification": {"combined_tests_before_last_gate_hardening": 244, "combined_subtests": 72, "hardened_gate_runner_tests_after_six_new_tests": 29, "distinct_test_cases_covered": 250, "zero_reset_import_preflights": 5, "review_fixes": "Final-boundary damage innewpaired capture and explicitsource-bound prediction-mask rederivation forconditionalgate, both BEFORE relevantresets. No oldlarge audit rerun or post-result source/weight/range tuning.", "warning": "pygame pkg_resources deprecation only"},
+  "reproduction": {
+    "diagnosis": "See joint-temporal-diagnosis-v1-diagnosis.json and saved funnel source pins; pre-excluded decisions remain NOT_COMPUTED.",
+    "new_pairs": "See joint-temporal-diagnosis-v1-paired-result.json; immutable protocol1324ff2f... and claim/admission bind exactly9arms. Existing run-start/output prevents reset replay.",
+    "full_analysis_recorded_command": "/tmp/kilo/haic-cpu21/bin/python -B -m scripts.run_joint_envelope_pilot analyze --output runs/joint-temporal-diagnosis-v1/full-pilot --protocol-sha256 a2f07616ea1830d82322d813c0c2c1da45691da27a947d1da6cbc88e2f47504e",
+    "verify_full_summary_without_writes_or_resets": "/tmp/kilo/haic-cpu21/bin/python -B -c \"from pathlib import Path; from unittest.mock import patch; from scripts import run_joint_envelope_pilot as p; out=Path('runs/joint-temporal-diagnosis-v1/full-pilot').resolve(); expected=p.read_json(out/'summary.json'); guard=patch.object(p,'save',lambda *args: None); guard.start(); actual=p.analyze(out,'a2f07616ea1830d82322d813c0c2c1da45691da27a947d1da6cbc88e2f47504e'); guard.stop(); assert actual==expected; print('saved conditional pilot summary verified without writes or resets')\"",
+    "rule": "Analysis artifact write is exclusive. Use documented read-only verification instead of overwriting/deleting evidence. Full11-reset budget spent; old admissions are one-shot and time-bounded, not newexecution authorization. Raw/frozen/generated data and external CPU21snapshot remainlocal; source/tests/manualrecords committed."
+  },
+  "remaining_question": "Why does a supported isolated fixed-tail local cost benefit fail to improve this natural-feedback lap? Objective/progress proxy, actual continuation and later policy-response interactions remain candidate explanations, not established mechanisms. This result still does not prove joint-control impossible or observer-only causation. No further change or run is authorized by the outcome itself."
+}

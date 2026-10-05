@@ -1,0 +1,45 @@
+{
+  "schema": "haic-joint-envelope-pilot-consumed-train-v1",
+  "study_id": "joint-envelope-pilot-v1",
+  "parent_study": "joint-temporal-diagnosis-v1",
+  "status": "reserved-consumed-reuse",
+  "claimed_by": "main/r6t9",
+  "claimed_at_utc": "2026-10-05T13:47:42Z",
+  "partition": "TRAIN",
+  "fresh": false,
+  "cells": [[3, 3184000005]],
+  "arms": ["baseline", "successor"],
+  "max_resets": 2,
+  "max_decisions_per_episode": 1200,
+  "retries": 0,
+  "replacements": 0,
+  "run_directory": "/workspace/HAIC-Money/runs/joint-temporal-diagnosis-v1/full-pilot",
+  "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96",
+  "gate_sha256": {
+    "analysis": "1043a3c62bf1d96078a52658edfa856e689a8e9f01f12413c03c2a3399569bae",
+    "protocol": "1324ff2fec88cb44d0b29983fcb0f3192c8a465c16d4657fc017a48c2933b7bc",
+    "report": "33c4d80654ad8f57734e445e8b3235099db150bb5728ca6f212b4a24dbd68fb5"
+  },
+  "source_sha256": {
+    "/workspace/HAIC-Money/scripts/run_joint_envelope_pilot.py": "0f73b74033fe91bc79d4a8cf72d263fb1364e635bdccddfc994d77bdbcf26e08",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/envelope_successor.py": "4bb6bdf088f35dfb1f90f4abc77b8eb96ae4f7c418f013b9247df743277331d1",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/paired_residual.py": "98c262128681634b02f2f942d9d104cbd1849a63e1a359ff8510fe69c336cd7c",
+    "/workspace/HAIC-Money/scripts/run_joint_temporal_pilot.py": "46461eae25d450fc0aeb7305992238944bc6c84ae3a31271e6d42957f45fdef4"
+  },
+  "evidence_sha256": {
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-plan.json": "f92ede10ed1b3dda8b55578f482297abd6842b975fe7811c89a0a6d161ba5123",
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-exposure.json": "537f36ed82f0fb172e95743a2e6f442c84b3fa7b24e790ec3489402eac9fea88",
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-paired-result.json": "3418047a5d334387a9a132cb7f228928a62d72dcf3dac5f2e4efd2a18de3f693",
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-claim.json": "7826a0101591ba2d966c1e9c3282177b4d5b5edca0e56aa7d962b1566352b2bd",
+    "/workspace/HAIC-Money/runs/joint-temporal-diagnosis-v1/pairs/counters.json": "47fbb6e3d888dbc796153c251765c60455f6f1337183d6e3213a0c7153f40ad4",
+    "/workspace/HAIC-Money/experiments/train-seed-claims/seed-3184000005.json": "eee35bf93ef19a975f6ae246a5087b3b9eddc35ddb717789ea1efd204027f99a"
+  },
+  "conditional_qualification": "First/only selectable favorable newpair in exact declaredorder is3/3184000005. Saved mask predicate and interval rederived from all3report-bound COMPLETE anchors, not merely trustingPASS ornew_would_select. Actualselected intervalupper-.4571009358<-.05, noobservedcontact/damage/wheelloss, both17endpoint paths contained. No selected counterexample orunknown. This is an empirical launchcondition, not safety or generalization proof.",
+  "prior_own_claim_reconciliation": "Exact priorpaired claim7826a010... is closed by report33c4d806... and counters47fbb6e3...:9actualresets/243decisions/1431raw, all9SEALED,noopenblock/operatorerror. Its immutable reserved-consumed status is not an outstanding interaction; this separate claim grants no paired rerun. Totalstudy maximum is9paired+2full resets as originally declared.",
+  "scope_recheck": "Current candidate-specific metadata/talk contains only own completednewpairs and conditionalstage; no newthirdparty claim orcandidatepartial beyond previously reconciledhistorical TRAINconsumption. Old seedclaims unchanged. Newfullclaim/protocol mustfreeze under same registry-directoryflock; separatecurrentresource admission precedesexecute.",
+  "active_conflicts": [],
+  "unmatched_candidate_intents": [],
+  "protected_intersections": [],
+  "ambiguity_blockers": [],
+  "limitations": "One consumed TRAIN road, one full episode perarm. No repeats or outcome-selectednewcell, no fit/weight/physics/risk/action/horizon changes, no official action ormodel replacement."
+}
