@@ -1,0 +1,63 @@
+{
+  "schema": "haic-joint-single-intervention-branch-plan-v1",
+  "status": "FROZEN_CRITERIA_BEFORE_B_OUTCOME",
+  "authorization": "User2026-10-05T14:24:31Z: narrowly compareA(champion),B(onlydecision34interventionthenchampionfeedback),C(currentcontinuedsuccessor), reusing comparableA/C; verify same-start .32s fixedtail; limit further work to this branch and evidence-based corrections. No official submission/model replacement.",
+  "cell": [3, 3184000005],
+  "partition": "CONSUMED_TRAIN",
+  "fresh": false,
+  "question": "Does the first intervention retain benefit under the champion's subsequent feedback, and do later interventions change that effect?",
+  "arms": {
+    "A": {"policy": "exact champion", "reuse": "runs/joint-temporal-diagnosis-v1/full-pilot/3-3184000005-baseline", "new_resets": 0},
+    "B": {"policy": "only1-based decision34 uses EXACT recordedC34 candidate; allother issuedactions equal a freshchampion query on actualBobservations", "new_resets": 1, "interventions": 1},
+    "C": {"policy": "current EnvelopeSuccessor, including all its later interventions", "reuse": "runs/joint-temporal-diagnosis-v1/full-pilot/3-3184000005-successor", "new_resets": 0}
+  },
+  "reference_binding": {
+    "full_protocol_sha256": "a2f07616ea1830d82322d813c0c2c1da45691da27a947d1da6cbc88e2f47504e",
+    "full_summary_sha256": "72dad2216d6f8d772c60f72e96206ab4838f5967589889da3fae3c62fd4f204f",
+    "full_report_sha256": "d687e676b8d0cd6c4404ec339a2ba24aaee5e55d5f5a4df5bb4034873386048b",
+    "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96",
+    "champion_zip_sha256": "c9e376a049805a8669af9c3959e09f3f96565530a5a4feb631977237ed64f801",
+    "required": "Current source/runtime/env/calibration equality, completed naturalA/C outcomes, exact initial/static/first33observations/actions/accessible physicalprefix, identical34prestate. Reuse is consumed evidence, not fresh or another executedrepeat. No broadoldinventory audit."
+  },
+  "B_contract": {
+    "intervention_step_1_based": 34,
+    "prefix_completed_holds": 33,
+    "expected_action": "Bind recorded float32 Cdecision34 action in reusecertificate/protocol. Do not choose anew or force an unsupported differentaction.",
+    "implementation": "Isolated SingleInterventionSuccessor reuses originalEnvelope/Temporal feedback. Suppress intervention except34 without mutating globalclasses; at34 require the same supported proposal/candidate and exact issuedCaction. Afterwardsneverintervene, but EVERYstep queries champion on currentBobservation and updates its actual histories normally.",
+    "feedback": "Onechampionquery/oneactualobservercommit perhold. Changed brake replaces current nominalhistory entry; actualsteer recomputes shield wheel/boxes from unadvancedstate. No futureAactions, futureAobservations, GTlabels or hypotheticalactions enter Bpolicy.",
+    "parity": "Binitial/static and first33decisions equalA/C;34prestate/image equal,34action and firstH1postphysics equalC. Crossarm poststate equality stops when actions differ. Confirm allotherBactions equal its ownchampion proposals, neverA's storedcontinuation.",
+    "unchanged": ["champion/distillation", "physicalenv", "physics1/1/1", "costweights", "performance residual.05/.05", "physical/mapping calibration", "19states/5refs", ".04/.05 maxactionchange", "H4/.32s", "risk margins"],
+    "maximum_decisions": 1200,
+    "warmup_raw": 51,
+    "raw_fps": 50,
+    "retries_or_replacement_cells": 0,
+    "termination": "Run to natural finish/retirement; record ordinary failures. Source/provenance/invalidaction/resource failure preservespartial and stops without retry. Failure to reproduceC34 is an operator/parityfailure, not a legitimatezero-effectB."
+  },
+  "fixed_tail_check": {
+    "existing": "runs/joint-temporal-diagnosis-v1/pairs/3-3184000005-{baseline,repeat,alternative}, prefix33, firsta0ora1 then3a0, H4=.32s",
+    "reuse_condition": "Prove sameonlineC34 observation/pastissuedinputs, observer/hypothesis or equivalentcachedprediction, referencecost/scene and float32a0/a1. Verify crossschema accessible physicalstate/prefix and CfirstH1 agrees with fixedalternative. Ignore only known administrativeTimeLimit cap64vs1200, not physicalstate. Do not claim hiddenB2solver cloning.",
+    "if_reuse_passes": "Zero newshort resets; cite alreadyexecuted exactfixedtail reproduction and prediction/actualbenefit with unchangedmetrics.",
+    "if_reuse_fails": "Do not silently use nonmatchedrecords. Atmost2newshort fixedtail arms after a separate targetedfreeze/claim/admission, samecell/prefix/actions/horizon; no newfullA/C or retries. Evidence mustjustifythisneed before resetting.",
+    "maximum_total_new_resets_including_B": 3,
+    "expected_new_resets_if_reuse_valid": 1
+  },
+  "analysis_fixed_before_B": {
+    "primary": "Completion and lapmilliseconds for naturalfinished matchedA/B/C; computeB-A,C-A,C-B onlywith validparity/finish. Progressnotfinish; retain allDNFs/partials/censoring. Internal one-road result, not officialranking.",
+    "physical": "Collision-positive decisions, contacts, damage includingterminalboundary, all/anywheel roadloss spells/ticks/durations, minimumfixtureclearance. Temporalafterintervention is not an individualcausal failure probability.",
+    "control": "Exact actualissued steer/gas/brake andchampionproposal at34..37; actualhistoryfeedback; allCinterventionsteps versusBexactly1. H1/H4/1s/2s speed, signedGTprogress, controlintegrals andsteeringvariation, with rawdt andbranchspecificobservations.",
+    "milestones": "Predefined .25/.50/.75/.95 tileprogress targetcrossing times andlapfinish; retain missingtargets as censored. Compare common targets, not unmatched wall-timepoints mislabeledsame physicalstate.",
+    "feedback_H4_cost": "Score actualA/B/C17endpoint/16rawcontrol firstH4 paths againstthe SAME preaction observedscene/five refs; requirecommon fullsupport, no truncation/filling. Measuredcost underdifferent actualcontrollers, not residualagainstconstant-tailprediction. Longer1s/2s measurements are diagnostics, not a changedpredictionhorizon.",
+    "cpu": "Full Bact CPU/wall, allsamples andp50/p95/p99/max; observers leftpassive after34 stillcount asbranchinstrumentation, not a speedoptimizationclaim."
+  },
+  "interpretation_rules": [
+    "If same-start fixedtail advantage fails, investigate source/observer/dynamics/cost atthatstate; do not blamefeedback alone.",
+    "If fixedtail wins butB is slower, firstlocal intervention doesnot preserve lapbenefit throughchampionfeedback. H4/1s/2s/control traces maylocateloss; horizon/return/acceleration mechanisms remainhypotheses unlessdirectlyisolated.",
+    "IfB is faster butCslower, later interventions asagroup/interactions are candidatesforloss; do not assigncausal blame toone lateraction withoutanotherbranch.",
+    "IfBties, reportno demonstratedsingle-intervention lapbenefit, notpositivecostassuccess.",
+    "CurrentC cannot enter submissioncandidate pool basedonlycost/activity. If actualfeedback laps remain unimproved, explicitlyexclude it. Any positiveB is onecase-specific ablation, not an automaticallygeneral submissionpolicy or officialreplacement. Addedroad/contact/damage regressions are not erasedbylapgain.",
+    "No after-outcome weights/allowance/physics/horizon tuning, extraepisodes ornewroads. Only demonstrated implementationdefects gettargetedfix/tests; preservefailed evidence."
+  ],
+  "resources": {"python": "/tmp/kilo/haic-cpu21/bin/python", "threads": 1, "B_child_wall_seconds": 600, "B_total_wall_seconds": 900, "rss_bytes": 1073741824, "address_space_bytes": 4294967296, "output_bytes": 1073741824, "basis": "Previousmatched2full episodes49.757s,maxRSS305127424B; Bperforms onecandidatecomparison andotherwisechampion+passiveobserver. Onefull episode conservative600s ceiling, no hardware/gate expansion. FreshVmRSS/cgroup/host/disk admission immediatelybefore reset."},
+  "literature": {"url": "https://arxiv.org/abs/2104.11353", "title": "Optimal Cost Design for Model Predictive Control", "use": "Plannedtrajectory cost maydiffer fromrollout taskcost under finitehorizon/replanning/approximation. Motivation forbranchmeasurement, not proof ofthecausehere or permission tofitnewweights."},
+  "publication": "Preserve source/conciseevidence onexistingbranch perverifieddusten45rules. Generatedraw/frozen runs staylocal. Updatecurrentstate/index andcandidateledger onlywarrantedstatus; keepofficialchampion andunrelatedRLPD work unchanged."
+}

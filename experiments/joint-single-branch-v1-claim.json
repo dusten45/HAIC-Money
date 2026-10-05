@@ -1,0 +1,45 @@
+{
+  "schema": "haic-joint-single-branch-consumed-train-v1",
+  "study_id": "joint-single-branch-v1",
+  "status": "reserved-consumed-reuse",
+  "claimed_by": "main/r6t9",
+  "partition": "TRAIN",
+  "fresh": false,
+  "cells": [[3, 3184000005]],
+  "intervention_step": 34,
+  "max_resets": 1,
+  "new_arms": ["B"],
+  "reused_arms": ["A", "C", "fixed_H4_baseline", "fixed_H4_repeat", "fixed_H4_alternative"],
+  "new_short_resets": 0,
+  "retries": 0,
+  "run_directory": "/workspace/HAIC-Money/runs/joint-single-branch-v1",
+  "calibration_sha256": "a0ceed5036b116491375c84dca4ea5b781119d0cdd5fa7c8ebc8ddf77b1a9f96",
+  "gate_sha256": {
+    "certificate": "bae94aa936cefa30e88675d903ece85c432c746a08f35c69de4c31e4a3339336",
+    "protocol": "a2f07616ea1830d82322d813c0c2c1da45691da27a947d1da6cbc88e2f47504e",
+    "summary": "72dad2216d6f8d772c60f72e96206ab4838f5967589889da3fae3c62fd4f204f",
+    "report": "d687e676b8d0cd6c4404ec339a2ba24aaee5e55d5f5a4df5bb4034873386048b"
+  },
+  "source_sha256": {
+    "/workspace/HAIC-Money/scripts/run_joint_single_branch.py": "10429ee8e21e4bf7f828d57ea6b151f2c6e4570e15d70593106d77bcdc7b7561",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/single_intervention.py": "04c15ab706e2bb8c62a4366fa8595f50481f4b6c5aa22e6b94058cb2a4831dc2",
+    "/workspace/HAIC-Money/scripts/score_joint_branch_feedback.py": "3f10e6936082ad6e38166935df39db05c6cebf484668df9ec3753b601dc57279",
+    "/workspace/HAIC-Money/scripts/run_joint_envelope_pilot.py": "0f73b74033fe91bc79d4a8cf72d263fb1364e635bdccddfc994d77bdbcf26e08",
+    "/workspace/HAIC-Money/scripts/run_joint_temporal_pilot.py": "46461eae25d450fc0aeb7305992238944bc6c84ae3a31271e6d42957f45fdef4",
+    "/workspace/HAIC-Money/haic/algorithms/joint_control/envelope_successor.py": "4bb6bdf088f35dfb1f90f4abc77b8eb96ae4f7c418f013b9247df743277331d1"
+  },
+  "evidence_sha256": {
+    "/workspace/HAIC-Money/experiments/joint-single-branch-v1-plan.json": "9936fd5cf406488759e6ae36efaeae8ad7d0ecc054e96d28d58b985656501a61",
+    "/workspace/HAIC-Money/experiments/joint-single-branch-v1-reuse.json": "bae94aa936cefa30e88675d903ece85c432c746a08f35c69de4c31e4a3339336",
+    "/workspace/HAIC-Money/experiments/joint-temporal-diagnosis-v1-full-claim.json": "c61e659643c057d4094f06b43be95bb3113e848ca60e4a7bfc24100423e77883",
+    "/workspace/HAIC-Money/runs/joint-temporal-diagnosis-v1/full-pilot/reset-ledger.jsonl": "4ee7f7e1aa9e5ab8ed5548fb75c85c4947e1db0499a61f145a9856c5449497a4",
+    "/workspace/HAIC-Money/experiments/train-seed-claims/seed-3184000005.json": "eee35bf93ef19a975f6ae246a5087b3b9eddc35ddb717789ea1efd204027f99a"
+  },
+  "scope_recheck": "Only immutable historicalconsumed seedclaim and owncompletedpaired/full claims occur in currentcandidate-specific claimsearch. Exactpreviousfull c61e... closed byreportd687... andledger4ee7... natural2episodes; no openintent/operatorerror ornewthirdparty reservation. Newuser14:24request separately authorizes this Bbranch. Scope/talk refreshed; unrelatedrepository changes do not affect this consumedcell admission. Freeze under registry-directoryflock; currentresourceadmission stillmandatory.",
+  "active_conflicts": [],
+  "unmatched_candidate_intents": [],
+  "protected_intersections": [],
+  "ambiguity_blockers": [],
+  "branch_contract": "ExactlyC34float32 candidate once; afterwards freshchampion onactualBobs withactualhistoryfeedback, neverstoredAfutureactions. Livepre34actionbyteparity stops beforeEnvstep onmismatch; Cpost34H1checkbefore35. No futureoutcome-selectedcase orunplannedshortreplay. A/C/fixedH4 remainREUSED, not newresets.",
+  "limits": "OnefullB,max1200decisions,51warmraw,600s child/total,1GiBRSS/4GiBAS/1GiBoutput. No retries,extraepisode,parameterfit,officialaction orconfirmedmodelreplacement. Oldsources andchampion/distillation unchanged."
+}
