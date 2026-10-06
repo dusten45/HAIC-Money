@@ -3,6 +3,50 @@
 Only durable choices that prevent future agents from repeating the same debate are
 listed here. Protocol/result artifacts remain the detailed evidence.
 
+## Close the Current H4-Cost Successor
+
+**Context:** At 2026-10-06T02:04:20Z, the user ended the current H4-cost-based
+successor after the matched single-intervention feedback branch. Preserve the
+existing champion for this submission rather than continue local successor tuning.
+
+**Evidence:** The [frozen ABC result](../../experiments/joint-single-branch-v1-result.json),
+[primary summary](../../runs/joint-single-branch-v1/summary.json) and
+[actual-feedback H4 costs](../../runs/joint-single-branch-v1/feedback-cost.json)
+show a real short benefit, including under B's own champion feedback, but worse
+lap time. In this consumed TRAIN case, cost favors C then B then A, whereas lap
+time favors A then B then C. B advances at H4 but is behind by one second and
+further behind at two seconds. This is a counterexample to the current selector,
+not evidence that the first short benefit failed to reproduce.
+
+**Interpretation boundary:** The earlier explanation that changed future actions
+immediately erase the short benefit does not describe this first intervention.
+The current cost, short horizon and terminal assessment fail to account adequately
+for later feedback-driving loss in the measured case. Which steering, braking,
+return or acceleration mechanism produces that loss remains unisolated. This
+does not reject joint-control in general, identify the observer as the sole
+bottleneck, or provide a safety/generalization theorem.
+
+**Decision:** Close further tuning, driving, diagnostic branch extensions,
+retries and candidate promotion of the current H4-cost successor. Keep it excluded
+from submission candidates. Preserve exact champion ZIP `c9e376a0...`, root Agent,
+distillation and all prior experiment evidence without rewriting pinned artifacts.
+The temporal observer, compact physics predictor and associated validation tools
+remain reusable research assets; do not delete or reset them. Other independently
+authorized research lanes are not stopped or redirected by this decision.
+
+**Future-work boundary:** Estimating how an H4 terminal state affects subsequent
+champion feedback and long-term task performance is a separate research objective,
+not an active plan or authorization to implement, train, collect or evaluate it.
+Retrospectively changing this road's weights is not evidence that the problem is
+solved. The user's MPC cost-design reference supplies context, not a transferred
+guarantee or a uniquely proven mechanism in this experiment.
+
+**Revisit condition:** Explicit new user direction is required to reopen research.
+Candidate consideration must rest on measured actual-feedback lap-time improvement,
+with matched provenance and observed failures retained, not lower H4 cost or more
+interventions alone. No official upload, model replacement or server confirmation
+is authorized by this closure.
+
 ## Stop Local Optimization of the KOI Champion
 
 **Context:** On2026-10-04T15:23:01Z, after the sprint72-relief rejection and the

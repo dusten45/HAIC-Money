@@ -1,5 +1,21 @@
 # Current Research State
 
+## Current H4 Successor Closed (2026-10-06)
+
+**CLOSED by user direction. Keep the existing champion for this submission.**
+The current H4-cost candidate-selection structure remains excluded; no further
+tuning, driving, repeats, gate relaxation or promotion of this successor.
+
+- [Closure decision](../decisions/INDEX.md#close-the-current-h4-cost-successor), [candidate status](../results/MODEL_STATUS.md#joint-temporal-successor-submission-candidate-excluded-2026-10-05), [frozen ABC result](../../experiments/joint-single-branch-v1-result.json).
+- The actual-feedback H4 cost order favors C, then B, then A, while lap time favors A, then B, then C. B retains a real short benefit but loses it beyond H4. The explanation that changed continuation immediately erased the first short benefit does not fit this case.
+- This rejects the current cost/horizon/terminal-assessment combination as a fast-driving selector in the measured case. The particular steering/braking mechanism is unresolved; joint-control generally is not rejected.
+- Preserve the temporal observer, compact physics model, road representation, calibration, tests and all frozen positive/negative evidence as reusable research assets. Champion ZIP `c9e376a0...`, path/speed distillation and unrelated research stay unchanged.
+- Evaluating the H4 terminal state's value under subsequent champion feedback is a separate future research problem. It is **not authorized or active work**, and this road must not be used to declare success after retrospective weight fitting. Reopening requires explicit new direction and actual feedback lap-time evidence, not cost or intervention-count gains alone.
+
+The dated sections below are historical evidence and do not reopen this closed
+campaign. This closure performs no new prediction, training, reset or evaluation;
+it is not an official submission or server model confirmation.
+
 ## Single-Intervention Branch Completed (2026-10-05)
 
 **Current joint successor excluded from submission candidates.** The first

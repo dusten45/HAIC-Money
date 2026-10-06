@@ -27,6 +27,15 @@ result.
 
 ## Joint Temporal Successor (Submission Candidate Excluded, 2026-10-05)
 
+- **Research CLOSED by user direction on 2026-10-06.** Keep the existing champion
+  for this submission; end further H4-successor tuning, driving, branch extensions
+  and promotion. See the [closure decision](../decisions/INDEX.md#close-the-current-h4-cost-successor).
+- The actual-feedback H4 benefit did reproduce; the cost/horizon/terminal-assessment
+  combination nevertheless misorders the measured laps. This is not rejection of
+  joint-control generally or a proven steering/braking mechanism. Preserve the
+  observer and small physics predictor as research assets. Long-term terminal-state
+  value assessment is a separate, not-yet-authorized research task, not same-road
+  weight retuning or an active replacement campaign.
 - **Current `EnvelopeSuccessor` is excluded from submission candidates.** User's
   required evidence is actual feedback lap-time reduction, not local cost or
   intervention count. The [single-intervention branch result](../../experiments/joint-single-branch-v1-result.json)

@@ -1,5 +1,16 @@
 # Experiment Evidence Index
 
+## H4 Successor Research Closure (2026-10-06)
+
+**Closed by user direction; no new experiment.** Keep the champion for this
+submission and stop current H4-successor tuning and driving. The
+[closure decision](../decisions/INDEX.md#close-the-current-h4-cost-successor)
+preserves the [ABC evidence](../../experiments/joint-single-branch-v1-result.json),
+observer, compact physics model and validation assets. Short benefit survives
+actual feedback but does not persist to the lap; terminal-state/long-term utility
+is a separate, unapproved research problem. Historical plans and results below
+remain frozen and do not authorize another run or outcome-fitted weight change.
+
 ## Single-Intervention Feedback Branch (2026-10-05)
 
 - [Fixed plan](../../experiments/joint-single-branch-v1-plan.json), [A/C/fixedH4 reuse proof](../../experiments/joint-single-branch-v1-reuse.json), [one-reset claim](../../experiments/joint-single-branch-v1-claim.json), [admission](../../experiments/joint-single-branch-v1-admission.json), [result/reproduction](../../experiments/joint-single-branch-v1-result.json).
